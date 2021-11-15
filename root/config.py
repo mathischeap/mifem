@@ -48,7 +48,6 @@ wOrker_ranks.remove(sEcretary_rank)
 assert 0 <= sEcretary_rank < sIze
 assert 0 <= mAster_rank < sIze
 
-
 # sentry setting, we can only turn on sentry in the master core!
 if rAnk == mAster_rank:
     seNtry_on = False
