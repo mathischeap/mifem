@@ -331,8 +331,6 @@ class ExactSolutionSelector(FrozenOnly):
 
 
 
-
-
 if __name__ == "__main__":
     # mpiexec -n 8 python _3dCSCG\main.py
 
