@@ -1,7 +1,7 @@
 import numpy as np
 from SCREWS.frozen import FrozenOnly
 from SCREWS.decorators import accepts
-from SCREWS.numerical._2d import NumericalJacobian22, NumericalJacobian21
+from SCREWS.numerical._2d import NumericalJacobian_xy_22, NumericalJacobian_xy_t_21
 
 
 class Interpolation(FrozenOnly):
@@ -61,7 +61,7 @@ class Interpolation(FrozenOnly):
 
         """
         r, s = self.___check_rs___(r, s)
-        NJ22 = NumericalJacobian22(self.mapping)
+        NJ22 = NumericalJacobian_xy_22(self.mapping)
         return NJ22.scipy_derivative(r, s)
 
     def Jacobian_Xr(self, r, s):
@@ -185,7 +185,7 @@ class ___PRIVATE_Transfinite_Mapping___(FrozenOnly):
         for i in range(4):
             XY = gamma[i]
             XtYt = dgamma[i]
-            NJ21 = NumericalJacobian21(XY)
+            NJ21 = NumericalJacobian_xy_t_21(XY)
             assert all(NJ21.check_Jacobian(XtYt, t)), \
                 " <TransfiniteMapping> :  '{}' edge mapping or Jacobian wrong.".format(_dict_[i])
 

@@ -17,7 +17,7 @@ from SCREWS.frozen import FrozenOnly
 
 
 
-class NumericalPartialDerivative4(ABC):
+class NumericalPartialDerivative_txyz(ABC):
     """
     Numerical partial derivative, we call it '4' because we compute a function or method of 4 inputs like
     ``A=f(t,x,y,z)``. And we will evaluate dA/dt, dA/dx, dA/dy, dA/dz at `(t, x, y, z)`. Note that `(x,y,z)`
@@ -177,8 +177,8 @@ class NumericalPartialDerivative4(ABC):
 
 
 
-class NumericalPartialDerivative4Functions(FrozenOnly):
-    """Like the NumericalPartialDerivative4 class but this will produce (through __call__ method) callable
+class NumericalPartialDerivative_txyz_Functions(FrozenOnly):
+    """Like the NumericalPartialDerivative_txyz class but this will produce (through __call__ method) callable
     functions (method).
     """
     def __init__(self, func):
@@ -216,28 +216,28 @@ class NumericalPartialDerivative4Functions(FrozenOnly):
         """pf/dt
         This partial derivative function will only accept input t is a number, i.e. int or float.
         """
-        NPD4 = NumericalPartialDerivative4(self._func_, t, x, y, z)
+        NPD4 = NumericalPartialDerivative_txyz(self._func_, t, x, y, z)
         return NPD4.scipy_partial('t')
 
     def ___PRIVATE_partial_func___partial_x___(self, t, x, y, z):
         """pf/dx
         This partial derivative function will only accept input t is a number, i.e. int or float.
         """
-        NPD4 = NumericalPartialDerivative4(self._func_, t, x, y, z)
+        NPD4 = NumericalPartialDerivative_txyz(self._func_, t, x, y, z)
         return NPD4.scipy_partial('x')
 
     def ___PRIVATE_partial_func___partial_y___(self, t, x, y, z):
         """pf/dy
         This partial derivative function will only accept input t is a number, i.e. int or float.
         """
-        NPD4 = NumericalPartialDerivative4(self._func_, t, x, y, z)
+        NPD4 = NumericalPartialDerivative_txyz(self._func_, t, x, y, z)
         return NPD4.scipy_partial('y')
 
     def ___PRIVATE_partial_func___partial_z___(self, t, x, y, z):
         """pf/dz
         This partial derivative function will only accept input t is a number, i.e. int or float.
         """
-        NPD4 = NumericalPartialDerivative4(self._func_, t, x, y, z)
+        NPD4 = NumericalPartialDerivative_txyz(self._func_, t, x, y, z)
         return NPD4.scipy_partial('z')
 
 
@@ -259,12 +259,12 @@ if __name__ == '__main__':
     y = np.random.rand(11, 12, 13)
     z = np.random.rand(11, 12, 13)
 
-    NP = NumericalPartialDerivative4(func, t, x, y, z)
+    NP = NumericalPartialDerivative_txyz(func, t, x, y, z)
 
     assert all(NP.check_total(Pt, Px, Py, Pz))
 
 
-    NPD4F = NumericalPartialDerivative4Functions(func)
+    NPD4F = NumericalPartialDerivative_txyz_Functions(func)
 
     Npt = NPD4F('t')
     Npx = NPD4F('x')

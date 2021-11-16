@@ -12,7 +12,7 @@ import random
 import numpy as np
 from functools import partial
 from _2dCSCG.APP.exact_solutions.base import Base
-from SCREWS.numerical._2d import NumericalPartialDerivative2
+from SCREWS.numerical._2d import NumericalPartialDerivative_xy
 from _2dCSCG.field.scalar import _2dCSCG_ScalarField
 from _2dCSCG.field.vector import _2dCSCG_VectorField
 
@@ -91,11 +91,11 @@ class scalar_Laplace_Base(Base):
         p = partial(self.p, time)
         p_x = partial(self.p_x, time)
         p_y = partial(self.p_y, time)
-        Pp = NumericalPartialDerivative2(p, *rs)
+        Pp = NumericalPartialDerivative_xy(p, *rs)
         assert all(Pp.check_total(p_x, p_y))
         p_xx = partial(self.p_xx, time)
         p_yy = partial(self.p_yy, time)
-        Ppx = NumericalPartialDerivative2(p_x, *rs)
-        Ppy = NumericalPartialDerivative2(p_y, *rs)
+        Ppx = NumericalPartialDerivative_xy(p_x, *rs)
+        Ppy = NumericalPartialDerivative_xy(p_y, *rs)
         assert Ppx.check_partial_x(p_xx)
         assert Ppy.check_partial_y(p_yy)

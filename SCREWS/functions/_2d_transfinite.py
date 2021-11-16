@@ -23,7 +23,7 @@ TU Delft
 import numpy as np
 from SCREWS.decorators import accepts
 from SCREWS.frozen import FrozenOnly
-from SCREWS.numerical._2d import NumericalJacobian21
+from SCREWS.numerical._2d import NumericalJacobian_xy_t_21
 
 
 
@@ -59,7 +59,7 @@ class TransfiniteMapping(FrozenOnly):
         for i in range(4):
             XY = gamma[i]
             XtYt = dgamma[i]
-            NJ21 =NumericalJacobian21(XY)
+            NJ21 =NumericalJacobian_xy_t_21(XY)
             assert all(NJ21.check_Jacobian(XtYt, t)), \
             " <TransfiniteMapping> :  '{}' edge mapping or Jacobian wrong.".format(_dict_[i])
             

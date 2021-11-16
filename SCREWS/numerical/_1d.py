@@ -7,7 +7,7 @@ from scipy.misc import derivative
 
 
 
-class NumericalDerivative(FrozenOnly):
+class NumericalDerivative_fx(FrozenOnly):
     """Numerical derivative in 1D."""
     def __init__(self, func, x, dx=1e-6, n=1, order=3):
         """

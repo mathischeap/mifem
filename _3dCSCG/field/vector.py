@@ -20,7 +20,7 @@ from scipy import sparse as spspa
 from SCREWS.functions._4d import CFG
 
 from importlib import import_module
-from SCREWS.numerical._4d import NumericalPartialDerivative4Functions
+from SCREWS.numerical._4d import NumericalPartialDerivative_txyz_Functions
 
 class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
     """The continuous vector field."""
@@ -548,9 +548,9 @@ class _3dCSCG_VectorField_Numerical(FrozenOnly):
         """Return a _3dCSCG_VectorField instances which is the numerical time derivative of self."""
         if self._vf_.ftype == 'standard':
             func_x, func_y, func_z = self._vf_.func
-            NPD4F_x = NumericalPartialDerivative4Functions(func_x)
-            NPD4F_y = NumericalPartialDerivative4Functions(func_y)
-            NPD4F_z = NumericalPartialDerivative4Functions(func_z)
+            NPD4F_x = NumericalPartialDerivative_txyz_Functions(func_x)
+            NPD4F_y = NumericalPartialDerivative_txyz_Functions(func_y)
+            NPD4F_z = NumericalPartialDerivative_txyz_Functions(func_z)
             TDV = _3dCSCG_VectorField(self._vf_.mesh,
                                       (NPD4F_x('t'), NPD4F_y('t'), NPD4F_z('t')),
                                       ftype='standard',
@@ -567,9 +567,9 @@ class _3dCSCG_VectorField_Numerical(FrozenOnly):
         """Return a _3dCSCG_TensorField instances which is the numerical gradient of self."""
         if self._vf_.ftype == 'standard':
             func_x, func_y, func_z = self._vf_.func
-            NPD4F_x = NumericalPartialDerivative4Functions(func_x)
-            NPD4F_y = NumericalPartialDerivative4Functions(func_y)
-            NPD4F_z = NumericalPartialDerivative4Functions(func_z)
+            NPD4F_x = NumericalPartialDerivative_txyz_Functions(func_x)
+            NPD4F_y = NumericalPartialDerivative_txyz_Functions(func_y)
+            NPD4F_z = NumericalPartialDerivative_txyz_Functions(func_z)
             T00, T01, T02 = NPD4F_x('x'), NPD4F_x('y'), NPD4F_x('z')
             T10, T11, T12 = NPD4F_y('x'), NPD4F_y('y'), NPD4F_y('z')
             T20, T21, T22 = NPD4F_z('x'), NPD4F_z('y'), NPD4F_z('z')
@@ -592,9 +592,9 @@ class _3dCSCG_VectorField_Numerical(FrozenOnly):
         """Return a _3dCSCG_TensorField instances which is the numerical curl of self."""
         if self._vf_.ftype == 'standard':
             func_x, func_y, func_z = self._vf_.func
-            NPD4F_x = NumericalPartialDerivative4Functions(func_x)
-            NPD4F_y = NumericalPartialDerivative4Functions(func_y)
-            NPD4F_z = NumericalPartialDerivative4Functions(func_z)
+            NPD4F_x = NumericalPartialDerivative_txyz_Functions(func_x)
+            NPD4F_y = NumericalPartialDerivative_txyz_Functions(func_y)
+            NPD4F_z = NumericalPartialDerivative_txyz_Functions(func_z)
             u_y, u_z = NPD4F_x('y'), NPD4F_x('z')
             v_x, v_z = NPD4F_y('x'), NPD4F_y('z')
             w_x, w_y = NPD4F_z('x'), NPD4F_z('y')
@@ -618,9 +618,9 @@ class _3dCSCG_VectorField_Numerical(FrozenOnly):
         """Return a _3dCSCG_ScalarField instances which is the numerical divergence of self."""
         if self._vf_.ftype == 'standard':
             func_x, func_y, func_z = self._vf_.func
-            NPD4F_x = NumericalPartialDerivative4Functions(func_x)
-            NPD4F_y = NumericalPartialDerivative4Functions(func_y)
-            NPD4F_z = NumericalPartialDerivative4Functions(func_z)
+            NPD4F_x = NumericalPartialDerivative_txyz_Functions(func_x)
+            NPD4F_y = NumericalPartialDerivative_txyz_Functions(func_y)
+            NPD4F_z = NumericalPartialDerivative_txyz_Functions(func_z)
             u_x = NPD4F_x('x')
             v_y = NPD4F_y('y')
             w_z = NPD4F_z('z')

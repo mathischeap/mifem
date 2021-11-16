@@ -19,7 +19,7 @@ from SCREWS.frozen import FrozenOnly
 from SCREWS.functions._4d import CFG
 
 from importlib import import_module
-from SCREWS.numerical._4d import NumericalPartialDerivative4Functions
+from SCREWS.numerical._4d import NumericalPartialDerivative_txyz_Functions
 
 
 class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
@@ -355,7 +355,7 @@ class _3dCSCG_ScalarField_Numerical(FrozenOnly):
         """Return a _3dCSCG_ScalarField instances which is the numerical time derivative of self."""
         if self._sf_.ftype == 'standard':
             func = self._sf_.func[0]
-            NPD4F = NumericalPartialDerivative4Functions(func)
+            NPD4F = NumericalPartialDerivative_txyz_Functions(func)
 
             TDS = _3dCSCG_ScalarField(self._sf_.mesh, NPD4F('t'),
                               ftype='standard',
@@ -372,7 +372,7 @@ class _3dCSCG_ScalarField_Numerical(FrozenOnly):
         """Return a _3dCSCG_VectorField instances which is the numerical gradient of self."""
         if self._sf_.ftype == 'standard':
             func = self._sf_.func[0]
-            NPD4F = NumericalPartialDerivative4Functions(func)
+            NPD4F = NumericalPartialDerivative_txyz_Functions(func)
             vector_class = getattr(import_module('_3dCSCG.field.vector'), '_3dCSCG_VectorField')
 
             GV = vector_class(self._sf_.mesh, (NPD4F('x'), NPD4F('y'), NPD4F('z')),

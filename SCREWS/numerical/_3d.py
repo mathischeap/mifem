@@ -5,12 +5,12 @@ from root.config import saFe_mode
 import numpy as np
 from abc import ABC
 from scipy.misc import derivative
-from SCREWS.numerical._1d import NumericalDerivative
+from SCREWS.numerical._1d import NumericalDerivative_fx
 
 
 
 
-class NumericalJacobian31(ABC):
+class NumericalJacobian_xyz_t_31(ABC):
     """
     For a mapping: ``XY(t) = (x, y, z) = (X(t), Y(t), Z(t))``, we compute ``dx/dt``, ``dy/dt``, and ``dz/dt``.
 
@@ -27,12 +27,12 @@ class NumericalJacobian31(ABC):
         return self._func31_(t)[2]
 
     def scipy_derivative(self, t, dt=1e-6, n=1, order=3):
-        Xt = NumericalDerivative(self.___evaluate_func31_for_x_t___, t,
-                                 dx=dt, n=n, order=order).scipy_derivative()
-        Yt = NumericalDerivative(self.___evaluate_func31_for_y_t___, t,
-                                 dx=dt, n=n, order=order).scipy_derivative()
-        Zt = NumericalDerivative(self.___evaluate_func31_for_z_t___, t,
-                                 dx=dt, n=n, order=order).scipy_derivative()
+        Xt = NumericalDerivative_fx(self.___evaluate_func31_for_x_t___, t,
+                                    dx=dt, n=n, order=order).scipy_derivative()
+        Yt = NumericalDerivative_fx(self.___evaluate_func31_for_y_t___, t,
+                                    dx=dt, n=n, order=order).scipy_derivative()
+        Zt = NumericalDerivative_fx(self.___evaluate_func31_for_z_t___, t,
+                                    dx=dt, n=n, order=order).scipy_derivative()
         return Xt, Yt, Zt
 
     def check_Jacobian(self, Jacobian, t, tolerance=1e-6):
@@ -54,7 +54,7 @@ class NumericalJacobian31(ABC):
 
 
 
-class NumericalJacobian33(ABC):
+class NumericalJacobian_xyz_33(ABC):
     """
     For a mapping: ``x = Phi_x(r, s, t), y = Phi_y(r, s, t), z = Phi_z(r, s, t),
     (``self._func_(r, s, t) = (Phi_x(r, s, t), Phi_y(r, s, t), Phi_z(r, s, t))``,
@@ -75,12 +75,12 @@ class NumericalJacobian33(ABC):
         return self._func33_(r, s, t)[2]
 
     def scipy_derivative(self, r, s, t, drdsdt=1e-8, n=1, order=3):
-        xr, xs, xt = NumericalPartialDerivative3(self.___evaluate_func33_for_x_rst___,
-                        r, s, t, dxdydz=drdsdt, n=n, order=order).scipy_total
-        yr, ys, yt = NumericalPartialDerivative3(self.___evaluate_func33_for_y_rst___,
-                        r, s, t, dxdydz=drdsdt, n=n, order=order).scipy_total
-        zr, zs, zt = NumericalPartialDerivative3(self.___evaluate_func33_for_z_rst___,
-                        r, s, t, dxdydz=drdsdt, n=n, order=order).scipy_total
+        xr, xs, xt = NumericalPartialDerivative_xyz(self.___evaluate_func33_for_x_rst___,
+                                                    r, s, t, dxdydz=drdsdt, n=n, order=order).scipy_total
+        yr, ys, yt = NumericalPartialDerivative_xyz(self.___evaluate_func33_for_y_rst___,
+                                                    r, s, t, dxdydz=drdsdt, n=n, order=order).scipy_total
+        zr, zs, zt = NumericalPartialDerivative_xyz(self.___evaluate_func33_for_z_rst___,
+                                                    r, s, t, dxdydz=drdsdt, n=n, order=order).scipy_total
         return ((xr, xs, xt),
                 (yr, ys, yt),
                 (zr, zs, zt))
@@ -88,7 +88,7 @@ class NumericalJacobian33(ABC):
 
 
 
-class NumericalPartialDerivative3(ABC):
+class NumericalPartialDerivative_xyz(ABC):
     """
     Numerical partial derivative, we call it '3' because we compute a function or method that like:
     ``a=f(x,y,z)``.

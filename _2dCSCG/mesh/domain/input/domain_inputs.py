@@ -13,7 +13,7 @@ import inspect
 import numpy as np
 from SCREWS.frozen import FrozenOnly
 from typing import Dict, Union
-from SCREWS.numerical._1d import NumericalDerivative
+from SCREWS.numerical._1d import NumericalDerivative_fx
 
 
 class DomainInput(FrozenOnly):
@@ -458,9 +458,9 @@ class BottomCustomizedRectangle(DomainInput):
         t = np.linspace(0, 1, 20)[1:-1]
         X, Y = mapping
         Xt, Yt = Jacobian
-        XND = NumericalDerivative(X, t)
+        XND = NumericalDerivative_fx(X, t)
         assert XND.check_derivative(Xt), " <BottomCustomizedRectangular> : Xt is wrong."
-        YND = NumericalDerivative(Y, t)
+        YND = NumericalDerivative_fx(Y, t)
         assert YND.check_derivative(Yt), " <BottomCustomizedRectangular> : Yt is wrong."
         assert np.abs(X(0) - 0) < 1e-8 and np.abs(Y(0) - 0) < 1e-8, " <BottomCustomizedRectangular>."
         assert np.abs(X(1) - l) < 1e-8, " <BottomCustomizedRectangular>."

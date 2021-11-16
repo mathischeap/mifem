@@ -4,14 +4,14 @@ from types import FunctionType, MethodType
 import numpy as np
 from abc import ABC
 from scipy.misc import derivative
-from SCREWS.numerical._1d import NumericalDerivative
+from SCREWS.numerical._1d import NumericalDerivative_fx
 
 
 
 
 
 
-class NumericalJacobian21(ABC):
+class NumericalJacobian_xy_t_21(ABC):
     """For a mapping: ``XY(t) = (x, y) = (X(t), Y(t))``, We compute ``dx/dt``, and ``dy/dt``.
     """
     def __init__(self, func21):
@@ -24,10 +24,10 @@ class NumericalJacobian21(ABC):
         return self._func21_(t)[1]
 
     def scipy_derivative(self, t, dt=1e-6, n=1, order=3):
-        Xt = NumericalDerivative(self.___evaluate_func21_for_x_t___, t,
-                                 dx=dt, n=n, order=order).scipy_derivative()
-        Yt = NumericalDerivative(self.___evaluate_func21_for_y_t___, t,
-                                 dx=dt, n=n, order=order).scipy_derivative()
+        Xt = NumericalDerivative_fx(self.___evaluate_func21_for_x_t___, t,
+                                    dx=dt, n=n, order=order).scipy_derivative()
+        Yt = NumericalDerivative_fx(self.___evaluate_func21_for_y_t___, t,
+                                    dx=dt, n=n, order=order).scipy_derivative()
         return Xt, Yt
 
     def check_Jacobian(self, Jacobian, t, tolerance=1e-6):
@@ -52,7 +52,7 @@ class NumericalJacobian21(ABC):
 
 
 
-class NumericalJacobian22(ABC):
+class NumericalJacobian_xy_22(ABC):
     """
     For a mapping: ``x = Phi_x(r, s), y = Phi_y(r, s)``,
     ``self._func_(r, s) = (Phi_x(r, s), Phi_y(r, s))``, we compute the its Jacobian numerically:
@@ -69,10 +69,10 @@ class NumericalJacobian22(ABC):
         return self._func22_(r, s)[1]
 
     def scipy_derivative(self, r, s, dr_ds=1e-8, n=1, order=3):
-        xr, xs = NumericalPartialDerivative2(self.___evaluate_func22_for_x_rs___,
-                        r, s, dx_dy=dr_ds, n=n, order=order).scipy_total
-        yr, ys = NumericalPartialDerivative2(self.___evaluate_func22_for_y_rs___,
-                        r, s, dx_dy=dr_ds, n=n, order=order).scipy_total
+        xr, xs = NumericalPartialDerivative_xy(self.___evaluate_func22_for_x_rs___,
+                                               r, s, dx_dy=dr_ds, n=n, order=order).scipy_total
+        yr, ys = NumericalPartialDerivative_xy(self.___evaluate_func22_for_y_rs___,
+                                               r, s, dx_dy=dr_ds, n=n, order=order).scipy_total
         return ((xr, xs),
                 (yr, ys))
 
@@ -80,7 +80,7 @@ class NumericalJacobian22(ABC):
 
 
 
-class NumericalPartialDerivative2(ABC):
+class NumericalPartialDerivative_xy(ABC):
     """
     Numerical partial derivative; we call it '2' because we compute a function or method that
     like: ``a=f(x,y)``.

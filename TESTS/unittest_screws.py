@@ -5,7 +5,7 @@ from root.config import *
 import random, time
 
 from SCREWS.functions._3d import ScalingFunc, Opposite, CFG, _0_, CartSphSwitcher, CartCylSwitcher
-from SCREWS.numerical._4d import NumericalPartialDerivative4, NumericalPartialDerivative4Functions
+from SCREWS.numerical._4d import NumericalPartialDerivative_txyz, NumericalPartialDerivative_txyz_Functions
 from SCREWS.emails import SendAdminAnEmail, SendAdminAnHTMLEmail
 
 from functools import partial
@@ -149,9 +149,9 @@ def test_SCREWS_NO3_4d_functions():
     x = np.random.rand(I, J, K)
     y = np.random.rand(I, J, K)
     z = np.random.rand(I, J, K)
-    NP = NumericalPartialDerivative4(func, t, x, y, z)
+    NP = NumericalPartialDerivative_txyz(func, t, x, y, z)
     assert all(NP.check_total(APt, APx, APy, APz))
-    NPD4F = NumericalPartialDerivative4Functions(func)
+    NPD4F = NumericalPartialDerivative_txyz_Functions(func)
     NPt = NPD4F('t')
     NPx = NPD4F('x')
     NPy = NPD4F('y')

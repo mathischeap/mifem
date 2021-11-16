@@ -20,7 +20,7 @@ from SCREWS.functions._4d import CFG
 from functools import partial
 
 from importlib import import_module
-from SCREWS.numerical._4d import NumericalPartialDerivative4Functions
+from SCREWS.numerical._4d import NumericalPartialDerivative_txyz_Functions
 
 
 class _3dCSCG_TensorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
@@ -213,15 +213,15 @@ class _3dCSCG_TensorField_Numerical(FrozenOnly):
             F00, F01, F02 = F0
             F10, F11, F12 = F1
             F20, F21, F22 = F2
-            NPD4F_00 = NumericalPartialDerivative4Functions(F00)
-            NPD4F_01 = NumericalPartialDerivative4Functions(F01)
-            NPD4F_02 = NumericalPartialDerivative4Functions(F02)
-            NPD4F_10 = NumericalPartialDerivative4Functions(F10)
-            NPD4F_11 = NumericalPartialDerivative4Functions(F11)
-            NPD4F_12 = NumericalPartialDerivative4Functions(F12)
-            NPD4F_20 = NumericalPartialDerivative4Functions(F20)
-            NPD4F_21 = NumericalPartialDerivative4Functions(F21)
-            NPD4F_22 = NumericalPartialDerivative4Functions(F22)
+            NPD4F_00 = NumericalPartialDerivative_txyz_Functions(F00)
+            NPD4F_01 = NumericalPartialDerivative_txyz_Functions(F01)
+            NPD4F_02 = NumericalPartialDerivative_txyz_Functions(F02)
+            NPD4F_10 = NumericalPartialDerivative_txyz_Functions(F10)
+            NPD4F_11 = NumericalPartialDerivative_txyz_Functions(F11)
+            NPD4F_12 = NumericalPartialDerivative_txyz_Functions(F12)
+            NPD4F_20 = NumericalPartialDerivative_txyz_Functions(F20)
+            NPD4F_21 = NumericalPartialDerivative_txyz_Functions(F21)
+            NPD4F_22 = NumericalPartialDerivative_txyz_Functions(F22)
             TDT = _3dCSCG_TensorField(self._tf_.mesh,
                                       [(NPD4F_00('t'), NPD4F_01('t'), NPD4F_02('t')),
                                        (NPD4F_10('t'), NPD4F_11('t'), NPD4F_12('t')),
@@ -235,7 +235,6 @@ class _3dCSCG_TensorField_Numerical(FrozenOnly):
             raise NotImplementedError(
                 f"Numerical time derivative not implemented for tensor type = {self._tf_.ftype}.")
 
-
     @property
     def divergence(self):
         """Return a _3dCSCG_VectorField instances which is the divergence of self."""
@@ -244,15 +243,15 @@ class _3dCSCG_TensorField_Numerical(FrozenOnly):
             F00, F01, F02 = F0
             F10, F11, F12 = F1
             F20, F21, F22 = F2
-            NPD4F_00 = NumericalPartialDerivative4Functions(F00)
-            NPD4F_01 = NumericalPartialDerivative4Functions(F01)
-            NPD4F_02 = NumericalPartialDerivative4Functions(F02)
-            NPD4F_10 = NumericalPartialDerivative4Functions(F10)
-            NPD4F_11 = NumericalPartialDerivative4Functions(F11)
-            NPD4F_12 = NumericalPartialDerivative4Functions(F12)
-            NPD4F_20 = NumericalPartialDerivative4Functions(F20)
-            NPD4F_21 = NumericalPartialDerivative4Functions(F21)
-            NPD4F_22 = NumericalPartialDerivative4Functions(F22)
+            NPD4F_00 = NumericalPartialDerivative_txyz_Functions(F00)
+            NPD4F_01 = NumericalPartialDerivative_txyz_Functions(F01)
+            NPD4F_02 = NumericalPartialDerivative_txyz_Functions(F02)
+            NPD4F_10 = NumericalPartialDerivative_txyz_Functions(F10)
+            NPD4F_11 = NumericalPartialDerivative_txyz_Functions(F11)
+            NPD4F_12 = NumericalPartialDerivative_txyz_Functions(F12)
+            NPD4F_20 = NumericalPartialDerivative_txyz_Functions(F20)
+            NPD4F_21 = NumericalPartialDerivative_txyz_Functions(F21)
+            NPD4F_22 = NumericalPartialDerivative_txyz_Functions(F22)
             F00_x, F01_y, F02_z = NPD4F_00('x'), NPD4F_01('y'), NPD4F_02('z')
             F10_x, F11_y, F12_z = NPD4F_10('x'), NPD4F_11('y'), NPD4F_12('z')
             F20_x, F21_y, F22_z = NPD4F_20('x'), NPD4F_21('y'), NPD4F_22('z')

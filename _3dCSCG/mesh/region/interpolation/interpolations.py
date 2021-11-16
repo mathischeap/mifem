@@ -13,11 +13,11 @@ import random
 from root.config import MPI, cOmm
 from SCREWS.frozen import FrozenOnly
 from SCREWS.decorators import accepts
-from SCREWS.numerical._3d import NumericalJacobian33, NumericalPartialDerivative3
+from SCREWS.numerical._3d import NumericalJacobian_xyz_33, NumericalPartialDerivative_xyz
 from SCREWS.functions._2d_transfinite import StraightLine
 from SCREWS.functions._2d_transfinite import ArcClockWise
 from SCREWS.functions._2d_transfinite import TransfiniteMapping
-from SCREWS.numerical._2d import NumericalPartialDerivative2
+from SCREWS.numerical._2d import NumericalPartialDerivative_xy
 from SCREWS.exceptions import ThreeDimensionalTransfiniteInterpolationError
 
 
@@ -99,7 +99,7 @@ class Interpolation(FrozenOnly):
         
         """
         r, s, t = self.___check_rst___(r, s, t)
-        NJ33 = NumericalJacobian33(self.mapping)
+        NJ33 = NumericalJacobian_xyz_33(self.mapping)
         return NJ33.scipy_derivative(r, s, t)
     
     def Jacobian(self, r, s, t):
@@ -116,44 +116,44 @@ class Interpolation(FrozenOnly):
 
 
     def Jacobian_X_(self, r, s, t):
-        N31 = NumericalPartialDerivative3(self.mapping_X, r, s, t)
+        N31 = NumericalPartialDerivative_xyz(self.mapping_X, r, s, t)
         return N31.scipy_total
     def Jacobian_Y_(self, r, s, t):
-        N31 = NumericalPartialDerivative3(self.mapping_Y, r, s, t)
+        N31 = NumericalPartialDerivative_xyz(self.mapping_Y, r, s, t)
         return N31.scipy_total
     def Jacobian_Z_(self, r, s, t):
-        N31 = NumericalPartialDerivative3(self.mapping_Z, r, s, t)
+        N31 = NumericalPartialDerivative_xyz(self.mapping_Z, r, s, t)
         return N31.scipy_total
 
 
     def Jacobian_Xr(self, r, s, t):
-        N31 = NumericalPartialDerivative3(self.mapping_X, r, s, t)
+        N31 = NumericalPartialDerivative_xyz(self.mapping_X, r, s, t)
         return N31.scipy_partial('x')
     def Jacobian_Xs(self, r, s, t):
-        N31 = NumericalPartialDerivative3(self.mapping_X, r, s, t)
+        N31 = NumericalPartialDerivative_xyz(self.mapping_X, r, s, t)
         return N31.scipy_partial('y')
     def Jacobian_Xt(self, r, s, t):
-        N31 = NumericalPartialDerivative3(self.mapping_X, r, s, t)
+        N31 = NumericalPartialDerivative_xyz(self.mapping_X, r, s, t)
         return N31.scipy_partial('z')
 
     def Jacobian_Yr(self, r, s, t):
-        N31 = NumericalPartialDerivative3(self.mapping_Y, r, s, t)
+        N31 = NumericalPartialDerivative_xyz(self.mapping_Y, r, s, t)
         return N31.scipy_partial('x')
     def Jacobian_Ys(self, r, s, t):
-        N31 = NumericalPartialDerivative3(self.mapping_Y, r, s, t)
+        N31 = NumericalPartialDerivative_xyz(self.mapping_Y, r, s, t)
         return N31.scipy_partial('y')
     def Jacobian_Yt(self, r, s, t):
-        N31 = NumericalPartialDerivative3(self.mapping_Y, r, s, t)
+        N31 = NumericalPartialDerivative_xyz(self.mapping_Y, r, s, t)
         return N31.scipy_partial('z')
 
     def Jacobian_Zr(self, r, s, t):
-        N31 = NumericalPartialDerivative3(self.mapping_Z, r, s, t)
+        N31 = NumericalPartialDerivative_xyz(self.mapping_Z, r, s, t)
         return N31.scipy_partial('x')
     def Jacobian_Zs(self, r, s, t):
-        N31 = NumericalPartialDerivative3(self.mapping_Z, r, s, t)
+        N31 = NumericalPartialDerivative_xyz(self.mapping_Z, r, s, t)
         return N31.scipy_partial('y')
     def Jacobian_Zt(self, r, s, t):
-        N31 = NumericalPartialDerivative3(self.mapping_Z, r, s, t)
+        N31 = NumericalPartialDerivative_xyz(self.mapping_Z, r, s, t)
         return N31.scipy_partial('z')
 
 
@@ -556,11 +556,11 @@ class Transfinite(Interpolation):
             Yq = self._region_._side_geometries_[side].Yq
             Zp = self._region_._side_geometries_[side].Zp
             Zq = self._region_._side_geometries_[side].Zq
-            XNJ = NumericalPartialDerivative2(X, p, q)
+            XNJ = NumericalPartialDerivative_xy(X, p, q)
             assert all(XNJ.check_total(Xp, Xq)), " <Transfinite> : X, Xp, Xq wrong"
-            YNJ = NumericalPartialDerivative2(Y, p, q)
+            YNJ = NumericalPartialDerivative_xy(Y, p, q)
             assert all(YNJ.check_total(Yp, Yq)), " <Transfinite> : Y, Yp, Yq wrong"
-            ZNJ = NumericalPartialDerivative2(Z, p, q)
+            ZNJ = NumericalPartialDerivative_xy(Z, p, q)
             assert all(ZNJ.check_total(Zp, Zq)), " <Transfinite> : Z, Zp, Zq wrong"
 
 

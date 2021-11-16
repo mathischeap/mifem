@@ -22,7 +22,7 @@ import random
 import numpy as np
 from functools import partial, lru_cache
 from _3dCSCG.APP.exact_solutions.base import Base
-from SCREWS.numerical._3d import NumericalPartialDerivative3
+from SCREWS.numerical._3d import NumericalPartialDerivative_xyz
 from _3dCSCG.field.vector import _3dCSCG_VectorField
 from _3dCSCG.field.scalar import _3dCSCG_ScalarField
 
@@ -67,16 +67,16 @@ class Poisson_Base(Base):
             u = partial(self.u, time)
             v = partial(self.v, time)
             w = partial(self.w, time)
-            P_phi = NumericalPartialDerivative3(phi, *rst)
+            P_phi = NumericalPartialDerivative_xyz(phi, *rst)
             assert all(P_phi.check_total(u, v, w))
 
             ux = partial(self.u_x, time)
             vy = partial(self.v_y, time)
             wz = partial(self.w_z, time)
 
-            P_u = NumericalPartialDerivative3(u, *rst)
-            P_v = NumericalPartialDerivative3(v, *rst)
-            P_w = NumericalPartialDerivative3(w, *rst)
+            P_u = NumericalPartialDerivative_xyz(u, *rst)
+            P_v = NumericalPartialDerivative_xyz(v, *rst)
+            P_w = NumericalPartialDerivative_xyz(w, *rst)
 
             assert P_u.check_partial_x(ux)
             assert P_v.check_partial_y(vy)
