@@ -14,7 +14,7 @@ if './' not in sys.path: sys.path.append('./')
 from types import FunctionType, MethodType
 from _3dCSCG.field.main import _3dCSCG_Continuous_FORM_BASE
 from functools import partial
-import numpy as np
+from root.config import *
 from SCREWS.frozen import FrozenOnly
 from SCREWS.functions._4d import CFG
 
@@ -90,7 +90,14 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                     raise Exception()
 
                 self._func_[bn] = [func_bn,] # we always put a func representing a scalar in a list or tuple of shape (1,)
-
+        elif ftype == 'trace-element-wise':
+            # we have received a dict whose keys are local trace elements, values are callable that returns, xyz and a vector.
+            assert isinstance(func, dict), f"func for trace-element-wise vector must a dict."
+            for i in func: # valid local trace elements
+                assert i in self.mesh.trace.elements, f"trace element #{i} is not in this core (#{rAnk})."
+                # NOTE that we do not put the vector in a list or tuple, it should take (t, xi, eta, sigma) and then return xyz and the vector.
+                assert callable(func[i]), f"func[{i}] is not callable."
+            self._func_ = func
         else:
             raise Exception(f" <ScalarField> do not accept funcType={ftype}")
 
@@ -124,6 +131,12 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                 for bn in self.func:
                     RETURN[bn] = [partial(self.func[bn][0], time),]
 
+            elif self.ftype  == 'trace-element-wise':
+                RETURN = dict()
+                for i in self.func: # go through all valid trace elements
+                    vi = self.func[i]
+                    RETURN[i] = partial(vi, time) # We can see that for each trace-element, it is a single function
+
             else:
                 raise Exception(f" Do not understand funcType={self.ftype}")
 
@@ -153,7 +166,7 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
         else:
             self.current_time = time
 
-
+        func = self.___DO_evaluate_func_at_time___(time)
 
         if where == 'mesh-element': # input `i` means mesh element, we reconstruct it in mesh elements
             xi, eta, sigma = np.meshgrid(xi, eta, sigma, indexing='ij')
@@ -163,11 +176,11 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
             if self.ftype == "standard":
                 assert isinstance(i, int) or i is None, f"We currently only accept int or None for i"
                 INDICES = self.mesh.elements.indices if i is None else [i, ]
-                func = self.___DO_evaluate_func_at_time___(time)[0]
+
                 for i in INDICES:
                     element = self.mesh.elements[i]
                     xyz_i = element.coordinate_transformation.mapping(xi, eta, sigma)
-                    v_i = func(*xyz_i)
+                    v_i = func[0](*xyz_i)
 
                     if ravel:
                         xyz[i] = [I.ravel('F') for I in xyz_i]
@@ -176,7 +189,7 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                         xyz[i] = xyz_i
                         value[i] = [v_i,]
             else:
-                raise NotImplementedError(f"mesh-reconstruct not implemented for ftype: {self.ftype}")
+                raise NotImplementedError(f"_3dCSCG_ScalarField mesh-reconstruct not implemented for ftype: {self.ftype}")
 
             return xyz, value
 
@@ -184,43 +197,81 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
             xyz = dict()
             value = dict()
-            func = self.___DO_evaluate_func_at_time___(time)
-            if self.ftype == 'boundary-wise':
-                RTE = self.mesh.boundaries.RANGE_trace_elements
 
-                if i is None:
+            if self.ftype == 'boundary-wise':
+
+                if i in (None, 'on_mesh_boundaries'):
+                    RTE = self.mesh.boundaries.RANGE_trace_elements
                     INDICES = list()
                     for bn in self.func:
                         INDICES.extend(RTE[bn])
 
                 else:
-                    raise NotImplementedError(f"currently only accept i=None, so reconstruct for all valid trace-elements.")
+                    raise NotImplementedError(f"_3dCSCG_ScalarField of ftype 'boundary-wise'"
+                                              f"trace-element-reconstruction currently doesn't accept i={i}.")
 
-                for i in INDICES:
-                    te = self.mesh.trace.elements[i]
+                for I in INDICES:
+                    te = self.mesh.trace.elements[I]
                     assert te.IS_on_mesh_boundary, f"must be the case!"
                     xyz_i = te.coordinate_transformation.mapping(xi, eta, sigma, parse_3_1d_eps=True)
 
                     bn = te.on_mesh_boundary
-                    assert bn in func, f"trace element #{i} is on <{bn}> which is not covered by boundary-wise func."
+                    assert bn in func, f"trace element #{I} is on <{bn}> which is not covered by boundary-wise func."
                     func_i = func[bn][0]
 
                     v_i = func_i(*xyz_i)
 
                     if ravel:
-                        xyz[i] = [I.ravel('F') for I in xyz_i]
-                        value[i] = [v_i.ravel('F'),]
+                        xyz[I] = [_.ravel('F') for _ in xyz_i]
+                        value[I] = [v_i.ravel('F'),]
                     else:
-                        xyz[i] = xyz_i
-                        value[i] = [v_i,]
+                        xyz[I] = xyz_i
+                        value[I] = [v_i,]
+
+            elif self.ftype == 'trace-element-wise':
+
+                if i is None: # we reconstruct on all valid local trace elements
+                    INDICES = list()
+                    # noinspection PyUnresolvedReferences
+                    INDICES.extend(func.keys())
+                elif i == 'on_mesh_boundaries': # we only reconstruct on all the valid local trace elements which are also on mesh boundaries.
+                    CMB = self.covered_mesh_boundaries # will contain all mesh boundary names.
+                    RTE = self.mesh.boundaries.RANGE_trace_elements
+                    boundary_trace_elements = list() # local trace elements on all mesh boundaries
+                    for mb in CMB:
+                        boundary_trace_elements.extend(RTE[mb])
+                    ___ = list()
+                    # noinspection PyUnresolvedReferences
+                    ___.extend(func.keys())
+                    INDICES = list()
+                    for I in ___:
+                        if I in boundary_trace_elements:
+                            INDICES.append(I)
+
+                else:
+                    raise NotImplementedError(f"_3dCSCG_ScalarField of 'trace-element-wise' ftype "
+                                              f"trace-element-reconstruction currently don't accept i={i}."
+                                              f"i must be one of (None, 'on_mesh_boundaries').")
+
+                for I in INDICES: # go through all valid local trace elements
+
+                    xyz_i, v_i = func[I](xi, eta, sigma)
+
+                    if ravel:
+                        xyz[I] = [_.ravel('F') for _ in xyz_i]
+                        value[I] = [v_i[0].ravel('F') ,]
+                    else:
+                        xyz[I] = xyz_i
+                        value[I] = v_i
+
 
             else:
-                raise NotImplementedError(f"trace-reconstruct not implemented for ftype: {self.ftype}")
+                raise NotImplementedError(f"_3dCSCG_ScalarField trace-reconstruct not implemented for ftype: {self.ftype}")
 
             return xyz, value
 
         else:
-            raise NotImplementedError(f"Can not reconstruct on {where}.")
+            raise NotImplementedError(f"_3dCSCG_ScalarField cannot reconstruct on {where}.")
 
 
 
@@ -403,3 +454,5 @@ if __name__ == '__main__':
 
     GV = SS.numerical.gradient
 
+    BS.current_time=0
+    BS.visualize()

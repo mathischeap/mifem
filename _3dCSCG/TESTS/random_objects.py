@@ -6,7 +6,7 @@ if './' not in sys.path: sys.path.append('./')
 
 from root.config import *
 import random
-from _3dCSCG.main import MeshGenerator, SpaceInvoker
+from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
 
 
 
@@ -329,7 +329,11 @@ def random_3D_mesh_and_space_of_total_load_around(total_load, **kwargs):
 
 
 
-
+def random_3D_FormCaller_of_total_load_around(*args, **kwargs):
+    """A wrapper of `random_3D_mesh_and_space_of_total_load_around` and we use the outputs to make a
+    3D FormCaller instance."""
+    mesh, space = random_3D_mesh_and_space_of_total_load_around(*args, **kwargs)
+    return FormCaller(mesh, space)
 
 
 

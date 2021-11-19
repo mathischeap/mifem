@@ -2,8 +2,7 @@
 
 from SCREWS.frozen import FrozenClass
 
-
-
+from root.config import *
 
 class CSCG_Continuous_FORM_BASE(FrozenClass):
     """"""
@@ -20,7 +19,7 @@ class CSCG_Continuous_FORM_BASE(FrozenClass):
         self._CMB_ = None
         self.___PRIVATE_set_vt_to___(valid_time)
 
-        assert ftype in ("standard", "boundary-wise"), f"ftype={ftype} wrong."
+        assert ftype in ("standard", "boundary-wise", "trace-element-wise"), f"ftype={ftype} wrong."
 
     # ... most standard properties ...
     @property
@@ -84,6 +83,27 @@ class CSCG_Continuous_FORM_BASE(FrozenClass):
             for bn in self.func:
                 assert bn in AMBs
                 self._CMB_.append(bn)
+        elif self.ftype == 'trace-element-wise':
+            _CMB_ = list()
+            for i in self.func: # valid local trace elements
+                te = self.mesh.trace.elements[i]
+                if te.IS_on_mesh_boundary:
+                    omb = te.on_mesh_boundary
+                    if omb not in _CMB_:
+                        _CMB_.append(omb)
+                else:
+                    pass
+
+            _CMB_ = cOmm.gather(_CMB_, root=mAster_rank)
+            if rAnk == mAster_rank:
+                self._CMB_ = set()
+                for __ in _CMB_:
+                    self._CMB_.update(__)
+                self._CMB_ = list(self._CMB_)
+            else:
+                self._CMB_ = None
+
+            self._CMB_ = cOmm.bcast(self._CMB_, root=mAster_rank)
 
         else:
             raise NotImplementedError(f"Can not deal with {self.ftype} ftype.")

@@ -39,10 +39,12 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
         super().RESET_cache()
 
     def ___TW_FUNC_body_checker___(self, func_body):
-        # a 0-trace can accommodate a _3dCSCG_ScalarField.
+        assert func_body.mesh.domain == self.mesh.domain
+        assert func_body.ndim == self.ndim == 3
+
         if func_body.__class__.__name__ == '_3dCSCG_VectorField':
-            assert func_body.mesh.domain == self.mesh.domain
-            assert func_body.ndim == self.ndim == 3
+            assert func_body.ftype in ('standard',), \
+                f"3dCSCG 1-trace FUNC cannot accommodate _3dCSCG_VectorField of ftype {func_body.ftype}."
         else:
             raise NotImplementedError(
                 f"1-trace form cannot accommodate {func_body}.")
@@ -53,31 +55,36 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
 
         :param bool update_cochain: Whether we update the cochain if the trace form.
         :param target:
+        :param component:
         :param kwargs: Keywords arguments to be passed to particular discretization schemes.
         :return: The cochain corresponding to the particular discretization scheme.
         """
         if target == 'func':
-            if self.TW.func.body.__class__.__name__ == '_3dCSCG_VectorField' \
-                and self.func.ftype == 'standard':
 
-                if component == 'T_para':
+            if self.TW.func.body.__class__.__name__ == '_3dCSCG_VectorField':
 
-                    return self.___PRIVATE_discretize_VectorField_standard_ftype_component_T_para___(
-                        update_cochain=update_cochain, target='func', **kwargs)
+                if self.func.ftype == 'standard':
 
-                elif component == 'T_perp':
+                    if component == 'T_para':
 
-                    return self.___PRIVATE_discretize_VectorField_standard_ftype_component_T_perp___(
-                        update_cochain=update_cochain, target='func', **kwargs)
+                        return self.___PRIVATE_discretize_VectorField_standard_ftype_component_T_para___(
+                            update_cochain=update_cochain, target='func', **kwargs)
+
+                    elif component == 'T_perp':
+
+                        return self.___PRIVATE_discretize_VectorField_standard_ftype_component_T_perp___(
+                            update_cochain=update_cochain, target='func', **kwargs)
+
+                    else:
+                        raise Exception(f"1-trace-form discretization targeting vector func of standard type. "
+                                        f"I can not discretize component = {component}. It should be either"
+                                        f"'T_para' (parallel trace) or 'T_perp' (perpendicular trace).")
 
                 else:
-                    raise Exception(f"1-trace-form discretization targeting vector func of standard type. "
-                                    f"I can not discretize component = {component}. It should be either"
-                                    f"'T_para' (parallel trace) or 'T_perp' (perpendicular trace).")
-
+                    raise Exception(f'3dCSCG 1-trace can not (target func) discretize _3dCSCG_VectorField of ftype {self.func.ftype}.')
 
             else:
-                raise NotImplementedError()
+                raise NotImplementedError(f'3dCSCG 1-trace can not (target func) discretize {self.TW.func.body.__class__}.')
 
         else:
             raise NotImplementedError(f"target={target} not implemented "

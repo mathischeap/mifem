@@ -12,6 +12,11 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 from root.config import *
+
+if rAnk == mAster_rank:
+    from SCREWS.miscellaneous import count_files_and_lines
+    files, lines = count_files_and_lines('./')
+
 t_start = MPI.Wtime()
 
 passed_2dCSCG_tests = 0
@@ -21,7 +26,10 @@ passed_GLOBAL_tests = 0
 from _2dCSCG.TESTS.mpi_unittest import * # comment this line to skip these tests.
 from _3dCSCG.TESTS.mpi_unittest import * # comment this line to skip these tests.
 
-if rAnk == mAster_rank: print(f"\n [Global] tests start...\n")
+if rAnk == mAster_rank:
+    print(f"\n [Global] tests start...\n")
+
+
 from TESTS.unittest_mifem import *
 from TESTS.unittest_tools import *
 from TESTS.unittest_screws import *

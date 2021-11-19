@@ -47,9 +47,14 @@ class _1Form(_3dCSCG_Standard_Form):
         super().RESET_cache()
 
     def ___TW_FUNC_body_checker___(self, func_body):
-        assert func_body.__class__.__name__ == '_3dCSCG_VectorField'
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 3
+
+        if func_body.__class__.__name__ == '_3dCSCG_VectorField':
+            assert func_body.ftype in ('standard',), \
+                f"3dCSCG 1form FUNC do not accept func _3dCSCG_VectorField of ftype {func_body.ftype}."
+        else:
+            raise Exception(f"3dCSCG 1form FUNC do not accept func {func_body.__class__}")
 
     @property
     def special(self):
@@ -60,22 +65,33 @@ class _1Form(_3dCSCG_Standard_Form):
         """A wrapper of all projection methods."""
         return self._projection_
 
-    def discretize(self, update_cochain=True, **kwargs):
+    def discretize(self, update_cochain=True, target = 'func', **kwargs):
         """
         Discretize the current function (a vector field:
         :class:`_3dCSCG.form.continuous.vector._3dCSCG_VectorField`) to cochain.
         It is actually a wrapper of multiple methods that discretize functions of different types (a vector
         field can be defined and represented in different ways in `python`, right?).
-
+        :param target:
         :param bool update_cochain: (`default`: ``True``) If we update cochain with the output? Sometimes we
             may do not want to do so since we just want to use this method do some external jobs.
+        :param kwargs:
         :return: The cochain.
         :rtype: Its type can be different according to the particular discretize method.
         """
-        if self.func.ftype == 'standard':
-            return self.___PRIVATE_discretize_standard_ftype___(update_cochain=update_cochain, **kwargs)
+        if target == 'func':
+            if self.TW.func.body.__class__.__name__ == '_3dCSCG_VectorField':
+
+                if self.func.ftype == 'standard':
+                    return self.___PRIVATE_discretize_standard_ftype___(update_cochain=update_cochain, **kwargs)
+                else:
+                    raise (f"3dCSCG 1-form cannot (target func) discretize _3dCSCG_VectorField of ftype={self.func.ftype}")
+
+            else:
+                raise NotImplementedError(f'3dCSCG 1-form can not discretize {self.TW.func.body.__class__}.')
         else:
-            raise NotImplementedError(f"self.func.ftype={self.func.ftype} not Implemented")
+            raise NotImplementedError(f"3dCSCG 1-form cannot discretize while targeting at {target}.")
+
+
 
     def ___PRIVATE_discretize_standard_ftype___(self, update_cochain=True, quad_degree=None):
         if self.___DISCRETIZE_STANDARD_CACHE___ is None or \

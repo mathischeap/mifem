@@ -64,6 +64,10 @@ class _3dCSCG_TensorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                         assert fij.__code__.co_argcount >= 5
                     elif isinstance(fij, (int, float)):
                         fij = CFG(fij)()
+
+                    elif callable(fij): # any other callable objects, we do not do check anymore.
+                        pass
+
                     else:
                         raise Exception(f"standard tensor component [{i}][{j}] is a {fij.__class__}, wrong!")
 
@@ -138,8 +142,15 @@ class _3dCSCG_TensorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
             value = dict()
 
             if self.ftype == "standard":
-                assert isinstance(i, int) or i is None, f"We currently only accept int or None for i"
-                INDICES = self.mesh.elements.indices if i is None else [i,]
+                if isinstance(i, int):
+                    INDICES = [i,]
+                elif i is None:
+                    INDICES = self.mesh.elements.indices
+
+                else:
+                    raise NotImplementedError(f"_3dCSCG_TensorField of 'standard' ftype"
+                                              f" mesh-element-reconstruction currently doesn't accept i={i}.")
+
                 func = self.___DO_evaluate_func_at_time___(time)
                 for i in INDICES:
                     element = self.mesh.elements[i]
@@ -157,14 +168,15 @@ class _3dCSCG_TensorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                         value[i] = ([v00, v01, v02],
                                     [v10, v11, v12],
                                     [v20, v21, v22])
+
             else:
-                raise NotImplementedError(f"mesh-reconstruct not implemented for ftype: {self.ftype}")
+                raise NotImplementedError(f"_3dCSCG_TensorField mesh-reconstruct not implemented for ftype: {self.ftype}")
 
             return xyz, value
 
 
         else:
-            raise NotImplementedError(f"Can not reconstruct 3dCSCG tensor field on {where}.")
+            raise NotImplementedError(f"_3dCSCG_TensorField cannot reconstruct 3dCSCG tensor field on {where}.")
 
 
 
@@ -183,6 +195,146 @@ class _3dCSCG_TensorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
         if self._numerical_ is None:
             self._numerical_ = _3dCSCG_TensorField_Numerical(self)
         return self._numerical_
+
+
+    def __neg__(self):
+        """-self."""
+        if self.ftype == 'standard':
+            w0, w1, w2 = self.func
+            w00, w01, w02 = w0
+            w10, w11, w12 = w1
+            w20, w21, w22 = w2
+
+            x00 = ___TENSOR_NEG_HELPER_1___(w00)
+            x01 = ___TENSOR_NEG_HELPER_1___(w01)
+            x02 = ___TENSOR_NEG_HELPER_1___(w02)
+            x10 = ___TENSOR_NEG_HELPER_1___(w10)
+            x11 = ___TENSOR_NEG_HELPER_1___(w11)
+            x12 = ___TENSOR_NEG_HELPER_1___(w12)
+            x20 = ___TENSOR_NEG_HELPER_1___(w20)
+            x21 = ___TENSOR_NEG_HELPER_1___(w21)
+            x22 = ___TENSOR_NEG_HELPER_1___(w22)
+
+            neg_tensor = _3dCSCG_TensorField(self.mesh,
+                                             ([x00, x01, x02],
+                                              [x10, x11, x12],
+                                              [x20, x21, x22]),
+                                             ftype='standard',
+                                             valid_time=self.valid_time,
+                                             name = '-' + self.standard_properties.name
+                                            )
+            return neg_tensor
+
+        else:
+            raise Exception(f"cannot do neg for {self.ftype} _3dCSCG_TensorField.")
+
+    def __sub__(self, other):
+        """self - other"""
+        if other.__class__.__name__ == '_3dCSCG_TensorField':
+
+            if self.ftype == 'standard' and other.ftype == 'standard':
+
+                w0, w1, w2 = self.func
+                w00, w01, w02 = w0
+                w10, w11, w12 = w1
+                w20, w21, w22 = w2
+
+                u0, u1, u2 = other.func
+                u00, u01, u02 = u0
+                u10, u11, u12 = u1
+                u20, u21, u22 = u2
+
+                x00 = ___TENSOR_SUB_HELPER_1___(w00, u00)
+                x01 = ___TENSOR_SUB_HELPER_1___(w01, u01)
+                x02 = ___TENSOR_SUB_HELPER_1___(w02, u02)
+                x10 = ___TENSOR_SUB_HELPER_1___(w10, u10)
+                x11 = ___TENSOR_SUB_HELPER_1___(w11, u11)
+                x12 = ___TENSOR_SUB_HELPER_1___(w12, u12)
+                x20 = ___TENSOR_SUB_HELPER_1___(w20, u20)
+                x21 = ___TENSOR_SUB_HELPER_1___(w21, u21)
+                x22 = ___TENSOR_SUB_HELPER_1___(w22, u22)
+
+                sub_tensor = _3dCSCG_TensorField(self.mesh,
+                                                 ([x00, x01, x02],
+                                                  [x10, x11, x12],
+                                                  [x20, x21, x22]),
+                                                 ftype='standard',
+                                                 valid_time=self.valid_time,
+                                                 name = self.standard_properties.name + '-' + other.standard_properties.name
+                                                )
+                return sub_tensor
+
+            else:
+                raise Exception(f"cannot do {self.ftype} _3dCSCG_TensorField - {other.ftype} _3dCSCG_TensorField")
+        else:
+            raise Exception(f"cannot do _3dCSCG_TensorField - {other.__class__}")
+
+    def __add__(self, other):
+        """self + other"""
+        if other.__class__.__name__ == '_3dCSCG_TensorField':
+
+            if self.ftype == 'standard' and other.ftype == 'standard':
+
+                w0, w1, w2 = self.func
+                w00, w01, w02 = w0
+                w10, w11, w12 = w1
+                w20, w21, w22 = w2
+
+                u0, u1, u2 = other.func
+                u00, u01, u02 = u0
+                u10, u11, u12 = u1
+                u20, u21, u22 = u2
+
+                x00 = ___TENSOR_ADD_HELPER_1___(w00, u00)
+                x01 = ___TENSOR_ADD_HELPER_1___(w01, u01)
+                x02 = ___TENSOR_ADD_HELPER_1___(w02, u02)
+                x10 = ___TENSOR_ADD_HELPER_1___(w10, u10)
+                x11 = ___TENSOR_ADD_HELPER_1___(w11, u11)
+                x12 = ___TENSOR_ADD_HELPER_1___(w12, u12)
+                x20 = ___TENSOR_ADD_HELPER_1___(w20, u20)
+                x21 = ___TENSOR_ADD_HELPER_1___(w21, u21)
+                x22 = ___TENSOR_ADD_HELPER_1___(w22, u22)
+
+                add_tensor = _3dCSCG_TensorField(self.mesh,
+                                                 ([x00, x01, x02],
+                                                  [x10, x11, x12],
+                                                  [x20, x21, x22]),
+                                                 ftype='standard',
+                                                 valid_time=self.valid_time,
+                                                 name = self.standard_properties.name + '+' + other.standard_properties.name
+                                                )
+                return add_tensor
+
+            else:
+                raise Exception(f"cannot do {self.ftype} _3dCSCG_TensorField - {other.ftype} _3dCSCG_TensorField")
+        else:
+            raise Exception(f"cannot do _3dCSCG_TensorField + {other.__class__}")
+
+
+class ___TENSOR_NEG_HELPER_1___(object):
+    def __init__(self, v):
+        self._v_ = v
+
+    def __call__(self, t, x, y, z):
+        return - self._v_(t, x, y, z)
+
+class ___TENSOR_SUB_HELPER_1___(object):
+    def __init__(self, w, u):
+        self._w_ = w
+        self._u_ = u
+
+    def __call__(self, t, x, y, z):
+        return self._w_(t, x, y, z) - self._u_(t, x, y, z)
+
+class ___TENSOR_ADD_HELPER_1___(object):
+    def __init__(self, w, u):
+        self._w_ = w
+        self._u_ = u
+
+    def __call__(self, t, x, y, z):
+        return self._w_(t, x, y, z) + self._u_(t, x, y, z)
+
+
 
 
 
@@ -279,6 +431,9 @@ class ___TENSOR_DIVERGENCE_HELPER___(object):
 
     def __call__(self, t, x, y, z):
         return self._fx_(t, x, y, z) + self._fy_(t, x, y, z) + self._fz_(t, x, y, z)
+
+
+
 
 
 if __name__ == '__main__':

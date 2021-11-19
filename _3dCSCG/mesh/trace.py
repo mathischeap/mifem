@@ -379,24 +379,32 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
             # local mesh element.
 
     @staticmethod
-    def ___generate_full_ep___(evaluation_points, element_side, parse_3_1d_eps=False):
+    def ___generate_full_ep___(evaluation_points, element_side, parse_3_1d_eps=False, picking=False):
         """
 
         :param evaluation_points:
         :param element_side:
         :param parse_3_1d_eps: If `parse_ep` is True, then we have *ep is xi, eta, sigma, and they are all 1d,
             between [-1,1], we will pick up two from them according the the side and do the mesh grid.
+
+            When `parse_3_1d_eps`, we will automatically do the picking! So `picking` must be False.
+
+        :param picking: We have provided 3 eps, but we will select two of them and make the third one
+            according to the `element_side`.
         """
-        if parse_3_1d_eps:
+        if parse_3_1d_eps: # we actually received 3 1d arrays, and we will do meshgrid to make it proper.
+
+            assert not picking, f"When `parse_3_1d_eps`, `picking` must be False " \
+                                f"because we will do picking automatically."
+
             assert len(evaluation_points) == 3 and all([np.ndim(epi)==1 for epi in evaluation_points]), \
                 f"When we parse_1d_3ep, we need 3 evaluation_points of ndim=1 ."
-
 
             for i, ep in enumerate(evaluation_points):
                 assert np.max(ep) <= 1 and np.min(ep) >= -1 and np.all(np.diff(ep)>0), \
                     f"evaluation_points[{i}] = {ep} is not an increasing 1d array in [-1,1]."
 
-
+            # evaluation_points will be of length 2.
             if element_side in 'NS':
                 evaluation_points = np.meshgrid(evaluation_points[1], evaluation_points[2], indexing='ij')
             elif element_side in 'WE':
@@ -406,35 +414,60 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
             else:
                 raise Exception()
 
-        else:
+        else: # we have standard evaluation_points, so do nothing here.
             pass
 
         if len(evaluation_points) == 2: # only two valid ep for local trace element provided.
 
+            assert not picking, f"We already make the picking basically!"
+
             ep0, ep1 = evaluation_points
             shape0 = np.shape(ep0)
+
             if saFe_mode:
                 assert shape0 == np.shape(ep1), \
                     " <TraceElement3D> : evaluation_points shape wrong."
 
-            if element_side == 'N': ep = (-np.ones(shape0), *evaluation_points)
-            elif element_side == 'S': ep = (np.ones(shape0), *evaluation_points)
+            if   element_side == 'N': ep = (-np.ones(shape0), *evaluation_points)
+            elif element_side == 'S': ep = ( np.ones(shape0), *evaluation_points)
             elif element_side == 'W': ep = (ep0, -np.ones(shape0), ep1)
-            elif element_side == 'E': ep = (ep0, np.ones(shape0), ep1)
+            elif element_side == 'E': ep = (ep0,  np.ones(shape0), ep1)
             elif element_side == 'B': ep = (*evaluation_points, -np.ones(shape0))
-            elif element_side == 'F': ep = (*evaluation_points, np.ones(shape0))
+            elif element_side == 'F': ep = (*evaluation_points,  np.ones(shape0))
             else:
                 raise Exception()
 
             return ep
 
-        elif len(evaluation_points) == 3: # two valid plus one -1 or +1 coordinates are provided
-            if saFe_mode:
-                # noinspection PyUnresolvedReferences
-                assert evaluation_points[0].shape == \
-                       evaluation_points[1].shape == \
-                       evaluation_points[2].shape, "evaluation_points shape wrong."
-            return evaluation_points
+        elif len(evaluation_points) == 3:
+
+            if picking: # we need to select from the 3 evaluation_points according to the element side.
+
+                ep0, ep1, ep2 = evaluation_points
+                shape0 = np.shape(ep0)
+                shape1 = np.shape(ep1)
+                shape2 = np.shape(ep2)
+                assert shape0 == shape1 == shape2, \
+                    f"When we do picking, for safety reason, " \
+                    f"we ask all eps to be of same shape."
+
+                if   element_side == 'N': ep = (-np.ones(shape0), ep1, ep2)
+                elif element_side == 'S': ep = ( np.ones(shape0), ep1, ep2)
+                elif element_side == 'W': ep = (ep0, -np.ones(shape1), ep2)
+                elif element_side == 'E': ep = (ep0,  np.ones(shape1), ep2)
+                elif element_side == 'B': ep = (ep0, ep1, -np.ones(shape2))
+                elif element_side == 'F': ep = (ep0, ep1,  np.ones(shape2))
+                else: raise Exception()
+
+                return ep
+
+            else: # two valid plus one -1 or +1 coordinates are provided
+                if saFe_mode:
+                    # noinspection PyUnresolvedReferences
+                    assert evaluation_points[0].shape == \
+                           evaluation_points[1].shape == \
+                           evaluation_points[2].shape, "evaluation_points shape wrong."
+                return evaluation_points
 
         else:
             raise Exception("evaluation_points shape wrong dimension wrong.")
@@ -1139,7 +1172,7 @@ class _3dCSCG_Trace_Element_CoordinateTransformation(FrozenOnly):
         x, y, z = self._te_._mesh_.elements[i].coordinate_transformation.mapping(*ep)
         return x, y, z
 
-    def Jacobian_matrix(self, *evaluation_points):
+    def Jacobian_matrix(self, *evaluation_points, parse_3_1d_eps=False):
         """
         The local Jacobian matrix.
 
@@ -1147,7 +1180,7 @@ class _3dCSCG_Trace_Element_CoordinateTransformation(FrozenOnly):
         """
         i = self._te_.CHARACTERISTIC_element
         element_side = self._te_.CHARACTERISTIC_side
-        ep = self._te_._elements_.___generate_full_ep___(evaluation_points, element_side)
+        ep = self._te_._elements_.___generate_full_ep___(evaluation_points, element_side, parse_3_1d_eps=parse_3_1d_eps)
         J = self._te_._mesh_.elements[i].coordinate_transformation.Jacobian_matrix(*ep)
         if element_side in 'NS':
             return ((J[0][1], J[0][2]),
@@ -1285,7 +1318,7 @@ class _3dCSCG_Trace_Element_CoordinateTransformation(FrozenOnly):
 
         return uv
 
-    def unit_normal_vector(self, *evaluation_points):
+    def unit_normal_vector(self, *evaluation_points, parse_3_1d_eps=False):
         """The unit_normal_vector (vector n) according to the right-hand-rule (without considering it is
         which side of the mesh element; it can point inner direction of the mesh element).
 
@@ -1296,7 +1329,7 @@ class _3dCSCG_Trace_Element_CoordinateTransformation(FrozenOnly):
 
         :param evaluation_points: A tuple or list of shape (ndim-1, ...).
         """
-        J = self.Jacobian_matrix(*evaluation_points)
+        J = self.Jacobian_matrix(*evaluation_points, parse_3_1d_eps=parse_3_1d_eps)
         a = (J[0][0], J[1][0], J[2][0])
         b = (J[0][1], J[1][1], J[2][1])
         acb0 = a[1] * b[2] - a[2] * b[1]

@@ -46,15 +46,25 @@ class _2Form(_3dCSCG_Standard_Form):
         super().RESET_cache()
 
     def ___TW_FUNC_body_checker___(self, func_body):
-        assert func_body.__class__.__name__ == '_3dCSCG_VectorField'
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 3
 
+        if func_body.__class__.__name__ == '_3dCSCG_VectorField':
+            assert func_body.ftype in ('standard',), \
+                f"3dCSCG 2form FUNC do not accept func _3dCSCG_VectorField of ftype {func_body.ftype}."
+        else:
+            raise Exception(f"3dCSCG 2form FUNC do not accept func {func_body.__class__}")
+
     def ___TW_BC_body_checker___(self, func_body):
-        assert func_body.__class__.__name__ == '_3dCSCG_VectorField', \
-            f"3d CSCG 2form BC cannot accept {func_body.__class__.__name__}."
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 3
+
+        if func_body.__class__.__name__ == '_3dCSCG_VectorField':
+            assert func_body.ftype in ('standard','boundary-wise'), \
+                f"3dCSCG 2form BC do not accept func _3dCSCG_VectorField of ftype {func_body.ftype}."
+        else:
+            raise Exception(f"3dCSCG 2form BC do not accept func {func_body.__class__}")
+
 
     @property
     def special(self):
@@ -79,26 +89,37 @@ class _2Form(_3dCSCG_Standard_Form):
         :rtype: Its type can be different according to the particular discretize method.
         """
         if target == 'func':
-            if self.func.ftype == 'standard':
-                return self.___PRIVATE_discretize_standard_ftype___(update_cochain=update_cochain, **kwargs)
+
+            if self.TW.func.body.__class__.__name__ == '_3dCSCG_VectorField':
+
+                if self.func.ftype == 'standard':
+                    return self.___PRIVATE_discretize_standard_ftype___(update_cochain=update_cochain, **kwargs)
+
+                else:
+                    raise NotImplementedError(f"3dCSCG 2-form cannot (target func) discretize _3dCSCG_VectorField of ftype={self.func.ftype}")
 
             else:
-                raise NotImplementedError(f"self.func.ftype={self.func.ftype} not Implemented")
+                raise NotImplementedError(f'3dCSCG 2-form can not (target func) discretize {self.TW.func.body.__class__}.')
 
         elif target == 'BC':
-            if self.BC.ftype == 'standard':
-                # always do not update cochain & and target always be "BC"
-                return self.___PRIVATE_discretize_standard_ftype___(update_cochain=False, target='BC', **kwargs)
+            if self.TW.BC.body.__class__.__name__ == '_3dCSCG_VectorField':
 
-            elif self.BC.ftype == "boundary-wise":
-                # we will always not update cochain & and always set target to be "BC"
-                return self.___PRIVATE_discretize_boundary_wise_ftype___(**kwargs)
+                if self.BC.ftype == 'standard':
+                    # always do not update cochain & and target always be "BC"
+                    return self.___PRIVATE_discretize_standard_ftype___(update_cochain=False, target='BC', **kwargs)
+
+                elif self.BC.ftype == "boundary-wise":
+                    # we will always not update cochain & and always set target to be "BC"
+                    return self.___PRIVATE_discretize_boundary_wise_ftype___(**kwargs)
+
+                else:
+                    raise NotImplementedError(f"3dCSCG 2-form cannot (target BC) discretize _3dCSCG_VectorField of ftype={self.BC.ftype}")
 
             else:
-                raise NotImplementedError(f"self.BC.ftype={self.BC.ftype} not Implemented")
+                raise NotImplementedError(f'3dCSCG 2-form can not (target BC) discretize {self.TW.BC.body.__class__}.')
 
         else:
-            raise NotImplementedError(f"target={target} not implemented.")
+            raise NotImplementedError(f"3dCSCG 2-form cannot discretize while targeting at {target}.")
 
     def ___PRIVATE_discretize_standard_ftype___(self, update_cochain=True, target='func', quad_degree=None):
         p = [self.dqp[i] + 1 for i in range(self.ndim)] if quad_degree is None else quad_degree

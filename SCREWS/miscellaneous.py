@@ -9,7 +9,7 @@
 """
 from abc import ABC
 from types import FunctionType, MethodType
-
+import os
 from time import localtime, strftime
 import random
 import string
@@ -327,8 +327,76 @@ def break_list_into_parts(LIST, parts):
     return RET
 
 
+def count_files_and_lines(start, files=0, lines=0, header=True, begin_start=None):
+    """
+    We use this function to count how many python files are in a path and how
+    many lines of python code are in these files.
 
+    The original code is provided by stack overflow user 'Bryce93' on page
+    'https://stackoverflow.com/questions/38543709/count-lines-of-code-in-directory-using-python'.
 
+    We have skipped
+        1). files in folder '__PROGRAMS__'
+        2). meaningless lines, i.e. of only spaces or '-'.
+        3). files named with extension '.pyc'.
+
+    Parameters
+    ----------
+    start : str
+        The path we want to start tracing in.
+
+    """
+    if header:
+        MyTimer.simple_header()
+        print("\t\t Line counting......\n")
+        print('{:>10} |{:>10} | {:<20}'.format('ADDED', 'TOTAL', 'FILE'))
+        print('{:->11}|{:->11}|{:->20}'.format('', '', ''))
+    toskip = ['    ' * i + '\n' for i in range(12)]
+    for thing in os.listdir(start):
+        thing = os.path.join(start, thing)
+        if os.path.isfile(thing):
+            if thing.endswith('.py'):
+                with open(thing, 'r') as f:
+                    try:
+                        FILES = f.readlines()[9:]
+                    except UnicodeDecodeError:
+                        lines += 20
+                    else:
+                        newlines = len(FILES)
+                        for entry in FILES:
+                            if entry in toskip:
+                                newlines -= 1
+                            elif '____' in entry or '-' in entry:
+                                newlines -= 1
+                            elif '~' in entry or '===' in entry:
+                                newlines -= 1
+                            elif '"""' in entry or '%%' in entry:
+                                newlines -= 1
+                            else:
+                                pass
+                        newlines = int(newlines * 0.8)  # we consider 20% of lines are docstring.
+                        lines += newlines
+                        if begin_start is not None:
+                            reldir_of_thing = '.' + thing.replace(begin_start, '')
+                        else:
+                            reldir_of_thing = '.' + thing.replace(start, '')
+                        if len(reldir_of_thing) > 45:
+                            reldir_of_thing = reldir_of_thing[:42] + '...'
+                        print('{:>10} |{:>10} | {:<20}'.format(newlines, lines, reldir_of_thing))
+                        files += 1
+    for thing in os.listdir(start):
+        # skip following ...
+        if thing[-4:] == '.pyc':
+            pass
+        elif thing[:12] == '_CONTENTS_':
+            pass
+        elif thing[:11] == '__GENERAL__':
+            pass
+        else:
+            thing = os.path.join(start, thing)
+            if os.path.isdir(thing):
+                files, lines = count_files_and_lines(thing, files, lines, header=False, begin_start=start)
+    return files, lines
 
 
 
@@ -349,7 +417,6 @@ if __name__ == '__main__':
     # SendAdminAnEmail('TEST message')()
     # from config import usErs
     # SendAdminAnHTMLEmail(usErs)('MESSAGE test')
-
 
     import doctest
     doctest.testmod()

@@ -37,14 +37,25 @@ class _0Form(_3dCSCG_Standard_Form):
         self._freeze_self_()
 
     def ___TW_FUNC_body_checker___(self, func_body):
-        assert func_body.__class__.__name__ == '_3dCSCG_ScalarField'
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 3
 
+        if func_body.__class__.__name__ == '_3dCSCG_ScalarField':
+            assert func_body.ftype in ('standard',), \
+                f"3dCSCG 0form FUNC do not accept func _3dCSCG_ScalarField of ftype {func_body.ftype}."
+        else:
+            raise Exception(f"3dCSCG 0form FUNC do not accept func {func_body.__class__}")
+
     def ___TW_BC_body_checker___(self, func_body):
-        assert func_body.__class__.__name__ == '_3dCSCG_ScalarField'
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 3
+
+        if func_body.__class__.__name__ == '_3dCSCG_ScalarField':
+            assert func_body.ftype in ('standard','boundary-wise'), \
+                f"3dCSCG 0form BC do not accept func _3dCSCG_ScalarField of ftype {func_body.ftype}."
+        else:
+            raise Exception(f"3dCSCG 0form BC do not accept func {func_body.__class__}")
+
 
     def RESET_cache(self):
         super().RESET_cache()
@@ -67,24 +78,32 @@ class _0Form(_3dCSCG_Standard_Form):
         :rtype: Its type can be different according to the particular discretize method.
         """
         if target == 'func':
-            if self.func.ftype == 'standard':
-                return self.___PRIVATE_discretize_standard_ftype___(update_cochain=update_cochain)
+            if self.TW.func.body.__class__.__name__ == '_3dCSCG_ScalarField':
+                if self.func.ftype == 'standard':
+                    return self.___PRIVATE_discretize_standard_ftype___(update_cochain=update_cochain)
+                else:
+                    raise NotImplementedError(f"3dCSCG 0-form cannot (target func) discretize _3dCSCG_ScalarField of ftype={self.func.ftype}")
+
             else:
-                raise NotImplementedError(f"self.func.ftype={self.func.ftype} not Implemented")
+                raise NotImplementedError(f'3dCSCG 0-form can not (target func) discretize {self.TW.func.body.__class__}.')
 
         elif target == 'BC':
-            if self.BC.ftype == 'standard':
-                # always do not update cochain & and target always be "BC"
-                return self.___PRIVATE_discretize_standard_ftype___(update_cochain=False, target='BC')
+            if self.TW.BC.body.__class__.__name__ == '_3dCSCG_ScalarField':
+                if self.BC.ftype == 'standard':
+                    # always do not update cochain & and target always be "BC"
+                    return self.___PRIVATE_discretize_standard_ftype___(update_cochain=False, target='BC')
 
-            elif self.BC.ftype == "boundary-wise":
-                # we will always not update cochain & and always set target to be "BC"
-                return self.___PRIVATE_discretize_boundary_wise_ftype___()
+                elif self.BC.ftype == "boundary-wise":
+                    # we will always not update cochain & and always set target to be "BC"
+                    return self.___PRIVATE_discretize_boundary_wise_ftype___()
+
+                else:
+                    raise NotImplementedError(f"3dCSCG 0-form cannot (target BC) discretize _3dCSCG_ScalarField of ftype={self.BC.ftype}")
 
             else:
-                raise NotImplementedError(f"self.BC.ftype={self.BC.ftype} not Implemented")
+                raise NotImplementedError(f'3dCSCG 0-form can not (target BC) discretize {self.TW.BC.body.__class__}.')
         else:
-            raise NotImplementedError(f"target={target} not implemented.")
+            raise NotImplementedError(f"3dCSCG 0-form cannot discretize while targeting at {target}.")
 
 
     def ___PRIVATE_discretize_standard_ftype___(self, update_cochain=True, target='func'):

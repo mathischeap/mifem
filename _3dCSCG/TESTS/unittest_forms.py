@@ -1136,4 +1136,4 @@ def test_Form_NO10_trace_1_form_Rd_and_Rc():
 
 if __name__ == '__main__':
     # mpiexec -n 12 python _3dCSCG\TESTS\unittest_forms.py
-    test_Form_NO10_trace_1_form_Rd_and_Rc()
+    test_Form_NO6_resemble()

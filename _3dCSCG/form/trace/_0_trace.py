@@ -38,22 +38,26 @@ class _0Trace(_3dCSCG_Standard_Trace, ABC):
         super().RESET_cache()
 
     def ___TW_FUNC_body_checker___(self, func_body):
-        # a 0-trace can accommodate a _3dCSCG_ScalarField.
+        assert func_body.mesh.domain == self.mesh.domain
+        assert func_body.ndim == self.ndim == 3
+
         if func_body.__class__.__name__ == '_3dCSCG_ScalarField':
-            assert func_body.mesh.domain == self.mesh.domain
-            assert func_body.ndim == self.ndim == 3
+            assert func_body.ftype in ('standard',), \
+                f"3dCSCG 0-trace FUNC cannot accommodate _3dCSCG_ScalarField of ftype {func_body.ftype}."
         elif func_body.__class__.__name__ == '_3dCSCG_VectorField':
-                assert func_body.mesh.domain == self.mesh.domain
-                assert func_body.ndim == self.ndim == 3
+            assert func_body.ftype in ('standard',), \
+                f"3dCSCG 0-trace FUNC cannot accommodate _3dCSCG_VectorField of ftype {func_body.ftype}."
         else:
             raise NotImplementedError(
                 f"0-trace form cannot accommodate {func_body}.")
 
     def ___TW_BC_body_checker___(self, func_body):
-        # a 2-trace can accommodate a _3dCSCG_ScalarField.
+        assert func_body.mesh.domain == self.mesh.domain
+        assert func_body.ndim == self.ndim == 3
+
         if func_body.__class__.__name__ == '_3dCSCG_ScalarField':
-            assert func_body.mesh.domain == self.mesh.domain
-            assert func_body.ndim == self.ndim == 3
+            assert func_body.ftype in ('standard',), \
+                f"3dCSCG 0-trace BC cannot accommodate _3dCSCG_ScalarField of ftype {func_body.ftype}."
         else:
             raise NotImplementedError(
                 f"3d CSCG 0-trace form BC cannot accommodate {func_body}.")
@@ -68,23 +72,36 @@ class _0Trace(_3dCSCG_Standard_Trace, ABC):
         :return: The cochain corresponding to the particular discretization scheme.
         """
         if target == 'func':
-            if self.TW.func.body.__class__.__name__ == '_3dCSCG_ScalarField' \
-                and self.func.ftype == 'standard':
-                return self.___PRIVATE_discretize_standard_ftype___(
-                    target = 'func',
-                    update_cochain=update_cochain)
-            elif self.TW.func.body.__class__.__name__ == '_3dCSCG_VectorField' \
-                and self.func.ftype == 'standard':
-                return self.___PRIVATE_discretize_VectorField_standard_ftype___(
-                    target='func',
-                    update_cochain=update_cochain)
+            if self.TW.func.body.__class__.__name__ == '_3dCSCG_ScalarField':
+                if self.func.ftype == 'standard':
+                    return self.___PRIVATE_discretize_standard_ftype___(
+                        target = 'func',
+                        update_cochain=update_cochain)
+                else:
+                    raise Exception(f'3dCSCG 0-trace can not (target func) discretize _3dCSCG_ScalarField of ftype {self.func.ftype}.')
+
+            elif self.TW.func.body.__class__.__name__ == '_3dCSCG_VectorField':
+                if self.func.ftype == 'standard':
+                    return self.___PRIVATE_discretize_VectorField_standard_ftype___(
+                        target='func',
+                        update_cochain=update_cochain)
+                else:
+                    raise Exception(f'3dCSCG 0-trace can not (target func) discretize _3dCSCG_VectorField of ftype {self.func.ftype}.')
+
             else:
-                raise NotImplementedError(f"can not discretize for {self.func.ftype}.")
+                raise NotImplementedError(f'3dCSCG 0-trace can not (target func) discretize {self.TW.func.body.__class__}.')
+
+
         elif target == 'BC':
-            if self.BC.ftype == 'standard':
-                return self.___PRIVATE_discretize_standard_ftype___(
-                    target = 'BC',
-                    update_cochain=False)
+            if self.TW.BC.body.__class__.__name__ == '_3dCSCG_ScalarField':
+                if self.BC.ftype == 'standard':
+                    return self.___PRIVATE_discretize_standard_ftype___(
+                        target = 'BC',
+                        update_cochain=False)
+                else:
+                    raise Exception(f'3dCSCG 0-trace can not (target BC) discretize _3dCSCG_ScalarField of ftype {self.BC.ftype}.')
+            else:
+                raise NotImplementedError(f'3dCSCG 0-trace can not (target BC) discretize {self.TW.BC.body.__class__}.')
         else:
             raise NotImplementedError()
 
@@ -131,7 +148,7 @@ class _0Trace(_3dCSCG_Standard_Trace, ABC):
         return 'locally full local TEW cochain', local_TEW
 
     def ___PRIVATE_discretize_VectorField_standard_ftype___(self, target='func', update_cochain=True):
-        """We will discretize the a standard scalar field to all trace elements."""
+        """We will discretize the a standard vector field (norm component) to all trace elements."""
 
         nodes = self.space.nodes
         nx, ny, nz = nodes

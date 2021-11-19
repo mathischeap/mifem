@@ -43,6 +43,7 @@ passed_3dCSCG_tests += test_APP_NO2_icpsNS_no_hybrid_TGV()
 passed_3dCSCG_tests += test_Form_NO0_3dCSCG_Field_numerical()
 passed_3dCSCG_tests += test_Form_NO1_3dCSCG_VectorField()
 passed_3dCSCG_tests += test_Form_NO2_3dCSCG_ScalarField()
+passed_3dCSCG_tests += test_Form_NO3_3dCSCG_TensorField()
 
 passed_3dCSCG_tests += test_Form_NO1_discretization_and_reconstruction()
 passed_3dCSCG_tests += test_Form_NO1a_discretization_and_reconstruction()

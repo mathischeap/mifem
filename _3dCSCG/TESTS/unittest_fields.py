@@ -10,8 +10,7 @@ if './' not in sys.path: sys.path.append('./')
 from root.config import *
 from SCREWS.miscellaneous import MyTimer
 import random
-from _3dCSCG.TESTS.random_objects import random_3D_mesh_and_space_of_total_load_around
-from _3dCSCG.main import FormCaller, MeshGenerator, SpaceInvoker
+from _3dCSCG.TESTS.random_objects import random_3D_FormCaller_of_total_load_around
 
 
 
@@ -23,8 +22,7 @@ def test_Form_NO0_3dCSCG_Field_numerical():
     else:
         load= None
     load = cOmm.bcast(load, root=mAster_rank)
-    mesh, space = random_3D_mesh_and_space_of_total_load_around(load, exclude_periodic=False)
-    FC = FormCaller(mesh, space)
+    FC = random_3D_FormCaller_of_total_load_around(load, exclude_periodic=False)
 
     t = random.random() * 10
     I, J, K = random.randint(2,10), random.randint(4,8), random.randint(3,9)
@@ -271,12 +269,39 @@ def test_Form_NO1_3dCSCG_VectorField():
     y = np.linspace(-0.8-random.random()/5, 0.8+random.random()/5, J)
     z = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, K)
 
-    mesh = MeshGenerator('crazy', c=0.0, bounds=([0,1],[0,1],[0,1]))([2,3,1], EDM='debug')
-    space = SpaceInvoker('polynomials')([('Lobatto', 2), ('Lobatto', 2), ('Lobatto', 3)])
-    FC = FormCaller(mesh, space)
+    if rAnk == mAster_rank:
+        load = random.randint(100, 499)
+    else:
+        load= None
+    load = cOmm.bcast(load, root=mAster_rank)
+    FC = random_3D_FormCaller_of_total_load_around(load, exclude_periodic=False)
 
     W = FC('vector', (w0, w1, w2))
     U = FC('vector', (u0, u1, u2))
+
+    W.current_time = t
+
+    # ------ norm component ------------------------
+    N = W.components.norm
+    N.current_time = t + 1
+    assert N.current_time == W.current_time + 1, f"N and W has decoupled!"
+    assert N.standard_properties.name == "norm-component-of-" + W.standard_properties.name, f"The naming rule."
+
+
+    # T_para component ------------------------------------------------------
+    T_para = W.components.T_para
+    T_para.current_time = t + 2
+    assert T_para.current_time == W.current_time + 2, f"T_para and W has decoupled!"
+    assert T_para.standard_properties.name == "T-para-component-of-" + W.standard_properties.name, f"The naming rule."
+
+
+    # T_perp component ------------------------------------------------------
+    T_perp = W.components.T_perp
+    T_perp.current_time = t + 3
+    assert T_perp.current_time == W.current_time + 3, f"T_perp and W has decoupled!"
+    assert T_perp.standard_properties.name == "T-perp-component-of-" + W.standard_properties.name, f"The naming rule."
+
+
 
     # ---------- neg ----------------------------------------------------
 
@@ -334,6 +359,7 @@ def test_Form_NO1_3dCSCG_VectorField():
     return 1
 
 
+
 def test_Form_NO2_3dCSCG_ScalarField():
     """"""
     if rAnk == mAster_rank:
@@ -349,9 +375,12 @@ def test_Form_NO2_3dCSCG_ScalarField():
     y = np.linspace(-0.8-random.random()/5, 0.8+random.random()/5, J)
     z = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, K)
 
-    mesh = MeshGenerator('crazy', c=0.0, bounds=([0,1],[0,1],[0,1]))([2,3,1], EDM='debug')
-    space = SpaceInvoker('polynomials')([('Lobatto', 2), ('Lobatto', 2), ('Lobatto', 3)])
-    FC = FormCaller(mesh, space)
+    if rAnk == mAster_rank:
+        load = random.randint(100, 499)
+    else:
+        load= None
+    load = cOmm.bcast(load, root=mAster_rank)
+    FC = random_3D_FormCaller_of_total_load_around(load, exclude_periodic=False)
 
     A = FC('scalar', www)
     B = FC('scalar', uuu)
@@ -391,8 +420,131 @@ def test_Form_NO2_3dCSCG_ScalarField():
 
 
 
+def test_Form_NO3_3dCSCG_TensorField():
+    """"""
+    if rAnk == mAster_rank:
+        print(f"-T- [test_Form_NO3_3dCSCG_TensorField]...", flush=True)
+
+    t = random.random() * 10
+    I, J, K = random.randint(2,10), random.randint(4,8), random.randint(3,9)
+    x = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, I)
+    y = np.linspace(-0.8-random.random()/5, 0.8+random.random()/5, J)
+    z = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, K)
+
+    def T00(t, x, y, z): return 2 * t * np.sin(np.pi * x) * np.cos(3 * np.pi * y) * np.cos(np.pi * z)
+    def T01(t, x, y, z): return 1.2 * t * np.sin(2 * np.pi * x) * np.cos(np.pi * y) * np.sin(np.pi * z)
+    def T02(t, x, y, z): return 1.2 * t * np.sin(2 * np.pi * x) * np.sin(np.pi * y) * np.cos(np.pi * z)
+
+    def T10(t, x, y, z): return 2 * t * np.cos(np.pi * x) * np.cos(0.11 * np.pi * y) * np.cos(np.pi * z)
+    def T11(t, x, y, z): return t * np.cos(2 * np.pi * x) * np.cos(0.5 * np.pi * y) * np.sin(3 * np.pi * z)
+    def T12(t, x, y, z): return t * np.cos(2 * np.pi * x) * np.sin(np.pi * y) * np.cos(2 * np.pi * z)
+
+    def T20(t, x, y, z): return t * np.sin(np.pi * x) * np.cos(np.pi * y) * np.sin(np.pi * z)
+    def T21(t, x, y, z): return t * np.sin(2 * np.pi * x) * np.cos(np.pi * y) * np.sin(0.1 * np.pi * z)
+    def T22(t, x, y, z): return t * np.sin(2 * np.pi * x) * np.sin(np.pi * y) * np.sin(np.pi * z)
+
+    def t00(t, x, y, z): return 2 * t * np.sin(np.pi * x) * np.cos(0.1 * np.pi * y) * np.cos(np.pi * z)
+    def t01(t, x, y, z): return t * np.sin(5 * np.pi * x) * np.cos(0.1 * np.pi * y) * np.sin(np.pi * z)
+    def t02(t, x, y, z): return t * np.sin(5 * np.pi * x) * np.sin(0.1 * np.pi * y) * np.cos(0.5 * np.pi * z)
+
+    def t10(t, x, y, z): return 3 * t * np.cos(np.pi * x) * np.cos(np.pi * y) * np.cos(np.pi * z)
+    def t11(t, x, y, z): return 1.2 * t * np.cos(3 * np.pi * x) * np.cos(np.pi * y) * np.sin(0.1 * np.pi * z)
+    def t12(t, x, y, z): return t * np.cos(3 * np.pi * x) * np.sin(np.pi * y) * np.cos(np.pi * z)
+
+    def t20(t, x, y, z): return 0.5 * t * np.sin(2*np.pi * x) * np.cos(0.1 * np.pi * y) * np.sin(np.pi * z)
+    def t21(t, x, y, z): return 1.5 * t * np.sin(4 * np.pi * x) * np.cos(0.1 * np.pi * y) * np.sin(np.pi * z)
+    def t22(t, x, y, z): return 0.2 * t * np.sin(4 * np.pi * x) * np.sin(np.pi * y) * np.sin(3*np.pi * z)
+
+    if rAnk == mAster_rank:
+        load = random.randint(100, 499)
+    else:
+        load= None
+    load = cOmm.bcast(load, root=mAster_rank)
+    FC = random_3D_FormCaller_of_total_load_around(load, exclude_periodic=False)
+
+    w = FC('tensor', ([T00, T01, T02], [T10, T11, T12], [T20, T21, T22]))
+    u = FC('tensor', ([t00, t01, t02], [t10, t11, t12], [t20, t21, t22]))
+
+    #---- neg --------------------------------------------------------------------
+    X = -w
+    X.current_time = t
+    R_xyz, R_v = X.reconstruct(x, y, z)
+    for i in R_xyz:
+        xyz = R_xyz[i]
+        A00, A01, A02 = -T00(t, *xyz), -T01(t, *xyz), -T02(t, *xyz)
+        A10, A11, A12 = -T10(t, *xyz), -T11(t, *xyz), -T12(t, *xyz)
+        A20, A21, A22 = -T20(t, *xyz), -T21(t, *xyz), -T22(t, *xyz)
+        C0, C1, C2 = R_v[i]
+        C00, C01, C02 = C0
+        C10, C11, C12 = C1
+        C20, C21, C22 = C2
+        assert np.max(np.abs(C00 - A00)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C01 - A01)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C02 - A02)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C10 - A10)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C11 - A11)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C12 - A12)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C20 - A20)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C21 - A21)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C22 - A22)) < 1e-10, f"neg is not accurate enough."
+
+    #---- sub --------------------------------------------------------------------
+    X = w - u
+    X.current_time = t
+    R_xyz, R_v = X.reconstruct(x, y, z)
+    for i in R_xyz:
+        xyz = R_xyz[i]
+        A00, A01, A02 = T00(t, *xyz)-t00(t, *xyz), T01(t, *xyz)-t01(t, *xyz), T02(t, *xyz)-t02(t, *xyz)
+        A10, A11, A12 = T10(t, *xyz)-t10(t, *xyz), T11(t, *xyz)-t11(t, *xyz), T12(t, *xyz)-t12(t, *xyz)
+        A20, A21, A22 = T20(t, *xyz)-t20(t, *xyz), T21(t, *xyz)-t21(t, *xyz), T22(t, *xyz)-t22(t, *xyz)
+        C0, C1, C2 = R_v[i]
+        C00, C01, C02 = C0
+        C10, C11, C12 = C1
+        C20, C21, C22 = C2
+        assert np.max(np.abs(C00 - A00)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C01 - A01)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C02 - A02)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C10 - A10)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C11 - A11)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C12 - A12)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C20 - A20)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C21 - A21)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C22 - A22)) < 1e-10, f"neg is not accurate enough."
+
+    #---- add --------------------------------------------------------------------
+    X = w + u
+    X.current_time = t
+    R_xyz, R_v = X.reconstruct(x, y, z)
+    for i in R_xyz:
+        xyz = R_xyz[i]
+        A00, A01, A02 = T00(t, *xyz)+t00(t, *xyz), T01(t, *xyz)+t01(t, *xyz), T02(t, *xyz)+t02(t, *xyz)
+        A10, A11, A12 = T10(t, *xyz)+t10(t, *xyz), T11(t, *xyz)+t11(t, *xyz), T12(t, *xyz)+t12(t, *xyz)
+        A20, A21, A22 = T20(t, *xyz)+t20(t, *xyz), T21(t, *xyz)+t21(t, *xyz), T22(t, *xyz)+t22(t, *xyz)
+        C0, C1, C2 = R_v[i]
+        C00, C01, C02 = C0
+        C10, C11, C12 = C1
+        C20, C21, C22 = C2
+        assert np.max(np.abs(C00 - A00)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C01 - A01)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C02 - A02)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C10 - A10)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C11 - A11)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C12 - A12)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C20 - A20)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C21 - A21)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C22 - A22)) < 1e-10, f"neg is not accurate enough."
+
+    return 1
+
+
+
+
+
+
+
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\TESTS\unittest_fields.py
+    # test_Form_NO2_3dCSCG_ScalarField()
     test_Form_NO1_3dCSCG_VectorField()
-    test_Form_NO0_3dCSCG_Field_numerical()
-    test_Form_NO2_3dCSCG_ScalarField()
+    # test_Form_NO3_3dCSCG_TensorField()
+    # test_Form_NO0_3dCSCG_Field_numerical()

@@ -26,7 +26,8 @@ from _2dCSCG.TESTS.unittest_APP import *
 
 t_3dCSCG_start = MPI.Wtime()
 
-if rAnk == mAster_rank: print(f"\n [_2dCSCG] tests start...\n")
+if rAnk == mAster_rank:
+    print(f"\n [_2dCSCG] tests start...\n")
 
 
 passed_2dCSCG_tests += test_Form_NO1_coboundary()

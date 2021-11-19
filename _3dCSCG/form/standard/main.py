@@ -298,6 +298,9 @@ class _3dCSCG_Standard_Form_Error(FrozenOnly):
         :return: The global :math:`L^{n}` error.
         :rtype: float
         """
+
+        assert self._sf_.func.ftype == 'standard', f"Currently, this L^n error method only works for standard functions."
+
         assert self._sf_.cochain.local is not None, " I have no cochain."
         OneOrThree = 1 if self._sf_.k in (0, 3) else 3
 

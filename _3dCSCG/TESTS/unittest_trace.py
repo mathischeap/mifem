@@ -59,8 +59,8 @@ def test_trace_NO2_trace_form_Rd_and_Rc():
     t2.TW.current_time = t
     t2.TW.DO.push_all_to_instant()
 
-    f2.discretize()
-    t2.discretize()
+    f2.discretize() # default discretization, discrete a vector to 2-form
+    t2.discretize() # default discretization, discrete a the outward norm component of a vector to 2-form
 
     S = space.selective_matrix._2Trace[1]
 

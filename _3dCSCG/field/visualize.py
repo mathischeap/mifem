@@ -130,7 +130,7 @@ class _3dCSCG_Field_matplot_Visualize(FrozenOnly):
         density = int((density/NUM)**0.5 + 1)
 
         x = y = z = np.linspace(-1, 1, density)
-        xyz, v = self._f_.reconstruct(x, y, z, where='trace-element')
+        xyz, v = self._f_.reconstruct(x, y, z, i='on_mesh_boundaries', where='trace-element')
         xyz = cOmm.gather(xyz, root=mAster_rank)
         v = cOmm.gather(v, root=mAster_rank)
 

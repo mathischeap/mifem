@@ -1,6 +1,15 @@
 # -*- coding: utf-8 -*-
 """
+v3.0.1
+
 """
+
+# Version
+
+vErsion = '3.0.1'
+
+
+
 
 # following value can be customized ...
 
