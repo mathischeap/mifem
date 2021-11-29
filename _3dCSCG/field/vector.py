@@ -167,7 +167,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
     def reconstruct(self, xi, eta, sigma,
         time=None,
         ravel=False,
-        i=None, where='mesh-element',
+        i=None, where=None,
         structured=True):
         """
 
@@ -186,13 +186,26 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
             When not `structured`, then it is free. we reconstruct on (xi, eta, sigma), no matter the dimensions.
 
         :return:
+
         """
+        # we deal with default `where` input ---------------------------------------------------------------
+        if where is None:
+            if self.ftype == "standard":
+                where = "mesh-element"
+            elif self.ftype in ("boundary-wise", "trace-element-wise"):
+                where = "trace-element"
+            else:
+                where = "mesh-element"
+        else:
+            pass
+
+        # we deal with `time` input ---------------------------------------------------------------
         if time is None:
             time = self.current_time
         else:
             self.current_time = time
 
-
+        # we deal with `structured` input ---------------------------------------------------------------
         if structured:
             pass # we stay at this method
         else:
@@ -200,9 +213,10 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
             return self.___PRIVATE_unstructured_reconstruction___(
                 xi, eta, sigma, time, ravel, i, where, structured)
 
-
+        # we get the current function ---------------------------------------------------------------
         func = self.___DO_evaluate_func_at_time___(time)
 
+        # we do the reconstruction accordingly ---------------------------------------------------------------
         if where == 'mesh-element':  # input `i` means mesh element, we reconstruct it in mesh elements
 
             xi, eta, sigma = np.meshgrid(xi, eta, sigma, indexing='ij')
@@ -238,7 +252,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
             return xyz, value
 
-        elif where == 'trace-element': # input `i` means trace element, we reconstruct it in mesh elements
+        elif where == 'trace-element': # input `i` means trace element, we reconstruct it on trace elements
 
             xyz = dict()
             value = dict()
@@ -246,6 +260,11 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
             if self.ftype == 'standard':
                 if isinstance(i, int):
                     INDICES = [i,]
+                elif i == 'on_mesh_boundaries': # then we plot on all mesh boundaries (mesh elements on the boundaries)
+                    INDICES = list()
+                    RTE = self.mesh.boundaries.RANGE_trace_elements
+                    for bn in RTE:
+                        INDICES.extend(RTE[bn])
                 else:
                     raise NotImplementedError(f"_3dCSCG_VectorField of 'standard' ftype"
                                               f" trace-element-reconstruction currently don't accept i={i}.")
@@ -266,7 +285,6 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                         value[I] = [vx_i, vy_i, vz_i,]
 
             elif self.ftype == 'boundary-wise':
-
 
                 if i in (None, 'on_mesh_boundaries'):
                     INDICES = list()
@@ -343,6 +361,8 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
         else:
             raise NotImplementedError(f"_3dCSCG_VectorField cannot reconstruct on {where}.")
+
+
 
     def ___PRIVATE_unstructured_reconstruction___(self, xi, eta, sigma, time, ravel, i, where, structured):
         """
@@ -860,12 +880,12 @@ class _3dCSCG_VectorField_Numerical(FrozenOnly):
         """Return a _3dCSCG_TensorField instances which is the numerical curl of self."""
         if self._vf_.ftype == 'standard':
             func_x, func_y, func_z = self._vf_.func
-            NPD4F_x = NumericalPartialDerivative_txyz_Functions(func_x)
-            NPD4F_y = NumericalPartialDerivative_txyz_Functions(func_y)
-            NPD4F_z = NumericalPartialDerivative_txyz_Functions(func_z)
-            u_y, u_z = NPD4F_x('y'), NPD4F_x('z')
-            v_x, v_z = NPD4F_y('x'), NPD4F_y('z')
-            w_x, w_y = NPD4F_z('x'), NPD4F_z('y')
+            NPD4F_u = NumericalPartialDerivative_txyz_Functions(func_x)
+            NPD4F_v = NumericalPartialDerivative_txyz_Functions(func_y)
+            NPD4F_w = NumericalPartialDerivative_txyz_Functions(func_z)
+            u_y, u_z = NPD4F_u('y'), NPD4F_u('z')
+            v_x, v_z = NPD4F_v('x'), NPD4F_v('z')
+            w_x, w_y = NPD4F_w('x'), NPD4F_w('y')
 
             curl_vector_0 = ___VECTOR_CURL_HELPER___(w_y, v_z)
             curl_vector_1 = ___VECTOR_CURL_HELPER___(u_z, w_x)
@@ -1184,9 +1204,23 @@ class ___VECTOR_T_PERP_COMPONENT___(object): # Trace Perpendicular
             w1, w2, w3 = w
             n1, n2, n3 = n
 
+            # #------- option 1 ----------------------------------------------------------------------
             wXn = (w2 * n3 - w3 * n2,
                    w3 * n1 - w1 * n3,
                    w1 * n2 - w2 * n1)
+            #--------- option 2: TEST FOR ORTHOGONAL MESH ONLY ------------------------------------
+            # side = self._te_.CHARACTERISTIC_side
+            # if side in 'NS':
+            #     wXn =  (w1, w3, -w2)
+            # elif side in 'WE':
+            #     wXn =  (-w3, w2, w1)
+            # elif side in 'BF':
+            #     wXn =  (w2, -w1, w3)
+            # else:
+            #     raise Exception
+
+            #=========================================================================================
+
 
             return xyz, wXn
 

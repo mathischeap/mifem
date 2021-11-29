@@ -381,4 +381,4 @@ def NoHy_TGV(N=2, k=4, t=15, steps=480, Re=500,
 if __name__ == '__main__':
     # mpiexec python _3dCSCG\TESTS\__unittest_scripts__\icpsNS_TGV_no_hybrid.py
 
-    NoHy_TGV(N=2, k=3, t=15, steps=750, Re=500, tol=1e-5, restart=300, maxiter=200, solver='gcrotmk', save_uw=True)
+    NoHy_TGV(N=2, k=3, t=1, steps=20, Re=500, tol=1e-3, restart=30, maxiter=10, solver='gcrotmk', save_uw=False)

@@ -80,8 +80,13 @@ passed_3dCSCG_tests += test_Naive_Numbering_NO3_2form()
 passed_3dCSCG_tests += test_Naive_Numbering_NO4_2trace()
 
 
-passed_3dCSCG_tests += test_trace_NO1_general_tests()
-passed_3dCSCG_tests += test_trace_NO2_trace_form_Rd_and_Rc()
+passed_3dCSCG_tests += test_trace_NO__general_tests()
+passed_3dCSCG_tests += test_trace_NO0_trace_0_form_Rd_and_Rc()
+passed_3dCSCG_tests += test_trace_NO1_trace_1_form_Rd_and_Rc()
+passed_3dCSCG_tests += test_trace_NO2_trace_2_form_Rd_and_Rc()
+
+
+
 
 if rAnk == mAster_rank:
     print("\n<{}> _3dCSCG tests passed; cost {:.3f} seconds.\n".format(

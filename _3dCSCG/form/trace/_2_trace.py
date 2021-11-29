@@ -38,6 +38,9 @@ class _2Trace(_3dCSCG_Standard_Trace):
         self.___cache_DISCRETIZE_STANDARD___ = None
         super().RESET_cache()
 
+
+
+
     def ___TW_FUNC_body_checker___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 3
@@ -52,7 +55,6 @@ class _2Trace(_3dCSCG_Standard_Trace):
         else:
             raise NotImplementedError(
                 f"3d CSCG 2-trace form FUNC cannot accommodate {func_body}.")
-
 
     def ___TW_BC_body_checker___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
@@ -70,6 +72,8 @@ class _2Trace(_3dCSCG_Standard_Trace):
                 f"3d CSCG 2-trace form BC cannot accommodate {func_body}.")
 
 
+
+
     def discretize(self, update_cochain=True, target='func', **kwargs):
         """
         Do the discretization.
@@ -82,17 +86,18 @@ class _2Trace(_3dCSCG_Standard_Trace):
         if target == 'func':
             if self.TW.func.body.__class__.__name__ == '_3dCSCG_ScalarField':
                 if self.func.ftype == 'standard':
-                    return self.___PRIVATE_discretize_ScalarField_standard_ftype___(
+                    return self.___PRIVATE_discretize_ScalarField_of_ftype_standard___(
                         update_cochain=update_cochain, **kwargs)
                 else:
                     raise Exception(f'3dCSCG 2-trace can not (target func) discretize _3dCSCG_ScalarField of ftype {self.func.ftype}.')
 
             elif self.TW.func.body.__class__.__name__ == '_3dCSCG_VectorField':
                 if self.func.ftype == 'standard': # we will discretize the norm component of the vector.
-                    return self.___PRIVATE_discretize_VectorField_standard_ftype___(
+                    return self.___PRIVATE_discretize_the_flux_of_a_VectorField_of_ftype_standard___(
                         update_cochain=update_cochain, **kwargs)
                 else:
                     raise Exception(f'3dCSCG 2-trace can not (target func) discretize _3dCSCG_VectorField of ftype {self.func.ftype}.')
+
             else:
                 raise NotImplementedError(f'3dCSCG 2-trace can not (target func) discretize {self.TW.func.body.__class__}.')
 
@@ -100,23 +105,24 @@ class _2Trace(_3dCSCG_Standard_Trace):
 
             if self.TW.BC.body.__class__.__name__ == '_3dCSCG_ScalarField':
                 if self.BC.ftype == 'standard':
-                    return self.___PRIVATE_discretize_ScalarField_standard_ftype___(
+                    return self.___PRIVATE_discretize_ScalarField_of_ftype_standard___(
                         update_cochain=False, target='BC', **kwargs)
                 elif self.BC.ftype == 'boundary-wise':
-                    return self.___PRIVATE_discretize_ScalarField_boundary_wise_ftype___(
+                    return self.___PRIVATE_discretize_ScalarField_of_ftype_boundary_wise___(
                         **kwargs) # must be False update_cochain and 'BC' target.
                 else:
                     raise Exception(f'3dCSCG 2-trace can not (target BC) discretize _3dCSCG_ScalarField of ftype {self.BC.ftype}.')
 
             elif self.TW.BC.body.__class__.__name__ == '_3dCSCG_VectorField':
-                if self.BC.ftype == 'standard': # we will discretize the norm component of the vector.
-                    return self.___PRIVATE_discretize_VectorField_standard_ftype___(
+                if self.BC.ftype == 'standard': # we will discretize the norm flux of the vector.
+                    return self.___PRIVATE_discretize_the_flux_of_a_VectorField_of_ftype_standard___(
                         update_cochain=False, target='BC', **kwargs)
-                elif self.BC.ftype == 'boundary-wise': # we will discretize the norm component of the vector.
-                    return self.___PRIVATE_discretize_VectorField_boundary_wise_ftype___(
+                elif self.BC.ftype == 'boundary-wise': # we will discretize the norm flux of the vector.
+                    return self.___PRIVATE_discretize_the_flux_of_a_VectorField_of_ftype_boundary_wise___(
                         **kwargs) # must be False update_cochain and 'BC' target.
                 else:
                     raise Exception(f'3dCSCG 2-trace can not (target BC) discretize _3dCSCG_VectorField of ftype {self.BC.ftype}.')
+
             else:
                 raise NotImplementedError(f'3dCSCG 2-trace can not (target BC) discretize {self.TW.BC.body.__class__}.')
 
@@ -124,11 +130,11 @@ class _2Trace(_3dCSCG_Standard_Trace):
             raise NotImplementedError(f"target={target} not implemented "
                                       f"for 3d CSCG 2-trace form discretization.")
 
-
-
-    def ___PRIVATE_discretize_ScalarField_standard_ftype___(self,
+    def ___PRIVATE_discretize_ScalarField_of_ftype_standard___(self,
         update_cochain=True, target='func', quad_degree=None):
         """We will discretize the a standard scalar field to all trace elements."""
+        if target in ('BC',): assert update_cochain is False, f"CANNOT update cochain when target is {target}"
+
         if self.___cache_DISCRETIZE_STANDARD___ is None or \
             self.___cache_DISCRETIZE_STANDARD___['quadDegree'] != quad_degree:
             p = [self.dqp[i] + 1 for i in range(self.ndim)] if quad_degree is None else quad_degree
@@ -244,9 +250,9 @@ class _2Trace(_3dCSCG_Standard_Trace):
         # 'locally full local TEW cochain': provide cochain.local_TEW and for all dofs on the trace element.
         return 'locally full local TEW cochain', local_TEW
 
-    def ___PRIVATE_discretize_ScalarField_boundary_wise_ftype___(self,
-        quad_degree=None):
+    def ___PRIVATE_discretize_ScalarField_of_ftype_boundary_wise___(self, quad_degree=None):
         """"""
+
         if self.___cache_DISCRETIZE_STANDARD___ is None or \
             self.___cache_DISCRETIZE_STANDARD___['quadDegree'] != quad_degree:
             p = [self.dqp[i] + 1 for i in range(self.ndim)] if quad_degree is None else quad_degree
@@ -359,9 +365,9 @@ class _2Trace(_3dCSCG_Standard_Trace):
         return 'locally full local TEW cochain', local_TEW
 
 
-    def ___PRIVATE_discretize_VectorField_standard_ftype___(self,
+    def ___PRIVATE_discretize_the_flux_of_a_VectorField_of_ftype_standard___(self,
         update_cochain=True, target='func', quad_degree=None):
-        """We will discretize the norm component of the vector.
+        """We will discretize the norm component of the vector to the trace 2-form.
 
         As a trace 2-form can only accommodate scalar, when given a
         vector, for example denoted by vec(u), we actually mean we get
@@ -372,6 +378,8 @@ class _2Trace(_3dCSCG_Standard_Trace):
         before mapping.
 
         """
+        if target in ('BC',): assert update_cochain is False, f"CANNOT update cochain when target is {target}"
+
         if self.___cache_DISCRETIZE_STANDARD___ is None or \
             self.___cache_DISCRETIZE_STANDARD___['quadDegree'] != quad_degree:
             p = [self.dqp[i] + 1 for i in range(self.ndim)] if quad_degree is None else quad_degree
@@ -492,10 +500,10 @@ class _2Trace(_3dCSCG_Standard_Trace):
         # 'locally full local TEW cochain': provide cochain.local_TEW and for all dofs on the trace element.
         return 'locally full local TEW cochain', local_TEW
 
-    def ___PRIVATE_discretize_VectorField_boundary_wise_ftype___(self,
-        quad_degree=None):
-        """We will discretize the norm component of the vector.
+    def ___PRIVATE_discretize_the_flux_of_a_VectorField_of_ftype_boundary_wise___(self, quad_degree=None):
+        """We will discretize the norm component of the vector to the trace 2-form.
         """
+
         if self.___cache_DISCRETIZE_STANDARD___ is None or \
             self.___cache_DISCRETIZE_STANDARD___['quadDegree'] != quad_degree:
             p = [self.dqp[i] + 1 for i in range(self.ndim)] if quad_degree is None else quad_degree
@@ -614,6 +622,9 @@ class _2Trace(_3dCSCG_Standard_Trace):
 
         # 'locally full local TEW cochain': provide cochain.local_TEW and for all dofs on the trace element.
         return 'locally full local TEW cochain', local_TEW
+
+
+
 
 
 
@@ -792,7 +803,7 @@ class _2Trace(_3dCSCG_Standard_Trace):
         I_func = cOmm.bcast(I_func, root=mAster_rank)
         func = (I_func['NS'], I_func['WE'], I_func['BF'])
         self.func._body_ = func
-        self.___PRIVATE_discretize_VectorField_standard_ftype___()
+        self.___PRIVATE_discretize_the_flux_of_a_VectorField_of_ftype_standard___()
         self.func._body_ = None
 
 

@@ -72,28 +72,28 @@ class TraceMatrix(FrozenOnly):
         # folder .\bin\miscellaneous
         #_____ North __________________________________________________________________
         Nn = np.zeros((nbt['N'], nbf), dtype=int)
-        Nn[lnt['N'][0].ravel('F'), lnf_dy[ 0,:,:].ravel('F')] = -1
-        Nn[lnt['N'][1].ravel('F'), lnf_dz[ 0,:,:].ravel('F')] = +1
+        Nn[lnt['N'][0].ravel('F'), lnf_dy[0, :, :].ravel('F')] = -1 #
+        Nn[lnt['N'][1].ravel('F'), lnf_dz[0, :, :].ravel('F')] = -1 #
         #_____ South __________________________________________________________________
         Ns = np.zeros((nbt['S'], nbf), dtype=int)
-        Ns[lnt['S'][0].ravel('F'), lnf_dy[-1,:,:].ravel('F')] = +1
-        Ns[lnt['S'][1].ravel('F'), lnf_dz[-1,:,:].ravel('F')] = -1
+        Ns[lnt['S'][0].ravel('F'), lnf_dy[-1, :, :].ravel('F')] = +1
+        Ns[lnt['S'][1].ravel('F'), lnf_dz[-1, :, :].ravel('F')] = +1
         #_____ West ___________________________________________________________________
         Nw = np.zeros((nbt['W'], nbf), dtype=int)
-        Nw[lnt['W'][0].ravel('F'), lnf_dx[:, 0,:].ravel('F')] = +1
-        Nw[lnt['W'][1].ravel('F'), lnf_dz[:, 0,:].ravel('F')] = -1
+        Nw[lnt['W'][0].ravel('F'), lnf_dx[:, 0, :].ravel('F')] = -1
+        Nw[lnt['W'][1].ravel('F'), lnf_dz[:, 0, :].ravel('F')] = -1
         #_____ East ___________________________________________________________________
         Ne = np.zeros((nbt['E'], nbf), dtype=int)
-        Ne[lnt['E'][0].ravel('F'), lnf_dx[:,-1,:].ravel('F')] = -1
-        Ne[lnt['E'][1].ravel('F'), lnf_dz[:,-1,:].ravel('F')] = +1
+        Ne[lnt['E'][0].ravel('F'), lnf_dx[:, -1, :].ravel('F')] = +1
+        Ne[lnt['E'][1].ravel('F'), lnf_dz[:, -1, :].ravel('F')] = +1
         #_____ Back ___________________________________________________________________
         Nb = np.zeros((nbt['B'], nbf), dtype=int)
-        Nb[lnt['B'][0].ravel('F'), lnf_dx[:,:, 0].ravel('F')] = -1
-        Nb[lnt['B'][1].ravel('F'), lnf_dy[:,:, 0].ravel('F')] = +1
+        Nb[lnt['B'][0].ravel('F'), lnf_dx[:, :, 0].ravel('F')] = -1
+        Nb[lnt['B'][1].ravel('F'), lnf_dy[:, :, 0].ravel('F')] = -1
         #_____ Front __________________________________________________________________
         Nf = np.zeros((nbt['F'], nbf), dtype=int)
-        Nf[lnt['F'][0].ravel('F'), lnf_dx[:,:,-1].ravel('F')] = +1
-        Nf[lnt['F'][1].ravel('F'), lnf_dy[:,:,-1].ravel('F')] = -1
+        Nf[lnt['F'][0].ravel('F'), lnf_dx[:, :, -1].ravel('F')] = +1
+        Nf[lnt['F'][1].ravel('F'), lnf_dy[:, :, -1].ravel('F')] = +1
         #------------------------------------------------------------------------------
         N = np.vstack((Nn, Ns, Nw, Ne, Nb, Nf))
         return csc_matrix(N), {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne, 'B': Nb, 'F': Nf}

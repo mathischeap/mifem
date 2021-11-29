@@ -91,12 +91,12 @@ class _3dCSCG_TensorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
             They should be callable with ``(x,y,z)`` coordinates.
         :rtype: list
         """
+        assert self.func is not None, f'Please first give me a func.'
+
         if time is None:
             time = self.current_time
         else:
             self.current_time = time
-
-        assert self.func is not None, 'Please first set func.'
 
         if self._previous_func_id_time_[0:2] == (id(self.func), time):
             return self._previous_func_id_time_[2]
@@ -116,7 +116,7 @@ class _3dCSCG_TensorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
 
 
-    def reconstruct(self, xi, eta, sigma, time=None, ravel=False, i=None, where='mesh-element'):
+    def reconstruct(self, xi, eta, sigma, time=None, ravel=False, i=None, where=None):
         """
 
         :param time:
@@ -130,11 +130,25 @@ class _3dCSCG_TensorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
         :param where:
         :return:
         """
+        # we deal with default `where` input ---------------------------------------------------------------
+        if where is None:
+            if self.ftype == "standard":
+                where = "mesh-element"
+            else:
+                where = "mesh-element"
+        else:
+            pass
+
+        # we deal with `time` input ---------------------------------------------------------------
         if time is None:
             time = self.current_time
         else:
             self.current_time = time
 
+        # we get the current function ---------------------------------------------------------------
+        func = self.___DO_evaluate_func_at_time___(time)
+
+        # we do the reconstruction accordingly ---------------------------------------------------------------
         if where == 'mesh-element':  # input `i` means mesh element, we reconstruct it in mesh elements
 
             xi, eta, sigma = np.meshgrid(xi, eta, sigma, indexing='ij')
@@ -151,7 +165,7 @@ class _3dCSCG_TensorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                     raise NotImplementedError(f"_3dCSCG_TensorField of 'standard' ftype"
                                               f" mesh-element-reconstruction currently doesn't accept i={i}.")
 
-                func = self.___DO_evaluate_func_at_time___(time)
+
                 for i in INDICES:
                     element = self.mesh.elements[i]
                     xyz_i = element.coordinate_transformation.mapping(xi, eta, sigma)

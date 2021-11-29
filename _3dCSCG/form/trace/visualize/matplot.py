@@ -111,7 +111,7 @@ class _3dCSCG_trace_form_Matplot(FrozenOnly):
             if plot_type == 'quiver':
                 density = 500
             elif plot_type == 'contourf':
-                density = 5000
+                density = 10000
             else:
                 raise NotImplementedError(f'3dCSCG 1Trace plot type={plot_type} is not implemented.')
         else:

@@ -38,7 +38,7 @@ class SendAdminAnEmail(FrozenOnly):
         MESSAGE += 'Contact: zhangyi_aero@hotmail.com or y.zhang-14@tudelft.nl'
         self._MESSAGE_ = MESSAGE
 
-    def __call__(self, message, title=None):
+    def __call__(self, message, subject=None):
         """By calling the object, we send the message."""
         assert rAnk == mAster_rank, "Should only call it in master core."
         hostname = socket.gethostname()
@@ -86,10 +86,10 @@ class SendAdminAnEmail(FrozenOnly):
                 msg = MIMEMultipart()  # create a message class
                 msg['From'] = _from_
                 msg['To'] = email
-                if title is None:
+                if subject is None:
                     msg['Subject'] = "mifem message (please do not reply)"
                 else:
-                    msg['Subject'] = title
+                    msg['Subject'] = subject
                 msg.attach(MIMEText(self._MESSAGE_))
                 smtp.send_message(msg)
             smtp.quit()

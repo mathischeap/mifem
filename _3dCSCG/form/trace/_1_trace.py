@@ -36,6 +36,7 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
 
     def RESET_cache(self):
         self.___cache_DISCRETIZE_STANDARD___ = None
+        self.___cache_DISCRETIZE_TEW___ = None
         super().RESET_cache()
 
     def ___TW_FUNC_body_checker___(self, func_body):
@@ -43,8 +44,9 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
         assert func_body.ndim == self.ndim == 3
 
         if func_body.__class__.__name__ == '_3dCSCG_VectorField':
-            assert func_body.ftype in ('standard',), \
+            assert func_body.ftype in ('standard', 'trace-element-wise'), \
                 f"3dCSCG 1-trace FUNC cannot accommodate _3dCSCG_VectorField of ftype {func_body.ftype}."
+
         else:
             raise NotImplementedError(
                 f"1-trace form cannot accommodate {func_body}.")
@@ -59,29 +61,42 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
         :param kwargs: Keywords arguments to be passed to particular discretization schemes.
         :return: The cochain corresponding to the particular discretization scheme.
         """
+
+
+
         if target == 'func':
 
             if self.TW.func.body.__class__.__name__ == '_3dCSCG_VectorField':
+
 
                 if self.func.ftype == 'standard':
 
                     if component == 'T_para':
 
-                        return self.___PRIVATE_discretize_VectorField_standard_ftype_component_T_para___(
+                        return self.___PRIVATE_discretize_VectorField_of_ftype_standard_at_component_T_para___(
                             update_cochain=update_cochain, target='func', **kwargs)
 
                     elif component == 'T_perp':
 
-                        return self.___PRIVATE_discretize_VectorField_standard_ftype_component_T_perp___(
+                        return self.___PRIVATE_discretize_VectorField_of_ftype_standard_at_component_T_perp___(
                             update_cochain=update_cochain, target='func', **kwargs)
 
                     else:
                         raise Exception(f"1-trace-form discretization targeting vector func of standard type. "
-                                        f"I can not discretize component = {component}. It should be either"
+                                        f"I cannot discretize component = {component}. It should be either"
                                         f"'T_para' (parallel trace) or 'T_perp' (perpendicular trace).")
+
+
+                elif self.func.ftype == 'trace-element-wise':
+                    # we do not care this trace-element-wise vector is T_para or T_perp vector, we just discretize it to the trace.
+                    return self.___PRIVATE_discretize_VectorField_of_ftype_trace_element_wise___(
+                        update_cochain=update_cochain, target='func', **kwargs)
+
 
                 else:
                     raise Exception(f'3dCSCG 1-trace can not (target func) discretize _3dCSCG_VectorField of ftype {self.func.ftype}.')
+
+
 
             else:
                 raise NotImplementedError(f'3dCSCG 1-trace can not (target func) discretize {self.TW.func.body.__class__}.')
@@ -91,12 +106,14 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
                                       f"for 3d CSCG 1-trace form discretization.")
 
 
-    def ___PRIVATE_discretize_VectorField_standard_ftype_component_T_para___(self,
+    def ___PRIVATE_discretize_VectorField_of_ftype_standard_at_component_T_para___(self,
         update_cochain=True, target='func', quad_degree=None):
-        """We will discretize the a standard vector field to all trace
+        """We will discretize the a the Trace_parallel component of a standard vector field to all trace
         elements.
 
         """
+        if target in ('BC',): assert update_cochain is False, f"CANNOT update cochain when target is {target}"
+
         if self.___cache_DISCRETIZE_STANDARD___ is None or \
             self.___cache_DISCRETIZE_STANDARD___['quadDegree'] != quad_degree:
             p = [self.dqp[i] + 1 for i in range(self.ndim)] if quad_degree is None else quad_degree
@@ -111,7 +128,7 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
                 qnodes_i += np.array(nodes[i][:-1])[:,np.newaxis].repeat(p[i]+1, axis=1)
                 qnodes.append(qnodes_i)
 
-            # NS sides
+            # NS ------------------------------------------------------
             qn_NS_dy_y = []
             qn_NS_dy_z = []
             for k in range(self.p[2]+1):
@@ -210,7 +227,6 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
 
         if target == 'func':
             assert self.func.body is not None, f"No func.body!"
-            _lf_ = self.func.body[0]
         else:
             raise NotImplementedError(f"1Trace = discretize_VectorField_standard: "
                                       f"Not applicable for target={target}.")
@@ -317,15 +333,27 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
         # 'locally full local TEW cochain': provide cochain.local_TEW and for all dofs on the trace element.
         return 'locally full local TEW cochain', local_TEW
 
-
-    def ___PRIVATE_discretize_VectorField_standard_ftype_component_T_perp___(self,
+    def ___PRIVATE_discretize_VectorField_of_ftype_standard_at_component_T_perp___(self,
         update_cochain=True, target='func', quad_degree=None):
-        """We will discretize the a standard vector field to all trace
+        """We will discretize the a the Trace_perpendicular component of a standard vector field to all trace
         elements.
 
         """
-        if self.___cache_DISCRETIZE_STANDARD___ is None or \
-            self.___cache_DISCRETIZE_STANDARD___['quadDegree'] != quad_degree:
+        if target in ('BC',): assert update_cochain is False, f"CANNOT update cochain when target is {target}"
+        raise NotImplementedError()
+
+    def ___PRIVATE_discretize_VectorField_of_ftype_trace_element_wise___(self,
+        update_cochain=True, target='func', quad_degree=None):
+        """We will discretize the a the Trace_parallel component of a standard vector field to all trace
+        elements.
+
+        """
+        # first check `target` and `update_cochain` inputs----------------------------------------
+        if target in ('BC',):
+            assert update_cochain is False, f"CANNOT update cochain when target is {target}"
+
+        # ----- 3D: prepare and cache or read from cache the data for the numerical integration ----------------
+        if self.___cache_DISCRETIZE_STANDARD___ is None or self.___cache_DISCRETIZE_STANDARD___['quadDegree'] != quad_degree:
             p = [self.dqp[i] + 1 for i in range(self.ndim)] if quad_degree is None else quad_degree
             quad_nodes, quad_weights = Quadrature(p, category='Gauss').quad
             nodes = self.space.nodes
@@ -338,7 +366,7 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
                 qnodes_i += np.array(nodes[i][:-1])[:,np.newaxis].repeat(p[i]+1, axis=1)
                 qnodes.append(qnodes_i)
 
-            # NS -----------------------------------------------------------------------------------------
+            # NS ------------------------------------------------------
             qn_NS_dy_y = []
             qn_NS_dy_z = []
             for k in range(self.p[2]+1):
@@ -347,7 +375,6 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
                     qn_NS_dy_z.append(nodes[2][k]*np.ones(p[1]+1))
             qn_NS_dy_y, qn_NS_dy_z = np.array(qn_NS_dy_y), np.array(qn_NS_dy_z)
             lens_NS_dy = np.tile(lens[1]*0.5, (self.p[2]+1))
-
 
             qn_NS_dz_y = []
             qn_NS_dz_z = []
@@ -358,7 +385,7 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
             qn_NS_dz_y, qn_NS_dz_z = np.array(qn_NS_dz_y), np.array(qn_NS_dz_z)
             lens_NS_dz = np.repeat(lens[2]*0.5, (self.p[1] + 1))
 
-            # WE ---------------------------------------------------------------------------------------
+            # WE --------------------------------------------------------------------------------
             qn_WE_dx_x = []
             qn_WE_dx_z = []
             for k in range(self.p[2]+1):
@@ -378,7 +405,7 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
             qn_WE_dz_x, qn_WE_dz_z = np.array(qn_WE_dz_x), np.array(qn_WE_dz_z)
             lens_WE_dz = np.repeat(lens[2]*0.5, (self.p[0] + 1))
 
-            #BF ---------------------------------------------------------------------------------------
+            #BF --------------------------------------------------------------------------------------------
             qn_BF_dx_x = []
             qn_BF_dx_y = []
             for j in range(self.p[1]+1):
@@ -396,8 +423,6 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
                     qn_BF_dy_y.append(qnodes[1][j])
             qn_BF_dy_x, qn_BF_dy_y = np.array(qn_BF_dy_x), np.array(qn_BF_dy_y)
             lens_BF_dy = np.repeat(lens[1]*0.5, (self.p[0] + 1))
-
-            #========================================================================================
 
             LENS = [lens_NS_dy, lens_NS_dz, lens_WE_dx, lens_WE_dz, lens_BF_dx, lens_BF_dy]
             cd = dict()
@@ -419,10 +444,7 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
             cd['quad_weights'] = quad_weights
 
             self.___cache_DISCRETIZE_STANDARD___ = cd
-
         else:
-
-            LENS = self.___cache_DISCRETIZE_STANDARD___['LENS']
             qn_NS_dy_y = self.___cache_DISCRETIZE_STANDARD___['qn_NS_dy_y']
             qn_NS_dy_z = self.___cache_DISCRETIZE_STANDARD___['qn_NS_dy_z']
             qn_NS_dz_y = self.___cache_DISCRETIZE_STANDARD___['qn_NS_dz_y']
@@ -435,42 +457,160 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
             qn_BF_dx_y = self.___cache_DISCRETIZE_STANDARD___['qn_BF_dx_y']
             qn_BF_dy_x = self.___cache_DISCRETIZE_STANDARD___['qn_BF_dy_x']
             qn_BF_dy_y = self.___cache_DISCRETIZE_STANDARD___['qn_BF_dy_y']
-            quad_weights = self.___cache_DISCRETIZE_STANDARD___['quad_weights']
 
+        # ----- 1D: prepare and cache or read from cache the data for the numerical integration ----------------
+        if self.___cache_DISCRETIZE_TEW___ is None or self.___cache_DISCRETIZE_TEW___['quadDegree'] != quad_degree:
+            p = [self.dqp[i] + 1 for i in range(self.ndim)] if quad_degree is None else quad_degree
+            quad_nodes, quad_weights = Quadrature(p, category='Gauss').quad
+            nodes = self.space.nodes
+            num_edges = [len(nodes[i])-1 for i in range(self.ndim)]
+            lens = [nodes[i][1:]-nodes[i][0:-1] for i in range(self.ndim)]
+            qnodes = []
+            for i in range(self.ndim):
+                qnodes_i = ((np.array(quad_nodes[i])+1)/2)[np.newaxis,:].repeat(num_edges[i],
+                           axis=0)*lens[i][:,np.newaxis]
+                qnodes_i += np.array(nodes[i][:-1])[:,np.newaxis].repeat(p[i]+1, axis=1)
+                qnodes.append(list(qnodes_i))
+
+            # NS ------------------------------------------------------------------------------------
+            qn_NS_dy_y1 = []
+            qn_NS_dy_z1 = []
+            for k in range(self.p[2]+1):
+                for j in range(self.p[1]):
+                    qn_NS_dy_y1.append(qnodes[1][j])
+                    qn_NS_dy_z1.append([nodes[2][k],])
+            lens_NS_dy = np.tile(lens[1]*0.5, (self.p[2]+1))
+
+            qn_NS_dz_y1 = []
+            qn_NS_dz_z1 = []
+            for k in range(self.p[2]):
+                for j in range(self.p[1]+1):
+                    qn_NS_dz_y1.append([nodes[1][j],])
+                    qn_NS_dz_z1.append(qnodes[2][k])
+            lens_NS_dz = np.repeat(lens[2]*0.5, (self.p[1] + 1))
+
+            # WE --------------------------------------------------------------------------------
+            qn_WE_dx_x1 = []
+            qn_WE_dx_z1 = []
+            for k in range(self.p[2]+1):
+                for i in range(self.p[0]):
+                    qn_WE_dx_x1.append(qnodes[0][i])
+                    qn_WE_dx_z1.append([nodes[2][k],])
+            lens_WE_dx = np.tile(lens[0]*0.5, (self.p[2] + 1))
+
+
+            qn_WE_dz_x1 = []
+            qn_WE_dz_z1 = []
+            for k in range(self.p[2]):
+                for i in range(self.p[0]+1):
+                    qn_WE_dz_x1.append([nodes[0][i],])
+                    qn_WE_dz_z1.append(qnodes[2][k])
+            lens_WE_dz = np.repeat(lens[2]*0.5, (self.p[0] + 1))
+
+            #BF --------------------------------------------------------------------------------------------
+            qn_BF_dx_x1 = []
+            qn_BF_dx_y1 = []
+            for j in range(self.p[1]+1):
+                for i in range(self.p[0]):
+                    qn_BF_dx_x1.append(qnodes[0][i])
+                    qn_BF_dx_y1.append([nodes[1][j],])
+            lens_BF_dx = np.tile(lens[0]*0.5, (self.p[1] + 1))
+
+            qn_BF_dy_x1 = []
+            qn_BF_dy_y1 = []
+            for j in range(self.p[1]):
+                for i in range(self.p[0]+1):
+                    qn_BF_dy_x1.append([nodes[0][i],])
+                    qn_BF_dy_y1.append(qnodes[1][j])
+            lens_BF_dy = np.repeat(lens[1]*0.5, (self.p[0] + 1))
+
+            LENS = [lens_NS_dy, lens_NS_dz, lens_WE_dx, lens_WE_dz, lens_BF_dx, lens_BF_dy]
+            cd = dict()
+            cd['quadDegree'] = quad_degree
+
+            cd['LENS'] = LENS
+            cd['qn_NS_dy_y1'] = qn_NS_dy_y1
+            cd['qn_NS_dy_z1'] = qn_NS_dy_z1
+            cd['qn_NS_dz_y1'] = qn_NS_dz_y1
+            cd['qn_NS_dz_z1'] = qn_NS_dz_z1
+            cd['qn_WE_dx_x1'] = qn_WE_dx_x1
+            cd['qn_WE_dx_z1'] = qn_WE_dx_z1
+            cd['qn_WE_dz_x1'] = qn_WE_dz_x1
+            cd['qn_WE_dz_z1'] = qn_WE_dz_z1
+            cd['qn_BF_dx_x1'] = qn_BF_dx_x1
+            cd['qn_BF_dx_y1'] = qn_BF_dx_y1
+            cd['qn_BF_dy_x1'] = qn_BF_dy_x1
+            cd['qn_BF_dy_y1'] = qn_BF_dy_y1
+            cd['quad_weights'] = quad_weights
+            self.___cache_DISCRETIZE_TEW___ = cd
+        else:
+            LENS = self.___cache_DISCRETIZE_TEW___['LENS']
+            qn_NS_dy_y1 = self.___cache_DISCRETIZE_TEW___['qn_NS_dy_y1']
+            qn_NS_dy_z1 = self.___cache_DISCRETIZE_TEW___['qn_NS_dy_z1']
+            qn_NS_dz_y1 = self.___cache_DISCRETIZE_TEW___['qn_NS_dz_y1']
+            qn_NS_dz_z1 = self.___cache_DISCRETIZE_TEW___['qn_NS_dz_z1']
+            qn_WE_dx_x1 = self.___cache_DISCRETIZE_TEW___['qn_WE_dx_x1']
+            qn_WE_dx_z1 = self.___cache_DISCRETIZE_TEW___['qn_WE_dx_z1']
+            qn_WE_dz_x1 = self.___cache_DISCRETIZE_TEW___['qn_WE_dz_x1']
+            qn_WE_dz_z1 = self.___cache_DISCRETIZE_TEW___['qn_WE_dz_z1']
+            qn_BF_dx_x1 = self.___cache_DISCRETIZE_TEW___['qn_BF_dx_x1']
+            qn_BF_dx_y1 = self.___cache_DISCRETIZE_TEW___['qn_BF_dx_y1']
+            qn_BF_dy_x1 = self.___cache_DISCRETIZE_TEW___['qn_BF_dy_x1']
+            qn_BF_dy_y1 = self.___cache_DISCRETIZE_TEW___['qn_BF_dy_y1']
+            quad_weights = self.___cache_DISCRETIZE_TEW___['quad_weights']
+
+        #------- check func and get func --------------------------------------------------------------------
         if target == 'func':
             assert self.func.body is not None, f"No func.body!"
-            _lf_ = self.func.body[0]
+            TEW_func = self.func.body
         else:
-            raise NotImplementedError(f"1Trace = discretize_VectorField_standard: "
-                                      f"Not applicable for target={target}.")
+            raise NotImplementedError(f"1Trace = discretize_VectorField_standard of ftype trace-element-wise "
+                                      f"not applicable for target={target}.")
 
+        # --- Now, we do a check whether trace-elements in TEW_func are local -------------------------------
+        for T in TEW_func:
+            assert T in self.mesh.trace.elements, f"trace-element #{T} is not a local trace-element."
+
+        # dispatch the lens for integration ------------------------------------------------
         lens_NS_dy, lens_NS_dz, lens_WE_dx, lens_WE_dz, lens_BF_dx, lens_BF_dy = LENS
+        # initialize the Trace-Element-Wise-local-cochain dict ------------------------------------
         local_TEW = dict()
-        for key in self.mesh.trace.elements:
-            te = self.mesh.trace.elements[key]
-            ele = te.CHARACTERISTIC_element
+        Zo = [0,]
+        # Go through all valid local trace-elements in the function ---------------------------
+        for T in TEW_func:
+            te = self.mesh.trace.elements[T]
+            # ele = te.CHARACTERISTIC_element
             ele_side = te.CHARACTERISTIC_side
 
+            #--------------------------------- NS sides ---------------------------------------
             if ele_side in 'NS':
-
                 J = te.coordinate_transformation.Jacobian_matrix(qn_NS_dy_y, qn_NS_dy_z)
                 J = (J[0][0], J[1][0], J[2][0]) # dy of (dy, dz)
-                x, y, z = te.coordinate_transformation.mapping(qn_NS_dy_y, qn_NS_dy_z, from_element=ele, side=ele_side)
-                u = self.func.body[0](x, y, z)
-                v = self.func.body[1](x, y, z)
-                w = self.func.body[2](x, y, z)
+                u, v, w = list(), list(), list()
+                for dy, dz in zip(qn_NS_dy_y1, qn_NS_dy_z1):
+                    ___, uvw = TEW_func[T](Zo, dy, dz)
+                    u.append(uvw[0])
+                    v.append(uvw[1])
+                    w.append(uvw[2])
+                u = np.array(u)[:,:,0]
+                v = np.array(v)[:,:,0]
+                w = np.array(w)[:,:,0]
                 A = J[0] * u + J[1] * v + J[2] * w
                 B = quad_weights[1]
                 C = lens_NS_dy
                 cochain_dy = np.einsum('jk, k, j -> j', A, B, C, optimize='greedy')
 
-
                 J = te.coordinate_transformation.Jacobian_matrix(qn_NS_dz_y, qn_NS_dz_z)
                 J = (J[0][1], J[1][1], J[2][1]) # dz of (dy, dz)
-                x, y, z = te.coordinate_transformation.mapping(qn_NS_dz_y, qn_NS_dz_z, from_element=ele, side=ele_side)
-                u = self.func.body[0](x, y, z)
-                v = self.func.body[1](x, y, z)
-                w = self.func.body[2](x, y, z)
+                u, v, w = list(), list(), list()
+                for dy, dz in zip(qn_NS_dz_y1, qn_NS_dz_z1):
+                    ___, uvw = TEW_func[T](Zo, dy, dz)
+                    u.append(uvw[0])
+                    v.append(uvw[1])
+                    w.append(uvw[2])
+                u = np.array(u)[:,0,:]
+                v = np.array(v)[:,0,:]
+                w = np.array(w)[:,0,:]
                 A = J[0] * u + J[1] * v + J[2] * w
                 B = quad_weights[2]
                 C = lens_NS_dz
@@ -478,27 +618,36 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
 
                 te_primal_local = np.concatenate([cochain_dy, cochain_dz])
 
-
+            #--------------------------------- WE sides ---------------------------------------
             elif ele_side in 'WE':
-
                 J = te.coordinate_transformation.Jacobian_matrix(qn_WE_dx_x, qn_WE_dx_z)
                 J = (J[0][1], J[1][1], J[2][1]) # dx of (dz, dx)
-                x, y, z = te.coordinate_transformation.mapping(qn_WE_dx_x, qn_WE_dx_z, from_element=ele, side=ele_side)
-                u = self.func.body[0](x, y, z)
-                v = self.func.body[1](x, y, z)
-                w = self.func.body[2](x, y, z)
+                u, v, w = list(), list(), list()
+                for dx, dz in zip(qn_WE_dx_x1, qn_WE_dx_z1):
+                    ___, uvw = TEW_func[T](dx, Zo, dz)
+                    u.append(uvw[0])
+                    v.append(uvw[1])
+                    w.append(uvw[2])
+                u = np.array(u)[:,:,0]
+                v = np.array(v)[:,:,0]
+                w = np.array(w)[:,:,0]
+
                 A = J[0] * u + J[1] * v + J[2] * w
                 B = quad_weights[0]
                 C = lens_WE_dx
                 cochain_dx = np.einsum('jk, k, j -> j', A, B, C, optimize='greedy')
 
-
                 J = te.coordinate_transformation.Jacobian_matrix(qn_WE_dz_x, qn_WE_dz_z)
                 J = (J[0][0], J[1][0], J[2][0]) # dz of (dz, dx)
-                x, y, z = te.coordinate_transformation.mapping(qn_WE_dz_x, qn_WE_dz_z, from_element=ele, side=ele_side)
-                u = self.func.body[0](x, y, z)
-                v = self.func.body[1](x, y, z)
-                w = self.func.body[2](x, y, z)
+                u, v, w = list(), list(), list()
+                for dx, dz in zip(qn_WE_dz_x1, qn_WE_dz_z1):
+                    ___, uvw = TEW_func[T](dx, Zo, dz)
+                    u.append(uvw[0])
+                    v.append(uvw[1])
+                    w.append(uvw[2])
+                u = np.array(u)[:,0,:]
+                v = np.array(v)[:,0,:]
+                w = np.array(w)[:,0,:]
                 A = J[0] * u + J[1] * v + J[2] * w
                 B = quad_weights[2]
                 C = lens_WE_dz
@@ -506,27 +655,36 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
 
                 te_primal_local = np.concatenate([cochain_dx, cochain_dz])
 
-
+            #--------------------------------- BF sides ---------------------------------------
             elif ele_side in 'BF':
 
                 J = te.coordinate_transformation.Jacobian_matrix(qn_BF_dx_x, qn_BF_dx_y)
                 J = (J[0][0], J[1][0], J[2][0]) # dx of (dx, dy)
-                x, y, z = te.coordinate_transformation.mapping(qn_BF_dx_x, qn_BF_dx_y, from_element=ele, side=ele_side)
-                u = self.func.body[0](x, y, z)
-                v = self.func.body[1](x, y, z)
-                w = self.func.body[2](x, y, z)
+                u, v, w = list(), list(), list()
+                for dx, dy in zip(qn_BF_dx_x1, qn_BF_dx_y1):
+                    ___, uvw = TEW_func[T](dx, dy, Zo)
+                    u.append(uvw[0])
+                    v.append(uvw[1])
+                    w.append(uvw[2])
+                u = np.array(u)[:,:,0]
+                v = np.array(v)[:,:,0]
+                w = np.array(w)[:,:,0]
                 A = J[0] * u + J[1] * v + J[2] * w
                 B = quad_weights[0]
                 C = lens_BF_dx
                 cochain_dx = np.einsum('jk, k, j -> j', A, B, C, optimize='greedy')
 
-
                 J = te.coordinate_transformation.Jacobian_matrix(qn_BF_dy_x, qn_BF_dy_y)
                 J = (J[0][1], J[1][1], J[2][1]) # dy of (dx, dy)
-                x, y, z = te.coordinate_transformation.mapping(qn_BF_dy_x, qn_BF_dy_y, from_element=ele, side=ele_side)
-                u = self.func.body[0](x, y, z)
-                v = self.func.body[1](x, y, z)
-                w = self.func.body[2](x, y, z)
+                u, v, w = list(), list(), list()
+                for dx, dy in zip(qn_BF_dy_x1, qn_BF_dy_y1):
+                    ___, uvw = TEW_func[T](dx, dy, Zo)
+                    u.append(uvw[0])
+                    v.append(uvw[1])
+                    w.append(uvw[2])
+                u = np.array(u)[:,0,:]
+                v = np.array(v)[:,0,:]
+                w = np.array(w)[:,0,:]
                 A = J[0] * u + J[1] * v + J[2] * w
                 B = quad_weights[1]
                 C = lens_BF_dy
@@ -539,12 +697,12 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
 
             if not self.space.IS_Kronecker: raise NotImplementedError()
 
-            local_TEW[key] = te_primal_local
-
+            local_TEW[T] = te_primal_local
 
         if update_cochain: self.cochain.local_TEW = local_TEW
         # 'locally full local TEW cochain': provide cochain.local_TEW and for all dofs on the trace element.
         return 'locally full local TEW cochain', local_TEW
+
 
 
     def reconstruct(self, xi, eta, sigma, ravel=False, i=None):
@@ -686,6 +844,7 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
                     raise Exception()
 
                 if side in 'NSBF':
+
                     M00 = np.einsum('im, jm, m -> ij', b0, b0, np.sqrt(g) * iG[0][0] * QW, optimize='greedy')
                     M11 = np.einsum('im, jm, m -> ij', b1, b1, np.sqrt(g) * iG[1][1] * QW, optimize='greedy')
                     if isinstance(mark, str) and mark[:5] == 'Orth.':
@@ -703,6 +862,8 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
 
                 M10 = M01.T
                 M = spspa.csc_matrix(np.bmat([(M00, M01), (M10, M11)]))
+
+                # print(iG[1][1])
 
                 if isinstance(mark, str): local_cache[mark] = M
 

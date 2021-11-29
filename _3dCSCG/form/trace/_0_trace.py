@@ -82,7 +82,7 @@ class _0Trace(_3dCSCG_Standard_Trace, ABC):
 
             elif self.TW.func.body.__class__.__name__ == '_3dCSCG_VectorField':
                 if self.func.ftype == 'standard':
-                    return self.___PRIVATE_discretize_VectorField_standard_ftype___(
+                    return self.___PRIVATE_discretize_the_flux_of_a_VectorField_of_standard_ftype___(
                         target='func',
                         update_cochain=update_cochain)
                 else:
@@ -107,6 +107,7 @@ class _0Trace(_3dCSCG_Standard_Trace, ABC):
 
     def ___PRIVATE_discretize_standard_ftype___(self, target='func', update_cochain=True):
         """We will discretize the a standard scalar field to all trace elements."""
+        if target in ('BC',): assert update_cochain is False, f"CANNOT update cochain when target is {target}"
 
         nodes = self.space.nodes
         nx, ny, nz = nodes
@@ -147,8 +148,9 @@ class _0Trace(_3dCSCG_Standard_Trace, ABC):
 
         return 'locally full local TEW cochain', local_TEW
 
-    def ___PRIVATE_discretize_VectorField_standard_ftype___(self, target='func', update_cochain=True):
-        """We will discretize the a standard vector field (norm component) to all trace elements."""
+    def ___PRIVATE_discretize_the_flux_of_a_VectorField_of_standard_ftype___(self, target='func', update_cochain=True):
+        """We will discretize the a standard vector field (norm flux) to all trace elements."""
+        if target in ('BC',): assert update_cochain is False, f"CANNOT update cochain when target is {target}"
 
         nodes = self.space.nodes
         nx, ny, nz = nodes

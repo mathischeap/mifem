@@ -677,6 +677,61 @@ def test_Form_NO3_incidence_matrices():
     f2.TW.func.body = es.status.curl_of_vorticity
     f2.TW.DO.push_all_to_instant(0)
     assert f2.error.L() < 1e-7
+
+    # we test numerical gradient, curl and div with coboundary of standard forms------------------------------------
+    if rAnk == mAster_rank:
+        c = random.random() / 10
+        if c < 0.05:
+            c = 0
+        else:
+            pass
+    else:
+        c = None
+    c = cOmm.bcast(c, root=mAster_rank)
+    t = 0
+
+    mesh = MeshGenerator('crazy', c=c)([5, 4, 5], EDM='debug')
+    space = SpaceInvoker('polynomials')([('Lobatto', 4), ('Lobatto', 5), ('Lobatto', 4)])
+    FC = FormCaller(mesh, space)
+
+    def w0(t, x, y, z): return -2*np.pi * np.sin(x) * np.cos(y) * np.cos(z*2.45) + np.sin(t)
+    def w1(t, x, y, z): return -3*np.pi * np.cos(x/np.pi) * np.sin(0.5*y) * np.cos(z/2) + np.sin(2*t)
+    def w2(t, x, y, z): return -np.pi * np.cos(1.11*x) * np.sin(y) * np.sin(np.pi*z) + (1.5-np.cos(t/2))
+    def p(t, x, y, z): return 3**np.pi * np.sin(2*x) * np.sin(y/3) * np.sin(z*3.45) + np.sin(0.57*t)
+
+    V = FC('vector', (w0, w1, w2))
+    S = FC('scalar', p)
+    gS = S.numerical.gradient
+    cV = V.numerical.curl
+    dV = V.numerical.divergence
+
+    f0 = FC('0-f', is_hybrid=False)
+    f0.TW.func.body = S
+    f0.TW.DO.push_all_to_instant(t)
+    f0.discretize()
+    f1 = f0.coboundary()
+    f1.TW.func.body = gS
+    f1.TW.DO.push_all_to_instant(t)
+    assert f1.error.L() < 0.0065
+
+    f1 = FC('1-f', is_hybrid=False)
+    f1.TW.func.body = V
+    f1.TW.DO.push_all_to_instant(t)
+    f1.discretize()
+    f2 = f1.coboundary()
+    f2.TW.func.body = cV
+    f2.TW.DO.push_all_to_instant(t)
+    assert f2.error.L() < 0.002
+
+    f2 = FC('2-f', is_hybrid=False)
+    f2.TW.func.body = V
+    f2.TW.DO.push_all_to_instant(t)
+    f2.discretize()
+    f3 = f2.coboundary()
+    f3.TW.func.body = dV
+    f3.TW.DO.push_all_to_instant(t)
+    assert f3.error.L() < 0.0025
+
     # +++++++++++++++++++++++++++++++++++++++++ ABOVE ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     return 1
@@ -1067,73 +1122,8 @@ def test_Form_No9_node_forms():
     return 1
 
 
-def test_Form_NO10_trace_1_form_Rd_and_Rc():
-    if rAnk == mAster_rank:
-        print("*** [test_Form_NO10_trace_1_form_Rd_and_Rc] ...... ", flush=True)
-
-    def uuu(t, x, y, z):
-        return np.sin(0.89*np.pi*x) + np.cos(np.pi*y) + np.cos(np.pi*z-0.578)**2 + t
-    def vvv(t, x, y, z):
-        return np.cos(2.21*np.pi*x) + np.sin(np.pi*y) + np.cos(np.pi*z-0.12)**2 + t
-    def www(t, x, y, z):
-        return np.cos(np.pi*x) + np.cos(np.pi*y) + np.sin(np.pi*z-0.15)**2 + t
-
-    mesh = MeshGenerator('crazy', c=0.1)([3, 4, 5])
-    space = SpaceInvoker('polynomials')([5, 4, 3])
-
-    FC = FormCaller(mesh, space)
-    velo = FC('vector', (uuu, vvv, www))
-    t = 0
-
-    # test 1-Trace form reconstruct ...............
-
-    t1 = FC('1-t')
-    t1.TW.func.DO.set_func_body_as(velo)
-    t1.TW.current_time = t
-    t1.TW.DO.push_all_to_instant()
-    t1.discretize()
-    xi = np.linspace(-1, 1, 13)
-    eta = np.linspace(-1, 1, 11)
-    sigma = np.linspace(-1, 1, 15)
-    xyz, V = t1.reconstruct(xi, eta, sigma, ravel=True)
-
-    xietasigma, _ = t1.DO.evaluate_basis_at_meshgrid(xi, eta, sigma)
-
-    for i in xyz:
-        te = mesh.trace.elements[i]
-        side = te.CHARACTERISTIC_side
-        x, y, z = xyz[i]
-        vx, vy, vz = V[i]
-
-        vx_exact = uuu(t, x, y, z)
-        vy_exact = vvv(t, x, y, z)
-        vz_exact = www(t, x, y, z)
-
-        VE = (vx_exact, vy_exact, vz_exact)
-
-        n = te.coordinate_transformation.unit_normal_vector(*xietasigma[side])
-
-        a1, a2, a3 = VE
-        b1, b2, b3 = n
-
-        c1 = a2*b3 - a3*b2
-        c2 = a3*b1 - a1*b3
-        c3 = a1*b2 - a2*b1
-        # c = (c1, c2, c3) = w x n
-
-        p1 = b2*c3 - b3*c2
-        p2 = b3*c1 - b1*c3
-        p3 = b1*c2 - b2*c1
-        # (p1, p2, p3) = n x c = n x (w x n)
-
-
-
-        # print(te, side, vx - p1)
-
-
-
 
 
 if __name__ == '__main__':
     # mpiexec -n 12 python _3dCSCG\TESTS\unittest_forms.py
-    test_Form_NO6_resemble()
+    test_Form_NO3_incidence_matrices()

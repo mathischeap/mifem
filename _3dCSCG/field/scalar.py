@@ -147,7 +147,7 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
     def shape(self):
         return (1,)
 
-    def reconstruct(self, xi, eta, sigma, time=None, ravel=False, i=None, where='mesh-element'):
+    def reconstruct(self, xi, eta, sigma, time=None, ravel=False, i=None, where=None):
         """
 
         :param time:
@@ -161,13 +161,27 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
         :param where:
         :return:
         """
+        # we deal with default `where` input ---------------------------------------------------------------
+        if where is None:
+            if self.ftype == "standard":
+                where = "mesh-element"
+            elif self.ftype in ("boundary-wise", "trace-element-wise"):
+                where = "trace-element"
+            else:
+                where = "mesh-element"
+        else:
+            pass
+
+        # we deal with `time` input ---------------------------------------------------------------
         if time is None:
             time = self.current_time
         else:
             self.current_time = time
 
+        # we get the current function ---------------------------------------------------------------
         func = self.___DO_evaluate_func_at_time___(time)
 
+        # we do the reconstruction accordingly ---------------------------------------------------------------
         if where == 'mesh-element': # input `i` means mesh element, we reconstruct it in mesh elements
             xi, eta, sigma = np.meshgrid(xi, eta, sigma, indexing='ij')
             xyz = dict()
@@ -399,7 +413,6 @@ class _3dCSCG_ScalarField_Numerical(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
         self._freeze_self_()
-
 
     @property
     def time_derivative(self):

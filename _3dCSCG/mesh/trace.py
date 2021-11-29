@@ -1177,6 +1177,7 @@ class _3dCSCG_Trace_Element_CoordinateTransformation(FrozenOnly):
         The local Jacobian matrix.
 
         :param evaluation_points: A tuple or list of shape (ndim-1, ...).
+        :param parse_3_1d_eps:
         """
         i = self._te_.CHARACTERISTIC_element
         element_side = self._te_.CHARACTERISTIC_side
@@ -1328,6 +1329,7 @@ class _3dCSCG_Trace_Element_CoordinateTransformation(FrozenOnly):
         vec(a) x vec(b) = (a2 b3 - a3 b2, a3 b1 - a1 b3, a1 b2-a2 b1)
 
         :param evaluation_points: A tuple or list of shape (ndim-1, ...).
+        :param parse_3_1d_eps:
         """
         J = self.Jacobian_matrix(*evaluation_points, parse_3_1d_eps=parse_3_1d_eps)
         a = (J[0][0], J[1][0], J[2][0])

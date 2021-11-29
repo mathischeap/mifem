@@ -30,8 +30,6 @@ def test_Form_NO0_3dCSCG_Field_numerical():
     y = np.linspace(-0.8-random.random()/5, 0.8+random.random()/5, J)
     z = np.linspace(-0.95-random.random()/20, 0.95+random.random()/20, K)
 
-
-
     #================ test for scalar ======================================================================
     def func(t, x, y, z): return np.sin(2*np.pi*x) * np.sin(np.pi*y) * np.sin(np.pi*z) * t
     SS = FC('scalar', func)
@@ -66,10 +64,6 @@ def test_Form_NO0_3dCSCG_Field_numerical():
         exact_td = APt(t, *xyz)
         numerical_td = R_v[i]
         assert np.max(np.abs(exact_td - numerical_td)) < 1e-7, f"time derivative is not accurate enough."
-
-
-
-
 
     #================ test for vector ======================================================================
     def U(t, x, y, z): return 2 * t * np.sin(np.pi * x) * np.cos(np.pi * y) * np.cos(np.pi * z)
@@ -163,10 +157,6 @@ def test_Form_NO0_3dCSCG_Field_numerical():
         numerical_D = R_v[i][0]
         assert np.max(np.abs(D - numerical_D)) < 1e-7, f"numerical divergence is not accurate enough."
 
-
-
-
-
     #================ test for tensor ======================================================================
     def T00(t, x, y, z): return 2 * t * np.sin(np.pi * x) * np.cos(np.pi * y) * np.cos(np.pi * z)
     def T01(t, x, y, z): return t * np.sin(2 * np.pi * x) * np.cos(np.pi * y) * np.sin(np.pi * z)
@@ -248,22 +238,26 @@ def test_Form_NO0_3dCSCG_Field_numerical():
     return 1
 
 
+
 def test_Form_NO1_3dCSCG_VectorField():
     """"""
     if rAnk == mAster_rank:
         print(f"-V- [test_Form_NO1_3dCSCG_VectorField]...", flush=True)
-    def w0(t, x, y, z): return -np.pi * np.sin(x) * np.cos(y) * np.cos(z) + t
-    def w1(t, x, y, z): return -np.pi * np.cos(x) * np.sin(y) * np.cos(z) + t
-    def w2(t, x, y, z): return -np.pi * np.cos(x) * np.sin(y) * np.sin(z) + t
-    def u0(t, x, y, z): return np.sin(np.pi*x) * np.sin(y) * np.cos(np.pi*z) + t
-    def u1(t, x, y, z): return np.cos(x) * np.sin(np.pi*y) * np.sin(np.pi*z) + t
-    def u2(t, x, y, z): return np.sin(np.pi*x) * np.cos(np.pi*y) * np.sin(z) + t
+    def w0(t, x, y, z): return -np.pi * np.sin(x) * np.cos(y) * np.cos(z) + np.sin(t)
+    def w1(t, x, y, z): return -np.pi * np.cos(x) * np.sin(y) * np.cos(z) * np.sin(2*t)
+    def w2(t, x, y, z): return -np.pi * np.cos(x) * np.sin(y) * np.sin(z) / (1.5-np.cos(t/2))
+    def u0(t, x, y, z): return np.sin(np.pi*x) * np.sin(y) * np.cos(np.pi*z) * 5 * np.sin(t)
+    def u1(t, x, y, z): return np.cos(x) * np.sin(np.pi*y) * np.sin(np.pi*z) * 5 * np.cos(t)
+    def u2(t, x, y, z): return np.sin(np.pi*x) * np.cos(np.pi*y) * np.sin(z) + 2 * np.cos(t)
     # x = w X u
     def x0(t, x, y, z): return w1(t, x, y, z) * u2(t, x, y, z) - w2(t, x, y, z) * u1(t, x, y, z)
     def x1(t, x, y, z): return w2(t, x, y, z) * u0(t, x, y, z) - w0(t, x, y, z) * u2(t, x, y, z)
     def x2(t, x, y, z): return w0(t, x, y, z) * u1(t, x, y, z) - w1(t, x, y, z) * u0(t, x, y, z)
 
     t = random.random() * 10
+    t1 = random.random() * 10
+    t2 = random.random() * 10
+    t3 = random.random() * 10
     I, J, K = random.randint(2,10), random.randint(4,8), random.randint(3,9)
     x = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, I)
     y = np.linspace(-0.8-random.random()/5, 0.8+random.random()/5, J)
@@ -274,37 +268,106 @@ def test_Form_NO1_3dCSCG_VectorField():
     else:
         load= None
     load = cOmm.bcast(load, root=mAster_rank)
-    FC = random_3D_FormCaller_of_total_load_around(load, exclude_periodic=False)
 
+    #----------------- use crazy mesh --------------------------------------------------------
+    FC = random_3D_FormCaller_of_total_load_around(load, mesh_pool=('crazy',))
+    W = FC('vector', (w0, w1, w2))
+    W.current_time = t
+    # ------ norm component ------------------------------------------------------------------
+    N = W.components.norm
+    N.current_time = t + t1
+    assert N.current_time == W.current_time + t1, f"N and W has decoupled!"
+    assert N.standard_properties.name == "norm-component-of-" + W.standard_properties.name, f"The naming rule."
+    R_xyz, R_v = N.reconstruct(x, y, z, i='on_mesh_boundaries')
+    for i in R_xyz:
+        xyz = R_xyz[i]
+        te = N.mesh.trace.elements[i]
+        side = te.CHARACTERISTIC_side
+        if side in 'NS':
+            np.testing.assert_array_almost_equal(R_v[i][0] - w0(t+t1, *xyz), 0)
+            np.testing.assert_array_almost_equal(R_v[i][1], 0)
+            np.testing.assert_array_almost_equal(R_v[i][2], 0)
+        elif side in 'WE':
+            np.testing.assert_array_almost_equal(R_v[i][0], 0)
+            np.testing.assert_array_almost_equal(R_v[i][1] - w1(t+t1, *xyz), 0)
+            np.testing.assert_array_almost_equal(R_v[i][2], 0)
+        elif side in 'BF':
+            np.testing.assert_array_almost_equal(R_v[i][0], 0)
+            np.testing.assert_array_almost_equal(R_v[i][1], 0)
+            np.testing.assert_array_almost_equal(R_v[i][2] - w2(t+t1, *xyz), 0)
+        else:
+            raise Exception()
+
+    # T_para component ---------------------------------------------------------------------------
+    T_para = W.components.T_para
+    T_para.current_time = t + t2
+    assert T_para.current_time == W.current_time + t2, f"T_para and W has decoupled!"
+    assert T_para.standard_properties.name == "T-para-component-of-" + W.standard_properties.name, f"The naming rule."
+    R_xyz, R_v = T_para.reconstruct(x, y, z, i='on_mesh_boundaries')
+    for i in R_xyz:
+        xyz = R_xyz[i]
+        te = T_para.mesh.trace.elements[i]
+        side = te.CHARACTERISTIC_side
+        if side in 'NS':
+            np.testing.assert_array_almost_equal(R_v[i][0], 0)
+            np.testing.assert_array_almost_equal(R_v[i][1] - w1(t+t2, *xyz), 0)
+            np.testing.assert_array_almost_equal(R_v[i][2] - w2(t+t2, *xyz), 0)
+        elif side in 'WE':
+            np.testing.assert_array_almost_equal(R_v[i][0] - w0(t+t2, *xyz), 0)
+            np.testing.assert_array_almost_equal(R_v[i][1], 0)
+            np.testing.assert_array_almost_equal(R_v[i][2] - w2(t+t2, *xyz), 0)
+        elif side in 'BF':
+            np.testing.assert_array_almost_equal(R_v[i][0] - w0(t+t2, *xyz), 0)
+            np.testing.assert_array_almost_equal(R_v[i][1] - w1(t+t2, *xyz), 0)
+            np.testing.assert_array_almost_equal(R_v[i][2], 0)
+        else:
+            raise Exception()
+
+    #now we test norm component + parallel component = the vector on all trace elements ------------------
+    T_para.current_time = t + t1
+    N_xyz, N_v = N.reconstruct(x, y, z) # on all trace-elements
+    P_xyz, P_v = T_para.reconstruct(x, y, z) # on all trace-elements
+    for i in N_xyz:
+        xyz = N_xyz[i]
+        nv = N_v[i]
+        pv = P_v[i]
+        vec = (nv[0] + pv[0], nv[1] + pv[1], nv[2] + pv[2])
+        VEC = (w0(t+t1, *xyz), w1(t+t1, *xyz), w2(t+t1, *xyz))
+        np.testing.assert_array_almost_equal(vec[0]-VEC[0], 0)
+        np.testing.assert_array_almost_equal(vec[1]-VEC[1], 0)
+        np.testing.assert_array_almost_equal(vec[2]-VEC[2], 0)
+
+    # T_perp component -------------------------------------------------------------------------
+    T_perp = W.components.T_perp
+    T_perp.current_time = t + t3
+    assert T_perp.current_time == W.current_time + t3, f"T_perp and W has decoupled!"
+    assert T_perp.standard_properties.name == "T-perp-component-of-" + W.standard_properties.name, f"The naming rule."
+    R_xyz, R_v = T_perp.reconstruct(x, y, z, i='on_mesh_boundaries')
+    for i in R_xyz:
+        xyz = R_xyz[i]
+        te = T_perp.mesh.trace.elements[i]
+        side = te.CHARACTERISTIC_side
+        if side in 'NS':
+            np.testing.assert_array_almost_equal(R_v[i][0], 0)
+            np.testing.assert_array_almost_equal(R_v[i][1] - w2(t+t3, *xyz), 0)
+            np.testing.assert_array_almost_equal(R_v[i][2] + w1(t+t3, *xyz), 0)
+        elif side in 'WE':
+            np.testing.assert_array_almost_equal(R_v[i][0] + w2(t+t3, *xyz), 0)
+            np.testing.assert_array_almost_equal(R_v[i][1], 0)
+            np.testing.assert_array_almost_equal(R_v[i][2] - w0(t+t3, *xyz), 0)
+        elif side in 'BF':
+            np.testing.assert_array_almost_equal(R_v[i][0] - w1(t+t3, *xyz), 0)
+            np.testing.assert_array_almost_equal(R_v[i][1] + w0(t+t3, *xyz), 0)
+            np.testing.assert_array_almost_equal(R_v[i][2], 0)
+        else:
+            raise Exception()
+
+    # ---------------- generate a new random mesh ----------------------------------------------
+    FC = random_3D_FormCaller_of_total_load_around(load, exclude_periodic=True)
     W = FC('vector', (w0, w1, w2))
     U = FC('vector', (u0, u1, u2))
 
-    W.current_time = t
-
-    # ------ norm component ------------------------
-    N = W.components.norm
-    N.current_time = t + 1
-    assert N.current_time == W.current_time + 1, f"N and W has decoupled!"
-    assert N.standard_properties.name == "norm-component-of-" + W.standard_properties.name, f"The naming rule."
-
-
-    # T_para component ------------------------------------------------------
-    T_para = W.components.T_para
-    T_para.current_time = t + 2
-    assert T_para.current_time == W.current_time + 2, f"T_para and W has decoupled!"
-    assert T_para.standard_properties.name == "T-para-component-of-" + W.standard_properties.name, f"The naming rule."
-
-
-    # T_perp component ------------------------------------------------------
-    T_perp = W.components.T_perp
-    T_perp.current_time = t + 3
-    assert T_perp.current_time == W.current_time + 3, f"T_perp and W has decoupled!"
-    assert T_perp.standard_properties.name == "T-perp-component-of-" + W.standard_properties.name, f"The naming rule."
-
-
-
-    # ---------- neg ----------------------------------------------------
-
+    # ---------- neg ---------------------------------------------------------------------------
     mW = - W
     mW.current_time = t
     R_xyz, R_v = mW.reconstruct(x, y, z)
@@ -316,7 +379,7 @@ def test_Form_NO1_3dCSCG_VectorField():
         assert np.max(np.abs(Ax1 - Cx1)) < 1e-10, f"neg y-component is not accurate enough."
         assert np.max(np.abs(Ax2 - Cx2)) < 1e-10, f"neg z-component is not accurate enough."
 
-    # ----------- sub ------------------------------------------------
+    # ----------- sub ---------------------------------------------------
     S = W - U
     S.current_time = t
     R_xyz, R_v = S.reconstruct(x, y, z)
@@ -328,8 +391,7 @@ def test_Form_NO1_3dCSCG_VectorField():
         assert np.max(np.abs(Ax1 - Cx1)) < 1e-10, f"sub y-component is not accurate enough."
         assert np.max(np.abs(Ax2 - Cx2)) < 1e-10, f"sub z-component is not accurate enough."
 
-
-    # ----------- add ------------------------------------------------
+    # ----------- add ---------------------------------------------------
     A = W + U
     A.current_time = t
     R_xyz, R_v = A.reconstruct(x, y, z)
@@ -341,11 +403,10 @@ def test_Form_NO1_3dCSCG_VectorField():
         assert np.max(np.abs(Ax1 - Cx1)) < 1e-10, f"add y-component is not accurate enough."
         assert np.max(np.abs(Ax2 - Cx2)) < 1e-10, f"add z-component is not accurate enough."
 
-    # ------ cross product ----------------------------------------
+    # ------ cross product ----------------------------------------------
     X = W.DO.cross_product(U)
     X.current_time = t
     R_xyz, R_v = X.reconstruct(x, y, z)
-
     for i in R_xyz:
         xyz = R_xyz[i]
         Ax0, Ax1, Ax2 = x0(t, *xyz), x1(t, *xyz), x2(t, *xyz)
@@ -353,8 +414,6 @@ def test_Form_NO1_3dCSCG_VectorField():
         assert np.max(np.abs(Ax0 - Cx0)) < 1e-10, f"cross product x-component is not accurate enough."
         assert np.max(np.abs(Ax1 - Cx1)) < 1e-10, f"cross product y-component is not accurate enough."
         assert np.max(np.abs(Ax2 - Cx2)) < 1e-10, f"cross product z-component is not accurate enough."
-
-
 
     return 1
 
@@ -544,7 +603,4 @@ def test_Form_NO3_3dCSCG_TensorField():
 
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\TESTS\unittest_fields.py
-    # test_Form_NO2_3dCSCG_ScalarField()
     test_Form_NO1_3dCSCG_VectorField()
-    # test_Form_NO3_3dCSCG_TensorField()
-    # test_Form_NO0_3dCSCG_Field_numerical()

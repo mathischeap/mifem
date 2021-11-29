@@ -238,12 +238,7 @@ def test_ADF_NO3_coboundary():
 
     assert df2.prime.error.L() < 0.01
 
-    # ---- dual curl ----------------------------------------------------------------------
-
-    #TODO: to be implemented
-
     # ---- dual divergence ----------------------------------------------------------------------
-
     df1 = FC('1-adf')
     dt0 = FC('0-adt')
 
@@ -272,7 +267,51 @@ def test_ADF_NO3_coboundary():
 
     assert df0.prime.error.L() < 0.028
 
+    # ---- dual curl ----------------------------------------------------------------------
+    mesh = MeshGenerator('crazy', c=0)([5, 6, 7], EDM=None, show_info=False)
+    # currently, the coboundary for dual curl only works for orthogonal mesh. The problem may be in the reduction, or mass matrix, or where-else.
+    space = SpaceInvoker('polynomials')([4, 3, 2], show_info=False)
+    FC = FormCaller(mesh, space)
+
+    def F(t, x, y, z):
+        return np.cos(np.pi*x) * np.sin(np.pi*y-0.125) * np.cos(np.pi*z) + t
+    def G(t, x, y, z):
+        return np.cos(np.pi*x) * np.cos(np.pi*y/2) * np.sin(np.pi*z) + t
+    def H(t, x, y, z):
+        return -2 * np.sin(np.pi*x) * np.cos(np.pi*y) * np.cos(np.pi*z) + t
+
+    df2 = FC('2-adf')
+    dt1 = FC('1-adt')
+
+    V = FC('vector', (F, G, H))
+    V_curl = V.numerical.curl
+    V_perp = V.components.T_perp
+
+    df2.prime.TW.func.DO.set_func_body_as(V)
+    df2.prime.TW.current_time = 0
+    df2.prime.TW.DO.push_all_to_instant()
+    df2.prime.DO.discretize()
+
+    dt1.prime.TW.func.DO.set_func_body_as(V_perp)
+    dt1.prime.TW.current_time = 0
+    dt1.prime.TW.DO.push_all_to_instant()
+    dt1.prime.DO.discretize()
+
+    df1 = df2.coboundary(dt1)
+    df1.prime.TW.func.DO.set_func_body_as(V_curl)
+    df1.prime.TW.current_time = 0
+    df1.prime.TW.DO.push_all_to_instant()
+
+    assert df2.prime.error.L() < 0.004, f"something is wrong."
+    assert df1.prime.error.L() < 0.013, f"something is wrong."
+
     return 1
+
+
+
+
+
+
 
 
 

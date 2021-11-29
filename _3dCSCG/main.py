@@ -269,6 +269,16 @@ class FormCaller(FrozenOnly):
                 '0-n': form_path + "node._0_node : _0Node",
                 }
 
+    @property
+    def mesh(self):
+        return self._mesh_
+
+    @property
+    def space(self):
+        return self._space_
+
+
+
 
 class ExactSolutionSelector(FrozenOnly):
     """We select an exact solution object with this class."""

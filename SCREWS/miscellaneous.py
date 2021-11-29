@@ -344,6 +344,10 @@ def count_files_and_lines(start, files=0, lines=0, header=True, begin_start=None
     ----------
     start : str
         The path we want to start tracing in.
+    files :
+    lines :
+    header :
+    begin_start :
 
     """
     if header:
@@ -355,7 +359,7 @@ def count_files_and_lines(start, files=0, lines=0, header=True, begin_start=None
     for thing in os.listdir(start):
         thing = os.path.join(start, thing)
         if os.path.isfile(thing):
-            if thing.endswith('.py'):
+            if thing.endswith('.py'): # we only look at python files.
                 with open(thing, 'r') as f:
                     try:
                         FILES = f.readlines()[9:]
@@ -374,7 +378,7 @@ def count_files_and_lines(start, files=0, lines=0, header=True, begin_start=None
                                 newlines -= 1
                             else:
                                 pass
-                        newlines = int(newlines * 0.8)  # we consider 20% of lines are docstring.
+                        newlines = int(newlines * 0.95) + 1  # we consider 5% of lines are docstring.
                         lines += newlines
                         if begin_start is not None:
                             reldir_of_thing = '.' + thing.replace(begin_start, '')
@@ -391,6 +395,8 @@ def count_files_and_lines(start, files=0, lines=0, header=True, begin_start=None
         elif thing[:12] == '_CONTENTS_':
             pass
         elif thing[:11] == '__GENERAL__':
+            pass
+        elif thing[:4] == 'venv':
             pass
         else:
             thing = os.path.join(start, thing)
