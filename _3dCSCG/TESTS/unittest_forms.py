@@ -14,6 +14,7 @@ from root.mifem import save
 import random
 from SCREWS.exceptions import ThreeDimensionalTransfiniteInterpolationError
 from _3dCSCG.TESTS.random_objects import random_3D_mesh_and_space_of_total_load_around
+from _3dCSCG.TESTS.random_objects import random_3D_FormCaller_of_total_load_around
 
 
 def test_Form_NO1_discretization_and_reconstruction():
@@ -1119,6 +1120,39 @@ def test_Form_No9_node_forms():
     if rAnk == mAster_rank:
         print("NNN [test_Form_No9_node_forms] ...... ", flush=True)
 
+
+
+
+    return 1
+
+
+
+
+def test_Form_No10_standard_form_dofs():
+    if rAnk == mAster_rank:
+        print("DOF [test_Form_No10_standard_form_dofs] ...... ", flush=True)
+
+
+    if rAnk == mAster_rank:
+        load = random.randint(100,499)
+    else:
+        load = None
+    load = cOmm.bcast(load, root=mAster_rank)
+    FC = random_3D_FormCaller_of_total_load_around(load)
+
+    f0 = FC('0-f', is_hybrid=False)
+    dofs = f0.dofs
+    for i in dofs:
+        assert i in dofs, f"must be the case"
+        D = dofs[i]
+        local_positions = D.positions
+        for E_I in local_positions:
+            E, I = E_I
+            assert f0.numbering.gathering[E][I] == i, f"must be the case."
+
+
+
+
     return 1
 
 
@@ -1126,4 +1160,4 @@ def test_Form_No9_node_forms():
 
 if __name__ == '__main__':
     # mpiexec -n 12 python _3dCSCG\TESTS\unittest_forms.py
-    test_Form_NO3_incidence_matrices()
+    test_Form_No10_standard_form_dofs()

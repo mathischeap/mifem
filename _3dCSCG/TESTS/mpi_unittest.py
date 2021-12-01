@@ -72,12 +72,14 @@ passed_3dCSCG_tests += test_Mesh_NO6_transfinite()
 passed_3dCSCG_tests += test_Mesh_NO7_boundaries()
 passed_3dCSCG_tests += test_Mesh_NO8_Mesh_SubGeometry_perpendicular_slice_object()
 passed_3dCSCG_tests += test_Mesh_NO9_edge_node_mesh()
-
+passed_3dCSCG_tests += test_Form_No10_standard_form_dofs()
 
 passed_3dCSCG_tests += test_Naive_Numbering_NO1_0form()
 passed_3dCSCG_tests += test_Naive_Numbering_NO2_1form()
 passed_3dCSCG_tests += test_Naive_Numbering_NO3_2form()
 passed_3dCSCG_tests += test_Naive_Numbering_NO4_2trace()
+passed_3dCSCG_tests += test_Naive_Numbering_NO6_1trace()
+passed_3dCSCG_tests += test_Naive_Numbering_NO5_0trace()
 
 
 passed_3dCSCG_tests += test_trace_NO__general_tests()

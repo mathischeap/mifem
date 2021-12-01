@@ -106,7 +106,7 @@ class Chain_Gathering_Matrix(FrozenOnly):
         return len(self), sum(self.local_dofs_distribution)
 
     def __getitem__(self, item):
-        """Return the Chain_Gathering_Vector of element #item.
+        """Return the chained gathering vector for the mesh element numbered by `item`.
 
         :param item: #item mesh element.
         :return: A 1d numpy.array. But we do not save it, it is made whenever we call this method.
@@ -118,6 +118,7 @@ class Chain_Gathering_Matrix(FrozenOnly):
             return np.concatenate(_)
 
     def __iter__(self):
+        """Go through all local mesh elements."""
         for i in self._GMs_[0]:
             yield i
 
@@ -126,9 +127,11 @@ class Chain_Gathering_Matrix(FrozenOnly):
         return len(self._GMs_[0])
 
     def __contains__(self, item):
+        """If a mesh element is contained by this CGM? Or if a mesh element is local?"""
         return item in self._GMs_[0]
 
     def __eq__(self, other):
+        """If two CGMs are equal?"""
         if self is other:
             RETURN = True
         else:
@@ -158,7 +161,6 @@ class Chain_Gathering_Matrix(FrozenOnly):
 
     @property
     def local_ranges(self):
-        """The dofs in this core is in this range."""
         if self._local_ranges_ is None:
 
             if len(self) == 0:
@@ -233,17 +235,17 @@ class ___Chain_Gathering_Matrix_FIND___(FrozenOnly):
 
     @accepts('self', (int, float, 'int32', 'int64'))
     def elements_contain_dof_numbered(self, m, N=None):
-        """Find the element which contains the dof numbered `m`.
+        """Find the local mesh-element(s) which contains the dof numbered `m`.
 
         :param m: the dof to be found.
         :param N: The max number of elements to find. If we already find `N` elements containing the dof `m`, we stop
             finding. When `N=None`, then we always check all local elements.
-        :return: Return a list of ints or None
+        :return:
 
             An list of int(s) represent the local element number(s) that has the dof numbered `m` or None if no
             local element  contains that dof. Therefore, maybe in multiple cores, the method does not return None.
 
-            We also return `where` (int): GMs[where] has the dof `m`. When the first output is None, `where = -1`.
+            We also return `where` (int): GMs[where] has the dof `m`. When the first output is None, we do not return where.
         """
         assert (m % 1) == 0, f"m={m} is wrong."
         assert -self._CGM_.GLOBAL_num_dofs <= m < self._CGM_.GLOBAL_num_dofs, \
@@ -342,6 +344,7 @@ class ___Chain_Gathering_Matrix_FIND___(FrozenOnly):
     @lru_cache(maxsize=256)
     def elements_and_local_indices_of_dof(self, m, N=None):
         """
+        Find the local element(s) and local indices of the dof numbered i.
 
         :param m:
         :param N:
@@ -431,14 +434,17 @@ class Gathering_Matrix(GatheringMatrix):
         self._mesh_type_ = mesh_type
         self._freeze_self_()
 
-    def __getitem__(self, item):
-        return self._gvd_[item]
+    def __getitem__(self, i):
+        """Return the GV for mesh element #`i`."""
+        return self._gvd_[i]
 
     def __iter__(self):
+        """Go through all local mesh elements."""
         for i in self._gvd_:
             yield i
 
     def __contains__(self, item):
+        """If a local mesh element (not a dof) is contained by this GM."""
         return item in self._gvd_
 
     def __len__(self):
@@ -498,7 +504,12 @@ class Gathering_Matrix(GatheringMatrix):
 
     @property
     def local_range(self):
-        """The range of numbering of dofs in this core."""
+        """The range of numbering of dofs in this core. So the dofs of this core are in this range, but
+        they do not necessarily fully cover this range.
+
+        If the local dofs are 0,1,2,4,5,12,32,33,35, then the  local_range is (0,36). Note it is not 35.
+        So the dofs must be in range(*local_range).
+        """
         if self._local_range_ is None:
             if len(self) == 0:
                 self._local_range_ = tuple()
@@ -560,12 +571,14 @@ class Gathering_Vector(FrozenOnly):
     """
     def __init__(self, i, gv):
         self._i_ = i
+
         if isinstance(gv, list): # list of integers
             self._gv_ = np.array(gv)
+
         if isinstance(gv, tuple): # tuple of a series of range object.
             for gvi in gv: assert isinstance(gvi, range), "Tuple of ranges."
             CHAIN = chain(*gv)
-            self._gv_ = np.array([i for i in CHAIN])
+            self._gv_ = np.array([_ for _ in CHAIN])
         elif gv.__class__.__name__ == 'ndarray': # 1d numpy.array of integers.
             assert np.ndim(gv) == 1, f"gathering vector needs to be 1d."
             self._gv_ = gv
@@ -588,29 +601,40 @@ class Gathering_Vector(FrozenOnly):
 
     @property
     def full_vector(self):
+        """We make a full vector for fast usage. self._gv_ can be np.array or a range object."""
         if self._full_vector_ is None:
             if self._gv_.__class__.__name__ == 'ndarray':
                 self._full_vector_ = self._gv_
             elif isinstance(self._gv_, range):
-                self._full_vector_ = np.array([j for j in self])
+                self._full_vector_ = np.array([_ for _ in self])
             else:
                 raise Exception()
+
+            assert len(set(self._full_vector_)) == len(self._full_vector_), \
+                "A gathering vector can not have repeated dofs. This usually happens when a mesh element" \
+                "is periodic to itself."
+
         return self._full_vector_
 
-    def __getitem__(self, item):
-        return self.full_vector[item]
+    def __getitem__(self, i):
+        """Get the ith dof numbering."""
+        return self.full_vector[i]
 
-    def __contains__(self, item):
-        return item in self._gv_
+    def __contains__(self, i):
+        """If #i dof is contained by this GV."""
+        return i in self._gv_
 
     def __iter__(self):
+        """Go through all local dofs."""
         for j in self._gv_:
             yield j
 
     def __len__(self):
+        """How many local dofs?"""
         return len(self._gv_)
 
     def __eq__(self, other):
+        """If two GVs are equal?"""
         if self is other:
             return True
         else:
@@ -630,3 +654,12 @@ class Gathering_Vector(FrozenOnly):
         return np.min(self.full_vector)
 
 
+    def index(self, i):
+        """find the index of dof #i. This is like the index function of a list. For example,
+            >>> A = [1,2,5,3,4],
+            >>> A.index(5)
+            2
+        """
+        WHERE =  np.where(self._full_vector_ == i)[0]
+        assert len(WHERE) == 1, f"We must only find one dof is numbered i."
+        return WHERE[0]

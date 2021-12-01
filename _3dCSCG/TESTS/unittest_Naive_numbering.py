@@ -11,6 +11,12 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config import *
 from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
+from _3dCSCG.TESTS.random_objects import random_3D_FormCaller_of_total_load_around
+import random
+
+
+
+
 
 
 def test_Naive_Numbering_NO1_0form():
@@ -21,7 +27,7 @@ def test_Naive_Numbering_NO1_0form():
     mesh = MeshGenerator('crazy_periodic')([2, 2, 2], EDM='debug')
     space = SpaceInvoker('polynomials')([('Lobatto', 2), ('Lobatto', 1), ('Lobatto', 2)])
     FC = FormCaller(mesh, space)
-    f0 = FC('0-f', is_hybrid=False)
+    f0 = FC('0-f', is_hybrid=False, numbering_parameters='Naive')
 
     benchmark = np.array(
         [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
@@ -48,7 +54,7 @@ def test_Naive_Numbering_NO2_1form():
     mesh = MeshGenerator('crazy_periodic')([2, 2, 2], EDM='debug')
     space = SpaceInvoker('polynomials')([('Lobatto', 2), ('Lobatto', 1), ('Lobatto', 2)])
     FC = FormCaller(mesh, space)
-    f1 = FC('1-f', is_hybrid=False)
+    f1 = FC('1-f', is_hybrid=False, numbering_parameters='Naive')
 
     benchmark = np.array(
         [[ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,
@@ -83,7 +89,7 @@ def test_Naive_Numbering_NO3_2form():
     space = SpaceInvoker('polynomials')([('Lobatto', 2), ('Lobatto', 1), ('Lobatto', 2)])
     FC = FormCaller(mesh, space)
 
-    f2 = FC('2-f', is_hybrid=False)
+    f2 = FC('2-f', is_hybrid=False, numbering_parameters='Naive')
     benchmark = np.array([
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
          17, 18, 19],
@@ -108,28 +114,96 @@ def test_Naive_Numbering_NO3_2form():
     return 1
 
 
+def test_Naive_Numbering_NO5_0trace():
+    """"""
+    if rAnk == mAster_rank:
+        load = random.randint(10, 199)
+        print(f"--- [test_Naive_Numbering_NO5_0trace] @ FC-load = {load} ...... ", flush=True)
+    else:
+        load= None
+    load = cOmm.bcast(load, root=mAster_rank)
+    FC = random_3D_FormCaller_of_total_load_around(load)
+
+    t0 = FC('0-t', numbering_parameters={'scheme_name': 'Naive',})
+
+    GM_TEW = t0.numbering.trace_element_wise
+    for i in GM_TEW:
+        assert i in t0.mesh.trace.elements, "must be the case"
+        assert len(set(GM_TEW.keys())) == t0.mesh.trace.elements.num, "must be the case"
+
+    GM_TEW = cOmm.gather(GM_TEW, root=mAster_rank)
+    if rAnk == mAster_rank:
+        END = 0
+        for i in range(t0.mesh.trace.elements.GLOBAL_num):# go through all (global) trace elements
+            for gm_core in GM_TEW:
+                if i in gm_core:
+                    fv = gm_core[i].full_vector
+                    assert fv[0] == END, f"must be the case."
+                    NEW_END = fv[-1] + 1
+
+            END = NEW_END
+
+    num_of_dofs_in_this_core = t0.numbering.num_of_dofs_in_this_core
+    LOCAL_NUMBERING = set()
+    GM = t0.numbering.gathering
+    for i in GM:
+        LOCAL_NUMBERING.update(GM[i].full_vector)
+    assert num_of_dofs_in_this_core == len(LOCAL_NUMBERING), "must be the case!"
+    return 1
+
+
+def test_Naive_Numbering_NO6_1trace():
+    """"""
+    if rAnk == mAster_rank:
+        load = random.randint(10, 199)
+        print(f"--- [test_Naive_Numbering_NO6_1trace] @ FC-load = {load} ...... ", flush=True)
+    else:
+        load= None
+    load = cOmm.bcast(load, root=mAster_rank)
+    FC = random_3D_FormCaller_of_total_load_around(load, EDM_pool=('chaotic',))
+
+    t1 = FC('1-t', numbering_parameters={'scheme_name': 'Naive',})
+
+    GM_TEW = t1.numbering.trace_element_wise
+    for i in GM_TEW:
+        assert i in t1.mesh.trace.elements, "must be the case"
+        assert len(set(GM_TEW.keys())) == t1.mesh.trace.elements.num, "must be the case"
+
+    GM_TEW = cOmm.gather(GM_TEW, root=mAster_rank)
+    if rAnk == mAster_rank:
+        END = 0
+        for i in range(t1.mesh.trace.elements.GLOBAL_num):# go through all (global) trace elements
+            for gm_core in GM_TEW:
+                if i in gm_core:
+                    fv = gm_core[i].full_vector
+                    assert fv[0] == END, f"must be the case."
+                    NEW_END = fv[-1] + 1
+
+            END = NEW_END
+
+
+    num_of_dofs_in_this_core = t1.numbering.num_of_dofs_in_this_core
+    LOCAL_NUMBERING = set()
+    GM = t1.numbering.gathering
+    for i in GM:
+        LOCAL_NUMBERING.update(GM[i].full_vector)
+    assert num_of_dofs_in_this_core == len(LOCAL_NUMBERING), "must be the case!"
+    return 1
+
+
 def test_Naive_Numbering_NO4_2trace():
     """"""
     if rAnk == mAster_rank:
         print("--- [test_Naive_Numbering_NO4_2trace] ...... ", flush=True)
 
-    mesh = MeshGenerator('crazy_periodic')([2, 1, 1], EDM='debug')
-    space = SpaceInvoker('polynomials')([('Lobatto', 2), ('Lobatto', 3), ('Lobatto', 1)])
-    FC = FormCaller(mesh, space)
-    t2 = FC('2-t')
-
-    benchmark = np.array(
-        [[0, 1, 2, 3, 4, 5, 6, 7, 6, 7, 8, 9, 10, 11, 12, 13, 8, 9, 10, 11, 12, 13],
-         [3, 4, 5, 0, 1, 2, 14, 15, 14, 15, 16, 17, 18, 19, 20, 21, 16, 17, 18, 19, 20, 21]]
-    )
-    for i in t2.numbering.gathering:
-        assert np.all(t2.numbering.gathering[i].full_vector == benchmark[i,:])
-
     mesh = MeshGenerator('crazy_periodic')([2, 2, 2], EDM='debug')
     space = SpaceInvoker('polynomials')([('Lobatto', 2), ('Lobatto', 3), ('Lobatto', 1)])
     FC = FormCaller(mesh, space)
-    t2 = FC('2-t')
+    t2 = FC('2-t', numbering_parameters='Naive')
 
+    GM = t2.numbering.gathering
+    num_of_dofs_in_this_core = t2.numbering.num_of_dofs_in_this_core
+    LOCAL_NUMBERING = set()
     benchmark = np.array(
         [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
          [3, 4, 5, 0, 1, 2, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37],
@@ -140,14 +214,18 @@ def test_Naive_Numbering_NO4_2trace():
          [82, 83, 84, 85, 86, 87, 76, 77, 74, 75, 50, 51, 52, 53, 54, 55, 44, 45, 46, 47, 48, 49],
          [85, 86, 87, 82, 83, 84, 80, 81, 78, 79, 62, 63, 64, 65, 66, 67, 56, 57, 58, 59, 60, 61]]
     )
-    for i in t2.numbering.gathering:
-        assert np.all(t2.numbering.gathering[i].full_vector == benchmark[i,:])
+    for i in GM:
+        assert np.all(GM[i].full_vector == benchmark[i,:])
+        LOCAL_NUMBERING.update(GM[i].full_vector)
 
+    assert num_of_dofs_in_this_core == len(LOCAL_NUMBERING), "must be the case!"
 
     return 1
 
 
+
 if __name__ == '__main__':
-    # mpiexec python _3dCSCG\TESTS\unittest_Naive_numbering.py
-    test_Naive_Numbering_NO4_2trace()
-    test_Naive_Numbering_NO1_0form()
+    # mpiexec -n 6 python _3dCSCG\TESTS\unittest_Naive_numbering.py
+    # test_Naive_Numbering_NO4_2trace()
+    test_Naive_Numbering_NO5_0trace()
+    test_Naive_Numbering_NO6_1trace()

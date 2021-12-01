@@ -22,6 +22,8 @@ def random_3D_mesh_of_elements_around(elements_num,
     ):
     """We generate a random mesh of almost ``elements_num`` elements.
 
+    Make sure we edit (1), (2), (3), (4) when new mesh is coded.
+
     :param elements_num:
     :param exclude_periodic: If we exclude the periodic domains.
     :param mesh_boundary_num: we will select mesh which satisfies this requirement.
@@ -37,6 +39,8 @@ def random_3D_mesh_of_elements_around(elements_num,
     assert isinstance(elements_num, (int, float)) and elements_num >= 1, \
         f"element_num = {elements_num} is wrong, must be a number and >= 1."
 
+
+    #------(1) EDIT the dict -> mesh_name_region_num :: we will select from this dict -------------------------------------------------
     if exclude_periodic:
         mesh_name_region_num = {  # add new meshes to this pool.
             # mesh name: how many regions
@@ -51,7 +55,6 @@ def random_3D_mesh_of_elements_around(elements_num,
             'bridge_arch_cracked': 4,
         }
 
-    #------ if mesh_pool is given, we update the pool to be selected from ------------------------------
     if mesh_pool is not None:
         if isinstance(mesh_pool, str):
             mesh_pool = [mesh_pool,]
@@ -68,10 +71,10 @@ def random_3D_mesh_of_elements_around(elements_num,
         pass
 
 
-    #--------- parse mesh_boundary_num ------------------------------------------------------------------
+    #---------(2) EDIT the dict -> mesh_name_boundary_num :: parse mesh_boundary_num ------------------------------------------------------------------
     mesh_name_boundary_num = {
             'crazy': 6,
-            'crazy_periodic': 6,
+            'crazy_periodic': 0, # crazy_periodic mesh has no mesh boundary.
             'bridge_arch_cracked': 8,
     }
     if mesh_boundary_num is None:
@@ -86,22 +89,30 @@ def random_3D_mesh_of_elements_around(elements_num,
     else:
         raise NotImplementedError(f"Do not understand mesh_boundary_num={mesh_boundary_num}.")
 
-    # ------- random personal parameters -------------------------------------------------------------
+    # -------(3) EDIT the dict -> mesh_personal_parameters :: random personal parameters -------------------------------------------------------------
     if rAnk == mAster_rank:
         mesh_personal_parameters = { # edit below when new mesh is added to above pool.
-            'crazy': {'c': random.randint(0,3)*random.random()/10,
-                      'bounds': [(-random.random(), random.random()+0.5),
-                                 (-random.random(), random.random()+0.5),
-                                 (-random.random(), random.random()+0.5)]
+            'crazy':{'c': random.randint(0,3)*random.random()/10,
+                     'bounds': [(-random.random(), random.random()+0.5),
+                                (-random.random(), random.random()+0.5),
+                                (-random.random(), random.random()+0.5)]
                       },
-            'crazy_periodic': {'c': random.randint(0,3)*random.random()/10},
+
+            'crazy_periodic': {'c': random.randint(0,3)*random.random()/10,
+                               'bounds': [(-random.random(), random.random()+0.5),
+                                          (-random.random(), random.random()+0.5),
+                                          (-random.random(), random.random()+0.5)]
+                               },
         }
     else:
         mesh_personal_parameters = None
 
     mesh_personal_parameters = cOmm.bcast(mesh_personal_parameters, root=mAster_rank)
 
-    # ====================
+
+
+
+    # ======================================================================================================
 
     while 1:
 
@@ -166,11 +177,20 @@ def random_3D_mesh_of_elements_around(elements_num,
         if factor2 < 1:
             factor2 = 1
 
+        #------ (4) EDIT :: special requests for particular meshes ---------------------------------------
+        if mesh_name == 'crazy_periodic':
+            if factor0 == 1: factor0 = 2
+            if factor1 == 1: factor1 = 2
+            if factor2 == 1: factor2 = 2
+        else: # has no special request for the mesh at this moment.
+            pass
+        #================================================================================================
+
         FFF = random.sample((factor0, factor1, factor2), 3)
 
         element_layout = list()
         for f in FFF:
-            element_layout.append([random.randint((f+1),6*(f+1)) for _ in range(f)])
+            element_layout.append([random.randint((f+1), 6*(f+1)) for _ in range(f)])
 
     else:
         element_layout = None

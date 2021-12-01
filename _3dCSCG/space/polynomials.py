@@ -36,7 +36,7 @@ class _3dCSCG_PolynomialSpace(_3dCSCG_Space):
 
     def DO_evaluate_quadrature(self, quad_degree, quad_type=None):
         """
-        We only do cache the results for last call.
+        We only cache the results of the last call.
 
         :param quad_degree:
         :param quad_type:

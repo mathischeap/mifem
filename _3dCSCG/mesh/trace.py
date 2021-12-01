@@ -375,8 +375,7 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
                 map_set.update(self._MAP_[i])
             assert map_set == set(self._elements_.keys())
             assert self._MAP_.keys() == elements_map.keys()
-            # should only contain trace elements which are sides of
-            # local mesh element.
+            # should only contain trace elements which are sides of local mesh element.
 
     @staticmethod
     def ___generate_full_ep___(evaluation_points, element_side, parse_3_1d_eps=False, picking=False):

@@ -16,6 +16,7 @@ from _3dCSCG.space.topology.selective_matrix import SelectiveMatrix
 from _3dCSCG.space.evaluating.mesh import EvaluatingMeshBasis
 from _3dCSCG.space.evaluating.trace import EvaluatingTraceBasis
 
+from _3dCSCG.space.visualize.main import _3dCSC_Space_Visualize
 
 
 class _3dCSCG_Space(EvaluatingMeshBasis, EvaluatingTraceBasis, FrozenClass):
@@ -38,6 +39,7 @@ class _3dCSCG_Space(EvaluatingMeshBasis, EvaluatingTraceBasis, FrozenClass):
         self._selective_matrix_ = SelectiveMatrix(self)
         self.___define_parameters___ = None
         self.standard_properties.stamp = '3dCSCG|structured|space'
+        self._visualize_ = None
         self._freeze_self_()
 
 
@@ -162,9 +164,13 @@ class _3dCSCG_Space(EvaluatingMeshBasis, EvaluatingTraceBasis, FrozenClass):
 
     def DO_evaluate_quadrature(self, quad_degree, quad_type=None):
         """
-        This method is supposed to be over-written in its children. Otherwise, it will
-        raise NotImplementedError.
+        This method is supposed to be over-written in its children.
         """
         raise NotImplementedError()
 
-
+    @property
+    def visualize(self):
+        """Use to visualize the 3d spaces."""
+        if self._visualize_ is None:
+            self._visualize_ = _3dCSC_Space_Visualize(self)
+        return self._visualize_

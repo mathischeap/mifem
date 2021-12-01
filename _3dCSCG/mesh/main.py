@@ -38,9 +38,45 @@ from _3dCSCG.mesh.node import _3dCSCG_Node
 
 
 
+
+
+
 class _3dCSCG_Mesh(CSCG_MESH_BASE):
     """The 3dCSCG mesh."""
     def __init__(self, domain, element_layout=None, EDM=None):
+        """
+
+        :param domain: **This will already be decided by the domain_inputs.**
+        :param element_layout:
+            It should be a dict whose keys are the region names. If it is not a dict, when we will make
+            a dict whose values (all the same) are `element_layout`, which means we use the same element_layout
+            in all regions.
+
+            Now for example,
+                element_layout = {'R:R1': EL1,
+                                  ......
+                                  }
+
+                If `EL1` is None, we will make it become EL1 = (1,1,1).
+                If `EL1` is an int, for example, EL1 = i, we will make it become EL1 = (i,i,i).
+
+                So in general EL1 will become of format EL1=(a,b,c), Each entry, a, b or c, must be one of
+                    (1): An positive int
+                    (2): A 1-d array whose entries are all positive int or float.
+                    (3): A string: special, we will parse this string then.
+
+
+        :param EDM:
+            Element-Distribution-Methods; it can be one of (None, 'debug', 'SWV0', 'chaotic')
+
+                None (default): We will try to find a proper method. If we cannot, we will use a most rigid method.
+                'debug': We will force ourselves to use the most rigid method.
+                'SWV0': Smart-Way-Version-0; A not so small way.
+                'chaotic': A very chaotic one. We better not save it because, when we re-build it, it will
+                    randomly generate the element distribution again. So we will actually get different meshes
+                    even we call same amount of cores, which sometimes is OKAY, but sometimes is not.
+
+        """
         assert domain.ndim == 3, " <Mesh> "
         self._domain_ = domain
         cOmm.barrier() # for safety reason
@@ -104,7 +140,14 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
             self._num_elements_accumulation_[self._num_total_elements_] = rn
 
     def ___PRIVATE_parse_element_layout_each_region___(self, element_layout):
-        """ """
+        """
+        When we reach here, each entry of `element_layout` can only be
+            (1) a positive int
+            (2) a 1d array whose each entry is positive.
+
+        So element_layout = (a, b, c), a or b or c can only be one of (1) and (2) above.
+
+        """
 
         _el_ = self.___PRIVATE_BASE_analyze_element_layout___(element_layout)
 
@@ -114,7 +157,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
         for i in range(self.ndim):
             if isinstance(_el_[i], int):
-                pass
+                assert _el_[i] > 0
             elif _el_[i].__class__.__name__ in ('tuple', 'list', 'ndarray'):
                 assert np.ndim(_el_[i]) == 1, \
                     " <Mesh> : elements_layout[{}]={} is wrong.".format(i, _el_[i])
@@ -123,6 +166,8 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
             else:
                 raise ElementsLayoutError(
                     " <Mesh> : elements_layout[{}]={} is wrong.".format(i, _el_[i]))
+
+
         # We then parse _element_layout_, _element_ratio_, _element_spacing_ ----------
         _element_layout_: list = [None for _ in range(self.ndim)]
         _element_ratio_: list = [None for _ in range(self.ndim)]
@@ -143,11 +188,13 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
             _element_spacing_[i][-1] = 1
             for j in range(1, _element_layout_[i]):
                 _element_spacing_[i][j] = np.sum(_element_ratio_[i][0:j])
+
         # Now we some properties ...
         _element_layout_: tuple = tuple(_element_layout_)
         _element_ratio_: tuple = tuple(_element_ratio_)
         _element_spacing_: tuple = tuple(_element_spacing_)
         _num_elements_in_region_ = np.prod(_element_layout_)
+
         return _element_layout_, _element_ratio_, _element_spacing_, _num_elements_in_region_
 
 

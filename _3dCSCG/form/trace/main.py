@@ -18,6 +18,11 @@ from _3dCSCG.form.trace.visualize.main import _3dCSCG_Trace_Visualize
 from BASE.CSCG.form.trace.main_BASE import CSCG_Trace_Form, CSCG_Trace_Form_Cochain_BASE
 from BASE.CSCG.form.trace.main_BASE import CSCG_Trace_Form_Coboundary_BASE
 
+from _3dCSCG.form.trace.dofs.main import _3dCSCG_Trace_forms_DOFs
+
+
+
+
 
 
 class _3dCSCG_Standard_Trace(CSCG_Trace_Form, _3dCSCG_FORM_BASE, ndim=3):
@@ -46,6 +51,7 @@ class _3dCSCG_Standard_Trace(CSCG_Trace_Form, _3dCSCG_FORM_BASE, ndim=3):
         self._visualize_ = _3dCSCG_Trace_Visualize(self)
         self._matrices_ = _3dCSCG_Trace_Matrices(self)
         self._coboundary_ = _3dCSCG_Trace_Coboundary(self)
+        self._dofs_ = None
         self._DO_ = _3dCSCG_Trace_DO(self)
 
     def RESET_cache(self):
@@ -80,7 +86,12 @@ class _3dCSCG_Standard_Trace(CSCG_Trace_Form, _3dCSCG_FORM_BASE, ndim=3):
         """
         raise NotImplementedError()
 
-
+    @property
+    def dofs(self):
+        """The dofs of the trace form."""
+        if self._dofs_ is None:
+            self._dofs_ = _3dCSCG_Trace_forms_DOFs(self)
+        return self._dofs_
 
 
 

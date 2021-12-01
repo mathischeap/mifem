@@ -34,7 +34,7 @@ class _3dCSCG_Trace_Numbering(FrozenOnly):
         self._tf_ = tf
         self._scheme_name_ = scheme_name
         path = '_3dCSCG.form.trace.numbering.' + scheme_name
-        name = '_3dCSCG_Trace_Numbering_' + scheme_name
+        name = '_3dCSCG_Trace_Form_Numbering_' + scheme_name
         self._numberer_ = getattr(import_module(path), name)(tf)
         self._parameters_ = parameters
         self._numbering_parameters_ = {'scheme_name': self._scheme_name_}

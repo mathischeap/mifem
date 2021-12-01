@@ -12,21 +12,29 @@ class CSCG_MESH_BASE(FrozenClass):
 
     def ___PRIVATE_BASE_analyze_element_layout___(self, element_layout):
         """
+        Here we return the Element_Layout (EL) for a particular region.
+
+        We will return EL which will be used as the element_layout of a particular region.
+
         Parameters
         ----------
         element_layout : None, int, tuple, list,
-            When it is `None`, we set it to be int 1.
+            When it is `None`, we return EL = [1,1,1] (for 3d) or [1,1] (for 2d).
 
-            When it is int `i`, we set it to be (`i`, `i`).
+            When it is int, for example, element_layout=i, we return EL = [i,i,i] or [i,i].
 
-            When it is tuple, list, they we study elements_layout[i], i=0 or 1:
-                if elements_layout[i] is string:
+            When it is tuple, list, they we study each elements_layout[i]
+
+                if elements_layout[i] is string, then we need to parse it.
+
                     it can be:
                         elements_layout[i]='Lobatto:X',
                         we study it according to Lobatto distribution and get the
                         correct `_el_[i]`
+
                 else:
                     `_el_[i] = elements_layout[i]`
+
         """
 
         if element_layout is None:
@@ -40,6 +48,7 @@ class CSCG_MESH_BASE(FrozenClass):
             assert len(element_layout) == self.ndim, " <Mesh> : element_layout error."
             _el_ = [None for _ in range(self.ndim)]
             for i in range(self.ndim):
+
                 if isinstance(element_layout[i], str):
 
                     # special element_layout input, using str ..........
@@ -51,10 +60,10 @@ class CSCG_MESH_BASE(FrozenClass):
                     else:
                         raise Exception('Element_layout key={} wrong.'.format(element_layout[i]))
 
-                elif isinstance(element_layout[i], dict):
-                    raise NotImplementedError()
+
                 else:
                     _el_[i] = element_layout[i]
+
 
         else:
             raise ElementsLayoutError()

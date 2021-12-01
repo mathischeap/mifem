@@ -22,6 +22,7 @@ from BASE.CSCG.form.standard.main_BASE import CSCG_Standard_Form
 from BASE.CSCG.form.standard.main_BASE import CSCG_Standard_Form_Cochain_BASE
 from BASE.CSCG.form.standard.main_BASE import CSCG_Standard_Form_Coboundary_BASE
 
+from _3dCSCG.form.standard.dofs.main import _3dCSCG_Standard_forms_DOFs
 
 class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
     """
@@ -57,6 +58,7 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
         self._visualize_ = _3dCSCG_FormVisualize(self)
         self._export_ = _3dCSC_Standard_Form_Export(self)
         self._DO_ = _3dCSCG_Standard_Form_DO(self)
+        self._dofs_ = None
 
     def RESET_cache(self):
         self.cochain.RESET_cache()
@@ -167,6 +169,13 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
     def export(self):
         return self._export_
 
+    @property
+    def dofs(self):
+        if self._dofs_ is None:
+            self._dofs_ = _3dCSCG_Standard_forms_DOFs(self)
+        return self._dofs_
+
+
     def ___PRIVATE_saving_info___(self):
         """"""
         my_info = dict()
@@ -248,7 +257,11 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
 
 
 class _3dCSCG_Standard_Form_Cochain(CSCG_Standard_Form_Cochain_BASE):
+    """The cochain must be full. So it must representing all dofs. For partial dofs, we can access them
+    through `cochain.partial` property.
+    """
     def __init__(self, sf):
+        self._partial_ = None
         super().__init__(sf)
 
     def local_(self, axis):
@@ -274,6 +287,28 @@ class _3dCSCG_Standard_Form_Cochain(CSCG_Standard_Form_Cochain_BASE):
             else:
                 raise Exception()
         return localAlongAxis
+
+
+    @property
+    def partial(self):
+        """To access partial of the cochain."""
+        if self._partial_ is None:
+            self._partial_ = _3dCSCG_Standard_Form_Cochain_Partial(self)
+        return self._partial_
+
+
+class _3dCSCG_Standard_Form_Cochain_Partial(FrozenOnly):
+    """For accessing a partial of the cochain."""
+    def __init__(self, sf):
+        self._sf_ = sf
+        self._freeze_self_()
+
+
+
+
+
+
+
 
 
 
