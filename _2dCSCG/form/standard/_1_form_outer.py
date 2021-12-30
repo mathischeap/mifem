@@ -220,20 +220,28 @@ if __name__ == '__main__':
     # mpiexec python _2dCSCG\form\standard\_1_form_outer.py
     from _2dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
-    mesh = MeshGenerator('crazy', c=0.3)([50,45])
+    # mesh = MeshGenerator('crazy', c=0.3)([50,45])
     # mesh = MeshGenerator('chp1',)([2,2])
-    space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',4)])
+    mesh = MeshGenerator('crazy', c=0.0,bounds=([0,1],[0,1]))([1,1])
+    space = SpaceInvoker('polynomials')([('Lobatto',2), ('Lobatto',2)])
     FC = FormCaller(mesh, space)
 
     ES = ExactSolutionSelector(mesh)('sL:sincos1')
 
     f1 = FC('1-f-o', is_hybrid=True)
-    f1.TW.func.DO.set_func_body_as(ES, 'velocity')
-    f1.TW.current_time = 0
-    f1.TW.DO.push_all_to_instant()
-    f1.discretize()
-    print(f1.error.L())
 
-    from root.mifem import save
+    M0 = f1.matrices.mass[0]
+    print(M0.toarray())
 
-    save(f1, 'test_2d_f1_o')
+    E21 = f1.matrices.incidence[0]
+    print(E21.toarray())
+
+    # f1.TW.func.DO.set_func_body_as(ES, 'velocity')
+    # f1.TW.current_time = 0
+    # f1.TW.DO.push_all_to_instant()
+    # f1.discretize()
+    # print(f1.error.L())
+    #
+    # from root.mifem import save
+    #
+    # save(f1, 'test_2d_f1_o')

@@ -164,6 +164,10 @@ class _1Form_Inner(_1Form_BASE):
         sqrtg = element.coordinate_transformation.Jacobian(*xietasigma, J=J)
         iJ = element.coordinate_transformation.inverse_Jacobian_matrix(*xietasigma, J=J)
         g = element.coordinate_transformation.inverse_metric_matrix(*xietasigma, iJ=iJ)
+
+        # print(sqrtg)
+        # print(sqrtg*g[0][0])
+
         del J, iJ
         M00 = self.___PRIVATE_inner_Helper1___(quad_weights, sqrtg*g[0][0], bfOther[0], bfSelf[0])
         M11 = self.___PRIVATE_inner_Helper1___(quad_weights, sqrtg*g[1][1], bfOther[1], bfSelf[1])
@@ -219,20 +223,24 @@ if __name__ == '__main__':
     # mpiexec python _2dCSCG\form\standard\_1_form_inner.py
     from _2dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
-    mesh = MeshGenerator('crazy', c=0.3)([50,45])
+    mesh = MeshGenerator('crazy', c=0.0,bounds=([0,1],[0,1]))([1,1])
     # mesh = MeshGenerator('chp1',)([2,2])
-    space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',4)])
+    space = SpaceInvoker('polynomials')([('Lobatto',1), ('Lobatto',1)])
     FC = FormCaller(mesh, space)
 
     ES = ExactSolutionSelector(mesh)('sL:sincos1')
 
     f1 = FC('1-f-i', is_hybrid=True)
-    f1.TW.func.DO.set_func_body_as(ES, 'velocity')
-    f1.TW.current_time = 0
-    f1.TW.DO.push_all_to_instant()
-    f1.discretize()
-    print(f1.error.L())
 
-    from root.mifem import save
+    M0 = f1.matrices.mass[0]
+    print(M0.toarray())
 
-    save(f1, 'test_2d_f1_i')
+    # f1.TW.func.DO.set_func_body_as(ES, 'velocity')
+    # f1.TW.current_time = 0
+    # f1.TW.DO.push_all_to_instant()
+    # f1.discretize()
+    # print(f1.error.L())
+    #
+    # from root.mifem import save
+    #
+    # save(f1, 'test_2d_f1_i')

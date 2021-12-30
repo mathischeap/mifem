@@ -467,7 +467,7 @@ def ___restore__3dCSCG_Algebra_DUAL_Form___(parameters):
     and the form type is decided by the obj_name.
 
     """
-    assert parameters['type'] == '_3dCSCG_Form'
+    assert parameters['type'] == '_3dCSCG_Form' # Not an error as we actually restore its prime form.
     ID = parameters['ID']
     prime = ___restore__3dCSCG_Form___(parameters)
     mesh = prime.mesh

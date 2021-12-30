@@ -9,6 +9,10 @@ A BASE for all forms except continuous forms.
          TU Delft, Delft, Netherlands
 
 """
+import sys
+if './' not in sys.path: sys.path.append('./')
+
+import numpy as np
 from BASE.CSCG.form.main_BASE import CSCG_FORM_BASE
 
 
@@ -39,3 +43,49 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
             return self.p
         else:
             raise NotImplementedError()
+
+
+
+
+
+    def __neg__(self):
+        """"""
+
+    def __sub__(self, other):
+        """"""
+        assert other.__class__.__name__ == self.__class__.__name__, f"forms do not match."
+        assert other.mesh == self.mesh, f"meshes do not match."
+        assert other.space == self.space, f"spaces do not match."
+
+    def __add__(self, other):
+        """"""
+        assert other.__class__.__name__ == self.__class__.__name__, f"forms do not match."
+        assert other.mesh == self.mesh, f"meshes do not match."
+        assert other.space == self.space, f"spaces do not match."
+
+
+
+
+if __name__ == '__main__':
+    # mpiexec -n 4 python _3dCSCG\form\main.py
+    from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+
+    mesh = MeshGenerator('crazy', c=0.0)([8,8,8])
+    space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3), ('Lobatto',3)])
+    FC = FormCaller(mesh, space)
+
+
+    def p(t, x, y, z): return - 6 * np.pi * np.sin(2 * np.pi * x) * np.sin(2 * np.pi * y) * np.sin(2 * np.pi * z) + 0 * t
+    def u(t,x,y,z): return np.sin(np.pi*x)*np.cos(2*np.pi*y)*np.cos(np.pi*z) + t
+    def v(t,x,y,z): return np.cos(np.pi*x)*np.sin(np.pi*y)*np.cos(2*np.pi*z) + t
+    def w(t,x,y,z): return np.cos(np.pi*x)*np.cos(np.pi*y)*np.sin(2*np.pi*z) + t
+    velocity = FC('vector', (u,v,w))
+    scalar = FC('scalar', p)
+
+    f1 = FC('1-f', is_hybrid=False)
+    F1 = FC('1-f', is_hybrid=False)
+
+
+    ffa1 = f1 + F1
+    ffs1 = f1 - F1
+

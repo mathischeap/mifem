@@ -50,7 +50,7 @@ class CSCG_Algebra_DUAL_FORM_BASE(FrozenClass):
         """
         _2bs_ = dict()
         _2bs_['obj'] = str(self).split()[0][1:]
-        _2bs_['parameters'] = self.prime.standard_properties.parameters
+        _2bs_['parameters'] = self.prime.standard_properties.parameters # this is the key
         if rAnk == mAster_rank:
             if do_save:
                 if filename[-3:] != '.mi': filename += '.mi'

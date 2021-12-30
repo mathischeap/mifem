@@ -2,9 +2,8 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 from SCREWS.frozen import FrozenOnly
-from root.config import rAnk
-from _3dCSCG.form.trace.dofs.basis_function import _3dCSCG_TF_DOF_BF
 
+from _3dCSCG.form.trace.dofs.dof.main import _3dCSCG_Trace_forms_DOF
 
 
 class _3dCSCG_Trace_forms_DOFs(FrozenOnly):
@@ -70,33 +69,6 @@ class _3dCSCG_Trace_forms_DOFs(FrozenOnly):
 
 
 
-class _3dCSCG_Trace_forms_DOF(FrozenOnly):
-    """A dof of a trace form."""
-    def __init__(self, dofs, i):
-        """"""
-        # we first check if dof #i is a local dof, if not, raise Error.
-        ELEMENTS, INDICES = dofs.___PRIVATE_FIND_local_mesh_elements_and_local_indices_of_dof___(i)
-        assert len(ELEMENTS) > 0, f"dof #{i} is not a local dof in RANK {rAnk}."
-        self._local_positions_ = list()
-        for E, I in zip(ELEMENTS, INDICES):
-            self._local_positions_.append((E, I))
-        self._i_ = i # I am the #i dof.
-        self._dofs_ = dofs
-        self._tf_ = dofs._tf_
-        self._bf_ = None
-        self._freeze_self_()
-
-    @property
-    def basis_function(self):
-        """The local basis function(s) of this dof."""
-        if self._bf_ is None:
-            self._bf_ = _3dCSCG_TF_DOF_BF(self)
-        return self._bf_
-
-
-
-
-
 
 
 if __name__ == '__main__':
@@ -104,7 +76,6 @@ if __name__ == '__main__':
     from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
     mesh = MeshGenerator('crazy', c=0.3)(None)
-    print(mesh.elements.layout)
     space = SpaceInvoker('polynomials')([('Lobatto',1), ('Lobatto',1), ('Lobatto',1)])
     FC = FormCaller(mesh, space)
 

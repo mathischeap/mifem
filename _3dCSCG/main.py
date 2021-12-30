@@ -146,7 +146,6 @@ class FormCaller(FrozenOnly):
 
         else:
             fp = dict()
-            fp['type'] = '_3dCSCG_Form'
             fp['ID'] = ID
             fp['mesh_parameters'] = deepcopy(self._mesh_.standard_properties.parameters)
             fp['space_parameters'] = deepcopy(self._space_.standard_properties.parameters)
@@ -155,6 +154,7 @@ class FormCaller(FrozenOnly):
             if ID in ('0-adf', '1-adf', '2-adf', '3-adf',  # algebraic dual (standard) forms
                       '0-adt', '1-adt', '2-adt',           # algebraic dual trace forms
                       ):
+                fp['type'] = '_3dCSCG_ADF'
                 # ---------------- make a dual from a prime ------------------------------------
                 if len(args) == 1: # if so, we get a prime form, we make dual form from it.
                     assert kwargs == dict(), \
@@ -225,10 +225,13 @@ class FormCaller(FrozenOnly):
 
                 FM = cls_body(prime, self._mesh_, self._space_, **KWARGS)
 
-            else: # all other objects like standard forms, trace forms, edge forms, node forms and so on.
-
+            else: # all forms in the folder "form", like the standard forms, trace forms, edge forms, node forms and so on
+                assert len(args) == 0, "all these forms do not take args, only take kwargs."
+                # this is a necessary request. If we define new forms in this folder, we have to make this satisfied.
+                fp['type'] = '_3dCSCG_Form'
                 FM = cls_body(self._mesh_, self._space_, **kwargs)
 
+            #===============================================================================================
             FM.___define_parameters___ = fp
 
         cOmm.barrier()  # for safety reason

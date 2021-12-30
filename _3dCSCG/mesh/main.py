@@ -9,6 +9,10 @@ Mesh main structure:
 
 Extension structures:
     Mesh -> TraceMesh -> TraceElements -> TraceElement
+         |
+         -> EdgeMesh
+         |
+         -> NodeMesh
 
 Components:
     Geometry
@@ -23,18 +27,18 @@ from SCREWS.frozen import FrozenOnly
 from SCREWS.exceptions import ElementsLayoutError, ElementSidePairError
 from SCREWS.miscellaneous import break_list_into_parts
 from _3dCSCG.mesh.elements.main import _3dCSCG_Mesh_Elements
-from _3dCSCG.mesh.trace import _3dCSCG_Trace
 from _3dCSCG.mesh.periodic_setting.main import _3dCSCG_PeriodicDomainSetting
 from _3dCSCG.mesh.__DEPRECATED__.coordinate_transformation.transformer import CoordinateTransformation as ___DCT___
 from _3dCSCG.mesh.visualize import _3dCSCG_Mesh_Visualize
-from _3dCSCG.mesh.boundaries import _3dCSCG_Mesh_Boundaries
+from _3dCSCG.mesh.boundaries.main import _3dCSCG_Mesh_Boundaries
 from _3dCSCG.mesh.sub_geometry.main import _3dCSCG_Mesh_SubGeometry
 
 
 
 
-from _3dCSCG.mesh.edge import _3dCSCG_Edge
-from _3dCSCG.mesh.node import _3dCSCG_Node
+from _3dCSCG.mesh.node.main import _3dCSCG_Node
+from _3dCSCG.mesh.edge.main import _3dCSCG_Edge
+from _3dCSCG.mesh.trace.main import _3dCSCG_Trace
 
 
 

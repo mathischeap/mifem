@@ -53,7 +53,9 @@ class _3dCSCG_PolynomialSpace(_3dCSCG_Space):
             quad_weights_ravel = _Quadrature_.quad_ndim_ravel[-1]
             # return quad_nodes, quad_weights, quad_weights_ravel
             self._quadrature_cache_ = [quad_degree, quad_type,
-                                       quad_nodes, quad_weights, quad_weights_ravel]
+                                       quad_nodes,
+                                       quad_weights,
+                                       quad_weights_ravel]
 
         return self._quadrature_cache_[2:]
 

@@ -318,9 +318,11 @@ class ___Operators_Inner___(FrozenOnly):
         self._mesh_ = sf.mesh
         self._sf_ = sf
         self._of_ = of
+
         if quad_degree is None:
             quad_degree = [int(np.max([sf.dqp[i], of.dqp[i]])) + 1 for i in range(2)]
-        quad_nodes, _, quad_weights = sf.space.DO_evaluate_quadrature(quad_degree)
+
+        quad_nodes, _, quad_weights = sf.space.DO_evaluate_quadrature(quad_degree, quad_type='Gauss')
         xietasigma, bfSelf = sf.DO.evaluate_basis_at_meshgrid(*quad_nodes)
         if of is sf:
             bfOther = bfSelf

@@ -2103,8 +2103,6 @@ def test_TOOLS_NO15_linear_system_apply_BC():
 if __name__ == '__main__':
     # mpiexec -n 5 python TESTS\unittest_tools.py
 
-    test_TOOLS_NO13_EWC_Customize_CSCG_partial_dofs()
-    test_TOOLS_NO14_partial_cochain_with_3dCSCG_form_BC()
-    test_TOOLS_NO15_linear_system_apply_BC()
+    test_TOOLS_NO11_test_ParallelMatrix3dInputRunner()
 
 

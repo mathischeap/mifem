@@ -135,8 +135,10 @@ class _2Form_BASE(_2dCSCG_Standard_Form):
 
     def ___OPERATORS_inner___(self, _, i, xietasigma, quad_weights, bfSelf, bfOther):
         """Note that here we only return a local matrix."""
+
         element = self.mesh.elements[i]
         detJ = element.coordinate_transformation.Jacobian(*xietasigma)
+
         Mi = np.einsum('im, jm, m -> ij',
             bfOther[0], bfSelf[0], np.reciprocal(detJ)*quad_weights,
             optimize='greedy'

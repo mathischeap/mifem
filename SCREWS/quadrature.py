@@ -296,11 +296,13 @@ class Quadrature(FrozenOnly):
 
 
 if __name__ == '__main__':
-    a = np.polynomial.legendre.leggauss(2)
+    # a = np.polynomial.legendre.leggauss(2)
 
 
-    # a = Quadrature(2)
-    # _ = a.quad
+    a = Quadrature(2, 'Lobatto')
+    _ = a.quad
+
+    print(_)
 
     # _gg2()
     # _gg2()

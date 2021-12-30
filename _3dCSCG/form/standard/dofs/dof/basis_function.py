@@ -5,13 +5,8 @@
 
 
 
-
-import numpy as np
-
 from SCREWS.frozen import FrozenOnly
-
-
-
+import numpy as np
 
 
 
@@ -81,7 +76,6 @@ class _3dCSCG_SF_DOF_BF(FrozenOnly):
         xyz = ME.coordinate_transformation.mapping(*xi_et_sg)
         return xyz, (rbf,) # for 0-standard-form, in-site-bf is equal to reference bf.
 
-
     def ___PRIVATE_reconstruct_1_bf___(self, xi_et_sg, rbf, ME):
         """We make the in-site bf from the rbf (reference bf) for the 1-standard-form.
 
@@ -129,11 +123,6 @@ class _3dCSCG_SF_DOF_BF(FrozenOnly):
         # density = int(density**(1/3)) + 1
         # xi = eta = sigma = np.linspace(-1, 1, density)
         raise NotImplementedError()
-
-
-
-
-
 
     def ___PRIVATE_visualize_1form___(self, density=1000):
         """"""

@@ -652,14 +652,9 @@ class _3dCSCG_Edge_Element_CT(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 12 python _3dCSCG\mesh\edge.py
+    # mpiexec -n 12 python _3dCSCG\mesh\edge\main.py
     from _3dCSCG.main import MeshGenerator
     elements = [2, 2, 2]
     # mesh = MeshGenerator('crazy_periodic', c=0.0, bounds=([0,3], [0,3], [0,3]))(elements)
     mesh = MeshGenerator('bridge_arch_cracked')(elements)
     edges = mesh.edge.elements
-
-    for i in edges:
-        edge = edges[i]
-        # print(i, edge.i, edge.positions, edge.CHARACTERISTIC_element, edge.CHARACTERISTIC_position)
-        # print(i, edge.i, edge.positions, edge.CHARACTERISTIC_position, edge.CHARACTERISTIC_element, edge.CHARACTERISTIC_corner_edge, edge.CHARACTERISTIC_region)

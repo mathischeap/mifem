@@ -5,7 +5,7 @@ The edge elements of a mesh.
 
 
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path: sys.path.append('../')
 
 from root.config import *
 from SCREWS.frozen import FrozenOnly

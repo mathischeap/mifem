@@ -94,6 +94,8 @@ class _3dCSCG_Mesh_Visualize(FrozenOnly):
     def matplot(self):
         return self._matplot_
 
+
+
 class _3dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
     """"""
     def __init__(self, mesh):
@@ -104,7 +106,6 @@ class _3dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
 
     def __call__(self, *args, **kwargs):
         return self.grid(*args, **kwargs)
-
 
 
     def grid(self, elements=None, density=50000, usetex=False,
@@ -231,15 +232,9 @@ class _3dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         #================================================================================
         return fig
 
-
-
-
     def element_distribution(self):
         """"""
         return self._mesh_.___PRIVATE_matplot_local_elements___()
-
-
-
 
     def connection(self, density=5000, usetex=False, saveto=None, aspect='equal'):
         """The connection of node and edge elements.
@@ -371,16 +366,20 @@ class _3dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         return fig
 
 
+
+
+
+
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\mesh\visualize.py
     from _3dCSCG.main import MeshGenerator
     elements = [3, 3, 3]
-    mesh = MeshGenerator('crazy', c=0.25)(elements)
+    mesh = MeshGenerator('crazy_periodic', c=0.25)(elements)
     # mesh = MeshGenerator('crazy_periodic', c=0.0, bounds=([0, 3], [0, 3], [0, 3]))(elements)
     # mesh = MeshGenerator('bridge_arch_cracked')(elements)
     # mesh = MeshGenerator('psc')(elements)
     mesh.visualize.matplot.grid()
     mesh.visualize.matplot.connection()
     mesh.visualize.matplot.element_distribution()
-    # mesh.domain.visualize()
-    # mesh.domain.regions.visualize()
+    mesh.domain.visualize()
+    mesh.domain.regions.visualize()

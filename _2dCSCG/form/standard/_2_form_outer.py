@@ -53,18 +53,21 @@ if __name__ == '__main__':
 
     from _2dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
-    mesh = MeshGenerator('crazy', c=0.3)([50,45])
+    mesh = MeshGenerator('crazy', c=0.0,bounds=([0,1],[0,1]))([1,1])
     # mesh = MeshGenerator('chp1',)([2,2])
-    space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',4)])
+    space = SpaceInvoker('polynomials')([('Lobatto',2), ('Lobatto',2)])
     FC = FormCaller(mesh, space)
 
     ES = ExactSolutionSelector(mesh)('sL:sincos1')
 
     f2 = FC('2-f-o', is_hybrid=False)
-    f2.TW.func.DO.set_func_body_as(ES, 'potential')
-    f2.TW.current_time = 0
-    f2.TW.DO.push_all_to_instant()
-    f2.discretize()
-    print(f2.error.L())
 
+
+    # f2.TW.func.DO.set_func_body_as(ES, 'potential')
+    # f2.TW.current_time = 0
+    # f2.TW.DO.push_all_to_instant()
+    # f2.discretize()
+    M0 = f2.matrices.mass[0]
+
+    print(M0.toarray())
     # save(f2, 'test_2d_f2_o')
