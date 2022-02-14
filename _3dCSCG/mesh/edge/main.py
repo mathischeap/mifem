@@ -361,6 +361,7 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
                 else:
                     assert position in bns, f"position={position} is wrong."
                     assert position not in on_mesh_boundaries[edge], f"boundary: {position} appears more than once."
+                    # noinspection PyUnresolvedReferences
                     on_mesh_boundaries[edge].append(position)
 
             # noinspection PyUnresolvedReferences
@@ -400,7 +401,7 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
 
     @property
     def num(self):
-        """Return how many local trace elements.
+        """Return how many local edge elements.
         (int)
 
         :return:

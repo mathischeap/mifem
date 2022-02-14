@@ -77,6 +77,7 @@ def random_3D_mesh_of_elements_around(elements_num,
             'crazy_periodic': 0, # crazy_periodic mesh has no mesh boundary.
             'bridge_arch_cracked': 8,
     }
+
     if mesh_boundary_num is None:
         pass
     elif len(mesh_boundary_num) >= 3 and mesh_boundary_num[:2] == '>=':
@@ -108,8 +109,6 @@ def random_3D_mesh_of_elements_around(elements_num,
         mesh_personal_parameters = None
 
     mesh_personal_parameters = cOmm.bcast(mesh_personal_parameters, root=mAster_rank)
-
-
 
 
     # ======================================================================================================

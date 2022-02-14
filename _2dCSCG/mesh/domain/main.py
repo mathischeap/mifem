@@ -18,7 +18,7 @@ from _2dCSCG.mesh.domain.boundaries import _2dCSCG_Domain_Boundaries
 class _2dCSCG_Domain(FrozenOnly):
     def __init__(self, di):
         """
-        Paramters
+        Parameters
         ---------
         di : DomainInput
             The DomainInput instance.

@@ -16,7 +16,7 @@ class _3dCSCG_Mesh_Element(FrozenOnly):
         self._i_ = i
         self._type_wrt_metric_ = None
         self._in_region_ = self._mesh_.DO.FIND_region_name_of_element(i)
-        self._ct_ = _3dCSCG_Mesh_ECT(self)
+        self._ct_ = _3dCSCG_Mesh_Element_CT(self)
         self._sub_geometry_ = None
         self._sides_ = None
         self._freeze_self_()
@@ -77,7 +77,7 @@ class _3dCSCG_Mesh_Element(FrozenOnly):
         return self._sides_
 
 
-class _3dCSCG_Mesh_ECT(FrozenOnly):
+class _3dCSCG_Mesh_Element_CT(FrozenOnly):
     """The Coordinate transformation class for the mesh element."""
     def __init__(self, element):
         self._element_ = element

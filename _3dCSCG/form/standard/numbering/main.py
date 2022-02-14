@@ -168,6 +168,61 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
         return list(RAVEL)
 
 
+
+
+    @property
+    def sharing_physical_locations(self):
+        """Return a list of tuples which represent the dofs that locating at the same physical locations.
+
+        For example, if it returns the following list:
+            [(1, 45, 665, 128), (2, 88, 95), ...]
+        Then we know that actually dofs #1, #45, #665, #128 exactly are at the same physical location.
+        Similarly. Dofs #2, #88, #95 are at the same physical location. And so on.
+
+        IMPORTANT: this is mainly for testing purpose. Its efficiency is very low. So for large simulations,
+        calling this property will be extremely expensive.
+
+        """
+        if self._sf_.IS_hybrid is False: # for non-hybrid forms, no dofs are at the same location.
+            return list()
+        else:
+            if self._sf_.k == 3: # a volume form, return empty list
+                return list()
+            else:
+                kwargs = self._sf_.___define_parameters___['kwargs']
+                kwargs['is_hybrid'] = False
+                non_hybrid_form = self._sf_.__class__(self._sf_.mesh, self._sf_.space, **kwargs)
+                NHF = non_hybrid_form.numbering.gathering
+                NHF = cOmm.gather(NHF, root=mAster_rank)
+
+                GM = self.gathering
+                GM = cOmm.gather(GM, root=mAster_rank)
+                if rAnk == mAster_rank: # in the master rank.
+                    DICT = dict()
+                    for _, nhf in enumerate(NHF):
+                        gm = GM[_]
+                        for i in nhf: # we are going through all mesh elements.
+                            GV = nhf[i]
+                            gv = gm[i]
+                            for j, dof in enumerate(GV):
+                                h_dof = gv[j]
+                                if dof not in DICT:
+                                    DICT[dof] = (h_dof,)
+                                else:
+                                    DICT[dof] += (h_dof,)
+
+                    LIST = list()
+                    for i in DICT:
+                        if len(DICT[i]) == 1:
+                            pass
+                        else:
+                            LIST.append(DICT[i])
+
+                    return LIST
+                else:
+                    return None
+
+
     @property
     def DO(self):
         return self._DO_
@@ -273,6 +328,11 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
             self._localSideCache2_[side_name] = indices.ravel('F')
 
         return GM[element].full_vector[self._localSideCache2_[side_name]]
+
+
+
+
+
 
 
 
@@ -404,16 +464,25 @@ class _3dCSCG_Standard_Form_Numbering_DO_FIND_(FrozenOnly):
 
 
 
+
+
+
+
+
+
+
 if __name__ == '__main__':
-    # mpiexec python _3dCSCG\form\standard\numbering\main.py
+    # mpiexec -n 6 python _3dCSCG\form\standard\numbering\main.py
     from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('pwc')([2, 2, [1,2,1]])
-    space = SpaceInvoker('polynomials')([('Lobatto',2), ('Lobatto',3), ('Lobatto',1)])
+    mesh = MeshGenerator('crazy')([1, 1, 2])
+    space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3), ('Lobatto',3)])
     FC = FormCaller(mesh, space)
 
-    f = FC('1-f', is_hybrid=False)
+    f = FC('2-f', is_hybrid=True)
     #
-    bd = f.numbering.GLOBAL_boundary_dofs
+    bd = f.numbering.sharing_physical_locations
+
+    print(bd)
     #
-    print(rAnk, bd)
+    # print(rAnk, bd)

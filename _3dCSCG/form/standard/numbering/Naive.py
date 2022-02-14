@@ -21,6 +21,8 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
 
 
 
+
+
     def _0Form(self):
         """
         Do the numbering if it is a standard 0-form.
@@ -37,7 +39,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         elif len(parameters) == 1 and 'SingleRegionSideCrack' in parameters:
             # have one region side crack ...
             assert not self._sf_.IS_hybrid, \
-                "0-form can not be hybrid for single region side crack numbering."
+                "0-form can not be hybrid for single-region-side-crack-numbering."
             return self._0Form_a_region_side_crack()
         else:
             raise NotImplementedError()
@@ -93,6 +95,8 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
 
 
 
+
+
     def _3Form_no_parameters(self):
         """
         Do the numbering if it is a standard 3-form.
@@ -112,6 +116,8 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         gathering_matrix = Gathering_Matrix(gathering_matrix, mesh_type='_3dCSCG')
         numOfDofs = numOfBasis * element_num
         return gathering_matrix, numOfDofs, extraInfo
+
+
 
 
 
@@ -257,6 +263,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         elif toSide == 'B': numberingCache[toElement][2][ :, :, 0] = data
         elif toSide == 'F': numberingCache[toElement][2][ :, :,-1] = data
         else: raise Exception()
+
 
 
 
@@ -428,6 +435,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
             numberingCache[toElement][0][ :, :,-1] = data0
             numberingCache[toElement][1][ :, :,-1] = data1
         else: raise Exception()
+
 
 
 
@@ -638,6 +646,13 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         numOfDofs = len(dofsPOOL)
 
         return new_gathering_matrix, numOfDofs, extraInfo
+
+
+
+
+
+
+
 
 
 

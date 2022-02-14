@@ -482,7 +482,7 @@ class GlobalMatrix(FrozenOnly):
 
     @property
     def IS_globally_empty(self):
-        """I am an empty matrix in any core."""
+        """I am an empty matrix in all cores."""
         local_judge = True if self.nnz == 0 else False
         return cOmm.allreduce(local_judge, op=MPI.LAND)
 

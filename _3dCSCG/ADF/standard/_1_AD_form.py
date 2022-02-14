@@ -39,7 +39,7 @@ if __name__ == "__main__":
     import numpy as np
 
     # mesh = MeshGenerator('bridge_arch_cracked')([8,9,7], EDM='SWV0', show_info=True)
-    mesh = MeshGenerator('crazy', c = 0.1)([10, 10, 10], EDM=None, show_info=True)
+    mesh = MeshGenerator('crazy', c = 0.)([10, 10, 10], EDM=None, show_info=True)
     space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3), ('Lobatto',3)], show_info=True)
 
 

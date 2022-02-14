@@ -108,17 +108,20 @@ def test_LinearSolver_No0_GMRES():
     X0 = LocallyFullVector(np.zeros((3,)))
 
     x0, info, beta, ITER, message = ParallelSolverDistributor("GMRES")(A, b, X0, restart=3, preconditioner=('Jacobian', dict()),
-                                                                       COD=False, routine='mpi_v2')
+                                                                       COD=False, routine='mpi_v2',
+                                                                       name='GMRES_test_mpi_v2', plot_residuals=False)
     x0 = x0.V
     np.testing.assert_array_almost_equal(x0, np.array([-2.1810344827586, 1.8362068965517, -0.5948275862068]))
 
     x0, info, beta, ITER, message = ParallelSolverDistributor("GMRES")(A, b, X0, restart=3, preconditioner=('Jacobian', dict()),
-                                                                       COD=False, routine='mpi_v0')
+                                                                       COD=False, routine='mpi_v0',
+                                                                       name='GMRES_test_mpi_v0', plot_residuals=False)
     x0 = x0.V
     np.testing.assert_array_almost_equal(x0, np.array([-2.1810344827586, 1.8362068965517, -0.5948275862068]))
     assert ITER == 1
 
-    x0, info, beta, ITER, message = GMRES.solve(A, b, X0, restart=3, preconditioner=None, COD=False, routine='mpi_v0')
+    x0, info, beta, ITER, message = GMRES.solve(A, b, X0, restart=3, preconditioner=None, COD=False, routine='mpi_v0',
+                                                                       name='GMRES_test_mpi_v0-1', plot_residuals=False)
     x0 = x0.V
     np.testing.assert_array_almost_equal(x0, np.array([-2.1810344827586, 1.8362068965517, -0.5948275862068]))
     assert ITER == 1
@@ -263,3 +266,4 @@ if __name__ == '__main__':
     # mpiexec -n 11 python TESTS\unittest_linear_solvers.py
 
     test_LinearSolver_No2_LooseGMRES()
+    test_LinearSolver_No0_GMRES()

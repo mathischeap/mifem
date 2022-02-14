@@ -18,8 +18,6 @@ class _3dCSCG_Edge_Numbering_Naive(FrozenOnly):
         self._mesh_ = ef.mesh
         self._freeze_self_()
 
-
-
     def _0Edge(self):
         """Do the numbering if it is an edge 0-form:
         :class:`_3dCSCG.form.edge._0_edge._0Edge`.
@@ -35,7 +33,6 @@ class _3dCSCG_Edge_Numbering_Naive(FrozenOnly):
             return self._0Edge_no_parameters()
         else:
             raise NotImplementedError()
-
 
     def _0Edge_no_parameters(self):
         """

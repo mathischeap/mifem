@@ -557,6 +557,19 @@ class _3dCSCG_ECT_3d_QUAD(FrozenOnly):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 if __name__ == '__main__':
     # mpiexec -n 12 python _3dCSCG\mesh\elements\main.py
     from _3dCSCG.main import MeshGenerator

@@ -269,7 +269,8 @@ def test_ADF_NO3_coboundary():
 
     # ---- dual curl ----------------------------------------------------------------------
     mesh = MeshGenerator('crazy', c=0)([5, 6, 7], EDM=None, show_info=False)
-    # currently, the coboundary for dual curl only works for orthogonal mesh. The problem may be in the reduction, or mass matrix, or where-else.
+    # currently, the coboundary for dual curl only works for orthogonal mesh.
+    # The problem may be in the reduction, or mass matrix, or where-else.
     space = SpaceInvoker('polynomials')([4, 3, 2], show_info=False)
     FC = FormCaller(mesh, space)
 

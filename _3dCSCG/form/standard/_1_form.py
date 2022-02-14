@@ -33,7 +33,11 @@ class _1Form(_3dCSCG_Standard_Form):
     """
     def __init__(self, mesh, space, is_hybrid=True,
         orientation='outer', numbering_parameters='Naive',  name=None):
-        if name is None: name = orientation + '-oriented-1-form'
+        if name is None:
+            if is_hybrid:
+                name = 'hybrid-' + orientation + '-oriented-1-form'
+            else:
+                name = orientation + '-oriented-1-form'
         super().__init__(mesh, space, is_hybrid, orientation, numbering_parameters, name)
         self._k_ = 1
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_standard_1form')
@@ -84,7 +88,7 @@ class _1Form(_3dCSCG_Standard_Form):
                 if self.func.ftype == 'standard':
                     return self.___PRIVATE_discretize_standard_ftype___(update_cochain=update_cochain, **kwargs)
                 else:
-                    raise (f"3dCSCG 1-form cannot (target func) discretize _3dCSCG_VectorField of ftype={self.func.ftype}")
+                    raise NotImplementedError(f"3dCSCG 1-form cannot (target func) discretize _3dCSCG_VectorField of ftype={self.func.ftype}")
 
             else:
                 raise NotImplementedError(f'3dCSCG 1-form can not discretize {self.TW.func.body.__class__}.')

@@ -33,7 +33,12 @@ class FrozenOnly(ABC):
         object.__setattr__(self, key, value)
 
     def _freeze_self_(self):
-        """Freeze self, can add no more new attributes."""
+        """Freeze self, can add no more new attributes. """
+        try:
+            # we will run method ___PreFrozenChecker___() if it exists.
+            getattr(self, '___PreFrozenChecker___')()
+        except AttributeError:
+            pass
         self.___ISFROZEN___ = True
 
     def _melt_self_(self):
@@ -47,17 +52,7 @@ class FrozenOnly(ABC):
 
 
 
-
-
-
 class FrozenClass(FrozenOnly):
-    def _freeze_self_(self):
-        """Freeze self, can add no more new attributes. """
-        try:
-            getattr(self, '___PreFrozenChecker___')() # we will run method ___PreFrozenChecker___() if it exists.
-        except AttributeError:
-            pass
-        self.___ISFROZEN___ = True
 
     @property
     def standard_properties(self):

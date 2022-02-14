@@ -208,6 +208,124 @@ def test_trace_NO2_trace_2_form_Rd_and_Rc():
 
 
 
+def test_trace_NO3_trace_matrices():
+    """"""
+    if rAnk == mAster_rank:
+        load = random.randint(100, 299)
+    else:
+        load= None
+    load = cOmm.bcast(load, root=mAster_rank)
+    FC = random_3D_FormCaller_of_total_load_around(load, exclude_periodic=False)
+
+    if rAnk == mAster_rank:
+        print(f"+++ [test_trace_NO3_trace_matrices] @load = {load} ...... ", flush=True)
+
+    # Below we do a check for the assembled trace matrix for 2-trace-form---------------------------------
+    t2 = FC('2-t')
+    f2 = FC('2-f', is_hybrid=True)
+
+    T2 = t2.matrices.trace
+    T2.gathering_matrices = (t2, f2)
+    T2a = T2.assembled
+    M = T2a.___PRIVATE_gather_M_to_core___(core=mAster_rank)
+    SPL = f2.numbering.sharing_physical_locations
+    if rAnk == mAster_rank:
+        COUNT = 0
+        for Mi in M:
+            NNZ = Mi.nnz
+            if NNZ == 1:
+                pass
+            elif NNZ == 2:
+                if tuple(Mi.indices) in SPL:
+                    COUNT += 1
+                else:
+                    raise Exception()
+            else:
+                raise Exception()
+
+        assert len(SPL) == COUNT
+
+
+    # Below we do a check for the assembled trace matrix for 1-trace-form---------------------------------
+    t1 = FC('1-t')
+    f1 = FC('1-f', is_hybrid=True)
+
+    T1 = t1.matrices.trace
+    T1.gathering_matrices = (t1, f1)
+    T1a = T1.assembled
+    M = T1a.___PRIVATE_gather_M_to_core___(core=mAster_rank)
+    SPL = f1.numbering.sharing_physical_locations
+    if rAnk == mAster_rank:
+        spl = list()
+        for Mi in M:
+            NNZ = Mi.nnz
+            if NNZ == 1:
+                pass
+            elif NNZ == 2:
+                i0, i1 = Mi.indices
+                FOUND_IT = False
+                for s in spl:
+                    if i0 in s or i1 in s:
+                        s.update((i0, i1))
+                        FOUND_IT = True
+                        break
+                if FOUND_IT:
+                    pass
+                else:
+                    spl.append({i0, i1})
+
+            else:
+                raise Exception()
+
+        for s in spl:
+            S = list(s)
+            S.sort()
+            assert tuple(S) in SPL, f"Something is wrong."
+
+    # Below we do a check for the assembled trace matrix for 0-trace-form---------------------------------
+    t0 = FC('0-t')
+    f0 = FC('0-f', is_hybrid=True)
+
+    T0 = t0.matrices.trace
+    T0.gathering_matrices = (t0, f0)
+    T0a = T0.assembled
+    M = T0a.___PRIVATE_gather_M_to_core___(core=mAster_rank)
+    SPL = f0.numbering.sharing_physical_locations
+    if rAnk == mAster_rank:
+        spl = list()
+        for Mi in M:
+            NNZ = Mi.nnz
+            if NNZ == 1:
+                pass
+            elif NNZ == 2:
+                i0, i1 = Mi.indices
+                FOUND_IT = False
+                for s in spl:
+                    if i0 in s or i1 in s:
+                        s.update((i0, i1))
+                        FOUND_IT = True
+                        break
+                if FOUND_IT:
+                    pass
+                else:
+                    spl.append({i0, i1})
+
+            else:
+                raise Exception()
+
+        for s in spl:
+            S = list(s)
+            S.sort()
+            assert tuple(S) in SPL, f"Something is wrong."
+
+    return 1
+
+
+
+
+
+
+
 
 
 
@@ -215,5 +333,4 @@ if __name__ == '__main__':
     # mpiexec -n 12 python _3dCSCG\TESTS\unittest_trace.py
     # test_trace_NO__general_tests()
     # test_trace_NO0_trace_0_form_Rd_and_Rc()
-    test_trace_NO1_trace_1_form_Rd_and_Rc()
-    # test_trace_NO2_trace_2_form_Rd_and_Rc()
+    test_trace_NO3_trace_matrices()

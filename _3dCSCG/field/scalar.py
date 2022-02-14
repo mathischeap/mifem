@@ -22,6 +22,12 @@ from importlib import import_module
 from SCREWS.numerical._4d import NumericalPartialDerivative_txyz_Functions
 
 
+
+
+
+
+
+
 class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
     """The continuous scalar field."""
     def __init__(self, mesh, func, ftype=None, valid_time=None, name='scalar-field'):

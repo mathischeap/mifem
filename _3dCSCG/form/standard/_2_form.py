@@ -32,7 +32,11 @@ class _2Form(_3dCSCG_Standard_Form):
     """
     def __init__(self, mesh, space, is_hybrid=True,
         orientation='outer', numbering_parameters='Naive',  name=None):
-        if name is None: name = orientation + '-oriented-2-form'
+        if name is None:
+            if is_hybrid:
+                name = 'hybrid-' + orientation + '-oriented-2-form'
+            else:
+                name = orientation + '-oriented-2-form'
         super().__init__(mesh, space, is_hybrid, orientation, numbering_parameters, name)
         self._k_ = 2
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_standard_2form')

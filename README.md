@@ -7,11 +7,12 @@ Here we host the *mifem* library. Currently, no detailed documentation
 is implemented as the number of users is quite low. 
 
 
-Do 
-
+Do
 > mpiexec python TESTS\mpi_unittest.py
 
-to do the tests.
+to run all the tests.
+
+
 
 
 by Yi Zhang | www.mathischeap.com

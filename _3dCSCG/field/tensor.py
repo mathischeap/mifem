@@ -354,6 +354,7 @@ class ___TENSOR_ADD_HELPER_1___(object):
 
 
 class _3dCSCG_TensorField_DO(FrozenOnly):
+    """"""
     def __init__(self, tf):
         self._tf_ = tf
         self._freeze_self_()
@@ -367,6 +368,7 @@ class _3dCSCG_TensorField_DO(FrozenOnly):
 
 
 class _3dCSCG_TensorField_Numerical(FrozenOnly):
+    """"""
     def __init__(self, tf):
         self._tf_ = tf
         self._freeze_self_()
@@ -438,6 +440,7 @@ class _3dCSCG_TensorField_Numerical(FrozenOnly):
 
 
 class ___TENSOR_DIVERGENCE_HELPER___(object):
+    """"""
     def __init__(self, fx, fy, fz):
         self._fx_ = fx
         self._fy_ = fy

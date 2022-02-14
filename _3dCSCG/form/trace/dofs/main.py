@@ -17,30 +17,22 @@ class _3dCSCG_Trace_forms_DOFs(FrozenOnly):
 
 
     def __iter__(self):
-        assert self._tf_.IS_hybrid, f"trace form must be hybrid."
-        for me in self._GM_: # go through all local mesh elements
-            for i in self._GM_[me]: # go through all local dofs
-                yield i
+        for i in range(self._GM_.GLOBAL_num_dofs):
+            yield i
 
     def __contains__(self, i):
         """If dof #i is contained in this core?"""
-        if self._local_range_ == tuple(): # I have no local mesh elements
+        if i % 1 != 0:
             return False
-
-        if i in range(*self._local_range_):
-            # note that this does not make sure i in contained by the core since dofs may not fully cover the range.
-            for e in self._GM_: # go through all local elements
-                v = self._GM_[e]
-                if i in v:
-                    return True # we return here!
-                else:
-                    pass
-            return False # We have checked all gathering vectors, and find nothing.
         else:
-            return False
+            if 0 <= i < self._GM_.GLOBAL_num_dofs:
+                return True
+            else:
+                return False
 
     def __getitem__(self, i):
         """Return a dof object for this particular local dof #i."""
+        assert i in self, f"dof#{i} is out of range."
         return _3dCSCG_Trace_forms_DOF(self, i)
 
 
@@ -83,6 +75,5 @@ if __name__ == '__main__':
     t0 = FC('0-t')
 
     dofs = t0.dofs
-    if 0 in dofs:
-        DI = dofs[0]
-        bf = DI.basis_function
+    DI = dofs[0]
+    bf = DI.basis_function

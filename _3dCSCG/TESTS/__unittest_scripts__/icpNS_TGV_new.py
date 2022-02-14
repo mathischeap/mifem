@@ -151,7 +151,8 @@ def NoHy_TGV_NEW(N=2, k=4, t=15, steps=480, Re=500,
     ib = ib.assembled
     X0 = LocallyFullVector(X0.assembled)
 
-    iR = solve(iA, ib, X0, atol=atol, restart=restart, maxiter=maxiter)[0]
+    iR = solve(iA, ib, X0, atol=atol, restart=restart, maxiter=maxiter,
+               name='pre_TGV_GMRES', plot_residuals=False)[0]
     iR.DO_distribute_to(u1, P0)
 
     w2.cochain.local = u1.coboundary.cochain_local

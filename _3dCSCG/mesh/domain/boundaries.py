@@ -56,7 +56,11 @@ class _3dCSCG_Boundaries(FrozenOnly):
 
 
     def ___PRIVATE_if_is_Regular__one_region_corner_interface___(self):
-        """"""
+        """
+        Return True if the interface of any two connected boundaries is regular (on the corner edge of a region).
+
+        :return: bool
+        """
         if rAnk == mAster_rank:
             ToF = True
             # for test reasons we

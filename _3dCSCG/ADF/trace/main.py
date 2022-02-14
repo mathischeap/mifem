@@ -235,3 +235,20 @@ class _3dCSCG_Algebra_DUAL_Trace_Form_Coboundary(FrozenOnly):
             self._T_ = \
                 EWC_SparseMatrix(self._dt_.mesh.elements, T, 'constant')
         return self._T_
+
+
+
+
+
+
+
+
+if __name__ == "__main__":
+    # mpiexec -n 6 python _3dCSCG\ADF\trace\main.py
+    from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
+
+    mesh = MeshGenerator('crazy',c=0.0, bounds=([-1,1],[-1,1],[-1,1]))([12, 12, 12], EDM=None, show_info=True)
+
+    space = SpaceInvoker('polynomials')([4, 4, 4], show_info=True)
+
+    FC = FormCaller(mesh, space)

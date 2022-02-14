@@ -2,6 +2,9 @@
 """
 
 """
+import sys
+if './' not in sys.path: sys.path.append('./')
+
 
 from importlib import import_module
 from root.config import *
@@ -13,6 +16,9 @@ from BASE.CSCG.ADF.standard.main_BASE import CSCG_Algebra_DUAL_Standard_Form
 from scipy.sparse import csr_matrix
 
 from TOOLS.linear_algebra.elementwise_cache import EWC_SparseMatrix
+
+
+
 
 
 class _3dCSCG_Algebra_DUAL_Standard_Form(CSCG_Algebra_DUAL_Standard_Form, _3dCSCG_Algebra_DUAL_FORM_BASE):
@@ -323,4 +329,13 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Coboundary(FrozenOnly):
 
 
 
+if __name__ == "__main__":
+    # mpiexec -n 6 python _3dCSCG\ADF\standard\main.py
+    from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
 
+    mesh = MeshGenerator('crazy',c=0.0, bounds=([-1,1],[-1,1],[-1,1]))(
+                                        [12, 12, 12], EDM=None, show_info=True)
+
+    space = SpaceInvoker('polynomials')([4, 4, 4], show_info=True)
+
+    FC = FormCaller(mesh, space)

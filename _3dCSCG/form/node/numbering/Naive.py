@@ -8,7 +8,6 @@
 
 """
 from SCREWS.frozen import FrozenOnly
-from TOOLS.linear_algebra.gathering import Gathering_Matrix, Gathering_Vector
 
 
 

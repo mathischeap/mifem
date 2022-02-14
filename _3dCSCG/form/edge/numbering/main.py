@@ -15,8 +15,8 @@ from importlib import import_module
 
 class _3dCSCG_Edge_Numbering(FrozenOnly):
     def __init__(self, ef, numbering_parameters):
+        """"""
         # ... parse number and numbering parameters ...
-
         if isinstance(numbering_parameters, str):
             scheme_name = numbering_parameters
             parameters = dict()
@@ -41,7 +41,6 @@ class _3dCSCG_Edge_Numbering(FrozenOnly):
         self._DO_ = _3dCSCG_Edge_Numbering_DO(self)
         self.RESET_cache()
         self._freeze_self_()
-
 
     def RESET_cache(self):
         self._gathering_ = None
@@ -70,7 +69,6 @@ class _3dCSCG_Edge_Numbering(FrozenOnly):
         if self._gathering_ is None:
             self.___PRIVATE_do_numbering___()
         return self._gathering_
-
 
     @property
     def extra(self):

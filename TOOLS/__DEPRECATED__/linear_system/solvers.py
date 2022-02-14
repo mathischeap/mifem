@@ -44,7 +44,7 @@ class _Solver_Base_(FrozenOnly):
 
     def ___PRIVATE_check_regularity_compatibility___(self, allowed):
         """
-        Check if the regularity of current linear sysmtem is allowed.
+        Check if the regularity of current linear system is allowed.
 
         :param allowed: The pool of all allowed regularities.
         :return:

@@ -10,7 +10,6 @@
 
 from SCREWS.frozen import FrozenOnly
 from importlib import import_module
-from root.config import *
 
 
 

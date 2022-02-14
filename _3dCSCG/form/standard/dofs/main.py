@@ -4,7 +4,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 from SCREWS.frozen import FrozenOnly
 
-from _3dCSCG.form.standard.dofs.visualize.main import _3dCSCG_SF_DOFs_VISUALIZE
+from _3dCSCG.form.standard.dofs.visualize import _3dCSCG_SF_DOFs_VISUALIZE
 from _3dCSCG.form.standard.dofs.dof.main import _3dCSCG_Standard_forms_DOF
 
 
@@ -17,40 +17,23 @@ class _3dCSCG_Standard_forms_DOFs(FrozenOnly):
         self._visualize_ = None
         self._freeze_self_()
 
-
-
     def __iter__(self):
-        if self._sf_.IS_hybrid:
-            for me in self._GM_: # go through all local mesh elements
-                for i in self._GM_[me]: # go through all local dofs
-                    yield i
-        else:
-            SET = set()
-            for me in self._GM_: # go through all local mesh elements
-                v = self._GM_[me]
-                SET.update(v.full_vector)
-            for i in SET:
-                yield i
+        for i in range(self._GM_.GLOBAL_num_dofs):
+            yield i
 
     def __contains__(self, i):
         """If dof #i is contained in this core?"""
-        if self._local_range_ == tuple(): # I have no local mesh elements
+        if i % 1 != 0:
             return False
-
-        if i in range(*self._local_range_):
-            # note that this does not make sure i in contained by the core since dofs may not fully cover the range.
-            for e in self._GM_: # go through all local elements
-                v = self._GM_[e]
-                if i in v:
-                    return True # we return here!
-                else:
-                    pass
-            return False # We have checked all gathering vectors, and find nothing.
         else:
-            return False
+            if 0 <= i < self._GM_.GLOBAL_num_dofs:
+                return True
+            else:
+                return False
 
     def __getitem__(self, i):
         """Return a dof object for this particular local dof #i."""
+        assert i in self, f"dof#{i} is out of range."
         return _3dCSCG_Standard_forms_DOF(self, i)
 
     def ___PRIVATE_FIND_local_mesh_elements_and_local_indices_of_dof___(self, i):
@@ -102,7 +85,9 @@ if __name__ == '__main__':
     # print(3 in range(1,3))
     # print(f0.dofs.local_range)
     dofs = f0.dofs
-    if 0 in dofs:
-        DI = dofs[0]
-        XYZ, IN_SITE_BF = DI.basis_function.reconstruct([-1,0,1], [-1,0,1], [-1,0,1])
-        print(XYZ, IN_SITE_BF)
+
+    # print(5. in dofs)
+
+    DI = dofs[0]
+
+    print(DI.positions)

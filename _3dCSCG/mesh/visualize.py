@@ -374,7 +374,7 @@ if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\mesh\visualize.py
     from _3dCSCG.main import MeshGenerator
     elements = [3, 3, 3]
-    mesh = MeshGenerator('crazy_periodic', c=0.25)(elements)
+    mesh = MeshGenerator('crazy', c=0.25)(elements)
     # mesh = MeshGenerator('crazy_periodic', c=0.0, bounds=([0, 3], [0, 3], [0, 3]))(elements)
     # mesh = MeshGenerator('bridge_arch_cracked')(elements)
     # mesh = MeshGenerator('psc')(elements)

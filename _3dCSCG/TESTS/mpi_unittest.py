@@ -86,7 +86,7 @@ passed_3dCSCG_tests += test_trace_NO__general_tests()
 passed_3dCSCG_tests += test_trace_NO0_trace_0_form_Rd_and_Rc()
 passed_3dCSCG_tests += test_trace_NO1_trace_1_form_Rd_and_Rc()
 passed_3dCSCG_tests += test_trace_NO2_trace_2_form_Rd_and_Rc()
-
+passed_3dCSCG_tests += test_trace_NO3_trace_matrices()
 
 
 

@@ -31,15 +31,19 @@ class _3dCSCG_SF_DOF_BF(FrozenOnly):
         :return: A tuple of reconstructions corresponding to the positions.
         """
         positions = self._dof_.positions # get all local positions.
+
+        if positions == list():
+            return tuple(), tuple()
+
         k = self._sf_.k
         mesh = self._mesh_
         space = self._space_
+        XYZ = tuple()
+        IN_SITE_BF = tuple()
 
         shape = [len(xi), len(et), len(sg)]
         xietasigma, RBF= space.DO_evaluate_form_basis_at_meshgrid(k, xi, et ,sg, compute_xietasigma=True)
         RBF = np.vstack(RBF)
-        XYZ = tuple()
-        IN_SITE_BF = tuple()
         for POS in positions:
             E, I = POS
             rbf = RBF[I] # find the bf for this position

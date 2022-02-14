@@ -15,10 +15,10 @@ from SCREWS.miscellaneous import MyTimer
 
 
 from TOOLS.linear_algebra.solvers.parallel.GMRES import ___gmres_stop_criterion___
-
+from TOOLS.linear_algebra.solvers.parallel.GMRES import ___gmres_plot_residuals___
 
 def solve(A, b, x0, m=100, k=10, maxiter=20, tol=1e-3, atol=1e-4, preconditioner=(None, dict()), COD=True,
-    routine='auto', loading_factor = 3e6, **kwargs):
+    routine='auto', loading_factor = 3e6, name=None, plot_residuals=False, **kwargs):
     """
 
     :param A: GlobalMatrix
@@ -34,6 +34,8 @@ def solve(A, b, x0, m=100, k=10, maxiter=20, tol=1e-3, atol=1e-4, preconditioner
     :param routine: Which particular routine we are going to use?
     :param loading_factor: A factor that decide the limit a single core (the master core) is going to handle. When the
         computational power of a single core (the master core) increases, we can make this factor larger.
+    :param name: The name of this solving process.
+    :param plot_residuals: bool, if we plot the residuals.
     :param kwargs: possible other args for particular routine.
     :return: Return a tuple of 5 outputs:
 
@@ -96,7 +98,8 @@ def solve(A, b, x0, m=100, k=10, maxiter=20, tol=1e-3, atol=1e-4, preconditioner
 
     # ---------- Do the computation ------------------------------------------------------------------------------------
     results, info, beta, ITER, solver_message = \
-    ROUTINE(A, b, x0, m=m, k=k, maxiter=maxiter, tol=tol, atol=atol, preconditioner=preconditioner, COD=COD)
+    ROUTINE(A, b, x0, m=m, k=k, maxiter=maxiter, tol=tol, atol=atol, preconditioner=preconditioner, COD=COD,
+            name=name, plot_residuals=plot_residuals)
 
     _ = kwargs # trivial; just leave freedom for future updates for kwargs.
 
@@ -108,7 +111,8 @@ def solve(A, b, x0, m=100, k=10, maxiter=20, tol=1e-3, atol=1e-4, preconditioner
 
 
 
-def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-3, atol=1e-4, preconditioner=None, COD=True):
+def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-3, atol=1e-4, preconditioner=None,
+                        COD=True, name=None, plot_residuals=False):
     """
 
     :param lhs: GlobalMatrix
@@ -121,6 +125,8 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-3, atol=1e
     :param atol: absolute tolerance.
     :param preconditioner: Format: (ID, kwargs (a dict) for the preconditioner)
     :param COD: Clear Original Data?
+    :param name: The name of this solving process.
+    :param plot_residuals: bool
     :return: Return a tuple of 5 outputs:
 
             1. (LocallyFullVector) results -- The result vector.
@@ -179,6 +185,9 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-3, atol=1e
         SUM_Hij_vi = np.empty((shape0,), dtype=float)
         Vs = None
         local_ind_dict = None
+
+        if plot_residuals:
+            residuals = list()
     else:
         local_ind_dict = dict()
         for i, ind in enumerate(local_ind):
@@ -221,6 +230,10 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-3, atol=1e
         if BETA is None: BETA = [beta,] # this is right, do not initial BETA as an empty list.
         if len(BETA) > 20: BETA = BETA[:1] + BETA[-2:]
         BETA.append(beta)
+        if rAnk == mAster_rank:
+            if plot_residuals:
+                residuals.append(beta)
+
         JUDGE, stop_iteration, info, JUDGE_explanation = ___gmres_stop_criterion___(tol, atol, ITER, maxiter, BETA)
         if stop_iteration: break
         # ...
@@ -363,5 +376,11 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-3, atol=1e
     message = f" mpi_v0_LGMRES = [SYSTEM-SHAPE: {A.shape}] [ITER={ITER}][residual=%.2e] costs %.2f, " \
               f"convergence info={info}, m={_m_}, k={_k_} maxiter={maxiter}, " \
               f"stop_judge={JUDGE}: {JUDGE_explanation}]"%(beta, COST_total)
+
+
+
+    if rAnk == mAster_rank:
+        if plot_residuals:
+            ___gmres_plot_residuals___(np.array(residuals), name, 'mpi_LGMRES_v0')
 
     return x0, info, beta, ITER, message
