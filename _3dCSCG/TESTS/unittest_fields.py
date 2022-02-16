@@ -18,7 +18,7 @@ def test_Form_NO0_3dCSCG_Field_numerical():
     """"""
     if rAnk == mAster_rank:
         load = random.randint(100, 499)
-        print(f"-N- [test_Form_NO0_3dCSCG_Field_numerical] start at {MyTimer.current_time()} with load={load}.", flush=True)
+        print(f"-N- [test_Form_NO0_3dCSCG_Field_numerical] {MyTimer.current_time()} with load={load}.", flush=True)
     else:
         load= None
     load = cOmm.bcast(load, root=mAster_rank)
@@ -560,15 +560,15 @@ def test_Form_NO3_3dCSCG_TensorField():
         C00, C01, C02 = C0
         C10, C11, C12 = C1
         C20, C21, C22 = C2
-        assert np.max(np.abs(C00 - A00)) < 1e-10, f"neg is not accurate enough."
-        assert np.max(np.abs(C01 - A01)) < 1e-10, f"neg is not accurate enough."
-        assert np.max(np.abs(C02 - A02)) < 1e-10, f"neg is not accurate enough."
-        assert np.max(np.abs(C10 - A10)) < 1e-10, f"neg is not accurate enough."
-        assert np.max(np.abs(C11 - A11)) < 1e-10, f"neg is not accurate enough."
-        assert np.max(np.abs(C12 - A12)) < 1e-10, f"neg is not accurate enough."
-        assert np.max(np.abs(C20 - A20)) < 1e-10, f"neg is not accurate enough."
-        assert np.max(np.abs(C21 - A21)) < 1e-10, f"neg is not accurate enough."
-        assert np.max(np.abs(C22 - A22)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C00 - A00)) < 1e-10, f"sub is not accurate enough."
+        assert np.max(np.abs(C01 - A01)) < 1e-10, f"sub is not accurate enough."
+        assert np.max(np.abs(C02 - A02)) < 1e-10, f"sub is not accurate enough."
+        assert np.max(np.abs(C10 - A10)) < 1e-10, f"sub is not accurate enough."
+        assert np.max(np.abs(C11 - A11)) < 1e-10, f"sub is not accurate enough."
+        assert np.max(np.abs(C12 - A12)) < 1e-10, f"sub is not accurate enough."
+        assert np.max(np.abs(C20 - A20)) < 1e-10, f"sub is not accurate enough."
+        assert np.max(np.abs(C21 - A21)) < 1e-10, f"sub is not accurate enough."
+        assert np.max(np.abs(C22 - A22)) < 1e-10, f"sub is not accurate enough."
 
     #---- add --------------------------------------------------------------------
     X = w + u
@@ -583,15 +583,15 @@ def test_Form_NO3_3dCSCG_TensorField():
         C00, C01, C02 = C0
         C10, C11, C12 = C1
         C20, C21, C22 = C2
-        assert np.max(np.abs(C00 - A00)) < 1e-10, f"neg is not accurate enough."
-        assert np.max(np.abs(C01 - A01)) < 1e-10, f"neg is not accurate enough."
-        assert np.max(np.abs(C02 - A02)) < 1e-10, f"neg is not accurate enough."
-        assert np.max(np.abs(C10 - A10)) < 1e-10, f"neg is not accurate enough."
-        assert np.max(np.abs(C11 - A11)) < 1e-10, f"neg is not accurate enough."
-        assert np.max(np.abs(C12 - A12)) < 1e-10, f"neg is not accurate enough."
-        assert np.max(np.abs(C20 - A20)) < 1e-10, f"neg is not accurate enough."
-        assert np.max(np.abs(C21 - A21)) < 1e-10, f"neg is not accurate enough."
-        assert np.max(np.abs(C22 - A22)) < 1e-10, f"neg is not accurate enough."
+        assert np.max(np.abs(C00 - A00)) < 1e-10, f"add is not accurate enough."
+        assert np.max(np.abs(C01 - A01)) < 1e-10, f"add is not accurate enough."
+        assert np.max(np.abs(C02 - A02)) < 1e-10, f"add is not accurate enough."
+        assert np.max(np.abs(C10 - A10)) < 1e-10, f"add is not accurate enough."
+        assert np.max(np.abs(C11 - A11)) < 1e-10, f"add is not accurate enough."
+        assert np.max(np.abs(C12 - A12)) < 1e-10, f"add is not accurate enough."
+        assert np.max(np.abs(C20 - A20)) < 1e-10, f"add is not accurate enough."
+        assert np.max(np.abs(C21 - A21)) < 1e-10, f"add is not accurate enough."
+        assert np.max(np.abs(C22 - A22)) < 1e-10, f"add is not accurate enough."
 
     return 1
 
