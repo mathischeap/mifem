@@ -6,7 +6,7 @@ v3.0.1
 
 mifem is a powerful implementation of the 
 *mimetic spectral element method*. Currently, no detailed documentation
-is implemented as the number of users is quite low. 
+is applied as the number of users is quite low. 
 
 
 Do
