@@ -368,7 +368,7 @@ class LocallyFullVector(FrozenOnly):
 
 
 def ___split_A___(indptr, splitting_factor, PS):
-    """A private function to help splitting global matrix into parts.
+    """A private function to help split global matrix into parts.
 
     :param indptr:
     :param splitting_factor:

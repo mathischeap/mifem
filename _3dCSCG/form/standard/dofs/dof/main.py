@@ -93,12 +93,12 @@ if __name__ == '__main__':
     from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
     mesh = MeshGenerator('crazy', c=0.3)([3,3,3])
-    space = SpaceInvoker('polynomials')([('Lobatto',1), ('Lobatto',1), ('Lobatto',1)])
+    space = SpaceInvoker('polynomials')([('Lobatto',2), ('Lobatto',2), ('Lobatto',2)])
     FC = FormCaller(mesh, space)
 
-    f0 = FC('0-f', is_hybrid=False)
+    f0 = FC('3-f', is_hybrid=False)
 
     dofs = f0.dofs
-    DI = dofs[0]
-    # DI.visualize()
-    print(rAnk, DI.positions, DI.GLOBAL_positions)
+    DI = dofs[9]
+    DI.visualize()
+    # print(rAnk, DI.positions, DI.GLOBAL_positions)

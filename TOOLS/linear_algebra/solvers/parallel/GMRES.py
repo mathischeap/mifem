@@ -83,7 +83,7 @@ def solve(A, b, x0, restart=100, maxiter=20, tol=1e-3, atol=1e-4, preconditioner
 
         if shape0 * restart < loading_factor: # when the total loading is less than the loading_factor,
                                               # we use routine v0 which is faster when the loading is low because it
-                                              # needs less communications
+                                              # needs fewer communications
             ROUTINE = ___mpi_v0_gmres___
         else: # otherwise, we use routine v2 which is faster when the loading is high.
             ROUTINE = ___mpi_v2_gmres___
@@ -249,7 +249,6 @@ def ___gmres_plot_residuals___(residuals, solve_name, scheme_name):
 def ___mpi_v0_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-4, preconditioner=None,
                        COD=True, name=None, plot_residuals=False):
     """
-
     :param lhs: GlobalMatrix
     :param rhs: GlobalVector
     :param X0: LocallyFullVector
@@ -273,7 +272,6 @@ def ___mpi_v0_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
             3. (float) beta -- The residual.
             4. (int) ITER -- The number of outer iterations.
             5. (str) message
-
     """
 
     Time_start = MPI.Wtime()
@@ -296,7 +294,6 @@ def ___mpi_v0_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
         else:
             raise NotImplementedError(f"We did not yet code preconditioning for the "
                                       f"routine: ___mpi_v0_gmres___ using method: <{applying_method}>.")
-
 
     if COD: # needs be after preconditioning since the preconditioner will use A.M
         lhs._M_ = None
@@ -340,6 +337,7 @@ def ___mpi_v0_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
         BETA.append(beta)
         if rAnk == mAster_rank:
             if plot_residuals:
+                # noinspection PyUnboundLocalVariable
                 residuals.append(beta)
         JUDGE, stop_iteration, info, JUDGE_explanation = ___gmres_stop_criterion___(tol, atol, ITER, maxiter, BETA)
         if stop_iteration: break
@@ -700,7 +698,7 @@ def ___mpi_v2_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
     BETA = None
 
     AVJ = np.empty((shape0,), dtype=float)
-    Hm = np.zeros((restart + 1, restart), dtype=float) # In future, we can change this to sparse matrix.
+    Hm = np.zeros((restart + 1, restart), dtype=float) # In the future, we can change this to sparse matrix.
     if rAnk == mAster_rank:
         VV = np.empty((shape0,), dtype=float)
         Vm = np.empty((restart, shape0), dtype=float)
@@ -739,6 +737,7 @@ def ___mpi_v2_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
         BETA.append(beta)
         if rAnk == mAster_rank:
             if plot_residuals:
+                # noinspection PyUnboundLocalVariable
                 residuals.append(beta)
         JUDGE, stop_iteration, info, JUDGE_explanation = ___gmres_stop_criterion___(tol, atol, ITER, maxiter, BETA)
         if stop_iteration: break

@@ -742,8 +742,8 @@ class IteratorMonitor(FrozenOnly):
         We remove some extreme values to make the iteration time plot to be of higher resolution.
 
         Note that, after we have removed some extreme value, the iteration time plot may look
-        very weird. For example, the average iteration time may be great than all iteration times.
-        This is okay, since we may have remove a huge iteration time. This should disappear after
+        very weird. For example, the average iteration time may be greater than all iteration times.
+        This is okay, since we may have removed a huge iteration time. This should disappear after
         we have a large amount of iterations.
 
         :param times:
@@ -913,8 +913,9 @@ class Iterator(FrozenClass):
             self._RDF_ = None
         self._freeze_self_()
 
-
-
+    def __next__(self):
+        """Must be implemented in tha child classes."""
+        raise NotImplementedError()
 
     @property
     def RDF(self):
@@ -993,7 +994,7 @@ class Iterator(FrozenClass):
 
     @property
     def message(self):
-        """(str) Return the message of the solver returns in the last run."""
+        """List(str) Return the messages of the solver for the last run."""
         return self._message_
 
     @message.setter
@@ -1114,8 +1115,8 @@ class Iterator(FrozenClass):
                     # noinspection PyBroadException
                     try: # try to save the iterator to .mitr file.
 
-                        with open(filename+'.mitr', 'wb') as output:
-                            # '.mitr' stands for Mimetic ITeRators.
+                        with open(filename + '.mitr', 'wb') as output:
+                            # '.mitr' stands for mimetic iterator.
                             pickle.dump(self, output, pickle.HIGHEST_PROTOCOL)
                         output.close()
 
@@ -1170,7 +1171,7 @@ class SimpleIterator(Iterator):
     def __next__(self):
         outputs = self._solver_(self.t, self.t+self.dt)
         # SimpleIterator use constant dt. Updating dt is necessary for all particular iterators.
-        self.dt = self.___PRIVATE_update_dt___()
+        self.dt = self.___PRIVATE_update_dt___() # this dt will be used for the next call of the solver
         return outputs
 
     def ___PRIVATE_update_dt___(self):
