@@ -14,7 +14,7 @@ from root.config import *
 from scipy import sparse as spspa
 from SCREWS.frozen import FrozenOnly
 from SCREWS.quadrature import Quadrature
-from _3dCSCG.form.standard.main import _3dCSCG_Standard_Form
+from _3dCSCG.form.standard.base.main import _3dCSCG_Standard_Form
 from TOOLS.linear_algebra.elementwise_cache import EWC_SparseMatrix
 from _3dCSCG.form.standard._0_form import _0Form
 
@@ -126,6 +126,17 @@ class _2Form(_3dCSCG_Standard_Form):
             raise NotImplementedError(f"3dCSCG 2-form cannot discretize while targeting at {target}.")
 
     def ___PRIVATE_discretize_standard_ftype___(self, update_cochain=True, target='func', quad_degree=None):
+        """The return cochain is 'locally full local cochain', which means it is mesh-element-wise
+        local cochain. So:
+
+        cochainLocal is a dict, whose keys are mesh element numbers, and values (1-d arrays) are
+        the local cochains.
+
+        :param update_cochain:
+        :param target:
+        :param quad_degree:
+        :return:
+        """
         p = [self.dqp[i] + 1 for i in range(self.ndim)] if quad_degree is None else quad_degree
         quad_nodes, quad_weights = Quadrature(p).quad
         if self.___DISCRETIZE_STANDARD_CACHE___ is None or \
@@ -320,7 +331,20 @@ class _2Form(_3dCSCG_Standard_Form):
 
 
     def ___PRIVATE_discretize_boundary_wise_ftype___(self, quad_degree=None):
-        """"""
+        """
+        'Boundary only local cochain' means we return a dict, its keys are mesh-element numbers,
+        its values are also dictionaries whose keys are mesh-element-side names, like 'N', 'S' and
+        so on, and values are the mesh-element-side(trace-element)-wise local cochains. For example
+        cochainLocal = {
+                1: {'N': [4, 3, 1, 1.5, ...], 'W': [...]},
+                23: {...},
+                ...}
+        We know we have cochains for mesh-element #1, #23, ..., and for mesh element #1, we have
+        local cochain on its North side and West side.
+
+        :param quad_degree:
+        :return:
+        """
         p = [self.dqp[i] + 1 for i in range(self.ndim)] if quad_degree is None else quad_degree
         quad_nodes, quad_weights = Quadrature(p).quad
         if self.___DISCRETIZE_STANDARD_CACHE___ is None or \
@@ -1164,7 +1188,7 @@ class ___3dCSCG_2Form_Project_Van___(FrozenOnly):
 
 if __name__ == '__main__':
     # mpiexec -n 5 python _3dCSCG\form\standard\_2_form.py
-    from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
+    from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
 
     mesh = MeshGenerator('crazy', c=0.0)([14,14,14])
     space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3), ('Lobatto',3)])

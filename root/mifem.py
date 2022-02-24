@@ -136,7 +136,8 @@ def read(filename, read_individuals=None):
                               '_3dCSCG.form.standard._3_form._3Form',
                               '_3dCSCG.form.trace._2_trace._2Trace',
                               '_3dCSCG.form.trace._1_trace._1Trace',
-                              '_3dCSCG.form.trace._0_trace._0Trace',):
+                              '_3dCSCG.form.trace._0_trace._0Trace',
+                              '_3dCSCG.form.edge._0_edge._0Edge'):
                 obj = ___restore__3dCSCG_Form___(obj_para)
             elif obj_name in ('_3dCSCG.ADF.standard._0_AD_form._0_Algebra_DUAL_Form',
                               '_3dCSCG.ADF.standard._1_AD_form._1_Algebra_DUAL_Form',

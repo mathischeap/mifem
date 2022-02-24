@@ -284,7 +284,6 @@ def ___mpi_v0_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
 
     if preconditioner is not None:
 
-
         applying_method = preconditioner.applying_method
 
         if applying_method == 'left_multiply':
@@ -362,7 +361,6 @@ def ___mpi_v0_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
                 sum_Hij_vi = 0
 
                 for i in range(j+1):
-
                     Hij = np.sum(AVJ * Vm[i])
                     # noinspection PyUnboundLocalVariable
                     Hm[i,j] = Hij
@@ -377,7 +375,6 @@ def ___mpi_v0_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
                     del v_jp1
 
             else:
-
                 if j == 0:
                     v_jp1 = np.empty((shape0,), dtype=float)
                 else:

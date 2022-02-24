@@ -7,7 +7,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 
-from _3dCSCG.ADF.standard.main import _3dCSCG_Algebra_DUAL_Standard_Form
+from _3dCSCG.ADF.standard.base import _3dCSCG_Algebra_DUAL_Standard_Form
 
 
 class _3_Algebra_DUAL_Form(_3dCSCG_Algebra_DUAL_Standard_Form):

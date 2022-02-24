@@ -8,6 +8,7 @@ Here we test the programs.
          TU Delft, Delft, Netherlands
 
 """
+
 import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config import *
@@ -19,6 +20,10 @@ import os
 import random
 import warnings
 from _3dCSCG.TESTS.__unittest_scripts__.icpsNS_TGV_LGMRES_solver import NoHy_TGV_NEW_LGMRES
+
+
+
+
 
 def test_APP_NO1_icpsNS_no_hybrid_manu_conserving():
     if rAnk == mAster_rank:
@@ -54,14 +59,13 @@ def test_APP_NO1_icpsNS_no_hybrid_manu_conserving():
         np.testing.assert_almost_equal(output[5], 0)
         np.testing.assert_almost_equal(output[6], 0)
 
-
     return 1
 
 
+
+
 def test_APP_NO2_icpsNS_no_hybrid_TGV():
-
     # warnings.filterwarnings("default")
-
     if rAnk == mAster_rank:
         print("--- [test_APP_NO2_icpsNS_no_hybrid_TGV] ...... ", flush=True)
 
@@ -97,6 +101,10 @@ def test_APP_NO2_icpsNS_no_hybrid_TGV():
              2.55462822e+00, 6.47077097e+00, 2.29692361e-09]), decimal=5)
 
     return 1
+
+
+
+
 
 
 if __name__ == '__main__':

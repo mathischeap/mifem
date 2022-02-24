@@ -24,8 +24,8 @@ def solve(A, b, x0, m=100, k=10, maxiter=20, tol=1e-3, atol=1e-4, preconditioner
     :param A: GlobalMatrix
     :param b: GlobalVector
     :param x0: LocallyFullVector
-    :param m:
-    :param k:
+    :param m: restart = `m` + `k`
+    :param k: restart = `m` + `k`
     :param maxiter:
     :param tol: tolerance.
     :param atol: absolute tolerance.
@@ -71,7 +71,7 @@ def solve(A, b, x0, m=100, k=10, maxiter=20, tol=1e-3, atol=1e-4, preconditioner
             print(">>> WARNING: if k = 0, LGMRES is equivalent to GMRES and is slower than GMRES. So please use GMRES.")
     assert tol > 0 and atol > 0, f"tol={tol} and atol={atol} wrong, they must be > 0."
 
-    # -------  Decide preconditioner -----------------------------------------------------------------------------------
+    # -------  Decide preconditioner ---------------------------------------------------------------
     if preconditioner is None: preconditioner = (None, dict())
 
     preconditioner_ID, preconditioner_kwargs = preconditioner
@@ -83,7 +83,7 @@ def solve(A, b, x0, m=100, k=10, maxiter=20, tol=1e-3, atol=1e-4, preconditioner
     else:
         preconditioner = None
 
-    # -------  Decide routine ------------------------------------------------------------------------------------------
+    # -------  Decide routine ----------------------------------------------------------------------
     if routine == 'auto':
 
         _ = loading_factor # when we have more routine, we can use this factor to make decision.
@@ -96,7 +96,7 @@ def solve(A, b, x0, m=100, k=10, maxiter=20, tol=1e-3, atol=1e-4, preconditioner
         else:
             raise Exception(f"routine={routine} is wrong.")
 
-    # ---------- Do the computation ------------------------------------------------------------------------------------
+    # ---------- Do the computation ----------------------------------------------------------------
     results, info, beta, ITER, solver_message = \
     ROUTINE(A, b, x0, m=m, k=k, maxiter=maxiter, tol=tol, atol=atol, preconditioner=preconditioner, COD=COD,
             name=name, plot_residuals=plot_residuals)
@@ -104,7 +104,7 @@ def solve(A, b, x0, m=100, k=10, maxiter=20, tol=1e-3, atol=1e-4, preconditioner
     _ = kwargs # trivial; just leave freedom for future updates for kwargs.
 
     MESSAGE =  message + '-' + solver_message
-    #===================================================================================================================
+    #===============================================================================================
 
     return results, info, beta, ITER, MESSAGE
 
@@ -177,7 +177,7 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-3, atol=1e
     BETA = None
 
     AVJ = np.empty((shape0,), dtype=float)
-    Hm = np.zeros((restart + 1, restart), dtype=float) # In future, we can change this to sparse matrix.
+    Hm = np.zeros((restart + 1, restart), dtype=float) # In the future, we can change this to sparse matrix.
     if rAnk == mAster_rank:
         VV = np.empty((shape0,), dtype=float)
         Vm = np.empty((restart, shape0), dtype=float)
@@ -232,6 +232,7 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-3, atol=1e
         BETA.append(beta)
         if rAnk == mAster_rank:
             if plot_residuals:
+                # noinspection PyUnboundLocalVariable
                 residuals.append(beta)
 
         JUDGE, stop_iteration, info, JUDGE_explanation = ___gmres_stop_criterion___(tol, atol, ITER, maxiter, BETA)

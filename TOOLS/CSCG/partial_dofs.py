@@ -40,20 +40,20 @@ class PartialDofs(FrozenOnly):
         return self._include_
 
     def __iter__(self):
-        """Go through all involved local element numbers."""
+        """Go through all involved local mesh element numbers."""
         for e in self._dofs_:
             yield e
 
     def __len__(self):
-        """How many involved local elements?"""
+        """How many involved local mesh elements?"""
         return len(self._dofs_)
 
     def __contains__(self, e):
-        """If element #e is involved?"""
+        """If mesh element #e is involved?"""
         return e in self._dofs_
 
     def __getitem__(self, e):
-        """Return the indicators for the involved element #e."""
+        """Return the indicators for the involved mesh element #e."""
         return self._dofs_[e]
 
     @property

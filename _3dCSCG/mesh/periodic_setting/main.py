@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-This is actually a component of the baseMesh but we put it here since it is newly
+This is actually a component of the baseMesh, but we put it here since it is newly
 coded for the MPI mesh.
 
 @author: Yi Zhang.
@@ -11,9 +11,7 @@ coded for the MPI mesh.
 """
 
 from SCREWS.frozen import FrozenOnly
-from _3dCSCG.mesh.periodic_setting.PBP_regular import _3dCSCG_Regular_PBP
-
-
+from _3dCSCG.mesh.periodic_setting.periodic_boundary_pairs.regular.main import _3dCSCG_Regular_PBP
 
 class _3dCSCG_PeriodicDomainSetting(FrozenOnly):
     """ This class is only initialized once in the MasterCore."""

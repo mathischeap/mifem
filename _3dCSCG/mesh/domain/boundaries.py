@@ -36,9 +36,9 @@ class _3dCSCG_Boundaries(FrozenOnly):
     def distribution_regularities(self):
         """How the boundaries are distributed. Return a list containing one or some of:
 
-            (1) "Regular:one-region-corner-interface": Any two of boundaries,
+            (1) "Regular:one-regions-corner-interface": Any two of boundaries,
                 if they connect with each other, should approach each other from
-                the same region. Topologically* (regions like orthogonal
+                the same regions. Topologically* (regions like orthogonal
                 structured mesh cells), all connected boundaries are
                 perpendicular (90 degree, NOT 270 degree!!!!) to each other.
 
@@ -49,7 +49,7 @@ class _3dCSCG_Boundaries(FrozenOnly):
         self._distribution_regularities_ = list()
 
         if self.___PRIVATE_if_is_Regular__one_region_corner_interface___():
-            self._distribution_regularities_.append("Regular:one-region-corner-interface")
+            self._distribution_regularities_.append("Regular:one-regions-corner-interface")
 
 
         return self._distribution_regularities_
@@ -57,7 +57,7 @@ class _3dCSCG_Boundaries(FrozenOnly):
 
     def ___PRIVATE_if_is_Regular__one_region_corner_interface___(self):
         """
-        Return True if the interface of any two connected boundaries is regular (on the corner edge of a region).
+        Return True if the interface of any two connected boundaries is regular (on the corner edge of a regions).
 
         :return: bool
         """
@@ -65,13 +65,13 @@ class _3dCSCG_Boundaries(FrozenOnly):
             ToF = True
             # for test reasons we
             NUM = self._domain_.regions.num
-            if NUM == 1: # only one region, then must be a Regular:one-region-corner-interface
+            if NUM == 1: # only one regions, then must be a Regular:one-regions-corner-interface
                 pass
             else:
                 MAP = self._domain_.regions.map
 
                 for rn in MAP:
-                    for i, s in enumerate('NSWEBF'): # go through all region sides
+                    for i, s in enumerate('NSWEBF'): # go through all regions sides
                         what_here = MAP[rn][i]
                         if what_here in self.names:
                             if s in 'NS':
@@ -97,7 +97,7 @@ class _3dCSCG_Boundaries(FrozenOnly):
                                         ToF = False # only this is happening, we stop.
                                         break
 
-                        else: # internal region side, skip it.
+                        else: # internal regions side, skip it.
                             assert what_here[:2] == 'R:', "trivial check."
 
                         if ToF is False: break

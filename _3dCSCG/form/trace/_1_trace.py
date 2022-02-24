@@ -13,7 +13,7 @@ if './' not in sys.path: sys.path.append('./')
 
 from root.config import *
 from SCREWS.quadrature import Quadrature
-from _3dCSCG.form.trace.main import _3dCSCG_Standard_Trace
+from _3dCSCG.form.trace.base.main import _3dCSCG_Standard_Trace
 from scipy import sparse as spspa
 
 class _1Trace(_3dCSCG_Standard_Trace, ABC):
@@ -108,9 +108,11 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
 
     def ___PRIVATE_discretize_VectorField_of_ftype_standard_at_component_T_para___(self,
         update_cochain=True, target='func', quad_degree=None):
-        """We will discretize the a the Trace_parallel component of a standard vector field to all trace
+        """We will discretize the Trace_parallel component of a standard vector field to all trace
         elements.
 
+        'locally full local TEW cochain' means the cochain is a dict whose keys are trace-element
+        numbers and values are trace-element-wise local cochains.
         """
         if target in ('BC',): assert update_cochain is False, f"CANNOT update cochain when target is {target}"
 
@@ -335,7 +337,7 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
 
     def ___PRIVATE_discretize_VectorField_of_ftype_standard_at_component_T_perp___(self,
         update_cochain=True, target='func', quad_degree=None):
-        """We will discretize the a the Trace_perpendicular component of a standard vector field to all trace
+        """We will discretize the Trace_perpendicular component of a standard vector field to all trace
         elements.
 
         """
@@ -344,8 +346,12 @@ class _1Trace(_3dCSCG_Standard_Trace, ABC):
 
     def ___PRIVATE_discretize_VectorField_of_ftype_trace_element_wise___(self,
         update_cochain=True, target='func', quad_degree=None):
-        """We will discretize the a the Trace_parallel component of a standard vector field to all trace
+        """We will discretize the Trace_parallel component of a standard vector field to all trace
         elements.
+
+
+        'locally full local TEW cochain' means the cochain is a dict whose keys are trace-element
+        numbers and values are trace-element-wise local cochains.
 
         """
         # first check `target` and `update_cochain` inputs----------------------------------------

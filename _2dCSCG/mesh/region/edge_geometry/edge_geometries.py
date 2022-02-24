@@ -157,7 +157,7 @@ class Customized(EdgeGeometry):
 class Free(EdgeGeometry):
     """A free edge geometry is a line we do not really care about its classfication.
 
-    A region of such edge geometry(s) usually will call a specific interpolator to
+    A regions of such edge geometry(s) usually will call a specific interpolator to
     generate the mapping and therefore Jacobian and so on, like the crazy mapping. The
     crazy mapping is a analytical mapping that we only need to know the bounds and c
     which is stored in the `domain_input`.

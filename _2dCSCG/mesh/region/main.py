@@ -186,7 +186,7 @@ class Region(RegionTopology, FrozenOnly):
 
     def ___PRIVATE_parse_edge_types___(self):
         """
-        Here we get the 4 edge geometries for futher getting the region interpolation.
+        Here we get the 4 edge geometries for futher getting the regions interpolation.
 
         Attributes
         ----------
@@ -262,7 +262,7 @@ class Regions(FrozenOnly):
         ----------
         self._region_corner_coordinates_pool_ : tuple
             A tuple where self._region_corner_pool_[i] indicates the coordinates of the
-            region corner globally numbered as i.
+            regions corner globally numbered as i.
         self._global_region_corner_numbering_ : dict
             A dict whose names indicate regions, and whose valune[j].ravel('F')
             indicates the golobal numbering of [UL, DL, UR, DR][j] corner.
@@ -311,13 +311,13 @@ class Regions(FrozenOnly):
 
     def ___generate_region_map___(self):
         """
-        Generate the region map and something else.
+        Generate the regions map and something else.
 
         Attributes
         ----------
         self._region_internal_side_pairs_ : tuple
             A tuple of sets of two elements. Each set represents two internal
-            region sides which are paired up.
+            regions sides which are paired up.
         self._region_sides_on_domain_boundaries_ : dict
         self._region_map_ : dict
 
@@ -326,11 +326,11 @@ class Regions(FrozenOnly):
         # we first find the internal pairing___________________________________________
         for rn in self.names:  # go through all regions
             _rm_[rn] = [[] for _ in range(4)]
-            for i in range(4):  # go through all 4 edges of each region.
+            for i in range(4):  # go through all 4 edges of each regions.
                 self_corner_indices = self.___found_edge_corner_global_numbering___(rn, i)
                 for rnrn in self.names:  # go through all regions except self
                     if rnrn != rn:
-                        for ii in range(4):  # go through all 4 edges of the region.
+                        for ii in range(4):  # go through all 4 edges of the regions.
                             other_corner_indices = self.___found_edge_corner_global_numbering___(rnrn, ii)
                             # noinspection PyTypeChecker
                             if all(self_corner_indices == other_corner_indices):
@@ -340,12 +340,12 @@ class Regions(FrozenOnly):
             for db_i in self._domain_.domain_input.boundary_region_edges[bn]:
                 _region_name_, _region_edge_ = db_i.split('-')
                 _rm_[_region_name_][self(rn)._edge_name_to_index_(_region_edge_)].append(bn)
-        # Now we check the region map and extract more info____________________________
+        # Now we check the regions map and extract more info____________________________
         # We first check each edge only appears at one place and extract the sides on domain boundaries
         _rsodb_ = {}
         for rn in self.names:  # go through all regions
             _rsodb_[rn] = [0 for _ in range(4)]
-            for i in range(4):  # go through all 4 edges of each region.
+            for i in range(4):  # go through all 4 edges of each regions.
                 try:
                     assert np.shape(_rm_[rn][i]) == (1,)
                 except AssertionError:
@@ -386,7 +386,7 @@ class Regions(FrozenOnly):
         _region_edge_correct_pairing_ = ({0, 1}, {2, 3})
         _risp_ = ()
         for rn in self.names:  # go through all regions
-            for i in range(4):  # go through all 4 edges of each region.
+            for i in range(4):  # go through all 4 edges of each regions.
                 if not _rsodb_[rn][i]:
                     assert {i, _rm_[_rm_[rn][i]].index(rn)} in _region_edge_correct_pairing_, \
                         " <Domain> <2D> : regions['{}']-side[{}] is paired up with regions['{}']-side[{}]".format(
@@ -428,7 +428,7 @@ class Regions(FrozenOnly):
         -------
         self._domain_._region_internal_side_pairs_ : tuple
             A tuple of sets of two elements. Each set represents two internal
-            region sides which are paired up.
+            regions sides which are paired up.
 
         """
         return self._internal_edge_pairs_
@@ -440,7 +440,7 @@ class Regions(FrozenOnly):
         -------
         self._edges_on_domain_boundaries_ : dict
             if _edges_on_domain_boundaries_[region_name][i] = 1, then
-            we know the ith edge of region named `region_name` is on domain boundary.
+            we know the ith edge of regions named `region_name` is on domain boundary.
 
         """
         return self._edges_on_domain_boundaries_

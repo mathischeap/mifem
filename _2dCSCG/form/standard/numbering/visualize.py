@@ -61,7 +61,7 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
             o = np.linspace(0, 1, density) # plot density
             I = np.ones(density)
             # line data ...
-            RI = {} # data for region internal lines
+            RI = {} # data for regions internal lines
             for rn in self._mesh_.domain.regions.names:
                 RI[rn] = ([], []) # ([dy_lines], [dx_lines])
                 #____ compute dy lines ___________________________________________
@@ -195,7 +195,7 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
                         ax.plot(RB[rn][ei][0], RB[rn][ei][1],
                                 color='k', linewidth=0.1*3)
                     else:
-                        if region_boundary: # plot the region boundary
+                        if region_boundary: # plot the regions boundary
                             ax.plot(RB[rn][ei][0], RB[rn][ei][1], color='b', linewidth=region_boundary_linewidth)
 
                     if show_boundary_names:

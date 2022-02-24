@@ -223,11 +223,3 @@ class NumericalPartialDerivative_xyz(ABC):
         return (self.check_partial_x(px_func, tolerance=tolerance),
                 self.check_partial_y(py_func, tolerance=tolerance),
                 self.check_partial_z(pz_func, tolerance=tolerance))
-
-
-
-
-
-
-
-

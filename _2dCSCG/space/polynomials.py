@@ -4,7 +4,7 @@
 from _2dCSCG.space.main import _2dCSCG_Space
 from SCREWS.quadrature import Quadrature
 from root.config import *
-from BASE.CSCG.space._1d_basis.polynomials import _1dPolynomial
+from INHERITING.CSCG.space._1d_basis.polynomials import _1dPolynomial
 
 class _2dCSCG_PolynomialSpace(_2dCSCG_Space):
     """"""

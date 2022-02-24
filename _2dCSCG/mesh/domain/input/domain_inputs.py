@@ -95,9 +95,9 @@ class DomainInput(FrozenOnly):
         for R in regionDict:
             assert R != self.domain_name
             assert '-' not in R and '=' not in R, \
-                " <DomainInput> : region name = {} is wrong".format(R)
+                " <DomainInput> : regions name = {} is wrong".format(R)
             assert R[0:2] == 'R:', \
-                " <DomainInput> : region name = {} does not start with 'R:'".format(R)
+                " <DomainInput> : regions name = {} does not start with 'R:'".format(R)
 
 
     @property
@@ -108,8 +108,8 @@ class DomainInput(FrozenOnly):
         Returns
         -------
         region_coordinates : dict
-            A dict whose keys represent the region names, and values represent
-            the coordinates of region corner points.
+            A dict whose keys represent the regions names, and values represent
+            the coordinates of regions corner points.
 
             In 2D: (UL, DL, UR, DR).
 
@@ -125,7 +125,7 @@ class DomainInput(FrozenOnly):
         self.___PRIVATE_region_name_equirement_checker___(_dict_)
 
         for R in _dict_:
-            assert isinstance(R, str) and R != '' and '-' not in R, " <DomainInput> : region name = {} is wrong".format(
+            assert isinstance(R, str) and R != '' and '-' not in R, " <DomainInput> : regions name = {} is wrong".format(
                 R)
             assert np.shape(_dict_[R])[0] == 4, \
                 " <DomainInput> : region_coordinates[{}]={} is wrong.".format(R, _dict_[R])
@@ -134,19 +134,19 @@ class DomainInput(FrozenOnly):
     @property
     def region_edge_types(self):
         """
-        Store the regions's boundaries' types.
+        Store the regions' boundaries' types.
 
         Returns
         -------
         region_boundary_type : dict
             A dict that contains the regions boundary info. The keys indicate
-            the region boundary, the value indicate the info. value[0] indicate
+            the regions boundary, the value indicate the info. value[0] indicate
             the type, value[1:] indicate the rest info which will be parsed
-            into full information. The not mentioned region boundaries will be
+            into full information. The not mentioned regions boundaries will be
             set into default type: ('plane',)
 
-            Notice that the value will be send to edge_geometry eventaully. And
-            if these is info (value[1:]) to be parsed, it will be done there in
+            Notice that the value will be sent to edge_geometry. And
+            if this info (value[1:]) to be parsed, it will be done there in
             edge_geometry. And the value is stored in the
             `edge_geometry.edge_types`.
 
@@ -170,7 +170,7 @@ class DomainInput(FrozenOnly):
         Requirements:
         0). != domain name.
         1). Is String and is not empty. Does not include '-' and '='.
-        2). Can not start with 'R:' (So it must be different from region names).
+        2). Can not start with 'R:' (So it must be different from regions names).
         3). Length > 1
         4). Does not contain any number
         """
@@ -191,7 +191,7 @@ class DomainInput(FrozenOnly):
     @property
     def boundary_region_edges(self):
         """
-        Store the domain boundary infomation.
+        Store the domain boundary information.
 
         Returns
         -------
@@ -292,7 +292,7 @@ class DomainInput(FrozenOnly):
         """
         This will fix the sequence of regions by fix their names in property
         region_names or regions.names. This is very important for numbering. Sometimes, a bad
-        region sequence can make the numbering wrong.
+        regions sequence can make the numbering wrong.
 
         """
         return self._region_sequence_
@@ -302,7 +302,7 @@ class DomainInput(FrozenOnly):
         assert len(rS) == len(self.region_corner_coordinates.keys())
         assert all([rSi in self.region_corner_coordinates for rSi in rS]) & \
             all([rSi in rS for rSi in self.region_corner_coordinates.keys()]), \
-            f"region_sequence={rS} has invalid region name(s)."
+            f"region_sequence={rS} has invalid regions name(s)."
         self._region_sequence_ = rS
 
     @property
@@ -531,7 +531,7 @@ class CylinderInChannel(DomainInput):
         |           .                .                        |
         |____li_____._______h________.___________lo___________|
 
-        The domian is divided into following regions:
+        The domain is divided into following regions:
          ___________._______________.________________________
         |           .\      Ru     /.                        |
         |           . \   _____   / .                        |
@@ -626,7 +626,7 @@ class CircleHolePlate1(DomainInput):
         |                |hy/2
         |_______hx_______|
 
-        The domian is divided into following regions:
+        The domain is divided into following regions:
          _______________
         |\      Ru     /|
         | \   _____   / |

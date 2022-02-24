@@ -41,20 +41,20 @@ class PartialCochain(FrozenOnly):
         return self._include_
 
     def __iter__(self):
-        """Go through all involved local element numbers."""
+        """Go through all involved local mesh element numbers."""
         for e in self._dofs_:
             yield e
 
     def __len__(self):
-        """How many involved local elements?"""
+        """How many involved local mesh elements?"""
         return len(self._dofs_)
 
     def __contains__(self, e):
-        """If element #e is involved?"""
+        """If mesh element #e is involved?"""
         return e in self._dofs_
 
     def __getitem__(self, e):
-        """Return the "indicators" (not local dofs) and the "local cochains" of the involved element #e."""
+        """Return the "indicators" (not local dofs) and the "local cochains" of the involved mesh element #e."""
         return self._dofs_[e], self._cochain_[e]
 
     @property
@@ -92,7 +92,8 @@ class _PartialCochain_Include_from_(FrozenOnly):
 
                     self._cochain_[i].extend(cochain[i][dofs])
 
-        elif cochain_type == 'Boundary only local cochain': # only cochains for dofs on mesh element side (boundary of the mesh).
+        elif cochain_type == 'Boundary only local cochain':
+            # only cochains for dofs on mesh element side (boundary of the mesh).
             for i in local_dofs_indicators:
                 assert i in cochain, \
                     f"element {i} in not in the local cochain, most likely," \
@@ -100,12 +101,14 @@ class _PartialCochain_Include_from_(FrozenOnly):
 
                 if i not in self._cochain_:
                     self._cochain_[i] = list()
+
                 assert len(local_dofs_indicators[i]) > 0, f"empty for element #{i}"
 
                 for side in local_dofs_indicators[i]:
                     self._cochain_[i].extend(cochain[i][side])
 
-        elif cochain_type == 'locally full local TEW cochain': # cochain.local_TEW, and locally full for all dofs on trace elements.
+        elif cochain_type == 'locally full local TEW cochain':
+            # cochain.local_TEW, and locally full for all dofs on trace elements.
             t = f # we rename it because it must be a trace form.
             TEM = t.mesh.trace.elements.map
 

@@ -13,7 +13,7 @@ from root.config import *
 from root.mifem import read
 from scipy.interpolate import NearestNDInterpolator
 from SCREWS.quadrature import Quadrature
-from _3dCSCG.form.trace.main import _3dCSCG_Standard_Trace
+from _3dCSCG.form.trace.base.main import _3dCSCG_Standard_Trace
 
 
 class _2Trace(_3dCSCG_Standard_Trace):
@@ -132,7 +132,11 @@ class _2Trace(_3dCSCG_Standard_Trace):
 
     def ___PRIVATE_discretize_ScalarField_of_ftype_standard___(self,
         update_cochain=True, target='func', quad_degree=None):
-        """We will discretize the a standard scalar field to all trace elements."""
+        """We will discretize the standard scalar field to all trace elements.
+
+        'locally full local TEW cochain' means the cochain is a dict whose keys are trace-element
+        numbers and values are trace-element-wise local cochains.
+        """
         if target in ('BC',): assert update_cochain is False, f"CANNOT update cochain when target is {target}"
 
         if self.___cache_DISCRETIZE_STANDARD___ is None or \
@@ -377,6 +381,9 @@ class _2Trace(_3dCSCG_Standard_Trace):
         xi+, eta+ or sigma+ direction (in the mesh element setting)
         before mapping.
 
+
+        'locally full local TEW cochain' means the cochain is a dict whose keys are trace-element
+        numbers and values are trace-element-wise local cochains.
         """
         if target in ('BC',): assert update_cochain is False, f"CANNOT update cochain when target is {target}"
 
@@ -502,6 +509,9 @@ class _2Trace(_3dCSCG_Standard_Trace):
 
     def ___PRIVATE_discretize_the_flux_of_a_VectorField_of_ftype_boundary_wise___(self, quad_degree=None):
         """We will discretize the norm component of the vector to the trace 2-form.
+
+        'locally full local TEW cochain' means the cochain is a dict whose keys are trace-element
+        numbers and values are trace-element-wise local cochains.
         """
 
         if self.___cache_DISCRETIZE_STANDARD___ is None or \

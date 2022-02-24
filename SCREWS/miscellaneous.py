@@ -388,6 +388,7 @@ def count_files_and_lines(start, files=0, lines=0, header=True, begin_start=None
                             reldir_of_thing = reldir_of_thing[:42] + '...'
                         print('{:>10} |{:>10} | {:<20}'.format(newlines, lines, reldir_of_thing))
                         files += 1
+
     for thing in os.listdir(start):
         # skip following ...
         if thing[-4:] == '.pyc':
@@ -426,3 +427,5 @@ if __name__ == '__main__':
 
     import doctest
     doctest.testmod()
+
+    count_files_and_lines('./')

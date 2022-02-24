@@ -182,7 +182,7 @@ class _2dCSCG_Trace_Numbering_Visualize(FrozenOnly):
                         ax.plot(RB[rn][ei][0], RB[rn][ei][1],
                                 color='k', linewidth=0.1*domain_boundary_linewidth)
                     else:
-                        if region_boundary: # plot the region boundary
+                        if region_boundary: # plot the regions boundary
                             ax.plot(RB[rn][ei][0], RB[rn][ei][1], color='b',
                                     linewidth=region_boundary_linewidth)
 

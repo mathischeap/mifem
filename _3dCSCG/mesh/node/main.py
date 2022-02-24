@@ -61,7 +61,7 @@ class _3dCSCG_Node_Elements(FrozenOnly):
                     regionElementLayout = baseElementLayout[rn]
                     assert all(np.array(regionElementLayout) > 1), \
                         f" elements.layout[{rn}]={regionElementLayout} wrong," \
-                        f" needs (>1, >1, >1) to make it work for periodic region."
+                        f" needs (>1, >1, >1) to make it work for periodic regions."
 
 
 
@@ -448,7 +448,7 @@ class _3dCSCG_Node_Element(FrozenOnly):
         return self._cc_
     @property
     def CHARACTERISTIC_region(self):
-        """We mainly consider this node element is in this region."""
+        """We mainly consider this node element is in this regions."""
         region = self._elements_._mesh_.DO.FIND_region_name_of_element(self.CHARACTERISTIC_element)
         return region
 

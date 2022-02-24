@@ -13,7 +13,7 @@ from abc import ABC
 
 
 
-from _3dCSCG.form.node.main import _3dCSCG_Node
+from _3dCSCG.form.node.base.main import _3dCSCG_Node
 
 
 

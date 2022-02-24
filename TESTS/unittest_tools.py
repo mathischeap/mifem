@@ -1471,7 +1471,7 @@ def test_TOOLS_NO13_EWC_Customize_CSCG_partial_dofs():
 
     mesh, space = random_3D_mesh_and_space_of_total_load_around(LOAD,
         exclude_periodic=True,
-        domain_boundary_distribution_regularities='Regular:one-region-corner-interface')
+        domain_boundary_distribution_regularities='Regular:one-regions-corner-interface')
 
     #-------- test partial_dofs only having boundary dofs involved====
     bns = mesh.boundaries.names

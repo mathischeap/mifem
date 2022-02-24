@@ -2,7 +2,7 @@
 
 
 from root.config import *
-from BASE.CSCG.mesh.main_BASE import CSCG_MESH_BASE
+from INHERITING.CSCG.mesh.main_BASE import CSCG_MESH_BASE
 from SCREWS.frozen import FrozenOnly
 from SCREWS.decorators import accepts, memoize5
 from SCREWS.exceptions import ElementsLayoutError, ElementEdgePairError
@@ -221,7 +221,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
 
                     else:
 
-                        if NCR < 4: # number of core in this region is 2 or 3.
+                        if NCR < 4: # number of core in this regions is 2 or 3.
                             # noinspection PyTupleAssignmentBalance
                             I, J = self._element_layout_[rn]
                             A = [I, J]
@@ -231,7 +231,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
 
                         else:
 
-                            # in this region, the element numbering will be range(start, end).
+                            # in this regions, the element numbering will be range(start, end).
                             start = current_num
                             end = current_num + self._num_elements_in_region_[rn]
 
@@ -265,14 +265,14 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
                                 A.sort()
                                 A0, A1 = A
 
-                                if A1 / A0 >= NCR * 0.75: # on A1, we have a lot more elements, so we block the region along A1
+                                if A1 / A0 >= NCR * 0.75: # on A1, we have a lot more elements, so we block the regions along A1
 
                                     _E_ = np.arange(current_num,
                                                     current_num + self._num_elements_in_region_[rn]).reshape(A, order='F')
 
                                 else:  # we now define a general numbering rule.
 
-                                    CNE = character_num_elements  # we use this number to decide how to divide the region.
+                                    CNE = character_num_elements  # we use this number to decide how to divide the regions.
 
                                     if A0 * A0 <= CNE: # A0 * A0 is significantly low.
                                         _E_ = np.arange(current_num,
@@ -329,10 +329,10 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
                         else:
                             raise Exception("SHOULD NEVER REACH HERE.")
 
-                    # give EGN to dict: ___element_global_numbering___ if this region is numbered.
+                    # give EGN to dict: ___element_global_numbering___ if this regions is numbered.
                     ___element_global_numbering___[rn] = EGN
 
-                else: # this region is not numbered, lets pass.
+                else: # this regions is not numbered, lets pass.
                     pass
 
                 current_num += self._num_elements_in_region_[rn]
@@ -364,7 +364,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
         return self.___PRIVATE_generate_element_global_numbering___(number_what='all regions')
 
     def ___PRIVATE_element_division_and_numbering_quality___(self):
-        """find the quality of element division (to cores) and element (region-wise global) numbering quality.
+        """find the quality of element division (to cores) and element (regions-wise global) numbering quality.
 
         :return: A tuple of 2 outputs:
 
@@ -448,7 +448,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
 
     def ___PRIVATE_fetch_side_element___(self, region_name, local_indices):
         """We try to find the global numbering of the elements or boundary attaching to the local element indexed
-        "local_indices" in the region named "region_name".
+        "local_indices" in the regions named "region_name".
 
         Parameters
         ----------
@@ -460,12 +460,12 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
         # _N___________________________________________________________________________
         _side_element_['U'] = None
         if local_indices[0] == 0:
-            # then this element's Upper edge is on the region Upper edge.
+            # then this element's Upper edge is on the regions Upper edge.
             what_attached = self.domain.regions.map[region_name][
                 self.domain.regions(region_name)._edge_name_to_index_('U')]
             if what_attached in self.domain._boundary_names_:
                 _side_element_['U'] = what_attached
-            else:  # must be another region
+            else:  # must be another regions
                 try:
                     _side_element_['U'] = self._element_global_numbering_[what_attached][
                         -1, local_indices[1]]
@@ -473,19 +473,19 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
                     raise Exception(
                         " Base layout dis-match between regions {} & {}".format(
                             region_name, what_attached))
-        else:  # then this element's Upper element is another element in this region
+        else:  # then this element's Upper element is another element in this regions
             _side_element_['U'] = self._element_global_numbering_[region_name][
                 local_indices[0] - 1, local_indices[1]]
         # _S___________________________________________________________________________
         _side_element_['D'] = None
         # noinspection PyTypeChecker
         if local_indices[0] == self._element_layout_[region_name][0] - 1:
-            # then this element's Down edge is on the region Down edge.
+            # then this element's Down edge is on the regions Down edge.
             what_attached = self.domain.regions.map[region_name][
                 self.domain.regions(region_name)._edge_name_to_index_('D')]
             if what_attached in self.domain._boundary_names_:
                 _side_element_['D'] = what_attached
-            else:  # must be another region
+            else:  # must be another regions
                 try:
                     _side_element_['D'] = self._element_global_numbering_[what_attached][
                         0, local_indices[1]]
@@ -493,18 +493,18 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
                     raise Exception(
                         " Base layout dis-match between regions {} & {}".format(
                             region_name, what_attached))
-        else:  # then this element's Down element is another element in this region
+        else:  # then this element's Down element is another element in this regions
             _side_element_['D'] = self._element_global_numbering_[region_name][
                 local_indices[0] + 1, local_indices[1]]
         # _W___________________________________________________________________________
         _side_element_['L'] = None
         if local_indices[1] == 0:
-            # then this element's Left edge is on the region Left edge.
+            # then this element's Left edge is on the regions Left edge.
             what_attached = self.domain.regions.map[region_name][
                 self.domain.regions(region_name)._edge_name_to_index_('L')]
             if what_attached in self.domain._boundary_names_:
                 _side_element_['L'] = what_attached
-            else:  # must be another region
+            else:  # must be another regions
                 try:
                     _side_element_['L'] = self._element_global_numbering_[what_attached][
                         local_indices[0], -1]
@@ -512,19 +512,19 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
                     raise Exception(
                         " Base layout dis-match between regions {} & {}".format(
                             region_name, what_attached))
-        else:  # then this element's Left element is another element in this region
+        else:  # then this element's Left element is another element in this regions
             _side_element_['L'] = self._element_global_numbering_[region_name][
                 local_indices[0], local_indices[1] - 1]
         # _E___________________________________________________________________________
         _side_element_['R'] = None
         # noinspection PyTypeChecker
         if local_indices[1] == self._element_layout_[region_name][1] - 1:
-            # then this element's Right edge is on the region Right edge.
+            # then this element's Right edge is on the regions Right edge.
             what_attached = self.domain.regions.map[region_name][
                 self.domain.regions(region_name)._edge_name_to_index_('R')]
             if what_attached in self.domain._boundary_names_:
                 _side_element_['R'] = what_attached
-            else:  # must be another region
+            else:  # must be another regions
                 try:
                     _side_element_['R'] = self._element_global_numbering_[what_attached][
                         local_indices[0], 0]
@@ -532,7 +532,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
                     raise Exception(
                         " Base layout dis-match between regions {} & {}".format(
                             region_name, what_attached))
-        else:  # then this element's Right element is another element in this region
+        else:  # then this element's Right element is another element in this regions
             _side_element_['R'] = self._element_global_numbering_[region_name][
                 local_indices[0], local_indices[1] + 1]
         # ------------------------------------------------------------------------------
@@ -629,7 +629,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
 
     @memoize5 # must use memoize
     def ___DO_find_region_name_and_local_indices_of_element___(self, i):
-        """ Find the region and the local numbering of ith element. """
+        """ Find the regions and the local numbering of ith element. """
         if i == -1: return None # to make sure we initialized the memoize cache.
         region_name = None
         for num_elements_accumulation in self._num_elements_accumulation_:
@@ -741,7 +741,7 @@ class _2dCSCG_Mesh_DO(FrozenOnly):
 
 
     def FIND_region_name_of_element(self, i):
-        """Find the region and the local numbering of ith element."""
+        """Find the regions and the local numbering of ith element."""
         region_name = None
         for num_elements_accumulation in self._mesh_._num_elements_accumulation_:
             if i < num_elements_accumulation:
@@ -804,10 +804,10 @@ class _2dCSCG_Mesh_DO(FrozenOnly):
 
     def regionwsie_stack(self, *ndas):
         """
-        We use this method to stack a ndarray region-wise. This function is very useful
-        in plotting reconstruction data. Since in a region, the elements are structure,
+        We use this method to stack a ndarray regions-wise. This function is very useful
+        in plotting reconstruction data. Since in a regions, the elements are structure,
         we can plot element by element. But if we group data from elements of the same
-        region, then we can plot region by region. This very increase the plotting speed
+        regions, then we can plot regions by regions. This very increase the plotting speed
         significantly.
 
         Parameters

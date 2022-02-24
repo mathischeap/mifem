@@ -12,7 +12,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 from types import FunctionType, MethodType
-from _3dCSCG.field.main import _3dCSCG_Continuous_FORM_BASE
+from _3dCSCG.field.base.main import _3dCSCG_Continuous_FORM_BASE
 from functools import partial
 from root.config import *
 from SCREWS.frozen import FrozenOnly

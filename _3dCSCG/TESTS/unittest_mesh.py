@@ -7,7 +7,7 @@ if './' not in sys.path: sys.path.append('./')
 from root.config import *
 from SCREWS.quadrature import Quadrature
 from SCREWS.exceptions import ThreeDimensionalTransfiniteInterpolationError
-from _3dCSCG.mesh.domain.input.finder import DomainInputFinder
+from _3dCSCG.mesh.domain.inputs.finder import DomainInputFinder
 from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
 import random
 import os

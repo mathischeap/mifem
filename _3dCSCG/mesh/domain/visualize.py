@@ -31,8 +31,8 @@ class _3dCSCG_Domain_Visualize(FrozenOnly):
         ----------
         nodes : int or None, optional
             A positive int to determine how good we are going to follow the real shape
-            of each region. When it is None (default), it will be set to be the optimal
-            according the region type.
+            of each regions. When it is None (default), it will be set to be the optimal
+            according the regions type.
 
         """
         if rAnk != mAster_rank: return

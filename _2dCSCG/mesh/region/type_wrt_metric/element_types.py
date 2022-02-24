@@ -7,7 +7,7 @@ from SCREWS.decorators import accepts
 
 class ElementTypeWr2Metric(FrozenOnly):
     """
-    A base for all element types w.r.t. metric. For each type of region, we can classify its elements
+    A base for all element types w.r.t. metric. For each type of regions, we can classify its elements
     into different types. These types are all coded here.
     """
     @property

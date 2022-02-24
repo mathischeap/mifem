@@ -13,7 +13,7 @@ from root.config import *
 from scipy import sparse as spspa
 from SCREWS.frozen import FrozenOnly
 from SCREWS.quadrature import Quadrature
-from _3dCSCG.form.standard.main import _3dCSCG_Standard_Form
+from _3dCSCG.form.standard.base.main import _3dCSCG_Standard_Form
 
 
 class _3Form(_3dCSCG_Standard_Form):
@@ -86,6 +86,13 @@ class _3Form(_3dCSCG_Standard_Form):
             raise NotImplementedError(f"3dCSCG 3-form cannot discretize while targeting at {target}.")
 
     def ___PRIVATE_discretize_standard_ftype___(self, update_cochain:bool=True, quad_degree=None):
+        """
+        The return cochain is 'locally full local cochain', which means it is mesh-element-wise
+        local cochain. So:
+
+        cochainLocal is a dict, whose keys are mesh element numbers, and values (1-d arrays) are
+        the local cochains.
+        """
         p = [self.dqp[i] + 1 for i in range(self.ndim)] if quad_degree is None else quad_degree
         quad_nodes, quad_weights = Quadrature(p).quad
         if self.___DISCRETIZE_STANDARD_CACHE___ is None \
@@ -140,7 +147,7 @@ class _3Form(_3dCSCG_Standard_Form):
         # pass to cochain.local ...
         if update_cochain: self.cochain.local = cochainLocal
         # ...
-        return cochainLocal
+        return 'locally full local cochain', cochainLocal
 
     def reconstruct(self, xi, eta, sigma, ravel=False, i=None, regions=None):
         """
@@ -237,6 +244,11 @@ class _3Form_Special(FrozenOnly):
     def __init__(self, _3sf):
         self._sf_ = _3sf
         self._freeze_self_()
+
+
+
+
+
 
 
 

@@ -12,7 +12,7 @@ This calls all cores. To call particular number of cores, say ``3`` cores, do
 
     $ mpiexec -n 3 python _3dCSCG\TESTS\mpi_unittest.py
 
-It is always suggested to test the library multiple time with different numbers of cores.
+It is always suggested testing the library multiple time with different numbers of cores.
 
 """
 import sys
@@ -27,6 +27,7 @@ from _3dCSCG.TESTS.unittest_Naive_numbering import *
 from _3dCSCG.TESTS.unittest_APP import *
 from _3dCSCG.TESTS.unittest_ADF import *
 from _3dCSCG.TESTS.unittest_trace import *
+from _3dCSCG.TESTS.unittest_edge_forms import *
 
 t_3dCSCG_start = MPI.Wtime()
 
@@ -88,6 +89,8 @@ passed_3dCSCG_tests += test_trace_NO1_trace_1_form_Rd_and_Rc()
 passed_3dCSCG_tests += test_trace_NO2_trace_2_form_Rd_and_Rc()
 passed_3dCSCG_tests += test_trace_NO3_trace_matrices()
 
+passed_3dCSCG_tests += test_edge_forms_No0_save_read()
+passed_3dCSCG_tests += test_edge_forms_No1_0edge_Rd_and_Rc()
 
 
 if rAnk == mAster_rank:

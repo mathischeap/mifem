@@ -36,10 +36,7 @@ from TESTS.unittest_screws import *
 from TESTS.unittest_linear_solvers import *
 from TESTS.unittest_linear_algebra import *
 
-
 t_global_start = MPI.Wtime()
-
-
 
 passed_GLOBAL_tests += test_mifem_NO1_2dCSCG_save_read()
 passed_GLOBAL_tests += test_mifem_NO2_3dCSCG_save_read()

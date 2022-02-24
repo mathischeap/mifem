@@ -12,7 +12,7 @@ from abc import ABC
 
 if './' not in sys.path: sys.path.append('./')
 from root.config import *
-from _3dCSCG.form.trace.main import _3dCSCG_Standard_Trace
+from _3dCSCG.form.trace.base.main import _3dCSCG_Standard_Trace
 from SCREWS.quadrature import Quadrature
 
 
@@ -106,7 +106,12 @@ class _0Trace(_3dCSCG_Standard_Trace, ABC):
             raise NotImplementedError()
 
     def ___PRIVATE_discretize_standard_ftype___(self, target='func', update_cochain=True):
-        """We will discretize the a standard scalar field to all trace elements."""
+        """We will discretize the standard scalar field to all trace elements.
+
+        'locally full local TEW cochain' means the cochain is a dict whose keys are trace-element
+        numbers and values are trace-element-wise local cochains.
+
+        """
         if target in ('BC',): assert update_cochain is False, f"CANNOT update cochain when target is {target}"
 
         nodes = self.space.nodes
@@ -149,7 +154,11 @@ class _0Trace(_3dCSCG_Standard_Trace, ABC):
         return 'locally full local TEW cochain', local_TEW
 
     def ___PRIVATE_discretize_the_flux_of_a_VectorField_of_standard_ftype___(self, target='func', update_cochain=True):
-        """We will discretize the a standard vector field (norm flux) to all trace elements."""
+        """We will discretize the standard vector field (norm flux) to all trace elements.
+
+        'locally full local TEW cochain' means the cochain is a dict whose keys are trace-element
+        numbers and values are trace-element-wise local cochains.
+        """
         if target in ('BC',): assert update_cochain is False, f"CANNOT update cochain when target is {target}"
 
         nodes = self.space.nodes
@@ -237,17 +246,9 @@ class _0Trace(_3dCSCG_Standard_Trace, ABC):
                 xyz_i = te.coordinate_transformation.mapping(
                     *xietasigma[side], from_element=ele, side=side)
                 prime_cochain = self.cochain.local_TEW[i]
-                if side in 'NS':
-                    vi = np.einsum('i, ij -> j', prime_cochain,
-                                   pb[side][0], optimize='greedy')
-                elif side in 'WE':
-                    vi = np.einsum('i, ij -> j', prime_cochain,
-                                   pb[side][0], optimize='greedy')
-                elif side in 'BF':
-                    vi = np.einsum('i, ij -> j', prime_cochain,
-                                   pb[side][0], optimize='greedy')
-                else:
-                    raise Exception()
+
+                vi = np.einsum('i, ij -> j', prime_cochain,
+                               pb[side][0], optimize='greedy')
 
                 if ravel:
                     xyz[i] = xyz_i

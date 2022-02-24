@@ -60,7 +60,7 @@ class _2dCSCG_Domain_Visualize(FrozenOnly):
         O = np.zeros(density)
         I = np.ones(density)
 
-        RB = {}  # region boundaries
+        RB = {}  # regions boundaries
         for rn in self._domain_.regions.names:
             RB[rn] = [None, None, None, None]
             for ei in range(4):
@@ -134,6 +134,7 @@ class _2dCSCG_Domain_Visualize(FrozenOnly):
         if ylim is not None: plt.ylim(ylim)
         for rn in self._domain_.regions.names:
             if show_region_names:
+                # noinspection PyUnboundLocalVariable
                 ax.text(RC[rn][0], RC[rn][1], rn.replace('_', '\_'), c='k', ha='center', va='center')
             for ei in range(4):
                 if reo_db[rn][ei] == 1:
@@ -150,11 +151,12 @@ class _2dCSCG_Domain_Visualize(FrozenOnly):
                         ax.plot(RB[rn][ei][0], RB[rn][ei][1], '--', color='k',
                                 linewidth=region_linewidth)
                 if show_region_names:
-                    # noinspection PyUnresolvedReferences
+                    # noinspection PyUnresolvedReferences,PyUnboundLocalVariable
                     ax.text(RE[rn][ei][0], RE[rn][ei][1],
                             {0: 'U', 1: 'D', 2: 'L', 3: 'R'}[ei], c='r', ha='center', va='center')
 
                 if show_boundary_names:
+                    # noinspection PyUnboundLocalVariable
                     if RBN[rn][ei] is None:
                         pass
                     else:

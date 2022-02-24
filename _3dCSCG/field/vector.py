@@ -14,7 +14,7 @@ from root.config import *
 from types import FunctionType, MethodType
 from SCREWS.frozen import FrozenOnly
 from TOOLS.linear_algebra.elementwise_cache import EWC_ColumnVector
-from _3dCSCG.field.main import _3dCSCG_Continuous_FORM_BASE
+from _3dCSCG.field.base.main import _3dCSCG_Continuous_FORM_BASE
 from functools import partial
 from scipy import sparse as spspa
 from SCREWS.functions._4d import CFG

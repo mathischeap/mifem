@@ -197,6 +197,7 @@ if __name__ == "__main__":
     # mesh = MeshGenerator('crazy',)([14,14])
     mesh = MeshGenerator('cic')([3,3], show_info=True, EDM='chaotic')
 
+
     # print(mesh.___PRIVATE_element_division_and_numbering_quality___())
     mesh.visualize.matplot.element_division()
     # mesh.visualize.matplot()

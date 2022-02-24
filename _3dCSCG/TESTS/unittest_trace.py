@@ -6,6 +6,8 @@ from root.config import *
 import random
 from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
 from _3dCSCG.TESTS.random_objects import random_3D_FormCaller_of_total_load_around
+# from scipy.sparse import csc_matrix
+# from TOOLS.linear_algebra.data_structures import LocallyFullVector
 
 def test_trace_NO__general_tests():
     """"""
@@ -73,6 +75,15 @@ def test_trace_NO0_trace_0_form_Rd_and_Rc():
             cochain_trace_selective = s @ cochain_form
             np.testing.assert_array_almost_equal(cochain_trace, cochain_trace_selective)
 
+    Sme = t0.matrices.selective # mesh-element-wise Selective matrix
+    for i in t0.mesh.elements:
+        Si = Sme[i]
+        cochain_form = f0.cochain.local[i]
+        cochain_trace_selective = Si @ cochain_form
+
+        cochain_trace = t0.cochain.local[i]
+        np.testing.assert_array_almost_equal(cochain_trace, cochain_trace_selective)
+
     return 1
 
 
@@ -122,6 +133,14 @@ def test_trace_NO1_trace_1_form_Rd_and_Rc():
             cochain_trace_selective = s @ cochain_form
             np.testing.assert_array_almost_equal(cochain_trace, cochain_trace_selective)
 
+    Sme = t1.matrices.selective # mesh-element-wise Selective matrix
+    for i in t1.mesh.elements: # go through all local mesh elements
+        Si = Sme[i]
+        cochain_form = f1.cochain.local[i]
+        cochain_trace_selective = Si @ cochain_form
+
+        cochain_trace = t1.cochain.local[i]
+        np.testing.assert_array_almost_equal(cochain_trace, cochain_trace_selective)
 
     # now we compare that discretization from the vector is the same as discretization from its parallel component-------
     if rAnk == mAster_rank:
@@ -189,18 +208,26 @@ def test_trace_NO2_trace_2_form_Rd_and_Rc():
     t2.TW.DO.push_all_to_instant()
 
     f2.discretize() # default discretization, discrete a vector to 2-form
-    t2.discretize() # default discretization, discrete a the outward norm component of a vector to 2-form
+    t2.discretize() # default discretization, discrete the outward norm component of a vector to 2-form
 
-    S = t2.space.selective_matrix._2Trace[1]
+    S = t2.space.selective_matrix._2Trace[1] # cannot use t2.matrices.selective
 
     trace_map = t2.mesh.trace.elements.map
-    for i in trace_map: # go through all local elements
+    for i in trace_map: # go through all local mesh elements
         for j, side in enumerate('NSWEBF'): # go through all local trace elements around mesh element #i
             cochain_trace = t2.cochain.local_TEW[trace_map[i][j]]
             s = S[side]
             cochain_form = f2.cochain.local[i]
             cochain_trace_selective = s @ cochain_form
             np.testing.assert_array_almost_equal(cochain_trace, cochain_trace_selective)
+
+    Sme = t2.matrices.selective # mesh-element-wise Selective matrix
+    for i in t2.mesh.elements: # go through all local mesh elements
+        Si = Sme[i]
+        cochain_form = f2.cochain.local[i]
+        cochain_trace_selective = Si @ cochain_form
+        cochain_trace = t2.cochain.local[i]
+        np.testing.assert_array_almost_equal(cochain_trace, cochain_trace_selective)
 
     return 1
 
@@ -330,7 +357,9 @@ def test_trace_NO3_trace_matrices():
 
 
 if __name__ == '__main__':
-    # mpiexec -n 12 python _3dCSCG\TESTS\unittest_trace.py
+    # mpiexec -n 6 python _3dCSCG\TESTS\unittest_trace.py
     # test_trace_NO__general_tests()
-    # test_trace_NO0_trace_0_form_Rd_and_Rc()
-    test_trace_NO3_trace_matrices()
+    test_trace_NO0_trace_0_form_Rd_and_Rc()
+    test_trace_NO1_trace_1_form_Rd_and_Rc()
+    test_trace_NO2_trace_2_form_Rd_and_Rc()
+    # test_trace_NO3_trace_matrices()

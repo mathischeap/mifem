@@ -13,7 +13,7 @@ from root.config import *
 from scipy import sparse as spspa
 from SCREWS.frozen import FrozenOnly
 from SCREWS.quadrature import Quadrature
-from _3dCSCG.form.standard.main import _3dCSCG_Standard_Form
+from _3dCSCG.form.standard.base.main import _3dCSCG_Standard_Form
 from TOOLS.linear_algebra.elementwise_cache import EWC_SparseMatrix
 from TOOLS.linear_algebra.data_structures import GlobalVector
 from _3dCSCG.form.standard._0_form import _0Form
@@ -98,6 +98,16 @@ class _1Form(_3dCSCG_Standard_Form):
 
 
     def ___PRIVATE_discretize_standard_ftype___(self, update_cochain=True, quad_degree=None):
+        """The return cochain is 'locally full local cochain', which means it is mesh-element-wise
+        local cochain. So:
+
+        cochainLocal is a dict, whose keys are mesh element numbers, and values (1-d arrays) are
+        the local cochains.
+
+        :param update_cochain:
+        :param quad_degree:
+        :return:
+        """
         if self.___DISCRETIZE_STANDARD_CACHE___ is None or \
             quad_degree != self.___DISCRETIZE_STANDARD_CACHE___['quadDegree']:
             self.___DISCRETIZE_STANDARD_CACHE___ = dict()
@@ -214,7 +224,7 @@ class _1Form(_3dCSCG_Standard_Form):
         if update_cochain:
             self.cochain.local = cochainLocal
         # ...
-        return cochainLocal
+        return 'locally full local cochain', cochainLocal
 
     def ___PRIVATE_discretize_preparation___(self, d_='', quad_degree=None):
         p = [self.dqp[i] + 1 for i in range(self.ndim)] if quad_degree is None else quad_degree
@@ -324,6 +334,7 @@ class _1Form(_3dCSCG_Standard_Form):
             if ravel:
                 pass
             else:
+                # noinspection PyUnresolvedReferences
                 xyz[i] = [xyz[i][j].reshape(shape, order='F') for j in range(3)]
                 # noinspection PyUnresolvedReferences
                 value[i] = [value[i][j].reshape(shape, order='F') for j in range(3)]

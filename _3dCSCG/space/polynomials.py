@@ -7,17 +7,17 @@
          TU Delft, Delft, Netherlands
 
 """
-from _3dCSCG.space.main import _3dCSCG_Space
+from _3dCSCG.space.base.main import _3dCSCG_Space_Base
 from SCREWS.quadrature import Quadrature
 from root.config import *
 
-from BASE.CSCG.space._1d_basis.polynomials import _1dPolynomial
+from INHERITING.CSCG.space._1d_basis.polynomials import _1dPolynomial
 
 
 
 
 
-class _3dCSCG_PolynomialSpace(_3dCSCG_Space):
+class _3dCSCG_PolynomialSpace(_3dCSCG_Space_Base):
     """"""
     def __init__(self, inputs, ndim):
         """

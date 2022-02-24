@@ -25,7 +25,7 @@ class _2dCSCG_Regular_PBP_RegionSidePair(FrozenOnly):
                 rn2, self._baseMesh_.domain.regions.names)
         assert sn2 in ('U', 'D', 'L', 'R')
         assert {'U': 'D', 'D': 'U', 'L': 'R', 'R': 'L'}[sn1] == sn2, \
-            " Regular periodic region side pair must be UD or LR pair!"
+            " Regular periodic regions side pair must be UD or LR pair!"
         self._regionEdgeOne_ = self._baseMesh_.domain.regions(rn1).edges[sn1]
         self._regionEdgeTwo_ = self._baseMesh_.domain.regions(rn2).edges[sn2]
         self._freeze_self_()
@@ -99,7 +99,7 @@ class _2dCSCG_Regular_PBP(FrozenOnly):
 
     def ___CHECK_REGION_SIDE_PAIRS___(self, regionEdgesOne, regionEdgesTwo):
         assert len(regionEdgesOne) == len(regionEdgesTwo), \
-            f"different region sides contained at two sides of regular periodic boundary pair {self._boundaryPair_}."
+            f"different regions sides contained at two sides of regular periodic boundary pair {self._boundaryPair_}."
 
         self._region_edge_pairs_ = dict()
         for i in range(len(regionEdgesOne)):

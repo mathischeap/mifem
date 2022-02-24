@@ -631,6 +631,9 @@ class GlobalMatrix(FrozenOnly):
                 v = A.___PRIVATE_distribute_vector___(v)
                 v = A.M @ v
             return GlobalVector(v)
+        elif B.__class__.__name__ == 'LocallyFullVector':
+            v = A.M @ B.V
+            return GlobalVector(v)
         else:
             raise NotImplementedError(f"Can not do GlobalMatrix @ {B.__class__.__name__}.")
 

@@ -24,7 +24,7 @@ class TypeWr2Metric(FrozenOnly):
 
     def __eq__(self, other):
         return self.mark == other.mark and other.___IS_2dCSCG_TypeWr2Metric___
-        # make sure we can comparing region type metric objects.
+        # make sure we can comparing regions type metric objects.
 
     @property
     def ___IS_2dCSCG_TypeWr2Metric___(self):
@@ -52,10 +52,10 @@ class TypeWr2Metric(FrozenOnly):
 
 class Chaotic(TypeWr2Metric):
     """
-    Chaotic region is the default region type. If we do not mention the region type in the domain input file,
-    we will use this region type as its type.
+    Chaotic regions is the default regions type. If we do not mention the regions type in the domain input file,
+    we will use this regions type as its type.
 
-    If a region is classified as a chaotic region, then all the elements in this region will also be chaotic.
+    If a regions is classified as a chaotic regions, then all the elements in this regions will also be chaotic.
     Therefore, we say that all elements are different. As a result, when we compute, for example, the Jacobian
     of elements, we have to do it for all elements. So, we should better aviod this.
     """
@@ -75,7 +75,7 @@ class Chaotic(TypeWr2Metric):
         return self._mark_
 
     def ___CLASSIFY_ELEMENT_of_spacing___(self, spacing: tuple) -> ChaoticElement:
-        assert np.shape(spacing) == (2,2), "I need a spacing of shape (2,2) to represent an element in a region."
+        assert np.shape(spacing) == (2,2), "I need a spacing of shape (2,2) to represent an element in a regions."
         assert all([0 <= spacing[i][0] < spacing[i][1] <= 1 for i in range(2)]), f"spacing={spacing} is wrong."
         return ChaoticElement()
 
@@ -103,7 +103,7 @@ class Crazy(TypeWr2Metric):
         return self._mark_
 
     def ___CLASSIFY_ELEMENT_of_spacing___(self, spacing: tuple) -> Union[ChaoticElement, OrthogonalElement]:
-        assert np.shape(spacing) == (2,2), "I need a spacing of shape (2,2) to represent an element in a region."
+        assert np.shape(spacing) == (2,2), "I need a spacing of shape (2,2) to represent an element in a regions."
         assert all([0 <= spacing[i][0] < spacing[i][1] <= 1 for i in range(2)]), f"spacing={spacing} is wrong."
         if self._c_ == 0:
             LxLy = [(spacing[i][1] - spacing[i][0]) * self._Lxy_[i] for i in range(2)]
@@ -181,7 +181,7 @@ class Transfinite(TypeWr2Metric):
 
     def ___CLASSIFY_ELEMENT_of_spacing___(self, spacing: tuple) -> \
         Union[ChaoticElement, OrthogonalElement,ParallelogramElement]:
-        assert np.shape(spacing) == (2,2), "I need a spacing of shape (2,2) to represent an element in a region."
+        assert np.shape(spacing) == (2,2), "I need a spacing of shape (2,2) to represent an element in a regions."
         assert all([0 <= spacing[i][0] < spacing[i][1] <= 1 for i in range(2)]), f"spacing={spacing} is wrong."
         if self._IS_chaotic_:
             return ChaoticElement()

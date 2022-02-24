@@ -13,7 +13,7 @@ from _3dCSCG.APP.exact_solutions.main import ExactSolution
 from importlib import import_module
 from SCREWS.frozen import FrozenOnly
 from SCREWS.miscellaneous import MyTimer
-from _3dCSCG.mesh.domain.input.finder import DomainInputFinder
+from _3dCSCG.mesh.domain.inputs.finder import DomainInputFinder
 from _3dCSCG.mesh.domain.main import _3dCSCG_Domain
 from _3dCSCG.mesh.main import _3dCSCG_Mesh
 from copy import deepcopy

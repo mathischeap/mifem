@@ -14,7 +14,7 @@ if './' not in sys.path: sys.path.append('./')
 
 import numpy as np
 from SCREWS.frozen import FrozenOnly
-from _3dCSCG.field.main import _3dCSCG_Continuous_FORM_BASE
+from _3dCSCG.field.base.main import _3dCSCG_Continuous_FORM_BASE
 from types import FunctionType, MethodType
 from SCREWS.functions._4d import CFG
 from functools import partial
@@ -53,6 +53,7 @@ class _3dCSCG_TensorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
         if ftype == 'standard': # 3 by 3 functions in list or tuple.
             # standard func is function or method.
             assert np.shape(func) == (3,3), f"Standard tensor only accepts list or tuple of shape (3,3)."
+
             _func_checked_ = [[None for _ in range(3)] for _ in range(3)]
             for i, fci_ in enumerate(func):
                 for j, fij in enumerate(fci_):
@@ -165,7 +166,6 @@ class _3dCSCG_TensorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                     raise NotImplementedError(f"_3dCSCG_TensorField of 'standard' ftype"
                                               f" mesh-element-reconstruction currently doesn't accept i={i}.")
 
-
                 for i in INDICES:
                     element = self.mesh.elements[i]
                     xyz_i = element.coordinate_transformation.mapping(xi, eta, sigma)
@@ -188,7 +188,6 @@ class _3dCSCG_TensorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
             return xyz, value
 
-
         else:
             raise NotImplementedError(f"_3dCSCG_TensorField cannot reconstruct 3dCSCG tensor field on {where}.")
 
@@ -209,7 +208,6 @@ class _3dCSCG_TensorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
         if self._numerical_ is None:
             self._numerical_ = _3dCSCG_TensorField_Numerical(self)
         return self._numerical_
-
 
     def __neg__(self):
         """-self."""
@@ -269,13 +267,13 @@ class _3dCSCG_TensorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                 x22 = ___TENSOR_SUB_HELPER_1___(w22, u22)
 
                 sub_tensor = _3dCSCG_TensorField(self.mesh,
-                                                 ([x00, x01, x02],
-                                                  [x10, x11, x12],
-                                                  [x20, x21, x22]),
-                                                 ftype='standard',
-                                                 valid_time=self.valid_time,
-                                                 name = self.standard_properties.name + '-' + other.standard_properties.name
-                                                )
+                     ([x00, x01, x02],
+                      [x10, x11, x12],
+                      [x20, x21, x22]),
+                     ftype='standard',
+                     valid_time=self.valid_time,
+                     name = self.standard_properties.name + '-' + other.standard_properties.name
+                    )
                 return sub_tensor
 
             else:
@@ -310,13 +308,13 @@ class _3dCSCG_TensorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                 x22 = ___TENSOR_ADD_HELPER_1___(w22, u22)
 
                 add_tensor = _3dCSCG_TensorField(self.mesh,
-                                                 ([x00, x01, x02],
-                                                  [x10, x11, x12],
-                                                  [x20, x21, x22]),
-                                                 ftype='standard',
-                                                 valid_time=self.valid_time,
-                                                 name = self.standard_properties.name + '+' + other.standard_properties.name
-                                                )
+                     ([x00, x01, x02],
+                      [x10, x11, x12],
+                      [x20, x21, x22]),
+                     ftype='standard',
+                     valid_time=self.valid_time,
+                     name = self.standard_properties.name + '+' + other.standard_properties.name
+                    )
                 return add_tensor
 
             else:

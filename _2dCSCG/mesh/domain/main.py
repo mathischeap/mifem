@@ -60,7 +60,7 @@ class _2dCSCG_Domain(FrozenOnly):
     def ___PRIVATE_parse_interpolators_(self):
         """
         Here only get the interpolator names actually. The interpolation class
-        will be obtained in the region itself.
+        will be obtained in the regions itself.
 
         We get the `_interpolators_` from the `domain_input`:
         `self.domain_input.region_interpolators`. If
@@ -72,7 +72,7 @@ class _2dCSCG_Domain(FrozenOnly):
         Attributes
         ----------
         self._interpolators_ : dict
-            The dict whose keys are region names and values are the
+            The dict whose keys are regions names and values are the
             interpolator names the interpolators of regions.
 
         """
@@ -85,7 +85,7 @@ class _2dCSCG_Domain(FrozenOnly):
         else:
             raise Exception(" <Domain> ")
         assert set(self._interpolators_.keys()) == set(self._region_names_), \
-            " <Domain> : I need interpolator for every region. "
+            " <Domain> : I need interpolator for every regions. "
 
     def ___PRIVATE_generate_regions___(self):
         """
@@ -155,7 +155,7 @@ class _2dCSCG_Domain(FrozenOnly):
         -------
         self._regions_ : dict
             A dict that contains all regions. Keys: regions' names. Values: the
-            region instances.
+            regions instances.
 
         """
         return self._regions_

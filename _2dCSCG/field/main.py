@@ -14,7 +14,7 @@ from root.config import *
 import matplotlib.pyplot as plt
 from SCREWS.frozen import FrozenOnly
 
-from BASE.CSCG.field.main_BASE import CSCG_Continuous_FORM_BASE
+from INHERITING.CSCG.field.main_BASE import CSCG_Continuous_FORM_BASE
 
 
 

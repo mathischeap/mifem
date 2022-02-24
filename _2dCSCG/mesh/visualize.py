@@ -54,7 +54,7 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         o = np.linspace(0, 1, density) # plot density
         I = np.ones(density)
         #______________________________________ line data _____________________________
-        RI = {} # data for region internal lines
+        RI = {} # data for regions internal lines
         for rn in self._mesh_.domain.regions.names:
             RI[rn] = ([], []) # ([dy_lines], [dx_lines])
             #____ compute dy lines ___________________________________________
@@ -173,7 +173,7 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         o = np.linspace(0, 1, density)  # plot density
         O = np.zeros(density)
         I = np.ones(density)
-        RB = {}  # region boundaries
+        RB = {}  # regions boundaries
         for rn in self._domain_.regions.names:
             RB[rn] = [None, None, None, None]
             for ei in range(4):
@@ -287,7 +287,7 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         o = np.linspace(0, 1, density) # plot density
         I = np.ones(density)
         #______________________________________ line data _____________________________
-        RI = {} # data for region internal lines
+        RI = {} # data for regions internal lines
         for rn in self._mesh_.domain.regions.names:
             RI[rn] = ([], []) # ([dy_lines], [dx_lines])
             #____ compute dy lines ___________________________________________
@@ -396,7 +396,7 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
                     ax.plot(RB[rn][ei][0], RB[rn][ei][1],
                             color='k', linewidth=0.1*domain_boundary_linewidth)
                 else:
-                    if region_boundary: # plot the region boundary
+                    if region_boundary: # plot the regions boundary
                         ax.plot(RB[rn][ei][0], RB[rn][ei][1], color='b', linewidth=region_boundary_linewidth)
 
                 if show_boundary_names:

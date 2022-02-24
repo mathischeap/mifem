@@ -6,7 +6,7 @@ if './' not in sys.path: sys.path.append('./')
 
 from root.config import *
 import random
-from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
+from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
 
 
@@ -40,7 +40,7 @@ def random_3D_mesh_of_elements_around(elements_num,
         f"element_num = {elements_num} is wrong, must be a number and >= 1."
 
 
-    #------(1) EDIT the dict -> mesh_name_region_num :: we will select from this dict -------------------------------------------------
+    #------(1) EDIT the dict -> mesh_name_region_num :: we will select from this dict ----------------
     if exclude_periodic:
         mesh_name_region_num = {  # add new meshes to this pool.
             # mesh name: how many regions
@@ -71,7 +71,7 @@ def random_3D_mesh_of_elements_around(elements_num,
         pass
 
 
-    #---------(2) EDIT the dict -> mesh_name_boundary_num :: parse mesh_boundary_num ------------------------------------------------------------------
+    #---------(2) EDIT the dict -> mesh_name_boundary_num :: parse mesh_boundary_num -----------------
     mesh_name_boundary_num = {
             'crazy': 6,
             'crazy_periodic': 0, # crazy_periodic mesh has no mesh boundary.
@@ -90,7 +90,7 @@ def random_3D_mesh_of_elements_around(elements_num,
     else:
         raise NotImplementedError(f"Do not understand mesh_boundary_num={mesh_boundary_num}.")
 
-    # -------(3) EDIT the dict -> mesh_personal_parameters :: random personal parameters -------------------------------------------------------------
+    # -------(3) EDIT the dict -> mesh_personal_parameters :: random personal parameters ------------
     if rAnk == mAster_rank:
         mesh_personal_parameters = { # edit below when new mesh is added to above pool.
             'crazy':{'c': random.randint(0,3)*random.random()/10,
@@ -111,7 +111,7 @@ def random_3D_mesh_of_elements_around(elements_num,
     mesh_personal_parameters = cOmm.bcast(mesh_personal_parameters, root=mAster_rank)
 
 
-    # ======================================================================================================
+    # ==============================================================================================
 
     while 1:
 
@@ -176,14 +176,14 @@ def random_3D_mesh_of_elements_around(elements_num,
         if factor2 < 1:
             factor2 = 1
 
-        #------ (4) EDIT :: special requests for particular meshes ---------------------------------------
+        #------ (4) EDIT :: special requests for particular meshes ---------------------------------
         if mesh_name == 'crazy_periodic':
             if factor0 == 1: factor0 = 2
             if factor1 == 1: factor1 = 2
             if factor2 == 1: factor2 = 2
         else: # has no special request for the mesh at this moment.
             pass
-        #================================================================================================
+        #===========================================================================================
 
         FFF = random.sample((factor0, factor1, factor2), 3)
 
@@ -353,6 +353,8 @@ def random_3D_FormCaller_of_total_load_around(*args, **kwargs):
     3D FormCaller instance."""
     mesh, space = random_3D_mesh_and_space_of_total_load_around(*args, **kwargs)
     return FormCaller(mesh, space)
+
+
 
 
 

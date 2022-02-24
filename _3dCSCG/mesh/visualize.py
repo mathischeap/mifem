@@ -25,7 +25,7 @@ class _3dCSCG_Mesh_Visualize(FrozenOnly):
     def tecplot(self, elements=None, density=100000):
         """
         Tecplot the mesh; the elements. Therefore, we do not plot the internal grids
-        for basis functions which are not a part of the mesh actually.
+        for basis functions which are not a part of the mesh.
 
         In Tecplot: layout -> page -> frame -> dataset -> zones. And each frame can
         also have multiple plots, each time, only one plot will be activated by doing
@@ -371,7 +371,7 @@ class _3dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 6 python _3dCSCG\mesh\visualize.py
+    # mpiexec -n 6 python _3dCSCG\mesh\main.py
     from _3dCSCG.main import MeshGenerator
     elements = [3, 3, 3]
     mesh = MeshGenerator('crazy', c=0.25)(elements)

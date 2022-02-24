@@ -17,9 +17,9 @@ from _2dCSCG.form.standard.visualize.main import _2dCSCG_FormVisualize
 from TOOLS.linear_algebra.elementwise_cache import EWC_SparseMatrix
 
 
-from BASE.CSCG.form.standard.main_BASE import CSCG_Standard_Form
-from BASE.CSCG.form.standard.main_BASE import CSCG_Standard_Form_Cochain_BASE
-from BASE.CSCG.form.standard.main_BASE import CSCG_Standard_Form_Coboundary_BASE
+from INHERITING.CSCG.form.standard.main_BASE import CSCG_Standard_Form
+from INHERITING.CSCG.form.standard.main_BASE import CSCG_Standard_Form_Cochain_BASE
+from INHERITING.CSCG.form.standard.main_BASE import CSCG_Standard_Form_Coboundary_BASE
 
 
 class _2dCSCG_Standard_Form(CSCG_Standard_Form, _2dCSCG_FORM_BASE, ndim=2):

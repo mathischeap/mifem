@@ -12,8 +12,8 @@ from _2dCSCG.form.main import _2dCSCG_FORM_BASE
 from _2dCSCG.form.trace.numbering.main import _2dCSCG_Trace_Numbering
 from _2dCSCG.form.trace.visualize import _2dCSCG_TraceVisualize
 
-from BASE.CSCG.form.trace.main_BASE import CSCG_Trace_Form, CSCG_Trace_Form_Cochain_BASE
-from BASE.CSCG.form.trace.main_BASE import CSCG_Trace_Form_Coboundary_BASE
+from INHERITING.CSCG.form.trace.main_BASE import CSCG_Trace_Form, CSCG_Trace_Form_Cochain_BASE
+from INHERITING.CSCG.form.trace.main_BASE import CSCG_Trace_Form_Coboundary_BASE
 
 
 
