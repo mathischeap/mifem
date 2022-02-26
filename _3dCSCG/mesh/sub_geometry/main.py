@@ -7,7 +7,7 @@ consist of sub-geometries of one or several elements.
 """
 
 from root.config import *
-from SCREWS.frozen import FrozenOnly
+from screws.frozen import FrozenOnly
 
 
 

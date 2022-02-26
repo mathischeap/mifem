@@ -2,7 +2,7 @@
 
 
 
-from SCREWS.frozen import FrozenOnly
+from screws.frozen import FrozenOnly
 
 
 class _3dCSCG_Mesh_Element_Side_CT(FrozenOnly):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-This is actually a component of the baseMesh but we put it here since it is newly
+This is actually a component of the baseMesh, but we put it here since it is newly
 coded for the MPI mesh.
 
 @author: Yi Zhang.
@@ -9,8 +9,8 @@ coded for the MPI mesh.
          TU Delft, Delft, Netherlands
 
 """
-from SCREWS.frozen import FrozenOnly
-from _2dCSCG.mesh.periodic_setting.PBP_regular import _2dCSCG_Regular_PBP
+from screws.frozen import FrozenOnly
+from _2dCSCG.mesh.periodic_setting.periodic_boundary_pairs.regular.main import _2dCSCG_Regular_PBP
 
 
 

@@ -2,17 +2,17 @@
 
 
 from root.config import *
-from INHERITING.CSCG.mesh.main_BASE import CSCG_MESH_BASE
-from SCREWS.frozen import FrozenOnly
-from SCREWS.decorators import accepts, memoize5
-from SCREWS.exceptions import ElementsLayoutError, ElementEdgePairError
+from inheriting.CSCG.mesh.main_BASE import CSCG_MESH_BASE
+from screws.frozen import FrozenOnly
+from screws.decorators import accepts, memoize5
+from screws.exceptions import ElementsLayoutError, ElementEdgePairError
 from typing import Dict, Union
-from _2dCSCG.mesh.elements import _2dCSCG_Mesh_Elements
-from _2dCSCG.mesh.trace import _2dCSCG_Trace
-from _2dCSCG.mesh.visualize import _2dCSCG_Mesh_Visualize
-from _2dCSCG.mesh.boundaries import _2dCSCG_Mesh_Boundaries
+from _2dCSCG.mesh.elements.main import _2dCSCG_Mesh_Elements
+from _2dCSCG.mesh.trace.main import _2dCSCG_Trace
+from _2dCSCG.mesh.visualize.main import _2dCSCG_Mesh_Visualize
+from _2dCSCG.mesh.boundaries.main import _2dCSCG_Mesh_Boundaries
 from _2dCSCG.mesh.periodic_setting.main import _2dCSCG_PeriodicDomainSetting
-from _2dCSCG.mesh.__DEPRECATED__.coordinate_transformation import CoordinateTransformation
+from _2dCSCG.mesh.deprecated.coordinate_transformation import CoordinateTransformation
 
 
 

@@ -1,7 +1,7 @@
 
 
 from root.config import *
-from SCREWS.frozen import FrozenOnly
+from screws.frozen import FrozenOnly
 import matplotlib.pyplot as plt
 from matplotlib import cm
 

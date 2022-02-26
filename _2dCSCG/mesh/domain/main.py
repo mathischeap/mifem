@@ -9,10 +9,11 @@ INTRO
          Delft, Netherlands
 
 """
-from SCREWS.frozen import FrozenOnly
-from _2dCSCG.mesh.region.main import Region, Regions
+from screws.frozen import FrozenOnly
+from _2dCSCG.mesh.regions.main import Regions
+from _2dCSCG.mesh.regions.region.main import Region
 from _2dCSCG.mesh.domain.visualize import _2dCSCG_Domain_Visualize
-from _2dCSCG.mesh.domain.boundaries import _2dCSCG_Domain_Boundaries
+from _2dCSCG.mesh.domain.boundaries.main import _2dCSCG_Domain_Boundaries
 
 
 class _2dCSCG_Domain(FrozenOnly):

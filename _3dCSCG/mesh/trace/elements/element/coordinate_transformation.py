@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from SCREWS.frozen import FrozenOnly
+from screws.frozen import FrozenOnly
 
 
 class _3dCSCG_Trace_Element_CoordinateTransformation(FrozenOnly):

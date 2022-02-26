@@ -7,19 +7,14 @@
          TU Delft, Delft, Netherlands
 
 """
-from SCREWS.frozen import FrozenOnly, FrozenClass
+from screws.frozen import FrozenClass
 
 
 
-class ExactSolution_Visualize(FrozenOnly):
-    def __init__(self, es):
-        self._es_ = es
-        self._freeze_self_()
+from _3dCSCG.APP.exact_solutions.visualize import ExactSolution_Visualize
 
 
-
-
-class ExactSolution(FrozenClass):
+class _3dCSCG_ExactSolution(FrozenClass):
     """A parent for all exact solution classes in _3dCSCG."""
     def __init__(self, mesh):
         assert mesh.__class__.__name__ == '_3dCSCG_Mesh', "Need a 3dCSCG mesh."
@@ -40,7 +35,9 @@ class ExactSolution(FrozenClass):
 
     @property
     def status(self):
-        """A property that contains all sub-properties/sub-methods about the status(variables, parameters, coefficients and so on)."""
+        """A property that contains all sub-properties/sub-methods about the status(
+        variables, parameters, coefficients and so on).
+        """
         return self._status_
 
     @property

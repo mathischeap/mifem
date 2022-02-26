@@ -8,14 +8,14 @@ if './' not in sys.path: sys.path.append('./')
 
 from importlib import import_module
 from root.config import *
-from SCREWS.frozen import FrozenOnly
+from screws.frozen import FrozenOnly
 from _3dCSCG.ADF.base import _3dCSCG_Algebra_DUAL_FORM_BASE
-from TOOLS.linear_algebra.elementwise_cache import EWC_ColumnVector
+from tools.linear_algebra.elementwise_cache import EWC_ColumnVector
 
-from INHERITING.CSCG.ADF.standard.main_BASE import CSCG_Algebra_DUAL_Standard_Form
+from inheriting.CSCG.ADF.standard.main_BASE import CSCG_Algebra_DUAL_Standard_Form
 from scipy.sparse import csr_matrix
 
-from TOOLS.linear_algebra.elementwise_cache import EWC_SparseMatrix
+from tools.linear_algebra.elementwise_cache import EWC_SparseMatrix
 
 
 
@@ -219,9 +219,9 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Coboundary(FrozenOnly):
     def __call__(self, dual_trace):
         """Compute the dual operator. This must be assisted with a dual trace form which has cochain."""
         assert self._dsf_.k in (1,2,3), f"dual coboundary does not work for 0-dual-standard form."
-        assert dual_trace.__class__.__name__ in ('_0_Algebra_DUAL_Trace',
-                                                 '_1_Algebra_DUAL_Trace',
-                                                 '_2_Algebra_DUAL_Trace'), \
+        assert dual_trace.__class__.__name__ in ('_3dCSCG_T0_ADF',
+                                                 '_3dCSCG_T1_ADF',
+                                                 '_3dCSCG_T2_ADF'), \
             f"dual trace: {dual_trace} in fact is not a dual trace form."
         assert self._dsf_.mesh == dual_trace.mesh, f"mesh of dual form must match" \
                                                    f"the mesh of the dual trace form."
@@ -242,10 +242,10 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Coboundary(FrozenOnly):
             E = - E_T
             T = T_T
 
-            next_prime_form_Path = '_3dCSCG.form.standard._2_form'
-            next_prime_form_Name = '_2Form'
+            next_prime_form_Path = '_3dCSCG.forms.standard._2_form'
+            next_prime_form_Name = '_3dCSCG_2Form'
             next_dual_form_Path = '_3dCSCG.ADF.standard._2_AD_form'
-            next_dual_form_Name = '_2_Algebra_DUAL_Form'
+            next_dual_form_Name = '_3dCSCG_S2_ADF'
 
         elif self._dsf_.k == 2: # dual gradient operator: (E_{curl}^T, -T_N^T)
             assert dual_trace.k == 1, f"2-dual-form has to match with a 1-dual-trace-form."
@@ -253,10 +253,10 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Coboundary(FrozenOnly):
             E = E_T
             T = - T_T
 
-            next_prime_form_Path = '_3dCSCG.form.standard._1_form'
-            next_prime_form_Name = '_1Form'
+            next_prime_form_Path = '_3dCSCG.forms.standard._1_form'
+            next_prime_form_Name = '_3dCSCG_1Form'
             next_dual_form_Path = '_3dCSCG.ADF.standard._1_AD_form'
-            next_dual_form_Name = '_1_Algebra_DUAL_Form'
+            next_dual_form_Name = '_3dCSCG_S1_ADF'
 
         elif self._dsf_.k == 1: # dual gradient operator: (-E_{grad}^T, T_N^T)
             assert dual_trace.k == 0, f"1-dual-form has to match with a 0-dual-trace-form."
@@ -264,10 +264,10 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Coboundary(FrozenOnly):
             E = - E_T
             T = T_T
 
-            next_prime_form_Path = '_3dCSCG.form.standard._0_form'
-            next_prime_form_Name = '_0Form'
+            next_prime_form_Path = '_3dCSCG.forms.standard._0_form'
+            next_prime_form_Name = '_3dCSCG_0Form'
             next_dual_form_Path = '_3dCSCG.ADF.standard._0_AD_form'
-            next_dual_form_Name = '_0_Algebra_DUAL_Form'
+            next_dual_form_Name = '_3dCSCG_S0_ADF'
 
         else:
             raise Exception(f"{self._dsf_.k}-dual-form has no coboundary.")
@@ -308,13 +308,13 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Coboundary(FrozenOnly):
             assert self._dsf_.k in (1, 2, 3), \
                 f"dual coboundary does not work for 0-dual-standard form."
             if self._dsf_.k == 3:
-                E23 = getattr(self._dsf_.space.incidence_matrix, '_2Form').T
+                E23 = getattr(self._dsf_.space.incidence_matrix, '_3dCSCG_2Form').T
                 E = EWC_SparseMatrix(self._dsf_.mesh.elements, E23, 'constant')
             elif self._dsf_.k == 2:
-                E12 = getattr(self._dsf_.space.incidence_matrix, '_1Form').T
+                E12 = getattr(self._dsf_.space.incidence_matrix, '_3dCSCG_1Form').T
                 E = EWC_SparseMatrix(self._dsf_.mesh.elements, E12, 'constant')
             elif self._dsf_.k == 1:
-                E01 = getattr(self._dsf_.space.incidence_matrix, '_0Form').T
+                E01 = getattr(self._dsf_.space.incidence_matrix, '_3dCSCG_0Form').T
                 E = EWC_SparseMatrix(self._dsf_.mesh.elements, E01, 'constant')
             else:
                 raise Exception()

@@ -12,7 +12,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 from root.config import *
-from SCREWS.frozen import FrozenOnly
+from screws.frozen import FrozenOnly
 
 
 class _3dCSCG_Boundaries(FrozenOnly):
@@ -65,7 +65,7 @@ class _3dCSCG_Boundaries(FrozenOnly):
             ToF = True
             # for test reasons we
             NUM = self._domain_.regions.num
-            if NUM == 1: # only one regions, then must be a Regular:one-regions-corner-interface
+            if NUM == 1: # only one region, then must be a Regular:one-regions-corner-interface
                 pass
             else:
                 MAP = self._domain_.regions.map

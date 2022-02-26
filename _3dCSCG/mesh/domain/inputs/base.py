@@ -12,8 +12,8 @@ generate a based on the domain.
 import inspect
 import numpy as np
 from typing import Dict
-from SCREWS.frozen import FrozenOnly
-from SCREWS.miscellaneous import check_no_splcharacter
+from screws.frozen import FrozenOnly
+from screws.miscellaneous import check_no_splcharacter
 
 class _3dDomainInputBase(FrozenOnly):
     def __init__(self, domain_name='domain without name'):

@@ -5,7 +5,7 @@
 
 
 
-from SCREWS.frozen import FrozenOnly
+from screws.frozen import FrozenOnly
 
 
 class SideCoordinateTransformation(FrozenOnly):

@@ -5,15 +5,15 @@ INTRO
 @author: Yi Zhang. Created on Wed May 22 16:27:46 2019
          Department of Aerodynamics
          Faculty of Aerospace Engineering
-         TU Delft
-         Delft, Netherlands
+         TU Delft,
+         Delft, the netherlands
 
 """
 from root.config import *
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
-from SCREWS.frozen import FrozenOnly
+from screws.frozen import FrozenOnly
 
 
 class _2dCSCG_Domain_Visualize(FrozenOnly):

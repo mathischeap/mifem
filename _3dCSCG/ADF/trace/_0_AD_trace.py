@@ -5,7 +5,7 @@ if './' not in sys.path: sys.path.append('./')
 from _3dCSCG.ADF.trace.base import _3dCSCG_Algebra_DUAL_Trace_Form
 
 
-class _0_Algebra_DUAL_Trace(_3dCSCG_Algebra_DUAL_Trace_Form):
+class _3dCSCG_T0_ADF(_3dCSCG_Algebra_DUAL_Trace_Form):
     """
     Dual trace 0-form.
 

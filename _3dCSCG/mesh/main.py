@@ -21,28 +21,23 @@ Components:
 import matplotlib.pyplot as plt
 from typing import Dict, Union
 from root.config import *
-from INHERITING.CSCG.mesh.main_BASE import CSCG_MESH_BASE
-from SCREWS.decorators import accepts, memoize5#, memoize2
-from SCREWS.frozen import FrozenOnly
-from SCREWS.exceptions import ElementsLayoutError, ElementSidePairError
-from SCREWS.miscellaneous import break_list_into_parts
+from inheriting.CSCG.mesh.main_BASE import CSCG_MESH_BASE
+from screws.decorators import accepts, memoize5#, memoize2
+from screws.exceptions import ElementsLayoutError, ElementSidePairError
+from screws.miscellaneous import break_list_into_parts
 from _3dCSCG.mesh.elements.main import _3dCSCG_Mesh_Elements
 from _3dCSCG.mesh.periodic_setting.main import _3dCSCG_PeriodicDomainSetting
-from _3dCSCG.mesh.__DEPRECATED__.coordinate_transformation.transformer import CoordinateTransformation as ___DCT___
-from _3dCSCG.mesh.visualize import _3dCSCG_Mesh_Visualize
+from _3dCSCG.mesh.deprecated.coordinate_transformation.transformer import CoordinateTransformation as ___DCT___
+from _3dCSCG.mesh.visualize.main import _3dCSCG_Mesh_Visualize
 from _3dCSCG.mesh.boundaries.main import _3dCSCG_Mesh_Boundaries
 from _3dCSCG.mesh.sub_geometry.main import _3dCSCG_Mesh_SubGeometry
-
+from _3dCSCG.mesh.DO.main import _3dCSCG_Mesh_DO
 
 
 
 from _3dCSCG.mesh.node.main import _3dCSCG_Node
 from _3dCSCG.mesh.edge.main import _3dCSCG_Edge
 from _3dCSCG.mesh.trace.main import _3dCSCG_Trace
-
-
-
-
 
 
 class _3dCSCG_Mesh(CSCG_MESH_BASE):
@@ -1317,102 +1312,3 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         """
         return self.trace.quality['average quality']
 
-
-
-class _3dCSCG_Mesh_DO(FrozenOnly):
-    def __init__(self, mesh):
-        self._mesh_ = mesh
-        self._FIND_ = _3dCSCG_Mesh_DO_FIND(self)
-        self._freeze_self_()
-
-    def RESET_cache(self):
-        self._mesh_.RESET_cache()
-
-    def parse_element_side_pair(self, eP):
-        return self._mesh_.___DO_parse_element_side_pair___(eP)
-
-
-
-    def FIND_region_name_of_element(self, i):
-        return self._mesh_.___DO_find_region_name_of_element___(i)
-
-    def FIND_region_name_and_local_indices_of_element(self, i):
-        return self._mesh_.___DO_find_region_name_and_local_indices_of_element___(i)
-
-    def FIND_reference_origin_and_size_of_element_of_given_local_indices(self, region_name, local_indices):
-        return self._mesh_.___DO_find_reference_origin_and_size_of_element_of_given_local_indices___(
-            region_name, local_indices)
-
-    def FIND_reference_origin_and_size_of_element(self, i):
-        return self._mesh_.___DO_find_reference_origin_and_size_of_element___(i)
-
-    def FIND_slave_of_element(self, i):
-        """Find the core rank of mesh element #i."""
-        return self._mesh_.___DO_find_slave_of_element___(i)
-
-    def FIND_element_attach_to_region_side(self, region, side_name):
-        """
-
-        :param str region:
-        :param str side_name:
-        :return:
-        """
-        EGN1 = self._mesh_.___PRIVATE_generate_element_global_numbering_for_region___(region)
-        if side_name == 'N':
-            elements = EGN1[ 0, :, :]
-        elif side_name == 'S':
-            elements = EGN1[-1, :, :]
-        elif side_name == 'W':
-            elements = EGN1[ :, 0, :]
-        elif side_name == 'E':
-            elements = EGN1[ :,-1, :]
-        elif side_name == 'B':
-            elements = EGN1[ :, :, 0]
-        elif side_name == 'F':
-            elements = EGN1[ :, :,-1]
-        else:
-            raise Exception()
-        return elements
-
-    @property
-    def FIND(self):
-        return self._FIND_
-
-
-    def regionwsie_stack(self, *args):
-        return self._mesh_.___DO_regionwsie_stack___(*args)
-
-
-
-class _3dCSCG_Mesh_DO_FIND(FrozenOnly):
-    def __init__(self, DO):
-        self._DO_ = DO
-        self._freeze_self_()
-
-
-
-    def region_name_of_element(self, i):
-        return self._DO_.FIND_region_name_of_element(i)
-
-    def region_name_and_local_indices_of_element(self, i):
-        return self._DO_.FIND_region_name_and_local_indices_of_element(i)
-
-    def reference_origin_and_size_of_element_of_given_local_indices(self, region_name, local_indices):
-        return self._DO_.FIND_reference_origin_and_size_of_element_of_given_local_indices(
-            region_name, local_indices)
-
-    def reference_origin_and_size_of_element(self, i):
-        return self._DO_.FIND_reference_origin_and_size_of_element(i)
-
-    def slave_of_element(self, i):
-        """Find the core rank of mesh element #i."""
-        return self._DO_.FIND_slave_of_element(i)
-
-    def element_attach_to_region_side(self, region, side_name):
-        """
-
-        :param str region:
-        :param str side_name:
-        :return:
-        """
-        return self._DO_.FIND_element_attach_to_region_side(region, side_name)

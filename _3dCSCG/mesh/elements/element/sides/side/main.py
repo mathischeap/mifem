@@ -3,7 +3,7 @@
 
 
 
-from SCREWS.frozen import FrozenOnly
+from screws.frozen import FrozenOnly
 from _3dCSCG.mesh.elements.element.sides.side.coordinate_transformation import _3dCSCG_Mesh_Element_Side_CT
 
 

@@ -9,7 +9,7 @@ Aerodynamics, AE
 TU Delft
 """
 import numpy as np
-from SCREWS.frozen import FrozenOnly
+from screws.frozen import FrozenOnly
 
 class SideGeometryBase(FrozenOnly):
     def __init__(self, corner_coordinates, side_type):

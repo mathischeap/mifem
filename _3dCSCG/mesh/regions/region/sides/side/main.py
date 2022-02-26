@@ -1,5 +1,5 @@
 
-from SCREWS.frozen import FrozenOnly
+from screws.frozen import FrozenOnly
 import numpy as np
 from root.config import saFe_mode
 

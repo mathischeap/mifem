@@ -6,7 +6,7 @@ A template for Region Class.
          Aerodynamics, AE
          TU Delft
 """
-from SCREWS.frozen import FrozenOnly
+from screws.frozen import FrozenOnly
 from _3dCSCG.mesh.regions.visualize.main import _3dCSCG_Regions_Visualize
 
 

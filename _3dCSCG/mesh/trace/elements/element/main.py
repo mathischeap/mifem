@@ -6,7 +6,7 @@ if './' not in sys.path: sys.path.append('./')
 from root.config import rAnk
 
 
-from SCREWS.frozen import FrozenOnly
+from screws.frozen import FrozenOnly
 
 from _3dCSCG.mesh.trace.elements.element.coordinate_transformation import _3dCSCG_Trace_Element_CoordinateTransformation
 

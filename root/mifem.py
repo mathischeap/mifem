@@ -5,7 +5,7 @@
 
 
 
-from SCREWS.miscellaneous import check_filename_mi
+from screws.miscellaneous import check_filename_mi
 from root.config import cHaining, mAster_rank, rAnk, cOmm
 import pickle
 from _2dCSCG.main import MeshGenerator as _2dCSCG_MeshGenerator
@@ -124,40 +124,40 @@ def read(filename, read_individuals=None):
             obj_para = obj_dict.pop('parameters')
             assert len(obj_dict) == 0, "mi file should store a dict of two keys only."
 
-            if obj_name == '_3dCSCG.mesh.main._3dCSCG_Mesh':
+            if obj_name == '_3dCSCG_Mesh':
                 obj = ___restore__3dCSCG_Mesh___(obj_para, ___CACHE_3dCSCG_mesh___)
-            elif obj_name == '_3dCSCG.space.polynomials._3dCSCG_PolynomialSpace':
+            elif obj_name == '_3dCSCG_PolynomialSpace':
                 obj = ___restore__3dCSCG_Space___(obj_para, ___CACHE_3dCSCG_space___)
-            elif obj_name == '_3dCSCG.APP.exact_solutions.main.ExactSolution':
+            elif obj_name == '_3dCSCG_ExactSolution':
                 obj = ___restore__3dCSCG_ExactSolution___(obj_para)
-            elif obj_name in ('_3dCSCG.form.standard._0_form._0Form',
-                              '_3dCSCG.form.standard._1_form._1Form',
-                              '_3dCSCG.form.standard._2_form._2Form',
-                              '_3dCSCG.form.standard._3_form._3Form',
-                              '_3dCSCG.form.trace._2_trace._2Trace',
-                              '_3dCSCG.form.trace._1_trace._1Trace',
-                              '_3dCSCG.form.trace._0_trace._0Trace',
-                              '_3dCSCG.form.edge._0_edge._0Edge'):
+            elif obj_name in ('_3dCSCG_0Form',
+                              '_3dCSCG_1Form',
+                              '_3dCSCG_2Form',
+                              '_3dCSCG_3Form',
+                              '_3dCSCG_2Trace',
+                              '_3dCSCG_1Trace',
+                              '_3dCSCG_0Trace',
+                              '_3dCSCG_0Edge'):
                 obj = ___restore__3dCSCG_Form___(obj_para)
-            elif obj_name in ('_3dCSCG.ADF.standard._0_AD_form._0_Algebra_DUAL_Form',
-                              '_3dCSCG.ADF.standard._1_AD_form._1_Algebra_DUAL_Form',
-                              '_3dCSCG.ADF.standard._2_AD_form._2_Algebra_DUAL_Form',
-                              '_3dCSCG.ADF.standard._3_AD_form._3_Algebra_DUAL_Form',
-                              '_3dCSCG.ADF.trace._0_AD_trace._0_Algebra_DUAL_Trace',
-                              '_3dCSCG.ADF.trace._1_AD_trace._1_Algebra_DUAL_Trace',
-                              '_3dCSCG.ADF.trace._2_AD_trace._2_Algebra_DUAL_Trace'):
+            elif obj_name in ('_3dCSCG_S0_ADF',
+                              '_3dCSCG_S1_ADF',
+                              '_3dCSCG_S2_ADF',
+                              '_3dCSCG_S3_ADF',
+                              '_3dCSCG_T0_ADF',
+                              '_3dCSCG_T1_ADF',
+                              '_3dCSCG_T2_ADF'):
                 obj = ___restore__3dCSCG_Algebra_DUAL_Form___(obj_para)
-            elif obj_name == '_2dCSCG.mesh.main._2dCSCG_Mesh':
+            elif obj_name == '_2dCSCG_Mesh':
                 obj = ___restore__2dCSCG_Mesh___(obj_para, ___CACHE_2dCSCG_mesh___)
-            elif obj_name == '_2dCSCG.space.polynomials._2dCSCG_PolynomialSpace':
+            elif obj_name == '_2dCSCG_PolynomialSpace':
                 obj = ___restore__2dCSCG_Space___(obj_para, ___CACHE_2dCSCG_space___)
-            elif obj_name in ('_2dCSCG.form.standard._0_form_inner._0Form_Inner',
-                              '_2dCSCG.form.standard._0_form_outer._0Form_Outer',
-                              '_2dCSCG.form.standard._1_form_inner._1Form_Inner',
-                              '_2dCSCG.form.standard._1_form_outer._1Form_Outer',
-                              '_2dCSCG.form.standard._2_form_inner._2Form_Inner',
-                              '_2dCSCG.form.standard._2_form_outer._2Form_Outer',
-                              '_2dCSCG.form.trace._1_trace_outer._1Trace_Outer',):
+            elif obj_name in ('_2dCSCG_0Form_Inner',
+                              '_2dCSCG_0Form_Outer',
+                              '_2dCSCG_1Form_Inner',
+                              '_2dCSCG_1Form_Outer',
+                              '_2dCSCG_2Form_Inner',
+                              '_2dCSCG_2Form_Outer',
+                              '_2dCSCG_1Trace_Outer',):
                 obj = ___restore__2dCSCG_Form___(obj_para)
             else:
                 raise Exception(f'Can not restore {obj_name}')
@@ -263,13 +263,7 @@ def ___restore__2dCSCG_Form___(parameters):
     space_parameters = parameters.pop('space_parameters')
     kwargs = parameters.pop('kwargs')
 
-    ___COCHAIN_READ_VERSION___ = -1
-    if 'cochain_local' in parameters:
-        ___COCHAIN_READ_VERSION___  = 0
-        COCHAIN = parameters.pop('cochain_local')
-    else:
-        ___COCHAIN_READ_VERSION___  = 1
-        COCHAIN = parameters.pop('region_wise_cochain_local')
+    COCHAIN = parameters.pop('region_wise_cochain_local')
 
     space = ___restore__2dCSCG_Space___(space_parameters, ___CACHE_2dCSCG_space___)
 
@@ -301,16 +295,7 @@ def ___restore__2dCSCG_Form___(parameters):
         form.TW.func.___DO_set_func_body_as___(ES, ES_variable_name)
         form.TW.___DO_push_all_to_instant___()
 
-    if ___COCHAIN_READ_VERSION___ == 0:
-        if COCHAIN != {}:
-            cochain_local = dict()
-            for i in mesh.elements:
-                cochain_local[i] = COCHAIN[i]
-            form.cochain.local = cochain_local
-    elif ___COCHAIN_READ_VERSION___ == 1:
-        form.cochain.___PRIVATE_do_distribute_region_wise_local_index_grouped_cochain_to_local___(COCHAIN)
-    else:
-        raise Exception()
+    form.cochain.___PRIVATE_do_distribute_region_wise_local_index_grouped_cochain_to_local___(COCHAIN)
 
     return form
 

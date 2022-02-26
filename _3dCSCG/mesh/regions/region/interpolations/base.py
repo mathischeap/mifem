@@ -9,9 +9,9 @@ Aerodynamics, AE
 TU Delft
 """
 import numpy as np
-from SCREWS.frozen import FrozenOnly
-from SCREWS.decorators import accepts
-from SCREWS.numerical._3d import NumericalJacobian_xyz_33, NumericalPartialDerivative_xyz
+from screws.frozen import FrozenOnly
+from screws.decorators import accepts
+from screws.numerical._3d import NumericalJacobian_xyz_33, NumericalPartialDerivative_xyz
 
 
 class InterpolationBase(FrozenOnly):

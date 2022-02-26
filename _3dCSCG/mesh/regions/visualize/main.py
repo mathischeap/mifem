@@ -2,7 +2,7 @@
 
 """
 
-from SCREWS.frozen import FrozenOnly
+from screws.frozen import FrozenOnly
 from _3dCSCG.mesh.regions.visualize.matplot import _3dCSCG_Regions_Visualize_Matplot_
 
 

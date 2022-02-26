@@ -4,12 +4,12 @@ if './' not in sys.path: sys.path.append('./')
 from root.config import *
 from _2dCSCG.APP.exact_solutions.main import ExactSolution
 from importlib import import_module
-from SCREWS.frozen import FrozenOnly
-from _2dCSCG.mesh.domain.input.finder import DomainInputFinder
+from screws.frozen import FrozenOnly
+from _2dCSCG.mesh.domain.inputs.allocator import DomainInputFinder
 from _2dCSCG.mesh.domain.main import _2dCSCG_Domain
 from _2dCSCG.mesh.main import _2dCSCG_Mesh
 from copy import deepcopy
-from SCREWS.miscellaneous import MyTimer
+from screws.miscellaneous import MyTimer
 
 
 
@@ -94,7 +94,7 @@ class SpaceInvoker(FrozenOnly):
 
     @classmethod
     def ___space_path___(cls):
-        return "_2dCSCG.space."
+        return "_2dCSCG.spaces."
 
 
 
@@ -129,19 +129,19 @@ class FormCaller(FrozenOnly):
 
     @classmethod
     def ___coded_forms___(cls):
-        form_path = '_2dCSCG.form.'
-        return {'0-f-i': form_path + "standard._0_form_inner : _0Form_Inner", # d on inner 0-form is grad
-                '1-f-i': form_path + "standard._1_form_inner : _1Form_Inner", # d on inner 1-form is rot (or curl)
-                '2-f-i': form_path + "standard._2_form_inner : _2Form_Inner",
+        form_path = '_2dCSCG.forms.'
+        return {'0-f-i': form_path + "standard._0_form.inner : _2dCSCG_0Form_Inner", # d on inner 0-form is grad
+                '1-f-i': form_path + "standard._1_form.inner : _2dCSCG_1Form_Inner", # d on inner 1-form is rot (or curl)
+                '2-f-i': form_path + "standard._2_form.inner : _2dCSCG_2Form_Inner",
 
-                '0-f-o': form_path + "standard._0_form_outer : _0Form_Outer", # d on outer 0-form is curl (or rot)
-                '1-f-o': form_path + "standard._1_form_outer : _1Form_Outer", # d on outer 1-form is div
-                '2-f-o': form_path + "standard._2_form_outer : _2Form_Outer",
+                '0-f-o': form_path + "standard._0_form.outer : _2dCSCG_0Form_Outer", # d on outer 0-form is curl (or rot)
+                '1-f-o': form_path + "standard._1_form.outer : _2dCSCG_1Form_Outer", # d on outer 1-form is div
+                '2-f-o': form_path + "standard._2_form.outer : _2dCSCG_2Form_Outer",
 
-                'scalar': "_2dCSCG.field.scalar : _2dCSCG_ScalarField",
-                'vector': "_2dCSCG.field.vector : _2dCSCG_VectorField",
+                'scalar': "_2dCSCG.fields.scalar : _2dCSCG_ScalarField",
+                'vector': "_2dCSCG.fields.vector : _2dCSCG_VectorField",
 
-                '1-t-o': form_path + "trace._1_trace_outer : _1Trace_Outer",
+                '1-t-o': form_path + "trace._1_trace.outer : _2dCSCG_1Trace_Outer",
                 }
 
 
@@ -162,10 +162,13 @@ class ExactSolutionSelector(FrozenOnly):
 
         cOmm.barrier()  # for safety reason
         assert ID in self.___coded_exact_solution___(), f"Exact solution ID={ID} not found."
-        pathAndName = self.___coded_exact_solution___()[ID]
-        classPath = pathAndName.split('.')[:-1]
+        pathAndName = self.___coded_exact_solution___()[ID].split('.')
+
+        classPath = pathAndName[:-1]
         classPath = self.___exact_solution_path___() + '.'.join(classPath)
-        className = pathAndName.split('.')[-1]
+
+        className = pathAndName[-1]
+
         ES =  ExactSolution(self._mesh_)
         status = getattr(import_module(classPath), className)(ES, **kwargs)
         ES.___set_status___(status)
@@ -184,7 +187,7 @@ class ExactSolutionSelector(FrozenOnly):
 
     @classmethod
     def ___exact_solution_path___(cls):
-        return '_2dCSCG.APP.exact_solutions.'
+        return '_2dCSCG.APP.exact_solutions.status.'
 
 
 

@@ -4,13 +4,13 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 from root.config import *
-from SCREWS.frozen import FrozenOnly
+from screws.frozen import FrozenOnly
 from _3dCSCG.ADF.base import _3dCSCG_Algebra_DUAL_FORM_BASE
 
-from INHERITING.CSCG.ADF.trace.main_BASE import CSCG_Algebra_DUAL_Trace_Form
+from inheriting.CSCG.ADF.trace.main_BASE import CSCG_Algebra_DUAL_Trace_Form
 from scipy import sparse as spspa
 
-from TOOLS.linear_algebra.elementwise_cache import EWC_SparseMatrix
+from tools.linear_algebra.elementwise_cache import EWC_SparseMatrix
 
 
 class _3dCSCG_Algebra_DUAL_Trace_Form(CSCG_Algebra_DUAL_Trace_Form, _3dCSCG_Algebra_DUAL_FORM_BASE):
@@ -224,11 +224,11 @@ class _3dCSCG_Algebra_DUAL_Trace_Form_Coboundary(FrozenOnly):
         """"""
         if self._T_ is None:
             if self._dt_.k == 2:
-                formName = '_2Trace'
+                formName = '_3dCSCG_2Trace'
             elif self._dt_.k == 1:
-                formName = '_1Trace'
+                formName = '_3dCSCG_1Trace'
             elif self._dt_.k == 0:
-                formName = '_0Trace'
+                formName = '_3dCSCG_0Trace'
             else:
                 raise Exception()
             T = getattr(self._dt_.space.trace_matrix, formName)[0].T

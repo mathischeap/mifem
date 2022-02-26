@@ -9,11 +9,11 @@ INTRO
 """
 import sys
 if './' not in sys.path: sys.path.append('./')
-from _3dCSCG.APP.exact_solutions.main import ExactSolution
+from _3dCSCG.APP.exact_solutions.main import _3dCSCG_ExactSolution
 from importlib import import_module
-from SCREWS.frozen import FrozenOnly
-from SCREWS.miscellaneous import MyTimer
-from _3dCSCG.mesh.domain.inputs.finder import DomainInputFinder
+from screws.frozen import FrozenOnly
+from screws.miscellaneous import MyTimer
+from _3dCSCG.mesh.domain.inputs.allocator import DomainInputAllocator
 from _3dCSCG.mesh.domain.main import _3dCSCG_Domain
 from _3dCSCG.mesh.main import _3dCSCG_Mesh
 from copy import deepcopy
@@ -25,7 +25,7 @@ class MeshGenerator(FrozenOnly):
         """Remember, **kwargs are parameters to customize the domain.
         The rule is: they can not change the topology of the regions!
         """
-        di = DomainInputFinder(ID)(**kwargs)
+        di = DomainInputAllocator(ID)(**kwargs)
         self._domain_ = _3dCSCG_Domain(di)
         self._ID_ = ID
         self._kwargs_ = kwargs
@@ -82,7 +82,7 @@ class MeshGenerator(FrozenOnly):
 
     @classmethod
     def ___coded_meshes___(cls):
-        return DomainInputFinder.___defined_DI___()
+        return DomainInputAllocator.___defined_DI___()
 
 
 
@@ -121,7 +121,7 @@ class SpaceInvoker(FrozenOnly):
 
     @classmethod
     def ___space_path___(cls):
-        return "_3dCSCG.space."
+        return "_3dCSCG.spaces."
 
 
 
@@ -164,19 +164,19 @@ class FormCaller(FrozenOnly):
                     pcn = str(prime.__class__)
 
                     if ID == '0-adf':
-                        assert pcn == "<class '_3dCSCG.form.standard._0_form._0Form'>"
+                        assert pcn == "<class '_3dCSCG.forms.standard._0_form._3dCSCG_0Form'>"
                     elif ID == '1-adf':
-                        assert pcn == "<class '_3dCSCG.form.standard._1_form._1Form'>"
+                        assert pcn == "<class '_3dCSCG.forms.standard._1_form._3dCSCG_1Form'>"
                     elif ID == '2-adf':
-                        assert pcn == "<class '_3dCSCG.form.standard._2_form._2Form'>"
+                        assert pcn == "<class '_3dCSCG.forms.standard._2_form._3dCSCG_2Form'>"
                     elif ID == '3-adf':
-                        assert pcn == "<class '_3dCSCG.form.standard._3_form._3Form'>"
+                        assert pcn == "<class '_3dCSCG.forms.standard._3_form._3dCSCG_3Form'>"
                     elif ID == '0-adt':
-                        assert pcn == "<class '_3dCSCG.form.trace._0_trace._0Trace'>"
+                        assert pcn == "<class '_3dCSCG.forms.trace._0_trace._3dCSCG_0Trace'>"
                     elif ID == '1-adt':
-                        assert pcn == "<class '_3dCSCG.form.trace._1_trace._1Trace'>"
+                        assert pcn == "<class '_3dCSCG.forms.trace._1_trace._3dCSCG_1Trace'>"
                     elif ID == '2-adt':
-                        assert pcn == "<class '_3dCSCG.form.trace._2_trace._2Trace'>"
+                        assert pcn == "<class '_3dCSCG.forms.trace._2_trace._3dCSCG_2Trace'>"
                     else:
                         raise Exception(f"ID={ID} do not accept a single prime form instance as input.")
 
@@ -241,35 +241,35 @@ class FormCaller(FrozenOnly):
 
     @classmethod
     def ___coded_forms___(cls):
-        form_path = '_3dCSCG.form.'
+        form_path = '_3dCSCG.forms.'
         algebra_dual_form_path = '_3dCSCG.ADF.'
 
-        return {'3-f': form_path + "standard._3_form : _3Form",
-                '2-f': form_path + "standard._2_form : _2Form",
-                '1-f': form_path + "standard._1_form : _1Form",
-                '0-f': form_path + "standard._0_form : _0Form",
+        return {'3-f': form_path + "standard._3_form : _3dCSCG_3Form",
+                '2-f': form_path + "standard._2_form : _3dCSCG_2Form",
+                '1-f': form_path + "standard._1_form : _3dCSCG_1Form",
+                '0-f': form_path + "standard._0_form : _3dCSCG_0Form",
 
-                '0-adf': algebra_dual_form_path + "standard._0_AD_form : _0_Algebra_DUAL_Form",
-                '1-adf': algebra_dual_form_path + "standard._1_AD_form : _1_Algebra_DUAL_Form",
-                '2-adf': algebra_dual_form_path + "standard._2_AD_form : _2_Algebra_DUAL_Form",
-                '3-adf': algebra_dual_form_path + "standard._3_AD_form : _3_Algebra_DUAL_Form",
+                '0-adf': algebra_dual_form_path + "standard._0_AD_form : _3dCSCG_S0_ADF",
+                '1-adf': algebra_dual_form_path + "standard._1_AD_form : _3dCSCG_S1_ADF",
+                '2-adf': algebra_dual_form_path + "standard._2_AD_form : _3dCSCG_S2_ADF",
+                '3-adf': algebra_dual_form_path + "standard._3_AD_form : _3dCSCG_S3_ADF",
 
-                '0-adt': algebra_dual_form_path + "trace._0_AD_trace : _0_Algebra_DUAL_Trace",
-                '1-adt': algebra_dual_form_path + "trace._1_AD_trace : _1_Algebra_DUAL_Trace",
-                '2-adt': algebra_dual_form_path + "trace._2_AD_trace : _2_Algebra_DUAL_Trace",
+                '0-adt': algebra_dual_form_path + "trace._0_AD_trace : _3dCSCG_T0_ADF",
+                '1-adt': algebra_dual_form_path + "trace._1_AD_trace : _3dCSCG_T1_ADF",
+                '2-adt': algebra_dual_form_path + "trace._2_AD_trace : _3dCSCG_T2_ADF",
 
-                'scalar': "_3dCSCG.field.scalar : _3dCSCG_ScalarField",
-                'vector': "_3dCSCG.field.vector : _3dCSCG_VectorField",
-                'tensor': "_3dCSCG.field.tensor : _3dCSCG_TensorField",
+                'scalar': "_3dCSCG.fields.scalar : _3dCSCG_ScalarField",
+                'vector': "_3dCSCG.fields.vector : _3dCSCG_VectorField",
+                'tensor': "_3dCSCG.fields.tensor : _3dCSCG_TensorField",
 
-                '0-t': form_path + "trace._0_trace : _0Trace",
-                '1-t': form_path + "trace._1_trace : _1Trace",
-                '2-t': form_path + "trace._2_trace : _2Trace",
+                '0-t': form_path + "trace._0_trace : _3dCSCG_0Trace",
+                '1-t': form_path + "trace._1_trace : _3dCSCG_1Trace",
+                '2-t': form_path + "trace._2_trace : _3dCSCG_2Trace",
 
-                '0-e': form_path + "edge._0_edge : _0Edge",
-                '1-e': form_path + "edge._1_edge : _1Edge",
+                '0-e': form_path + "edge._0_edge : _3dCSCG_0Edge",
+                '1-e': form_path + "edge._1_edge : _3dCSCG_1Edge",
 
-                '0-n': form_path + "node._0_node : _0Node",
+                '0-n': form_path + "node._0_node : _3dCSCG_0Node",
                 }
 
     @property
@@ -298,11 +298,13 @@ class ExactSolutionSelector(FrozenOnly):
 
         cOmm.barrier()  # for safety reason
         assert ID in self.___coded_exact_solution___(), f"Exact solution ID={ID} not found."
-        pathAndName = self.___coded_exact_solution___()[ID]
-        classPath = pathAndName.split('.')[:-1]
+        pathAndName = self.___coded_exact_solution___()[ID].split('.')
+
+        classPath = pathAndName[:-1]
         classPath = self.___exact_solution_path___() + '.'.join(classPath)
-        className = pathAndName.split('.')[-1]
-        ES =  ExactSolution(self._mesh_)
+
+        className = pathAndName[-1]
+        ES =  _3dCSCG_ExactSolution(self._mesh_)
         status = getattr(import_module(classPath), className)(ES, **kwargs)
         ES.___set_status___(status)
         esp = dict()
@@ -338,7 +340,7 @@ class ExactSolutionSelector(FrozenOnly):
 
     @classmethod
     def ___exact_solution_path___(cls):
-        return '_3dCSCG.APP.exact_solutions.'
+        return '_3dCSCG.APP.exact_solutions.status.'
 
 
 

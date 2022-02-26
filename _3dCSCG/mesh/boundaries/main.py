@@ -1,5 +1,5 @@
 """
-In mesh.domain, we distinguish domain boundary and periodic boundary. So even two domain boundaries
+In `mesh.domain`, we distinguish domain boundary and periodic boundary. So even two domain boundaries
 are periodic boundaries (physically, they are not boundaries), we still have them named and in
 mesh.domain.regions.map shown.
 
@@ -7,8 +7,8 @@ However, in mesh.boundaries, the periodic boundaries are not considered.
 
 Therefore, for a periodic domain, mesh.boundaries will have no valid boundary. But mesh.domain.boundaries has.
 
-This is very important. The reason we have this is because the logic we used to code the mesh. We first
-generate the mesh.elements.map through regions.map, then we adjust the elements.map through studying the
+This is very important. The reason we have this is because of the logic we used to code the mesh. We first
+generate the mesh.elements.map through `regions.map`, then we adjust the elements.map through studying the
 periodic setting. This I know is not very good. But the thing is when I first code it, I did not consider
 periodic boundaries. So ...
 """
@@ -17,7 +17,7 @@ import sys
 if './' not in sys.path: sys.path.append('../')
 
 from root.config import *
-from SCREWS.frozen import FrozenOnly
+from screws.frozen import FrozenOnly
 
 from _3dCSCG.mesh.boundaries.boundary.main import _3dCSCG_Mesh_Boundary
 

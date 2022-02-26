@@ -15,7 +15,7 @@ from _3dCSCG.ADF.standard.base import _3dCSCG_Algebra_DUAL_Standard_Form
 
 
 
-class _2_Algebra_DUAL_Form(_3dCSCG_Algebra_DUAL_Standard_Form):
+class _3dCSCG_S2_ADF(_3dCSCG_Algebra_DUAL_Standard_Form):
     """
     Standard a dual 2-form.
 

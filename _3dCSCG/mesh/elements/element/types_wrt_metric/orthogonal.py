@@ -1,7 +1,7 @@
 
 
 
-from SCREWS.decorators import accepts
+from screws.decorators import accepts
 from _3dCSCG.mesh.elements.element.types_wrt_metric.base import ElementTypeWr2MetricBase
 
 

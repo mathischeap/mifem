@@ -7,15 +7,10 @@
          TU Delft, Delft, Netherlands
 
 """
-from SCREWS.frozen import FrozenOnly, FrozenClass
+from screws.frozen import FrozenClass
 
 
-
-class ExactSolution_Visualize(FrozenOnly):
-    def __init__(self, es):
-        self._es_ = es
-        self._freeze_self_()
-
+from _2dCSCG.APP.exact_solutions.visualize import ExactSolution_Visualize
 
 
 

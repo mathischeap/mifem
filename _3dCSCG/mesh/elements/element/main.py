@@ -2,7 +2,7 @@
 import sys
 if './' not in sys.path: sys.path.append('../')
 
-from SCREWS.frozen import FrozenOnly
+from screws.frozen import FrozenOnly
 from _3dCSCG.mesh.elements.element.sub_geometry import ElementSubGeometry
 import numpy as np
 from _3dCSCG.mesh.elements.element.sides.main import _3dCSCG_Mesh_Element_Sides

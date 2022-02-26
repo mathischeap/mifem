@@ -62,7 +62,7 @@ if rAnk == mAster_rank:
     seNtry_on = False
     """If sEntryOn is on, we will monitor the scheme with Sentry."""
 else:
-    seNtry_on = False # NEVER turn on this one: cause we only monitor it through the master!
+    seNtry_on = False # NEVER turn on this one: because we only monitor it through the master!
 
 
 
@@ -156,7 +156,7 @@ def dIspatching(originalTaskInputs: list, method):
                     assert newFreeCore[0] == i # make sure we recv something correct.
                     CORE_STATUS[newFreeCore[0]] = True
 
-            # now all tasks are gone. Send message to slaves to tell they can stop waiting for more new tasks.
+            # now all tasks are gone. Send message to all slaves to tell they stop waiting for more new tasks.
             for i in sLave_ranks:
                 assert CORE_STATUS[i] # must be true
                 cOmm.send('stop waiting for new tasks', dest=i, tag=i) # ask it stopping waiting.

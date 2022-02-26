@@ -7,7 +7,7 @@ if './' not in sys.path: sys.path.append('./')
 
 
 
-from SCREWS.frozen import FrozenOnly
+from screws.frozen import FrozenOnly
 from root.config import *
 
 

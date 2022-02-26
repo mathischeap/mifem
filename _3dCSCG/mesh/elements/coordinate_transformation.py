@@ -7,8 +7,8 @@ if './' not in sys.path: sys.path.append('./')
 
 
 from root.config import *
-from SCREWS.frozen import FrozenOnly
-from SCREWS.quadrature import Quadrature
+from screws.frozen import FrozenOnly
+from screws.quadrature import Quadrature
 
 
 

@@ -4,7 +4,7 @@ Sub-geometries of an element. Like we can pick a point, a slice or a volume from
 
 """
 
-from SCREWS.frozen import FrozenOnly
+from screws.frozen import FrozenOnly
 
 
 class ElementSubGeometry(FrozenOnly):

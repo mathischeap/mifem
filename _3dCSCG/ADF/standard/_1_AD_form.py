@@ -5,7 +5,7 @@ if './' not in sys.path: sys.path.append('./')
 from _3dCSCG.ADF.standard.base import _3dCSCG_Algebra_DUAL_Standard_Form
 
 
-class _1_Algebra_DUAL_Form(_3dCSCG_Algebra_DUAL_Standard_Form):
+class _3dCSCG_S1_ADF(_3dCSCG_Algebra_DUAL_Standard_Form):
     """
     Standard a dual 1-form.
 

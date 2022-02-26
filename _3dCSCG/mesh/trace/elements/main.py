@@ -6,12 +6,12 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 from root.config import *
-from SCREWS.frozen import FrozenOnly
+from screws.frozen import FrozenOnly
 
 
 
-from SCREWS.customized_warnings import TraceElementWarning
-from SCREWS.functions._3d import angle_between_two_vectors
+from screws.customized_warnings import TraceElementWarning
+from screws.functions._3d import angle_between_two_vectors
 from itertools import combinations
 
 from _3dCSCG.mesh.trace.elements.DO import _3dCSCG_Trace_Elements_DO
