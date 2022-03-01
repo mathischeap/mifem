@@ -57,7 +57,7 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
 
         # Now, we reshape the XYZ and V for tecplot and do the plot ...
         if rAnk == mAster_rank:
-            X, Y, Z, V = mesh.DO.regionwsie_stack(X, Y, Z, V)
+            X, Y, Z, V = mesh.do.regionwsie_stack(X, Y, Z, V)
             tp.session.connect(port=port)
             tp.new_layout()
             page = tp.active_page()
@@ -129,7 +129,7 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
 
         # Now, we reshape the XYZ and V for tecplot and do the plot ...
         if rAnk == mAster_rank:
-            X, Y, Z, Vx, Vy, Vz = mesh.DO.regionwsie_stack(X, Y, Z, Vx, Vy, Vz)
+            X, Y, Z, Vx, Vy, Vz = mesh.do.regionwsie_stack(X, Y, Z, Vx, Vy, Vz)
             tp.session.connect(port=port)
             tp.new_layout()
             page = tp.active_page()
@@ -205,7 +205,7 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
 
         # Now, we reshape the XYZ and V for tecplot and do the plot ...
         if rAnk == mAster_rank:
-            X, Y, Z, Vx, Vy, Vz = mesh.DO.regionwsie_stack(X, Y, Z, Vx, Vy, Vz)
+            X, Y, Z, Vx, Vy, Vz = mesh.do.regionwsie_stack(X, Y, Z, Vx, Vy, Vz)
             tp.session.connect(port=port)
             tp.new_layout()
             page = tp.active_page()
@@ -276,7 +276,7 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
 
         # Now, we reshape the XYZ and V for tecplot and do the plot ...
         if rAnk == mAster_rank:
-            X, Y, Z, V = mesh.DO.regionwsie_stack(X, Y, Z, V)
+            X, Y, Z, V = mesh.do.regionwsie_stack(X, Y, Z, V)
             tp.session.connect(port=port)
             tp.new_layout()
             page = tp.active_page()
@@ -350,7 +350,7 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
 
         # Now, we reshape the XYZ and V for tecplot and do the plot ...
         if rAnk == mAster_rank:
-            X, Y, Z, V = mesh.DO.regionwsie_stack(X, Y, Z, V)
+            X, Y, Z, V = mesh.do.regionwsie_stack(X, Y, Z, V)
             tp.session.connect(port=port)
             tp.new_layout()
             page = tp.active_page()
@@ -424,7 +424,7 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
 
         # Now, we reshape the XYZ and V for tecplot and do the plot ...
         if rAnk == mAster_rank:
-            X, Y, Z, V = mesh.DO.regionwsie_stack(X, Y, Z, V)
+            X, Y, Z, V = mesh.do.regionwsie_stack(X, Y, Z, V)
             tp.session.connect(port=port)
             tp.new_layout()
             page = tp.active_page()

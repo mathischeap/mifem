@@ -31,7 +31,7 @@ from _3dCSCG.mesh.deprecated.coordinate_transformation.transformer import Coordi
 from _3dCSCG.mesh.visualize.main import _3dCSCG_Mesh_Visualize
 from _3dCSCG.mesh.boundaries.main import _3dCSCG_Mesh_Boundaries
 from _3dCSCG.mesh.sub_geometry.main import _3dCSCG_Mesh_SubGeometry
-from _3dCSCG.mesh.DO.main import _3dCSCG_Mesh_DO
+from _3dCSCG.mesh.do.main import _3dCSCG_Mesh_DO
 
 
 
@@ -107,7 +107,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         self._sub_geometry_ = _3dCSCG_Mesh_SubGeometry(self)
         self.___define_parameters___ = None
         self.___TEST_MODE___ = False
-        self.DO.RESET_cache()
+        self.do.reset_cache()
         self._freeze_self_()
 
 
@@ -1067,7 +1067,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
     def ___parameters___(self):
         """
         This `parameters` is used to compare if meshes are the same. Therefore, the
-        `___parameters___` should can uniquely identify a mesh. We also use it tor save and restore a mesh.
+        `___parameters___` should uniquely identify a mesh. We also use it tor save and restore a mesh.
 
         So it is mandatory for saving a mesh.
         """
@@ -1079,12 +1079,12 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
 
 
-    def RESET_cache(self):
-        self.trace.RESET_cache()
+    def ___PRIVATE_reset_cache___(self):
+        self.trace.___PRIVATE_reset_cache___()
         if self.trace._elements_ is not None:
-            self.trace.elements.RESET_cache()
-        self.elements.RESET_cache()
-        self.boundaries.RESET_cache()
+            self.trace.elements.___PRIVATE_reset_cache___()
+        self.elements.___PRIVATE_reset_cache___()
+        self.boundaries.___PRIVATE_reset_cache___()
         self.___element_global_numbering___ = None
 
 
@@ -1259,7 +1259,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
 
     @property
-    def DO(self):
+    def do(self):
         return self._DO_
 
     @property
@@ -1311,4 +1311,3 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         the best, 0 the worst.
         """
         return self.trace.quality['average quality']
-

@@ -23,11 +23,11 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 12 python _3dCSCG\mesh\trace\elements\DO.py
+    # mpiexec -n 12 python _3dCSCG\mesh\trace\elements\do.py
     from _3dCSCG.main import MeshGenerator
     elements = [3, 4, 2]
     mesh = MeshGenerator('crazy_periodic', c=0.3, bounds=([0,1], [0,1], [0,1]))(elements)
     mesh.trace.elements.SELFCHECK.outward_unit_normal_vector()
     Q = mesh.trace.elements.quality
 
-    mesh.trace.elements.DO.illustrate_trace_element(1)
+    mesh.trace.elements.do.illustrate_trace_element(1)

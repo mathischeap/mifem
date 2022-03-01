@@ -87,8 +87,8 @@ class _PartialCochain_Include_from_(FrozenOnly):
                 assert len(local_dofs_indicators[i]) > 0, f"empty for element #{i}"
 
                 for side in local_dofs_indicators[i]:
-                    dofs = f.numbering.DO. \
-                        FIND.local_dofs_on_element_side(side)
+                    dofs = f.numbering.do. \
+                        find.local_dofs_on_element_side(side)
 
                     self._cochain_[i].extend(cochain[i][dofs])
 
@@ -163,7 +163,7 @@ if __name__ == '__main__':
     t0 = FC('0-t')
     t2 = FC('2-t')
 
-    # f1.TW.func.DO.set_func_body_as(es, 'velocity')
+    # f1.TW.func.do.set_func_body_as(es, 'velocity')
     # f1.TW.current_time = 0
     # f1.TW.___DO_push_all_to_instant___()
     # f1.discretize()

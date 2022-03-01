@@ -31,17 +31,17 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
         super().__init__(mesh, space, orientation, numbering_parameters, name)
         self._k_ = 2
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_trace_2form')
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         self.___cache_DISCRETIZE_STANDARD___ = None
-        super().RESET_cache()
+        super().___PRIVATE_reset_cache___()
 
 
 
 
-    def ___TW_FUNC_body_checker___(self, func_body):
+    def ___PRIVATE_TW_FUNC_body_checker___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 3
 
@@ -56,7 +56,7 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
             raise NotImplementedError(
                 f"3d CSCG 2-trace form FUNC cannot accommodate {func_body}.")
 
-    def ___TW_BC_body_checker___(self, func_body):
+    def ___PRIVATE_TW_BC_body_checker___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 3
 
@@ -325,7 +325,7 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
 
         assert self.BC.body is not None, f"No BC.body!"
         FUNC = self.BC.body
-        RANGE_trace_elements = self.mesh.boundaries.RANGE_trace_elements
+        RANGE_trace_elements = self.mesh.boundaries.range_of_trace_elements
         local_TEW = dict()
         for bn in FUNC:
             func_bn = FUNC[bn]
@@ -584,7 +584,7 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
         assert self.BC.body is not None, f"No BC.body!"
         FUNC = self.BC.body
 
-        RANGE_trace_elements = self.mesh.boundaries.RANGE_trace_elements
+        RANGE_trace_elements = self.mesh.boundaries.range_of_trace_elements
 
         local_TEW = dict()
         for bn in FUNC:
@@ -661,7 +661,7 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
                 indices = [i,]
             else:
                 indices = i
-        xietasigma, pb = self.DO.evaluate_basis_at_meshgrid(xi, eta, sigma)
+        xietasigma, pb = self.do.evaluate_basis_at_meshgrid(xi, eta, sigma)
         ii, jj, kk = np.size(xi), np.size(eta), np.size(sigma)
         xyz = dict()
         v = dict()
@@ -712,7 +712,7 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
         qw['WE'] = np.kron(quad_weights[2], quad_weights[0])
         qw['BF'] = np.kron(quad_weights[1], quad_weights[0])
 
-        xietasigma, pb = self.DO.evaluate_basis_at_meshgrid(*quad_nodes)
+        xietasigma, pb = self.do.evaluate_basis_at_meshgrid(*quad_nodes)
 
         local_cache = dict()
 
@@ -743,7 +743,7 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
         return MD
 
 
-    def ___DO_resemble___(self, obj_or_filename):
+    def ___PRIVATE_do_resemble___(self, obj_or_filename):
         """
 
         :param obj_or_filename:
@@ -832,9 +832,9 @@ if __name__ == '__main__':
 
     t2 = FC('2-t')
 
-    # t2.TW.func.DO.set_func_body_as(S)
+    # t2.TW.func.do.set_func_body_as(S)
     # t2.TW.current_time = 0
-    # t2.TW.DO.push_all_to_instant()
+    # t2.TW.do.push_all_to_instant()
 
     # t2.discretize()
     #

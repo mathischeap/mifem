@@ -342,7 +342,7 @@ class GlobalMatrix(FrozenOnly):
         self._undirected_graph_ = ___Undirected_Graph___(self)
         self._directed_graph_ = ___Directed_Graph___(self)
         self.IS_regularly_distributed = False
-        # Default be False, may not the case. When matters, ``DO.claim_distribution_pattern`` first.
+        # Default be False, may not the case. When matters, ``do.claim_distribution_pattern`` first.
         SHAPE = cOmm.gather(self.shape, root=sEcretary_rank)
         if rAnk == sEcretary_rank:
             for i, sp in enumerate(SHAPE):
@@ -419,14 +419,14 @@ class GlobalMatrix(FrozenOnly):
             #     pass
             # else:
             #     if saFe_mode:
-            #         assert self.DO.___PRIVATE_check_if_Iam_row_major___() == (True, 0), \
+            #         assert self.do.___PRIVATE_check_if_Iam_row_major___() == (True, 0), \
             #             "It is not a row major matrix."
         elif self._IS_regularly_distributed_ == 'column':
             assert self.mtype == 'csc'
             #     pass
             # else:
             #     if saFe_mode:
-            #         assert self.DO.___PRIVATE_check_if_Iam_column_major___() == (True, 0), \
+            #         assert self.do.___PRIVATE_check_if_Iam_column_major___() == (True, 0), \
             #             "It is not a column major matrix."
         else:
             pass
@@ -523,7 +523,7 @@ class GlobalMatrix(FrozenOnly):
                 B.IS_regularly_distributed in (True, 'row', 'column'):
                 M = A.___PRIVATE_MATMUL_rowMajor_dot_columnMajor___(A, B)
             else:
-                # PLEASE DO NOT REACH HERE!
+                # PLEASE do NOT REACH HERE!
                 s_m_r, s_m_c = A.DO.claim_distribution_pattern()
                 if A.IS_regularly_distributed in ('row', 'column'):
                     pass
@@ -652,7 +652,7 @@ class GlobalMatrix(FrozenOnly):
         Make the matrix row-major distributed: each entire row only exsits in one core; could not be
         shared.
 
-        DO NOT EASILY USE THIS! THIS IS VERY SLOW.
+        do NOT EASILY USE THIS! THIS IS VERY SLOW.
 
         :return:
         """
@@ -707,7 +707,7 @@ class GlobalMatrix(FrozenOnly):
         Make the matrix column-major distributed: each entire column only exsits in one core; could not be
         shared.
 
-        DO NOT EASILY USE THIS! THIS IS VERY SLOW.
+        do NOT EASILY USE THIS! THIS IS VERY SLOW.
 
         :return:
         """
@@ -1065,7 +1065,7 @@ class ___GM_DO___(FrozenOnly):
 
     def ___PRIVATE_being_regularly_distributed___(self, major):
         """
-        DO NOT EASILY USE THIS! THIS IS VERY SLOW.
+        do NOT EASILY USE THIS! THIS IS VERY SLOW.
 
         :param major: 'row' or 'column' Row major or column major. If row major: in each core,
             We store some sequential rows or the sparse matrix, otherwise, we store some

@@ -16,7 +16,7 @@ class _3dCSCG_Mesh_Element(FrozenOnly):
         self._mesh_ = elements._mesh_
         self._i_ = i
         self._type_wrt_metric_ = None
-        self._in_region_ = self._mesh_.DO.FIND_region_name_of_element(i)
+        self._in_region_ = self._mesh_.do.find.region_name_of_element(i)
         self._ct_ = _3dCSCG_Mesh_Element_CT(self)
         self._sub_geometry_ = None
         self._sides_ = None
@@ -43,7 +43,7 @@ class _3dCSCG_Mesh_Element(FrozenOnly):
 
         This property basically reflects the relative position of this element in the domain regions.
         """
-        region, localRegionIndices = self._mesh_.DO.FIND_region_name_and_local_indices_of_element(self.i)
+        region, localRegionIndices = self._mesh_.do.find.region_name_and_local_indices_of_element(self.i)
         elementsSpacing = self._elements_.spacing[region]
         _spacing_ = np.zeros((3,2))
         for i in range(3):
@@ -91,20 +91,20 @@ class _3dCSCG_Mesh_Element_CT(FrozenOnly):
     @property
     def origin(self):
         if self._origin_ is None:
-            in_region, local_indices = self._mesh_.DO.FIND_region_name_and_local_indices_of_element(
+            in_region, local_indices = self._mesh_.do.find.region_name_and_local_indices_of_element(
                 self._element_.i)
             self._origin_, self._delta_ = \
-                self._mesh_.DO.FIND_reference_origin_and_size_of_element_of_given_local_indices(
+                self._mesh_.do.find.reference_origin_and_size_of_element_of_given_local_indices(
                 in_region, local_indices)
         return self._origin_
 
     @property
     def delta(self):
         if self._delta_ is None:
-            in_region, local_indices = self._mesh_.DO.FIND_region_name_and_local_indices_of_element(
+            in_region, local_indices = self._mesh_.do.find.region_name_and_local_indices_of_element(
                 self._element_.i)
             self._origin_, self._delta_ = \
-                self._mesh_.DO.FIND_reference_origin_and_size_of_element_of_given_local_indices(
+                self._mesh_.do.find.reference_origin_and_size_of_element_of_given_local_indices(
                 in_region, local_indices)
         return self._delta_
 

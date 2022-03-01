@@ -4,7 +4,7 @@ Jacobian preconditioner.
 """
 from root.config import *
 from scipy import sparse as spspa
-from tools.linear_algebra.preconditioners.main import Preconditioner
+from tools.linear_algebra.preconditioners.base import Preconditioner
 
 
 class JacobianPreconditioner(Preconditioner):

@@ -157,7 +157,7 @@ class M_TIR_Visualize:
         xd_max = np.min(xd_max)
         xd_min = np.min(xd_min)
         x_range = (xd_max, xd_min)
-        #___ DO THE PLOT_______________________________________________________________
+        #___ do THE PLOT_______________________________________________________________
         for i in range(line_groups):
             for j in range(num_lines_per_group):
                 k = j + i*num_lines_per_group

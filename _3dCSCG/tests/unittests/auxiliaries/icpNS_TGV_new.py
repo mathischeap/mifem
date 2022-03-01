@@ -10,11 +10,11 @@ if './' not in sys.path: sys.path.append('../__unittest_scripts__/')
 
 from numpy import pi
 from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
-from tools.linear_algebra.data_structures import LocallyFullVector
-from tools.linear_algebra.elementwise_cache import EWC_ColumnVector
-from tools.linear_algebra.functions import bmat, concatenate
+from tools.linear_algebra.data_structures.global_matrix.main import LocallyFullVector
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_ColumnVector
+from tools.linear_algebra.elementwise_cache.operators.concatenate.main import bmat, concatenate
 from tools.linear_algebra.solvers.parallel.GMRES import solve
-from tools.iterator import SimpleIterator
+from tools.iterators.simple import SimpleIterator
 from time import time
 from root.config import *
 from root.mifem import save
@@ -74,10 +74,10 @@ def NoHy_TGV_NEW(N=2, k=4, t=15, steps=480, Re=500,
     w1 = FC('1-f', is_hybrid=False, orientation='outer', name='outer-vorticity')
     u2 = FC('2-f', is_hybrid=False, orientation='outer', name='outer-velocity')
     P3 = FC('3-f', is_hybrid=False, orientation='outer', name='outer-total-pressure')
-    u1.TW.func.DO.set_func_body_as(es.status.velocity)
-    u2.TW.func.DO.set_func_body_as(es.status.velocity)
-    w1.TW.func.DO.set_func_body_as(es.status.vorticity)
-    w2.TW.func.DO.set_func_body_as(es.status.vorticity)
+    u1.TW.func.do.set_func_body_as(es.status.velocity)
+    u2.TW.func.do.set_func_body_as(es.status.velocity)
+    w1.TW.func.do.set_func_body_as(es.status.vorticity)
+    w2.TW.func.do.set_func_body_as(es.status.vorticity)
 
     # define used fundamental matrices ......
     M1 = u1.matrices.mass
@@ -96,10 +96,10 @@ def NoHy_TGV_NEW(N=2, k=4, t=15, steps=480, Re=500,
     u2.TW.current_time = t0
     w1.TW.current_time = t0
     w2.TW.current_time = t0
-    u1.TW.DO.push_all_to_instant()
-    u2.TW.DO.push_all_to_instant()
-    w1.TW.DO.push_all_to_instant()
-    w2.TW.DO.push_all_to_instant()
+    u1.TW.do.push_all_to_instant()
+    u2.TW.do.push_all_to_instant()
+    w1.TW.do.push_all_to_instant()
+    w2.TW.do.push_all_to_instant()
     u1.discretize()
     u2.discretize()
     w1.discretize()
@@ -108,19 +108,19 @@ def NoHy_TGV_NEW(N=2, k=4, t=15, steps=480, Re=500,
     u2.error.L()
     w1.error.L()
     w2.error.L()
-    KE1_t0 = 0.5 * u1.DO.compute_L2_inner_product_energy_with(M=M1) / Volume
-    KE2_t0 = 0.5 * u2.DO.compute_L2_inner_product_energy_with(M=M2) / Volume
-    H1_t0 = u1.DO.compute_L2_inner_product_energy_with(w1, M=M1)
-    H2_t0 = u2.DO.compute_L2_inner_product_energy_with(w2, M=M2)
-    E1_t0 = 0.5 * w1.DO.compute_L2_inner_product_energy_with(M=M1) / Volume
-    E2_t0 = 0.5 * w2.DO.compute_L2_inner_product_energy_with(M=M2) / Volume
+    KE1_t0 = 0.5 * u1.do.compute_L2_inner_product_energy_with(M=M1) / Volume
+    KE2_t0 = 0.5 * u2.do.compute_L2_inner_product_energy_with(M=M2) / Volume
+    H1_t0 = u1.do.compute_L2_inner_product_energy_with(w1, M=M1)
+    H2_t0 = u2.do.compute_L2_inner_product_energy_with(w2, M=M2)
+    E1_t0 = 0.5 * w1.do.compute_L2_inner_product_energy_with(M=M1) / Volume
+    E2_t0 = 0.5 * w2.do.compute_L2_inner_product_energy_with(M=M2) / Volume
     du2 = u2.coboundary()
-    du2.TW.func.DO.set_func_body_as(es.status.divergence_of_velocity)
+    du2.TW.func.do.set_func_body_as(es.status.divergence_of_velocity)
     du2.TW.current_time = t0
-    du2.TW.DO.push_all_to_instant()
+    du2.TW.do.push_all_to_instant()
     DIV_L2_error_t0 = du2.error.L()
-    u1u2_diff_t0 = u2.DO.compute_L2_diff_from(u1)
-    w1w2_diff_t0 = w2.DO.compute_L2_diff_from(w1)
+    u1u2_diff_t0 = u2.do.compute_L2_diff_from(u1)
+    w1w2_diff_t0 = w2.do.compute_L2_diff_from(w1)
 
     if save_uw:
         save([u1, u2, w1, w2], f'icpNS_NH_UUWW_TGV_NEW_Re{Re}_N{N}k{k}t{t}Steps{steps}_t0')
@@ -156,8 +156,8 @@ def NoHy_TGV_NEW(N=2, k=4, t=15, steps=480, Re=500,
     iR.DO_distribute_to(u1, P0)
 
     w2.cochain.local = u1.coboundary.cochain_local
-    KE1_t0h = 0.5 * u1.DO.compute_L2_inner_product_energy_with(M=M1) / Volume
-    E2_t0h  = 0.5 * w2.DO.compute_L2_inner_product_energy_with(M=M2) / Volume
+    KE1_t0h = 0.5 * u1.do.compute_L2_inner_product_energy_with(M=M1) / Volume
+    E2_t0h  = 0.5 * w2.do.compute_L2_inner_product_energy_with(M=M2) / Volume
 
     if rAnk == mAster_rank and show_info:
         print('KE1_t0', KE1_t0)
@@ -265,12 +265,12 @@ def NoHy_TGV_NEW(N=2, k=4, t=15, steps=480, Re=500,
         oR.DO_distribute_to(u2, w1, P3)
 
         du2 = u2.coboundary()
-        du2.TW.func.DO.set_func_body_as(es.status.divergence_of_velocity)
+        du2.TW.func.do.set_func_body_as(es.status.divergence_of_velocity)
         du2.TW.current_time = tk1
-        du2.TW.DO.push_all_to_instant()
+        du2.TW.do.push_all_to_instant()
         DIV_L2_error_tk1 = du2.error.L()
-        KE2_tk1 = 0.5 * u2.DO.compute_L2_inner_product_energy_with(M=M2) / Volume
-        E1_tk1 = 0.5 * w1.DO.compute_L2_inner_product_energy_with(M=M1) / Volume
+        KE2_tk1 = 0.5 * u2.do.compute_L2_inner_product_energy_with(M=M2) / Volume
+        E1_tk1 = 0.5 * w1.do.compute_L2_inner_product_energy_with(M=M1) / Volume
 
         # ... inner
 
@@ -293,14 +293,14 @@ def NoHy_TGV_NEW(N=2, k=4, t=15, steps=480, Re=500,
             mean_u1_cochain_local_at_tk[i] = (_u1_old_cochain_[i] + _u1_new_cochain_[i]) / 2
 
         u1.cochain.local = mean_u1_cochain_local_at_tk  # we then have u1 cochain @ tk
-        KE1_tk1 = 0.5 * u1.DO.compute_L2_inner_product_energy_with(M=M1) / Volume
-        H1_tk1 = u1.DO.compute_L2_inner_product_energy_with(w1, M=M1)
-        u1u2_diff_tk1 = u2.DO.compute_L2_diff_from(u1)
+        KE1_tk1 = 0.5 * u1.do.compute_L2_inner_product_energy_with(M=M1) / Volume
+        H1_tk1 = u1.do.compute_L2_inner_product_energy_with(w1, M=M1)
+        u1u2_diff_tk1 = u2.do.compute_L2_diff_from(u1)
 
         w2.cochain.local = u1.coboundary.cochain_local
-        H2_tk1 = u2.DO.compute_L2_inner_product_energy_with(w2, M=M2)
-        E2_tk1 = 0.5 * w2.DO.compute_L2_inner_product_energy_with(M=M2) / Volume
-        w1w2_diff_tk1 = w2.DO.compute_L2_diff_from(w1)
+        H2_tk1 = u2.do.compute_L2_inner_product_energy_with(w2, M=M2)
+        E2_tk1 = 0.5 * w2.do.compute_L2_inner_product_energy_with(M=M2) / Volume
+        w1w2_diff_tk1 = w2.do.compute_L2_diff_from(w1)
 
         if save_uw:
             if check_multiple_close(tk1, 0.1) and check_almost_in_range(tk1, 8.8, 9.5):
@@ -313,8 +313,8 @@ def NoHy_TGV_NEW(N=2, k=4, t=15, steps=480, Re=500,
                 pass
         u1.cochain.local = _u1_new_cochain_  # renew u1 cochain to time tk+half
         w2.cochain.local = u1.coboundary.cochain_local  # renew w2 cochain to time tk+half
-        KE1_tk1h = 0.5 * u1.DO.compute_L2_inner_product_energy_with(M=M1) / Volume
-        E2_tk1h = 0.5 * w2.DO.compute_L2_inner_product_energy_with(M=M2) / Volume
+        KE1_tk1h = 0.5 * u1.do.compute_L2_inner_product_energy_with(M=M1) / Volume
+        E2_tk1h = 0.5 * w2.do.compute_L2_inner_product_energy_with(M=M2) / Volume
         if save_uw:
             if check_multiple_close(tk1, 0.1) and check_almost_in_range(tk1, 8.8, 9.5):
                 TK1 = round(tk1, 1)

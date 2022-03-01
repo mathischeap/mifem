@@ -38,19 +38,19 @@ def test_Form_NO1_discretization_and_reconstruction():
         f2 = FC('2-f', is_hybrid=False)
         f3 = FC('3-f', is_hybrid=False)
         f0.TW.func.body = scalar
-        f0.TW.DO.push_all_to_instant(0)
+        f0.TW.do.push_all_to_instant(0)
         f0.discretize()
         assert f0.error.L() < 0.00003
         f1.TW.func.body = vector
-        f1.TW.DO.push_all_to_instant(0)
+        f1.TW.do.push_all_to_instant(0)
         f1.discretize()
         assert f1.error.L() < 0.0004
         f2.TW.func.body = vector
-        f2.TW.DO.push_all_to_instant(0)
+        f2.TW.do.push_all_to_instant(0)
         f2.discretize()
         assert f2.error.L() < 0.0005
         f3.TW.func.body = scalar
-        f3.TW.DO.push_all_to_instant(0)
+        f3.TW.do.push_all_to_instant(0)
         f3.discretize()
         assert f3.error.L() < 0.0004
     except ThreeDimensionalTransfiniteInterpolationError:
@@ -71,19 +71,19 @@ def test_Form_NO1_discretization_and_reconstruction():
     f3 = FC('3-f', is_hybrid=False)
 
     f0.TW.func.body = scalar
-    f0.TW.DO.push_all_to_instant(0)
+    f0.TW.do.push_all_to_instant(0)
     f0.discretize()
     assert f0.error.L() < 0.0004
     f1.TW.func.body = vector
-    f1.TW.DO.push_all_to_instant(0)
+    f1.TW.do.push_all_to_instant(0)
     f1.discretize()
     assert f1.error.L() < 0.004
     f2.TW.func.body = vector
-    f2.TW.DO.push_all_to_instant(0)
+    f2.TW.do.push_all_to_instant(0)
     f2.discretize()
     assert f2.error.L() < 0.0041
     f3.TW.func.body = scalar
-    f3.TW.DO.push_all_to_instant(0)
+    f3.TW.do.push_all_to_instant(0)
     f3.discretize()
     assert f3.error.L() < 0.003
 
@@ -92,19 +92,19 @@ def test_Form_NO1_discretization_and_reconstruction():
     f2.cochain.globe = f2.cochain.globe
     f3.cochain.globe = f3.cochain.globe
     f0.TW.func.body = scalar
-    f0.TW.DO.push_all_to_instant(0)
+    f0.TW.do.push_all_to_instant(0)
     f0.discretize()
     assert f0.error.L() < 0.0004
     f1.TW.func.body = vector
-    f1.TW.DO.push_all_to_instant(0)
+    f1.TW.do.push_all_to_instant(0)
     f1.discretize()
     assert f1.error.L() < 0.004
     f2.TW.func.body = vector
-    f2.TW.DO.push_all_to_instant(0)
+    f2.TW.do.push_all_to_instant(0)
     f2.discretize()
     assert f2.error.L() < 0.0041
     f3.TW.func.body = scalar
-    f3.TW.DO.push_all_to_instant(0)
+    f3.TW.do.push_all_to_instant(0)
     f3.discretize()
     assert f3.error.L() < 0.003
 
@@ -114,19 +114,19 @@ def test_Form_NO1_discretization_and_reconstruction():
     f3 = FC('3-f', is_hybrid=True)
 
     f0.TW.func.body = scalar
-    f0.TW.DO.push_all_to_instant(0)
+    f0.TW.do.push_all_to_instant(0)
     f0.discretize()
     assert f0.error.L() < 0.0004
     f1.TW.func.body = vector
-    f1.TW.DO.push_all_to_instant(0)
+    f1.TW.do.push_all_to_instant(0)
     f1.discretize()
     assert f1.error.L() < 0.004
     f2.TW.func.body = vector
-    f2.TW.DO.push_all_to_instant(0)
+    f2.TW.do.push_all_to_instant(0)
     f2.discretize()
     assert f2.error.L() < 0.0041
     f3.TW.func.body = scalar
-    f3.TW.DO.push_all_to_instant(0)
+    f3.TW.do.push_all_to_instant(0)
     f3.discretize()
     assert f3.error.L() < 0.003
 
@@ -135,19 +135,19 @@ def test_Form_NO1_discretization_and_reconstruction():
     f2.cochain.globe = f2.cochain.globe
     f3.cochain.globe = f3.cochain.globe
     f0.TW.func.body = scalar
-    f0.TW.DO.push_all_to_instant(0)
+    f0.TW.do.push_all_to_instant(0)
     f0.discretize()
     assert f0.error.L() < 0.0004
     f1.TW.func.body = vector
-    f1.TW.DO.push_all_to_instant(0)
+    f1.TW.do.push_all_to_instant(0)
     f1.discretize()
     assert f1.error.L() < 0.004
     f2.TW.func.body = vector
-    f2.TW.DO.push_all_to_instant(0)
+    f2.TW.do.push_all_to_instant(0)
     f2.discretize()
     assert f2.error.L() < 0.0041
     f3.TW.func.body = scalar
-    f3.TW.DO.push_all_to_instant(0)
+    f3.TW.do.push_all_to_instant(0)
     f3.discretize()
     assert f3.error.L() < 0.003
 
@@ -233,19 +233,19 @@ def test_Form_NO1a_discretization_and_reconstruction():
         f2 = FC('2-f', is_hybrid=False)
         f3 = FC('3-f', is_hybrid=False)
         f0.TW.func.body = scalar
-        f0.TW.DO.push_all_to_instant(0)
+        f0.TW.do.push_all_to_instant(0)
         f0.discretize()
         assert f0.error.L() < 0.00003
         f1.TW.func.body = vector
-        f1.TW.DO.push_all_to_instant(0)
+        f1.TW.do.push_all_to_instant(0)
         f1.discretize()
         assert f1.error.L() < 0.0004
         f2.TW.func.body = vector
-        f2.TW.DO.push_all_to_instant(0)
+        f2.TW.do.push_all_to_instant(0)
         f2.discretize()
         assert f2.error.L() < 0.0005
         f3.TW.func.body = scalar
-        f3.TW.DO.push_all_to_instant(0)
+        f3.TW.do.push_all_to_instant(0)
         f3.discretize()
         assert f3.error.L() < 0.0004
     except ThreeDimensionalTransfiniteInterpolationError:
@@ -267,19 +267,19 @@ def test_Form_NO1a_discretization_and_reconstruction():
     f3 = FC('3-f', is_hybrid=False)
 
     f0.TW.func.body = scalar
-    f0.TW.DO.push_all_to_instant(0)
+    f0.TW.do.push_all_to_instant(0)
     f0.discretize()
     assert f0.error.L() < 0.0004
     f1.TW.func.body = vector
-    f1.TW.DO.push_all_to_instant(0)
+    f1.TW.do.push_all_to_instant(0)
     f1.discretize()
     assert f1.error.L() < 0.004
     f2.TW.func.body = vector
-    f2.TW.DO.push_all_to_instant(0)
+    f2.TW.do.push_all_to_instant(0)
     f2.discretize()
     assert f2.error.L() < 0.0041
     f3.TW.func.body = scalar
-    f3.TW.DO.push_all_to_instant(0)
+    f3.TW.do.push_all_to_instant(0)
     f3.discretize()
     assert f3.error.L() < 0.003
 
@@ -288,19 +288,19 @@ def test_Form_NO1a_discretization_and_reconstruction():
     f2.cochain.globe = f2.cochain.globe
     f3.cochain.globe = f3.cochain.globe
     f0.TW.func.body = scalar
-    f0.TW.DO.push_all_to_instant(0)
+    f0.TW.do.push_all_to_instant(0)
     f0.discretize()
     assert f0.error.L() < 0.0004
     f1.TW.func.body = vector
-    f1.TW.DO.push_all_to_instant(0)
+    f1.TW.do.push_all_to_instant(0)
     f1.discretize()
     assert f1.error.L() < 0.004
     f2.TW.func.body = vector
-    f2.TW.DO.push_all_to_instant(0)
+    f2.TW.do.push_all_to_instant(0)
     f2.discretize()
     assert f2.error.L() < 0.0041
     f3.TW.func.body = scalar
-    f3.TW.DO.push_all_to_instant(0)
+    f3.TW.do.push_all_to_instant(0)
     f3.discretize()
     assert f3.error.L() < 0.003
 
@@ -310,19 +310,19 @@ def test_Form_NO1a_discretization_and_reconstruction():
     f3 = FC('3-f', is_hybrid=True)
 
     f0.TW.func.body = scalar
-    f0.TW.DO.push_all_to_instant(0)
+    f0.TW.do.push_all_to_instant(0)
     f0.discretize()
     assert f0.error.L() < 0.0004
     f1.TW.func.body = vector
-    f1.TW.DO.push_all_to_instant(0)
+    f1.TW.do.push_all_to_instant(0)
     f1.discretize()
     assert f1.error.L() < 0.004
     f2.TW.func.body = vector
-    f2.TW.DO.push_all_to_instant(0)
+    f2.TW.do.push_all_to_instant(0)
     f2.discretize()
     assert f2.error.L() < 0.0041
     f3.TW.func.body = scalar
-    f3.TW.DO.push_all_to_instant(0)
+    f3.TW.do.push_all_to_instant(0)
     f3.discretize()
     assert f3.error.L() < 0.003
 
@@ -331,19 +331,19 @@ def test_Form_NO1a_discretization_and_reconstruction():
     f2.cochain.globe = f2.cochain.globe
     f3.cochain.globe = f3.cochain.globe
     f0.TW.func.body = scalar
-    f0.TW.DO.push_all_to_instant(0)
+    f0.TW.do.push_all_to_instant(0)
     f0.discretize()
     assert f0.error.L() < 0.0004
     f1.TW.func.body = vector
-    f1.TW.DO.push_all_to_instant(0)
+    f1.TW.do.push_all_to_instant(0)
     f1.discretize()
     assert f1.error.L() < 0.004
     f2.TW.func.body = vector
-    f2.TW.DO.push_all_to_instant(0)
+    f2.TW.do.push_all_to_instant(0)
     f2.discretize()
     assert f2.error.L() < 0.0041
     f3.TW.func.body = scalar
-    f3.TW.DO.push_all_to_instant(0)
+    f3.TW.do.push_all_to_instant(0)
     f3.discretize()
     assert f3.error.L() < 0.003
 
@@ -360,19 +360,19 @@ def test_Form_NO1a_discretization_and_reconstruction():
     f3 = FC('3-f', is_hybrid=False)
 
     f0.TW.func.body = scalar
-    f0.TW.DO.push_all_to_instant(0)
+    f0.TW.do.push_all_to_instant(0)
     f0.discretize()
     assert f0.error.L() < 0.01
     f1.TW.func.body = vector
-    f1.TW.DO.push_all_to_instant(0)
+    f1.TW.do.push_all_to_instant(0)
     f1.discretize()
     assert f1.error.L() < 0.05
     f2.TW.func.body = vector
-    f2.TW.DO.push_all_to_instant(0)
+    f2.TW.do.push_all_to_instant(0)
     f2.discretize()
     assert f2.error.L() < 0.07
     f3.TW.func.body = scalar
-    f3.TW.DO.push_all_to_instant(0)
+    f3.TW.do.push_all_to_instant(0)
     f3.discretize()
     assert f3.error.L() < 0.05
 
@@ -396,9 +396,9 @@ def test_Form_NO1b_trace_form_Rd_and_Rc():
     t = 0
     # test 0-Trace form reconstruct ...............
     t0 = FC('0-t')
-    t0.TW.func.DO.set_func_body_as(flux)
+    t0.TW.func.do.set_func_body_as(flux)
     t0.TW.current_time = t
-    t0.TW.DO.push_all_to_instant()
+    t0.TW.do.push_all_to_instant()
     t0.discretize()
     xi = eta = sigma = np.linspace(-1, 1, 50)
     xyz, V = t0.reconstruct(xi, eta, sigma)
@@ -411,9 +411,9 @@ def test_Form_NO1b_trace_form_Rd_and_Rc():
 
     # test 2-Trace form reconstruct...............
     t2 = FC('2-t')
-    t2.TW.func.DO.set_func_body_as(flux)
+    t2.TW.func.do.set_func_body_as(flux)
     t2.TW.current_time = t
-    t2.TW.DO.push_all_to_instant()
+    t2.TW.do.push_all_to_instant()
     t2.discretize()
     xi = eta = sigma = np.linspace(-1, 1, 50)
     xyz, V = t2.reconstruct(xi, eta, sigma)
@@ -456,13 +456,13 @@ def test_Form_NO1b_trace_form_Rd_and_Rc():
     S2 = t2.matrices.selective
 
     # t0 & f0, discretization and selective matrix
-    t0.TW.func.DO.set_func_body_as(flux)
+    t0.TW.func.do.set_func_body_as(flux)
     t0.TW.current_time = t
-    t0.TW.DO.push_all_to_instant()
+    t0.TW.do.push_all_to_instant()
     t0.discretize()
-    f0.TW.func.DO.set_func_body_as(flux)
+    f0.TW.func.do.set_func_body_as(flux)
     f0.TW.current_time = t
-    f0.TW.DO.push_all_to_instant()
+    f0.TW.do.push_all_to_instant()
     f0.discretize()
     t0_local = t0.cochain.local
     f0_local = f0.cochain.local
@@ -471,13 +471,13 @@ def test_Form_NO1b_trace_form_Rd_and_Rc():
         np.testing.assert_array_almost_equal(A0, 0)
 
     # t1 & f1, discretization and selective matrix
-    t1.TW.func.DO.set_func_body_as(velo)
+    t1.TW.func.do.set_func_body_as(velo)
     t1.TW.current_time = t
-    t1.TW.DO.push_all_to_instant()
+    t1.TW.do.push_all_to_instant()
     t1.discretize()
-    f1.TW.func.DO.set_func_body_as(velo)
+    f1.TW.func.do.set_func_body_as(velo)
     f1.TW.current_time = t
-    f1.TW.DO.push_all_to_instant()
+    f1.TW.do.push_all_to_instant()
     f1.discretize()
     t1_local = t1.cochain.local
     f1_local = f1.cochain.local
@@ -486,13 +486,13 @@ def test_Form_NO1b_trace_form_Rd_and_Rc():
         np.testing.assert_array_almost_equal(A1, 0)
 
     # t2 & f2, discretization and selective matrix
-    t2.TW.func.DO.set_func_body_as(velo)
+    t2.TW.func.do.set_func_body_as(velo)
     t2.TW.current_time = t
-    t2.TW.DO.push_all_to_instant()
+    t2.TW.do.push_all_to_instant()
     t2.discretize()
-    f2.TW.func.DO.set_func_body_as(velo)
+    f2.TW.func.do.set_func_body_as(velo)
     f2.TW.current_time = t
-    f2.TW.DO.push_all_to_instant()
+    f2.TW.do.push_all_to_instant()
     f2.discretize()
     t2_local = t2.cochain.local
     f2_local = f2.cochain.local
@@ -651,18 +651,18 @@ def test_Form_NO3_incidence_matrices():
         assert E32E21[i].nnz == 0
 
     f3.TW.func.body = es.status.divergence_of_velocity
-    f3.TW.DO.push_all_to_instant(0)
+    f3.TW.do.push_all_to_instant(0)
     L_inf = f3.error.L(n='infinity')
     assert L_inf < 1e-8
 
     # we test curl of vorticity for incompressible NS ----------- BELOW ------------------------------------------------
     f1 = FC('1-f', is_hybrid=False)
     f1.TW.func.body = es.status.vorticity
-    f1.TW.DO.push_all_to_instant(0)
+    f1.TW.do.push_all_to_instant(0)
     f1.discretize()
     f2 = f1.coboundary()
     f2.TW.func.body = es.status.curl_of_vorticity
-    f2.TW.DO.push_all_to_instant(0)
+    f2.TW.do.push_all_to_instant(0)
     assert f2.error.L() < 0.00045
 
     mesh = MeshGenerator('crazy', c=0.0)([6, 6, 6], EDM='debug')
@@ -672,11 +672,11 @@ def test_Form_NO3_incidence_matrices():
 
     f1 = FC('1-f', is_hybrid=True)
     f1.TW.func.body = es.status.vorticity
-    f1.TW.DO.push_all_to_instant(0)
+    f1.TW.do.push_all_to_instant(0)
     f1.discretize()
     f2 = f1.coboundary()
     f2.TW.func.body = es.status.curl_of_vorticity
-    f2.TW.DO.push_all_to_instant(0)
+    f2.TW.do.push_all_to_instant(0)
     assert f2.error.L() < 1e-7
 
     # we test numerical gradient, curl and div with coboundary of standard forms------------------------------------
@@ -708,29 +708,29 @@ def test_Form_NO3_incidence_matrices():
 
     f0 = FC('0-f', is_hybrid=False)
     f0.TW.func.body = S
-    f0.TW.DO.push_all_to_instant(t)
+    f0.TW.do.push_all_to_instant(t)
     f0.discretize()
     f1 = f0.coboundary()
     f1.TW.func.body = gS
-    f1.TW.DO.push_all_to_instant(t)
+    f1.TW.do.push_all_to_instant(t)
     assert f1.error.L() < 0.0065
 
     f1 = FC('1-f', is_hybrid=False)
     f1.TW.func.body = V
-    f1.TW.DO.push_all_to_instant(t)
+    f1.TW.do.push_all_to_instant(t)
     f1.discretize()
     f2 = f1.coboundary()
     f2.TW.func.body = cV
-    f2.TW.DO.push_all_to_instant(t)
+    f2.TW.do.push_all_to_instant(t)
     assert f2.error.L() < 0.002
 
     f2 = FC('2-f', is_hybrid=False)
     f2.TW.func.body = V
-    f2.TW.DO.push_all_to_instant(t)
+    f2.TW.do.push_all_to_instant(t)
     f2.discretize()
     f3 = f2.coboundary()
     f3.TW.func.body = dV
-    f3.TW.DO.push_all_to_instant(t)
+    f3.TW.do.push_all_to_instant(t)
     assert f3.error.L() < 0.0025
 
     # +++++++++++++++++++++++++++++++++++++++++ ABOVE ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -921,39 +921,39 @@ def test_Form_NO6_resemble():
     f3 = fc('3-f', is_hybrid=True)
 
     f0.TW.func.body = scalar
-    f0.TW.DO.push_all_to_instant(0)
+    f0.TW.do.push_all_to_instant(0)
     f0.discretize()
     f1.TW.func.body = vector
-    f1.TW.DO.push_all_to_instant(0)
+    f1.TW.do.push_all_to_instant(0)
     f1.discretize()
     f2.TW.func.body = vector
-    f2.TW.DO.push_all_to_instant(0)
+    f2.TW.do.push_all_to_instant(0)
     f2.discretize()
     f3.TW.func.body = scalar
-    f3.TW.DO.push_all_to_instant(0)
+    f3.TW.do.push_all_to_instant(0)
     f3.discretize()
 
     save(f0, 'f0')
     save(f1, 'f1')
     save(f2, 'f2')
     save(f3, 'f3')
-    l0 = f0.DO.compute_L2_inner_product_energy_with()
-    l1 = f1.DO.compute_L2_inner_product_energy_with()
-    l2 = f2.DO.compute_L2_inner_product_energy_with()
-    l3 = f3.DO.compute_L2_inner_product_energy_with()
+    l0 = f0.do.compute_L2_inner_product_energy_with()
+    l1 = f1.do.compute_L2_inner_product_energy_with()
+    l2 = f2.do.compute_L2_inner_product_energy_with()
+    l3 = f3.do.compute_L2_inner_product_energy_with()
 
     F0 = fc('0-f', is_hybrid=True)
     F1 = fc('1-f', is_hybrid=True)
     F2 = fc('2-f', is_hybrid=False)
     F3 = fc('3-f', is_hybrid=False)
-    F0.DO.resemble(f0)
-    F1.DO.resemble(f1)
-    F2.DO.resemble(f2)
-    F3.DO.resemble(f3)
-    np.testing.assert_almost_equal(F0.DO.compute_L2_diff_from(f0), 0)
-    np.testing.assert_almost_equal(F1.DO.compute_L2_diff_from(f1), 0)
-    np.testing.assert_almost_equal(F2.DO.compute_L2_diff_from(f2), 0)
-    np.testing.assert_almost_equal(F3.DO.compute_L2_diff_from(f3), 0)
+    F0.do.resemble(f0)
+    F1.do.resemble(f1)
+    F2.do.resemble(f2)
+    F3.do.resemble(f3)
+    np.testing.assert_almost_equal(F0.do.compute_L2_diff_from(f0), 0)
+    np.testing.assert_almost_equal(F1.do.compute_L2_diff_from(f1), 0)
+    np.testing.assert_almost_equal(F2.do.compute_L2_diff_from(f2), 0)
+    np.testing.assert_almost_equal(F3.do.compute_L2_diff_from(f3), 0)
 
     mesh = MeshGenerator('crazy', c=0.0)([3,2,3], EDM='debug')
     space = SpaceInvoker('polynomials')([('Lobatto',4), ('Lobatto',5), ('Lobatto',4)])
@@ -962,14 +962,14 @@ def test_Form_NO6_resemble():
     F1 = FC('1-f', is_hybrid=False)
     F2 = FC('2-f', is_hybrid=True)
     F3 = FC('3-f', is_hybrid=False)
-    F0.DO.resemble(f0)
-    F1.DO.resemble(f1)
-    F2.DO.resemble(f2, density=20000)
-    F3.DO.resemble(f3, density=20000)
-    L0 = F0.DO.compute_L2_inner_product_energy_with()
-    L1 = F1.DO.compute_L2_inner_product_energy_with()
-    L2 = F2.DO.compute_L2_inner_product_energy_with()
-    L3 = F3.DO.compute_L2_inner_product_energy_with()
+    F0.do.resemble(f0)
+    F1.do.resemble(f1)
+    F2.do.resemble(f2, density=20000)
+    F3.do.resemble(f3, density=20000)
+    L0 = F0.do.compute_L2_inner_product_energy_with()
+    L1 = F1.do.compute_L2_inner_product_energy_with()
+    L2 = F2.do.compute_L2_inner_product_energy_with()
+    L3 = F3.do.compute_L2_inner_product_energy_with()
     assert (np.abs(l0-L0)/l0) < 0.03
     assert (np.abs(l1-L1)/l1) < 0.02
     assert (np.abs(l2-L2)/l2) < 0.01
@@ -978,14 +978,14 @@ def test_Form_NO6_resemble():
     F1 = FC('1-f', is_hybrid=False)
     F2 = FC('2-f', is_hybrid=True)
     F3 = FC('3-f', is_hybrid=False)
-    F0.DO.resemble('f0.mi')
-    F1.DO.resemble('f1.mi')
-    F2.DO.resemble('f2.mi', density=20000)
-    F3.DO.resemble('f3.mi', density=20000)
-    L0 = F0.DO.compute_L2_inner_product_energy_with()
-    L1 = F1.DO.compute_L2_inner_product_energy_with()
-    L2 = F2.DO.compute_L2_inner_product_energy_with()
-    L3 = F3.DO.compute_L2_inner_product_energy_with()
+    F0.do.resemble('f0.mi')
+    F1.do.resemble('f1.mi')
+    F2.do.resemble('f2.mi', density=20000)
+    F3.do.resemble('f3.mi', density=20000)
+    L0 = F0.do.compute_L2_inner_product_energy_with()
+    L1 = F1.do.compute_L2_inner_product_energy_with()
+    L2 = F2.do.compute_L2_inner_product_energy_with()
+    L3 = F3.do.compute_L2_inner_product_energy_with()
     assert (np.abs(l0-L0)/l0) < 0.03
     assert (np.abs(l1-L1)/l1) < 0.02
     assert (np.abs(l2-L2)/l2) < 0.01
@@ -993,15 +993,15 @@ def test_Form_NO6_resemble():
 
     t2 = FC('2-t')
     t2.TW.func.body = scalar
-    t2.TW.DO.push_all_to_instant(0)
+    t2.TW.do.push_all_to_instant(0)
     t2.discretize()
     save(t2, 'trace')
     T2 = FC('2-t')
-    T2.DO.resemble(t2)
+    T2.do.resemble(t2)
     for i in mesh.elements:
         assert np.abs(np.sum(T2.cochain.local[i]- t2.cochain.local[i])) < 0.002
     T2 = FC('2-t')
-    T2.DO.resemble('trace.mi')
+    T2.do.resemble('trace.mi')
     for i in mesh.elements:
         assert np.abs(np.sum(T2.cochain.local[i]- t2.cochain.local[i])) < 0.002
 

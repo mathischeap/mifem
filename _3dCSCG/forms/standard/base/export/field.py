@@ -101,10 +101,10 @@ class _3dCSC_SF_Export_Field(FrozenOnly):
         if rAnk == mAster_rank:
             if self._sf_.k in (1, 2):
                 # noinspection PyUnboundLocalVariable
-                X, Y, Z, Vx, Vy, Vz = mesh.DO.regionwsie_stack(X, Y, Z, Vx, Vy, Vz)
+                X, Y, Z, Vx, Vy, Vz = mesh.do.regionwsie_stack(X, Y, Z, Vx, Vy, Vz)
             else:
                 # noinspection PyUnboundLocalVariable
-                X, Y, Z, V = mesh.DO.regionwsie_stack(X, Y, Z, Vx)
+                X, Y, Z, V = mesh.do.regionwsie_stack(X, Y, Z, Vx)
 
             for rn in regions:
                 assert rn in X and rn in Y and rn in Z, "Data not full!"

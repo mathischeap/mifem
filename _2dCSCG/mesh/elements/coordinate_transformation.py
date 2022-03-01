@@ -10,10 +10,10 @@ import numpy as np
 class _2dCSCG_Mesh_Elements_CT(FrozenOnly):
     def __init__(self, elements):
         self._elements_ = elements
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         self._ctq_1d_ = _2dCSCG_ECT_1d_QUAD(self)
         self._ctq_2d_ = _2dCSCG_ECT_2d_QUAD(self)
 

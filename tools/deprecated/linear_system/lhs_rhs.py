@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-import numpy as np
 from screws.frozen import FrozenOnly
 from scipy import sparse as spspa
-from tools.linear_algebra.data_structures import GlobalVector, GlobalMatrix
+from tools.linear_algebra.data_structures.global_matrix.main import GlobalVector, GlobalMatrix
 
 
 

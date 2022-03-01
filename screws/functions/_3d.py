@@ -17,6 +17,10 @@ class ScalingFunc(ABC):
         return self._scaled_func_
 
 
+
+
+
+
 class Opposite(ABC):
     """Equal to ``ScalingFunc(-1, func)()``."""
     def __init__(self, func):
@@ -28,6 +32,10 @@ class Opposite(ABC):
 
     def __call__(self):
         return self._opposite_func_
+
+
+
+
 
 
 class CFG(ABC):
@@ -116,4 +124,3 @@ def angle_between_two_vectors(v1, v2):
         pass
 
     return np.arccos(_)
-

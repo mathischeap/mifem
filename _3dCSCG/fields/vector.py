@@ -13,7 +13,7 @@ if './' not in sys.path: sys.path.append('./')
 from root.config import *
 from types import FunctionType, MethodType
 from screws.frozen import FrozenOnly
-from tools.linear_algebra.elementwise_cache import EWC_ColumnVector
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_ColumnVector
 from _3dCSCG.fields.base.main import _3dCSCG_Continuous_FORM_BASE
 from functools import partial
 from scipy import sparse as spspa
@@ -262,7 +262,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                     INDICES = [i,]
                 elif i == 'on_mesh_boundaries': # then we plot on all mesh boundaries (mesh elements on the boundaries)
                     INDICES = list()
-                    RTE = self.mesh.boundaries.RANGE_trace_elements
+                    RTE = self.mesh.boundaries.range_of_trace_elements
                     for bn in RTE:
                         INDICES.extend(RTE[bn])
                 else:
@@ -288,7 +288,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
                 if i in (None, 'on_mesh_boundaries'):
                     INDICES = list()
-                    RTE = self.mesh.boundaries.RANGE_trace_elements
+                    RTE = self.mesh.boundaries.range_of_trace_elements
                     for bn in self.func: # this may not contain all mesh boundaries, only valid ones.
                         INDICES.extend(RTE[bn])
 
@@ -325,7 +325,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                     INDICES.extend(func.keys())
                 elif i == 'on_mesh_boundaries': # we only reconstruct on all the valid local trace elements which are also on mesh boundaries.
                     CMB = self.covered_mesh_boundaries # will contain all mesh boundary names.
-                    RTE = self.mesh.boundaries.RANGE_trace_elements
+                    RTE = self.mesh.boundaries.range_of_trace_elements
                     boundary_trace_elements = list() # local trace elements on all mesh boundaries
                     for mb in CMB:
                         boundary_trace_elements.extend(RTE[mb])
@@ -392,7 +392,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
             func = self.___DO_evaluate_func_at_time___(time)
 
             if self.ftype == 'standard':
-                RTE = self.mesh.boundaries.RANGE_trace_elements
+                RTE = self.mesh.boundaries.range_of_trace_elements
 
                 if i is None:
                     INDICES = list()  # will reconstruct for all local trace elements on the mesh boundaries.
@@ -459,7 +459,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                                       f"cannot inner product with {other.__class__}")
 
     @property
-    def DO(self):
+    def do(self):
         return self._DO_
 
     @property
@@ -496,7 +496,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                                             valid_time=self.valid_time,
                                             name=self.standard_properties.name
                                             ) # we made a safe copy.
-            # this is very important as it decoupled the norm component and the vector. MUST DO THIS!
+            # this is very important as it decoupled the norm component and the vector. MUST do THIS!
 
             trace_element_wise_func = dict()
             for i in safe_copy.mesh.trace.elements: # the local trace element #i on mesh boundaries
@@ -708,8 +708,8 @@ class _3dCSCG_VectorField_DO(FrozenOnly):
 class _VF_InnerWith2Form(FrozenOnly):
     def __init__(self, vf, _2f, quad_degree):
         if quad_degree is None: quad_degree = [_2f.dqp[i]+1 for i in range(3)]
-        quad_nodes, _, quad_weights = _2f.space.DO_evaluate_quadrature(quad_degree)
-        _, bf2 = _2f.DO.evaluate_basis_at_meshgrid(*quad_nodes, compute_xietasigma=False)
+        quad_nodes, _, quad_weights = _2f.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
+        _, bf2 = _2f.do.evaluate_basis_at_meshgrid(*quad_nodes, compute_xietasigma=False)
         self._g0_, self._g1_, self._g2_ = bf2
         self._JM_ = _2f.mesh.elements.coordinate_transformation.QUAD_1d.Jacobian_matrix(quad_degree, 'Gauss')
         self._mapping_ = _2f.mesh.elements.coordinate_transformation.QUAD_1d.mapping(quad_degree, 'Gauss')
@@ -725,7 +725,7 @@ class _VF_InnerWith2Form(FrozenOnly):
         """
         mark = self._mesh_.elements[i].type_wrt_metric.mark
         xyz = self._mapping_[i]
-        _f0_, _f1_, _f2_ = self._vf_.DO.evaluate_func_at_time()
+        _f0_, _f1_, _f2_ = self._vf_.do.evaluate_func_at_time()
         f0, f1, f2 = _f0_(*xyz), _f1_(*xyz), _f2_(*xyz)
         g0, g1, g2 = self._g0_, self._g1_, self._g2_
         JM = self._JM_[i]
@@ -746,8 +746,8 @@ class _VF_InnerWith2Form(FrozenOnly):
 class _VF_InnerWith1Form(FrozenOnly):
     def __init__(self, vf, _1f, quad_degree):
         if quad_degree is None: quad_degree = [_1f.dqp[i]+1 for i in range(3)]
-        quad_nodes, _, quad_weights = _1f.space.DO_evaluate_quadrature(quad_degree)
-        _, bf1 = _1f.DO.evaluate_basis_at_meshgrid(*quad_nodes, compute_xietasigma=False)
+        quad_nodes, _, quad_weights = _1f.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
+        _, bf1 = _1f.do.evaluate_basis_at_meshgrid(*quad_nodes, compute_xietasigma=False)
         self._g0_, self._g1_, self._g2_ = bf1
         self._JM_ = _1f.mesh.elements.coordinate_transformation.QUAD_1d.Jacobian_matrix(quad_degree, 'Gauss')
         self._mapping_ = _1f.mesh.elements.coordinate_transformation.QUAD_1d.mapping(quad_degree, 'Gauss')
@@ -797,7 +797,7 @@ class _VF_InnerWith1Form(FrozenOnly):
         """
         mark = self._mesh_.elements[i].type_wrt_metric.mark
         xyz = self._mapping_[i]
-        _f0_, _f1_, _f2_ = self._vf_.DO.evaluate_func_at_time()
+        _f0_, _f1_, _f2_ = self._vf_.do.evaluate_func_at_time()
         f0, f1, f2 = _f0_(*xyz), _f1_(*xyz), _f2_(*xyz)
         g0, g1, g2 = self._g0_, self._g1_, self._g2_
         J00, J01, J02, J10, J11, J12, J20, J21, J22 = self.___PRIVATE_J___(i, mark)
@@ -977,7 +977,7 @@ class _3dCSCG_VectorField_Components(FrozenOnly):
                                             valid_time=self._vf_.valid_time,
                                             name=self._vf_.standard_properties.name
                                             )
-            # this is very important as it decoupled the norm component and the vector. MUST DO THIS!
+            # this is very important as it decoupled the norm component and the vector. MUST do THIS!
 
             trace_element_wise_func = dict()
             for i in safe_copy.mesh.trace.elements: # the local trace element #i on mesh boundaries
@@ -1011,7 +1011,7 @@ class _3dCSCG_VectorField_Components(FrozenOnly):
                                             valid_time=self._vf_.valid_time,
                                             name=self._vf_.standard_properties.name
                                             )
-            # this is very important as it decoupled the norm component and the vector. MUST DO THIS!
+            # this is very important as it decoupled the norm component and the vector. MUST do THIS!
 
             trace_element_wise_func = dict()
             for i in safe_copy.mesh.trace.elements: # the local trace element #i on mesh boundaries
@@ -1045,7 +1045,7 @@ class _3dCSCG_VectorField_Components(FrozenOnly):
                                             valid_time=self._vf_.valid_time,
                                             name=self._vf_.standard_properties.name
                                             )
-            # this is very important as it decoupled the norm component and the vector. MUST DO THIS!
+            # this is very important as it decoupled the norm component and the vector. MUST do THIS!
 
             trace_element_wise_func = dict()
             for i in safe_copy.mesh.trace.elements: # the local trace element #i on mesh boundaries
@@ -1305,7 +1305,7 @@ if __name__ == '__main__':
 
     # f2 = FC('2-t')
     # f2.TW.BC.body = BV
-    # f2.TW.DO.push_BC_to_instant(0)
+    # f2.TW.do.push_BC_to_instant(0)
 
     # f2.BC.valid_boundaries=['North','West', ]
     # f2pc = f2.BC.partial_cochain

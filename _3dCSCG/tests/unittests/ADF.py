@@ -30,10 +30,10 @@ def test_ADF_NO1_general_tests_standard_forms():
     assert df2.IS_hybrid, "algebraic dual standard form must be hybrid."
     assert df3.IS_hybrid, "algebraic dual standard form must be hybrid."
 
-    df0.prime.TW.func.DO.set_func_body_as(es, 'pressure')
+    df0.prime.TW.func.do.set_func_body_as(es, 'pressure')
     df0.prime.TW.current_time = 0
-    df0.prime.TW.DO.push_all_to_instant()
-    df0.prime.DO.discretize()
+    df0.prime.TW.do.push_all_to_instant()
+    df0.prime.do.discretize()
 
     df0_error = df0.prime.error.L()
     save(df0, 'test_ADF_NO1_df0.mi')
@@ -41,30 +41,30 @@ def test_ADF_NO1_general_tests_standard_forms():
     DF0_error = DF0.prime.error.L()
     assert df0_error == DF0_error
 
-    df1.prime.TW.func.DO.set_func_body_as(es, 'vorticity')
+    df1.prime.TW.func.do.set_func_body_as(es, 'vorticity')
     df1.prime.TW.current_time = 1
-    df1.prime.TW.DO.push_all_to_instant()
-    df1.prime.DO.discretize()
+    df1.prime.TW.do.push_all_to_instant()
+    df1.prime.do.discretize()
     df1_error = df1.prime.error.L()
     save(df1, 'test_ADF_NO1_df1.mi')
     DF1 = read('test_ADF_NO1_df1.mi')
     DF1_error = DF1.prime.error.L()
     assert df1_error == DF1_error
 
-    df2.prime.TW.func.DO.set_func_body_as(es, 'velocity')
+    df2.prime.TW.func.do.set_func_body_as(es, 'velocity')
     df2.prime.TW.current_time = 2
-    df2.prime.TW.DO.push_all_to_instant()
-    df2.prime.DO.discretize()
+    df2.prime.TW.do.push_all_to_instant()
+    df2.prime.do.discretize()
     df2_error = df2.prime.error.L()
     save(df2, 'test_ADF_NO1_df2.mi')
     DF2 = read('test_ADF_NO1_df2.mi')
     DF2_error = DF2.prime.error.L()
     assert df2_error == DF2_error
 
-    df3.prime.TW.func.DO.set_func_body_as(es, 'pressure')
+    df3.prime.TW.func.do.set_func_body_as(es, 'pressure')
     df3.prime.TW.current_time = 3
-    df3.prime.TW.DO.push_all_to_instant()
-    df3.prime.DO.discretize()
+    df3.prime.TW.do.push_all_to_instant()
+    df3.prime.do.discretize()
     df3_error = df3.prime.error.L()
     save(df3, 'test_ADF_NO1_df3.mi')
     DF3 = read('test_ADF_NO1_df3.mi')
@@ -118,18 +118,18 @@ def test_ADF_NO2_general_tests_trace_forms():
     vector = FC('vector', (u,v,w))
 
     # --------- save & read -----------------------------------------------
-    dt0.prime.TW.func.DO.set_func_body_as(scalar)
+    dt0.prime.TW.func.do.set_func_body_as(scalar)
     dt0.prime.TW.current_time = 0
-    dt0.prime.TW.DO.push_all_to_instant()
-    dt0.prime.DO.discretize()
-    dt1.prime.TW.func.DO.set_func_body_as(vector)
+    dt0.prime.TW.do.push_all_to_instant()
+    dt0.prime.do.discretize()
+    dt1.prime.TW.func.do.set_func_body_as(vector)
     dt1.prime.TW.current_time = 0
-    dt1.prime.TW.DO.push_all_to_instant()
-    dt1.prime.DO.discretize()
-    dt2.prime.TW.func.DO.set_func_body_as(scalar)
+    dt1.prime.TW.do.push_all_to_instant()
+    dt1.prime.do.discretize()
+    dt2.prime.TW.func.do.set_func_body_as(scalar)
     dt2.prime.TW.current_time = 0
-    dt2.prime.TW.DO.push_all_to_instant()
-    dt2.prime.DO.discretize()
+    dt2.prime.TW.do.push_all_to_instant()
+    dt2.prime.do.discretize()
 
     save([dt0, dt1, dt2], 'dual_objects.mi')
 
@@ -147,18 +147,18 @@ def test_ADF_NO2_general_tests_trace_forms():
 
     es = ExactSolutionSelector(mesh)('icpsNS:sincosRD')
 
-    dt0.prime.TW.func.DO.set_func_body_as(es, 'pressure')
+    dt0.prime.TW.func.do.set_func_body_as(es, 'pressure')
     dt0.prime.TW.current_time = 0
-    dt0.prime.TW.DO.push_all_to_instant()
-    dt0.prime.DO.discretize()
-    dt1.prime.TW.func.DO.set_func_body_as(es, 'velocity')
+    dt0.prime.TW.do.push_all_to_instant()
+    dt0.prime.do.discretize()
+    dt1.prime.TW.func.do.set_func_body_as(es, 'velocity')
     dt1.prime.TW.current_time = 2
-    dt1.prime.TW.DO.push_all_to_instant()
-    dt1.prime.DO.discretize()
-    dt2.prime.TW.func.DO.set_func_body_as(es, 'pressure')
+    dt1.prime.TW.do.push_all_to_instant()
+    dt1.prime.do.discretize()
+    dt2.prime.TW.func.do.set_func_body_as(es, 'pressure')
     dt2.prime.TW.current_time = 3
-    dt2.prime.TW.DO.push_all_to_instant()
-    dt2.prime.DO.discretize()
+    dt2.prime.TW.do.push_all_to_instant()
+    dt2.prime.do.discretize()
 
     save([dt0, dt1, dt2], 'dual_objects.mi')
     Dt0, Dt1, Dt2 = read('dual_objects.mi', read_individuals=[1, 1, 1])
@@ -208,20 +208,20 @@ def test_ADF_NO3_coboundary():
     scalar = FC('scalar', p)
     vector = FC('vector', (u, v, w))
 
-    df3.prime.TW.func.DO.set_func_body_as(scalar)
+    df3.prime.TW.func.do.set_func_body_as(scalar)
     df3.prime.TW.current_time = 0
-    df3.prime.TW.DO.push_all_to_instant()
-    df3.prime.DO.discretize()
+    df3.prime.TW.do.push_all_to_instant()
+    df3.prime.do.discretize()
 
-    dt2.prime.TW.func.DO.set_func_body_as(scalar)
+    dt2.prime.TW.func.do.set_func_body_as(scalar)
     dt2.prime.TW.current_time = 0
-    dt2.prime.TW.DO.push_all_to_instant()
-    dt2.prime.DO.discretize()
+    dt2.prime.TW.do.push_all_to_instant()
+    dt2.prime.do.discretize()
 
     df2 = df3.coboundary(dt2)
-    df2.prime.TW.func.DO.set_func_body_as(vector)
+    df2.prime.TW.func.do.set_func_body_as(vector)
     df2.prime.TW.current_time = 0
-    df2.prime.TW.DO.push_all_to_instant()
+    df2.prime.TW.do.push_all_to_instant()
 
     assert df2.prime.error.L() < 0.01
 
@@ -237,20 +237,20 @@ def test_ADF_NO3_coboundary():
     scalar = FC('scalar', p)
     vector = FC('vector', (u, v, w))
 
-    df1.prime.TW.func.DO.set_func_body_as(vector)
+    df1.prime.TW.func.do.set_func_body_as(vector)
     df1.prime.TW.current_time = 1
-    df1.prime.TW.DO.push_all_to_instant()
-    df1.prime.DO.discretize()
+    df1.prime.TW.do.push_all_to_instant()
+    df1.prime.do.discretize()
 
-    dt0.prime.TW.func.DO.set_func_body_as(vector)
+    dt0.prime.TW.func.do.set_func_body_as(vector)
     dt0.prime.TW.current_time = 1
-    dt0.prime.TW.DO.push_all_to_instant()
-    dt0.prime.DO.discretize()
+    dt0.prime.TW.do.push_all_to_instant()
+    dt0.prime.do.discretize()
 
     df0 = df1.coboundary(dt0)
-    df0.prime.TW.func.DO.set_func_body_as(scalar)
+    df0.prime.TW.func.do.set_func_body_as(scalar)
     df0.prime.TW.current_time = 1
-    df0.prime.TW.DO.push_all_to_instant()
+    df0.prime.TW.do.push_all_to_instant()
 
     assert df0.prime.error.L() < 0.028
 
@@ -275,20 +275,20 @@ def test_ADF_NO3_coboundary():
     V_curl = V.numerical.curl
     V_perp = V.components.T_perp
 
-    df2.prime.TW.func.DO.set_func_body_as(V)
+    df2.prime.TW.func.do.set_func_body_as(V)
     df2.prime.TW.current_time = 0
-    df2.prime.TW.DO.push_all_to_instant()
-    df2.prime.DO.discretize()
+    df2.prime.TW.do.push_all_to_instant()
+    df2.prime.do.discretize()
 
-    dt1.prime.TW.func.DO.set_func_body_as(V_perp)
+    dt1.prime.TW.func.do.set_func_body_as(V_perp)
     dt1.prime.TW.current_time = 0
-    dt1.prime.TW.DO.push_all_to_instant()
-    dt1.prime.DO.discretize()
+    dt1.prime.TW.do.push_all_to_instant()
+    dt1.prime.do.discretize()
 
     df1 = df2.coboundary(dt1)
-    df1.prime.TW.func.DO.set_func_body_as(V_curl)
+    df1.prime.TW.func.do.set_func_body_as(V_curl)
     df1.prime.TW.current_time = 0
-    df1.prime.TW.DO.push_all_to_instant()
+    df1.prime.TW.do.push_all_to_instant()
 
     assert df2.prime.error.L() < 0.004, f"something is wrong."
     assert df1.prime.error.L() < 0.013, f"something is wrong."
@@ -304,6 +304,6 @@ def test_ADF_NO3_coboundary():
 
 
 if __name__ == '__main__':
-    # mpiexec -n 6 python _3dCSCG\TESTS\unittest_ADF.py
+    # mpiexec -n 6 python _3dCSCG\tests\unittests\ADF.py
     # test_ADF_NO1_general_tests_standard_forms()
-    test_ADF_NO3_coboundary()
+    test_ADF_NO1_general_tests_standard_forms()

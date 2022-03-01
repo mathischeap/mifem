@@ -46,7 +46,7 @@ class CSCG_Form_TimeWise(FrozenOnly):
 
 
     @property
-    def DO(self):
+    def do(self):
         return self._DO_
 
 
@@ -133,7 +133,7 @@ class CSCG_Form_TimeWise_Func(FrozenOnly):
         else:
             # only by setting ES and variable_name, the func can be restored.
             self_body = getattr(scalar_vector_or_ES.status, variable_name)
-            self._f_.___TW_FUNC_body_checker___(self_body)  # has to pass the checker.
+            self._f_.___PRIVATE_TW_FUNC_body_checker___(self_body)  # has to pass the checker.
             # do not use body.setter because we want to set _ES_ and _ES_variable_name_ attributes.
             self._body_ = self_body
             self._ES_ = scalar_vector_or_ES
@@ -146,7 +146,7 @@ class CSCG_Form_TimeWise_Func(FrozenOnly):
 
     @body.setter
     def body(self, body):
-        self._f_.___TW_FUNC_body_checker___(body)  # has to pass the checker.
+        self._f_.___PRIVATE_TW_FUNC_body_checker___(body)  # has to pass the checker.
         self._body_ = body
         self._ES_ = None
         self._ES_variable_name_ = None
@@ -157,7 +157,7 @@ class CSCG_Form_TimeWise_Func(FrozenOnly):
         return self.body.ftype
 
     @property
-    def DO(self):
+    def do(self):
         return self._DO_
 
 
@@ -245,7 +245,7 @@ class CSCG_Form_TimeWise_BC(FrozenOnly):
 
     @body.setter
     def body(self, body):
-        self._f_.___TW_BC_body_checker___(body)  # has to pass the checker.
+        self._f_.___PRIVATE_TW_BC_body_checker___(body)  # has to pass the checker.
         self._body_ = body
         self._ES_ = None
         self._ES_variable_name_ = None

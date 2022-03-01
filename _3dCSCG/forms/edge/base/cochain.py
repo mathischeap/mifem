@@ -45,7 +45,7 @@ class _3dCSCG_Edge_Cochain(FrozenOnly):
 
         RN_LI_dict = dict()
         for i in self.local:
-            rn, loc_ind = self._ef_.mesh.DO.FIND_region_name_and_local_indices_of_element(i)
+            rn, loc_ind = self._ef_.mesh.do.find.region_name_and_local_indices_of_element(i)
 
             RN_LI_dict[i] = rn + '=|=' + str(loc_ind)
 
@@ -82,7 +82,7 @@ class _3dCSCG_Edge_Cochain(FrozenOnly):
         LOC_COCHAIN = dict()
 
         for i in self._ef_.mesh.elements:
-            rn, loc_ind = self._ef_.mesh.DO.FIND_region_name_and_local_indices_of_element(i)
+            rn, loc_ind = self._ef_.mesh.do.find.region_name_and_local_indices_of_element(i)
             dict_key = rn + '=|=' + str(loc_ind)
             LOC_COCHAIN[i] = RW_LI_COCHAIN[dict_key]
 
@@ -207,8 +207,8 @@ if __name__ == '__main__':
     def p(t, x, y, z): return - 6 * np.pi * np.sin(2*np.pi*x) * np.sin(2*np.pi*y) * np.sin(2*np.pi*z) + 0 * t
     scalar = FC('scalar', p)
 
-    e0.TW.func.DO.set_func_body_as(scalar)
+    e0.TW.func.do.set_func_body_as(scalar)
     e0.TW.current_time = 0
-    e0.TW.DO.push_all_to_instant()
+    e0.TW.do.push_all_to_instant()
 
     e0.discretize()

@@ -34,7 +34,7 @@ class _3dCSCG_PolynomialSpace(_3dCSCG_Space_Base):
 
 
 
-    def DO_evaluate_quadrature(self, quad_degree, quad_type=None):
+    def ___PRIVATE_do_evaluate_quadrature___(self, quad_degree, quad_type=None):
         """
         We only cache the results of the last call.
 

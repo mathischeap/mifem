@@ -31,19 +31,19 @@ def test_edge_forms_No0_save_read():
     # scalar = FC('scalar', p)
     # e0 = FC('0-e')
     # e00 = FC('0-e')
-    # e0.TW.func.DO.set_func_body_as(scalar)
+    # e0.TW.func.do.set_func_body_as(scalar)
     # e0.TW.current_time = 5.233
-    # e0.TW.DO.push_all_to_instant()
+    # e0.TW.do.push_all_to_instant()
     # e0.discretize()
     #
     # ESS = ExactSolutionSelector(mesh)('icpsNS:sincosRD')
-    # e00.TW.func.DO.set_func_body_as(ESS, 'pressure')
+    # e00.TW.func.do.set_func_body_as(ESS, 'pressure')
     # e00.TW.current_time = 2.875
-    # e00.TW.DO.push_all_to_instant()
+    # e00.TW.do.push_all_to_instant()
     # e00.discretize()
     #
     # save([e0, e00], '___unittest_edge_save_read_000___.mi')
-    #========================= DO NOT DELETE ABOVE CODES ====================================
+    #========================= do NOT DELETE ABOVE CODES ====================================
 
     E0, E00 = read('_3dCSCG/tests/unittests/auxiliaries/___unittest_edge_save_read_000___.mi')
     if 100 in E0.cochain.local:
@@ -100,9 +100,9 @@ def test_edge_forms_No0_save_read():
     scalar = FC('scalar', p)
 
     e0 = FC('0-e', orientation='outer', numbering_parameters={'scheme_name': 'Naive',}, name='test_0edge')
-    e0.TW.func.DO.set_func_body_as(scalar)
+    e0.TW.func.do.set_func_body_as(scalar)
     e0.TW.current_time = t
-    e0.TW.DO.push_all_to_instant()
+    e0.TW.do.push_all_to_instant()
     e0.discretize()
     save(e0, '___unittest_edge_e0_save___.mi')
     E0 = read('___unittest_edge_e0_save___.mi')
@@ -116,9 +116,9 @@ def test_edge_forms_No0_save_read():
     assert E0.orientation == 'outer'
 
     e0 = FC('0-e', orientation='inner', numbering_parameters={'scheme_name': 'Naive',}, name='test_0edge111')
-    e0.TW.func.DO.set_func_body_as(ESS, 'pressure')
+    e0.TW.func.do.set_func_body_as(ESS, 'pressure')
     e0.TW.current_time = t + 10
-    e0.TW.DO.push_all_to_instant()
+    e0.TW.do.push_all_to_instant()
     e0.discretize()
     save(e0, '___unittest_edge_e0_save1___.mi')
     E0 = read('___unittest_edge_e0_save1___.mi')
@@ -155,9 +155,9 @@ def test_edge_forms_No1_0edge_Rd_and_Rc():
     e0 = FC('0-e')
     def p(t, x, y, z): return - 6 * np.pi * np.sin(2*np.pi*x) * np.sin(2*np.pi*y) * np.sin(2*np.pi*z) + 1.2 * t
     scalar = FC('scalar', p)
-    e0.TW.func.DO.set_func_body_as(scalar)
+    e0.TW.func.do.set_func_body_as(scalar)
     e0.TW.current_time = 0
-    e0.TW.DO.push_all_to_instant()
+    e0.TW.do.push_all_to_instant()
     e0.discretize()
     assert e0.error.L(n='infinity', quad_density=5000000) < 0.1
 

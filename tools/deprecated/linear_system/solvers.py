@@ -2,11 +2,11 @@
 from screws.frozen import FrozenOnly
 # from TOOLS.linear_algebra.solvers.gmres import gmres0 as gmres
 import tools.linear_algebra.solvers.serial.scipy_sparse_linalg as spspalinalg_solvers
-from tools.linear_algebra.data_structures import GlobalMatrix, DistributedVector, GlobalVector
+from tools.linear_algebra.data_structures.global_matrix.main import GlobalMatrix, DistributedVector, GlobalVector
 from time import time
 from root.config import *
 from scipy import sparse as spspa
-from tools.linear_algebra.elementwise_cache import EWC_SparseMatrix
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
 import tools.linear_algebra.deprecated.operators as TLO
 
 class _Solver_Base_(FrozenOnly):

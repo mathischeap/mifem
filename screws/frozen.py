@@ -21,6 +21,7 @@ from abc import ABC
 class FrozenOnly(ABC):
     @property
     def ___isfrozen___(self):
+        """"""
         try:
             return self.___ISFROZEN___
         except AttributeError:
@@ -28,6 +29,7 @@ class FrozenOnly(ABC):
             return self.___ISFROZEN___
 
     def __setattr__(self, key, value):
+        """"""
         if self.___isfrozen___ and key not in dir(self):
             raise FrozenError(" <FrozenClass> : %r is frozen. CANNOT define new attributes." % self)
         object.__setattr__(self, key, value)
@@ -144,6 +146,7 @@ class StandardProperties(FrozenOnly):
     def mark(self, mark):
         self.___mark___ = mark
 
+
     @property
     def stamp(self):
         """
@@ -156,6 +159,7 @@ class StandardProperties(FrozenOnly):
     @stamp.setter
     def stamp(self, stamp):
         self.___stamp___ = stamp
+
 
     @property
     def parameters(self):

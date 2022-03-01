@@ -130,7 +130,7 @@ class CSCG_FORM_BASE(FrozenClass):
 class CSCG_Form_BC(CSCG_Form_BC_func):
     def __init__(self, f):
         super(CSCG_Form_BC, self).__init__(f)
-        self._valid_boundaries_ = None # can not put it in RESET_cache method
+        self._valid_boundaries_ = None # can not put it in ___PRIVATE_reset_cache___ method
         self.RESET_cache()
         self._freeze_self_()
 

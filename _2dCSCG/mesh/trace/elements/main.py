@@ -13,11 +13,11 @@ class _2dCSCG_Trace_Elements(FrozenOnly):
         self._trace_ = trace
         self._mesh_ = trace._mesh_
         self.___PRIVATE_generating_trace_elements___()
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
 
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         self._type_amount_dict_ = None
 
     def ___DO_find_type_and_amount_numbered_before___(self):

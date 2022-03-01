@@ -21,14 +21,14 @@ class NumericalDerivative_fx(FrozenOnly):
             How many points are used to approximate the derivative.
 
         """
-        self.___check_func___(func)
-        self.___check_x___(x)
-        self.___check_dx___(dx)
-        self.___check_n___(n)
-        self.___check_order___(order)
+        self.___PRIVATE_check_func___(func)
+        self.___PRIVATE_check_x___(x)
+        self.___PRIVATE_check_dx___(dx)
+        self.___PRIVATE_check_n___(n)
+        self.___PRIVATE_check_order___(order)
         self._freeze_self_()
 
-    def ___check_func___(self, func):
+    def ___PRIVATE_check_func___(self, func):
         assert callable(func), " <PartialDerivative> : func is not callable."
         if isinstance(func, FunctionType):
             # noinspection PyUnresolvedReferences
@@ -41,24 +41,27 @@ class NumericalDerivative_fx(FrozenOnly):
             raise NotImplementedError()
         self._func_ = func
 
-    def ___check_x___(self, x):
+    def ___PRIVATE_check_x___(self, x):
         self._x_ = x
         assert np.ndim(self._x_) == 1
 
-    def ___check_dx___(self, dx):
+    def ___PRIVATE_check_dx___(self, dx):
         """ """
         assert isinstance(dx, (int, float))
         self._dx_  = dx
 
-    def ___check_n___(self, n):
+    def ___PRIVATE_check_n___(self, n):
         """ """
         assert n % 1 == 0 and n >= 1, " <PartialDerivative> : n = {} is wrong.".format(n)
         self._n_ = n
 
-    def ___check_order___(self, order):
+    def ___PRIVATE_check_order___(self, order):
         """ """
         assert order % 2 == 1 and order > 0, " <PartialDerivative> : order needs to be odd positive."
         self._order_ = order
+
+
+
 
     def scipy_derivative(self):
         """We compute ``df/d_`` at points ``x``."""

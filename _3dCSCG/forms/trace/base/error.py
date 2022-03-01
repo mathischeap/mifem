@@ -60,7 +60,7 @@ class _3dCSCG_Trace_Error(FrozenOnly):
 
         else:
             assert isinstance(n, int) and n > 0, f"L^{n} error is not valid."
-            quad_nodes, _, quad_weights = self._tf_.space.DO_evaluate_quadrature(quad_degree)
+            quad_nodes, _, quad_weights = self._tf_.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
 
         #-- reconstruct the trace form on all trace-elements -----------------------------------------
         xyz, v = self._tf_.reconstruct(*quad_nodes)
@@ -102,9 +102,9 @@ if __name__ == '__main__':
     def p(t, x, y, z): return - 6 * np.pi * np.sin(2*np.pi*x) * np.sin(2*np.pi*y) * np.sin(2*np.pi*z) + 0 * t
     scalar = FC('scalar', p)
 
-    t0.TW.func.DO.set_func_body_as(scalar)
+    t0.TW.func.do.set_func_body_as(scalar)
     t0.TW.current_time = 0
-    t0.TW.DO.push_all_to_instant()
+    t0.TW.do.push_all_to_instant()
 
     t0.discretize()
 

@@ -7,7 +7,7 @@ from screws.quadrature import Quadrature
 class _1Form_BASE(_2dCSCG_Standard_Form):
     """"""
 
-    def ___DO_evaluate_basis_at_meshgrid___(self, xi, eta, compute_xietasigma=True):
+    def ___PRIVATE_do_evaluate_basis_at_meshgrid___(self, xi, eta, compute_xietasigma=True):
         """
         Evaluate the basis functions on ``meshgrid(xi, eta, sigma)``.
 
@@ -22,15 +22,15 @@ class _1Form_BASE(_2dCSCG_Standard_Form):
             1. (None, tuple) -- ``(xi, eta, sigma)`` after ``meshgrid`` and ``ravel('F')``.
             2. tuple -- The evaluated basis functions.
         """
-        return self.space.DO_evaluate_form_basis_at_meshgrid(
+        return self.space.do.evaluate_form_basis_at_meshgrid(
             self.k, xi, eta, orientation=self.orientation, compute_xietasigma=compute_xietasigma)
 
 
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         self.___DISCRETIZE_STANDARD_CACHE___ = None
-        super().RESET_cache()
+        super().___PRIVATE_reset_cache___()
 
-    def ___TW_FUNC_body_checker___(self, func_body):
+    def ___PRIVATE_TW_FUNC_body_checker___(self, func_body):
         assert func_body.__class__.__name__ == '_2dCSCG_VectorField'
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 2

@@ -32,15 +32,15 @@ class _3dCSCG_0Edge(_3dCSCG_Edge, ABC):
         super().__init__(mesh, space, orientation, numbering_parameters, name)
         self._k_ = 0
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_edge_0form')
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
 
-    def RESET_cache(self):
-        super().RESET_cache()
+    def ___PRIVATE_reset_cache___(self):
+        super().___PRIVATE_reset_cache___()
 
 
-    def ___TW_FUNC_body_checker___(self, func_body):
+    def ___PRIVATE_TW_FUNC_body_checker___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 3
 
@@ -50,7 +50,7 @@ class _3dCSCG_0Edge(_3dCSCG_Edge, ABC):
         else:
             raise Exception(f"3dCSCG 0form FUNC do not accept func {func_body.__class__}")
 
-    def ___TW_BC_body_checker___(self, func_body):
+    def ___PRIVATE_TW_BC_body_checker___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 3
 
@@ -147,7 +147,7 @@ class _3dCSCG_0Edge(_3dCSCG_Edge, ABC):
             else:
                 indices = i
 
-        basis = self.DO.evaluate_basis_at_meshgrid(xi, eta, sigma)
+        basis = self.do.evaluate_basis_at_meshgrid(xi, eta, sigma)
         xyz = dict()
         v = dict()
 
@@ -186,9 +186,9 @@ if __name__ == '__main__':
     def p(t, x, y, z): return - 6 * np.pi * np.sin(2*np.pi*x) * np.sin(2*np.pi*y) * np.sin(2*np.pi*z) + 0 * t
     scalar = FC('scalar', p)
 
-    e0.TW.func.DO.set_func_body_as(scalar)
+    e0.TW.func.do.set_func_body_as(scalar)
     e0.TW.current_time = 0
-    e0.TW.DO.push_all_to_instant()
+    e0.TW.do.push_all_to_instant()
 
     e0.discretize()
     print(e0.error.L())

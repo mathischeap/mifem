@@ -108,7 +108,7 @@ class _3dCSCG_MeshPerpendicularSlice(FrozenOnly):
 
         involved_loc_elements = list()
         for e in self._mesh_.elements:
-            r_n, ijk = self._mesh_.DO.FIND_region_name_and_local_indices_of_element(e)
+            r_n, ijk = self._mesh_.do.find.region_name_and_local_indices_of_element(e)
             if r_n != rn:
                 pass
             else:

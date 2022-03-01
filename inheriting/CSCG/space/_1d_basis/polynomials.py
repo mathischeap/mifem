@@ -311,7 +311,7 @@ class _1dPolynomial(FrozenOnly):
         interval = bmx - bmi
         if interval == 0: interval = 0.1
         ylim = [bmi - interval * ylim_ratio, bmx + interval * ylim_ratio]
-        # ___________ DO THE PLOT ______________________________________________________
+        # ___________ do THE PLOT ______________________________________________________
         plt.figure(figsize=figsize)
         for basis_i in basis:
             plt.plot(x, basis_i, linewidth=1 * linewidth)

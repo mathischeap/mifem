@@ -7,7 +7,7 @@ if './' not in sys.path: sys.path.append('../')
 
 
 from screws.frozen import FrozenOnly
-from tools.linear_algebra.elementwise_cache import EWC_SparseMatrix
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
 
 
 

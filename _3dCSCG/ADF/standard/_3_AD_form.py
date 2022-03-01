@@ -66,22 +66,22 @@ if __name__ == "__main__":
     scalar = FC('scalar', p)
     vector = FC('vector', (u, v, w))
 
-    df3.prime.TW.func.DO.set_func_body_as(scalar)
+    df3.prime.TW.func.do.set_func_body_as(scalar)
     df3.prime.TW.current_time = 0
-    df3.prime.TW.DO.push_all_to_instant()
-    df3.prime.DO.discretize()
+    df3.prime.TW.do.push_all_to_instant()
+    df3.prime.do.discretize()
 
-    dt2.prime.TW.func.DO.set_func_body_as(scalar)
+    dt2.prime.TW.func.do.set_func_body_as(scalar)
     dt2.prime.TW.current_time = 0
-    dt2.prime.TW.DO.push_all_to_instant()
-    dt2.prime.DO.discretize()
+    dt2.prime.TW.do.push_all_to_instant()
+    dt2.prime.do.discretize()
 
 
     df2 = df3.coboundary(dt2)
 
-    df2.prime.TW.func.DO.set_func_body_as(vector)
+    df2.prime.TW.func.do.set_func_body_as(vector)
     df2.prime.TW.current_time = 0
-    df2.prime.TW.DO.push_all_to_instant()
+    df2.prime.TW.do.push_all_to_instant()
 
 
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""2D funtions."""
+"""2D functions."""
 import numpy as np
 from abc import ABC
 
@@ -12,8 +12,8 @@ class ScalingFunc(ABC):
 
     .. doctest::
 
-        >>> newfunc = ScalingFunc(3)(CFG(5)())
-        >>> newfunc(0, 0)
+        >>> new_func = ScalingFunc(3)(CFG(5)())
+        >>> new_func(0, 0)
         15.0
 
     ``newfunc`` is the scaled function which alway return 15.
@@ -36,8 +36,8 @@ class Opposite(ABC):
 
     .. doctest::
 
-        >>> newfunc = Opposite(CFG(5)())()
-        >>> newfunc(0, 0)
+        >>> new_func = Opposite(CFG(5)())()
+        >>> new_func(0, 0)
         -5.0
     """
 
@@ -242,6 +242,8 @@ def find_line_intersection(a1, a2, b1, b2):
     x = __det__(d, xdiff) / div
     y = __det__(d, ydiff) / div
     return x, y
+
+
 
 
 

@@ -32,12 +32,12 @@ class _3dCSCG_0Node(_3dCSCG_Node, ABC):
         super().__init__(mesh, space, orientation, numbering_parameters, name)
         self._k_ = 0
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_node_0form')
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
 
-    def RESET_cache(self):
-        super().RESET_cache()
+    def ___PRIVATE_reset_cache___(self):
+        super().___PRIVATE_reset_cache___()
 
 
 

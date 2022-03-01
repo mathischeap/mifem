@@ -12,13 +12,18 @@ from _2dCSCG.spaces.base.num_basis import NumBasis
 from _2dCSCG.spaces.base.local_numbering import LocalNumbering
 from _2dCSCG.spaces.base.incidence_matrix import IncidenceMatrix
 from _2dCSCG.spaces.base.trace_matrix import TraceMatrix
-from _2dCSCG.spaces.base.inheriting.mesh_basis_evaluation import EvaluatingMeshBasis
-from _2dCSCG.spaces.base.inheriting.trace_basis_evaluation import EvaluatingTraceBasis
+from _2dCSCG.spaces.base.do import _2dCSCG_space_do
 
 
 
-class _2dCSCG_Space(EvaluatingMeshBasis, EvaluatingTraceBasis, FrozenClass):
+
+
+
+
+
+class _2dCSCG_Space(FrozenClass):
     """n-D basis; basis functions."""
+
     def __init__(self, inputs, ndim):
         if ndim is not None: inputs = [inputs for _ in range(ndim)]
         self._inputs_ = inputs
@@ -31,8 +36,8 @@ class _2dCSCG_Space(EvaluatingMeshBasis, EvaluatingTraceBasis, FrozenClass):
         self._trace_matrix_ = TraceMatrix(self)
         self.___define_parameters___ = None
         self.standard_properties.stamp = '2dCSCG|structured|space'
+        self._DO_ = _2dCSCG_space_do(self)
         self._freeze_self_()
-
 
     @property
     def ___parameters___(self):
@@ -57,7 +62,9 @@ class _2dCSCG_Space(EvaluatingMeshBasis, EvaluatingTraceBasis, FrozenClass):
             nodes += (basises[i].nodes,)
         self._ndim_, self._basises_, self._p_, self._nodes_ = ndim, basises, p, nodes
 
-
+    @property
+    def do(self):
+        return self._DO_
 
     @property
     def num_basis(self):
@@ -84,7 +91,7 @@ class _2dCSCG_Space(EvaluatingMeshBasis, EvaluatingTraceBasis, FrozenClass):
         We categorize the FunctionSpace using the particular FunctionSpace name
         `self.__class__.__name__` plus a category called `_category_`.
 
-        `_category_` is from its basises. If basises's categories are the same,
+        `_category_` is from its basises. If basises' categories are the same,
         FunctionSpace will take it. Otherwise, `_category_` is named 'mixed'.
 
         Returns
@@ -140,7 +147,7 @@ class _2dCSCG_Space(EvaluatingMeshBasis, EvaluatingTraceBasis, FrozenClass):
 
 
 
-    def DO_evaluate_quadrature(self, quad_degree, quad_type=None):
+    def ___PRIVATE_do_evaluate_quadrature___(self, quad_degree, quad_type=None):
         """
         This method is supposed to be over-written in its children. Otherwise, it will
         raise NotImplementedError.

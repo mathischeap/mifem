@@ -13,9 +13,16 @@ class CFG(ABC):
         """ """
         self._C_ = C
 
-    def _constant_func_(self, t, x, y, z):
 
+
+
+    def _constant_func_(self, t, x, y, z):
+        """ """
         return self._C_ + 0 * t * x * y * z
 
+
+
+
     def __call__(self):
+        """ """
         return self._constant_func_

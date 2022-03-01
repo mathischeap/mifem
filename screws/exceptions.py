@@ -1,5 +1,8 @@
 
 
+
+
+
 class StatisticError(Exception):
     """Raise when we try to access standard property ``statistic`` but ``___statistic___`` is not defined."""
 

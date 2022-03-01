@@ -8,7 +8,7 @@ from screws.decorators import accepts
 from root.config import *
 from _3dCSCG.mesh.elements.element.main import _3dCSCG_Mesh_Element
 from _3dCSCG.mesh.elements.coordinate_transformation import _3dCSCG_Mesh_Elements_CT
-from _3dCSCG.mesh.elements.DO.main import _3dCSCG_Mesh_Elements_DO
+from _3dCSCG.mesh.elements.do.main import _3dCSCG_Mesh_Elements_DO
 
 
 class _3dCSCG_Mesh_Elements(FrozenOnly):
@@ -21,11 +21,11 @@ class _3dCSCG_Mesh_Elements(FrozenOnly):
         for i in self.indices:
             self._elements_[i] = _3dCSCG_Mesh_Element(self, i)
         self.___PRIVATE_parse_elements_type_wrt_metric___()
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
-    def RESET_cache(self):
-        self.coordinate_transformation.RESET_cache()
+    def ___PRIVATE_reset_cache___(self):
+        self.coordinate_transformation.___PRIVATE_reset_cache___()
         self._quality_ = None
 
     def ___PRIVATE_parse_elements_type_wrt_metric___(self):
@@ -126,7 +126,7 @@ class _3dCSCG_Mesh_Elements(FrozenOnly):
         return self._quality_
 
     @property
-    def DO(self):
+    def do(self):
         if self._DO_ is None:
             self._DO_ = _3dCSCG_Mesh_Elements_DO(self)
         return self._DO_
@@ -140,7 +140,7 @@ class _3dCSCG_Mesh_Elements(FrozenOnly):
     @accepts('self', int)
     def ___DO_find_slave_of_element___(self, i: int) -> int:
         """Find the core rank of mesh element #i."""
-        return self._mesh_.DO.FIND_slave_of_element(i)
+        return self._mesh_.do.FIND_slave_of_element(i)
 
 
 
@@ -159,7 +159,7 @@ if __name__ == '__main__':
     mesh = MeshGenerator('crazy', c=0.3, bounds=([0,1], [0,1], [0,1]))(elements)
 
     for i in range(mesh.elements.GLOBAL_num):
-        mesh.elements.DO.illustrate_element(i)
+        mesh.elements.do.illustrate_element(i)
 
     # print(mesh.elements.quality)
     # print(mesh.quality)

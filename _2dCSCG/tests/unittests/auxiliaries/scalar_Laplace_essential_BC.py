@@ -4,7 +4,7 @@ import sys
 if './' not in sys.path: sys.path.append('/')
 from tools.deprecated.linear_system.main import LinearSystem
 from _2dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
-from tools.linear_algebra.data_structures import GlobalVector, GlobalMatrix
+from tools.linear_algebra.data_structures.global_matrix.main import GlobalVector, GlobalMatrix
 from scipy import sparse as spspa
 
 def scalar_Laplace_solver(c, Kx, Ky, Nx, Ny):

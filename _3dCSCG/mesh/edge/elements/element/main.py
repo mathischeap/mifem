@@ -109,7 +109,7 @@ class _3dCSCG_Edge_Element(FrozenOnly):
     @property
     def CHARACTERISTIC_region(self):
         """We mainly consider this edge element is in this regions."""
-        region = self._elements_._mesh_.DO.FIND_region_name_of_element(self.CHARACTERISTIC_element)
+        region = self._elements_._mesh_.do.FIND_region_name_of_element(self.CHARACTERISTIC_element)
         return region
 
 

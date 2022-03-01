@@ -31,13 +31,13 @@ class _3dCSCG_0Trace(_3dCSCG_Standard_Trace, ABC):
         super().__init__(mesh, space, orientation, numbering_parameters, name)
         self._k_ = 0
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_trace_0form')
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
-    def RESET_cache(self):
-        super().RESET_cache()
+    def ___PRIVATE_reset_cache___(self):
+        super().___PRIVATE_reset_cache___()
 
-    def ___TW_FUNC_body_checker___(self, func_body):
+    def ___PRIVATE_TW_FUNC_body_checker___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 3
 
@@ -51,7 +51,7 @@ class _3dCSCG_0Trace(_3dCSCG_Standard_Trace, ABC):
             raise NotImplementedError(
                 f"0-trace form cannot accommodate {func_body}.")
 
-    def ___TW_BC_body_checker___(self, func_body):
+    def ___PRIVATE_TW_BC_body_checker___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 3
 
@@ -233,7 +233,7 @@ class _3dCSCG_0Trace(_3dCSCG_Standard_Trace, ABC):
             else:
                 indices = i
 
-        xietasigma, pb = self.DO.evaluate_basis_at_meshgrid(
+        xietasigma, pb = self.do.evaluate_basis_at_meshgrid(
             xi, eta,sigma)
         ii, jj, kk = np.size(xi), np.size(eta), np.size(sigma)
         xyz = dict()
@@ -282,7 +282,7 @@ class _3dCSCG_0Trace(_3dCSCG_Standard_Trace, ABC):
         qw['WE'] = np.kron(quad_weights[2], quad_weights[0])
         qw['BF'] = np.kron(quad_weights[1], quad_weights[0])
 
-        xietasigma, pb = self.DO.evaluate_basis_at_meshgrid(*quad_nodes)
+        xietasigma, pb = self.do.evaluate_basis_at_meshgrid(*quad_nodes)
 
         local_cache = dict()
 
@@ -334,9 +334,9 @@ if __name__ == '__main__':
     flux = FC('scalar', flux_func)
     t0 = FC('0-t')
 
-    # t0.TW.func.DO.set_func_body_as(flux)
+    # t0.TW.func.do.set_func_body_as(flux)
     # t0.TW.current_time = 1
-    # t0.TW.DO.push_all_to_instant()
+    # t0.TW.do.push_all_to_instant()
     # t0.discretize()
 
 
@@ -345,9 +345,9 @@ if __name__ == '__main__':
     def w(t, x, y, z): return t + np.cos(np.pi*x) * np.cos(2*np.pi*y) * np.cos(2*np.pi*z)
     V = FC('vector', (u,v,w))
 
-    # t0.TW.func.DO.set_func_body_as(V)
+    # t0.TW.func.do.set_func_body_as(V)
     # t0.TW.current_time = 1
-    # t0.TW.DO.push_all_to_instant()
+    # t0.TW.do.push_all_to_instant()
     # t0.discretize()
     #
     # t0.visualize()

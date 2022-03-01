@@ -23,12 +23,12 @@ class _3dCSCG_Mesh_Boundary(FrozenOnly):
     @property
     def element_sides(self):
         """This mesh boundary covers these local mesh element sides."""
-        return self._bdrs_.RANGE_element_sides[self._name_]
+        return self._bdrs_.range_of_element_sides[self._name_]
 
     @property
     def trace_elements(self):
         """This mesh boundary covers these local trace elements."""
-        return self._bdrs_.RANGE_trace_elements[self._name_]
+        return self._bdrs_.range_of_trace_elements[self._name_]
 
 
 

@@ -36,11 +36,11 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
         self._SELFCHECK_ = None
         self._ct_ = None
         self.___PRIVATE_generating_trace_elements___()
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
 
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         self._type_amount_dict_ = None
         self._Q_ = None
         self._AvQ_ = None
@@ -760,14 +760,14 @@ if __name__ == '__main__':
     print(mesh.quality)
     print(mesh.trace.quality)
 
-    mesh.trace.elements.DO.illustrate_trace_element(1)
+    mesh.trace.elements.do.illustrate_trace_element(1)
 
     # te0 = mesh.trace.elements[0]
 
     # print(te0.IS_on_periodic_boundary)
 
     for i in range(mesh.trace.elements.GLOBAL_num):
-        mesh.trace.elements.DO.illustrate_trace_element(i)
+        mesh.trace.elements.do.illustrate_trace_element(i)
         # if i in mesh.trace.elements:
         #     te = mesh.trace.elements[i]
         #

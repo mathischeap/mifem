@@ -2,7 +2,7 @@
 from root.config import *
 from scipy import sparse as spspa
 from scipy.sparse import linalg as spspalinalg
-from tools.linear_algebra.data_structures import DistributedVector
+from tools.linear_algebra.data_structures.global_matrix.main import DistributedVector
 from screws.frozen import FrozenOnly
 from screws.exceptions import LinerSystemSolverDivergenceError
 
@@ -273,7 +273,7 @@ def gmres1(AA, bb, X0, restart=100, maxiter=1000, tol=1e-4):
     we can avoid collecting and distributing vector vj. But, to do the A @ vj, we have to bcast
     vj in each core to all cores which may be slow. But overall, I believe this is faster.
 
-    It turns out to be very very slow! DO NOT use this routine! I over-estimated the speed of
+    It turns out to be very very slow! do NOT use this routine! I over-estimated the speed of
     communication between cores! It is not that fast.
 
     :param GlobalMatrix AA:
@@ -302,7 +302,7 @@ def gmres1(AA, bb, X0, restart=100, maxiter=1000, tol=1e-4):
     assert restart >= 3, "restart must be >= 3."
     assert tol > 0, "tol must be > 0."
 
-    # if AA.mtype != 'csc': AA.DO.tocsc()
+    # if AA.mtype != 'csc': AA.do.tocsc()
 
     A = AA.M
     f = bb.V

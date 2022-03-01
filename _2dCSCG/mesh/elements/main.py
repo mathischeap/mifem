@@ -17,12 +17,12 @@ class _2dCSCG_Mesh_Elements(FrozenOnly):
         for i in self.indices:
             self._elements_[i] = _2dCSCG_Mesh_Element(self, i)
         self.___PRIVATE_parse_elements_type_wrt_metric___()
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         """"""
-        self.coordinate_transformation.RESET_cache()
+        self.coordinate_transformation.___PRIVATE_reset_cache___()
 
     def ___PRIVATE_parse_elements_type_wrt_metric___(self):
         counter: dict = dict()
@@ -107,7 +107,7 @@ class _2dCSCG_Mesh_Elements(FrozenOnly):
 
     @accepts('self', int)
     def ___DO_find_slave_of_element___(self, i: int) -> int:
-        return self._mesh_.DO.FIND_slave_of_element(i)
+        return self._mesh_.do.FIND_slave_of_element(i)
 
 
 

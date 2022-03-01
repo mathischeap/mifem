@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Collections of some memoizers. These memoizers are found on internet. 
+Collections of some memorizers. These memorizers are found on internet.
 Authors are gratefully appreciated.
 
 decorators return new functions, therefore will change .__code__ and so on.
@@ -8,7 +8,7 @@ decorators return new functions, therefore will change .__code__ and so on.
 @author: Yi Zhang (collecting). Created on Thu Feb 22 22:37:03 2018
          Department of Aerodynamics
          Faculty of Aerospace Engineering
-         TU Delft
+         TU Delft,
          Delft, Netherlands
          
 """
@@ -145,7 +145,7 @@ class memoize5(object):
     be hashable.
 
     If a memoized method is invoked directly on its class the result will not
-    be cached. Instead the method will be invoked like a static method:
+    be cached. Instead of the method will be invoked like a static method:
     class Obj(object):
         @memoize
         def add_to(self, arg):
@@ -203,7 +203,7 @@ def accepts(*types):
     input can be one of these types.
     
     class names in str will be always ok.
-    If use type classes: int, float, str, make sure the are before the str class name. For example:
+    If use type classes: int, float, str, make sure they are before the str class name. For example:
 
     - ``(int, float, 'ndarray')`` is GOOD.
     - ``('ndarray', int, float)`` is BAD.
@@ -222,7 +222,7 @@ def accepts(*types):
     
     We have defined some acceptance keys:
 
-     1. sparse_matrix: including all sparse matrix types in scipy.sparse,
+     1. sparse_matrix: including all sparse matrix types in `scipy.sparse`,
              'csc_matrix', 'csr_matrix', 'coo_matrix', 'lil_matrix', 
              'dok_matrix', 'dia_matrix', 'bsr_matrix'.
      2. natural_number: 0, 1, 2, 3, ......

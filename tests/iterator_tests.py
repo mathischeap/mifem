@@ -6,12 +6,12 @@ $ mpiexec -n 12 python TESTS\iterator_tests.py
 
 """
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 from root.config import *
 from time import sleep
 
-from tools.iterator import SimpleIterator
-import os
+from tools.iterators.simple import SimpleIterator
+
 
 def ___TEST_SOLVER___(tk, tk1):
     """

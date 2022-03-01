@@ -2,7 +2,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config import *
-from _2dCSCG.APP.exact_solutions.main import ExactSolution
+from _2dCSCG.APP.exact_solution.main import ExactSolution
 from importlib import import_module
 from screws.frozen import FrozenOnly
 from _2dCSCG.mesh.domain.inputs.allocator import DomainInputFinder
@@ -187,7 +187,7 @@ class ExactSolutionSelector(FrozenOnly):
 
     @classmethod
     def ___exact_solution_path___(cls):
-        return '_2dCSCG.APP.exact_solutions.status.'
+        return '_2dCSCG.APP.exact_solution.status.'
 
 
 

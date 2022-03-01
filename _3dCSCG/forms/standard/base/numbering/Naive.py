@@ -9,7 +9,7 @@
 """
 from root.config import *
 from screws.frozen import FrozenOnly
-from tools.linear_algebra.gathering import Gathering_Matrix, Gathering_Vector
+from tools.linear_algebra.gathering.chain_matrix.main import Gathering_Matrix, Gathering_Vector
 
 
 
@@ -577,8 +577,8 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
 
         DOFs_2b_updated = set()
 
-        elements_1 = self._mesh_.DO.FIND_element_attach_to_region_side(r1, s1)
-        elements_2 = self._mesh_.DO.FIND_element_attach_to_region_side(r2, s2)
+        elements_1 = self._mesh_.do.FIND_element_attach_to_region_side(r1, s1)
+        elements_2 = self._mesh_.do.FIND_element_attach_to_region_side(r2, s2)
 
         assert elements_1.shape == elements_2.shape
         I, J = elements_1.shape
@@ -591,7 +591,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
                     e1 = elements_1[i, j]
                     if e1 in self._mesh_.elements:
                         dofs_1 = self._sf_.numbering.___PRIVATE_DO_find_dofs_on_element_side___(e1, s1, GM=gathering_matrix)
-                        # dofs_1 = self._sf_.numbering.DO.FIND.dofs_on_element_side(e1, s1, GM=gathering_matrix)
+                        # dofs_1 = self._sf_.numbering.do.find.dofs_on_element_side(e1, s1, GM=gathering_matrix)
 
                 e2 = elements_2[i, j]
                 if e2 in self._mesh_.elements:

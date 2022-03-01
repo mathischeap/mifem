@@ -49,9 +49,9 @@ class _2dCSCG_Standard_Trace(CSCG_Trace_Form, _2dCSCG_FORM_BASE, ndim=2):
         self._coboundary_ = _2dCSCG_TraceCoboundary(self)
         self._DO_ = _2dCSCG_Trace_DO(self)
 
-    def RESET_cache(self):
-        self.cochain.RESET_cache()
-        self.coboundary.RESET_cache()
+    def ___PRIVATE_reset_cache___(self):
+        self.cochain.___PRIVATE_reset_cache___()
+        self.coboundary.___PRIVATE_reset_cache___()
 
     def ___DO_evaluate_basis_at_meshgrid___(self, xi, eta, compute_xietasigma=True):
         """
@@ -68,7 +68,7 @@ class _2dCSCG_Standard_Trace(CSCG_Trace_Form, _2dCSCG_FORM_BASE, ndim=2):
             1. (None, tuple) -- ``(xi, eta, sigma)`` after ``meshgrid`` and ``ravel('F')``.
             2. tuple -- The evaluated basis functions.
         """
-        return self.space.DO_evaluate_trace_basis_at_meshgrid(
+        return self.space.do.evaluate_trace_basis_at_meshgrid(
             self.k, xi, eta, compute_xietasigma=compute_xietasigma)
 
     def ___DO_resemble___(self, obj_or_filename):
@@ -90,10 +90,10 @@ class _2dCSCG_Trace_DO(FrozenOnly):
         self._freeze_self_()
 
     def evaluate_basis_at_meshgrid(self, *args, **kwargs):
-        return self._tf_.___DO_evaluate_basis_at_meshgrid___(*args, **kwargs)
+        return self._tf_.___PRIVATE_do_evaluate_basis_at_meshgrid___(*args, **kwargs)
 
     def resemble(self, *args, **kwargs):
-        return self._tf_.___DO_resemble___(*args, **kwargs)
+        return self._tf_.___PRIVATE_do_resemble___(*args, **kwargs)
 
 
 

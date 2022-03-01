@@ -102,9 +102,9 @@ class _2dCSCG_Trace_Element(FrozenOnly):
     def shared_with_core(self):
         if self.IS_shared_by_cores:
             if int(self._p1_[:-1]) in self._elements_._mesh_.elements:
-                CORE = self._elements_._mesh_.DO.FIND_slave_of_element(int(self._p2_[:-1]))
+                CORE = self._elements_._mesh_.do.find.slave_of_element(int(self._p2_[:-1]))
             elif int(self._p2_[:-1]) in self._elements_._mesh_.elements:
-                CORE = self._elements_._mesh_.DO.FIND_slave_of_element(int(self._p1_[:-1]))
+                CORE = self._elements_._mesh_.do.find.slave_of_element(int(self._p1_[:-1]))
             else:
                 raise Exception()
             assert CORE != rAnk

@@ -4,9 +4,9 @@
 from root.config import *
 from screws.frozen import FrozenOnly
 from screws.exceptions import LocalCochainShapeError
-from tools.linear_algebra.elementwise_cache import EWC_ColumnVector
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_ColumnVector
 from scipy.sparse import lil_matrix, csr_matrix, csc_matrix
-from tools.linear_algebra.data_structures import DistributedVector
+from tools.linear_algebra.data_structures.global_matrix.main import DistributedVector
 from scipy import sparse as spspa
 
 
@@ -87,8 +87,8 @@ class CSCG_Standard_Form:
         return self.ndim == self.k
 
     @property
-    def DO(self):
-        """If has too many do methods, we group them in to DO."""
+    def do(self):
+        """If it has too many do methods, we group them in to do."""
         return self._DO_
 
 
@@ -102,10 +102,10 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
         self._local_ = None # this is a key property, should not reset it.
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         pass
 
 
@@ -130,7 +130,7 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
 
         RN_LI_dict = dict()
         for i in self.local:
-            rn, loc_ind = self._sf_.mesh.DO.FIND_region_name_and_local_indices_of_element(i)
+            rn, loc_ind = self._sf_.mesh.do.find.region_name_and_local_indices_of_element(i)
 
             RN_LI_dict[i] = rn + '=|=' + str(loc_ind)
 
@@ -168,7 +168,7 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
         LOC_COCHAIN = dict()
 
         for i in self._sf_.mesh.elements:
-            rn, loc_ind = self._sf_.mesh.DO.FIND_region_name_and_local_indices_of_element(i)
+            rn, loc_ind = self._sf_.mesh.do.find.region_name_and_local_indices_of_element(i)
             dict_key = rn + '=|=' + str(loc_ind)
             LOC_COCHAIN[i] = RW_LI_COCHAIN[dict_key]
 
@@ -338,10 +338,10 @@ class CSCG_Standard_Form_Coboundary_BASE(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
         self._next_form_ = None
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         self._incidenceMatrix_ = None
 
     @property

@@ -7,7 +7,7 @@ Here we store some serial_spspalinalg solvers.
 from root.config import *
 from scipy import sparse as spspa
 from scipy.sparse import linalg as spspalinalg
-from tools.linear_algebra.data_structures import DistributedVector
+from tools.linear_algebra.data_structures.global_matrix.main import DistributedVector
 from time import time
 
 

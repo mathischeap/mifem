@@ -186,5 +186,5 @@ class CSCG_Continuous_FORM_BASE(FrozenClass):
         raise NotImplementedError()
 
     @property
-    def DO(self):
+    def do(self):
         raise NotImplementedError()

@@ -9,11 +9,11 @@ from screws.quadrature import Quadrature
 
 class _2Form_BASE(_2dCSCG_Standard_Form):
     """"""
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         self.___DISCRETIZE_STANDARD_CACHE___ = None
-        super().RESET_cache()
+        super().___PRIVATE_reset_cache___()
 
-    def ___TW_FUNC_body_checker___(self, func_body):
+    def ___PRIVATE_TW_FUNC_body_checker___(self, func_body):
         assert func_body.__class__.__name__ == '_2dCSCG_ScalarField'
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 2
@@ -106,7 +106,7 @@ class _2Form_BASE(_2dCSCG_Standard_Form):
             1. (Dict[int, list]) -- :math:`x, y, z` coordinates.
             2. (Dict[int, list]) -- Reconstructed values.
         """
-        xietasigma, basis = self.DO.evaluate_basis_at_meshgrid(xi, eta)
+        xietasigma, basis = self.do.evaluate_basis_at_meshgrid(xi, eta)
         xyz = dict()
         value = dict()
         shape = [len(xi), len(eta)]
@@ -133,7 +133,7 @@ class _2Form_BASE(_2dCSCG_Standard_Form):
 
 
 
-    def ___OPERATORS_inner___(self, _, i, xietasigma, quad_weights, bfSelf, bfOther):
+    def ___PRIVATE_operator_inner___(self, _, i, xietasigma, quad_weights, bfSelf, bfOther):
         """Note that here we only return a local matrix."""
 
         element = self.mesh.elements[i]
@@ -146,14 +146,14 @@ class _2Form_BASE(_2dCSCG_Standard_Form):
         Mi = spspa.csr_matrix(Mi)
         return Mi
 
-    def ___OPERATORS_wedge___(self, other, quad_degree=None):
+    def ___PRIVATE_operator_wedge___(self, other, quad_degree=None):
         """In fact, it is integral over wedge product."""
         assert other.k == 0, "Need a _2dCSCG_0Form"
         assert self.mesh == other.mesh, "Meshes do not match."
         if quad_degree is None:
             quad_degree = [int(np.max([self.dqp[i], other.dqp[i]])) for i in range(2)]
-        quad_nodes, _, quad_weights = self.space.DO_evaluate_quadrature(quad_degree)
-        _, basisS = self.DO.evaluate_basis_at_meshgrid(*quad_nodes, compute_xietasigma=False)
-        _, basisO = other.DO.evaluate_basis_at_meshgrid(*quad_nodes, compute_xietasigma=False)
+        quad_nodes, _, quad_weights = self.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
+        _, basisS = self.do.evaluate_basis_at_meshgrid(*quad_nodes, compute_xietasigma=False)
+        _, basisO = other.do.evaluate_basis_at_meshgrid(*quad_nodes, compute_xietasigma=False)
         W = np.einsum('im, jm, m -> ij', basisO[0], basisS[0], quad_weights, optimize='greedy')
         return spspa.csc_matrix(W)

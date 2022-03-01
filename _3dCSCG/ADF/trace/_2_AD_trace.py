@@ -51,10 +51,10 @@ if __name__ == "__main__":
 
     # es = ExactSolutionSelector(mesh)('icpsNS:sincosRD')
 
-    # df3.prime.TW.func.DO.set_func_body_as(es, 'pressure')
+    # df3.prime.TW.func.do.set_func_body_as(es, 'pressure')
     # df3.prime.TW.current_time = 0
-    # df3.prime.TW.DO.push_all_to_instant()
-    # df3.prime.DO.discretize()
+    # df3.prime.TW.do.push_all_to_instant()
+    # df3.prime.do.discretize()
     # print(space.nodes)
 
     M2 = ad2.mass_matrix

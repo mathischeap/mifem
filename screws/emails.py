@@ -14,8 +14,13 @@ from email.mime.image import MIMEImage
 from root.config import rAnk, mAster_rank
 
 
+
+
+
 class EmailSendingError(Exception):
-    """Raise when we try to access standard property ``statistic`` but ``___statistic___`` is not defined."""
+    """Raise when we try to access standard property ``statistic`` but
+    ``___statistic___`` is not defined.
+    """
 
 
 class SendAdminAnEmail(FrozenOnly):
@@ -57,8 +62,8 @@ class SendAdminAnEmail(FrozenOnly):
 
         in_the_wall = whether_in_the_great_fire_wall()
 
-        # ---- connect to the serve -----------------------------------
-        if in_the_wall and hostname in ('DT-YI-HT20', 'DESKTOP-SYSU-YiZhang'): # edit or add condition here when I am working from new machine (only for the library holder)
+        # edit or add condition here when I am working from new machine (only for the library holder)
+        if in_the_wall and hostname in ('DT-YI-HT20', 'DESKTOP-SYSU-YiZhang'):
             # noinspection PyBroadException
             try:
                 # build connection: I am in the wall!
@@ -73,7 +78,6 @@ class SendAdminAnEmail(FrozenOnly):
                 return 0
         else:
             return 0
-        #===================================================================================
 
         # noinspection PyBroadException
         try:
@@ -102,7 +106,7 @@ class SendAdminAnEmail(FrozenOnly):
 
 
 class SendAdminAnHTMLEmail(FrozenOnly):
-    """To send an email to the library admin."""
+    """Send an email to the library admin."""
     def __init__(self):
         assert rAnk == mAster_rank, "Should only call it in master core."
         hostname = socket.gethostname()
@@ -122,8 +126,8 @@ class SendAdminAnHTMLEmail(FrozenOnly):
         else:
 
             in_the_wall = whether_in_the_great_fire_wall()
-            #---- connect to the serve -----------------------------------
-            if in_the_wall and hostname in ('DT-YI-HT20', 'DESKTOP-SYSU-YiZhang'): # edit or add condition here when I am working from new machine (only for the library holder)
+            # edit or add condition here when I am working from new machine (only for the library holder)
+            if in_the_wall and hostname in ('DT-YI-HT20', 'DESKTOP-SYSU-YiZhang'):
                 # noinspection PyBroadException
                 try:
                     with open('root/___private_developer_code___.txt', 'r') as f:
@@ -144,8 +148,6 @@ class SendAdminAnHTMLEmail(FrozenOnly):
                     self.s = None
             else:
                 self.s = None
-
-            # =====================================================================
 
         self._names_ = list()
         self._emails_ = list()
@@ -276,6 +278,13 @@ def whether_in_the_great_fire_wall():
         except socket.error:
             IN_THE_WALL[i] = True
     return all(IN_THE_WALL)
+
+
+
+
+
+
+
 
 
 

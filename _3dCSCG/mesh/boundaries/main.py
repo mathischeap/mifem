@@ -29,10 +29,10 @@ class _3dCSCG_Mesh_Boundaries(FrozenOnly):
     def __init__(self, mesh):
         assert mesh.__class__.__name__ == '_3dCSCG_Mesh'
         self._mesh_ = mesh
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         self._boundaries_dict_ = None
         self._names_ = None
         self._RANGE_element_sides_ = None
@@ -99,14 +99,14 @@ class _3dCSCG_Mesh_Boundaries(FrozenOnly):
         return self._names_
 
     @property
-    def RANGE_element_sides(self):
+    def range_of_element_sides(self):
         """(dict) Return a dict that contains the local element sides on each boundary."""
         if self._RANGE_element_sides_ is None:
             self.___PRIVATE_parse_boundaries___()
         return self._RANGE_element_sides_
 
     @property
-    def RANGE_trace_elements(self):
+    def range_of_trace_elements(self):
         """(dict) Return a dict that contains the local trace elements on each boundary."""
         if self._RANGE_trace_elements_ is None:
             self.___PRIVATE_parse_boundaries___()
@@ -140,6 +140,6 @@ if __name__ == "__main__":
     mesh = MeshGenerator('crazy')([4,2,[1,2,4,2,1]])
     # mesh = MeshGenerator('crazy', bounds=((0,3),(0,3),(0,3)))([2,1,1])
     # mesh.boundaries.___PRIVATE_parse_boundaries___()
-    print(rAnk, mesh.boundaries.RANGE_element_sides)
+    print(rAnk, mesh.boundaries.range_of_element_sides)
     # print(rAnk, mesh.boundaries.names)
     # print(rAnk, mesh.boundaries.names, mesh.domain.boundaries.names)

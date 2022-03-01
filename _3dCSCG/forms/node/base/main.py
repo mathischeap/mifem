@@ -44,7 +44,7 @@ class _3dCSCG_Node(_3dCSCG_FORM_BASE, ndim=3):
         # self._coboundary_ = _3dCSCG_Trace_Coboundary(self)
         # self._DO_ = _3dCSCG_Trace_DO(self)
 
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         """"""
 
     @property

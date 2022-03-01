@@ -25,14 +25,14 @@ class _2dCSCG_1Trace_Outer(_2dCSCG_Standard_Trace):
         super().__init__(mesh, space, True, 'outer', numbering_parameters, name)
         self._k_ = 1
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_trace_1form')
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         self.___cache_DISCRETIZE_STANDARD___ = None
-        super().RESET_cache()
+        super().___PRIVATE_reset_cache___()
 
-    def ___TW_FUNC_body_checker___(self, func_body):
+    def ___PRIVATE_TW_FUNC_body_checker___(self, func_body):
         if func_body.__class__.__name__ == '_2dCSCG_ScalarField':
             assert func_body.mesh.domain == self.mesh.domain
             assert func_body.ndim == self.ndim == 2
@@ -54,7 +54,7 @@ class _2dCSCG_1Trace_Outer(_2dCSCG_Standard_Trace):
             raise NotImplementedError()
 
     def ___PRIVATE_discretize_standard_ftype___(self, update_cochain=True, quad_degree=None):
-        """We will discretize the a standard scalar field to all trace elements."""
+        """We will discretize the standard scalar field to all trace elements."""
         raise NotImplementedError()
 
     def reconstruct(self, xi, eta, ravel=False, key=None):

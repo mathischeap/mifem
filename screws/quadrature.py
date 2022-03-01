@@ -72,7 +72,7 @@ class Quadrature(FrozenOnly):
             \int{sqrt{1-x^2}*g(x)} = \sum w_i * g(x_i),
         where these w_i are different. These weights are not included in this class.
         
-        As for 'extended_Gauss' quadrature, just DO NOT use it. I am not sure if it is
+        As for 'extended_Gauss' quadrature, just do NOT use it. I am not sure if it is
         right here.
         
         """

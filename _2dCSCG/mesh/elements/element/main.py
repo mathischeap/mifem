@@ -13,7 +13,7 @@ class _2dCSCG_Mesh_Element(FrozenOnly):
         self._mesh_ = elements._mesh_
         self._i_ = i
         self._type_wrt_metric_ = None
-        self._in_region_ = self._mesh_.DO.FIND_region_name_of_element(self.i)
+        self._in_region_ = self._mesh_.do.find.region_name_of_element(self.i)
         self._ct_ = _2dCSCG_Mesh_ECT(self)
         self._freeze_self_()
 
@@ -31,7 +31,7 @@ class _2dCSCG_Mesh_Element(FrozenOnly):
 
     @property
     def spacing(self):
-        region, localRegionIndices = self._mesh_.DO.FIND_region_name_and_local_indices_of_element(self.i)
+        region, localRegionIndices = self._mesh_.do.find.region_name_and_local_indices_of_element(self.i)
         elementsSpacing = self._elements_.spacing[region]
         _spacing_ = np.zeros((2,2))
         for i in range(2):
@@ -42,7 +42,7 @@ class _2dCSCG_Mesh_Element(FrozenOnly):
     @property
     def type_wrt_metric(self):
         if self._type_wrt_metric_ is None:
-            region, _ = self._mesh_.DO.FIND_region_name_and_local_indices_of_element(self.i)
+            region, _ = self._mesh_.do.find.region_name_and_local_indices_of_element(self.i)
             self._type_wrt_metric_ = \
                 self._mesh_.domain.regions[region].type_wrt_metric.___CLASSIFY_ELEMENT_of_spacing___(
                     self.spacing)

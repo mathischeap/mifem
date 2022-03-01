@@ -82,7 +82,7 @@ class _PartialDofs_Include_from_(FrozenOnly):
             assert bn in mesh.boundaries.names, \
                 f"boundary named {bn} is not found!"
 
-        Res = mesh.boundaries.RANGE_element_sides
+        Res = mesh.boundaries.range_of_element_sides
 
         new_added = dict()
 
@@ -162,8 +162,8 @@ class _PartialDofs_Interpretation_Local_(FrozenOnly):
             if indi[:2] == '1-': # type-1 indicators
                 side = indi[2]
                 # so the numbering property must have this method implemented.
-                dofs = self._form_.numbering.DO.\
-                    FIND.local_dofs_on_element_side(side)
+                dofs = self._form_.numbering.do.\
+                    find.local_dofs_on_element_side(side)
                 DOFs.extend(dofs)
             else:
                 raise NotImplementedError(
@@ -214,7 +214,7 @@ if __name__ == '__main__':
     t0 = FC('0-t')
     t2 = FC('2-t')
 
-    # f1.TW.func.DO.set_func_body_as(es, 'velocity')
+    # f1.TW.func.do.set_func_body_as(es, 'velocity')
     # f1.TW.current_time = 0
     # f1.TW.___DO_push_all_to_instant___()
     # f1.discretize()

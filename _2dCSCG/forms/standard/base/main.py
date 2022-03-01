@@ -14,7 +14,7 @@ from _2dCSCG.forms.base import _2dCSCG_FORM_BASE
 from _2dCSCG.forms.standard.base.numbering.main import _2dCSCG_Standard_Form_Numbering
 from _2dCSCG.forms.standard.base.visualize.main import _2dCSCG_FormVisualize
 
-from tools.linear_algebra.elementwise_cache import EWC_SparseMatrix
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
 
 
 from inheriting.CSCG.form.standard.main_BASE import CSCG_Standard_Form
@@ -54,11 +54,11 @@ class _2dCSCG_Standard_Form(CSCG_Standard_Form, _2dCSCG_FORM_BASE, ndim=2):
         self._visualize_ = _2dCSCG_FormVisualize(self)
         self._DO_ = _2dCSCG_Standard_Form_DO(self)
 
-    def RESET_cache(self):
-        self.cochain.RESET_cache()
-        self.coboundary.RESET_cache()
+    def ___PRIVATE_reset_cache___(self):
+        self.cochain.___PRIVATE_reset_cache___()
+        self.coboundary.___PRIVATE_reset_cache___()
 
-    def ___DO_evaluate_basis_at_meshgrid___(self, xi, eta, compute_xietasigma=True):
+    def ___PRIVATE_do_evaluate_basis_at_meshgrid___(self, xi, eta, compute_xietasigma=True):
         """
         Evaluate the basis functions on ``meshgrid(xi, eta, sigma)``.
 
@@ -73,7 +73,7 @@ class _2dCSCG_Standard_Form(CSCG_Standard_Form, _2dCSCG_FORM_BASE, ndim=2):
             1. (None, tuple) -- ``(xi, eta, sigma)`` after ``meshgrid`` and ``ravel('F')``.
             2. tuple -- The evaluated basis functions.
         """
-        return self.space.DO_evaluate_form_basis_at_meshgrid(
+        return self.space.do.evaluate_form_basis_at_meshgrid(
             self.k, xi, eta, compute_xietasigma=compute_xietasigma)
 
 
@@ -82,11 +82,11 @@ class _2dCSCG_Standard_Form_DO(FrozenOnly):
         self._sf_ = sf
         self._freeze_self_()
 
-    def RESET_cache(self):
-        self._sf_.RESET_cache()
+    def reset_cache(self):
+        self._sf_.___PRIVATE_reset_cache___()
 
     def evaluate_basis_at_meshgrid(self, *args, **kwargs):
-        return self._sf_.___DO_evaluate_basis_at_meshgrid___(*args, **kwargs)
+        return self._sf_.___PRIVATE_do_evaluate_basis_at_meshgrid___(*args, **kwargs)
 
     def discretize(self, *args, **kwargs):
         return self._sf_.discretize(*args, **kwargs)
@@ -146,7 +146,7 @@ class _2dCSCG_Standard_Form_Error(FrozenOnly):
         OneOrThree = 1 if self._sf_.k in (0, 2) else 2
         quad_degree = [self._sf_.dqp[i] + 2 for i in range(2)] \
             if quad_degree is None else quad_degree
-        quad_nodes, _, quad_weights = self._sf_.space.DO_evaluate_quadrature(quad_degree)
+        quad_nodes, _, quad_weights = self._sf_.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
         xi, eta = np.meshgrid(*quad_nodes, indexing='ij')
         xi = xi.ravel('F')
         eta = eta.ravel('F')
@@ -306,7 +306,7 @@ class _2dCSCG_Standard_Form_Operators(FrozenOnly):
                                 self._sf_.mesh.elements.___PRIVATE_elementwise_cache_metric_key___)
 
     def wedge(self, other, quad_degree=None):
-        data = self._sf_.___OPERATORS_wedge___(other, quad_degree=quad_degree)
+        data = self._sf_.___PRIVATE_operator_wedge___(other, quad_degree=quad_degree)
         return EWC_SparseMatrix(self._sf_.mesh.elements, data, 'constant')
 
 
@@ -322,12 +322,12 @@ class ___Operators_Inner___(FrozenOnly):
         if quad_degree is None:
             quad_degree = [int(np.max([sf.dqp[i], of.dqp[i]])) + 1 for i in range(2)]
 
-        quad_nodes, _, quad_weights = sf.space.DO_evaluate_quadrature(quad_degree, quad_type='Gauss')
-        xietasigma, bfSelf = sf.DO.evaluate_basis_at_meshgrid(*quad_nodes)
+        quad_nodes, _, quad_weights = sf.space.___PRIVATE_do_evaluate_quadrature___(quad_degree, quad_type='Gauss')
+        xietasigma, bfSelf = sf.do.evaluate_basis_at_meshgrid(*quad_nodes)
         if of is sf:
             bfOther = bfSelf
         else:
-            xietasigma, bfOther = of.DO.evaluate_basis_at_meshgrid(*quad_nodes)
+            xietasigma, bfOther = of.do.evaluate_basis_at_meshgrid(*quad_nodes)
         self._xietasigma_ = xietasigma
         self._quad_weights_ = quad_weights
         self._bfSelf_ = bfSelf
@@ -335,7 +335,7 @@ class ___Operators_Inner___(FrozenOnly):
         self._freeze_self_()
 
     def __call__(self, i):
-        Mi = self._sf_.___OPERATORS_inner___(
+        Mi = self._sf_.___PRIVATE_operator_inner___(
             self._of_, i, self._xietasigma_, self._quad_weights_, self._bfSelf_, self._bfOther_
         )
         return Mi

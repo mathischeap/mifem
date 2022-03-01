@@ -10,7 +10,7 @@ from _3dCSCG.ADF.base import _3dCSCG_Algebra_DUAL_FORM_BASE
 from inheriting.CSCG.ADF.trace.main_BASE import CSCG_Algebra_DUAL_Trace_Form
 from scipy import sparse as spspa
 
-from tools.linear_algebra.elementwise_cache import EWC_SparseMatrix
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
 
 
 class _3dCSCG_Algebra_DUAL_Trace_Form(CSCG_Algebra_DUAL_Trace_Form, _3dCSCG_Algebra_DUAL_FORM_BASE):

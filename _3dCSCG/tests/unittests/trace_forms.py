@@ -55,12 +55,12 @@ def test_trace_NO0_trace_0_form_Rd_and_Rc():
     P = FC('scalar', pressure)
     f0 = FC('0-f', is_hybrid=True)
     t0 = FC('0-t')
-    f0.TW.func.DO.set_func_body_as(P)
+    f0.TW.func.do.set_func_body_as(P)
     f0.TW.current_time = t
-    f0.TW.DO.push_all_to_instant()
-    t0.TW.func.DO.set_func_body_as(P)
+    f0.TW.do.push_all_to_instant()
+    t0.TW.func.do.set_func_body_as(P)
     t0.TW.current_time = t
-    t0.TW.DO.push_all_to_instant()
+    t0.TW.do.push_all_to_instant()
 
     f0.discretize() # default discretization, discrete a scalar to 0-form
     t0.discretize() # default discretization, discrete a scalar to 0-trace-form
@@ -111,15 +111,15 @@ def test_trace_NO1_trace_1_form_Rd_and_Rc():
 
     # first we test the Selective matrix --------------------------------------------------
     t1 = FC('1-t')
-    t1.TW.func.DO.set_func_body_as(velocity)
+    t1.TW.func.do.set_func_body_as(velocity)
     t1.TW.current_time = t
-    t1.TW.DO.push_all_to_instant()
+    t1.TW.do.push_all_to_instant()
     t1.discretize() # Using the default T_para discretization
 
     f1 = FC('1-f', is_hybrid=True)
-    f1.TW.func.DO.set_func_body_as(velocity)
+    f1.TW.func.do.set_func_body_as(velocity)
     f1.TW.current_time = t
-    f1.TW.DO.push_all_to_instant()
+    f1.TW.do.push_all_to_instant()
     f1.discretize()  # default discretization, discrete a vector to a standard 1-form
 
     S = t1.space.selective_matrix._3dCSCG_1Trace[1]
@@ -157,17 +157,17 @@ def test_trace_NO1_trace_1_form_Rd_and_Rc():
     t = 0
 
     t1 = FC('1-t')
-    t1.TW.func.DO.set_func_body_as(velocity)
+    t1.TW.func.do.set_func_body_as(velocity)
     t1.TW.current_time = t
-    t1.TW.DO.push_all_to_instant()
+    t1.TW.do.push_all_to_instant()
     t1.discretize() # Using the default T_para discretization
     c1 = t1.cochain.local_TEW
 
     T1 = FC('1-t')
     para_V = velocity.components.T_para
-    T1.TW.func.DO.set_func_body_as(para_V)
+    T1.TW.func.do.set_func_body_as(para_V)
     T1.TW.current_time = t
-    T1.TW.DO.push_all_to_instant()
+    T1.TW.do.push_all_to_instant()
     T1.discretize() # para_V is 'trace-element-wise', we use the trace-element-wise discretization
     C1 = T1.cochain.local_TEW
 
@@ -200,12 +200,12 @@ def test_trace_NO2_trace_2_form_Rd_and_Rc():
     vector = FC('vector', (u, v, w))
     f2 = FC('2-f', is_hybrid=True)
     t2 = FC('2-t')
-    f2.TW.func.DO.set_func_body_as(vector)
+    f2.TW.func.do.set_func_body_as(vector)
     f2.TW.current_time = t
-    f2.TW.DO.push_all_to_instant()
-    t2.TW.func.DO.set_func_body_as(vector)
+    f2.TW.do.push_all_to_instant()
+    t2.TW.func.do.set_func_body_as(vector)
     t2.TW.current_time = t
-    t2.TW.DO.push_all_to_instant()
+    t2.TW.do.push_all_to_instant()
 
     f2.discretize() # default discretization, discrete a vector to 2-form
     t2.discretize() # default discretization, discrete the outward norm component of a vector to 2-form

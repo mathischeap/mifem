@@ -2,12 +2,12 @@
 
 from root.config import *
 from screws.frozen import FrozenOnly
-from tools.linear_algebra.data_structures import DistributedVector
+from tools.linear_algebra.data_structures.global_matrix.main import DistributedVector
 from scipy import sparse as spspa
 from screws.exceptions import LocalCochainShapeError
 from scipy.sparse import lil_matrix, csr_matrix, csc_matrix
-from tools.linear_algebra.elementwise_cache import EWC_SparseMatrix
-from tools.linear_algebra.elementwise_cache import EWC_ColumnVector
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_ColumnVector
 
 
 # noinspection PyUnresolvedReferences
@@ -87,7 +87,7 @@ class CSCG_Trace_Form:
 
 
     @property
-    def DO(self):
+    def do(self):
         """Group all methods."""
         return self._DO_
 
@@ -97,10 +97,10 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
     """"""
     def __init__(self, tf):
         self._tf_ = tf
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         self._local_ = None
         self._local_TEW_ = None
 
@@ -137,7 +137,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
 
         RN_LI_dict = dict()
         for i in self.local:
-            rn, loc_ind = self._tf_.mesh.DO.FIND_region_name_and_local_indices_of_element(i)
+            rn, loc_ind = self._tf_.mesh.do.find.region_name_and_local_indices_of_element(i)
 
             RN_LI_dict[i] = rn + '=|=' + str(loc_ind)
 
@@ -174,7 +174,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
         LOC_COCHAIN = dict()
 
         for i in self._tf_.mesh.elements:
-            rn, loc_ind = self._tf_.mesh.DO.FIND_region_name_and_local_indices_of_element(i)
+            rn, loc_ind = self._tf_.mesh.do.find.region_name_and_local_indices_of_element(i)
             dict_key = rn + '=|=' + str(loc_ind)
             LOC_COCHAIN[i] = RW_LI_COCHAIN[dict_key]
 
@@ -378,10 +378,10 @@ class CSCG_Trace_Form_Coboundary_BASE(FrozenOnly):
     def __init__(self, tf):
         self._tf_ = tf
         self._T_ = None
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         pass
 
     @property

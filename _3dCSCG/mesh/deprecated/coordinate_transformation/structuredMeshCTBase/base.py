@@ -119,9 +119,9 @@ class CTBase(CTMODGenerators, CTMODMethods, FrozenOnly):
         if evaluation_points is None:
             evaluation_points = self.evaluation_points
         region_name, local_indices = \
-            self._mesh_.DO.FIND_region_name_and_local_indices_of_element(i)
+            self._mesh_.do.find.region_name_and_local_indices_of_element(i)
         origin, delta = \
-            self._mesh_.DO.FIND_reference_origin_and_size_of_element_of_given_local_indices(
+            self._mesh_.do.find.reference_origin_and_size_of_element_of_given_local_indices(
                 region_name, local_indices)
         xyz_i = self._mesh_.domain.regions(region_name).interpolation(
                 *[(evaluation_points[j]+1)*0.5*delta[j] + origin[j] for j in range(self.ndim)])
@@ -186,9 +186,9 @@ class CTBase(CTMODGenerators, CTMODMethods, FrozenOnly):
         i = element
         
         region_name, local_indices = \
-            self._mesh_.DO.FIND_region_name_and_local_indices_of_element(i)
+            self._mesh_.do.find.region_name_and_local_indices_of_element(i)
         origin, delta = \
-            self._mesh_.DO.FIND_reference_origin_and_size_of_element_of_given_local_indices(
+            self._mesh_.do.find.reference_origin_and_size_of_element_of_given_local_indices(
                 region_name, local_indices)
         xyz_rst = self._mesh_.domain.regions(region_name).interpolation.Jacobian_matrix(
                 *[(evaluation_points[j]+1)*0.5*delta[j] + origin[j] for j in range(self.ndim)])

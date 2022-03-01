@@ -3,7 +3,6 @@
 
 from root.config import *
 from inheriting.CSCG.mesh.main_BASE import CSCG_MESH_BASE
-from screws.frozen import FrozenOnly
 from screws.decorators import accepts, memoize5
 from screws.exceptions import ElementsLayoutError, ElementEdgePairError
 from typing import Dict, Union
@@ -13,8 +12,7 @@ from _2dCSCG.mesh.visualize.main import _2dCSCG_Mesh_Visualize
 from _2dCSCG.mesh.boundaries.main import _2dCSCG_Mesh_Boundaries
 from _2dCSCG.mesh.periodic_setting.main import _2dCSCG_PeriodicDomainSetting
 from _2dCSCG.mesh.deprecated.coordinate_transformation import CoordinateTransformation
-
-
+from _2dCSCG.mesh.do.main import _2dCSCG_Mesh_DO
 
 
 class _2dCSCG_Mesh(CSCG_MESH_BASE):
@@ -50,7 +48,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
         self._boundaries_ = _2dCSCG_Mesh_Boundaries(self)
         self.___define_parameters___ = None
         self.___TEST_MODE___ = False
-        self.RESET_cache()
+        self.do.reset_cache()
         self._freeze_self_()
 
 
@@ -71,7 +69,6 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
         else:
             EL = element_layout
 
-        # ______________________________________________________________________________
         self._element_layout_ = dict()
         self._element_ratio_ = dict()
         self._element_spacing_ = dict()
@@ -221,7 +218,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
 
                     else:
 
-                        if NCR < 4: # number of core in this regions is 2 or 3.
+                        if NCR < 4: # number of core in this region is 2 or 3.
                             # noinspection PyTupleAssignmentBalance
                             I, J = self._element_layout_[rn]
                             A = [I, J]
@@ -329,10 +326,10 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
                         else:
                             raise Exception("SHOULD NEVER REACH HERE.")
 
-                    # give EGN to dict: ___element_global_numbering___ if this regions is numbered.
+                    # give EGN to dict: ___element_global_numbering___ if this region is numbered.
                     ___element_global_numbering___[rn] = EGN
 
-                else: # this regions is not numbered, lets pass.
+                else: # this region is not numbered, lets pass.
                     pass
 
                 current_num += self._num_elements_in_region_[rn]
@@ -435,7 +432,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
 
 
     def ___PRIVATE_generate_element_map___(self):
-        """We now by studying the domain.regions.map to generate elements.map which will be the key property of a mesh,
+        """We now study the domain.regions.map to generate elements.map which will be the key property of a mesh,
         because it actually records the topology of a mesh.
         """
         self.___element_map___: Dict[int, Union[tuple, list]] = dict()
@@ -563,7 +560,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
         self.___useful_periodic_element_edge_pairs___ = list()
         sideIndexDict = {'U': 0, 'D': 1, 'L': 2, 'R': 3}
         for eachPair in ___USEFUL_periodicElementEdgePairs___:
-            pairType, elements, sides = self.DO.parse_element_edge_pair(eachPair)[:3]
+            pairType, elements, sides = self.do.parse_element_edge_pair(eachPair)[:3]
             if pairType == 'regular|regular':
                 elementOne, elementTwo = elements
                 sideOne, sideTwo = sides
@@ -609,7 +606,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
     def ___parameters___(self):
         """
         This `parameters` is used to compare if meshes are the same. Therefore, the
-        `___parameters___` should can uniquely identify a mesh. We also use it tor save and restore a mesh.
+        `___parameters___` should uniquely identify a mesh. We also use it tor save and restore a mesh.
 
         So it is mandatory for saving a mesh.
         """
@@ -621,10 +618,10 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
 
 
 
-    def RESET_cache(self):
-        self.trace.RESET_cache()
-        self.elements.RESET_cache()
-        self.boundaries.RESET_cache()
+    def ___PRIVATE_reset_cache___(self):
+        self.trace.___PRIVATE_reset_cache___()
+        self.elements.___PRIVATE_reset_cache___()
+        self.boundaries.___PRIVATE_reset_cache___()
         self.___element_global_numbering___ = None
 
     @memoize5 # must use memoize
@@ -676,7 +673,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
         return self.domain.ndim
 
     @property
-    def DO(self):
+    def do(self):
         return self._DO_
 
     @property
@@ -702,174 +699,3 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
 
 
 
-
-
-class _2dCSCG_Mesh_DO(FrozenOnly):
-    def __init__(self, mesh):
-        self._mesh_ = mesh
-        self._FIND_ = _2dCSCG_Mesh_DO_FIND(self)
-        self._freeze_self_()
-
-    def RESET_cache(self):
-        self._mesh_.RESET_cache()
-
-    @staticmethod
-    def parse_element_edge_pair(eP: str):
-        """Element side pairs are also used for trace element keys."""
-        if eP.count('-') == 1:
-            # must be regular pair to domain boundary!
-            elementOne = int(eP.split('-')[0])
-            edgeOne = eP.split('-')[1][0]
-            boundaryName = eP.split('|')[1]
-            return 'regular|domainBoundary', elementOne, edgeOne, boundaryName
-        elif eP.count('-') == 2:
-            elementOne, pairTypeINFO, elementTwo = eP.split('-')
-            elementOne = int(elementOne)
-            elementTwo = int(elementTwo)
-            if len(pairTypeINFO) == 3 and pairTypeINFO[1] == '|':
-                # regular pair; conforming pair; N|S, W|E, B|F and no twist!
-                edgeOne = pairTypeINFO[0]
-                edgeTwo = pairTypeINFO[2]
-                return 'regular|regular', \
-                       [elementOne, elementTwo], edgeOne + edgeTwo, None  # None for future extension.
-                # for all kinds of pair, return has follow this same rule!
-            else:
-                raise ElementEdgePairError(f"Pair: {pairTypeINFO} is not understandable.")
-        else:
-            raise Exception('elementSidePair format wrong!')
-
-
-
-    def FIND_region_name_of_element(self, i):
-        """Find the regions and the local numbering of ith element."""
-        region_name = None
-        for num_elements_accumulation in self._mesh_._num_elements_accumulation_:
-            if i < num_elements_accumulation:
-                region_name = self._mesh_._num_elements_accumulation_[num_elements_accumulation]
-                break
-        return region_name
-
-    def FIND_slave_of_element(self, i: int) -> int:
-        """"""
-        DISTRI = self._mesh_._element_distribution_
-        if isinstance(i, str): i = int(i)
-        if sIze <= 6 or not self._mesh_.___is_occupying_all_cores___:
-            for nC in range(sIze):
-                if i in DISTRI[nC]: return nC
-            raise Exception()
-        midCore0 = 0
-        midCore1 = sIze // 2
-        midCore2 = sIze
-        while i not in DISTRI[midCore1] and midCore1 - midCore0 > 2 and midCore2 - midCore1 > 2:
-            if i > max(DISTRI[midCore1]):
-                midCore0 = midCore1
-                midCore1 = (midCore0 + midCore2) // 2
-            elif i < min(DISTRI[midCore1]):
-                midCore2 = midCore1
-                midCore1 = (midCore0 + midCore2) // 2
-            else:
-                raise Exception
-        if i in DISTRI[midCore1]:
-            return midCore1
-        elif i > np.max(DISTRI[midCore1]):
-            for noCore in range(midCore1, midCore2):
-                if i in DISTRI[noCore]: return noCore
-        elif i < np.min(DISTRI[midCore1]):
-            for noCore in range(midCore0, midCore1):
-                if i in DISTRI[noCore]: return noCore
-        else:
-            raise Exception
-
-    def FIND_region_name_and_local_indices_of_element(self, i):
-        return self._mesh_.___DO_find_region_name_and_local_indices_of_element___(i)
-
-    def FIND_reference_origin_and_size_of_element_of_given_local_indices(self, region_name, local_indices):
-        origin = [None for _ in range(2)]
-        delta = [None for _ in range(2)]
-        for i in range(2):
-            origin[i] = self._mesh_._element_spacing_[region_name][i][local_indices[i]]
-            delta[i] = self._mesh_._element_ratio_[region_name][i][local_indices[i]]
-        return tuple(origin), tuple(delta)
-
-    def FIND_reference_origin_and_size_of_element(self, i):
-        region_name, local_indices = self.FIND_region_name_and_local_indices_of_element(i)
-        return self.FIND_reference_origin_and_size_of_element_of_given_local_indices(
-            region_name, local_indices)
-
-    @property
-    def FIND(self):
-        return self._FIND_
-
-
-
-    def regionwsie_stack(self, *ndas):
-        """
-        We use this method to stack a ndarray regions-wise. This function is very useful
-        in plotting reconstruction data. Since in a regions, the elements are structure,
-        we can plot element by element. But if we group data from elements of the same
-        regions, then we can plot regions by regions. This very increase the plotting speed
-        significantly.
-
-        Parameters
-        ----------
-        ndas : ndarray
-            The ndarray to be stacked. The ndim of the 'nda' must be self.ndim + 1. and
-            `np.shape('nda')[0]` must == `self.elements.num`.
-
-        Returns
-        -------
-        output : tuple
-
-        """
-        _SD_ = tuple()
-        for nda in ndas:
-            if isinstance(nda, dict):
-                for _ in nda: assert np.ndim(nda[_]) == 2
-            else:
-                assert np.ndim(nda) == 2 + 1
-            if isinstance(nda, dict):
-                assert len(nda) == self._mesh_._num_total_elements_
-            else:
-                assert len(nda) == self._mesh_._num_total_elements_
-            _sd_ = {}
-            if isinstance(nda, dict):
-                ij = np.shape(nda[0])
-            else:
-                ij = np.shape(nda)[1:]
-            I, J = ij
-            ALL_element_global_numbering_ = \
-                self._mesh_.___PRIVATE_generate_ALL_element_global_numbering___()
-            for Rn in ALL_element_global_numbering_:
-                region_data_shape = [ij[i] * self._mesh_._element_layout_[Rn][i] for i in range(2)]
-                _sd_[Rn] = np.zeros(region_data_shape)
-                for j in range(self._mesh_._element_layout_[Rn][1]):
-                    for i in range(self._mesh_._element_layout_[Rn][0]):
-                        _sd_[Rn][i * I:(i + 1) * I, j * J:(j + 1) * J] = \
-                            nda[ALL_element_global_numbering_[Rn][i, j]]
-            _SD_ += (_sd_,)
-        _SD_ = _SD_[0] if len(ndas) == 1 else _SD_
-        return _SD_
-
-
-
-
-class _2dCSCG_Mesh_DO_FIND(FrozenOnly):
-    """A wrapper of all find methods for mesh.do."""
-    def __init__(self, meshDO):
-        self._DO_ = meshDO
-        self._freeze_self_()
-
-    def region_name_of_element(self, i):
-        return self._DO_.FIND_region_name_of_element(i)
-
-    def slave_of_element(self, i):
-        return self._DO_.FIND_slave_of_element(i)
-
-    def region_name_and_local_indices_of_element(self, i):
-        return self._DO_.FIND_region_name_and_local_indices_of_element(i)
-
-    def reference_origin_and_size_of_element_of_given_local_indices(self, region_name, local_indices):
-        return self._DO_.FIND_reference_origin_and_size_of_element_of_given_local_indices(region_name, local_indices)
-
-    def reference_origin_and_size_of_element(self, i):
-        return self._DO_.FIND_reference_origin_and_size_of_element(i)

@@ -2,7 +2,7 @@
 
 from screws.frozen import FrozenOnly
 import numpy as np
-from tools.linear_algebra.data_structures import GlobalMatrix
+from tools.linear_algebra.data_structures.global_matrix.main import GlobalMatrix
 from scipy import sparse as spspa
 
 

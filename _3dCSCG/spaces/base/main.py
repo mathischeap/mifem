@@ -13,15 +13,12 @@ from _3dCSCG.spaces.base.local_numbering import LocalNumbering
 from _3dCSCG.spaces.base.incidence_matrix import IncidenceMatrix
 from _3dCSCG.spaces.base.trace_matrix import TraceMatrix
 from _3dCSCG.spaces.base.selective_matrix import SelectiveMatrix
-from _3dCSCG.spaces.base.inheriting.mesh_basis_evaluation import EvaluatingMeshBasis
-from _3dCSCG.spaces.base.inheriting.trace_basis_evaluation import EvaluatingTraceBasis
-from _3dCSCG.spaces.base.inheriting.edge_basis_evaluation import EvaluatingEdgeBasis
-
+from _3dCSCG.spaces.base.do import _3dCSCG_space_do
 
 from _3dCSCG.spaces.base.visualize.main import _3dCSC_Space_Visualize
 
 
-class _3dCSCG_Space_Base(EvaluatingMeshBasis, EvaluatingTraceBasis, EvaluatingEdgeBasis, FrozenClass):
+class _3dCSCG_Space_Base(FrozenClass):
     """n-D basis; basis functions."""
     def __init__(self, inputs, ndim):
         """If `ndim` is not None, we will repeat the inputs for `ndim` times.
@@ -42,6 +39,7 @@ class _3dCSCG_Space_Base(EvaluatingMeshBasis, EvaluatingTraceBasis, EvaluatingEd
         self.___define_parameters___ = None
         self.standard_properties.stamp = '3dCSCG|structured|space'
         self._visualize_ = None
+        self._DO_ = _3dCSCG_space_do(self)
         self._freeze_self_()
 
 
@@ -79,7 +77,9 @@ class _3dCSCG_Space_Base(EvaluatingMeshBasis, EvaluatingTraceBasis, EvaluatingEd
             nodes += (basises[i].nodes,)
         self._ndim_, self._basises_, self._p_, self._nodes_ = ndim, basises, p, nodes
 
-
+    @property
+    def do(self):
+        return self._DO_
 
     @property
     def num_basis(self):
@@ -164,7 +164,7 @@ class _3dCSCG_Space_Base(EvaluatingMeshBasis, EvaluatingTraceBasis, EvaluatingEd
 
 
 
-    def DO_evaluate_quadrature(self, quad_degree, quad_type=None):
+    def ___PRIVATE_do_evaluate_quadrature___(self, quad_degree, quad_type=None):
         """
         This method is supposed to be over-written in its children.
         """

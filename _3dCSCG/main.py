@@ -9,7 +9,7 @@ INTRO
 """
 import sys
 if './' not in sys.path: sys.path.append('./')
-from _3dCSCG.APP.exact_solutions.main import _3dCSCG_ExactSolution
+from _3dCSCG.APP.exact_solution.main import _3dCSCG_ExactSolution
 from importlib import import_module
 from screws.frozen import FrozenOnly
 from screws.miscellaneous import MyTimer
@@ -142,7 +142,7 @@ class FormCaller(FrozenOnly):
         if ID in ('scalar', 'vector', 'tensor'):
 
             FM = cls_body(self._mesh_, *args, **kwargs)
-            # We CANNOT (DO NOT) save continuous field instances.
+            # We CANNOT (do NOT) save continuous field instances.
 
         else:
             fp = dict()
@@ -164,13 +164,13 @@ class FormCaller(FrozenOnly):
                     pcn = str(prime.__class__)
 
                     if ID == '0-adf':
-                        assert pcn == "<class '_3dCSCG.forms.standard._0_form._3dCSCG_0Form'>"
+                        assert pcn == "<class '_3dCSCG.forms.standard._0_form.main._3dCSCG_0Form'>"
                     elif ID == '1-adf':
-                        assert pcn == "<class '_3dCSCG.forms.standard._1_form._3dCSCG_1Form'>"
+                        assert pcn == "<class '_3dCSCG.forms.standard._1_form.main._3dCSCG_1Form'>"
                     elif ID == '2-adf':
-                        assert pcn == "<class '_3dCSCG.forms.standard._2_form._3dCSCG_2Form'>"
+                        assert pcn == "<class '_3dCSCG.forms.standard._2_form.main._3dCSCG_2Form'>"
                     elif ID == '3-adf':
-                        assert pcn == "<class '_3dCSCG.forms.standard._3_form._3dCSCG_3Form'>"
+                        assert pcn == "<class '_3dCSCG.forms.standard._3_form.main._3dCSCG_3Form'>"
                     elif ID == '0-adt':
                         assert pcn == "<class '_3dCSCG.forms.trace._0_trace._3dCSCG_0Trace'>"
                     elif ID == '1-adt':
@@ -244,10 +244,10 @@ class FormCaller(FrozenOnly):
         form_path = '_3dCSCG.forms.'
         algebra_dual_form_path = '_3dCSCG.ADF.'
 
-        return {'3-f': form_path + "standard._3_form : _3dCSCG_3Form",
-                '2-f': form_path + "standard._2_form : _3dCSCG_2Form",
-                '1-f': form_path + "standard._1_form : _3dCSCG_1Form",
-                '0-f': form_path + "standard._0_form : _3dCSCG_0Form",
+        return {'3-f': form_path + "standard._3_form.main : _3dCSCG_3Form",
+                '2-f': form_path + "standard._2_form.main : _3dCSCG_2Form",
+                '1-f': form_path + "standard._1_form.main : _3dCSCG_1Form",
+                '0-f': form_path + "standard._0_form.main : _3dCSCG_0Form",
 
                 '0-adf': algebra_dual_form_path + "standard._0_AD_form : _3dCSCG_S0_ADF",
                 '1-adf': algebra_dual_form_path + "standard._1_AD_form : _3dCSCG_S1_ADF",
@@ -340,7 +340,7 @@ class ExactSolutionSelector(FrozenOnly):
 
     @classmethod
     def ___exact_solution_path___(cls):
-        return '_3dCSCG.APP.exact_solutions.status.'
+        return '_3dCSCG.APP.exact_solution.status.'
 
 
 

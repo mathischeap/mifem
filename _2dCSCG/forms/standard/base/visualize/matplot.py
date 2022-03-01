@@ -79,7 +79,7 @@ class _2dCSCG_FormVisualize_Matplot(FrozenOnly):
             else:
                 pass
 
-            x, y, v = self._mesh_.DO.regionwsie_stack(x, y, v)
+            x, y, v = self._mesh_.do.regionwsie_stack(x, y, v)
 
 
 
@@ -192,7 +192,7 @@ class _2dCSCG_FormVisualize_Matplot(FrozenOnly):
             else:
                 pass
 
-            x, y, vx, vy = self._mesh_.DO.regionwsie_stack(x, y, vx, vy)
+            x, y, vx, vy = self._mesh_.do.regionwsie_stack(x, y, vx, vy)
 
             plt.rc('text', usetex=usetex)
             if colormap is not None: plt.rcParams['image.cmap'] = colormap

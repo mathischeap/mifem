@@ -24,13 +24,13 @@ class NumericalPartialDerivative_txyz(ABC):
     must be of the same shape; no matter the dimensions (we do not do mesh grid to them). And t must be 1-d.
     """
     def __init__(self, func, t, x, y, z, dtdxdydz=1e-6, n=1, order=3):
-        self.___check_func___(func)
-        self.___check_txyz___(t, x, y, z)
-        self.___check_dtdxdydz___(dtdxdydz)
-        self.___check_n___(n)
-        self.___check_order___(order)
+        self.___PRIVATE_check_func___(func)
+        self.___PRIVATE_check_txyz___(t, x, y, z)
+        self.___PRIVATE_check_dtdxdydz___(dtdxdydz)
+        self.___PRIVATE_check_n___(n)
+        self.___PRIVATE_check_order___(order)
 
-    def ___check_func___(self, func):
+    def ___PRIVATE_check_func___(self, func):
         assert callable(func), " <PartialDerivative> : func is not callable."
         if isinstance(func, FunctionType):
             # noinspection PyUnresolvedReferences
@@ -43,14 +43,14 @@ class NumericalPartialDerivative_txyz(ABC):
             raise NotImplementedError(func.__class__.__name__)
         self._func_ = func
 
-    def ___check_txyz___(self, t, x, y, z):
+    def ___PRIVATE_check_txyz___(self, t, x, y, z):
         """We ask x, y, z, must be of the same shape."""
         assert np.shape(x) == np.shape(y) == np.shape(z), " <PartialDerivative> : xyz of different shapes."
         self._x_, self._y_, self._z_ = x, y, z
         assert isinstance(t, (int, float)), f"t need to be a number, now t={t} is a {t.__class__}."
         self._t_ = t
 
-    def ___check_dtdxdydz___(self, dtdxdydz):
+    def ___PRIVATE_check_dtdxdydz___(self, dtdxdydz):
         if isinstance(dtdxdydz, (int, float)):
             self._dt_ = self._dx_ = self._dy_ = self._dz_ = dtdxdydz
         else:
@@ -59,50 +59,50 @@ class NumericalPartialDerivative_txyz(ABC):
         assert all([isinstance(d, (int, float)) and d > 0 for d in (self._dt_, self._dx_, self._dy_, self._dz_)]), \
             f"dt, dx, dy, dz must be positive number."
 
-    def ___check_n___(self, n):
+    def ___PRIVATE_check_n___(self, n):
         assert n % 1 == 0 and n >= 1, " <PartialDerivative> : n = {} is wrong.".format(n)
         self._n_ = n
 
-    def ___check_order___(self, order):
+    def ___PRIVATE_check_order___(self, order):
         assert order % 2 == 1 and order > 0, " <PartialDerivative> : order needs to be odd positive."
         self._order_ = order
 
 
 
-    def ___evaluate_func_for_t___(self, t):
+    def ___PRIVATE_evaluate_func_for_t___(self, t):
         return self._func_(t, self._x_, self._y_, self._z_)
 
-    def ___evaluate_func_for_x___(self, x):
+    def ___PRIVATE_evaluate_func_for_x___(self, x):
         return self._func_(self._t_, x, self._y_, self._z_)
 
-    def ___evaluate_func_for_y___(self, y):
+    def ___PRIVATE_evaluate_func_for_y___(self, y):
         return self._func_(self._t_, self._x_, y, self._z_)
 
-    def ___evaluate_func_for_z___(self, z):
+    def ___PRIVATE_evaluate_func_for_z___(self, z):
         return self._func_(self._t_, self._x_, self._y_, z)
+
+
 
     def scipy_partial(self, d_):
         """We compute the partial derivative, i.e. ``df/d_``, at points ``*txyz``."""
         if d_ == 't':
             # noinspection PyTypeChecker
-            return derivative(self.___evaluate_func_for_t___, self._t_, dx=self._dt_,
+            return derivative(self.___PRIVATE_evaluate_func_for_t___, self._t_, dx=self._dt_,
                               n=self._n_, order=self._order_)
         elif d_ == 'x':
             # noinspection PyTypeChecker
-            return derivative(self.___evaluate_func_for_x___, self._x_, dx=self._dx_,
+            return derivative(self.___PRIVATE_evaluate_func_for_x___, self._x_, dx=self._dx_,
                               n=self._n_, order=self._order_)
         elif d_ == 'y':
             # noinspection PyTypeChecker
-            return derivative(self.___evaluate_func_for_y___, self._y_, dx=self._dy_,
+            return derivative(self.___PRIVATE_evaluate_func_for_y___, self._y_, dx=self._dy_,
                               n=self._n_, order=self._order_)
         elif d_ == 'z':
             # noinspection PyTypeChecker
-            return derivative(self.___evaluate_func_for_z___, self._z_, dx=self._dz_,
+            return derivative(self.___PRIVATE_evaluate_func_for_z___, self._z_, dx=self._dz_,
                               n=self._n_, order=self._order_)
         else:
             raise Exception(" <PartialDerivative> : dt, dx or dy or dz? give me 't', 'x', 'y' or 'z'.")
-
-
 
     @property
     def scipy_total(self):
@@ -182,10 +182,10 @@ class NumericalPartialDerivative_txyz_Functions(FrozenOnly):
     functions (method).
     """
     def __init__(self, func):
-        self.___check_func___(func)
+        self.___PRIVATE_check_func___(func)
         self._freeze_self_()
 
-    def ___check_func___(self, func):
+    def ___PRIVATE_check_func___(self, func):
         assert callable(func), " <PartialDerivative> : func is not callable."
         if isinstance(func, FunctionType):
             # noinspection PyUnresolvedReferences
@@ -245,7 +245,7 @@ class NumericalPartialDerivative_txyz_Functions(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 6 python SCREWS\numerical\_4d.py
+    # mpiexec -n 6 python screws\numerical\_4d.py
 
     def func(t, x, y, z): return np.sin(np.pi*x) * np.sin(np.pi*y) * np.sin(np.pi*z) * t
 
@@ -263,7 +263,6 @@ if __name__ == '__main__':
 
     assert all(NP.check_total(Pt, Px, Py, Pz))
 
-
     NPD4F = NumericalPartialDerivative_txyz_Functions(func)
 
     Npt = NPD4F('t')
@@ -271,7 +270,7 @@ if __name__ == '__main__':
     Npy = NPD4F('y')
     Npz = NPD4F('z')
 
-    print(np.sum(np.abs(Pt(t,x,y,z) - Npt(t, x, y, z))))
-    print(np.sum(np.abs(Px(t,x,y,z) - Npx(t, x, y, z))))
-    print(np.sum(np.abs(Py(t,x,y,z) - Npy(t, x, y, z))))
-    print(np.sum(np.abs(Pz(t,x,y,z) - Npz(t, x, y, z))))
+    print(np.sum(np.abs(Pt(t,x,y,z) - Npt(t,x,y,z))))
+    print(np.sum(np.abs(Px(t,x,y,z) - Npx(t,x,y,z))))
+    print(np.sum(np.abs(Py(t,x,y,z) - Npy(t,x,y,z))))
+    print(np.sum(np.abs(Pz(t,x,y,z) - Npz(t,x,y,z))))

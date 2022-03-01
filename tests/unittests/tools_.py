@@ -14,9 +14,9 @@ from root.config import *
 import os
 from time import sleep
 from scipy import sparse as spspa
-from tools.iterator import SimpleIterator
+from tools.iterators.simple import SimpleIterator
 import random
-from tools.linear_algebra.data_structures import GlobalVector, DistributedVector, GlobalMatrix
+from tools.linear_algebra.data_structures.global_matrix.main import GlobalVector, DistributedVector, GlobalMatrix
 from tools.linear_algebra.deprecated.data_structure_old0 import GlobalMatrix as GlobalMatrixOld
 import tools.linear_algebra.deprecated.gmres as gmres
 import tools.linear_algebra.solvers.serial.scipy_sparse_linalg as serial_spspalinalg
@@ -24,12 +24,12 @@ from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
 from _2dCSCG.main import MeshGenerator as MeshGenerator2D
 from _2dCSCG.main import SpaceInvoker as SpaceInvoker2D
 from _2dCSCG.main import FormCaller as FormCaller2D
-from tools.linear_algebra.gathering import Chain_Gathering_Matrix
-from tools.linear_algebra.functions import bmat, concatenate
-import tools.linear_algebra.functions as mif
-from tools.linear_algebra.linear_system import LinearSystem
-from tools.linear_algebra.elementwise_cache import EWC_ColumnVector
-from tools.runner import ParallelMatrix3dInputRunner, RunnerDataReader
+from tools.linear_algebra.gathering.chain_matrix.main import Chain_Gathering_Matrix
+from tools.linear_algebra.elementwise_cache.operators.concatenate.main import bmat, concatenate
+import tools.linear_algebra.elementwise_cache.operators.concatenate.main as mif
+from tools.linear_algebra.linear_system.main import LinearSystem
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_ColumnVector
+from tools.run.reader import ParallelMatrix3dInputRunner, RunnerDataReader
 from tools.CSCG.partial_dofs import PartialDofs
 from _3dCSCG.tests.random_objects import random_3D_mesh_and_space_of_total_load_around
 
@@ -562,7 +562,7 @@ def test_TOOLS_NO4_GlobalMatrix_GlobalVector_operators_test():
     if rAnk == mAster_rank:
         np.testing.assert_almost_equal(np.sum(np.abs(C - C0)), 0)
 
-    # test DO.claim_distribution_pattern
+    # test do.claim_distribution_pattern
     if sIze == 1: # when single core, A is full, so it is to be considered as, always, row-major
         pass
     else:
@@ -988,7 +988,7 @@ def test_TOOLS_NO9_test_Chained_Gathering_Matrix():
         n = 0
 
         for m in range(GND):
-            I = CGM.FIND.elements_contain_dof_numbered(m)
+            I = CGM.find.elements_contain_dof_numbered(m)
             if I is None:
                 exclude_list = list()
             else:
@@ -1002,7 +1002,7 @@ def test_TOOLS_NO9_test_Chained_Gathering_Matrix():
                 if j not in exclude_list:
                     assert m not in CGM[j], "m also in some elements else!"
 
-            OUTPUT = CGM.FIND.elements_and_local_indices_of_dof(m)
+            OUTPUT = CGM.find.elements_and_local_indices_of_dof(m)
             if OUTPUT is None:
                 GET_it = 0
             else:
@@ -1366,8 +1366,8 @@ def test_TOOLS_NO12_EWC_assembling_test():
     def p(t, x, y, z): return -0.001 + x + 2.1254*y + 0.1234*z + t
     scalar = FC('scalar', p)
 
-    f0.TW.func.DO.set_func_body_as(scalar)
-    f0.TW.DO.push_all_to_instant(0)
+    f0.TW.func.do.set_func_body_as(scalar)
+    f0.TW.do.push_all_to_instant(0)
     f0.discretize()
     c0 = f0.cochain.local
     aC0 = ___brutal_force_EWC_vector_assembling___(c0, GM0)
@@ -1411,8 +1411,8 @@ def test_TOOLS_NO12_EWC_assembling_test():
     def p(t, x, y): return -0.001 + x + 2.1254*y + t
     scalar = FC('scalar', p)
 
-    f0.TW.func.DO.set_func_body_as(scalar)
-    f0.TW.DO.push_all_to_instant(0)
+    f0.TW.func.do.set_func_body_as(scalar)
+    f0.TW.do.push_all_to_instant(0)
     f0.discretize()
     c0 = f0.cochain.local
     aC0 = ___brutal_force_EWC_vector_assembling___(c0, GM0)
@@ -1695,7 +1695,7 @@ def test_TOOLS_NO14_partial_cochain_with_3dCSCG_form_BC():
     #----  with 3d CSCG 0-form ---------------------------------------------------------------------
     f0 = FC('0-f', is_hybrid=ISH)
     f0.TW.BC.body = BS
-    f0.TW.DO.push_BC_to_instant(time)
+    f0.TW.do.push_BC_to_instant(time)
     f0.BC.valid_boundaries = BNS
     f0pc = f0.BC.partial_cochain
     xi_et_sg = np.meshgrid(*space.nodes, indexing='ij')
@@ -1711,7 +1711,7 @@ def test_TOOLS_NO14_partial_cochain_with_3dCSCG_form_BC():
         np.testing.assert_array_almost_equal(local_cochain, v_exact)
 
     f0.TW.BC.body = SS
-    f0.TW.DO.push_BC_to_instant(time)
+    f0.TW.do.push_BC_to_instant(time)
     f0.BC.valid_boundaries = BNS
     f0pc = f0.BC.partial_cochain
     xi_et_sg = np.meshgrid(*space.nodes, indexing='ij')
@@ -1729,12 +1729,12 @@ def test_TOOLS_NO14_partial_cochain_with_3dCSCG_form_BC():
     #----  with 3d CSCG 2-form ---------------------------------------------------------------------
     f2 = FC('2-f', is_hybrid=ISH)
     f2.TW.func.body = SV
-    f2.TW.DO.push_func_to_instant(time)
+    f2.TW.do.push_func_to_instant(time)
     f2.discretize()
     f2_cochain = f2.cochain.local
 
     f2.TW.BC.body = BV
-    f2.TW.DO.push_BC_to_instant(time)
+    f2.TW.do.push_BC_to_instant(time)
     f2.BC.valid_boundaries = BNS
     f2pc = f2.BC.partial_cochain
     for i in f2pc:
@@ -1744,7 +1744,7 @@ def test_TOOLS_NO14_partial_cochain_with_3dCSCG_form_BC():
         np.testing.assert_array_almost_equal(local_cochain, cochain_exact)
 
     f2.TW.BC.body = SV
-    f2.TW.DO.push_BC_to_instant(time)
+    f2.TW.do.push_BC_to_instant(time)
     f2.BC.valid_boundaries = BNS
     f2pc = f2.BC.partial_cochain
     for i in f2pc:
@@ -1756,12 +1756,12 @@ def test_TOOLS_NO14_partial_cochain_with_3dCSCG_form_BC():
     #------ with 3d CSCG 2-trace-form -----------------------------------------------
     t2 = FC('2-t')
     t2.TW.func.body = SV
-    t2.TW.DO.push_func_to_instant(time)
+    t2.TW.do.push_func_to_instant(time)
     t2.discretize()
     t2_cochain = t2.cochain.local
     # 1: standard vector
     t2.TW.BC.body = SV
-    t2.TW.DO.push_BC_to_instant(time)
+    t2.TW.do.push_BC_to_instant(time)
     t2.BC.valid_boundaries = BNS
     t2pc = t2.BC.partial_cochain
     for i in t2pc:
@@ -1771,7 +1771,7 @@ def test_TOOLS_NO14_partial_cochain_with_3dCSCG_form_BC():
         np.testing.assert_array_almost_equal(local_cochain, cochain_exact)
     # 2: boundary-wise vector
     t2.TW.BC.body = BV
-    t2.TW.DO.push_BC_to_instant(time)
+    t2.TW.do.push_BC_to_instant(time)
     t2.BC.valid_boundaries = BNS
     t2pc = t2.BC.partial_cochain
     for i in t2pc:
@@ -1781,12 +1781,12 @@ def test_TOOLS_NO14_partial_cochain_with_3dCSCG_form_BC():
         np.testing.assert_array_almost_equal(local_cochain, cochain_exact)
 
     t2.TW.func.body = SS
-    t2.TW.DO.push_func_to_instant(time)
+    t2.TW.do.push_func_to_instant(time)
     t2.discretize()
     t2_cochain = t2.cochain.local
     # 1: standard scalar
     t2.TW.BC.body = SS
-    t2.TW.DO.push_BC_to_instant(time)
+    t2.TW.do.push_BC_to_instant(time)
     t2.BC.valid_boundaries = BNS
     t2pc = t2.BC.partial_cochain
     for i in t2pc:
@@ -1796,7 +1796,7 @@ def test_TOOLS_NO14_partial_cochain_with_3dCSCG_form_BC():
         np.testing.assert_array_almost_equal(local_cochain, cochain_exact)
     # 2: boundary-wise scalar
     t2.TW.BC.body = BS
-    t2.TW.DO.push_BC_to_instant(time)
+    t2.TW.do.push_BC_to_instant(time)
     t2.BC.valid_boundaries = BNS
     t2pc = t2.BC.partial_cochain
     for i in t2pc:
@@ -1947,7 +1947,7 @@ def test_TOOLS_NO15_linear_system_apply_BC():
 
 
     t2.TW.BC.body = BS
-    t2.TW.DO.push_BC_to_instant(time)
+    t2.TW.do.push_BC_to_instant(time)
     t2.BC.valid_boundaries = BNS
     t2BC1 = t2.BC.partial_cochain
 
@@ -2027,7 +2027,7 @@ def test_TOOLS_NO15_linear_system_apply_BC():
     t2BC2 = PartialDofs(t2)
     t2BC2.include.boundaries(BNS_com)
     f2.TW.BC.body = BV_com
-    f2.TW.DO.push_BC_to_instant(time)
+    f2.TW.do.push_BC_to_instant(time)
     f2.BC.valid_boundaries = BNS_com
     f2BC2 = f2.BC.partial_cochain
 

@@ -8,13 +8,13 @@ from _2dCSCG.forms.standard.base.main import _2dCSCG_Standard_Form
 
 class _0Form_BASE(_2dCSCG_Standard_Form):
     """"""
-    def ___TW_FUNC_body_checker___(self, func_body):
+    def ___PRIVATE_TW_FUNC_body_checker___(self, func_body):
         assert func_body.__class__.__name__ == '_2dCSCG_ScalarField'
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 2
 
-    def RESET_cache(self):
-        super().RESET_cache()
+    def ___PRIVATE_reset_cache___(self):
+        super().___PRIVATE_reset_cache___()
 
     def discretize(self, update_cochain=True):
         """
@@ -49,7 +49,7 @@ class _0Form_BASE(_2dCSCG_Standard_Form):
         return cochainLocal
 
     def reconstruct(self, xi, eta, ravel=False, i=None):
-        xietasigma, basis = self.DO.evaluate_basis_at_meshgrid(xi, eta)
+        xietasigma, basis = self.do.evaluate_basis_at_meshgrid(xi, eta)
         xyz = dict()
         value = dict()
         shape = [len(xi), len(eta)]
@@ -65,7 +65,7 @@ class _0Form_BASE(_2dCSCG_Standard_Form):
                 value[i] = [v.reshape(shape, order='F'),]
         return xyz, value
 
-    def ___OPERATORS_inner___(self, _, i, xietasigma, quad_weights, bfSelf, bfOther):
+    def ___PRIVATE_operator_inner___(self, _, i, xietasigma, quad_weights, bfSelf, bfOther):
         """Note that here we only return a local matrix."""
         element = self.mesh.elements[i]
         detJ = element.coordinate_transformation.Jacobian(*xietasigma)
@@ -74,7 +74,7 @@ class _0Form_BASE(_2dCSCG_Standard_Form):
         return Mi
 
 
-    def ___OPERATORS_wedge___(self, other, quad_degree=None):
+    def ___PRIVATE_operator_wedge___(self, other, quad_degree=None):
         """ """
         assert self.ndim == other.ndim and self.k + other.k == other.ndim, " <_0Form> "
         try:
@@ -83,8 +83,8 @@ class _0Form_BASE(_2dCSCG_Standard_Form):
             raise Exception(' <_0Form_int_wedge> : meshes do not fit.')
         if quad_degree is None:
             quad_degree = [int(np.max([self.dqp[i], other.dqp[i]])) + 1 for i in range(2)]
-        quad_nodes , _, quad_weights = self.space.DO_evaluate_quadrature(quad_degree)
-        xietasigma, basisS = self.DO.evaluate_basis_at_meshgrid(*quad_nodes)
-        _, basisO = other.DO.evaluate_basis_at_meshgrid(*quad_nodes)
+        quad_nodes , _, quad_weights = self.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
+        xietasigma, basisS = self.do.evaluate_basis_at_meshgrid(*quad_nodes)
+        _, basisO = other.do.evaluate_basis_at_meshgrid(*quad_nodes)
         W = np.einsum('im, jm, m -> ij', basisO[0], basisS[0], quad_weights, optimize='greedy')
         return spspa.csc_matrix(W)

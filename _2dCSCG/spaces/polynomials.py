@@ -13,7 +13,7 @@ class _2dCSCG_PolynomialSpace(_2dCSCG_Space):
         self._quadrature_cache_ = [-1, None, None, None, None]
         super().__init__(inputs, ndim)
 
-    def DO_evaluate_quadrature(self, quad_degree, quad_type=None):
+    def ___PRIVATE_do_evaluate_quadrature___(self, quad_degree, quad_type=None):
         """
         We only do cache the results for last call.
 

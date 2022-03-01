@@ -166,9 +166,9 @@ def test_mifem_NO2_3dCSCG_save_read():
     T2 = read('_3dCSCG_2trace')
 
     t1 = FC('1-t')
-    t1.TW.func.DO.set_func_body_as(es, 'velocity')
+    t1.TW.func.do.set_func_body_as(es, 'velocity')
     t1.TW.current_time = 13
-    t1.TW.DO.push_all_to_instant()
+    t1.TW.do.push_all_to_instant()
     t1.discretize()
     save(t1, '_3dCSCG_1trace')
     T1 = read('_3dCSCG_1trace')
@@ -182,9 +182,9 @@ def test_mifem_NO2_3dCSCG_save_read():
         np.testing.assert_array_almost_equal(t1_cochain[i], T1_cochain[i])
 
     t0 = FC('0-t')
-    t0.TW.func.DO.set_func_body_as(es, 'pressure')
+    t0.TW.func.do.set_func_body_as(es, 'pressure')
     t0.TW.current_time = 15
-    t0.TW.DO.push_all_to_instant()
+    t0.TW.do.push_all_to_instant()
     t0.discretize()
     save(t0, '_3dCSCG_0trace')
     T0 = read('_3dCSCG_0trace')

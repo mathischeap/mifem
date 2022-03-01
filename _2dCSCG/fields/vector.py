@@ -127,7 +127,7 @@ class _2dCSCG_VectorField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
         return xyz, value
 
     @property
-    def DO(self):
+    def do(self):
         return self._DO_
 
 

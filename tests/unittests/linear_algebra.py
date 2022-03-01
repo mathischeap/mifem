@@ -7,8 +7,8 @@ if './' not in sys.path: sys.path.append('../')
 from root.config import *
 import random
 from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
-from tools.linear_algebra.elementwise_cache import EWC_ColumnVector
-from tools.linear_algebra.functions import concatenate
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_ColumnVector
+from tools.linear_algebra.elementwise_cache.operators.concatenate.main import concatenate
 from scipy import sparse as spspa
 
 
@@ -43,10 +43,10 @@ def test_LinearAlgebra_No0_EWC_ColumnVector():
     f0 = FC('0-f', is_hybrid=False)
     f1 = FC('1-f', is_hybrid=False)
     f0.TW.func.body = scalar
-    f0.TW.DO.push_all_to_instant(0)
+    f0.TW.do.push_all_to_instant(0)
     f0.discretize()
     f1.TW.func.body = vector
-    f1.TW.DO.push_all_to_instant(0)
+    f1.TW.do.push_all_to_instant(0)
     f1.discretize()
 
     v0 = f0.cochain.EWC

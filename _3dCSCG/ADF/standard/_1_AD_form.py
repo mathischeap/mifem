@@ -60,24 +60,24 @@ if __name__ == "__main__":
     scalar = FC('scalar', p)
     vector = FC('vector', (u, v, w))
 
-    df1.prime.TW.func.DO.set_func_body_as(vector)
+    df1.prime.TW.func.do.set_func_body_as(vector)
     df1.prime.TW.current_time = 0
-    df1.prime.TW.DO.push_all_to_instant()
-    df1.prime.DO.discretize()
+    df1.prime.TW.do.push_all_to_instant()
+    df1.prime.do.discretize()
 
-    dt0.prime.TW.func.DO.set_func_body_as(vector)
+    dt0.prime.TW.func.do.set_func_body_as(vector)
     dt0.prime.TW.current_time = 0
-    dt0.prime.TW.DO.push_all_to_instant()
-    dt0.prime.DO.discretize()
+    dt0.prime.TW.do.push_all_to_instant()
+    dt0.prime.do.discretize()
 
 
     df0 = df1.coboundary(dt0)
 
     # df0 = FC('0-adf')
-    df0.prime.TW.func.DO.set_func_body_as(scalar)
+    df0.prime.TW.func.do.set_func_body_as(scalar)
     df0.prime.TW.current_time = 0
-    df0.prime.TW.DO.push_all_to_instant()
-    # df0.prime.DO.discretize()
+    df0.prime.TW.do.push_all_to_instant()
+    # df0.prime.do.discretize()
 
     # df0.prime.visualize()
 

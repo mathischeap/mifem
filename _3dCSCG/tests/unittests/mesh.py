@@ -58,11 +58,11 @@ def test_Mesh_NO1_mesh_general():
     # test method ___DO_find_slave_of_element___ ...
     mesh = MeshGenerator('crazy')([5, 4, 3], EDM='debug')
     for i in range(mesh.elements.GLOBAL_num):
-        sn = mesh.DO.FIND_slave_of_element(i)
+        sn = mesh.do.find.slave_of_element(i)
         assert i in mesh._element_distribution_[sn]
     mesh = MeshGenerator('crazy')([1, 2, 1], EDM='debug')
     for i in range(mesh.elements.GLOBAL_num):
-        sn = mesh.DO.FIND_slave_of_element(i)
+        sn = mesh.do.find.slave_of_element(i)
         assert i in mesh._element_distribution_[sn]
     return 1
 
@@ -1201,19 +1201,19 @@ def test_Mesh_NO8_Mesh_SubGeometry_perpendicular_slice_object():
     f2 = FC('2-f', is_hybrid=False)
     f3 = FC('3-f', is_hybrid=False)
     f0.TW.func.body = scalar
-    f0.TW.DO.push_all_to_instant(0)
+    f0.TW.do.push_all_to_instant(0)
     f0.discretize()
 
     f1.TW.func.body = vector
-    f1.TW.DO.push_all_to_instant(0)
+    f1.TW.do.push_all_to_instant(0)
     f1.discretize()
 
     f2.TW.func.body = vector
-    f2.TW.DO.push_all_to_instant(0)
+    f2.TW.do.push_all_to_instant(0)
     f2.discretize()
 
     f3.TW.func.body = scalar
-    f3.TW.DO.push_all_to_instant(0)
+    f3.TW.do.push_all_to_instant(0)
     f3.discretize()
 
     f0.visualize.matplot.perpendicular_slice(MSG_PSO, usetex=False, saveto='No8_perpendicular_slice_object_f0.pdf')

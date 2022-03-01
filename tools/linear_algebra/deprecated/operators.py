@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from scipy import sparse as _spspa
 import numpy as _np
-from tools.linear_algebra.data_structures import GlobalMatrix as _GlobalMatrix
+from tools.linear_algebra.data_structures.global_matrix.main import GlobalMatrix as _GlobalMatrix
 
 
 

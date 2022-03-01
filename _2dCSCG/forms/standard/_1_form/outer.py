@@ -33,7 +33,7 @@ class _2dCSCG_1Form_Outer(_1Form_BASE):
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_1form_Outer')
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_1form')
         self._special_ = _1Form_Outer_Special(self)
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
     @property
@@ -128,7 +128,7 @@ class _2dCSCG_1Form_Outer(_1Form_BASE):
 
 
     def reconstruct(self, xi, eta, ravel=False, i=None):
-        xietasigma, basis = self.DO.evaluate_basis_at_meshgrid(xi, eta)
+        xietasigma, basis = self.do.evaluate_basis_at_meshgrid(xi, eta)
         xyz = dict()
         value = dict()
         shape = [len(xi), len(eta)]
@@ -157,7 +157,7 @@ class _2dCSCG_1Form_Outer(_1Form_BASE):
         return xyz, value
 
 
-    def ___OPERATORS_inner___(self, other, i, xietasigma, quad_weights, bfSelf, bfOther):
+    def ___PRIVATE_operator_inner___(self, other, i, xietasigma, quad_weights, bfSelf, bfOther):
         """Note that here we only return a local matrix."""
         element = self.mesh.elements[i]
         mark = element.type_wrt_metric.mark
@@ -187,15 +187,15 @@ class _2dCSCG_1Form_Outer(_1Form_BASE):
         return spspa.csc_matrix(M)
 
 
-    def ___OPERATORS_wedge___(self, other, quad_degree=None):
+    def ___PRIVATE_operator_wedge___(self, other, quad_degree=None):
         """ """
         assert other.k == 1, "Need a _2dCSCG_1Form"
         assert self.mesh == other.mesh, "Meshes do not match."
         if quad_degree is None:
             quad_degree = [int(np.max([self.dqp[i], other.dqp[i]])) for i in range(2)]
-        quad_nodes, _, quad_weights = self.space.DO_evaluate_quadrature(quad_degree)
-        xietasigma, bS = self.DO.evaluate_basis_at_meshgrid(*quad_nodes)
-        _, bO = other.DO.evaluate_basis_at_meshgrid(*quad_nodes)
+        quad_nodes, _, quad_weights = self.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
+        xietasigma, bS = self.do.evaluate_basis_at_meshgrid(*quad_nodes)
+        _, bO = other.do.evaluate_basis_at_meshgrid(*quad_nodes)
         W00 = np.einsum('im, jm -> ij', bO[0], bS[0]*quad_weights[np.newaxis, :], optimize='optimal')
         W11 = np.einsum('im, jm -> ij', bO[1], bS[1]*quad_weights[np.newaxis, :], optimize='optimal')
         i, j = other.NUM_basis_components
@@ -236,9 +236,9 @@ if __name__ == '__main__':
     E21 = f1.matrices.incidence[0]
     print(E21.toarray())
 
-    # f1.TW.func.DO.set_func_body_as(ES, 'velocity')
+    # f1.TW.func.do.set_func_body_as(ES, 'velocity')
     # f1.TW.current_time = 0
-    # f1.TW.DO.push_all_to_instant()
+    # f1.TW.do.push_all_to_instant()
     # f1.discretize()
     # print(f1.error.L())
     #

@@ -521,7 +521,7 @@ class CSCG_MESH_BASE(FrozenClass):
         region_map = self.domain.regions.map
 
         for i in self._element_indices_:
-            rn = self.DO.FIND_region_name_of_element(i)
+            rn = self.do.find.region_name_of_element(i)
             if rn not in ___USEFUL_regions_and_boundaries___:
                 ___USEFUL_regions_and_boundaries___.append(rn)
                 _elements_in_regions_.append(rn)

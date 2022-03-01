@@ -103,7 +103,7 @@ class _3dCSCG_Trace_Element(FrozenOnly):
     @property
     def CHARACTERISTIC_region(self):
         """We mainly consider this trace element is in this regions."""
-        region = self._mesh_.DO.FIND_region_name_of_element(
+        region = self._mesh_.do.find.region_name_of_element(
             self.CHARACTERISTIC_element)
         return region
 
@@ -167,9 +167,9 @@ class _3dCSCG_Trace_Element(FrozenOnly):
         """None or a int. """
         if self.IS_shared_by_cores:
             if int(self._p1_[:-1]) in self._elements_._mesh_.elements:
-                CORE = self._elements_._mesh_.DO.FIND_slave_of_element(int(self._p2_[:-1]))
+                CORE = self._elements_._mesh_.do.find.slave_of_element(int(self._p2_[:-1]))
             elif int(self._p2_[:-1]) in self._elements_._mesh_.elements:
-                CORE = self._elements_._mesh_.DO.FIND_slave_of_element(int(self._p1_[:-1]))
+                CORE = self._elements_._mesh_.do.find.slave_of_element(int(self._p1_[:-1]))
             else:
                 raise Exception()
             assert CORE != rAnk
@@ -205,7 +205,7 @@ if __name__ == '__main__':
     print(mesh.quality)
     print(mesh.trace.quality)
 
-    mesh.trace.elements.DO.illustrate_trace_element(1)
+    mesh.trace.elements.do.illustrate_trace_element(1)
 
     # te0 = mesh.trace.elements[0]
 

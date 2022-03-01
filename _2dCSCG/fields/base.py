@@ -126,7 +126,7 @@ class _2dCSCG_Field_Visualize(FrozenOnly):
             else:
                 pass
 
-            x, y, v = self._mesh_.DO.regionwsie_stack(x, y, v)
+            x, y, v = self._mesh_.do.regionwsie_stack(x, y, v)
 
             plt.rc('text', usetex=usetex)
             if colormap is not None: plt.rcParams['image.cmap'] = colormap
@@ -243,7 +243,7 @@ class _2dCSCG_Field_Visualize(FrozenOnly):
             else:
                 pass
 
-            x, y, vx, vy = self._mesh_.DO.regionwsie_stack(x, y, vx, vy)
+            x, y, vx, vy = self._mesh_.do.regionwsie_stack(x, y, vx, vy)
 
             plt.rc('text', usetex=usetex)
             if colormap is not None: plt.rcParams['image.cmap'] = colormap

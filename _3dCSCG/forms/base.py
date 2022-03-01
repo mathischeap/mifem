@@ -78,7 +78,7 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
         # noinspection PyArgumentList
         result_form = self.__class__(self.mesh, self.space, **kwargs_A)
 
-        # MUST DO: add the cochain local ------------------
+        # MUST do: add the cochain local ------------------
         COCHAIN_LOCAL = dict()
         for e in self.mesh.elements:
             clA = self.cochain.local[e]
@@ -91,7 +91,7 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
             FB = self.TW.func.body - other.TW.func.body
             result_form.TW.func.body = FB
             result_form.TW.current_time = self.TW.current_time
-            result_form.TW.DO.push_all_to_instant()
+            result_form.TW.do.push_all_to_instant()
         except:
             pass
         #=========================================================
@@ -124,7 +124,7 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
         # noinspection PyArgumentList
         result_form = self.__class__(self.mesh, self.space, **kwargs_A)
 
-        # MUST DO: add the cochain local ------------------
+        # MUST do: add the cochain local ------------------
         COCHAIN_LOCAL = dict()
         for e in self.mesh.elements:
             clA = self.cochain.local[e]
@@ -137,7 +137,7 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
             FB = self.TW.func.body + other.TW.func.body
             result_form.TW.func.body = FB
             result_form.TW.current_time = self.TW.current_time
-            result_form.TW.DO.push_all_to_instant()
+            result_form.TW.do.push_all_to_instant()
         except:
             pass
         #=========================================================
@@ -327,11 +327,11 @@ if __name__ == '__main__':
     f1 = FC('1-f', is_hybrid=False, name='A')
     F1 = FC('1-f', is_hybrid=False)
 
-    f1.TW.func.DO.set_func_body_as(velocity)
+    f1.TW.func.do.set_func_body_as(velocity)
     f1.TW.current_time = 0
     f1.TW.___DO_push_all_to_instant___()
     f1.discretize()
-    F1.TW.func.DO.set_func_body_as(velocity)
+    F1.TW.func.do.set_func_body_as(velocity)
     F1.TW.current_time = 0
     F1.TW.___DO_push_all_to_instant___()
     F1.discretize()

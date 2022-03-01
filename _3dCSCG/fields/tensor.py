@@ -199,7 +199,7 @@ class _3dCSCG_TensorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
         return 3, 3
 
     @property
-    def DO(self):
+    def do(self):
         return self._DO_
 
     @property

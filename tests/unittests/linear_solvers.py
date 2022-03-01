@@ -5,7 +5,7 @@ if './' not in sys.path: sys.path.append('../')
 from root.config import *
 import random
 from scipy import sparse as spspa
-from tools.linear_algebra.data_structures import GlobalVector, GlobalMatrix, LocallyFullVector
+from tools.linear_algebra.data_structures.global_matrix.main import GlobalVector, GlobalMatrix, LocallyFullVector
 import tools.linear_algebra.solvers.parallel.GMRES as GMRES
 from tools.linear_algebra.solvers.parallel.distributor import ParallelSolverDistributor
 

@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """
-These two dimensional tools are currently working for three-dimensional cases. For 
+These two-dimensional tools are currently working for three-dimensional cases. For
 example, for a three-dimensional meshComponents, if on the third-dimension, it is just a
 transformation mapping, then we can use a two-dimensional transfinite mapping to get 
-the the mapping.
+the mapping.
 
 They will be deprecated when the 2D transfinite interpolation and the edge functions
 are officially coded. But it looks like this will never be happening.
 
-CURRENTLY USED:
+Now used:
     1). 3D `bridge_arch_cracked` interpolation.
     2). 3D `bridge_arch` interpolation.
     3). 2D `transfinite` interpolation.
@@ -29,6 +29,7 @@ from screws.numerical._2d import NumericalJacobian_xy_t_21
 
 
 class TransfiniteMapping(FrozenOnly):
+    """"""
     def __init__(self, gamma, dgamma=None):
         """
          y          - 2 +

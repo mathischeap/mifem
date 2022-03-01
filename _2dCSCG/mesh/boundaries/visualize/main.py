@@ -15,4 +15,3 @@ class _2dCSCG_Mesh_Boundaries_Visualize(FrozenOnly):
 
     def matplot(self, usetex=False):
         raise NotImplementedError()
-

@@ -10,12 +10,12 @@ from importlib import import_module
 from root.config import *
 from screws.frozen import FrozenOnly
 from _3dCSCG.ADF.base import _3dCSCG_Algebra_DUAL_FORM_BASE
-from tools.linear_algebra.elementwise_cache import EWC_ColumnVector
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_ColumnVector
 
 from inheriting.CSCG.ADF.standard.main_BASE import CSCG_Algebra_DUAL_Standard_Form
 from scipy.sparse import csr_matrix
 
-from tools.linear_algebra.elementwise_cache import EWC_SparseMatrix
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
 
 
 
@@ -61,7 +61,7 @@ class _3dCSCG_Algebra_DUAL_Standard_Form(CSCG_Algebra_DUAL_Standard_Form, _3dCSC
 
     @property
     def DO(self):
-        """If has too many do methods, we group them in to DO."""
+        """If has too many do methods, we group them in to do."""
         return self._DO_
 
     @property
@@ -242,7 +242,7 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Coboundary(FrozenOnly):
             E = - E_T
             T = T_T
 
-            next_prime_form_Path = '_3dCSCG.forms.standard._2_form'
+            next_prime_form_Path = '_3dCSCG.forms.standard._2_form.main'
             next_prime_form_Name = '_3dCSCG_2Form'
             next_dual_form_Path = '_3dCSCG.ADF.standard._2_AD_form'
             next_dual_form_Name = '_3dCSCG_S2_ADF'
@@ -253,7 +253,7 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Coboundary(FrozenOnly):
             E = E_T
             T = - T_T
 
-            next_prime_form_Path = '_3dCSCG.forms.standard._1_form'
+            next_prime_form_Path = '_3dCSCG.forms.standard._1_form.main'
             next_prime_form_Name = '_3dCSCG_1Form'
             next_dual_form_Path = '_3dCSCG.ADF.standard._1_AD_form'
             next_dual_form_Name = '_3dCSCG_S1_ADF'
@@ -264,7 +264,7 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Coboundary(FrozenOnly):
             E = - E_T
             T = T_T
 
-            next_prime_form_Path = '_3dCSCG.forms.standard._0_form'
+            next_prime_form_Path = '_3dCSCG.forms.standard._0_form.main'
             next_prime_form_Name = '_3dCSCG_0Form'
             next_dual_form_Path = '_3dCSCG.ADF.standard._0_AD_form'
             next_dual_form_Name = '_3dCSCG_S0_ADF'

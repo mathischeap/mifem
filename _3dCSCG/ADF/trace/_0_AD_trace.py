@@ -54,10 +54,10 @@ if __name__ == "__main__":
 
     es = ExactSolutionSelector(mesh)('icpsNS:sincosRD')
 
-    df0.prime.TW.func.DO.set_func_body_as(es, 'pressure')
+    df0.prime.TW.func.do.set_func_body_as(es, 'pressure')
     df0.prime.TW.current_time = 0
-    df0.prime.TW.DO.push_all_to_instant()
-    df0.prime.DO.discretize()
+    df0.prime.TW.do.push_all_to_instant()
+    df0.prime.do.discretize()
 
     # print(df0.cochain.local)
 

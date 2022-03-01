@@ -9,7 +9,7 @@ See paper:
 
 from root.config import *
 from tools.linear_algebra.preconditioners.allocator import PreconditionerAllocator
-from tools.linear_algebra.data_structures import LocallyFullVector
+from tools.linear_algebra.data_structures.global_matrix.main import LocallyFullVector
 from screws.exceptions import LinerSystemSolverDivergenceError
 from screws.miscellaneous import MyTimer
 
@@ -54,14 +54,14 @@ def solve(A, b, x0, m=100, k=10, maxiter=20, tol=1e-3, atol=1e-4, preconditioner
     """
 
     message = "LGMRES-" + MyTimer.current_time()
-    assert str(A.__class__) == "<class 'tools.linear_algebra.data_structures.GlobalMatrix'>", \
-                     f"A needs to be a 'tools.linear_algebra.data_structures.GlobalMatrix'. Now I get {A.__class__}."
+    assert A.__class__.__name__ == "GlobalMatrix", \
+                     f"A needs to be a GlobalMatrix'. Now I get {A.__class__}."
 
-    assert str(b.__class__) == "<class 'tools.linear_algebra.data_structures.GlobalVector'>", \
-                     f"b needs to be a 'tools.linear_algebra.data_structures.GlobalVector'. Now I get {b.__class__}."
+    assert b.__class__.__name__ == "GlobalVector", \
+                     f"b needs to be a 'GlobalVector'. Now I get {b.__class__}."
 
-    assert str(x0.__class__) == "<class 'tools.linear_algebra.data_structures.LocallyFullVector'>", \
-                     f"x0 needs to be a 'tools.linear_algebra.data_structures.LocallyFullVector'. Now I get {b.__class__}."
+    assert x0.__class__.__name__ == "LocallyFullVector", \
+                     f"x0 needs to be a 'LocallyFullVector'. Now I get {b.__class__}."
 
     assert maxiter >= 1 and maxiter % 1 == 0, f"maxiter={maxiter} must be >= 1."
     assert m >= 3 and m % 1 == 0, f"restart={m} must be >= 3."
@@ -152,7 +152,7 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-3, atol=1e
     Time_start = MPI.Wtime()
     A = lhs.M
     f = rhs.V.toarray().ravel()
-    x0 = np.array(X0.V) # just to make another copy of x0: IMPORTANT TO DO SO!
+    x0 = np.array(X0.V) # just to make another copy of x0: IMPORTANT TO do SO!
 
     shape0, shape1 = A.shape
     assert f.shape[0] == x0.shape[0] == shape0 == shape1, "Ax=f shape dis-match."

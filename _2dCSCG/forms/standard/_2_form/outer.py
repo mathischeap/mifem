@@ -29,7 +29,7 @@ class _2dCSCG_2Form_Outer(_2Form_BASE):
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_outer_2form')
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_2form')
         self._special_ = _2Form_Outer_Special(self)
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
     @property
@@ -63,9 +63,9 @@ if __name__ == '__main__':
     f2 = FC('2-f-o', is_hybrid=False)
 
 
-    # f2.TW.func.DO.set_func_body_as(ES, 'potential')
+    # f2.TW.func.do.set_func_body_as(ES, 'potential')
     # f2.TW.current_time = 0
-    # f2.TW.DO.push_all_to_instant()
+    # f2.TW.do.push_all_to_instant()
     # f2.discretize()
     M0 = f2.matrices.mass[0]
 

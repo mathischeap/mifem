@@ -9,7 +9,7 @@
 """
 from root.config import *
 from screws.frozen import FrozenOnly
-from tools.linear_algebra.gathering import Gathering_Matrix, Gathering_Vector
+from tools.linear_algebra.gathering.chain_matrix.main import Gathering_Matrix, Gathering_Vector
 
 
 

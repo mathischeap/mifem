@@ -221,7 +221,7 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
             if self.ftype == 'boundary-wise':
 
                 if i in (None, 'on_mesh_boundaries'):
-                    RTE = self.mesh.boundaries.RANGE_trace_elements
+                    RTE = self.mesh.boundaries.range_of_trace_elements
                     INDICES = list()
                     for bn in self.func:
                         INDICES.extend(RTE[bn])
@@ -256,7 +256,7 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                     INDICES.extend(func.keys())
                 elif i == 'on_mesh_boundaries': # we only reconstruct on all the valid local trace elements which are also on mesh boundaries.
                     CMB = self.covered_mesh_boundaries # will contain all mesh boundary names.
-                    RTE = self.mesh.boundaries.RANGE_trace_elements
+                    RTE = self.mesh.boundaries.range_of_trace_elements
                     boundary_trace_elements = list() # local trace elements on all mesh boundaries
                     for mb in CMB:
                         boundary_trace_elements.extend(RTE[mb])
@@ -296,7 +296,7 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
 
     @property
-    def DO(self):
+    def do(self):
         return self._DO_
 
     @property

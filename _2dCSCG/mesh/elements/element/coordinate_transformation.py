@@ -15,20 +15,20 @@ class _2dCSCG_Mesh_ECT(FrozenOnly):
     @property
     def origin(self):
         if self._origin_ is None:
-            in_region, local_indices = self._mesh_.DO.FIND_region_name_and_local_indices_of_element(
+            in_region, local_indices = self._mesh_.do.find.region_name_and_local_indices_of_element(
                 self._element_.i)
             self._origin_, self._delta_ = \
-                self._mesh_.DO.FIND_reference_origin_and_size_of_element_of_given_local_indices(
+                self._mesh_.do.find.reference_origin_and_size_of_element_of_given_local_indices(
                 in_region, local_indices)
         return self._origin_
 
     @property
     def delta(self):
         if self._delta_ is None:
-            in_region, local_indices = self._mesh_.DO.FIND_region_name_and_local_indices_of_element(
+            in_region, local_indices = self._mesh_.do.find.region_name_and_local_indices_of_element(
                 self._element_.i)
             self._origin_, self._delta_ = \
-                self._mesh_.DO.FIND_reference_origin_and_size_of_element_of_given_local_indices(
+                self._mesh_.do.find.reference_origin_and_size_of_element_of_given_local_indices(
                 in_region, local_indices)
         return self._delta_
 

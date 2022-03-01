@@ -29,7 +29,7 @@ class _2dCSCG_0Form_Outer(_0Form_BASE):
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_outer_0form')
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_0form')
         self._special_ = _0Form_Outer_Special(self)
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
     @property
@@ -60,9 +60,9 @@ if __name__ == '__main__':
     # ES = ExactSolutionSelector(mesh)('sL:sincos1')
     #
     # f0 = FC('0-f-o', is_hybrid=True)
-    # f0.TW.func.DO.set_func_body_as(ES, 'potential')
+    # f0.TW.func.do.set_func_body_as(ES, 'potential')
     # f0.TW.current_time = 0
-    # f0.TW.DO.push_all_to_instant()
+    # f0.TW.do.push_all_to_instant()
     # f0.discretize()
     # print(f0.error.L())
 

@@ -404,7 +404,7 @@ def test_Form_NO1_3dCSCG_VectorField():
         assert np.max(np.abs(Ax2 - Cx2)) < 1e-10, f"add z-component is not accurate enough."
 
     # ------ cross product ----------------------------------------------
-    X = W.DO.cross_product(U)
+    X = W.do.cross_product(U)
     X.current_time = t
     R_xyz, R_v = X.reconstruct(x, y, z)
     for i in R_xyz:

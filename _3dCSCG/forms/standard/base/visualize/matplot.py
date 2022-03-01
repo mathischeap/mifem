@@ -889,28 +889,28 @@ if __name__ == '__main__':
 
 
     f0 = FC('0-f', is_hybrid=False, numbering_parameters={'scheme_name': 'Naive',})
-    f0.TW.func.DO.set_func_body_as(es, 'pressure')
+    f0.TW.func.do.set_func_body_as(es, 'pressure')
     f0.TW.current_time = 0
-    f0.TW.DO.push_all_to_instant()
-    f0.DO.discretize()
+    f0.TW.do.push_all_to_instant()
+    f0.do.discretize()
 
     f1 = FC('1-f', is_hybrid=False, numbering_parameters={'scheme_name': 'Naive',})
-    f1.TW.func.DO.set_func_body_as(es, 'velocity')
+    f1.TW.func.do.set_func_body_as(es, 'velocity')
     f1.TW.current_time = 0
-    f1.TW.DO.push_all_to_instant()
-    f1.DO.discretize()
+    f1.TW.do.push_all_to_instant()
+    f1.do.discretize()
 
     f2 = FC('2-f', is_hybrid=False, numbering_parameters={'scheme_name': 'Naive',})
-    f2.TW.func.DO.set_func_body_as(es, 'velocity')
+    f2.TW.func.do.set_func_body_as(es, 'velocity')
     f2.TW.current_time = 0
-    f2.TW.DO.push_all_to_instant()
-    f2.DO.discretize()
+    f2.TW.do.push_all_to_instant()
+    f2.do.discretize()
 
     f3 = FC('3-f', is_hybrid=False, numbering_parameters={'scheme_name': 'Naive',})
-    f3.TW.func.DO.set_func_body_as(es, 'pressure')
+    f3.TW.func.do.set_func_body_as(es, 'pressure')
     f3.TW.current_time = 0
-    f3.TW.DO.push_all_to_instant()
-    f3.DO.discretize()
+    f3.TW.do.push_all_to_instant()
+    f3.do.discretize()
 
 
 

@@ -51,7 +51,7 @@ class _3dCSCG_Edge_Numbering(FrozenOnly):
         self._boundary_dofs_ = None
 
     @property
-    def DO(self):
+    def do(self):
         return self._DO_
 
     def ___PRIVATE_do_numbering___(self):

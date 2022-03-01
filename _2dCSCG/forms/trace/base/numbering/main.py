@@ -40,10 +40,10 @@ class _2dCSCG_Trace_Numbering(FrozenOnly):
         self._numbering_parameters_ = {'scheme_name': self._scheme_name_}
         self._numbering_parameters_.update(self._parameters_)
         self._visualize_ = _2dCSCG_Trace_Numbering_Visualize(tf)
-        self.DO_reset_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
-    def DO_reset_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         self._local_ = None
         self._gathering_ = None
         self._trace_element_wise_ = None

@@ -30,10 +30,10 @@ class _2dCSCG_Mesh_Boundaries(FrozenOnly):
         assert mesh.__class__.__name__ == '_2dCSCG_Mesh'
         self._mesh_ = mesh
         self._visualize_ = _2dCSCG_Mesh_Boundaries_Visualize(self)
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         self._boundaries_dict_ = dict()
         self._names_ = None
         self._RANGE_element_edges_ = None
@@ -96,14 +96,14 @@ class _2dCSCG_Mesh_Boundaries(FrozenOnly):
         return self._names_
 
     @property
-    def RANGE_element_edges(self):
+    def range_of_element_edges(self):
         """(dict) Return a dict that contains the local element sides on each boundary."""
         if self._RANGE_element_edges_ is None:
             self.___PRIVATE_parse_boundaries___()
         return self._RANGE_element_edges_
 
     @property
-    def RANGE_trace_elements(self):
+    def range_of_trace_elements(self):
         """(dict) Return a dict that contains the local trace elements on each boundary."""
         if self._RANGE_trace_elements_ is None:
             self.___PRIVATE_parse_boundaries___()
@@ -141,5 +141,5 @@ if __name__ == "__main__":
     from _2dCSCG.main import MeshGenerator
     mesh = MeshGenerator('crazy', bounds=((0,3),(0,3)))([2,3])
     mesh.boundaries.___PRIVATE_parse_boundaries___()
-    print(rAnk, mesh.boundaries.RANGE_element_edges)
-    print(rAnk, mesh.boundaries.RANGE_trace_elements)
+    print(rAnk, mesh.boundaries.range_of_element_edges)
+    print(rAnk, mesh.boundaries.range_of_trace_elements)

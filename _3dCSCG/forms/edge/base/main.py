@@ -13,7 +13,7 @@ from _3dCSCG.forms.edge.base.numbering.main import _3dCSCG_Edge_Numbering
 from _3dCSCG.forms.edge.base.matrices import _3dCSCG_Edge_Matrices
 from _3dCSCG.forms.edge.base.cochain import _3dCSCG_Edge_Cochain
 from _3dCSCG.forms.edge.base.error import _3dCSCG_Edge_Error
-from _3dCSCG.forms.edge.base.DO import _3dCSCG_Edge_DO
+from _3dCSCG.forms.edge.base.do import _3dCSCG_Edge_DO
 
 
 class _3dCSCG_Edge(_3dCSCG_FORM_BASE, ndim=3):
@@ -45,7 +45,7 @@ class _3dCSCG_Edge(_3dCSCG_FORM_BASE, ndim=3):
         # self._visualize_ = _3dCSCG_Trace_Visualize(self)
         # self._coboundary_ = _3dCSCG_Trace_Coboundary(self)
 
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         """"""
 
     @property
@@ -81,5 +81,5 @@ class _3dCSCG_Edge(_3dCSCG_FORM_BASE, ndim=3):
         return self._error_
 
     @property
-    def DO(self):
+    def do(self):
         return self._DO_

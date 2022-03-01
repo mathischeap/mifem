@@ -8,9 +8,6 @@ from screws.numerical._1d import NumericalDerivative_fx
 
 
 
-
-
-
 class NumericalJacobian_xy_t_21(ABC):
     """For a mapping: ``XY(t) = (x, y) = (X(t), Y(t))``, We compute ``dx/dt``, and ``dy/dt``.
     """
@@ -18,15 +15,15 @@ class NumericalJacobian_xy_t_21(ABC):
         """ """
         self._func21_ = func21
 
-    def ___evaluate_func21_for_x_t___(self, t):
+    def ___PRIVATE_evaluate_func21_for_x_t___(self, t):
         return self._func21_(t)[0]
-    def ___evaluate_func21_for_y_t___(self, t):
+    def ___PRIVATE_evaluate_func21_for_y_t___(self, t):
         return self._func21_(t)[1]
 
     def scipy_derivative(self, t, dt=1e-6, n=1, order=3):
-        Xt = NumericalDerivative_fx(self.___evaluate_func21_for_x_t___, t,
+        Xt = NumericalDerivative_fx(self.___PRIVATE_evaluate_func21_for_x_t___, t,
                                     dx=dt, n=n, order=order).scipy_derivative()
-        Yt = NumericalDerivative_fx(self.___evaluate_func21_for_y_t___, t,
+        Yt = NumericalDerivative_fx(self.___PRIVATE_evaluate_func21_for_y_t___, t,
                                     dx=dt, n=n, order=order).scipy_derivative()
         return Xt, Yt
 
@@ -55,7 +52,7 @@ class NumericalJacobian_xy_t_21(ABC):
 class NumericalJacobian_xy_22(ABC):
     """
     For a mapping: ``x = Phi_x(r, s), y = Phi_y(r, s)``,
-    ``self._func_(r, s) = (Phi_x(r, s), Phi_y(r, s))``, we compute the its Jacobian numerically:
+    ``self._func_(r, s) = (Phi_x(r, s), Phi_y(r, s))``, we compute its Jacobian numerically:
     ``(( dx/dr, dx/ds ), ( dy/dr, dy/ds ))``.
 
     """
@@ -63,15 +60,15 @@ class NumericalJacobian_xy_22(ABC):
         """ """
         self._func22_ = func22
 
-    def ___evaluate_func22_for_x_rs___(self, r, s):
+    def ___PRIVATE_evaluate_func22_for_x_rs___(self, r, s):
         return self._func22_(r, s)[0]
-    def ___evaluate_func22_for_y_rs___(self, r, s):
+    def ___PRIVATE_evaluate_func22_for_y_rs___(self, r, s):
         return self._func22_(r, s)[1]
 
     def scipy_derivative(self, r, s, dr_ds=1e-8, n=1, order=3):
-        xr, xs = NumericalPartialDerivative_xy(self.___evaluate_func22_for_x_rs___,
+        xr, xs = NumericalPartialDerivative_xy(self.___PRIVATE_evaluate_func22_for_x_rs___,
                                                r, s, dx_dy=dr_ds, n=n, order=order).scipy_total
-        yr, ys = NumericalPartialDerivative_xy(self.___evaluate_func22_for_y_rs___,
+        yr, ys = NumericalPartialDerivative_xy(self.___PRIVATE_evaluate_func22_for_y_rs___,
                                                r, s, dx_dy=dr_ds, n=n, order=order).scipy_total
         return ((xr, xs),
                 (yr, ys))
@@ -93,13 +90,13 @@ class NumericalPartialDerivative_xy(ABC):
     :param order: How many points are used to approximate the derivative.
     """
     def __init__(self, func, x, y, dx_dy=1e-6, n=1, order=3):
-        self.___check_func___(func)
-        self.___check_xy___(x, y)
-        self.___check_dx_dy___(dx_dy)
-        self.___check_n___(n)
-        self.___check_order___(order)
+        self.___PRIVATE_check_func___(func)
+        self.___PRIVATE_check_xy___(x, y)
+        self.___RPIVATE_check_dx_dy___(dx_dy)
+        self.___PRIVATE_check_n___(n)
+        self.___PRIVATE_check_order___(order)
 
-    def ___check_func___(self, func):
+    def ___PRIVATE_check_func___(self, func):
         """ """
         assert callable(func), " <PartialDerivative> : func is not callable."
         if isinstance(func, FunctionType):
@@ -123,13 +120,13 @@ class NumericalPartialDerivative_xy(ABC):
             raise NotImplementedError(func.__class__.__name__)
         self._func_ = func
 
-    def ___check_xy___(self, x, y):
+    def ___PRIVATE_check_xy___(self, x, y):
         """ """
         self._x_, self._y_ = x, y
         assert np.shape(self._x_) == np.shape(self._y_), \
             " <PartialDerivative> : xy of different shapes."
 
-    def ___check_dx_dy___(self, dx_dy):
+    def ___RPIVATE_check_dx_dy___(self, dx_dy):
         """ """
         if isinstance(dx_dy, (int, float)):
             self._dx_ = self._dy_ = dx_dy
@@ -138,32 +135,35 @@ class NumericalPartialDerivative_xy(ABC):
             self._dx_, self._dy_ = dx_dy
         assert all([isinstance(d, (int, float)) and d > 0 for d in (self._dx_, self._dy_)])
 
-    def ___check_n___(self, n):
+    def ___PRIVATE_check_n___(self, n):
         """ """
         assert n % 1 == 0 and n >= 1, " <PartialDerivative> : n = {} is wrong.".format(n)
         self._n_ = n
 
-    def ___check_order___(self, order):
+    def ___PRIVATE_check_order___(self, order):
         """ """
         assert order % 2 == 1 and order > 0, " <PartialDerivative> : order needs to be odd positive."
         self._order_ = order
 
-    def ___evaluate_func_for_x___(self, x):
+    def ___PRIVATE_evaluate_func_for_x___(self, x):
         return self._func_(x, self._y_)
 
-    def ___evaluate_func_for_y___(self, y):
+    def ___PRIVATE_evaluate_func_for_y___(self, y):
         return self._func_(self._x_, y)
+
+
+
 
     def scipy_partial(self, d_):
         """ We compute ``df/d_`` at points ``*xyz.``"""
         if d_ == 'x':
             # noinspection PyTypeChecker
-            return derivative(self.___evaluate_func_for_x___, self._x_, dx=self._dx_,
-                              n=self._n_, order=self._order_)
+            return derivative(self.___PRIVATE_evaluate_func_for_x___,
+                              self._x_, dx=self._dx_, n=self._n_, order=self._order_)
         elif d_ == 'y':
             # noinspection PyTypeChecker
-            return derivative(self.___evaluate_func_for_y___, self._y_, dx=self._dy_,
-                              n=self._n_, order=self._order_)
+            return derivative(self.___PRIVATE_evaluate_func_for_y___,
+                              self._y_, dx=self._dy_, n=self._n_, order=self._order_)
         else:
             raise Exception(" <PartialDerivative> : dx or dy or dz? ")
 

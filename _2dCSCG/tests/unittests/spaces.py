@@ -18,7 +18,7 @@ def test_Space_NO1_polynomial_space():
     np.testing.assert_array_almost_equal(space.nodes[1],
                                          np.array([-1.00000000e+00,  1.23259516e-32,  1.00000000e+00]))
 
-    quad_nodes, quad_weights, quad_weights_ravel = space.DO_evaluate_quadrature((3,2))
+    quad_nodes, quad_weights, quad_weights_ravel = space.___PRIVATE_do_evaluate_quadrature___((3, 2))
 
     np.testing.assert_array_almost_equal(
         quad_nodes[0], np.array([-0.86113631, -0.33998104,  0.33998104,  0.86113631]))

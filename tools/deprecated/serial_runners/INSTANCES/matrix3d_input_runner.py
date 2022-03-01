@@ -269,7 +269,7 @@ class Matrix3dInputRunner(Runner):
             assert rAnk == mAster_rank
             for sc in range(sIze): # do not use bcast for safety
                 if sc != mAster_rank:
-                    cOmm.send([I, J, K], dest=sc, tag=sc+0.1)   # position mark 1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                    cOmm.send([I, J, K], dest=sc, tag=sc+1)   # position mark 1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             cOmm.barrier()
 
         n = 0
@@ -282,7 +282,7 @@ class Matrix3dInputRunner(Runner):
                         if sIze > 1:
                             for sc in range(sIze): # do not use bcast for safety
                                 if sc != mAster_rank:
-                                    cOmm.send(False, dest=sc, tag=sc+0.2)   # position mark 2 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                                    cOmm.send(False, dest=sc, tag=sc+2)   # position mark 2 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
                             cOmm.barrier()
 
 
@@ -299,7 +299,7 @@ class Matrix3dInputRunner(Runner):
                         if sIze > 1:
                             for sc in range(sIze): # do not use bcast for safety
                                 if sc != mAster_rank:
-                                    cOmm.send(False, dest=sc, tag=sc+0.2)   # position mark 2 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                                    cOmm.send(False, dest=sc, tag=sc+2)   # position mark 2 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
                             cOmm.barrier()
 
 
@@ -315,7 +315,7 @@ class Matrix3dInputRunner(Runner):
                         if sIze > 1:
                             for sc in range(sIze): # do not use bcast for safety
                                 if sc != mAster_rank:
-                                    cOmm.send(True, dest=sc, tag=sc+0.2)   # position mark 2 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                                    cOmm.send(True, dest=sc, tag=sc+2)   # position mark 2 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
                             cOmm.barrier()
 
 
@@ -341,7 +341,7 @@ class Matrix3dInputRunner(Runner):
                                 if sIze > 1:
                                     for sc in range(sIze): # do not use bcast for safety
                                         if sc != mAster_rank:
-                                            cOmm.send(INPUTS, dest=sc, tag=sc+0.3)   # position mark 3 <<<<<<<<<<<<<<<<<<<<<
+                                            cOmm.send(INPUTS, dest=sc, tag=sc+3)   # position mark 3 <<<<<<<<<<<<<<<<<<<<<
                                     cOmm.barrier()
 
                                 outputs = self._solver_(INPUTS[0], INPUTS[1], INPUTS[2], **INPUTS[3])

@@ -31,15 +31,15 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
         super().__init__(mesh, space, orientation, numbering_parameters, name)
         self._k_ = 1
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_trace_1form')
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         self.___cache_DISCRETIZE_STANDARD___ = None
         self.___cache_DISCRETIZE_TEW___ = None
-        super().RESET_cache()
+        super().___PRIVATE_reset_cache___()
 
-    def ___TW_FUNC_body_checker___(self, func_body):
+    def ___PRIVATE_TW_FUNC_body_checker___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 3
 
@@ -340,9 +340,13 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
         """We will discretize the Trace_perpendicular component of a standard vector field to all trace
         elements.
 
+        :param update_cochain:
+        :param target:
+        :param quad_degree:
+        :return:
         """
         if target in ('BC',): assert update_cochain is False, f"CANNOT update cochain when target is {target}"
-        raise NotImplementedError()
+        raise NotImplementedError(quad_degree)
 
     def ___PRIVATE_discretize_VectorField_of_ftype_trace_element_wise___(self,
         update_cochain=True, target='func', quad_degree=None):
@@ -746,7 +750,7 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
         num_BF_dx = px*(py+1)
         num_BF_dy = py*(px+1)
 
-        xietasigma, pb = self.DO.evaluate_basis_at_meshgrid(xi, eta, sigma)
+        xietasigma, pb = self.do.evaluate_basis_at_meshgrid(xi, eta, sigma)
         ii, jj, kk = np.size(xi), np.size(eta), np.size(sigma)
         xyz = dict()
         v = dict()
@@ -824,7 +828,7 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
         qw['WE'] = np.kron(quad_weights[2], quad_weights[0])
         qw['BF'] = np.kron(quad_weights[1], quad_weights[0])
 
-        xietasigma, pb = self.DO.evaluate_basis_at_meshgrid(*quad_nodes)
+        xietasigma, pb = self.do.evaluate_basis_at_meshgrid(*quad_nodes)
 
         local_cache = dict()
 
@@ -907,9 +911,9 @@ if __name__ == '__main__':
 
     t1 = FC('1-t')
 
-    t1.TW.func.DO.set_func_body_as(V)
+    t1.TW.func.do.set_func_body_as(V)
     t1.TW.current_time = 0
-    t1.TW.DO.push_all_to_instant()
+    t1.TW.do.push_all_to_instant()
 
     t1.discretize()
 

@@ -22,8 +22,8 @@ class PreconditionerAllocator(FrozenOnly):
 
     def __call__(self, A, **kwargs):
         """"""
-        assert str(A.__class__) == "<class 'tools.linear_algebra.data_structures.GlobalMatrix'>", \
-            f"A needs to be a 'tools.linear_algebra.data_structures.GlobalMatrix'. Now I get {A.__class__}."
+        assert A.__class__.__name__ == "GlobalMatrix", \
+            f"A needs to be a 'GlobalMatrix'. Now I get {A.__class__}."
         return self._preconditioner_class_(A, **kwargs)
 
     @classmethod

@@ -41,4 +41,4 @@ if __name__ == '__main__':
     mesh.trace.elements.SELFCHECK.outward_unit_normal_vector()
     Q = mesh.trace.elements.quality
 
-    mesh.trace.elements.DO.illustrate_trace_element(1)
+    mesh.trace.elements.do.illustrate_trace_element(1)

@@ -58,7 +58,7 @@ class _3dCSCG_Edge_Error(FrozenOnly):
 
         else:
             assert isinstance(n, int) and n > 0, f"L^{n} error is not valid."
-            quad_nodes, _, quad_weights = self._ef_.space.DO_evaluate_quadrature(quad_degree)
+            quad_nodes, _, quad_weights = self._ef_.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
 
         #-- reconstruct the edge form on all edge-elements -----------------------------------------
         xyz, v = self._ef_.reconstruct(*quad_nodes)
@@ -100,9 +100,9 @@ if __name__ == '__main__':
     def p(t, x, y, z): return - 6 * np.pi * np.sin(2*np.pi*x) * np.sin(2*np.pi*y) * np.sin(2*np.pi*z) + 0 * t
     scalar = FC('scalar', p)
 
-    e0.TW.func.DO.set_func_body_as(scalar)
+    e0.TW.func.do.set_func_body_as(scalar)
     e0.TW.current_time = 0
-    e0.TW.DO.push_all_to_instant()
+    e0.TW.do.push_all_to_instant()
 
     e0.discretize()
 

@@ -52,7 +52,7 @@ class _3dCSCG_Node_Numbering(FrozenOnly):
         self._extra_ = None
 
     @property
-    def DO(self):
+    def do(self):
         return self._DO_
 
     def ___PRIVATE_do_numbering___(self):
