@@ -1,6 +1,6 @@
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 class _3Form_Special(FrozenOnly):
     def __init__(self, _3sf):

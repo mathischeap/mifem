@@ -1,6 +1,6 @@
 
-from screws.frozen import FrozenOnly
-from root.config import *
+from screws.freeze.main import FrozenOnly
+from root.config.main import *
 
 class _3dCSCG_Standard_Form_DO(FrozenOnly):
     def __init__(self, sf):
@@ -31,10 +31,17 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
     def cross_product(self, *args, **kwargs):
         return self._sf_.special.cross_product(*args, **kwargs)
 
-    def compute_L2_inner_product_energy_with(self, *args, **kwargs):
-        return self._sf_.___PRIVATE_do_compute_L2_inner_product_energy_with___(*args, **kwargs)
+    def compute_L2_energy_with(self, other=None, M=None):
+        """Compute (self, other)_{L2} = int_{Omega}(self dot other)
 
-    def compute_L2_diff_from(self, other, n=2, quad_degree=None):
+        :param other: When it is None, other=self. Then we are doing self.compute_Ln_energy(n=2)
+        :param M:
+        :return:
+        """
+        return self._sf_.___PRIVATE_do_compute_Ln_energy_with___(other=other, M=M)
+
+    def compute_Ln_diff_from(self, other, n=2, quad_degree=None):
+        """ compute: ||self - other||_{L^n} = n-root{ int_{Omega}(self - other)^n }."""
         sf = self._sf_
         of = other
         assert '3dCSCG_standard_form' in of.standard_properties.tags, "Other should be a _3dCSCG standard form."
@@ -71,3 +78,20 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
 
     def reconstruct(self, *args, **kwargs):
         return self._sf_.reconstruct(*args, **kwargs)
+
+    def make_reconstruction_matrix_on_grid(self, xi, eta, sigma):
+        """Make the reconstruction matrices for all mesh elements. These matrices are stored in
+        a dict whose keys are the numbers of mesh elements and values are the local reconstruction
+        matrices.
+
+        Let `RM` be the reconstruction matrix (or the tuple of three matrices).
+        If we want to do the local reconstruction, we do
+
+            RM[i] @ f.cochain.local[i]
+
+        and we will get the reconstructions of the form `f` on `meshgrid(xi, eta, sigma)` in mesh-element
+        #i. And if `f` is a scalar form, we get a 1d array. And if `f` is a vector form, we get a
+        tuple of three 1d arrays (its three components along x, y, z directions.)
+
+        """
+        return self._sf_.___PRIVATE_make_reconstruction_matrix_on_grid___(xi, eta, sigma)

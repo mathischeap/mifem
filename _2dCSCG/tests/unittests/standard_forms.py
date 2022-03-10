@@ -1,10 +1,11 @@
 
 import sys
-if './' not in sys.path: sys.path.append('../')
-from root.config import *
-import random
+if './' not in sys.path: sys.path.append('./')
+from root.config.main import *
+from _2dCSCG.tests.random_objects import random_2D_FormCaller_of_total_load_around
 from _2dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
 from scipy.sparse import linalg as spspalinalg
+import random
 
 
 
@@ -42,15 +43,16 @@ def test_Form_NO1_coboundary():
         return dPdx + dQdy
     
     sp = FC('scalar', p)
-
     if rAnk == mAster_rank:
         T = [random.uniform(-10, 10) for _ in range(3)]
     else:
         T = None
+
     T = cOmm.bcast(T, root=mAster_rank)
 
-    # ---------- inner outer --------------------------------------------------
+    # inner outer ------------------------------------------------
     for t in T:
+        # test inner -------------------------------------------
         f0 = FC('0-f-i', is_hybrid=False)
         f0.TW.func.___DO_set_func_body_as___(sp)
         f0.TW.___DO_push_all_to_instant___(t)
@@ -82,7 +84,7 @@ def test_Form_NO1_coboundary():
         f2.TW.___DO_push_all_to_instant___(t)
         assert f2.error.L(upon=False) < 5e-4
 
-        # ---------- test outer --------------------------------------------------
+        # test outer -------------------------------------------
 
         f0 = FC('0-f-o', is_hybrid=False)
         f0.TW.func.___DO_set_func_body_as___(sp)
@@ -143,13 +145,13 @@ def test_Form_NO2_Naive_numbering():
 
     for i in mesh.elements:
         np.testing.assert_array_equal(
-            G0[i].full_vector, np.arange( i * f0.NUM_basis, (i+1) * f0.NUM_basis))
+            G0[i].full_vector, np.arange( i * f0.num.basis, (i+1) * f0.num.basis))
         np.testing.assert_array_equal(
-            G1I[i].full_vector, np.arange( i * f1i.NUM_basis, (i+1) * f1i.NUM_basis))
+            G1I[i].full_vector, np.arange( i * f1i.num.basis, (i+1) * f1i.num.basis))
         np.testing.assert_array_equal(
-            G1O[i].full_vector, np.arange( i * f1o.NUM_basis, (i+1) * f1o.NUM_basis))
+            G1O[i].full_vector, np.arange( i * f1o.num.basis, (i+1) * f1o.num.basis))
         np.testing.assert_array_equal(
-            G2[i].full_vector, np.arange( i * f2.NUM_basis, (i+1) * f2.NUM_basis))
+            G2[i].full_vector, np.arange( i * f2.num.basis, (i+1) * f2.num.basis))
 
     if 1 in mesh.elements:
         np.testing.assert_array_equal(T1O[1].full_vector,
@@ -191,7 +193,7 @@ def test_Form_NO2_Naive_numbering():
 
     for i in mesh.elements:
         np.testing.assert_array_equal(
-            G2[i].full_vector, np.arange( i * f2.NUM_basis, (i+1) * f2.NUM_basis))
+            G2[i].full_vector, np.arange( i * f2.num.basis, (i+1) * f2.num.basis))
 
     return 1
 
@@ -328,6 +330,7 @@ def test_Form_NO4_Hodge():
         Mi = M[i].tocsc()
         Wi = W[i]
         H = spspalinalg.inv(Mi) @ Wi
+        # noinspection PyUnresolvedReferences
         f0_cochain[i] = H @ f2.cochain.local[i]
 
     f0.cochain.local = f0_cochain
@@ -364,6 +367,7 @@ def test_Form_NO4_Hodge():
         Mi = M[i].tocsc()
         Wi = W[i]
         H = spspalinalg.inv(Mi) @ Wi
+        # noinspection PyUnresolvedReferences
         f1i_cochain[i] = H @ f1o.cochain.local[i]
 
     f1i.cochain.local = f1i_cochain
@@ -374,11 +378,159 @@ def test_Form_NO4_Hodge():
 
 
 
+def test_Form_NO5_cross_product():
+    """"""
+    if rAnk == mAster_rank:
+        t = random.uniform(-1, 1)
+        c = random.randint(0,3) * random.random() / 10
+        IH = [True, False][random.randint(0,1)]
+        print(f"~~~ [test_Form_NO5_cross_product] @ c= %.4f... "%c, flush=True)
+    else:
+        t = None
+        c = None
+        IH = None
+
+    t, c, IH = cOmm.bcast([t, c, IH], root=mAster_rank)
+
+    def w(t, x, y): return np.cos(2*np.pi*x) * np.cos(2*np.pi*y) + t/2
+    def u(t, x, y): return - np.pi * np.sin(2*np.pi*x) * np.cos(2*np.pi*y) + t/2
+    def v(t, x, y): return np.pi * np.cos(2*np.pi*x) * np.sin(2*np.pi*y) + t
+    def a(t, x, y): return np.cos(2.08*np.pi*x) * np.sin(4.5*np.pi*y) + t/2.336
+    def b(t, x, y): return np.sin(3.1*np.pi*x) * np.cos(1.587*np.pi*y) + t*3.5123
+
+    def wva_wub(t, x, y): return - w(t, x, y) * v(t, x, y) * a(t, x, y) + w(t, x, y) * u(t, x, y) * b(t, x, y)
+
+    mesh = MeshGenerator('crazy', c=c)([6, 5])
+    space = SpaceInvoker('polynomials')([('Lobatto', 4), ('Lobatto', 3)])
+    FC = FormCaller(mesh, space)
+
+    scalar1 = FC('scalar', w)
+    vector1 = FC('vector', (u, v))
+    vector2 = FC('vector', (a, b))
+    scalar2 = FC('scalar', wva_wub)
+
+    w0 = FC('0-f-o', is_hybrid=IH)
+    u1 = FC('1-f-o', is_hybrid=IH)
+    e1 = FC('1-f-o', is_hybrid=IH)
+    R2 = FC('2-f-o', is_hybrid=IH)
+
+    w0.TW.func.do.set_func_body_as(scalar1)
+    w0.TW.do.push_all_to_instant(t)
+    w0.discretize()
+    u1.TW.func.do.set_func_body_as(vector1)
+    u1.TW.do.push_all_to_instant(t)
+    u1.discretize()
+    e1.TW.func.do.set_func_body_as(vector2)
+    e1.TW.do.push_all_to_instant(t)
+    e1.discretize()
+
+    R2.TW.func.do.set_func_body_as(scalar2)
+    R2.TW.do.push_all_to_instant(t)
+    R2.discretize()
+    L2e = R2.do.compute_Ln_energy(n=1, quad_degree=[8, 7])[0]
+
+    CP = w0.special.cross_product_1f__ip_1f(u1, e1)
+    for i in mesh.elements:
+        cpi = CP[i].toarray()
+        result = np.einsum('j, jk, k ->', e1.cochain.local[i], cpi, u1.cochain.local[i],
+                           optimize='greedy')
+        assert abs(result - L2e[i])  < 0.01
+        result = np.einsum('j, jk, k ->', u1.cochain.local[i], cpi, u1.cochain.local[i],
+                           optimize='greedy')
+        np.testing.assert_almost_equal(result, 0)
+
+    return 1
+
+
+
+
+def test_Form_NO6_reconstruction_matrices():
+    """"""
+    if rAnk == mAster_rank:
+        load = random.randint(100,1000)
+        IH = [True, False][random.randint(0,1)]
+        print(f"~~~ [test_Form_NO6_reconstruction_matrices] @ load= {load}... ", flush=True)
+    else:
+        load = None
+        IH = None
+    load, IH = cOmm.bcast([load, IH], root=mAster_rank)
+    FC = random_2D_FormCaller_of_total_load_around(load)
+
+    def P(t, x, y): return - 1.76*np.pi * np.sin(2.1*np.pi*x) * np.cos(1.11*np.pi*y) + t/2
+    def Q(t, x, y): return np.pi * np.cos(3.52*np.pi*x) * np.sin(2*np.pi*y) + t
+
+    scalar = FC('scalar', P)
+    vector = FC('vector', (P, Q))
+    xi = np.linspace(-1,1,11)
+    eta = np.linspace(-1,1,9)
+    #------------ outer 0-form -------------
+    f0o = FC('0-f-o', is_hybrid=IH)
+    f0i = FC('0-f-i', is_hybrid=IH)
+    for f0 in (f0o, f0i):
+        f0.TW.func.do.set_func_body_as(scalar)
+        f0.TW.current_time = 1
+        f0.TW.do.push_all_to_instant()
+        f0.discretize()
+        R = f0.reconstruct(xi, eta, ravel=True)[1]
+        MR = f0.do.make_reconstruction_matrix_on_grid(xi, eta)
+        for i in MR:
+            r = MR[i] @ f0.cochain.local[i]
+            np.testing.assert_almost_equal(np.max(np.abs(r - R[i][0])), 0)
+
+    #---------- outer 1-form ---------------------
+    f1o = FC('1-f-o', is_hybrid=IH)
+    f1o.TW.func.do.set_func_body_as(vector)
+    f1o.TW.current_time = 1
+    f1o.TW.do.push_all_to_instant()
+    f1o.discretize()
+
+    R = f1o.reconstruct(xi, eta, ravel=True)[1]
+    MR = f1o.do.make_reconstruction_matrix_on_grid(xi, eta)
+    for i in MR:
+        U, V = MR[i] @ f1o.cochain.local[i]
+        u, v = R[i]
+        np.testing.assert_almost_equal(np.max(np.abs(U- u)), 0)
+        np.testing.assert_almost_equal(np.max(np.abs(v- V)), 0)
+
+    #------------- inner 1-form ------------------------------
+    vector = FC('vector', (P, Q))
+    f1i = FC('1-f-i', is_hybrid=IH)
+    f1i.TW.func.do.set_func_body_as(vector)
+    f1i.TW.current_time = 1
+    f1i.TW.do.push_all_to_instant()
+    f1i.discretize()
+
+    R = f1i.reconstruct(xi, eta, ravel=True)[1]
+    MR = f1i.do.make_reconstruction_matrix_on_grid(xi, eta)
+    for i in MR:
+        U, V = MR[i] @ f1i.cochain.local[i]
+        u, v = R[i]
+        np.testing.assert_almost_equal(np.max(np.abs(U- u)), 0)
+        np.testing.assert_almost_equal(np.max(np.abs(v- V)), 0)
+
+    #------------ 2-form -------------
+    f2o = FC('2-f-o', is_hybrid=IH)
+    f2i = FC('2-f-i', is_hybrid=IH)
+    for f2 in (f2o, f2i):
+        f2.TW.func.do.set_func_body_as(scalar)
+        f2.TW.current_time = 1
+        f2.TW.do.push_all_to_instant()
+        f2.discretize()
+        R = f2.reconstruct(xi, eta, ravel=True)[1]
+        MR = f2.do.make_reconstruction_matrix_on_grid(xi, eta)
+        for i in MR:
+            r = MR[i] @ f2.cochain.local[i]
+            np.testing.assert_almost_equal(np.max(np.abs(r - R[i][0])), 0)
+
+    return 1
+
+
+
 
 
 if __name__ == '__main__':
-    # mpiexec python _2dCSCG\TESTS\unittest_form.py
+    # mpiexec -n 4 python _2dCSCG\tests\unittests\standard_forms.py
     # test_Form_NO4_Hodge()
-    test_Form_NO1_coboundary()
-    # test_Form_NO2_Naive_numbering()
+    test_Form_NO5_cross_product()
+    # test_Form_NO6_reconstruction_matrices()
     # test_Form_NO3_mass_matrices()

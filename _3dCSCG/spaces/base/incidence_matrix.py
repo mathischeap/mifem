@@ -8,7 +8,7 @@ Aerodynamics, AE
 TU Delft
 """
 import numpy as np
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from scipy.sparse import csc_matrix
 
 class IncidenceMatrix(FrozenOnly):

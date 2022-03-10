@@ -1,9 +1,9 @@
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 from _2dCSCG.mesh.trace.elements.element.coordinate_transformation import _2dCSCG_Trace_Element_CoordinateTransformation
-from root.config import rAnk
+from root.config.main import rAnk
 
 
 

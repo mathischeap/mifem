@@ -8,9 +8,9 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from tools.linear_algebra.gathering.chain_matrix.main import Gathering_Matrix, Gathering_Vector
 
 
@@ -56,7 +56,7 @@ class _3dCSCG_Edge_Numbering_Naive(FrozenOnly):
 
         _p_ = self._ef_.space.p
         p = [_p_[0] + 1, _p_[1] + 1, _p_[2] + 1]
-        tAn = self._mesh_.edge.elements.___DO_find_type_and_amount_numbered_before___()
+        tAn = self._mesh_.edge.elements.___PRIVATE_find_type_and_amount_numbered_before___()
         _D_ = {'NS':p[0], 'WE':p[1], 'BF':p[2]}
 
         for i in self._mesh_.edge.elements:
@@ -120,7 +120,7 @@ class _3dCSCG_Edge_Numbering_Naive(FrozenOnly):
         extraInfo = None
 
         p = self._ef_.space.p
-        tAn = self._mesh_.edge.elements.___DO_find_type_and_amount_numbered_before___()
+        tAn = self._mesh_.edge.elements.___PRIVATE_find_type_and_amount_numbered_before___()
         _D_ = {'NS':p[0], 'WE':p[1], 'BF':p[2]}
 
         for i in self._mesh_.edge.elements:

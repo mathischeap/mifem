@@ -3,7 +3,7 @@
 
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from _3dCSCG.forms.standard.base.numbering.do.find import _3dCSCG_Standard_Form_Numbering_DO_FIND_
 
 
@@ -16,3 +16,6 @@ class _3dCSCG_Standard_Form_Numbering_DO_(FrozenOnly):
     @property
     def find(self):
         return self._find_
+
+    def reset_cache(self):
+        self._numbering_.___PRIVATE_reset_cache___()

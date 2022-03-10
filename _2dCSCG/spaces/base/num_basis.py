@@ -1,5 +1,5 @@
 import numpy as np
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 
 class NumBasis(FrozenOnly):

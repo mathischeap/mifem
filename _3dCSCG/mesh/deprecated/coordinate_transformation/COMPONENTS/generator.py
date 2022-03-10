@@ -7,7 +7,7 @@ Created on Fri May  3 09:47:58 2019
 Aerodynamics, AE
 TU Delft
 """
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 class CoordinateTransformationGenerators(FrozenOnly):
     """ Here we group all generators for class CoordinateTransformation3D."""

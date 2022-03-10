@@ -4,7 +4,7 @@ Space related unittests.
 """
 import sys
 if './' not in sys.path: sys.path.append('./')
-from root.config import *
+from root.config.main import *
 from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
 import random
 

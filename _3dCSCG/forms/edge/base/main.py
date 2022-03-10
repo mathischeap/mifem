@@ -41,7 +41,7 @@ class _3dCSCG_Edge(_3dCSCG_FORM_BASE, ndim=3):
         self._cochain_ = _3dCSCG_Edge_Cochain(self)
         self._error_ = _3dCSCG_Edge_Error(self)
         self._DO_ = _3dCSCG_Edge_DO(self)
-        #
+
         # self._visualize_ = _3dCSCG_Trace_Visualize(self)
         # self._coboundary_ = _3dCSCG_Trace_Coboundary(self)
 

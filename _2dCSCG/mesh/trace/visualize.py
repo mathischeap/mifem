@@ -2,8 +2,8 @@
 
 import matplotlib.pyplot as plt
 from matplotlib import cm
-from screws.frozen import FrozenOnly
-from root.config import *
+from screws.freeze.main import FrozenOnly
+from root.config.main import *
 
 
 

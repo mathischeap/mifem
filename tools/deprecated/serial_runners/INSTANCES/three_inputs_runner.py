@@ -16,11 +16,11 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from time import localtime, strftime, time
-from screws.decorators import accepts
+from screws.decorators.accepts import accepts
 from tools.deprecated.serial_runners._runner_ import Runner
 from tools.deprecated.serial_runners.INSTANCES.COMPONENTS.tir_drw import TIR_DRW
 from tools.deprecated.serial_runners.INSTANCES.COMPONENTS.m_tir_tabular import M_TIR_Tabulate
-from root.config import sIze
+from root.config.main import sIze
 assert sIze == 1, "Runners can only be run in single thread."
 
 class TimeIteration:

@@ -3,9 +3,8 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from screws.frozen import FrozenOnly
-from screws.decorators import accepts
-from root.config import *
+from screws.freeze.main import FrozenOnly
+from root.config.main import *
 from _3dCSCG.mesh.elements.element.main import _3dCSCG_Mesh_Element
 from _3dCSCG.mesh.elements.coordinate_transformation import _3dCSCG_Mesh_Elements_CT
 from _3dCSCG.mesh.elements.do.main import _3dCSCG_Mesh_Elements_DO
@@ -42,6 +41,24 @@ class _3dCSCG_Mesh_Elements(FrozenOnly):
                     self._multi_elements_metric_[mki] = 2
             else:
                 counter[mki] = i
+
+    @property
+    def statistic(self):
+        """The statistic of local mesh elements according to their `type_wrt_metric`.
+
+        :return: a dict of the statistic
+        """
+        MEM = self._multi_elements_metric_
+        Statistic = dict()
+        Statistic['total num of local mesh elements'] = self.num
+        A = self.num
+        for type_name in MEM:
+            A -= MEM[type_name] - 1
+        Statistic['amount of types wrt metric'] = A
+        Statistic['similarity according to types wrt metric'] = (self.num - A) / (
+                    self.num - 1)  # in [0, 1]
+
+        return Statistic
 
     @property
     def GLOBAL_num(self):
@@ -137,14 +154,6 @@ class _3dCSCG_Mesh_Elements(FrozenOnly):
         if not isinstance(mark, str): mark = str(mark)
         return mark
 
-    @accepts('self', int)
-    def ___DO_find_slave_of_element___(self, i: int) -> int:
-        """Find the core rank of mesh element #i."""
-        return self._mesh_.do.FIND_slave_of_element(i)
-
-
-
-
 
 
 
@@ -156,10 +165,10 @@ if __name__ == '__main__':
     # mpiexec -n 12 python _3dCSCG\mesh\elements\main.py
     from _3dCSCG.main import MeshGenerator
     elements = [5, 5, 5]
-    mesh = MeshGenerator('crazy', c=0.3, bounds=([0,1], [0,1], [0,1]))(elements)
+    mesh = MeshGenerator('crazy', c=0.0, bounds=([0,1], [0,1], [0,1]))(elements)
 
-    for i in range(mesh.elements.GLOBAL_num):
-        mesh.elements.do.illustrate_element(i)
+    # for i in range(mesh.elements.GLOBAL_num):
+    #     mesh.elements.do.illustrate_element(i)
 
-    # print(mesh.elements.quality)
+    print(mesh.elements.statistic)
     # print(mesh.quality)

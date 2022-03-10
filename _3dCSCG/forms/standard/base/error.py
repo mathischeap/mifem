@@ -1,7 +1,7 @@
 
 
-from root.config import *
-from screws.frozen import FrozenOnly
+from root.config.main import *
+from screws.freeze.main import FrozenOnly
 
 class _3dCSCG_Standard_Form_Error(FrozenOnly):
     def __init__(self, sf):

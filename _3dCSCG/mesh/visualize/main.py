@@ -2,10 +2,10 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from root.config import *
+from root.config.main import *
 # import tecplot as tp
 # from tecplot.constant import PlotType
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 from _3dCSCG.mesh.visualize.matplot import _3dCSCG_Mesh_Visualize_Matplot
 

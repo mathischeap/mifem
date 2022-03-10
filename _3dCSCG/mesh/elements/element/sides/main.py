@@ -2,11 +2,7 @@
 
 """
 
-
-import sys
-if './' not in sys.path: sys.path.append('../')
-
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from _3dCSCG.mesh.elements.element.sides.side.main import _3dCSCG_Mesh_Element_Side
 
 
@@ -34,7 +30,3 @@ class _3dCSCG_Mesh_Element_Sides(FrozenOnly):
 
     def __contains__(self, s):
         return s in 'NSWEBF'
-
-
-
-

@@ -1,8 +1,8 @@
 
 
 
-from screws.frozen import FrozenOnly
-from root.config import rAnk, mAster_rank
+from screws.freeze.main import FrozenOnly
+from root.config.main import rAnk, mAster_rank
 
 
 

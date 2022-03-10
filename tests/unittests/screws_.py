@@ -1,13 +1,19 @@
 
 import sys
 if './' not in sys.path: sys.path.append('./')
-from root.config import *
+from root.config.main import *
 
 import random, time
 
-from screws.functions._3d import ScalingFunc, Opposite, CFG, _0_, CartSphSwitcher, CartCylSwitcher
-from screws.numerical._4d import NumericalPartialDerivative_txyz, NumericalPartialDerivative_txyz_Functions
-from screws.emails import SendAdminAnEmail, SendAdminAnHTMLEmail
+from screws.functions._3d_space.scaling import ScalingFunc
+from screws.functions._3d_space.opposite import Opposite
+from screws.functions._3d_space.constant import CFG
+from screws.functions._3d_space._0_ import _0_
+from screws.functions._3d_space.Cartesian_spherical_coordinate_switcher import CartSphSwitcher
+from screws.functions._3d_space.Cartesian_cylinder_coordinate_switcher import CartCylSwitcher
+from screws.numerical.time_plus_3d_space.partial_derivative_as_functions import NumericalPartialDerivative_txyz_Functions
+from screws.numerical.time_plus_3d_space.partial_derivative import NumericalPartialDerivative_txyz
+from screws.emails.plain import SendAdminAnEmail, SendAdminAnHTMLEmail
 
 from functools import partial
 

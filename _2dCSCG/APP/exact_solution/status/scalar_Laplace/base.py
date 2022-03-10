@@ -12,9 +12,9 @@ import random
 import numpy as np
 from functools import partial
 from _2dCSCG.APP.exact_solution.status.base import Base
-from screws.numerical._2d import NumericalPartialDerivative_xy
-from _2dCSCG.fields.scalar import _2dCSCG_ScalarField
-from _2dCSCG.fields.vector import _2dCSCG_VectorField
+from screws.numerical._2d_space.Jacobian_21 import NumericalPartialDerivative_xy
+from _2dCSCG.fields.scalar.main import _2dCSCG_ScalarField
+from _2dCSCG.fields.vector.main import _2dCSCG_VectorField
 
 
 

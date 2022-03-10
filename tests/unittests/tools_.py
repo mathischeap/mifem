@@ -10,7 +10,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from root.config import *
+from root.config.main import *
 import os
 from time import sleep
 from scipy import sparse as spspa
@@ -19,7 +19,7 @@ import random
 from tools.linear_algebra.data_structures.global_matrix.main import GlobalVector, DistributedVector, GlobalMatrix
 from tools.linear_algebra.deprecated.data_structure_old0 import GlobalMatrix as GlobalMatrixOld
 import tools.linear_algebra.deprecated.gmres as gmres
-import tools.linear_algebra.solvers.serial.scipy_sparse_linalg as serial_spspalinalg
+import tools.linear_algebra.solvers.serial.deprecated as serial_spspalinalg
 from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
 from _2dCSCG.main import MeshGenerator as MeshGenerator2D
 from _2dCSCG.main import SpaceInvoker as SpaceInvoker2D
@@ -66,7 +66,7 @@ def test_TOOLS_NO1_iterator():
                         auto_save_frequency=5,
                         monitor_factor=0,
                         RDF_filename='RDF_filename',
-                        save_to_miter=True,
+                        save_to_mitr=True,
                         name=None)
     SI(___TEST_SOLVER___, [0,0])
     SI.run()
@@ -298,7 +298,7 @@ def test_TOOLS_NO2_3_linear_algebra_serial_scipy_sparse_solver():
     b = GlobalVector(b)
 
     x0, info = getattr(serial_spspalinalg, 'gmres')(A, b, X0, restart=3, tol=1e-6, maxiter=1)[0:2]
-    assert x0.IS_master_dominating, "Results must be a master dominating DistributedVector."
+    assert x0.IS.master_dominating, "Results must be a master dominating DistributedVector."
     x0 = x0.V
     if rAnk == mAster_rank:
         np.testing.assert_almost_equal(x0[0,0], -2.1810344827586)
@@ -309,7 +309,7 @@ def test_TOOLS_NO2_3_linear_algebra_serial_scipy_sparse_solver():
     assert info == 0
 
     x0, info = getattr(serial_spspalinalg, 'gcrotmk')(A, b, X0, restart=3, tol=1e-6, maxiter=5)[0:2]
-    assert x0.IS_master_dominating, "Results must be a master dominating DistributedVector."
+    assert x0.IS.master_dominating, "Results must be a master dominating DistributedVector."
     x0 = x0.V
     if rAnk == mAster_rank:
         np.testing.assert_almost_equal(x0[0,0], -2.1810344827586)
@@ -320,7 +320,7 @@ def test_TOOLS_NO2_3_linear_algebra_serial_scipy_sparse_solver():
     assert info == 0
 
     x0, info = getattr(serial_spspalinalg, 'bicgstab')(A, b, X0, restart=3, tol=1e-6, maxiter=5)[0:2]
-    assert x0.IS_master_dominating, "Results must be a master dominating DistributedVector."
+    assert x0.IS.master_dominating, "Results must be a master dominating DistributedVector."
     x0 = x0.V
     if rAnk == mAster_rank:
         np.testing.assert_almost_equal(x0[0,0], -2.1810344827586)
@@ -376,7 +376,7 @@ def test_TOOLS_NO2_4_linear_algebra_serial_spsolve_solver():
 
     x0, info = serial_spspalinalg.spsolve(A, b)[0:2]
 
-    assert x0.IS_master_dominating, "Results must be a master dominating DistributedVector."
+    assert x0.IS.master_dominating, "Results must be a master dominating DistributedVector."
     x0 = x0.V
     if rAnk == mAster_rank:
         np.testing.assert_almost_equal(x0[0,0], -2.1810344827586)
@@ -724,8 +724,8 @@ def test_TOOLS_NO7_linear_algebra_EWC_test():
 
         s = E10.shape
         assert s[0] == len(mesh.elements)
-        assert s[1] == f1.NUM_basis
-        assert s[2] == f0.NUM_basis
+        assert s[1] == f1.num.basis
+        assert s[2] == f0.num.basis
 
 
         E210 = E21 @ E10
@@ -746,8 +746,8 @@ def test_TOOLS_NO7_linear_algebra_EWC_test():
         BMAT = mif.bmat(blocks)
         s = BMAT.shape
         assert s[0] == len(mesh.elements)
-        assert s[1] == f2.NUM_basis + f1.NUM_basis
-        assert s[2] == f2.NUM_basis + f1.NUM_basis
+        assert s[1] == f2.num.basis + f1.num.basis
+        assert s[2] == f2.num.basis + f1.num.basis
 
         for i in BMAT:
             bi = BMAT[i]
@@ -1056,8 +1056,8 @@ def test_TOOLS_NO10_test_EWC_SparseMatrix_Customize():
 
         s = E32.shape
         assert s[0] == len(mesh.elements)
-        assert s[1] == f3.NUM_basis
-        assert s[2] == f2.NUM_basis
+        assert s[1] == f3.num.basis
+        assert s[2] == f2.num.basis
 
         f2_GND = f2.GLOBAL_num_dofs
         f3_GND = f3.GLOBAL_num_dofs
@@ -1131,8 +1131,8 @@ def test_TOOLS_NO10_test_EWC_SparseMatrix_Customize():
 
         s = SYSTEM.shape
         assert s[0] == len(mesh.elements)
-        assert s[1] == f1.NUM_basis + f0.NUM_basis
-        assert s[2] == f1.NUM_basis + f0.NUM_basis
+        assert s[1] == f1.num.basis + f0.num.basis
+        assert s[2] == f1.num.basis + f0.num.basis
 
         if rAnk == mAster_rank:
             AAA =  int(GND / 30)
@@ -1807,9 +1807,9 @@ def test_TOOLS_NO14_partial_cochain_with_3dCSCG_form_BC():
 
 
     # test set_entries_according_to_two_CSCG_partial_cochains for EWC vectors.
-    cf0 = EWC_ColumnVector(mesh, f0.NUM_basis)
-    cf2 = EWC_ColumnVector(mesh, f2.NUM_basis)
-    ct2 = EWC_ColumnVector(mesh, t2.NUM_basis)
+    cf0 = EWC_ColumnVector(mesh, f0.num.basis)
+    cf2 = EWC_ColumnVector(mesh, f2.num.basis)
+    ct2 = EWC_ColumnVector(mesh, t2.num.basis)
 
     b = concatenate([cf0, cf2, ct2])
     b.gathering_matrix = [f0, f2, t2]
@@ -1929,17 +1929,17 @@ def test_TOOLS_NO15_linear_system_apply_BC():
     A = bmat(BMAT)
     SHAPE = A.shape
     assert SHAPE[0] == len(mesh.elements)
-    assert SHAPE[1] == f2.NUM_basis + f3.NUM_basis + t2.NUM_basis
-    assert SHAPE[2] == f2.NUM_basis + f3.NUM_basis + t2.NUM_basis
+    assert SHAPE[1] == f2.num.basis + f3.num.basis + t2.num.basis
+    assert SHAPE[2] == f2.num.basis + f3.num.basis + t2.num.basis
     A.gathering_matrices = ([f2, f3, t2], [f2, f3, t2])
 
-    b0 = EWC_ColumnVector(mesh, f2.NUM_basis)
-    b1 = EWC_ColumnVector(mesh, f3.NUM_basis)
-    b2 = EWC_ColumnVector(mesh, t2.NUM_basis)
+    b0 = EWC_ColumnVector(mesh, f2.num.basis)
+    b1 = EWC_ColumnVector(mesh, f3.num.basis)
+    b2 = EWC_ColumnVector(mesh, t2.num.basis)
     b = concatenate([b0, b1, b2])
     SHAPE = b.shape
     assert SHAPE[0] == len(mesh.elements)
-    assert SHAPE[1] == f2.NUM_basis + f3.NUM_basis + t2.NUM_basis
+    assert SHAPE[1] == f2.num.basis + f3.num.basis + t2.num.basis
     assert SHAPE[2] == 1
     b.gathering_matrix = [f2, f3, t2]
 

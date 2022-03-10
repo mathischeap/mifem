@@ -1,6 +1,6 @@
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from _3dCSCG.forms.standard._0_form.main import _3dCSCG_0Form
 
 

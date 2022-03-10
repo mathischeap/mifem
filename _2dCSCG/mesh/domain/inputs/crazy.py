@@ -5,7 +5,13 @@ import numpy as np
 
 
 class Crazy(DomainInputBase):
+    """"""
     def __init__(self, c=0, bounds=((0, 1), (0, 1))):
+        """
+
+        :param c:
+        :param bounds:
+        """
         assert np.shape(bounds)[0] == 2, " <Crazy> : bounds dimension is wrong."
         for i in range(2):
             assert np.shape(bounds[i]) == (2,) and bounds[i][1] > bounds[i][0], \

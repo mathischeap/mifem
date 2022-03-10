@@ -1,5 +1,5 @@
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
 
 

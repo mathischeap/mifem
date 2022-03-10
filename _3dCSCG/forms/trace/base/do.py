@@ -2,7 +2,7 @@
 
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 
 
@@ -39,4 +39,3 @@ class _3dCSCG_Trace_DO(FrozenOnly):
 
     def reconstruct(self, *args, **kwargs):
         return self._tf_.reconstruct(*args, **kwargs)
-

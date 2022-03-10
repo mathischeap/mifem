@@ -1,8 +1,8 @@
 
 
 
-from root.config import *
-from screws.frozen import FrozenOnly
+from root.config.main import *
+from screws.freeze.main import FrozenOnly
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 

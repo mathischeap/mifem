@@ -11,8 +11,8 @@ In the mesh.boundaries class, the periodic boundaries will not be shown.
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from root.config import *
-from screws.frozen import FrozenOnly
+from root.config.main import *
+from screws.freeze.main import FrozenOnly
 
 
 class _3dCSCG_Boundaries(FrozenOnly):

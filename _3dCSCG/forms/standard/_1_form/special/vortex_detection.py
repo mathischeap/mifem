@@ -1,7 +1,7 @@
 
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 import numpy as np
 
 

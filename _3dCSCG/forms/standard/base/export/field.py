@@ -6,9 +6,9 @@ We want to export the field to some data files.
 """
 
 
-from root.config import *
-from screws.frozen import FrozenOnly
-from screws.miscellaneous import check_filename, check_no_splcharacter
+from root.config.main import *
+from screws.freeze.main import FrozenOnly
+from screws.miscellaneous.timer import check_filename, check_no_splcharacter
 from scipy.io import savemat
 
 

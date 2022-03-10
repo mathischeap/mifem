@@ -7,13 +7,16 @@
          TU Delft, Delft, Netherlands
 
 """
-from screws.frozen import FrozenOnly
+
 from _2dCSCG.forms.base import _2dCSCG_FORM_BASE
 from _2dCSCG.forms.trace.base.numbering.main import _2dCSCG_Trace_Numbering
 from _2dCSCG.forms.trace.base.visualize import _2dCSCG_TraceVisualize
+from _2dCSCG.forms.trace.base.do import _2dCSCG_Trace_DO
+from _2dCSCG.forms.trace.base.cochain import _2dCSCG_Trace_Cochain
+from _2dCSCG.forms.trace.base.coboundary import _2dCSCG_TraceCoboundary
+from _2dCSCG.forms.trace.base.matrices import _2dCSCG_TraceMatrices
 
-from inheriting.CSCG.form.trace.main_BASE import CSCG_Trace_Form, CSCG_Trace_Form_Cochain_BASE
-from inheriting.CSCG.form.trace.main_BASE import CSCG_Trace_Form_Coboundary_BASE
+from inheriting.CSCG.forms.trace.main import CSCG_Trace_Form
 
 
 
@@ -32,6 +35,8 @@ class _2dCSCG_Standard_Trace(CSCG_Trace_Form, _2dCSCG_FORM_BASE, ndim=2):
     """
     def __init__(self, mesh, space, is_hybrid, orientation, numbering_parameters, name):
         super().__init__(mesh, space)
+        super(_2dCSCG_Standard_Trace, self).___init___()
+
         self._NUM_basis_, self._NUM_basis_components_, self._NUM_basis_onside_ = \
             getattr(self.space.num_basis, self.__class__.__name__)
         assert isinstance(is_hybrid, bool), " isHybrid needs to be bool."
@@ -41,13 +46,45 @@ class _2dCSCG_Standard_Trace(CSCG_Trace_Form, _2dCSCG_FORM_BASE, ndim=2):
         self._orientation_ = orientation
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_trace_form')
         self.standard_properties.name = name
+
         self._numbering_ = _2dCSCG_Trace_Numbering(self, numbering_parameters)
         self._cochain_ = _2dCSCG_Trace_Cochain(self)
-
         self._visualize_ = _2dCSCG_TraceVisualize(self)
         self._matrices_ = _2dCSCG_TraceMatrices(self)
         self._coboundary_ = _2dCSCG_TraceCoboundary(self)
         self._DO_ = _2dCSCG_Trace_DO(self)
+
+
+    @property
+    def numbering(self):
+        """Collections of all numbering-related sub-properties."""
+        return self._numbering_
+
+    @property
+    def cochain(self):
+        """Collections of all cochain-related sub-properties."""
+        return self._cochain_
+
+    @property
+    def visualize(self):
+        """Collections of all visualization-related sub-properties."""
+        return self._visualize_
+
+    @property
+    def matrices(self):
+        """Collections of all matrices-related sub-properties."""
+        return self._matrices_
+
+    @property
+    def coboundary(self):
+        """Collections of all coboundary-related sub-properties."""
+        return self._coboundary_
+
+    @property
+    def do(self):
+        """Group all methods."""
+        return self._DO_
+
 
     def ___PRIVATE_reset_cache___(self):
         self.cochain.___PRIVATE_reset_cache___()
@@ -71,7 +108,7 @@ class _2dCSCG_Standard_Trace(CSCG_Trace_Form, _2dCSCG_FORM_BASE, ndim=2):
         return self.space.do.evaluate_trace_basis_at_meshgrid(
             self.k, xi, eta, compute_xietasigma=compute_xietasigma)
 
-    def ___DO_resemble___(self, obj_or_filename):
+    def ___PRIVATE_do_resemble___(self, obj_or_filename):
         """
 
         :param obj_or_filename:
@@ -79,63 +116,3 @@ class _2dCSCG_Standard_Trace(CSCG_Trace_Form, _2dCSCG_FORM_BASE, ndim=2):
         """
         raise NotImplementedError()
 
-
-
-
-
-
-class _2dCSCG_Trace_DO(FrozenOnly):
-    def __init__(self, tf):
-        self._tf_ = tf
-        self._freeze_self_()
-
-    def evaluate_basis_at_meshgrid(self, *args, **kwargs):
-        return self._tf_.___PRIVATE_do_evaluate_basis_at_meshgrid___(*args, **kwargs)
-
-    def resemble(self, *args, **kwargs):
-        return self._tf_.___PRIVATE_do_resemble___(*args, **kwargs)
-
-
-
-
-
-class _2dCSCG_Trace_Cochain(CSCG_Trace_Form_Cochain_BASE):
-    def __init__(self, tf):
-        super().__init__(tf)
-
-    def ___local_2_local_TEW___(self):
-        """"""
-        BO = self._tf_.NUM_basis_onside
-        INDICES = [0,]
-        for sn in 'UDLR':
-            # noinspection PyUnresolvedReferences
-            INDICES.append(INDICES[-1]+BO[sn])
-        _D_ = {'U':0, 'D':1, 'L':2, 'R':3}
-        TEW = dict()
-        for i in self._tf_.mesh.trace.elements:
-            TE = self._tf_.mesh.trace.elements[i]
-            CE, Ce = TE.CHARACTERISTIC_element, TE.CHARACTERISTIC_edge
-            i0 = _D_[Ce]
-            TEW[i] = self.local[CE][INDICES[i0]:INDICES[i0 + 1]]
-        self.local_TEW = TEW
-
-
-
-
-
-class _2dCSCG_TraceCoboundary(CSCG_Trace_Form_Coboundary_BASE):
-    def __init__(self, tf):
-        super().__init__(tf)
-
-
-
-
-class _2dCSCG_TraceMatrices(FrozenOnly):
-    def __init__(self, tf):
-        self._tf_ = tf
-        self._N_ = None
-        self._freeze_self_()
-
-    @property
-    def trace(self):
-        return self._tf_.coboundary.trace_matrix

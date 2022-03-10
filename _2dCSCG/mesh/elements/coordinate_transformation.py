@@ -1,9 +1,9 @@
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from screws.quadrature import Quadrature
-from screws.decorators import memoize1
-from root.config import caChe_factor
+from screws.decorators.accepts import memoize1
+from root.config.main import caChe_factor
 import numpy as np
 
 

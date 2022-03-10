@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 
 class ElementTypeWr2MetricBase(FrozenOnly):

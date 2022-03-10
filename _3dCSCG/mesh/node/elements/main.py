@@ -3,8 +3,8 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from root.config import *
-from screws.frozen import FrozenOnly
+from root.config.main import *
+from screws.freeze.main import FrozenOnly
 from _3dCSCG.mesh.node.elements.element.main import _3dCSCG_Node_Element
 
 

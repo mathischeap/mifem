@@ -1,6 +1,6 @@
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 import numpy as np
 from _2dCSCG.mesh.elements.element.coordinate_transformation import _2dCSCG_Mesh_ECT
 

@@ -8,8 +8,8 @@ Aerodynamics, AE
 TU Delft
 """
 import inspect
-from screws.miscellaneous import MyTimer
-from screws.frozen import FrozenOnly
+from screws.miscellaneous.timer import MyTimer
+from screws.freeze.main import FrozenOnly
 
 class TIR_DRW(FrozenOnly):
     """ """

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 
-from root.config import *
+from root.config.main import *
 from screws.quadrature import Quadrature
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 class Base(FrozenOnly):
     """A base (parent) for all exact solution classes."""

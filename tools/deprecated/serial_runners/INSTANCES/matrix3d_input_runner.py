@@ -15,10 +15,10 @@ TU Delft
 """
 import types
 from time import localtime, strftime, time, sleep
-from screws.miscellaneous import initialize_3d_list
+from screws.miscellaneous.timer import initialize_3d_list
 from tools.deprecated.serial_runners._runner_ import Runner
 from tools.deprecated.serial_runners.INSTANCES.COMPONENTS.m_tir_tabular import M_TIR_Tabulate
-from root.config import *
+from root.config.main import *
 
 
 class TimeIteration:

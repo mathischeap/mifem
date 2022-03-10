@@ -34,7 +34,7 @@ class CoordinateTransformation(CTBase):
     @staticmethod
     def ___method___(J):
         """
-        If we already knwo J, we can use this method to compute the rest without
+        If we already know J, we can use this method to compute the rest without
         computing J again. This saves a bit time. And we do not store J to, like,
         `self._J_` to avoid additional memory occupancy if we forget to clear it.
 

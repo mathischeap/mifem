@@ -1,10 +1,10 @@
 
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
-from root.config import *
-from screws.frozen import FrozenOnly
+from root.config.main import *
+from screws.freeze.main import FrozenOnly
 import matplotlib.pyplot as plt
 
 
@@ -915,8 +915,8 @@ if __name__ == '__main__':
 
 
     region = mesh.domain.regions['R:R']
-    RS = region.sub_geometry.GENERATE_perpendicular_slice_object(t=4.5/9)
-    MS = mesh.sub_geometry.GENERATE_perpendicular_slice_object(RS)
+    RS = region.sub_geometry.make_a_perpendicular_slice_object_on(r=4.5 / 9)
+    MS = mesh.sub_geometry.make_a_perpendicular_slice_object_on(RS)
 
     f0.visualize.matplot.perpendicular_slice(MS)
     # f0.visualize.matplot.perpendicular_slice_sum_square_difference_with(MS, f3, saveto='')

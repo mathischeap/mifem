@@ -2,7 +2,7 @@
 Jacobian preconditioner.
 
 """
-from root.config import *
+from root.config.main import *
 from scipy import sparse as spspa
 from tools.linear_algebra.preconditioners.base import Preconditioner
 

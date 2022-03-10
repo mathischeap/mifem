@@ -9,7 +9,7 @@
 """
 from numpy import sin, cos, pi
 from _3dCSCG.APP.exact_solution.status.icpsNS.base import icpsNS_Base
-from _3dCSCG.fields.vector import _3dCSCG_VectorField
+from _3dCSCG.fields.vector.main import _3dCSCG_VectorField
 
 
 

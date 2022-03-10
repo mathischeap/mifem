@@ -1,8 +1,8 @@
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from functools import lru_cache
-from screws.decorators import accepts
+from screws.decorators.accepts import accepts
 import numpy as np
 
 

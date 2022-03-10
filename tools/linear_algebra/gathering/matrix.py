@@ -6,7 +6,7 @@ from tools.deprecated.assembler.main import GatheringMatrix
 
 import numpy as np
 from tools.linear_algebra.gathering.vector import Gathering_Vector
-from root.config import rAnk, mAster_rank, cOmm, MPI
+from root.config.main import rAnk, mAster_rank, cOmm, MPI
 
 
 
@@ -145,8 +145,11 @@ class Gathering_Matrix(GatheringMatrix):
         :return:
         """
         for ogm in args:
-            assert ogm.__class__.__name__ == 'Gathering_Matrix', f"I am stacking a {ogm.__class__.__name__}, wrong!"
-            assert len(self) == len(ogm), "Length dis-match."
+            assert ogm.__class__.__name__ == 'Gathering_Matrix', \
+                f"I am stacking a {ogm.__class__.__name__}, wrong!"
+            assert len(self) == len(ogm), \
+                f"Length dis-match."
+
         for i in self:
             for ogm in args:
                 assert i in ogm, "elements dis-match."
@@ -162,6 +165,5 @@ class Gathering_Matrix(GatheringMatrix):
             for j, ogm in enumerate(args):
                 gvd_i_gv = np.concatenate([gvd_i_gv, ogm[i].full_vector + upon[j]])
             gvd[i] = Gathering_Vector(i, gvd_i_gv)
+
         return Gathering_Matrix(gvd)
-
-

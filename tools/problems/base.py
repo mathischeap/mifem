@@ -3,7 +3,7 @@ Not useful yet!
 
 """
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 
 

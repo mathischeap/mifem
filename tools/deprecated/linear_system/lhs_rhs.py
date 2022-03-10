@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from scipy import sparse as spspa
 from tools.linear_algebra.data_structures.global_matrix.main import GlobalVector, GlobalMatrix
 

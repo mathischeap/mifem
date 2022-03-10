@@ -2,12 +2,12 @@
 """
 Here we test our iterators.
 
-$ mpiexec -n 12 python TESTS\iterator_tests.py
+$ mpiexec -n 4 python tests\iterator_tests.py
 
 """
 import sys
 if './' not in sys.path: sys.path.append('./')
-from root.config import *
+from root.config.main import *
 from time import sleep
 
 from tools.iterators.simple import SimpleIterator
@@ -23,7 +23,7 @@ def ___TEST_SOLVER___(tk, tk1):
     Returns
     -------
     exit_code : The standard exit code.
-    shut_down : If it is ``True``, the outer iterator will shutdown immediately.
+    shut_down : If it is ``True``, the outer iterator will shut down immediately.
     message : The solver message.
     output1 :
     """
@@ -41,7 +41,7 @@ def ___TEST_SOLVER___(tk, tk1):
 
 SI = SimpleIterator(t0=0, dt=0.1, max_steps=100000,
                     auto_save_frequency=5,
-                    monitor_factor=100,
+                    monitor_factor=10000,
                     RDF_filename='RDF_filename',
                     name=None)
 

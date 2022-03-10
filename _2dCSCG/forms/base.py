@@ -9,7 +9,7 @@ A BASE for all forms except continuous forms.
          TU Delft, Delft, Netherlands
 
 """
-from inheriting.CSCG.form.main_BASE import CSCG_FORM_BASE
+from inheriting.CSCG.forms.base.main import CSCG_FORM_BASE
 
 
 # noinspection PyAbstractClass

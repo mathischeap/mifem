@@ -37,6 +37,9 @@ def ___concatenate_EWC_sparse_vectors___(vectors):
 
     return EWC
 
+
+
+
 class ___concatenate_HELPER_DataGenerator___:
     """"""
     def __init__(self, vectors):

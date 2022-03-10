@@ -1,11 +1,12 @@
 
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from scipy import sparse as spspa
-from root.config import rAnk, mAster_rank, cOmm, np, sEcretary_rank, MPI
+from root.config.main import rAnk, mAster_rank, cOmm, np, sEcretary_rank, MPI
 from tools.linear_algebra.data_structures.vectors.GLOBAL.adjust import ___GV_ADJUST___
-
+from tools.linear_algebra.data_structures.vectors.GLOBAL.do import GlobalVectorDo
+from tools.linear_algebra.data_structures.vectors.GLOBAL.IS import GlobalVectorIS
 
 class GlobalVector(FrozenOnly):
     """
@@ -17,7 +18,17 @@ class GlobalVector(FrozenOnly):
     GlobalVector may have to be adjusted, so we do not ask it to be csc_matrix.
     """
     def __init__(self, V):
-        if V.__class__.__name__ == 'csr_matrix': V = V.tocsc()
+        """
+
+        :param V: it can be:
+            - csc_matrix of shape (x, 1).
+            - 1d array
+            - 2d array of shape (x, 1)
+            - int: we will make an empty sparse matrix.
+            - None: (Cannot be in the master core) we will make an empty sparse matrix.
+
+        """
+        #------ parse input V ------------------------------------------------------------
         if V.__class__.__name__ == 'ndarray':
             if np.ndim(V) == 1:
                 V = spspa.csr_matrix(V).T
@@ -28,14 +39,20 @@ class GlobalVector(FrozenOnly):
                 raise Exception(f"Only accept 1- or 2-d array, now it is {np.ndim(V)}.")
         elif V is None:
             assert rAnk != mAster_rank, "in master core, can not give None."
+        elif V.__class__.__name__ in ('int', 'int32', 'int64'):
+            V = spspa.csc_matrix((V, 1))
         else:
             pass
+        #----------------- check V ---------------------------------------
+        if V.__class__.__name__ == 'csr_matrix':
+            V = V.tocsc()
 
         if rAnk == mAster_rank:
             assert spspa.issparse(V), "I need a scipy sparse matrix"
             shape = V.shape
         else:
             shape = None
+
         shape = cOmm.bcast(shape, root=mAster_rank)
         if rAnk != mAster_rank:
             if V is None:
@@ -44,6 +61,7 @@ class GlobalVector(FrozenOnly):
                 pass
 
         assert spspa.isspmatrix_csc(V) and V.shape[1] == 1, "V must be a csc_matrix of shape (x, 1)."
+        #--------------------------------------------------------------------------------------
 
         self._V_ = V
         SHAPE = cOmm.gather(self.shape, root=sEcretary_rank)
@@ -51,7 +69,8 @@ class GlobalVector(FrozenOnly):
             for i, sp in enumerate(SHAPE):
                 assert sp == SHAPE[0], f"shape in core {i} is different from shape in core 0."
         self._adjust_ = ___GV_ADJUST___(self)
-
+        self._do_ = None
+        self._IS_ = None
         self._freeze_self_()
 
     @property
@@ -111,25 +130,7 @@ class GlobalVector(FrozenOnly):
             v = np.sum(v).toarray()[:, 0]
         return v
 
-    @property
-    def IS_master_dominating(self):
-        """(bool) return True if all data are in master core, empty in slave cores."""
-        if rAnk == mAster_rank:
-            ToF = True
-        else:
-            if self.V is None:
-                ToF = True
-            else:
-                nnz = self.nnz
-                ToF = nnz == 0
-        return cOmm.allreduce(ToF, op=MPI.LAND)
-
-    @property
-    def IS_globally_empty(self):
-        local_judge = True if self.nnz == 0 else False
-        return cOmm.allreduce(local_judge, op=MPI.LAND)
-
-    def DO_resemble_row_distribution_of(self, GM):
+    def ___PRIVATE_resemble_row_distribution_of___(self, GM):
         """
         We let self's distribution resemble that of a GM.
 
@@ -147,3 +148,15 @@ class GlobalVector(FrozenOnly):
     @property
     def adjust(self):
         return self._adjust_
+
+    @property
+    def do(self):
+        if self._do_ is None:
+            self._do_ = GlobalVectorDo(self)
+        return self._do_
+
+    @property
+    def IS(self):
+        if self._IS_ is None:
+            self._IS_ = GlobalVectorIS(self)
+        return self._IS_

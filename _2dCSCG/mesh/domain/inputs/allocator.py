@@ -1,6 +1,6 @@
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from screws.exceptions import MeshError
 from importlib import import_module
 
@@ -41,7 +41,8 @@ class DomainInputFinder(FrozenOnly):
                   'quadrangle': 'Quadrangle',
                   'crazy_periodic': "CrazyPeriodic",
                   'bcr': "BottomCustomizedRectangle",
-                  'cic': "CylinderInChannel"}
+                  'cic': "CylinderInChannel",
+                  'rectangle': "Rectangle"}
         return _dict_
 
     @classmethod
@@ -51,4 +52,4 @@ class DomainInputFinder(FrozenOnly):
 
 
 if __name__ == "__main__":
-    di = DomainInputFinder('crazy')()
+    di = DomainInputFinder('rectangle')()

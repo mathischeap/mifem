@@ -9,7 +9,7 @@
 """
 from _3dCSCG.spaces.base.main import _3dCSCG_Space_Base
 from screws.quadrature import Quadrature
-from root.config import *
+from root.config.main import *
 
 from inheriting.CSCG.space._1d_basis.polynomials import _1dPolynomial
 

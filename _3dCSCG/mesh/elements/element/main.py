@@ -1,9 +1,9 @@
 """"""
 import sys
-if './' not in sys.path: sys.path.append('../')
+if './' not in sys.path: sys.path.append('./')
 
-from screws.frozen import FrozenOnly
-from _3dCSCG.mesh.elements.element.sub_geometry import ElementSubGeometry
+from screws.freeze.main import FrozenOnly
+from _3dCSCG.mesh.elements.element.sub_geometry.sub_geometry import ElementSubGeometry
 import numpy as np
 from _3dCSCG.mesh.elements.element.sides.main import _3dCSCG_Mesh_Element_Sides
 
@@ -53,7 +53,7 @@ class _3dCSCG_Mesh_Element(FrozenOnly):
 
     @property
     def type_wrt_metric(self):
-        """Return a element metric type object reflecting the element type."""
+        """Return an element metric type object reflecting the element type."""
         if self._type_wrt_metric_ is None:
             self._type_wrt_metric_ = \
                 self._mesh_.domain.regions[self.in_region].type_wrt_metric.___CLASSIFY_ELEMENT_of_spacing___(
@@ -298,7 +298,7 @@ class _3dCSCG_Mesh_Element_CT(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 12 python _3dCSCG\mesh\elements\main.py
+    # mpiexec -n 5 python _3dCSCG\mesh\elements\element\main.py
     from _3dCSCG.main import MeshGenerator
     elements = [2, 2, 2]
     mesh = MeshGenerator('crazy', c=0.3, bounds=([0,3], [0,3], [0,3]))(elements)

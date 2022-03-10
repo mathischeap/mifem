@@ -1,7 +1,12 @@
 
-from inheriting.CSCG.form.standard.main_BASE import CSCG_Standard_Form_Coboundary_BASE
+
+
+
+from inheriting.CSCG.forms.standard.coboundary import CSCG_Standard_Form_Coboundary_BASE
 from importlib import import_module
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
+
+
 
 
 
@@ -22,11 +27,12 @@ class _3dCSCG_Standard_Form_Coboundary(CSCG_Standard_Form_Coboundary_BASE):
 
         return self._incidenceMatrix_
 
+
+
+
     def ___PRIVATE_next_class___(self):
         assert self._sf_.k < 3, "volume form has no next prime space."
         k = self._sf_.k
         nextPath = f'_3dCSCG.forms.standard._{k+1}_form.main'
         nextName = f'_3dCSCG_{k+1}Form'
         return getattr(import_module(nextPath), nextName)
-
-

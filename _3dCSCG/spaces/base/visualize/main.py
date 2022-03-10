@@ -1,7 +1,7 @@
 
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 
 from _3dCSCG.spaces.base.visualize.matplot import _3dCSC_Space_Visualize_Matplot

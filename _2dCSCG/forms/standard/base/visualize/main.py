@@ -7,7 +7,7 @@
          TU Delft, Delft, Netherlands
 
 """
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 
 from _2dCSCG.forms.standard.base.visualize.matplot import _2dCSCG_FormVisualize_Matplot

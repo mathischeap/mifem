@@ -22,9 +22,9 @@ import random
 import numpy as np
 from functools import partial, lru_cache
 from _3dCSCG.APP.exact_solution.status.base import Base
-from screws.numerical._3d import NumericalPartialDerivative_xyz
-from _3dCSCG.fields.vector import _3dCSCG_VectorField
-from _3dCSCG.fields.scalar import _3dCSCG_ScalarField
+from screws.numerical._3d_space.Jacobian_33 import NumericalPartialDerivative_xyz
+from _3dCSCG.fields.vector.main import _3dCSCG_VectorField
+from _3dCSCG.fields.scalar.main import _3dCSCG_ScalarField
 
 
 class Poisson_Base(Base):

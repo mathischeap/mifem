@@ -5,7 +5,7 @@ A main body of all preconditioners.
 
 """
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 
 

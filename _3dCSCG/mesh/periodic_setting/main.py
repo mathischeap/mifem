@@ -10,7 +10,7 @@ coded for the MPI mesh.
 
 """
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from _3dCSCG.mesh.periodic_setting.periodic_boundary_pairs.regular.main import _3dCSCG_Regular_PBP
 
 class _3dCSCG_PeriodicDomainSetting(FrozenOnly):

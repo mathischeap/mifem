@@ -2,9 +2,9 @@
 
 
 import types
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from scipy import sparse as spspa
-from root.config import *
+from root.config.main import *
 from tools.linear_algebra.gathering.chain_matrix.main import Chain_Gathering_Matrix
 from tools.linear_algebra.data_structures.global_matrix.main import GlobalVector
 
@@ -85,7 +85,7 @@ class EWC_ColumnVector(FrozenOnly):
 
 
         self._gathering_matrix_ = None
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self.___CT___ = '>CT<'
         self.___NC___ = '>NC<'
         self.___IS_NC___ = False
@@ -97,12 +97,12 @@ class EWC_ColumnVector(FrozenOnly):
         self._shape_ = None
         self._freeze_self_()
 
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         self._cache_ = dict()
 
     def ___PRIVATE_empty_data_generator___(self, i):
         assert i in self.elements
-        return spspa.csc_matrix((self.___EMPTY_LENGTH___,1))
+        return spspa.csc_matrix((self.___EMPTY_LENGTH___, 1))
 
     def ___PRIVATE_constant_cache_key_generator___(self, i):
         assert i in self.elements
@@ -342,6 +342,4 @@ class ___CV_NEG___(FrozenOnly):
         self._freeze_self_()
 
     def __call__(self, i):
-        return -self._V_[i]
-
-
+        return - self._V_[i]

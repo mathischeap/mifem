@@ -1,9 +1,9 @@
 """Here we do tests for the mifem module."""
 
 import sys
-if './' not in sys.path: sys.path.append('../')
+if './' not in sys.path: sys.path.append('./')
 import os
-from root.config import *
+from root.config.main import *
 
 from _2dCSCG.main import MeshGenerator as _2dCSCG_MeshGenerator
 from _2dCSCG.main import SpaceInvoker as _2dCSCG_SpaceInvoker
@@ -14,7 +14,7 @@ from _3dCSCG.main import MeshGenerator as _3dCSCG_MeshGenerator
 from _3dCSCG.main import SpaceInvoker as _3dCSCG_SpaceInvoker
 from _3dCSCG.main import ExactSolutionSelector as _3dCSCG_ExactSolutionSelector
 from _3dCSCG.main import FormCaller as _3dCSCG_FormCaller
-from root.mifem import save, read
+from root.mifem.save import save, read
 
 import random
 

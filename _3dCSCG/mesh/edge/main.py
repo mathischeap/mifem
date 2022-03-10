@@ -7,7 +7,7 @@ The edge elements of a mesh.
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from _3dCSCG.mesh.edge.elements.main import _3dCSCG_Edge_Elements
 
 
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     # mesh = MeshGenerator('crazy_periodic', c=0.0, bounds=([0,3], [0,3], [0,3]))(elements)
     mesh = MeshGenerator('bridge_arch_cracked')(elements)
     edges = mesh.edge.elements
-    edges.___DO_find_type_and_amount_numbered_before___()
+    edges.___PRIVATE_find_type_and_amount_numbered_before___()
 
     # for i in edges:
     #     edge = edges[i]

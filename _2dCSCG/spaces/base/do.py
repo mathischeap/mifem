@@ -1,9 +1,9 @@
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 import numpy as np
 from screws.exceptions import DimensionError
-from screws.decorators import accepts
+from screws.decorators.accepts import accepts
 
 
 

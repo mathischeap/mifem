@@ -1,6 +1,6 @@
 # mifem
 
-v3.0.2
+v3.0.3
 
 *mimetic finite element method*
 

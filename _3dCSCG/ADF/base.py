@@ -2,7 +2,7 @@
 
 """"""
 
-from inheriting.CSCG.ADF.main_BASE import CSCG_Algebra_DUAL_FORM_BASE
+from inheriting.CSCG.ADF.base import CSCG_Algebra_DUAL_FORM_BASE
 
 
 class _3dCSCG_Algebra_DUAL_FORM_BASE(CSCG_Algebra_DUAL_FORM_BASE):

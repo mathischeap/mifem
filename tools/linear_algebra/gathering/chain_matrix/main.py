@@ -2,10 +2,10 @@
 """"""
 
 import sys
-if './' not in sys.path: sys.path.append('../')
+if './' not in sys.path: sys.path.append('./')
 
-from screws.frozen import FrozenOnly
-from root.config import *
+from screws.freeze.main import FrozenOnly
+from root.config.main import *
 from tools.linear_algebra.gathering.chain_matrix.find import ___Chain_Gathering_Matrix_FIND___
 
 from tools.linear_algebra.gathering.vector import Gathering_Vector

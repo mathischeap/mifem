@@ -1,7 +1,7 @@
 
 import sys
-if './' not in sys.path: sys.path.append('../')
-from root.config import *
+if './' not in sys.path: sys.path.append('./')
+from root.config.main import *
 from _2dCSCG.main import MeshGenerator
 from _2dCSCG.mesh.domain.inputs.allocator import DomainInputFinder
 import random
@@ -71,7 +71,25 @@ def test_Mesh_NO1_mesh_topology():
     if 10 in MAP: assert MAP[10] == (9, 11, 7, 1)
     if 11 in MAP: assert MAP[11] == (10, 9, 8, 2)
 
-    # mesh.visualize()
+    mesh = MeshGenerator('quadrangle')([3, 4], EDM=None)
+    for i in mesh.elements:
+        element = mesh.elements[i]
+        mark = element.type_wrt_metric.mark
+        assert mark[:13] == 'Parallelogram'
+    mesh = MeshGenerator('quadrangle', p_UL=(0,0), p_DL=(1,0), p_UR=(0,1), p_DR=(1,1))(
+        [3, 4], EDM=None)
+    for i in mesh.elements:
+        element = mesh.elements[i]
+        mark = element.type_wrt_metric.mark
+        assert mark[:4] == 'Orth'
+    mesh = MeshGenerator('quadrangle', p_UL=(1,0), p_DL=(2,1), p_UR=(0,1), p_DR=(1,2))(
+        [3, 4], EDM=None)
+    for i in mesh.elements:
+        element = mesh.elements[i]
+        mark = element.type_wrt_metric.mark
+        assert mark[:13] == 'Parallelogram'
+
+
     return 1
 
 
@@ -516,8 +534,8 @@ def test_Mesh_NO4_mesh_trace_topology():
 
 
 if __name__ == '__main__':
-    # mpiexec python _2dCSCG\TESTS\unittest_mesh.py
-    test_Mesh_NO4_mesh_trace_topology()
+    # mpiexec python _2dCSCG\tests\unittests\mesh.py
+    test_Mesh_NO1_mesh_topology()
     # test_Mesh_NO2_mesh_coordinate_transformation()
     # test_Mesh_NO3_mesh_coordinate_transformation_QUAD()
     # test_Mesh_NO4_mesh_trace_topology()

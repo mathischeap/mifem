@@ -4,9 +4,9 @@
 
 import sys
 if './' not in sys.path: sys.path.append('/')
-from root.config import *
+from root.config.main import *
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from _3dCSCG.forms.standard.base.dofs.dof.basis_function import _3dCSCG_SF_DOF_BF
 from _3dCSCG.forms.standard.base.dofs.dof.visualize import _3dCSCG_SF_DOF_VISUALIZE
 

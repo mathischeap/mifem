@@ -1,5 +1,5 @@
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from _3dCSCG.forms.standard._2_form.project.to import ___3dCSCG_2Form_Project_To___
 from _3dCSCG.forms.standard._2_form.project.van import ___3dCSCG_2Form_Project_Van___
 

@@ -4,7 +4,7 @@ Mesh related unittests.
 """
 import sys
 if './' not in sys.path: sys.path.append('./')
-from root.config import *
+from root.config.main import *
 from screws.quadrature import Quadrature
 from screws.exceptions import ThreeDimensionalTransfiniteInterpolationError
 from _3dCSCG.mesh.domain.inputs.allocator import DomainInputAllocator
@@ -55,7 +55,7 @@ def test_Mesh_NO1_mesh_general():
     if rAnk == mAster_rank:
         print(">>> {test_Mesh_NO1_mesh_general} ...... ", flush=True)
 
-    # test method ___DO_find_slave_of_element___ ...
+    # test method ___PRIVATE_do_find_slave_of_element___ ...
     mesh = MeshGenerator('crazy')([5, 4, 3], EDM='debug')
     for i in range(mesh.elements.GLOBAL_num):
         sn = mesh.do.find.slave_of_element(i)
@@ -1186,8 +1186,8 @@ def test_Mesh_NO8_Mesh_SubGeometry_perpendicular_slice_object():
 
     R = mesh.domain.regions['R:R']
     RSG = R.sub_geometry
-    RSG_PSO = RSG.GENERATE_perpendicular_slice_object(r=0.5)
-    MSG_PSO = mesh.sub_geometry.GENERATE_perpendicular_slice_object(RSG_PSO)
+    RSG_PSO = RSG.make_a_perpendicular_slice_object_on(r=0.5)
+    MSG_PSO = mesh.sub_geometry.make_a_perpendicular_slice_object_on(RSG_PSO)
 
 
     def u(t, x, y, z): return np.cos(np.pi*x) + np.sin(np.pi*y) * np.sin(np.pi*z-0.125)**2 + t/2

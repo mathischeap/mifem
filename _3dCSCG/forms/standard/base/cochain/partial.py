@@ -1,4 +1,4 @@
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 
 class _3dCSCG_Standard_Form_Cochain_Partial(FrozenOnly):

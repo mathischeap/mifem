@@ -1,10 +1,10 @@
 
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 
-from root.config import *
+from root.config.main import *
 import numpy as np
 import matplotlib.pyplot as plt
 

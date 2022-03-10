@@ -7,9 +7,9 @@ Created on Sat May  4 23:38:56 2019
 Aerodynamics, AE
 TU Delft
 """
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from importlib import import_module
-from root.config import sIze
+from root.config.main import sIze
 assert sIze == 1, "Runners can only be run in single thread."
 
 

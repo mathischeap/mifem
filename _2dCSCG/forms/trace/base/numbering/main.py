@@ -4,10 +4,10 @@
 @author: Yi Zhang.
          Department of Aerodynamics
          Faculty of Aerospace Engineering
-         TU Delft, Delft, Netherlands
+         TU Delft, Delft, the Netherlands
 
 """
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from importlib import import_module
 from _2dCSCG.forms.trace.base.numbering.visualize import _2dCSCG_Trace_Numbering_Visualize
 

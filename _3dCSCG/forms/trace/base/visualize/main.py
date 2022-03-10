@@ -2,8 +2,8 @@
 
 
 import tecplot as tp
-from screws.frozen import FrozenOnly
-from root.config import *
+from screws.freeze.main import FrozenOnly
+from root.config.main import *
 from tecplot.constant import PlotType
 from _3dCSCG.forms.trace.base.visualize.matplot import _3dCSCG_trace_form_Matplot
 

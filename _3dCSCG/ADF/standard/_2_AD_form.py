@@ -8,7 +8,7 @@ if './' not in sys.path: sys.path.append('./')
 
 
 
-from _3dCSCG.ADF.standard.base import _3dCSCG_Algebra_DUAL_Standard_Form
+from _3dCSCG.ADF.standard.base.main import _3dCSCG_Algebra_DUAL_Standard_Form
 
 
 
@@ -30,15 +30,15 @@ class _3dCSCG_S2_ADF(_3dCSCG_Algebra_DUAL_Standard_Form):
         self._prime_ = prime
         self._k_ = 2
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_standard_algebra_dual_2form')
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
 
 
 
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         """"""
-        super().RESET_cache()
+        super().___PRIVATE_reset_cache___()
 
 
 

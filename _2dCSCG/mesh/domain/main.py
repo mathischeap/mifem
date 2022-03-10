@@ -5,13 +5,13 @@ INTRO
 @author: Yi Zhang. Created on Tue May 21 14:10:36 2019
          Department of Aerodynamics
          Faculty of Aerospace Engineering
-         TU Delft
-         Delft, Netherlands
+         TU Delft,
+         Delft, the Netherlands
 
 """
-from screws.frozen import FrozenOnly
-from _2dCSCG.mesh.regions.main import Regions
-from _2dCSCG.mesh.regions.region.main import Region
+from screws.freeze.main import FrozenOnly
+from _2dCSCG.mesh.domain.regions.main import Regions
+from _2dCSCG.mesh.domain.regions.region.main import Region
 from _2dCSCG.mesh.domain.visualize import _2dCSCG_Domain_Visualize
 from _2dCSCG.mesh.domain.boundaries.main import _2dCSCG_Domain_Boundaries
 

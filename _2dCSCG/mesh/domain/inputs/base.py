@@ -5,14 +5,14 @@ INTRO
 @author: Yi Zhang. Created on Tue May 21 11:57:52 2019
          Department of Aerodynamics
          Faculty of Aerospace Engineering
-         TU Delft
-         Delft, Netherlands
+         TU Delft,
+         Delft, the Netherlands
 
 """
 import inspect
-import numpy as np
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from typing import Dict, Union
+import numpy as np
 
 
 class DomainInputBase(FrozenOnly):
@@ -84,20 +84,22 @@ class DomainInputBase(FrozenOnly):
     def region_interpolators(self, region_interpolators):
         self._region_interpolators_ = region_interpolators
 
-    def ___PRIVATE_region_name_equirement_checker___(self, regionDict):
+    def ___PRIVATE_region_name_requirement_checker___(self, regionDict):
         """
         Requirements:
-        0). != domain name.
-        1). Does not include '-' and '='.
-        2). Starts with 'R:'
+        1). must be str
+        2). != domain name.
+        3). length > 2
+        4). Starts with 'R:'
+        5). can only have letters and _
         """
         for R in regionDict:
-            assert R != self.domain_name
-            assert '-' not in R and '=' not in R, \
-                " <DomainInput> : regions name = {} is wrong".format(R)
-            assert R[0:2] == 'R:', \
-                " <DomainInput> : regions name = {} does not start with 'R:'".format(R)
-
+            assert isinstance(R, str), f"region name={R} wrong, need be str!"
+            assert R != self.domain_name, f"region name == domain.name! wrong!"
+            assert len(R) > 2, f"region name = {R} too short, must > 2."
+            assert R[0:2] == 'R:', f"regions name = {R} does not start with 'R:'"
+            R2 = R[2:].replace('_', '')
+            assert R2.isalpha(),f"region_name = {R} wrong, can only have letter and _ (at >2)."
 
     @property
     def region_corner_coordinates(self):
@@ -120,12 +122,8 @@ class DomainInputBase(FrozenOnly):
     @region_corner_coordinates.setter
     def region_corner_coordinates(self, _dict_):
         assert isinstance(_dict_, dict), " <DomainInput> : region_coordinates needs to be a dict."
-
-        self.___PRIVATE_region_name_equirement_checker___(_dict_)
-
+        self.___PRIVATE_region_name_requirement_checker___(_dict_)
         for R in _dict_:
-            assert isinstance(R, str) and R != '' and '-' not in R, " <DomainInput> : regions name = {} is wrong".format(
-                R)
             assert np.shape(_dict_[R])[0] == 4, \
                 " <DomainInput> : region_coordinates[{}]={} is wrong.".format(R, _dict_[R])
         self._region_corner_coordinates_ = _dict_
@@ -138,8 +136,8 @@ class DomainInputBase(FrozenOnly):
         Returns
         -------
         region_boundary_type : dict
-            A dict that contains the regions boundary info. The keys indicate
-            the regions boundary, the value indicate the info. value[0] indicate
+            A dict that contains the region boundary info. The keys indicate
+            the region boundary, the value indicate the info. value[0] indicate
             the type, value[1:] indicate the rest info which will be parsed
             into full information. The not mentioned regions boundaries will be
             set into default type: ('plane',)
@@ -163,29 +161,19 @@ class DomainInputBase(FrozenOnly):
         self._region_edge_types_ = _dict_
 
 
-
     def ___PRIVATE_boundary_name_requirement_checker___(self, boundaryRegionSidesDict):
         """
         Requirements:
-        0). != domain name.
-        1). Is String and is not empty. Does not include '-' and '='.
-        2). Can not start with 'R:' (So it must be different from regions names).
-        3). Length > 1
-        4). Does not contain any number
+        1). != domain name.
+        2). Length > 2
+        3). Can not start with 'R:' (So it must be different from regions names).
+        4). Only have letters
         """
         for boundary_name in boundaryRegionSidesDict.keys():
             assert boundary_name != self.domain_name
-            assert isinstance(boundary_name, str) and boundary_name != '' \
-                   and '-' not in boundary_name and '=' not in boundary_name, \
-                " <DomainInput> : boundary_name = {} is wrong.".format(boundary_name)
-            assert boundary_name[0:2] not in ('R:',), \
-                " <DomainInput> : boundary_name = {} wrong.".format(boundary_name)
-            assert len(boundary_name) > 1, \
-                " <DomainInput> : boundary_name = {} is too short.".format(boundary_name)
-            for i in '0123456789':
-                assert i not in boundary_name, \
-                    " <DomainInput> : boundary_name = {} has number {}.".format(boundary_name, i)
-
+            assert len(boundary_name) > 2, f"boundary_name = {boundary_name} is too short (>2 must)."
+            assert boundary_name[0:2] != 'R:', f"boundary_name = {boundary_name} wrong."
+            assert boundary_name.isalpha(), f"boundary_name = {boundary_name} wrong, boundary_name can only contain letters."
 
     @property
     def boundary_region_edges(self):

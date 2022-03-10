@@ -1,8 +1,8 @@
 
 import matplotlib.pyplot as plt
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from screws.quadrature import Quadrature
-from root.config import *
+from root.config.main import *
 
 
 
@@ -11,7 +11,7 @@ class _1dPolynomial(FrozenOnly):
     The 1d polynomial basis function space.
 
     :param category:
-    :type category: str, list, tuple, numpy.ndarray
+    :type category: int, str, list, tuple, numpy.ndarray
     :param p: (`default`:``None``) If it is None, then we generate Polynomial1D from ``category``. In
         This case, ``category`` must be a 1d date structure between -1 and 1.
     :type p: int, None
@@ -24,7 +24,8 @@ class _1dPolynomial(FrozenOnly):
             (3) _1dPolynomial('Lobatto", 3) # use Lobatto nodes of degree 3.
             (4) _1dPolynomial([-1,-0.5, 0.5, 1]) # customize nodes, category will be 'free'.
         """
-        if isinstance(category, (int, float)): # default: if only provide a int for category, we use it as degree for a set of Lobatto nodes.
+        if isinstance(category, (int, float)):
+            # default: if only provide an int for category, we use it as degree for a set of Lobatto nodes.
             p = category
             category = 'Lobatto'
 
@@ -40,7 +41,7 @@ class _1dPolynomial(FrozenOnly):
             nodes = np.array(category)
             self._category_ = 'free'
         else:
-            assert category in Quadrature.___coded_quadrature___(), \
+            assert category in Quadrature.___PRIVATE_coded_quadrature___(), \
                 " <Polynomials1D> : poly type = {} is wrong.".format(category)
             if category == 'Gauss':
                 assert isinstance(p, int) and p >= 0, \
@@ -384,9 +385,9 @@ if __name__ == "__main__":
     # p1.plot_lagrange_basis(dual=False, saveto='nodal.pdf', title=False, figsize=(6,4),tick_size=20, label_size=20)
     # p1.plot_edge_basis(dual=False, saveto='edge.pdf', title=False, figsize=(6,4), tick_size=20, label_size=20, fill_between=2)
 
-    p1 = _1dPolynomial(5)
-    # p1 = _1dPolynomial('Lobatto', 4)
+    # p1 = _1dPolynomial(5)
+    p1 = _1dPolynomial('Lobatto', 4)
     # p1 = _1dPolynomial('Lobatto-4')
     # p1 = _1dPolynomial([-1,0,1])
-    p1.plot_lagrange_basis(dual=False, title=False, figsize=(6,4),tick_size=20, label_size=20)
-    p1.plot_edge_basis(dual=False, title=False, figsize=(6,4), tick_size=20, label_size=20, fill_between=2)
+    p1.plot_lagrange_basis(dual=False, title=False, figsize=(6,4),tick_size=20, label_size=20, usetex=True)
+    p1.plot_edge_basis(dual=False, title=False, figsize=(6,4), tick_size=20, label_size=20, fill_between=2, usetex=True)

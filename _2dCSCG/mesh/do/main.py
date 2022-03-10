@@ -1,7 +1,7 @@
 
 
-
-from screws.frozen import FrozenOnly
+import numpy as np
+from screws.freeze.main import FrozenOnly
 from screws.exceptions import ElementEdgePairError
 from _2dCSCG.mesh.do.find import _2dCSCG_Mesh_DO_FIND
 

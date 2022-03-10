@@ -1,13 +1,20 @@
 # -*- coding: utf-8 -*-
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 # from TOOLS.linear_algebra.solvers.gmres import gmres0 as gmres
-import tools.linear_algebra.solvers.serial.scipy_sparse_linalg as spspalinalg_solvers
+import tools.linear_algebra.solvers.serial.deprecated as spspalinalg_solvers
 from tools.linear_algebra.data_structures.global_matrix.main import GlobalMatrix, DistributedVector, GlobalVector
 from time import time
-from root.config import *
+from root.config.main import *
 from scipy import sparse as spspa
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
 import tools.linear_algebra.deprecated.operators as TLO
+
+
+
+
+
+
+
 
 class _Solver_Base_(FrozenOnly):
     """
@@ -259,12 +266,16 @@ class icpsNS(_Solver_Base_):
 
         len_1 = A10.gathering_matrices[0].GLOBAL_num_dofs
         len_2 = self._LS_.lhs[0][2].shape[1]
+
         beta  = TLO.bmat(([self._LS_.lhs[0][2]         , self._LS_.lhs[0][3]],
                           [GlobalMatrix((len_1, len_2)), None               ]), format='csc')
+
         gamma = TLO.bmat(([self._LS_.lhs[2][0], GlobalMatrix((len_2, len_1))],
                           [self._LS_.lhs[3][0], None                        ]), format='csc')
+
         F     = TLO.bmat(([self._LS_.lhs[2][2], None                        ],
                           [None               , self._LS_.lhs[3][3]         ]), format='csc')
+
         B0 = self._LS_.rhs[0].assembled
         g = TLO.concatenate((B0              ,self._LS_.rhs[1]))
         h = TLO.concatenate((self._LS_.rhs[2],self._LS_.rhs[3]))

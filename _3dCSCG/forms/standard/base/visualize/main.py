@@ -1,7 +1,7 @@
 
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from _3dCSCG.forms.standard.base.visualize.matplot import _3dCSCG_standard_form_Matplot
 from _3dCSCG.forms.standard.base.visualize.tecplot_ import _3dCSCG_standard_form_Tecplot
 

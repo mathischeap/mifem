@@ -15,12 +15,12 @@ from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionS
 from tools.linear_algebra.data_structures.global_matrix.main import LocallyFullVector
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_ColumnVector
 from tools.linear_algebra.elementwise_cache.operators.concatenate.main import bmat, concatenate
-from tools.linear_algebra.solvers.parallel.distributor import ParallelSolverDistributor
+from tools.linear_algebra.solvers.parallel.allocator import ParallelSolverDistributor
 from tools.iterators.simple import SimpleIterator
 from time import time
-from root.config import *
-from root.mifem import save
-from screws.miscellaneous import check_multiple_close, check_almost_in_range
+from root.config.main import *
+from root.mifem.save import save
+from screws.miscellaneous.timer import check_multiple_close, check_almost_in_range
 
 
 
@@ -91,8 +91,8 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
     E32 = u2.coboundary.incidence_matrix
     E12 = E21.T
     E23 = E32.T
-    CP1 = w1.special.cross_product(u1, u1, quad_degree=quad_degree)
-    CP2 = w2.special.cross_product(u2, u2, quad_degree=quad_degree)
+    CP1 = w1.special.cross_product_1f__ip_1f(u1, u1, quad_degree=quad_degree)
+    CP2 = w2.special.cross_product_2f__ip_2f(u2, u2, quad_degree=quad_degree)
 
     # ... compute t0 co-chains and conditions ......
     u1.TW.current_time = t0
@@ -111,19 +111,19 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
     u2.error.L()
     w1.error.L()
     w2.error.L()
-    KE1_t0 = 0.5 * u1.do.compute_L2_inner_product_energy_with(M=M1) / Volume
-    KE2_t0 = 0.5 * u2.do.compute_L2_inner_product_energy_with(M=M2) / Volume
-    H1_t0 = u1.do.compute_L2_inner_product_energy_with(w1, M=M1)
-    H2_t0 = u2.do.compute_L2_inner_product_energy_with(w2, M=M2)
-    E1_t0 = 0.5 * w1.do.compute_L2_inner_product_energy_with(M=M1) / Volume
-    E2_t0 = 0.5 * w2.do.compute_L2_inner_product_energy_with(M=M2) / Volume
+    KE1_t0 = 0.5 * u1.do.compute_L2_energy_with(M=M1) / Volume
+    KE2_t0 = 0.5 * u2.do.compute_L2_energy_with(M=M2) / Volume
+    H1_t0 = u1.do.compute_L2_energy_with(w1, M=M1)
+    H2_t0 = u2.do.compute_L2_energy_with(w2, M=M2)
+    E1_t0 = 0.5 * w1.do.compute_L2_energy_with(M=M1) / Volume
+    E2_t0 = 0.5 * w2.do.compute_L2_energy_with(M=M2) / Volume
     du2 = u2.coboundary()
     du2.TW.func.do.set_func_body_as(es.status.divergence_of_velocity)
     du2.TW.current_time = t0
     du2.TW.do.push_all_to_instant()
     DIV_L2_error_t0 = du2.error.L()
-    u1u2_diff_t0 = u2.do.compute_L2_diff_from(u1)
-    w1w2_diff_t0 = w2.do.compute_L2_diff_from(w1)
+    u1u2_diff_t0 = u2.do.compute_Ln_diff_from(u1)
+    w1w2_diff_t0 = w2.do.compute_Ln_diff_from(w1)
 
     if save_uw:
         save([u1, u2, w1, w2], f'icpNS_NH_UUWW_TGV_NEW_Re{Re}_N{N}k{k}t{t}Steps{steps}_t0')
@@ -141,12 +141,12 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
 
     B0 = (2 * M1 / dt - 0.5 * CP1 - 0.5*nu*E12M2E21) @ u1.cochain.EWC
     B0.gathering_matrix = u1
-    B1 = EWC_ColumnVector(mesh, P0.NUM_basis)
+    B1 = EWC_ColumnVector(mesh, P0.num.basis)
     B1.gathering_matrix = P0
     ib = concatenate([B0, B1])
 
     X0_0 = u1.cochain.EWC
-    X0_1 = EWC_ColumnVector(mesh, P0.NUM_basis)
+    X0_1 = EWC_ColumnVector(mesh, P0.num.basis)
     X0_1.gathering_matrix = P0
     X0 = concatenate((X0_0, X0_1))
 
@@ -155,11 +155,11 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
     X0 = LocallyFullVector(X0.assembled)
 
     iR = ParallelSolverDistributor("LGMRES")(iA, ib, X0, atol=atol, m=m, k=K, maxiter=maxiter)[0]
-    iR.DO_distribute_to(u1, P0)
+    iR.___PRIVATE_be_distributed_to___(u1, P0)
 
     w2.cochain.local = u1.coboundary.cochain_local
-    KE1_t0h = 0.5 * u1.do.compute_L2_inner_product_energy_with(M=M1) / Volume
-    E2_t0h  = 0.5 * w2.do.compute_L2_inner_product_energy_with(M=M2) / Volume
+    KE1_t0h = 0.5 * u1.do.compute_L2_energy_with(M=M1) / Volume
+    E2_t0h  = 0.5 * w2.do.compute_L2_energy_with(M=M2) / Volume
 
     if rAnk == mAster_rank and show_info:
         print('KE1_t0', KE1_t0)
@@ -205,11 +205,11 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
     B0 = (M2 / dt - 0.5 * CP2) @ u2.cochain.EWC - 0.5*nu*M2E21 @ w1.cochain.EWC
     B0.gathering_matrix = u2
 
-    B1 = EWC_ColumnVector(mesh, w1.NUM_basis)
+    B1 = EWC_ColumnVector(mesh, w1.num.basis)
     B1.gathering_matrix = w1
 
 
-    B2 = EWC_ColumnVector(mesh, P3.NUM_basis)
+    B2 = EWC_ColumnVector(mesh, P3.num.basis)
     B2.gathering_matrix = P3
     ob = concatenate([B0, B1, B2])
 
@@ -253,7 +253,7 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
         if tk == t0:  # first step
             X0_0 = u2.cochain.EWC
             X0_1 = w1.cochain.EWC
-            X0_2 = EWC_ColumnVector(mesh, P3.NUM_basis)
+            X0_2 = EWC_ColumnVector(mesh, P3.num.basis)
             X0_2.gathering_matrix = P3
             X0 = LocallyFullVector(concatenate((X0_0, X0_1, X0_2)).assembled)
         else:
@@ -264,15 +264,15 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
         del SYS_oA, SYS_ob
 
         OUT_R[0] = oR
-        oR.DO_distribute_to(u2, w1, P3)
+        oR.___PRIVATE_be_distributed_to___(u2, w1, P3)
 
         du2 = u2.coboundary()
         du2.TW.func.do.set_func_body_as(es.status.divergence_of_velocity)
         du2.TW.current_time = tk1
         du2.TW.do.push_all_to_instant()
         DIV_L2_error_tk1 = du2.error.L()
-        KE2_tk1 = 0.5 * u2.do.compute_L2_inner_product_energy_with(M=M2) / Volume
-        E1_tk1 = 0.5 * w1.do.compute_L2_inner_product_energy_with(M=M1) / Volume
+        KE2_tk1 = 0.5 * u2.do.compute_L2_energy_with(M=M2) / Volume
+        E1_tk1 = 0.5 * w1.do.compute_L2_energy_with(M=M1) / Volume
 
         # ... inner
 
@@ -286,7 +286,7 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
 
         INN_R[0] = iR
         _u1_old_cochain_ = u1.cochain.local
-        iR.DO_distribute_to(u1, P0)
+        iR.___PRIVATE_be_distributed_to___(u1, P0)
 
         _u1_new_cochain_ = u1.cochain.local
 
@@ -295,14 +295,14 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
             mean_u1_cochain_local_at_tk[i] = (_u1_old_cochain_[i] + _u1_new_cochain_[i]) / 2
 
         u1.cochain.local = mean_u1_cochain_local_at_tk  # we then have u1 cochain @ tk
-        KE1_tk1 = 0.5 * u1.do.compute_L2_inner_product_energy_with(M=M1) / Volume
-        H1_tk1 = u1.do.compute_L2_inner_product_energy_with(w1, M=M1)
-        u1u2_diff_tk1 = u2.do.compute_L2_diff_from(u1)
+        KE1_tk1 = 0.5 * u1.do.compute_L2_energy_with(M=M1) / Volume
+        H1_tk1 = u1.do.compute_L2_energy_with(w1, M=M1)
+        u1u2_diff_tk1 = u2.do.compute_Ln_diff_from(u1)
 
         w2.cochain.local = u1.coboundary.cochain_local
-        H2_tk1 = u2.do.compute_L2_inner_product_energy_with(w2, M=M2)
-        E2_tk1 = 0.5 * w2.do.compute_L2_inner_product_energy_with(M=M2) / Volume
-        w1w2_diff_tk1 = w2.do.compute_L2_diff_from(w1)
+        H2_tk1 = u2.do.compute_L2_energy_with(w2, M=M2)
+        E2_tk1 = 0.5 * w2.do.compute_L2_energy_with(M=M2) / Volume
+        w1w2_diff_tk1 = w2.do.compute_Ln_diff_from(w1)
 
         if save_uw:
             if check_multiple_close(tk1, 0.1) and check_almost_in_range(tk1, 8.8, 9.5):
@@ -315,8 +315,8 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
                 pass
         u1.cochain.local = _u1_new_cochain_  # renew u1 cochain to time tk+half
         w2.cochain.local = u1.coboundary.cochain_local  # renew w2 cochain to time tk+half
-        KE1_tk1h = 0.5 * u1.do.compute_L2_inner_product_energy_with(M=M1) / Volume
-        E2_tk1h = 0.5 * w2.do.compute_L2_inner_product_energy_with(M=M2) / Volume
+        KE1_tk1h = 0.5 * u1.do.compute_L2_energy_with(M=M1) / Volume
+        E2_tk1h = 0.5 * w2.do.compute_L2_energy_with(M=M2) / Volume
         if save_uw:
             if check_multiple_close(tk1, 0.1) and check_almost_in_range(tk1, 8.8, 9.5):
                 TK1 = round(tk1, 1)

@@ -11,7 +11,7 @@ import sys
 from abc import ABC
 if './' not in sys.path: sys.path.append('./')
 
-from root.config import *
+from root.config.main import *
 from screws.quadrature import Quadrature
 from _3dCSCG.forms.trace.base.main import _3dCSCG_Standard_Trace
 from scipy import sparse as spspa
@@ -802,13 +802,19 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
                 else:
                     if side in 'NS':
                         xyz[key] = [xyz_i[m].reshape(jj, kk, order='F') for m in range(3)]
-                        v[key] = [v_x.reshape((jj, kk), order='F'), v_y.reshape((jj, kk), order='F'), v_z.reshape((jj, kk), order='F')]
+                        v[key] = [v_x.reshape((jj, kk), order='F'),
+                                  v_y.reshape((jj, kk), order='F'),
+                                  v_z.reshape((jj, kk), order='F')]
                     elif side in 'WE':
                         xyz[key] = [xyz_i[m].reshape(ii, kk, order='F') for m in range(3)]
-                        v[key] = [v_x.reshape((ii, kk), order='F'), v_y.reshape((ii, kk), order='F'), v_z.reshape((ii, kk), order='F')]
+                        v[key] = [v_x.reshape((ii, kk), order='F'),
+                                  v_y.reshape((ii, kk), order='F'),
+                                  v_z.reshape((ii, kk), order='F')]
                     elif side in 'BF':
                         xyz[key] = [xyz_i[m].reshape(ii, jj, order='F') for m in range(3)]
-                        v[key] = [v_x.reshape((ii, jj), order='F'), v_y.reshape((ii, jj), order='F'), v_z.reshape((ii, jj), order='F')]
+                        v[key] = [v_x.reshape((ii, jj), order='F'),
+                                  v_y.reshape((ii, jj), order='F'),
+                                  v_z.reshape((ii, jj), order='F')]
                     else:
                         raise Exception
 
@@ -893,7 +899,7 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 5 python _3dCSCG\form\trace\_1_trace.py
+    # mpiexec -n 5 python _3dCSCG\forms\trace\_1_trace.py
 
     from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 

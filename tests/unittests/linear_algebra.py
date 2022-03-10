@@ -1,10 +1,10 @@
 
 import sys
-if './' not in sys.path: sys.path.append('../')
+if './' not in sys.path: sys.path.append('./')
 
 
 
-from root.config import *
+from root.config.main import *
 import random
 from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_ColumnVector

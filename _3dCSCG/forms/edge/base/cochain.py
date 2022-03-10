@@ -3,12 +3,12 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('../')
+if './' not in sys.path: sys.path.append('./')
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from screws.exceptions import LocalCochainShapeError
-from root.config import *
+from root.config.main import *
 
 
 

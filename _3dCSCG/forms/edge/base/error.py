@@ -3,11 +3,11 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('../')
+if './' not in sys.path: sys.path.append('./')
 
 
-from screws.frozen import FrozenOnly
-from root.config import *
+from screws.freeze.main import FrozenOnly
+from root.config.main import *
 
 
 
@@ -25,6 +25,7 @@ class _3dCSCG_Edge_Error(FrozenOnly):
 
         :param n:
         :param quad_degree:
+        :param quad_density:
         :return:
         """
 
@@ -88,7 +89,8 @@ class _3dCSCG_Edge_Error(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 6 python _3dCSCG\form\edge\error.py
+    # mpiexec -n 6 python _3dCSCG\forms\edge\base\error.py
+
     from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
     mesh = MeshGenerator('crazy', c=0.)([5,6,7])

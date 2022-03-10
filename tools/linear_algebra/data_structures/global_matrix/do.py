@@ -2,7 +2,7 @@
 
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 class ___GM_DO___(FrozenOnly):
     def __init__(self, gm):
@@ -17,15 +17,15 @@ class ___GM_DO___(FrozenOnly):
         """
         IS_row_major = self._gm_.___PRIVATE_check_row_major___()
         if IS_row_major:
-            self._gm_.IS_regularly_distributed = 'row'
+            self._gm_.IS.regularly_distributed = 'row'
             return
 
         IS_column_major = self._gm_.___PRIVATE_check_col_major___()
         if IS_column_major:
-            self._gm_.IS_regularly_distributed = 'column'
+            self._gm_.IS.regularly_distributed = 'column'
             return
 
-        self._gm_.IS_regularly_distributed = False
+        self._gm_.IS.regularly_distributed = False
 
 
     def gather_M_to_core(self, **kwargs):

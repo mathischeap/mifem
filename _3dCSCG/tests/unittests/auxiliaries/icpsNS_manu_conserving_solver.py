@@ -8,10 +8,10 @@ from tools.linear_algebra.data_structures.global_matrix.main import GlobalMatrix
 from scipy import sparse as spspa
 from tools.iterators.simple import SimpleIterator
 import tools.linear_algebra.deprecated.operators as TLO
-import tools.linear_algebra.solvers.serial.scipy_sparse_linalg as scipy_sparse_linalg
+import tools.linear_algebra.solvers.serial.deprecated as scipy_sparse_linalg
 from time import time
 
-from root.config import *
+from root.config.main import *
 
 def manu_conserving_solver(N, k, t, steps):
        # ... define the problem ...
@@ -55,8 +55,8 @@ def manu_conserving_solver(N, k, t, steps):
        E32 = u2.coboundary.incidence_matrix
        E12 = E21.T
        E23 = E32.T
-       CP1 = w1.special.cross_product(u1, u1, quad_degree=quad_degree)
-       CP2 = w2.special.cross_product(u2, u2, quad_degree=quad_degree)
+       CP1 = w1.special.cross_product_1f__ip_1f(u1, u1, quad_degree=quad_degree)
+       CP2 = w2.special.cross_product_2f__ip_2f(u2, u2, quad_degree=quad_degree)
 
        # ... compute t0 co-chains and conditions ......
        u1.TW.current_time = t0
@@ -75,20 +75,20 @@ def manu_conserving_solver(N, k, t, steps):
        u2.error.L()
        w1.error.L()
        w2.error.L()
-       KE1_t0 = 0.5 * u1.do.compute_L2_inner_product_energy_with(M=M1)
-       KE2_t0 = 0.5 * u2.do.compute_L2_inner_product_energy_with(M=M2)
-       H1_t0  =       u1.do.compute_L2_inner_product_energy_with(w1, M=M1)
-       H2_t0  =       u2.do.compute_L2_inner_product_energy_with(w2, M=M2)
-       E1_t0  = 0.5 * w1.do.compute_L2_inner_product_energy_with(M=M1)
-       E2_t0  = 0.5 * w2.do.compute_L2_inner_product_energy_with(M=M2)
+       KE1_t0 = 0.5 * u1.do.compute_L2_energy_with(M=M1)
+       KE2_t0 = 0.5 * u2.do.compute_L2_energy_with(M=M2)
+       H1_t0  =       u1.do.compute_L2_energy_with(w1, M=M1)
+       H2_t0  =       u2.do.compute_L2_energy_with(w2, M=M2)
+       E1_t0  = 0.5 * w1.do.compute_L2_energy_with(M=M1)
+       E2_t0  = 0.5 * w2.do.compute_L2_energy_with(M=M2)
        du2 = u2.coboundary()
        du2.TW.func.___DO_set_func_body_as___(es.status.divergence_of_velocity)
        du2.TW.current_time = t0
        du2.TW.___DO_push_all_to_instant___()
        DIV_L2_error_t0 = du2.error.L()
        DIV_L_inf_error_t0 = du2.error.L(n='infinity')
-       u1u2_diff_t0 = u2.do.compute_L2_diff_from(u1)
-       w1w2_diff_t0 = w2.do.compute_L2_diff_from(w1)
+       u1u2_diff_t0 = u2.do.compute_Ln_diff_from(u1)
+       w1w2_diff_t0 = w2.do.compute_Ln_diff_from(w1)
 
        # set up inner half integer time step systems ......
        lhs00_Hf = 2*M1/dt + 0.5*CP1
@@ -107,7 +107,7 @@ def manu_conserving_solver(N, k, t, steps):
        iA = TLO.bmat(lhs)
        iA = iA.___PRIVATE_gather_M_to_core___(clean_local=True)
        iA = GlobalMatrix(iA)
-       assert iA.IS_master_dominating
+       assert iA.IS.master_dominating
        if rAnk != mAster_rank: iA._M_ = None
 
        B0 = (2 * M1 / dt - 0.5 * CP1) @ u1.cochain.EWC
@@ -117,15 +117,15 @@ def manu_conserving_solver(N, k, t, steps):
        ib = TLO.concatenate([B0, B1])
        ib = ib.___PRIVATE_gather_V_to_core___(clean_local=True)
        ib = GlobalVector(ib)
-       assert ib.IS_master_dominating
+       assert ib.IS.master_dominating
 
        del lhs00_Hf, lhs00_Hf_A, M1E10, M1E10_A, E01M1_A, lhs11_A, lhs, B0, B1
 
        iR = scipy_sparse_linalg.spsolve(iA, ib)[0]
-       iR.DO_distribute_to(u1, P0)
+       iR.___PRIVATE_be_distributed_to___(u1, P0)
        w2.cochain.local = u1.coboundary.cochain_local
-       KE1_t0h = 0.5 * u1.do.compute_L2_inner_product_energy_with(M=M1)
-       E2_t0h  = 0.5 * w2.do.compute_L2_inner_product_energy_with(M=M2)
+       KE1_t0h = 0.5 * u1.do.compute_L2_energy_with(M=M1)
+       E2_t0h  = 0.5 * w2.do.compute_L2_energy_with(M=M2)
 
        u1_p_f2 = u1.special.___PRIVATE_projected_into_2form_exactly___()
        D_u1_p_f2 = u1_p_f2.coboundary()
@@ -168,7 +168,7 @@ def manu_conserving_solver(N, k, t, steps):
        oA = TLO.bmat(lhs)
        oA = oA.___PRIVATE_gather_M_to_core___(clean_local=True)
        oA = GlobalMatrix(oA)
-       assert oA.IS_master_dominating
+       assert oA.IS.master_dominating
        if rAnk != mAster_rank: oA._M_ = None
 
        oB_0 = (M2 / dt - 0.5 * CP2) @ u2.cochain.EWC
@@ -179,7 +179,7 @@ def manu_conserving_solver(N, k, t, steps):
        ob = TLO.concatenate([B0, B1, B2])
        ob = ob.___PRIVATE_gather_V_to_core___(clean_local=True)
        ob = GlobalVector(ob)
-       assert ob.IS_master_dominating
+       assert ob.IS.master_dominating
        del E23M3, mE23M3_A, E12M2, mE12M2_A, M1_A, E32_A, lhs, B0, B1, B2
 
 
@@ -231,7 +231,7 @@ def manu_conserving_solver(N, k, t, steps):
               del oB_0_A, oA00_A
 
               oR, _, _, _, mo = scipy_sparse_linalg.spsolve(oA, ob)
-              oR.DO_distribute_to(u2, w1, P3)
+              oR.___PRIVATE_be_distributed_to___(u2, w1, P3)
 
               du2 = u2.coboundary()
               du2.TW.func.___DO_set_func_body_as___(es.status.divergence_of_velocity)
@@ -239,8 +239,8 @@ def manu_conserving_solver(N, k, t, steps):
               du2.TW.___DO_push_all_to_instant___()
               DIV_L2_error_tk1 = du2.error.L()
               DIV_L_inf_error_tk1 = du2.error.L(n = 'infinity')
-              KE2_tk1 = 0.5 * u2.do.compute_L2_inner_product_energy_with(M=M2)
-              E1_tk1 = 0.5 * w1.do.compute_L2_inner_product_energy_with(M=M1)
+              KE2_tk1 = 0.5 * u2.do.compute_L2_energy_with(M=M2)
+              E1_tk1 = 0.5 * w1.do.compute_L2_energy_with(M=M1)
 
               # ... inner
               iA00_A = iA00.assembled
@@ -262,7 +262,7 @@ def manu_conserving_solver(N, k, t, steps):
 
               iR, _, _, _, mi = scipy_sparse_linalg.spsolve(iA, ib)
               _u1_old_cochain_ = u1.cochain.local
-              iR.DO_distribute_to(u1, P0)
+              iR.___PRIVATE_be_distributed_to___(u1, P0)
 
               _u1_new_cochain_ = u1.cochain.local
 
@@ -271,19 +271,19 @@ def manu_conserving_solver(N, k, t, steps):
                   mean_u1_cochain_local_at_tk[i] = (_u1_old_cochain_[i] + _u1_new_cochain_[i]) / 2
 
               u1.cochain.local = mean_u1_cochain_local_at_tk  # we then have u1 cochain @ tk
-              KE1_tk1 = 0.5 * u1.do.compute_L2_inner_product_energy_with(M=M1)
-              H1_tk1 = u1.do.compute_L2_inner_product_energy_with(w1, M=M1)
-              u1u2_diff_tk1 = u2.do.compute_L2_diff_from(u1)
+              KE1_tk1 = 0.5 * u1.do.compute_L2_energy_with(M=M1)
+              H1_tk1 = u1.do.compute_L2_energy_with(w1, M=M1)
+              u1u2_diff_tk1 = u2.do.compute_Ln_diff_from(u1)
 
               w2.cochain.local = u1.coboundary.cochain_local
-              H2_tk1 = u2.do.compute_L2_inner_product_energy_with(w2, M=M2)
-              E2_tk1 = 0.5 * w2.do.compute_L2_inner_product_energy_with(M=M2)
-              w1w2_diff_tk1 = w2.do.compute_L2_diff_from(w1)
+              H2_tk1 = u2.do.compute_L2_energy_with(w2, M=M2)
+              E2_tk1 = 0.5 * w2.do.compute_L2_energy_with(M=M2)
+              w1w2_diff_tk1 = w2.do.compute_Ln_diff_from(w1)
 
               u1.cochain.local = _u1_new_cochain_  # renew u1 cochain to time tk+half
               w2.cochain.local = u1.coboundary.cochain_local  # renew w2 cochain to time tk+half
-              KE1_tk1h = 0.5 * u1.do.compute_L2_inner_product_energy_with(M=M1)
-              E2_tk1h = 0.5 * w2.do.compute_L2_inner_product_energy_with(M=M2)
+              KE1_tk1h = 0.5 * u1.do.compute_L2_energy_with(M=M1)
+              E2_tk1h = 0.5 * w2.do.compute_L2_energy_with(M=M2)
 
               u1_p_f2 = u1.special.___PRIVATE_projected_into_2form_exactly___()
               D_u1_p_f2 = u1_p_f2.coboundary()

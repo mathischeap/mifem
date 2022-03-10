@@ -1,7 +1,7 @@
 
 import sys
-if './' not in sys.path: sys.path.append('../')
-from root.config import *
+if './' not in sys.path: sys.path.append('./')
+from root.config.main import *
 from _2dCSCG.main import SpaceInvoker
 
 

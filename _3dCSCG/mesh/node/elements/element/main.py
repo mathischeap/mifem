@@ -1,7 +1,7 @@
 
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from _3dCSCG.mesh.node.elements.element.coordinate_transformation import _3dCSCG_Node_Element_CT
 
 

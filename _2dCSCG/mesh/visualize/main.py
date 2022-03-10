@@ -3,7 +3,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from _2dCSCG.mesh.visualize.matplot import _2dCSCG_Mesh_Visualize_Matplot
 
 

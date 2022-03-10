@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from root.config import *
+from root.config.main import *
 from scipy import sparse as spspa
 from scipy.sparse import linalg as spspalinalg
 from tools.linear_algebra.data_structures.global_matrix.main import DistributedVector
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from screws.exceptions import LinerSystemSolverDivergenceError
 
 
@@ -700,7 +700,7 @@ def gmres2(AA, bb, X0, restart=100, maxiter=1000, tol=1e-4):
     assert maxiter >= 1, "maxiter must be >= 1."
     assert restart >= 3, "restart must be >= 3."
     assert tol > 0, "tol must be > 0."
-    bb.DO_resemble_row_distribution_of(AA) # important, after this, we can do f - A @ x0
+    bb.___PRIVATE_resemble_row_distribution_of___(AA) # important, after this, we can do f - A @ x0
     A = AA.M
     f = bb.V
     x0 = X0.V

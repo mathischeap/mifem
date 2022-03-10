@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 from _2dCSCG.mesh.trace.visualize import _2dCSCG_Trace_Visualize
 from _2dCSCG.mesh.trace.elements.main import _2dCSCG_Trace_Elements

@@ -8,7 +8,7 @@
 import sys
 if './' not in sys.path: sys.path.append('../')
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 
 

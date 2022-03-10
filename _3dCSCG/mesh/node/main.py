@@ -7,7 +7,7 @@ The edge elements of a mesh.
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 from _3dCSCG.mesh.node.elements.main import _3dCSCG_Node_Elements
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from scipy import sparse as spspa
-from root.config import *
+from root.config.main import *
 import matplotlib.pyplot as plt
 from numpy import linalg as nplinalg
 

@@ -1,8 +1,8 @@
 
 
 
-from root.config import *
-from screws.frozen import FrozenOnly
+from root.config.main import *
+from screws.freeze.main import FrozenOnly
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
@@ -23,11 +23,11 @@ class _2dCSCG_Trace_Numbering_Visualize(FrozenOnly):
 
 
     def _matplot_trace_mesh_BASE_(self, ax, region_boundary=True, density=10000, usetex=False,
-        show_element_numbering=True,
-        corlormap='tab10', boundary_name_fontsize=12, title=True,
-        show_boundary_names=True, domain_boundary_linewidth=3,
-        region_boundary_linewidth=1, element_linwidth=0.6,
-        element_color='gray'):
+                                  show_element_numbering=True,
+                                  corlormap='tab10', boundary_name_fontsize=12, title=True,
+                                  show_boundary_names=True, domain_boundary_linewidth=3,
+                                  region_boundary_linewidth=1, element_linewidth=0.6,
+                                  element_color='gray'):
         """
 
         :param ax:
@@ -41,7 +41,7 @@ class _2dCSCG_Trace_Numbering_Visualize(FrozenOnly):
         :param show_boundary_names:
         :param domain_boundary_linewidth:
         :param region_boundary_linewidth:
-        :param element_linwidth:
+        :param element_linewidth:
         :param element_color:
         :return:
         """
@@ -163,7 +163,7 @@ class _2dCSCG_Trace_Numbering_Visualize(FrozenOnly):
             ax.spines['bottom'].set_visible(True)
 
             for i in ted:
-                ax.plot(*ted[i], color=element_color, linewidth=element_linwidth)
+                ax.plot(*ted[i], color=element_color, linewidth=element_linewidth)
                 if show_element_numbering:
                     ax.text(*tec[i], "@${}$".format(i),
                              color = 'k', alpha=0.5,

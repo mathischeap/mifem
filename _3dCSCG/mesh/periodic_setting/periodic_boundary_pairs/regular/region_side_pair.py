@@ -1,7 +1,7 @@
 
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 
 class _3dCSCG_Regular_PBP_RegionSidePair(FrozenOnly):

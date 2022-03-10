@@ -1,5 +1,5 @@
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 from _2dCSCG.mesh.domain.boundaries.boundary.coordinate_transformation import BoundaryCoordinateTransformation
 

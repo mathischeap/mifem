@@ -3,7 +3,7 @@
 
 
 
-from screws.decorators import accepts
+from screws.decorators.accepts import accepts
 from _2dCSCG.mesh.elements.element.types_wrt_metric.base import ElementTypeWr2MetricBase
 
 
@@ -15,5 +15,5 @@ class OrthogonalElement(ElementTypeWr2MetricBase):
     @accepts('self', (tuple, list, 'ndarray', 'ndim=1', 'shape=(2)'))
     def __init__(self, LxLy):
         Lx, Ly = LxLy
-        self._mark_ = 'Orth.' + 'x{}y{}'.format('%.3f' % Lx, '%.3f' % Ly)
+        self._mark_ = 'Orth.' + 'x{}y{}'.format('%.4f' % Lx, '%.4f' % Ly)
         self._freeze_self_()

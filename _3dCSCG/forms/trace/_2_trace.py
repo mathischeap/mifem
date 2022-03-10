@@ -9,8 +9,8 @@
 """
 import sys
 if './' not in sys.path: sys.path.append('./')
-from root.config import *
-from root.mifem import read
+from root.config.main import *
+from root.mifem.save import read
 from scipy.interpolate import NearestNDInterpolator
 from screws.quadrature import Quadrature
 from _3dCSCG.forms.trace.base.main import _3dCSCG_Standard_Trace
@@ -129,6 +129,8 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
         else:
             raise NotImplementedError(f"target={target} not implemented "
                                       f"for 3d CSCG 2-trace form discretization.")
+
+
 
     def ___PRIVATE_discretize_ScalarField_of_ftype_standard___(self,
         update_cochain=True, target='func', quad_degree=None):
@@ -818,8 +820,11 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
 
 
 
+
+
+
 if __name__ == '__main__':
-    # mpiexec -n 5 python _3dCSCG\form\trace\_2_trace.py
+    # mpiexec -n 5 python _3dCSCG\forms\trace\_2_trace.py
 
     from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
@@ -832,24 +837,4 @@ if __name__ == '__main__':
 
     t2 = FC('2-t')
 
-    # t2.TW.func.do.set_func_body_as(S)
-    # t2.TW.current_time = 0
-    # t2.TW.do.push_all_to_instant()
-
-    # t2.discretize()
-    #
-    # xi = eta = sigma = np.linspace(-1,1,20)
-    #
-    # t2.visualize.matplot()
-
-    # print(mesh.elements.map)
-    # print(mesh.trace.elements.GLOBAL_num)
-    # print(rAnk, t2.numbering.GLOBAL_boundary_dofs_ravel)
-    # print(t2.coboundary.trace_matrix)
-
-    # print(rAnk, xyz.keys())
-
-
     M = t2.___PRIVATE_generate_TEW_mass_matrices___()
-
-    # print(M.keys())

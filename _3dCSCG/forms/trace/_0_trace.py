@@ -11,7 +11,7 @@ import sys
 from abc import ABC
 
 if './' not in sys.path: sys.path.append('./')
-from root.config import *
+from root.config.main import *
 from _3dCSCG.forms.trace.base.main import _3dCSCG_Standard_Trace
 from screws.quadrature import Quadrature
 
@@ -105,7 +105,8 @@ class _3dCSCG_0Trace(_3dCSCG_Standard_Trace, ABC):
         else:
             raise NotImplementedError()
 
-    def ___PRIVATE_discretize_standard_ftype___(self, target='func', update_cochain=True):
+    def ___PRIVATE_discretize_standard_ftype___(
+            self, target='func', update_cochain=True):
         """We will discretize the standard scalar field to all trace elements.
 
         'locally full local TEW cochain' means the cochain is a dict whose keys are trace-element
@@ -153,7 +154,8 @@ class _3dCSCG_0Trace(_3dCSCG_Standard_Trace, ABC):
 
         return 'locally full local TEW cochain', local_TEW
 
-    def ___PRIVATE_discretize_the_flux_of_a_VectorField_of_standard_ftype___(self, target='func', update_cochain=True):
+    def ___PRIVATE_discretize_the_flux_of_a_VectorField_of_standard_ftype___(
+            self, target='func', update_cochain=True):
         """We will discretize the standard vector field (norm flux) to all trace elements.
 
         'locally full local TEW cochain' means the cochain is a dict whose keys are trace-element
@@ -318,7 +320,7 @@ class _3dCSCG_0Trace(_3dCSCG_Standard_Trace, ABC):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 5 python _3dCSCG\form\trace\_0_trace.py
+    # mpiexec -n 5 python _3dCSCG\forms\trace\_0_trace.py
 
     from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
 

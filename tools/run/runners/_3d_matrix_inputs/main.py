@@ -1,6 +1,6 @@
 
 
-from root.config import *
+from root.config.main import *
 import inspect
 import os
 from tools.run.runners.base import ParallelRunnerBase

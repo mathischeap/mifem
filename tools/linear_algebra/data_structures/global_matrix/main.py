@@ -6,11 +6,12 @@ import sys
 if './' not in sys.path: sys.path.append('../')
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from scipy import sparse as spspa
-from root.config import *
+from root.config.main import *
 
 from tools.linear_algebra.data_structures.global_matrix.do import ___GM_DO___
+from tools.linear_algebra.data_structures.global_matrix.IS import ___GM_IS___
 from tools.linear_algebra.data_structures.global_matrix.visualize import ___GM_VISUALIZE___
 from tools.linear_algebra.data_structures.global_matrix.directed_graph import ___GM_Directed_Graph___
 from tools.linear_algebra.data_structures.global_matrix.undirected_graph import ___GM_Undirected_Graph___
@@ -18,8 +19,8 @@ from tools.linear_algebra.data_structures.global_matrix.adjust import ___GM_ADJU
 from tools.linear_algebra.data_structures.global_matrix.condition import ___GM_CONDITION___
 
 from tools.linear_algebra.data_structures.vectors.GLOBAL.main import GlobalVector
-from tools.linear_algebra.data_structures.vectors.locally_full import LocallyFullVector
-from tools.linear_algebra.data_structures.vectors.distributed import DistributedVector
+from tools.linear_algebra.data_structures.vectors.locally_full.main import LocallyFullVector
+from tools.linear_algebra.data_structures.vectors.distributed.main import DistributedVector
 
 
 class GlobalMatrix(FrozenOnly):
@@ -29,26 +30,39 @@ class GlobalMatrix(FrozenOnly):
     :type M:
     """
     def __init__(self, M):
-        if isinstance(M, (tuple, list)):
+        """
+
+        :param M: We will make the GlobalMatrix from this M.
+            - scipy sparse matrix
+            - a list or tuple of two positive integers: We will make an empty sparse lil_matrix
+                from it.
+        """
+        #---------- parse input M -----------------------------------------------------------
+        if isinstance(M, (tuple, list)): # a list or tuple of two positive integers
             assert len(M) == 2
             assert M[0]%1 == 0 and M[1]%1 == 0 and M[0] > 0 and M[1] > 0, \
                 f"to initialize an empty GlobalMatrix of shape {M} is illegal."
             # we initialize an empty lil sparse matrix when provide tuple or list of 2 integers.
             M = spspa.lil_matrix(M)
+        else:
+            pass
+        #------------- check M ---------------------------------------------------------------
         assert spspa.issparse(M), "I need a scipy sparse matrix"
         self._M_ = M
-        self._visualize_ = ___GM_VISUALIZE___(self)
-        self._condition_ = ___GM_CONDITION___(self)
-        self._undirected_graph_ = ___GM_Undirected_Graph___(self)
-        self._directed_graph_ = ___GM_Directed_Graph___(self)
-        self.IS_regularly_distributed = False
         # Default be False, may not the case. When matters, ``do.claim_distribution_pattern()`` first.
         SHAPE = cOmm.gather(self.shape, root=sEcretary_rank)
         if rAnk == sEcretary_rank:
             for i, sp in enumerate(SHAPE):
                 assert sp == SHAPE[0], f"shape in core {i} is different from shape in core 0."
+        #-----------------------------------------------------------------------------------------
+        self._visualize_ = ___GM_VISUALIZE___(self)
+        self._condition_ = ___GM_CONDITION___(self)
+        self._undirected_graph_ = ___GM_Undirected_Graph___(self)
+        self._directed_graph_ = ___GM_Directed_Graph___(self)
+        self.IS_regularly_distributed = False
         self._adjust_ = ___GM_ADJUST___(self)
-        self._DO_ =___GM_DO___(self)
+        self._DO_ = ___GM_DO___(self)
+        self._IS_ = ___GM_IS___(self)
         self._freeze_self_()
 
     @property
@@ -111,66 +125,6 @@ class GlobalMatrix(FrozenOnly):
         _shared_rows_ = self.___PRIVATE_parse_distributions___(what='shared_rows')
         return _shared_rows_
 
-
-    @property
-    def IS_globally_empty(self):
-        """I am an empty matrix in all cores."""
-        local_judge = True if self.nnz == 0 else False
-        return cOmm.allreduce(local_judge, op=MPI.LAND)
-
-    @property
-    def IS_regularly_distributed(self):
-        if self._IS_regularly_distributed_ is True:
-            assert self.mtype in ('csr', 'csc'), \
-                "M has to be csr or csc matrix when IS_regularly_distributed=True "
-        elif self._IS_regularly_distributed_ == 'row':
-            assert self.mtype == 'csr'
-            #     pass
-            # else:
-            #     if saFe_mode:
-            #         assert self.do.___PRIVATE_check_if_Iam_row_major___() == (True, 0), \
-            #             "It is not a row major matrix."
-        elif self._IS_regularly_distributed_ == 'column':
-            assert self.mtype == 'csc'
-            #     pass
-            # else:
-            #     if saFe_mode:
-            #         assert self.do.___PRIVATE_check_if_Iam_column_major___() == (True, 0), \
-            #             "It is not a column major matrix."
-        else:
-            pass
-        return self._IS_regularly_distributed_
-
-    @IS_regularly_distributed.setter
-    def IS_regularly_distributed(self, IS_regularly_distributed):
-        """
-        Do not set this easily. If do so, make sure you have checked it since we do not and the code
-        does not neither (because the check is not fast at all).
-        """
-        assert IS_regularly_distributed in (True, 'row', 'column', False), \
-            f"IS_regularly_distributed={IS_regularly_distributed} wrong, " \
-            f"can only be one of (True, 'row', 'column', False)."
-        self._IS_regularly_distributed_ = IS_regularly_distributed
-
-    @property
-    def IS_master_dominating(self):
-        """(bool) return True if all data are in master core, empty in slave cores."""
-        if rAnk == mAster_rank:
-            ToF = True
-        else:
-            if self.M is None:
-                ToF = True
-            else:
-                nnz = self.nnz
-                ToF = nnz == 0
-        return cOmm.allreduce(ToF, op=MPI.LAND)
-
-    @property
-    def IS_square(self):
-        shape = self._M_.shape
-        return shape[0] == shape[1]
-
-
     @property
     def T(self):
         """Transpose."""
@@ -225,7 +179,7 @@ class GlobalMatrix(FrozenOnly):
 
         """
         if B.__class__.__name__ == 'GlobalMatrix':
-            if A.IS_master_dominating and B.IS_master_dominating: # this is important.
+            if A.IS.master_dominating and B.IS.master_dominating: # this is important.
                 if rAnk == mAster_rank:
                     M = A.M @ B.M
                 else:
@@ -242,7 +196,7 @@ class GlobalMatrix(FrozenOnly):
         elif B.__class__.__name__ == 'GlobalVector':
             # not fast but okay (only do it once), use the master to collect/distribute vector.
             v = B.___PRIVATE_gather_V_to_core___(mAster_rank)
-            if A.IS_master_dominating:
+            if A.IS.master_dominating:
                 if rAnk == mAster_rank:
                     v = A.M @ v
                 else:
@@ -254,7 +208,7 @@ class GlobalMatrix(FrozenOnly):
         elif B.__class__.__name__ == 'DistributedVector':
             # not fast but okay (only do it once), use the master to collect/distribute vector.
             v = B.___PRIVATE_gather_V_to_core___(mAster_rank)
-            if A.IS_master_dominating:
+            if A.IS.master_dominating:
                 if rAnk == mAster_rank:
                     v = A.M @ v
                 else:
@@ -295,6 +249,10 @@ class GlobalMatrix(FrozenOnly):
         GM = GlobalMatrix(self.M + other.M)
         return GM
 
+
+    @property
+    def IS(self):
+        return self._IS_
 
     @property
     def adjust(self):
@@ -445,8 +403,6 @@ class GlobalMatrix(FrozenOnly):
                 return np.sum(M)
             else:
                 return spspa.csc_matrix(self.shape)
-
-
 
     def ___PRIVATE_distribute_vector___(self, v):
         """

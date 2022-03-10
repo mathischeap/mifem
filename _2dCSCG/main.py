@@ -1,15 +1,15 @@
 
 import sys
 if './' not in sys.path: sys.path.append('./')
-from root.config import *
+from root.config.main import *
 from _2dCSCG.APP.exact_solution.main import ExactSolution
 from importlib import import_module
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from _2dCSCG.mesh.domain.inputs.allocator import DomainInputFinder
 from _2dCSCG.mesh.domain.main import _2dCSCG_Domain
 from _2dCSCG.mesh.main import _2dCSCG_Mesh
 from copy import deepcopy
-from screws.miscellaneous import MyTimer
+from screws.miscellaneous.timer import MyTimer
 
 
 
@@ -130,16 +130,16 @@ class FormCaller(FrozenOnly):
     @classmethod
     def ___coded_forms___(cls):
         form_path = '_2dCSCG.forms.'
-        return {'0-f-i': form_path + "standard._0_form.inner : _2dCSCG_0Form_Inner", # d on inner 0-form is grad
-                '1-f-i': form_path + "standard._1_form.inner : _2dCSCG_1Form_Inner", # d on inner 1-form is rot (or curl)
-                '2-f-i': form_path + "standard._2_form.inner : _2dCSCG_2Form_Inner",
+        return {'0-f-i': form_path + "standard._0_form.inner.main : _2dCSCG_0Form_Inner", # d on inner 0-form is grad
+                '1-f-i': form_path + "standard._1_form.inner.main : _2dCSCG_1Form_Inner", # d on inner 1-form is rot (or curl)
+                '2-f-i': form_path + "standard._2_form.inner.main : _2dCSCG_2Form_Inner",
 
-                '0-f-o': form_path + "standard._0_form.outer : _2dCSCG_0Form_Outer", # d on outer 0-form is curl (or rot)
-                '1-f-o': form_path + "standard._1_form.outer : _2dCSCG_1Form_Outer", # d on outer 1-form is div
-                '2-f-o': form_path + "standard._2_form.outer : _2dCSCG_2Form_Outer",
+                '0-f-o': form_path + "standard._0_form.outer.main : _2dCSCG_0Form_Outer", # d on outer 0-form is curl (or rot)
+                '1-f-o': form_path + "standard._1_form.outer.main : _2dCSCG_1Form_Outer", # d on outer 1-form is div
+                '2-f-o': form_path + "standard._2_form.outer.main : _2dCSCG_2Form_Outer",
 
-                'scalar': "_2dCSCG.fields.scalar : _2dCSCG_ScalarField",
-                'vector': "_2dCSCG.fields.vector : _2dCSCG_VectorField",
+                'scalar': "_2dCSCG.fields.scalar.main : _2dCSCG_ScalarField",
+                'vector': "_2dCSCG.fields.vector.main : _2dCSCG_VectorField",
 
                 '1-t-o': form_path + "trace._1_trace.outer : _2dCSCG_1Trace_Outer",
                 }
@@ -171,7 +171,7 @@ class ExactSolutionSelector(FrozenOnly):
 
         ES =  ExactSolution(self._mesh_)
         status = getattr(import_module(classPath), className)(ES, **kwargs)
-        ES.___set_status___(status)
+        ES.___PRIVATE_set_status___(status)
         esp = dict()
         esp['type'] = '_2dCSCG_ExactSolution'
         esp['ID'] = ID
@@ -197,13 +197,15 @@ if __name__ == "__main__":
     # mpiexec python _2dCSCG\main.py
 
     # mesh = MeshGenerator('cic',)([14,14])
-    # mesh = MeshGenerator('crazy',)([14,14])
-    mesh = MeshGenerator('cic')([3,3], show_info=True, EDM='chaotic')
-
+    mesh = MeshGenerator('rectangle', region_layout=(3,4))([5,5])
+    # mesh = MeshGenerator('cic')([3,3], show_info=True, EDM='chaotic')
 
     # print(mesh.___PRIVATE_element_division_and_numbering_quality___())
     mesh.visualize.matplot.element_division()
-    # mesh.visualize.matplot()
+    mesh.visualize()
+    mesh.domain.visualize()
+
+    # mesh.domain.regions.visualize()
 
     # print(rAnk, mesh._element_indices_)
 
@@ -211,6 +213,6 @@ if __name__ == "__main__":
     #
     # # from mifem import save, read
     #
-    # # mesh.visualize()
+    # mesh.visualize()
     #
     # es = ExactSolutionSelector(mesh)("sL:sincos1", show_info=True)

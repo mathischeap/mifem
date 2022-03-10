@@ -3,8 +3,8 @@
 
 
 
-from screws.frozen import FrozenOnly
-from root.config import rAnk, mAster_rank
+from screws.freeze.main import FrozenOnly
+from root.config.main import rAnk, mAster_rank
 import matplotlib.pyplot as plt
 
 
@@ -24,7 +24,7 @@ class ___GM_VISUALIZE___(FrozenOnly):
         :param markersize:
         :return:
         """
-        M = self._gm_.___PRIVATE_gather_M_to_core___(core=mAster_rank)
+        M = self._gm_.do.gather_M_to_core(core=mAster_rank)
         if rAnk == mAster_rank:
             fig = plt.figure()
             plt.spy(M,

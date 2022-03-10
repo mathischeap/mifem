@@ -2,8 +2,8 @@ import random
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from root.config import *
-from root.mifem import save, read
+from root.config.main import *
+from root.mifem.save import save, read
 import os
 
 from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
@@ -25,10 +25,10 @@ def test_ADF_NO1_general_tests_standard_forms():
     df2 = FC('2-adf', numbering_parameters={'scheme_name': 'Naive', })
     df3 = FC('3-adf', numbering_parameters={'scheme_name': 'Naive', })
 
-    assert df0.IS_hybrid, "algebraic dual standard form must be hybrid."
-    assert df1.IS_hybrid, "algebraic dual standard form must be hybrid."
-    assert df2.IS_hybrid, "algebraic dual standard form must be hybrid."
-    assert df3.IS_hybrid, "algebraic dual standard form must be hybrid."
+    assert df0.IS.hybrid, "algebraic dual standard form must be hybrid."
+    assert df1.IS.hybrid, "algebraic dual standard form must be hybrid."
+    assert df2.IS.hybrid, "algebraic dual standard form must be hybrid."
+    assert df3.IS.hybrid, "algebraic dual standard form must be hybrid."
 
     df0.prime.TW.func.do.set_func_body_as(es, 'pressure')
     df0.prime.TW.current_time = 0
@@ -98,9 +98,9 @@ def test_ADF_NO2_general_tests_trace_forms():
     dt1 = FC('1-adt', numbering_parameters={'scheme_name': 'Naive', })
     dt2 = FC('2-adt', numbering_parameters={'scheme_name': 'Naive', })
 
-    assert dt0.IS_hybrid, "algebraic dual standard form must be hybrid."
-    assert dt1.IS_hybrid, "algebraic dual standard form must be hybrid."
-    assert dt2.IS_hybrid, "algebraic dual standard form must be hybrid."
+    assert dt0.IS.hybrid, "algebraic dual standard form must be hybrid."
+    assert dt1.IS.hybrid, "algebraic dual standard form must be hybrid."
+    assert dt2.IS.hybrid, "algebraic dual standard form must be hybrid."
 
     def u(t, x, y, z):
         return t + np.sin(2*np.pi*x) * np.cos(np.pi*y) * np.cos(2*np.pi*z)
@@ -306,4 +306,4 @@ def test_ADF_NO3_coboundary():
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\tests\unittests\ADF.py
     # test_ADF_NO1_general_tests_standard_forms()
-    test_ADF_NO1_general_tests_standard_forms()
+    test_ADF_NO2_general_tests_trace_forms()

@@ -7,10 +7,10 @@ Created on Fri Dec 14 20:40:12 2018
 Aerodynamics, AE
 TU Delft
 """
-from screws.frozen import FrozenOnly
+
+from screws.freeze.main import FrozenOnly
 from screws.exceptions import MeshError
 from importlib import import_module
-
 
 
 class DomainInputAllocator(FrozenOnly):

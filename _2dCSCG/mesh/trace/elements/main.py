@@ -1,9 +1,9 @@
 
 
 
-from root.config import *
+from root.config.main import *
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from _2dCSCG.mesh.trace.elements.element.main import _2dCSCG_Trace_Element
 
 
@@ -20,7 +20,7 @@ class _2dCSCG_Trace_Elements(FrozenOnly):
     def ___PRIVATE_reset_cache___(self):
         self._type_amount_dict_ = None
 
-    def ___DO_find_type_and_amount_numbered_before___(self):
+    def ___PRIVATE_find_type_and_amount_numbered_before___(self):
         """
         :return: A dictionary. For example, ``{..., 65: [32, 33,], ...}``, it means
             we have 32 'UD', 33 'LR' trace elements numbered before 65. We can see that

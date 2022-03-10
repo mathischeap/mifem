@@ -9,7 +9,7 @@ CONTINUOUS FORMS are special, they do not inherit the main class of form!
 
 
 from abc import ABC
-from inheriting.CSCG.field.main_BASE import CSCG_Continuous_FORM_BASE
+from inheriting.CSCG.field.base import CSCG_Continuous_FORM_BASE
 from _3dCSCG.fields.base.visualize import _3dCSCG_Field_Visualize
 
 

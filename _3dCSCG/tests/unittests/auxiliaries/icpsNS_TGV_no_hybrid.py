@@ -14,11 +14,11 @@ from tools.linear_algebra.data_structures.global_matrix.main import GlobalMatrix
 from scipy import sparse as spspa
 from tools.iterators.simple import SimpleIterator
 import tools.linear_algebra.deprecated.operators as TLO
-import tools.linear_algebra.solvers.serial.scipy_sparse_linalg as scipy_sparse_linalg
+import tools.linear_algebra.solvers.serial.deprecated as scipy_sparse_linalg
 from time import time
-from root.config import *
-from root.mifem import save
-from screws.miscellaneous import check_multiple_close, check_almost_in_range
+from root.config.main import *
+from root.mifem.save import save
+from screws.miscellaneous.timer import check_multiple_close, check_almost_in_range
 
 # import warnings
 
@@ -87,8 +87,8 @@ def NoHy_TGV(N=2, k=4, t=15, steps=480, Re=500,
     E32 = u2.coboundary.incidence_matrix
     E12 = E21.T
     E23 = E32.T
-    CP1 = w1.special.cross_product(u1, u1, quad_degree=quad_degree)
-    CP2 = w2.special.cross_product(u2, u2, quad_degree=quad_degree)
+    CP1 = w1.special.cross_product_1f__ip_1f(u1, u1, quad_degree=quad_degree)
+    CP2 = w2.special.cross_product_2f__ip_2f(u2, u2, quad_degree=quad_degree)
 
     # ... compute t0 co-chains and conditions ......
     u1.TW.current_time = t0
@@ -107,19 +107,19 @@ def NoHy_TGV(N=2, k=4, t=15, steps=480, Re=500,
     u2.error.L()
     w1.error.L()
     w2.error.L()
-    KE1_t0 = 0.5 * u1.do.compute_L2_inner_product_energy_with(M=M1) / Volume
-    KE2_t0 = 0.5 * u2.do.compute_L2_inner_product_energy_with(M=M2) / Volume
-    H1_t0 = u1.do.compute_L2_inner_product_energy_with(w1, M=M1)
-    H2_t0 = u2.do.compute_L2_inner_product_energy_with(w2, M=M2)
-    E1_t0 = 0.5 * w1.do.compute_L2_inner_product_energy_with(M=M1) / Volume
-    E2_t0 = 0.5 * w2.do.compute_L2_inner_product_energy_with(M=M2) / Volume
+    KE1_t0 = 0.5 * u1.do.compute_L2_energy_with(M=M1) / Volume
+    KE2_t0 = 0.5 * u2.do.compute_L2_energy_with(M=M2) / Volume
+    H1_t0 = u1.do.compute_L2_energy_with(w1, M=M1)
+    H2_t0 = u2.do.compute_L2_energy_with(w2, M=M2)
+    E1_t0 = 0.5 * w1.do.compute_L2_energy_with(M=M1) / Volume
+    E2_t0 = 0.5 * w2.do.compute_L2_energy_with(M=M2) / Volume
     du2 = u2.coboundary()
     du2.TW.func.___DO_set_func_body_as___(es.status.divergence_of_velocity)
     du2.TW.current_time = t0
     du2.TW.___DO_push_all_to_instant___()
     DIV_L2_error_t0 = du2.error.L()
-    u1u2_diff_t0 = u2.do.compute_L2_diff_from(u1)
-    w1w2_diff_t0 = w2.do.compute_L2_diff_from(w1)
+    u1u2_diff_t0 = u2.do.compute_Ln_diff_from(u1)
+    w1w2_diff_t0 = w2.do.compute_Ln_diff_from(w1)
 
     if save_uw:
         save([u1, u2, w1, w2], f'UUWW_TGV_Re{Re}_N{N}k{k}t{t}Steps{steps}_t0')
@@ -144,7 +144,7 @@ def NoHy_TGV(N=2, k=4, t=15, steps=480, Re=500,
     del lhs
     iA = iA.___PRIVATE_gather_M_to_core___(clean_local=True)
     iA = GlobalMatrix(iA)
-    assert iA.IS_master_dominating
+    assert iA.IS.master_dominating
 
     B0 = (2 * M1 / dt - 0.5 * CP1 - 0.5*nu*E12M2E21) @ u1.cochain.EWC
     B0.gathering_matrix = u1
@@ -153,7 +153,7 @@ def NoHy_TGV(N=2, k=4, t=15, steps=480, Re=500,
     ib = TLO.concatenate([B0, B1])
     ib = ib.___PRIVATE_gather_V_to_core___(clean_local=True)
     ib = GlobalVector(ib)
-    assert ib.IS_master_dominating
+    assert ib.IS.master_dominating
     del B0, B1
 
     X0_0 = u1.cochain.globe
@@ -162,10 +162,10 @@ def NoHy_TGV(N=2, k=4, t=15, steps=480, Re=500,
 
     iR = getattr(scipy_sparse_linalg, solver)(
         iA, ib, X0, tol=tol, restart=restart, maxiter=maxiter)[0]
-    iR.DO_distribute_to(u1, P0)
+    iR.___PRIVATE_be_distributed_to___(u1, P0)
     w2.cochain.local = u1.coboundary.cochain_local
-    KE1_t0h = 0.5 * u1.do.compute_L2_inner_product_energy_with(M=M1) / Volume
-    E2_t0h  = 0.5 * w2.do.compute_L2_inner_product_energy_with(M=M2) / Volume
+    KE1_t0h = 0.5 * u1.do.compute_L2_energy_with(M=M1) / Volume
+    E2_t0h  = 0.5 * w2.do.compute_L2_energy_with(M=M2) / Volume
 
     if rAnk == mAster_rank and show_info:
         print('KE1_t0', KE1_t0)
@@ -206,7 +206,7 @@ def NoHy_TGV(N=2, k=4, t=15, steps=480, Re=500,
     del lhs
     oA = oA.___PRIVATE_gather_M_to_core___(clean_local=True)
     oA = GlobalMatrix(oA)
-    assert oA.IS_master_dominating
+    assert oA.IS.master_dominating
 
     oB_0 = (M2 / dt - 0.5 * CP2) @ u2.cochain.EWC - 0.5*nu*M2E21 @ w1.cochain.EWC
     oB_0.gathering_matrix = u2
@@ -216,7 +216,7 @@ def NoHy_TGV(N=2, k=4, t=15, steps=480, Re=500,
     ob = TLO.concatenate([B0, B1, B2])
     ob = ob.___PRIVATE_gather_V_to_core___(clean_local=True)
     ob = GlobalVector(ob)
-    assert ob.IS_master_dominating
+    assert ob.IS.master_dominating
     del B0, B1, B2, M2E21
 
     OUT_R = [0, ]
@@ -282,15 +282,15 @@ def NoHy_TGV(N=2, k=4, t=15, steps=480, Re=500,
         oR, _, _, _, mo = getattr(scipy_sparse_linalg, solver)(
                         oA, ob, X0, tol=tol, restart=restart, maxiter=maxiter)
         OUT_R[0] = oR
-        oR.DO_distribute_to(u2, w1, P3)
+        oR.___PRIVATE_be_distributed_to___(u2, w1, P3)
 
         du2 = u2.coboundary()
         du2.TW.func.___DO_set_func_body_as___(es.status.divergence_of_velocity)
         du2.TW.current_time = tk1
         du2.TW.___DO_push_all_to_instant___()
         DIV_L2_error_tk1 = du2.error.L()
-        KE2_tk1 = 0.5 * u2.do.compute_L2_inner_product_energy_with(M=M2) / Volume
-        E1_tk1 = 0.5 * w1.do.compute_L2_inner_product_energy_with(M=M1) / Volume
+        KE2_tk1 = 0.5 * u2.do.compute_L2_energy_with(M=M2) / Volume
+        E1_tk1 = 0.5 * w1.do.compute_L2_energy_with(M=M1) / Volume
 
         # ... inner
         iA00_A = iA00.assembled
@@ -320,7 +320,7 @@ def NoHy_TGV(N=2, k=4, t=15, steps=480, Re=500,
                         iA, ib, X0, tol=tol, restart=restart, maxiter=maxiter)
         INN_R[0] = iR
         _u1_old_cochain_ = u1.cochain.local
-        iR.DO_distribute_to(u1, P0)
+        iR.___PRIVATE_be_distributed_to___(u1, P0)
 
         _u1_new_cochain_ = u1.cochain.local
 
@@ -329,14 +329,14 @@ def NoHy_TGV(N=2, k=4, t=15, steps=480, Re=500,
             mean_u1_cochain_local_at_tk[i] = (_u1_old_cochain_[i] + _u1_new_cochain_[i]) / 2
 
         u1.cochain.local = mean_u1_cochain_local_at_tk  # we then have u1 cochain @ tk
-        KE1_tk1 = 0.5 * u1.do.compute_L2_inner_product_energy_with(M=M1) / Volume
-        H1_tk1 = u1.do.compute_L2_inner_product_energy_with(w1, M=M1)
-        u1u2_diff_tk1 = u2.do.compute_L2_diff_from(u1)
+        KE1_tk1 = 0.5 * u1.do.compute_L2_energy_with(M=M1) / Volume
+        H1_tk1 = u1.do.compute_L2_energy_with(w1, M=M1)
+        u1u2_diff_tk1 = u2.do.compute_Ln_diff_from(u1)
 
         w2.cochain.local = u1.coboundary.cochain_local
-        H2_tk1 = u2.do.compute_L2_inner_product_energy_with(w2, M=M2)
-        E2_tk1 = 0.5 * w2.do.compute_L2_inner_product_energy_with(M=M2) / Volume
-        w1w2_diff_tk1 = w2.do.compute_L2_diff_from(w1)
+        H2_tk1 = u2.do.compute_L2_energy_with(w2, M=M2)
+        E2_tk1 = 0.5 * w2.do.compute_L2_energy_with(M=M2) / Volume
+        w1w2_diff_tk1 = w2.do.compute_Ln_diff_from(w1)
 
         if save_uw:
             if check_multiple_close(tk1, 0.1) and check_almost_in_range(tk1, 8.7, 9.5):
@@ -349,8 +349,8 @@ def NoHy_TGV(N=2, k=4, t=15, steps=480, Re=500,
                 pass
         u1.cochain.local = _u1_new_cochain_  # renew u1 cochain to time tk+half
         w2.cochain.local = u1.coboundary.cochain_local  # renew w2 cochain to time tk+half
-        KE1_tk1h = 0.5 * u1.do.compute_L2_inner_product_energy_with(M=M1) / Volume
-        E2_tk1h = 0.5 * w2.do.compute_L2_inner_product_energy_with(M=M2) / Volume
+        KE1_tk1h = 0.5 * u1.do.compute_L2_energy_with(M=M1) / Volume
+        E2_tk1h = 0.5 * w2.do.compute_L2_energy_with(M=M2) / Volume
         if save_uw:
             if check_multiple_close(tk1, 0.1) and check_almost_in_range(tk1, 8.3, 9.5):
                 TK1 = round(tk1, 1)

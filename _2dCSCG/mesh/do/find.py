@@ -1,7 +1,7 @@
 
 
-from screws.frozen import FrozenOnly
-from root.config import sIze
+from screws.freeze.main import FrozenOnly
+from root.config.main import sIze
 import numpy as np
 
 
@@ -51,7 +51,7 @@ class _2dCSCG_Mesh_DO_FIND(FrozenOnly):
             raise Exception
 
     def region_name_and_local_indices_of_element(self, i):
-        return self._mesh_.___DO_find_region_name_and_local_indices_of_element___(i)
+        return self._mesh_.___PRIVATE_do_find_region_name_and_local_indices_of_element___(i)
 
     def reference_origin_and_size_of_element_of_given_local_indices(self, region_name, local_indices):
         origin = [None for _ in range(2)]

@@ -2,10 +2,10 @@
 
 
 import numpy as np
-from root.config import cOmm
-from screws.frozen import FrozenOnly
-from _3dCSCG.mesh.regions.main import Regions
-from _3dCSCG.mesh.regions.region.main import Region
+from root.config.main import cOmm
+from screws.freeze.main import FrozenOnly
+from _3dCSCG.mesh.domain.regions.main import Regions
+from _3dCSCG.mesh.domain.regions.region.main import Region
 from _3dCSCG.mesh.domain.visualize.main import _3dCSCG_Domain_Visualize
 from _3dCSCG.mesh.domain.boundaries import _3dCSCG_Boundaries
 

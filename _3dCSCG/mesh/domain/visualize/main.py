@@ -1,10 +1,10 @@
 """
 
 """
-from root.config import *
+from root.config.main import *
 import tecplot as tp
 from tecplot.constant import PlotType
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
@@ -31,7 +31,7 @@ class _3dCSCG_Domain_Visualize(FrozenOnly):
         ----------
         nodes : int or None, optional
             A positive int to determine how good we are going to follow the real shape
-            of each regions. When it is None (default), it will be set to be the optimal
+            of each region. When it is None (default), it will be set to be the optimal
             according the regions type.
 
         """

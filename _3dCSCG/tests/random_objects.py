@@ -6,7 +6,7 @@ Generate random objects for testing purpose.
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from root.config import *
+from root.config.main import *
 import random
 from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
 

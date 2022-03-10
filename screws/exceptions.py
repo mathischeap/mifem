@@ -1,5 +1,8 @@
 
+"""
+In this script, we DO NOT use the structure of naming files and folders of the mifem library.
 
+"""
 
 
 
@@ -40,3 +43,9 @@ class LinerSystemSolverDivergenceError(Exception):
 
 class ThreeDimensionalTransfiniteInterpolationError(Exception):
     """Raise when we try to define new attribute for a frozen object."""
+
+
+class EmailSendingError(Exception):
+    """Raise when we try to access standard property ``statistic`` but
+    ``___statistic___`` is not defined.
+    """

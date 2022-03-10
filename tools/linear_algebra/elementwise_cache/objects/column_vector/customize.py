@@ -1,8 +1,8 @@
 
 
 
-from screws.decorators import accepts
-from screws.frozen import FrozenOnly
+from screws.decorators.accepts import accepts
+from screws.freeze.main import FrozenOnly
 from scipy import sparse as spspa
 import numpy as np
 
@@ -87,8 +87,7 @@ class SpaVec_Customize(FrozenOnly):
         :return:
         """
 
-        if pd.__class__.__name__ == 'PartialCochain':
-            pd = pd.dofs
+        if pd.__class__.__name__ == 'PartialCochain': pd = pd.dofs
 
         bsp = self._spa_vec_.con_shape
         assert bsp is not False and np.shape(bsp) == (1,), \
@@ -137,6 +136,7 @@ class SpaVec_Customize(FrozenOnly):
             pc = pd
 
         if pd.__class__.__name__ == 'PartialCochain': pd = pd.dofs
+
         assert pd.__class__.__name__ == 'PartialDofs', f"pd must be a PartialDofs."
         assert pc.__class__.__name__ == 'PartialCochain', f"pc must be a PartialCochain."
 

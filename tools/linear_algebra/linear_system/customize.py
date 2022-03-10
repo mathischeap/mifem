@@ -1,6 +1,6 @@
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 class ___LinearSystem_Customize___(FrozenOnly):
     """Used to define customizations to A and b simultaneously."""
@@ -19,9 +19,12 @@ class ___LinearSystem_Customize___(FrozenOnly):
         :param interpreted_as: how we interpret the `pd` and `pc`.
         :return:
         """
+        # check 1: ---------------------------------
         if i == j:
             assert pc is None, f"when pc is None, we must have i==j, " \
                                f"now i={i}, j={j}."
+
+        # check 2: ---------------------------------
         if pc is None:
             assert i == j, \
                 f"when do not provide pc, we must set diagonal block, " \
@@ -30,8 +33,10 @@ class ___LinearSystem_Customize___(FrozenOnly):
                 "I need a PartialCochain when pc is None."
             pc = pd
 
+        # check 3: ---------------------------------
         assert pc.__class__.__name__ == 'PartialCochain', f"pc must be a PartialCochain."
 
+        #======== customize ==============================================
         I, J = self._LS_.block_shape
         assert i % 1 == 0, f"i={i}({i.__class__.__name__}) cannot be an index!"
         assert j % 1 == 0, f"j={j}({j.__class__.__name__}) cannot be an index!"

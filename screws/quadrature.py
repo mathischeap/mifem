@@ -11,20 +11,7 @@ TU Delft
 import numpy as np
 from functools import partial
 from scipy.special import legendre, roots_legendre
-from screws.frozen import FrozenOnly
-
-# # a global cache for 1d Gauss quad .
-# _Qpvdf_xicnfd2df_gauss_pp_ = dict()
-#
-# def _gg(p):
-#     global _Qpvdf_xicnfd2df_gauss_pp_
-#
-#     if p > 50: return np.polynomial.legendre.leggauss(p+1)
-#
-#     if p not in _Qpvdf_xicnfd2df_gauss_pp_:
-#         _Qpvdf_xicnfd2df_gauss_pp_[p] = np.polynomial.legendre.leggauss(p+1)
-#
-#     return _Qpvdf_xicnfd2df_gauss_pp_[p]
+from screws.freeze.inheriting.frozen_only import FrozenOnly
 
 
 class Quadrature(FrozenOnly):
@@ -48,14 +35,14 @@ class Quadrature(FrozenOnly):
         assert all([pi >= 0 and pi % 1 == 0 for pi in p]), " <Quadrature> : p = {} is wrong.".format(p)
         self._p_ = p
         _category_ = [category for _ in range(self.ndim)] if isinstance(category, str) else category
-        assert all([ci in self.___coded_quadrature___() for ci in _category_])
+        assert all([ci in self.___PRIVATE_coded_quadrature___() for ci in _category_])
         self._category_ = _category_
-        self.___check_p___()        
+        self.___PRIVATE_check_p___()
         self._quad_ = None
         self._freeze_self_()
         
     @classmethod
-    def ___coded_quadrature___(cls):
+    def ___PRIVATE_coded_quadrature___(cls):
         """ 
         Notice that here the 'Chebyshev' quadrature can not be used in the same way as
         'Gauss' or 'Lobatto' quadratures.
@@ -78,7 +65,7 @@ class Quadrature(FrozenOnly):
         """
         return 'Gauss', 'Lobatto', 'extended_Gauss', 'Chebyshev'
     
-    def ___check_p___(self):
+    def ___PRIVATE_check_p___(self):
         """ """
         for i, ci in enumerate(self.category):
             if ci in ('Chebyshev', 'Gauss'):
@@ -112,11 +99,11 @@ class Quadrature(FrozenOnly):
         """(Tuple) ``quad[0]`` are the nodes, ``quad[1]`` are the weights."""
         if self._quad_ is None:
             if self.ndim == 1:
-                self._quad_ = getattr(self, '___'+self.category[0]+'___')(self.p[0])
+                self._quad_ = getattr(self, '___PRIVATE_compute_'+self.category[0]+'___')(self.p[0])
             else:
                 self._quad_ = ([], [])
                 for i in range(self.ndim):
-                    nodes, weights = getattr(self, '___'+self.category[i]+'___')(self.p[i])
+                    nodes, weights = getattr(self, '___PRIVATE_compute_'+self.category[i]+'___')(self.p[i])
                     self._quad_[0].append(nodes)
                     self._quad_[1].append(weights)
         return self._quad_
@@ -142,11 +129,11 @@ class Quadrature(FrozenOnly):
         
     @property
     def quad_ndim_ravel(self):
-        """Same as `quad_ndim` but now we have ravel it, so it is of shape (n+1, x*y*z)."""
+        """Same as `quad_ndim` but now we have raveled it, so it is of shape (n+1, x*y*z)."""
         return [qn.ravel('F') for qn in self.quad_ndim]
 
 
-    def ___Lobatto___(self, p):
+    def ___PRIVATE_compute_Lobatto___(self, p):
         """ """
         x_0 = np.cos(np.arange(1, p) / p * np.pi)
         nodal_pts = np.zeros((p + 1))
@@ -155,15 +142,15 @@ class Quadrature(FrozenOnly):
         nodal_pts[-1] = -1
         # Newton method for root finding ...
         for i, ch_pt in enumerate(x_0):
-            leg_p = partial(self._legendre_prime_lobatto_, n=p)
-            leg_pp = partial(self._legendre_double_prime_, n=p)
-            nodal_pts[i + 1] = self._newton_method_(leg_p, leg_pp, ch_pt, 100)
+            leg_p = partial(self.___PRIVATE_legendre_prime_lobatto___, n=p)
+            leg_pp = partial(self.___PRIVATE_legendre_double_prime___, n=p)
+            nodal_pts[i + 1] = self.___PRIVATE_newton_method___(leg_p, leg_pp, ch_pt, 100)
         # weights ...
         weights = 2 / (p * (p + 1) * (legendre(p)(nodal_pts))**2)
         return nodal_pts[::-1], weights
 
     @staticmethod
-    def ___Gauss___(p):
+    def ___PRIVATE_compute_Gauss___(p):
         """
         Gauss quadrature are most wildly used, so we cache it.
         """
@@ -172,7 +159,7 @@ class Quadrature(FrozenOnly):
         return roots_legendre(p+1)
 
     @staticmethod
-    def ___extended_Gauss___(p):
+    def ___PRIVATE_compute_extended_Gauss___(p):
         """ """
         nodes, weights = np.polynomial.legendre.leggauss(p-1)
         ext_nodes = np.ones((p + 1))
@@ -183,7 +170,7 @@ class Quadrature(FrozenOnly):
         return ext_nodes, ext_weights
 
     @staticmethod
-    def ___Chebyshev___(p):
+    def ___PRIVATE_compute_Chebyshev___(p):
         """ 
         For 'Chebyshev', we do not use it to integrate f(x), but use it to integrate
         f(x)/sqrt(1-x^2). So:
@@ -201,7 +188,7 @@ class Quadrature(FrozenOnly):
 
 
     @staticmethod
-    def _legendre_prime_(x, n):
+    def ___PRIVATE_legendre_prime___(x, n):
         """
         Calculate first derivative of the nth Legendre Polynomial recursively.
         
@@ -234,10 +221,10 @@ class Quadrature(FrozenOnly):
         legendre_p = (n * legendre(n - 1)(x) - n * x * legendre(n)(x))/(1-x**2)
         return legendre_p
     
-    def _legendre_prime_lobatto_(self, x, n):
-        return (1-x**2)**2*self._legendre_prime_(x,n)
+    def ___PRIVATE_legendre_prime_lobatto___(self, x, n):
+        return (1-x**2)**2*self.___PRIVATE_legendre_prime___(x, n)
     
-    def _legendre_double_prime_(self, x, n):
+    def ___PRIVATE_legendre_double_prime___(self, x, n):
         """
         Calculate second derivative legendre polynomial recursively.
     
@@ -254,11 +241,11 @@ class Quadrature(FrozenOnly):
             (np.array) = value second derivative of L_n.
             
         """
-        legendre_pp = 2 * x * self._legendre_prime_(x, n) - n * (n + 1) * legendre(n)(x)
+        legendre_pp = 2 * x * self.___PRIVATE_legendre_prime___(x, n) - n * (n + 1) * legendre(n)(x)
         return legendre_pp * (1 - x ** 2)
 
     @staticmethod
-    def _newton_method_(f, df_dx, x_0, n_max, min_error=np.finfo(float).eps * 10):
+    def ___PRIVATE_newton_method___(f, df_dx, x_0, n_max, min_error=np.finfo(float).eps * 10):
         """
         Newton method for root finding.
     
@@ -295,14 +282,16 @@ class Quadrature(FrozenOnly):
 
 
 
+
+
+
+
+
+
 if __name__ == '__main__':
     # a = np.polynomial.legendre.leggauss(2)
-
 
     a = Quadrature(2, 'Lobatto')
     _ = a.quad
 
     print(_)
-
-    # _gg2()
-    # _gg2()

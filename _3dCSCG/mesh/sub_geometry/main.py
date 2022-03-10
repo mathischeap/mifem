@@ -6,8 +6,8 @@ consist of sub-geometries of one or several elements.
 
 """
 
-from root.config import *
-from screws.frozen import FrozenOnly
+from root.config.main import *
+from screws.freeze.main import FrozenOnly
 
 
 
@@ -22,7 +22,7 @@ class _3dCSCG_Mesh_SubGeometry(FrozenOnly):
 
 
 
-    def GENERATE_perpendicular_slice_object(self, *args, **kwargs):
+    def make_a_perpendicular_slice_object_on(self, *args, **kwargs):
         return _3dCSCG_MeshPerpendicularSlice(self._mesh_, *args, **kwargs)
 
 
@@ -64,18 +64,18 @@ class _3dCSCG_MeshPerpendicularSlice(FrozenOnly):
         assert rn in self._mesh_.domain.regions, "regions does not exist."
         assert self._mesh_.domain.regions[rn] is RS._region_, "regions does not match."
 
-        r, t, s = RS.r, RS.t, RS.s
+        r, s, t = RS.r, RS.s, RS.t
         spacing = self._mesh_.elements.spacing[rn]
 
         A = self.___PRIVATE_locate_index_in_spacing___(r, spacing[0])
-        B = self.___PRIVATE_locate_index_in_spacing___(t, spacing[1])
-        C = self.___PRIVATE_locate_index_in_spacing___(s, spacing[2])
+        B = self.___PRIVATE_locate_index_in_spacing___(s, spacing[1])
+        C = self.___PRIVATE_locate_index_in_spacing___(t, spacing[2])
 
         _ = (A, B, C)
-        PTA = 'rts'.index(RS.perpendicular_to_axis)
+        PTA = 'rst'.index(RS.perpendicular_to_axis)
         assert len(_[PTA]) == 1, "something is wrong."
 
-        PTA_position = (r, t, s)[PTA]
+        PTA_position = (r, s, t)[PTA]
 
         IND = list()
 
@@ -131,11 +131,11 @@ class _3dCSCG_MeshPerpendicularSlice(FrozenOnly):
         for e in involved_loc_elements:
             element = self._mesh_.elements[e]
             if PTA == 0:
-                ESG_PS = element.sub_geometry.GENERATE_perpendicular_slice_object(xi = position)
+                ESG_PS = element.sub_geometry.make_a_perpendicular_slice_object_on(xi = position)
             elif PTA == 1:
-                ESG_PS = element.sub_geometry.GENERATE_perpendicular_slice_object(eta = position)
+                ESG_PS = element.sub_geometry.make_a_perpendicular_slice_object_on(eta = position)
             elif PTA == 2:
-                ESG_PS = element.sub_geometry.GENERATE_perpendicular_slice_object(sigma = position)
+                ESG_PS = element.sub_geometry.make_a_perpendicular_slice_object_on(sigma = position)
             else:
                 raise Exception()
 

@@ -1,9 +1,7 @@
 
 
 
-
-
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from _3dCSCG.mesh.elements.element.sides.side.coordinate_transformation import _3dCSCG_Mesh_Element_Side_CT
 
 
@@ -29,7 +27,6 @@ class _3dCSCG_Mesh_Element_Side(FrozenOnly):
         """The index of position in 'NSWEBF'."""
         return self._side_index_
 
-
     @property
     def side_name(self):
         """The index of position in 'NSWEBF'."""
@@ -43,10 +40,8 @@ class _3dCSCG_Mesh_Element_Side(FrozenOnly):
         return self._mesh_.trace.elements.map[
             self._element_.i][self.side_index]
 
-
     @property
     def coordinate_transformation(self):
         if self._ct_ is None:
             self._ct_ = _3dCSCG_Mesh_Element_Side_CT(self)
         return self._ct_
-

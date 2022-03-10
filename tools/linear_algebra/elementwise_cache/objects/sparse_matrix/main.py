@@ -1,9 +1,9 @@
 
 import types
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from scipy import sparse as spspa
 from scipy.sparse import linalg as spspalinalg
-from root.config import *
+from root.config.main import *
 from tools.linear_algebra.data_structures.global_matrix.main import GlobalMatrix
 from tools.linear_algebra.gathering.chain_matrix.main import Chain_Gathering_Matrix
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.customize import SpaMat_Customize
@@ -99,7 +99,7 @@ class EWC_SparseMatrix(FrozenOnly):
 
         self._gathering_matrices_0_ = None
         self._gathering_matrices_1_ = None
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self.___NC___ = '>NC<'
         self.___CT___ = '>CT<'
         self.___IS_NC___ = False
@@ -112,7 +112,7 @@ class EWC_SparseMatrix(FrozenOnly):
         self._freeze_self_()
 
 
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         self._cache_ = dict()
 
 
@@ -466,6 +466,13 @@ class EWC_SparseMatrix(FrozenOnly):
         """inv of self."""
         data_generator = ___LinearAlgebraINV___(self)
         return EWC_SparseMatrix(self._elements_, data_generator, self._KG_)
+
+
+
+
+
+
+
 
 
 class ___MUL___(FrozenOnly):

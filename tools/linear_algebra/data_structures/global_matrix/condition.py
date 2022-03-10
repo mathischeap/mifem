@@ -2,8 +2,8 @@
 
 
 from numpy import linalg as nplinalg
-from screws.frozen import FrozenOnly
-from root.config import rAnk, mAster_rank, cOmm
+from screws.freeze.main import FrozenOnly
+from root.config.main import rAnk, mAster_rank, cOmm
 
 
 class ___GM_CONDITION___(FrozenOnly):

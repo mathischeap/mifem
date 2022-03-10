@@ -12,8 +12,7 @@ generate a based on the domain.
 import inspect
 import numpy as np
 from typing import Dict
-from screws.frozen import FrozenOnly
-from screws.miscellaneous import check_no_splcharacter
+from screws.freeze.main import FrozenOnly
 
 class _3dDomainInputBase(FrozenOnly):
     def __init__(self, domain_name='domain without name'):
@@ -88,45 +87,35 @@ class _3dDomainInputBase(FrozenOnly):
     def ___PRIVATE_region_name_requirement_checker___(self, regionDict):
         """
         Requirements:
-        0). != domain name.
-        1). Does not include '-' and '='.
-        2). Starts with 'R:'
+        1). must be str
+        2). != domain name.
+        3). length > 2
+        4). Starts with 'R:'
+        5). can only have letters and _
         """
         for R in regionDict:
-            assert R != self.domain_name
-            assert check_no_splcharacter(R[2:]), f"regions name {R} has special characters."
-            assert '-' not in R and '=' not in R, \
-                " <DomainInput> : regions name = {} is wrong".format(R)
-            assert R[0:2] == 'R:', \
-                " <DomainInput> : regions name = {} does not start with 'R:'".format(R)
+            assert isinstance(R, str), f"region name={R} wrong, need be str!"
+            assert R != self.domain_name, f"region name == domain.name! wrong!"
+            assert len(R) > 2, f"region name = {R} too short, must > 2."
+            assert R[0:2] == 'R:', f"regions name = {R} does not start with 'R:'"
+            R2 = R[2:].replace('_', '')
+            assert R2.isalpha(),f"region_name = {R} wrong, can only have letter and _ (at >2)."
 
 
     def ___PRIVATE_boundary_name_requirement_checker___(self, boundaryRegionSidesDict):
         """
         Requirements:
-        0). != domain name.
-        1). Is String and is not empty. Does not include '-' and '='.
-        2). Can not start with 'R:' (So it must be different from regions names).
-        3). Length > 1
-        4). Does not contain any number
+        1). != domain name.
+        2). Length > 2
+        3). Can not start with 'R:' (So it must be different from regions names).
+        4). Only have letters
         """
         for boundary_name in boundaryRegionSidesDict.keys():
             assert boundary_name != self.domain_name
-            assert check_no_splcharacter(boundary_name), f"boundary name {boundary_name} has special characters."
-            assert isinstance(boundary_name, str) and boundary_name != '' \
-                   and '-' not in boundary_name and '=' not in boundary_name \
-                   and '|' not in boundary_name, \
-                " <DomainInput> : boundary_name = {} is wrong.".format(boundary_name)
-            assert boundary_name[0:2] not in ('R:',), \
-                " <DomainInput> : boundary_name = {} wrong.".format(boundary_name)
-            assert len(boundary_name) > 1, \
-                " <DomainInput> : boundary_name = {} is too short.".format(boundary_name)
-            for i in '0123456789':
-                assert i not in boundary_name, \
-                    " <DomainInput> : boundary_name = {} has number {}.".format(boundary_name, i)
-        self._boundary_names_ = list(boundaryRegionSidesDict.keys())
-
-
+            assert len(boundary_name) > 2, f"boundary_name = {boundary_name} is too short (>2 must)."
+            assert boundary_name[0:2] != 'R:', f"boundary_name = {boundary_name} wrong."
+            BN = boundary_name.replace('_', '')
+            assert BN.isalpha(), f"boundary_name = {boundary_name} wrong, boundary_name can only contain letters and _."
 
 
 
@@ -281,6 +270,7 @@ class _3dDomainInputBase(FrozenOnly):
                 raise Exception(" <DomainInput> : boundary_region_sides input value accepts" + \
                                 " only str, tuple of list.")
         self._boundary_region_sides_ = _dict_
+        self._boundary_names_ = list(_dict_.keys())
 
     @property
     def region_sequence(self):

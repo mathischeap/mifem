@@ -8,9 +8,9 @@
 
 """
 
+
+
 from _3dCSCG.forms.base import _3dCSCG_FORM_BASE
-
-
 from _3dCSCG.forms.node.base.numbering.main import _3dCSCG_Node_Numbering
 
 
@@ -33,16 +33,25 @@ class _3dCSCG_Node(_3dCSCG_FORM_BASE, ndim=3):
             getattr(self.space.num_basis, self.__class__.__name__)
         assert orientation in ('inner', 'outer'), " orientation needs to be 'inner' or 'outer'."
         self._orientation_ = orientation
-        self.standard_properties.___PRIVATE_add_tag___('3dCSCG_node_form')
+        self.standard_properties.___PRIVATE_add_tag___('3dCSCG_node_form',)
         self.standard_properties.name = name
         self._numbering_ = _3dCSCG_Node_Numbering(self, numbering_parameters)
 
         # self._cochain_ = _3dCSCG_Trace_Cochain(self)
-        #
         # self._visualize_ = _3dCSCG_Trace_Visualize(self)
         # self._matrices_ = _3dCSCG_Trace_Matrices(self)
         # self._coboundary_ = _3dCSCG_Trace_Coboundary(self)
         # self._DO_ = _3dCSCG_Trace_DO(self)
+
+
+
+
+
+
+
+
+
+
 
     def ___PRIVATE_reset_cache___(self):
         """"""

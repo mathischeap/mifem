@@ -8,8 +8,9 @@
 
 """
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from importlib import import_module
+from _3dCSCG.forms.edge.base.numbering.do import _3dCSCG_Edge_Numbering_DO
 
 
 
@@ -82,14 +83,3 @@ class _3dCSCG_Edge_Numbering(FrozenOnly):
         if self._edge_element_wise_ is None:
             self.___PRIVATE_do_numbering___()
         return self._edge_element_wise_
-
-
-
-
-
-
-
-class _3dCSCG_Edge_Numbering_DO(FrozenOnly):
-    def __init__(self, EN):
-        self._numbering_ = EN
-        self._freeze_self_()

@@ -11,13 +11,13 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 from _3dCSCG.APP.exact_solution.main import _3dCSCG_ExactSolution
 from importlib import import_module
-from screws.frozen import FrozenOnly
-from screws.miscellaneous import MyTimer
+from screws.freeze.main import FrozenOnly
+from screws.miscellaneous.timer import MyTimer
 from _3dCSCG.mesh.domain.inputs.allocator import DomainInputAllocator
 from _3dCSCG.mesh.domain.main import _3dCSCG_Domain
 from _3dCSCG.mesh.main import _3dCSCG_Mesh
 from copy import deepcopy
-from root.config import *
+from root.config.main import rAnk, mAster_rank, cOmm
 
 
 class MeshGenerator(FrozenOnly):
@@ -180,7 +180,7 @@ class FormCaller(FrozenOnly):
                     else:
                         raise Exception(f"ID={ID} do not accept a single prime form instance as input.")
 
-                    assert prime.IS_hybrid, "prime must be hybrid."
+                    assert prime.IS.hybrid, "prime must be hybrid."
                     assert prime.mesh is self._mesh_ and prime.space is self._space_, \
                         "mesh, space do not match." # not just ==, but is!
 
@@ -258,9 +258,9 @@ class FormCaller(FrozenOnly):
                 '1-adt': algebra_dual_form_path + "trace._1_AD_trace : _3dCSCG_T1_ADF",
                 '2-adt': algebra_dual_form_path + "trace._2_AD_trace : _3dCSCG_T2_ADF",
 
-                'scalar': "_3dCSCG.fields.scalar : _3dCSCG_ScalarField",
-                'vector': "_3dCSCG.fields.vector : _3dCSCG_VectorField",
-                'tensor': "_3dCSCG.fields.tensor : _3dCSCG_TensorField",
+                'scalar': "_3dCSCG.fields.scalar.main : _3dCSCG_ScalarField",
+                'vector': "_3dCSCG.fields.vector.main : _3dCSCG_VectorField",
+                'tensor': "_3dCSCG.fields.tensor.main : _3dCSCG_TensorField",
 
                 '0-t': form_path + "trace._0_trace : _3dCSCG_0Trace",
                 '1-t': form_path + "trace._1_trace : _3dCSCG_1Trace",
@@ -306,7 +306,7 @@ class ExactSolutionSelector(FrozenOnly):
         className = pathAndName[-1]
         ES =  _3dCSCG_ExactSolution(self._mesh_)
         status = getattr(import_module(classPath), className)(ES, **kwargs)
-        ES.___set_status___(status)
+        ES.___PRIVATE_set_status___(status)
         esp = dict()
         esp['type'] = '_3dCSCG_ExactSolution'
         esp['ID'] = ID

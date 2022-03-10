@@ -13,7 +13,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 import numpy as np
-from inheriting.CSCG.form.main_BASE import CSCG_FORM_BASE
+from inheriting.CSCG.forms.base.main import CSCG_FORM_BASE
 
 
 # noinspection PyAbstractClass
@@ -310,7 +310,7 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python _3dCSCG\form\main.py
+    # mpiexec -n 4 python _3dCSCG\forms\base.py
     from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
     mesh = MeshGenerator('crazy', c=0.0)([5,5,5])

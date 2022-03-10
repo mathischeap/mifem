@@ -1,9 +1,9 @@
 
 
-from screws.frozen import FrozenOnly
-from screws.decorators import accepts
+from screws.freeze.main import FrozenOnly
+from screws.decorators.accepts import accepts
 from scipy import sparse as spspa
-from root.config import *
+from root.config.main import *
 
 
 class SpaMat_Customize(FrozenOnly):
@@ -285,12 +285,10 @@ class SpaMat_Customize(FrozenOnly):
         :param interpreted_as:
         :return:
         """
-        if pds.__class__.__name__ == 'PartialCochain':
-            pds = pds.dofs
+        if pds.__class__.__name__ == 'PartialCochain': pds = pds.dofs
 
         assert self._spa_mat_.elements._mesh_ == pds._mesh_, \
             "PartialDofs elements != EWC elements."
-
 
         bsp = self._spa_mat_.bmat_shape
 

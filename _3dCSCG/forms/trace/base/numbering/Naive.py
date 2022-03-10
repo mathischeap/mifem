@@ -7,7 +7,7 @@
          TU Delft, Delft, Netherlands
 
 """
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from tools.linear_algebra.gathering.chain_matrix.main import Gathering_Matrix, Gathering_Vector
 
 
@@ -52,10 +52,10 @@ class _3dCSCG_Trace_Form_Numbering_Naive(FrozenOnly):
         local_num_dofs = 0
         extraInfo = None
 
-        num_basis_onside = self._tf_.NUM_basis_onside
+        num_basis_onside = self._tf_.num.basis_onside
         NBO = [num_basis_onside['N'], num_basis_onside['W'],  num_basis_onside['B']]
 
-        type_amount_dict = self._mesh_.trace.elements.___DO_find_type_and_amount_numbered_before___()
+        type_amount_dict = self._mesh_.trace.elements.___PRIVATE_find_type_and_amount_numbered_before___()
 
         for i in self._mesh_.trace.elements:
             t_e_i = self._mesh_.trace.elements[i]
@@ -115,10 +115,10 @@ class _3dCSCG_Trace_Form_Numbering_Naive(FrozenOnly):
         local_num_dofs = 0
         extraInfo = None
 
-        num_basis_onside = self._tf_.NUM_basis_onside
+        num_basis_onside = self._tf_.num.basis_onside
         NBO = [num_basis_onside['N'], num_basis_onside['W'],  num_basis_onside['B']]
 
-        type_amount_dict = self._mesh_.trace.elements.___DO_find_type_and_amount_numbered_before___()
+        type_amount_dict = self._mesh_.trace.elements.___PRIVATE_find_type_and_amount_numbered_before___()
 
         for i in self._mesh_.trace.elements:
             t_e_i = self._mesh_.trace.elements[i]
@@ -182,10 +182,10 @@ class _3dCSCG_Trace_Form_Numbering_Naive(FrozenOnly):
         local_num_dofs = 0
         extraInfo = None
 
-        num_basis_onside = self._tf_.NUM_basis_onside
+        num_basis_onside = self._tf_.num.basis_onside
         NBO = [num_basis_onside['N'], num_basis_onside['W'],  num_basis_onside['B']]
 
-        type_amount_dict = self._mesh_.trace.elements.___DO_find_type_and_amount_numbered_before___()
+        type_amount_dict = self._mesh_.trace.elements.___PRIVATE_find_type_and_amount_numbered_before___()
 
         for i in self._mesh_.trace.elements:
             t_e_i = self._mesh_.trace.elements[i]

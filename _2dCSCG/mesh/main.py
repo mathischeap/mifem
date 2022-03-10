@@ -1,9 +1,9 @@
 
 
 
-from root.config import *
-from inheriting.CSCG.mesh.main_BASE import CSCG_MESH_BASE
-from screws.decorators import accepts, memoize5
+from root.config.main import *
+from inheriting.CSCG.mesh.base import CSCG_MESH_BASE
+from screws.decorators.accepts import accepts, memoize5
 from screws.exceptions import ElementsLayoutError, ElementEdgePairError
 from typing import Dict, Union
 from _2dCSCG.mesh.elements.main import _2dCSCG_Mesh_Elements
@@ -437,11 +437,11 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
         """
         self.___element_map___: Dict[int, Union[tuple, list]] = dict()
         for i in self._element_indices_:
-            region_name, local_indices = self.___DO_find_region_name_and_local_indices_of_element___(i)
+            region_name, local_indices = self.___PRIVATE_do_find_region_name_and_local_indices_of_element___(i)
             _em_i_ = self.___PRIVATE_fetch_side_element___(region_name, local_indices)
             self.___element_map___[i] = _em_i_
         if len(self._element_indices_) == 0: # to make sure we initialized the memoize cache.
-            self.___DO_find_region_name_and_local_indices_of_element___(-1)
+            self.___PRIVATE_do_find_region_name_and_local_indices_of_element___(-1)
 
     def ___PRIVATE_fetch_side_element___(self, region_name, local_indices):
         """We try to find the global numbering of the elements or boundary attaching to the local element indexed
@@ -583,7 +583,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
             self.___boundary_element_edges___[bn] = ()
 
         for i in self._element_indices_:
-            region_name, local_indices = self.___DO_find_region_name_and_local_indices_of_element___(i)
+            region_name, local_indices = self.___PRIVATE_do_find_region_name_and_local_indices_of_element___(i)
             _em_i_ = self.___element_map___[i]
             for j in range(len(_em_i_)):
                 if _em_i_[j] in self.domain._boundary_names_:
@@ -625,7 +625,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
         self.___element_global_numbering___ = None
 
     @memoize5 # must use memoize
-    def ___DO_find_region_name_and_local_indices_of_element___(self, i):
+    def ___PRIVATE_do_find_region_name_and_local_indices_of_element___(self, i):
         """ Find the regions and the local numbering of ith element. """
         if i == -1: return None # to make sure we initialized the memoize cache.
         region_name = None

@@ -6,12 +6,12 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 
-from root.config import *
+from root.config.main import *
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
     def __init__(self, mesh):
@@ -100,7 +100,7 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
             for i in range(self._mesh_.elements.layout[rn][0]):
                 for j in range(self._mesh_.elements.layout[rn][1]):
 
-                    C = self._mesh_.do.FIND_slave_of_element(gnrn[i, j])
+                    C = self._mesh_.do.find.slave_of_element(gnrn[i, j])
 
                     if C == mAster_rank: # for the master core, we box the element numbering.
                         plt.text(eccrn[0][i,j], eccrn[1][i,j], "${}$".format(gnrn[i,j]),

@@ -8,9 +8,9 @@
 
 """
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from importlib import import_module
-from root.config import *
+from root.config.main import *
 
 
 from _3dCSCG.forms.trace.base.numbering.do.main import _3dCSCG_Trace_Numbering_DO

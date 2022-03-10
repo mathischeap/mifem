@@ -6,8 +6,8 @@ The trace (face) elements of a mesh.
 import sys
 if './' not in sys.path: sys.path.append('../')
 
-from root.config import *
-from screws.frozen import FrozenOnly
+from root.config.main import *
+from screws.freeze.main import FrozenOnly
 
 from _3dCSCG.mesh.trace.elements.main import _3dCSCG_Trace_Elements
 

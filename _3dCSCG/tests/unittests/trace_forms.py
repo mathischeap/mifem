@@ -2,7 +2,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from root.config import *
+from root.config.main import *
 import random
 from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
 from _3dCSCG.tests.random_objects import random_3D_FormCaller_of_total_load_around
@@ -28,9 +28,9 @@ def test_trace_NO__general_tests():
     t2 = FC('2-t')
 
     # some tests ----------------------------------------------
-    assert t0.IS_hybrid
-    assert t1.IS_hybrid
-    assert t2.IS_hybrid
+    assert t0.IS.hybrid
+    assert t1.IS.hybrid
+    assert t2.IS.hybrid
 
     return 1
 

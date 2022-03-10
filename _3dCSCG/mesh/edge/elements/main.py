@@ -7,8 +7,8 @@ if './' not in sys.path: sys.path.append('./')
 
 
 
-from screws.frozen import FrozenOnly
-from root.config import *
+from screws.freeze.main import FrozenOnly
+from root.config.main import *
 
 
 from _3dCSCG.mesh.edge.elements.element.main import _3dCSCG_Edge_Element
@@ -25,10 +25,10 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
         self._locations_ = self.___PRIVATE_generating_edge_locations___()
         self._elements_ = dict()
         self._ct_ = _3dCSCG_Edge_Elements_CT(self)
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         pass
 
     def ___PRIVATE_generating_edge_element_map___(self):
@@ -209,7 +209,7 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
             raise Exception()
 
 
-    def ___DO_find_type_and_amount_numbered_before___(self):
+    def ___PRIVATE_find_type_and_amount_numbered_before___(self):
         """
         :return: A dictionary. For example, ``{..., 107: [32, 33, 42], ...}``, it means
             we have 32 'NS'-, 33 'WE'- and 42 'BF'-direction edge elements numbered before 107.
@@ -270,8 +270,6 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
                     raise Exception()
 
         return type_amount_dict
-
-
 
 
     @property

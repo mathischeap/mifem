@@ -10,7 +10,7 @@
 import sys
 if './' not in sys.path: sys.path.append('/')
 from importlib import import_module
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 
 

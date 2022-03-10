@@ -11,7 +11,7 @@ Here we test the programs.
 
 import sys
 if './' not in sys.path: sys.path.append('./')
-from root.config import *
+from root.config.main import *
 
 from _3dCSCG.tests.unittests.auxiliaries.icpsNS_manu_conserving_solver import manu_conserving_solver
 from _3dCSCG.tests.unittests.auxiliaries.icpsNS_TGV_no_hybrid import NoHy_TGV

@@ -4,10 +4,10 @@
 @author: Yi Zhang.
          Department of Aerodynamics
          Faculty of Aerospace Engineering
-         TU Delft, Delft, Netherlands
+         TU Delft, Delft, the Netherlands
 
 """
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from tools.linear_algebra.gathering.chain_matrix.main import Gathering_Matrix, Gathering_Vector
 
 
@@ -52,10 +52,10 @@ class _2dCSCG_Trace_Numbering_Naive(FrozenOnly):
         local_num_dofs = 0
         extraInfo = None
 
-        num_basis_onside = self._tf_.NUM_basis_onside
+        num_basis_onside = self._tf_.num.basis_onside
         NBO = [num_basis_onside['U'], num_basis_onside['L']]
 
-        type_amount_dict = self._mesh_.trace.elements.___DO_find_type_and_amount_numbered_before___()
+        type_amount_dict = self._mesh_.trace.elements.___PRIVATE_find_type_and_amount_numbered_before___()
 
         for i in self._mesh_.trace.elements:
             t_e_i = self._mesh_.trace.elements[i]

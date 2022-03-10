@@ -1,5 +1,5 @@
 
-from inheriting.CSCG.form.trace.main_BASE import CSCG_Trace_Form_Coboundary_BASE
+from inheriting.CSCG.forms.trace.coboundary import CSCG_Trace_Form_Coboundary_BASE
 
 
 

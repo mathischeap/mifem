@@ -4,11 +4,10 @@ Time-wise iterator.
 
 """
 
-
-
-from root.config import *
-
+from root.config.main import *
 from tools.iterators.base.main import Iterator
+
+
 
 
 class SimpleIterator(Iterator):
@@ -18,6 +17,7 @@ class SimpleIterator(Iterator):
     :param dt:
     :param max_steps:
     :param max_time:
+    :param kwargs: These kwargs are those passed to the parent: `Iterator`.
     """
     def __init__(self, t0=0, dt=None, max_steps=None, max_time=None, **kwargs):
         cHeck_same_in_all_cores(t0, dt, max_steps, max_time, kwargs)

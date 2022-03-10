@@ -3,11 +3,11 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('../')
+if './' not in sys.path: sys.path.append('./')
 
 
-from screws.frozen import FrozenOnly
-from root.config import *
+from screws.freeze.main import FrozenOnly
+from root.config.main import *
 
 
 
@@ -19,8 +19,6 @@ class _3dCSCG_Edge_DO(FrozenOnly):
         self._ef_ = ef
         self._freeze_self_()
 
-
-
     def evaluate_basis_at_meshgrid(self, xi, eta, sigma):
         return self._ef_.space.do.evaluate_edge_basis_at_meshgrid(self._ef_.k, xi, eta, sigma)
 
@@ -29,8 +27,10 @@ class _3dCSCG_Edge_DO(FrozenOnly):
 
 
 
+
+
 if __name__ == '__main__':
-    # mpiexec -n 6 python _3dCSCG\form\edge\do.py
+    # mpiexec -n 6 python _3dCSCG\forms\edge\base\do.py
     from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
     mesh = MeshGenerator('crazy', c=0.25)([5,6,7])

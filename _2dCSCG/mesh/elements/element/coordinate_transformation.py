@@ -1,6 +1,6 @@
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 import numpy as np
 
 class _2dCSCG_Mesh_ECT(FrozenOnly):

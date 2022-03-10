@@ -1,6 +1,6 @@
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 class _2dCSCG_Trace_Element_CoordinateTransformation(FrozenOnly):
     def __init__(self, te):

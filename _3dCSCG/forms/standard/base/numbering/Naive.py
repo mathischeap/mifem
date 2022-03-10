@@ -7,8 +7,8 @@
          TU Delft, Delft, Netherlands
 
 """
-from root.config import *
-from screws.frozen import FrozenOnly
+from root.config.main import *
+from screws.freeze.main import FrozenOnly
 from tools.linear_algebra.gathering.chain_matrix.main import Gathering_Matrix, Gathering_Vector
 
 
@@ -38,7 +38,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
             return self._0Form_no_parameters()
         elif len(parameters) == 1 and 'SingleRegionSideCrack' in parameters:
             # have one regions side crack ...
-            assert not self._sf_.IS_hybrid, \
+            assert not self._sf_.IS.hybrid, \
                 "0-form can not be hybrid for single-regions-side-crack-numbering."
             return self._0Form_a_region_side_crack()
         else:
@@ -109,7 +109,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         """
         gathering_matrix = dict()
         element_num = self._sf_.mesh.elements.num
-        numOfBasis = self._sf_.NUM_basis
+        numOfBasis = self._sf_.num.basis
         extraInfo = None
         for i in self._sf_.mesh.elements:
             gathering_matrix[i] = Gathering_Vector(i, range(i * numOfBasis, (i + 1) * numOfBasis))
@@ -134,9 +134,9 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         """
         gathering_matrix = dict()
         element_num = self._sf_.mesh.elements.num
-        numOfBasis = self._sf_.NUM_basis
+        numOfBasis = self._sf_.num.basis
         extraInfo = None
-        if self._sf_.IS_hybrid:
+        if self._sf_.IS.hybrid:
             for i in self._sf_.mesh.elements:
                 gathering_matrix[i] = Gathering_Vector(i, range(i * numOfBasis, (i + 1) * numOfBasis))
             gathering_matrix = Gathering_Matrix(gathering_matrix, mesh_type='_3dCSCG')
@@ -162,7 +162,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
             global_numbering = cOmm.recv(source=mAster_rank, tag=rAnk)
         else:
             p = self._sf_.p
-            numOfBasisComponents = self._sf_.NUM_basis_components
+            numOfBasisComponents = self._sf_.num.basis_components
             numberingCache = dict()
             currentNumber = 0
             other_side_name = 'SNEWFB' # not an error, this is other side name.
@@ -280,9 +280,9 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         """
         gathering_matrix = dict()
         element_num = self._sf_.mesh.elements.num
-        numOfBasis = self._sf_.NUM_basis
+        numOfBasis = self._sf_.num.basis
         extraInfo = None
-        if self._sf_.IS_hybrid:
+        if self._sf_.IS.hybrid:
             for i in self._sf_.mesh.elements:
                 gathering_matrix[i] = Gathering_Vector(i, range(i * numOfBasis, (i + 1) * numOfBasis))
             gathering_matrix = Gathering_Matrix(gathering_matrix, mesh_type='_3dCSCG')
@@ -308,7 +308,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
             global_numbering = cOmm.recv(source=mAster_rank, tag=rAnk)
         else:
             p = self._sf_.p
-            numOfBasisComponents = self._sf_.NUM_basis_components
+            numOfBasisComponents = self._sf_.num.basis_components
             numberingCache = dict()
             currentNumber = 0
             other_side_name = 'SNEWFB' # not an error, this is other side name.
@@ -452,9 +452,9 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         """
         gathering_matrix = dict()
         element_num = self._sf_.mesh.elements.num
-        numOfBasis = self._sf_.NUM_basis
+        numOfBasis = self._sf_.num.basis
         extraInfo = None
-        if self._sf_.IS_hybrid:
+        if self._sf_.IS.hybrid:
             for i in self._sf_.mesh.elements:
                 gathering_matrix[i] = Gathering_Vector(i, range(i * numOfBasis, (i + 1) * numOfBasis))
             gathering_matrix = Gathering_Matrix(gathering_matrix, mesh_type='_3dCSCG')

@@ -2,8 +2,8 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from screws.frozen import FrozenOnly
-from root.config import caChe_factor
+from screws.freeze.main import FrozenOnly
+from root.config.main import caChe_factor
 
 
 class _3dCSCG_Trace_Elements_CoordinateTransformation(FrozenOnly):

@@ -1,5 +1,5 @@
 
-from inheriting.CSCG.form.trace.main_BASE import CSCG_Trace_Form_Cochain_BASE
+from inheriting.CSCG.forms.trace.cochain import CSCG_Trace_Form_Cochain_BASE
 
 
 class _3dCSCG_Trace_Cochain(CSCG_Trace_Form_Cochain_BASE):
@@ -8,7 +8,7 @@ class _3dCSCG_Trace_Cochain(CSCG_Trace_Form_Cochain_BASE):
 
     def ___local_2_local_TEW___(self):
         """"""
-        BO = self._tf_.NUM_basis_onside
+        BO = self._tf_.num.basis_onside
         INDICES = [0,]
         for sn in 'NSWEBF':
             # noinspection PyUnresolvedReferences

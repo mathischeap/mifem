@@ -3,9 +3,9 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from root.config import *
+from root.config.main import *
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 import numpy as np
 import matplotlib.pyplot as plt
 

@@ -1,14 +1,17 @@
 
 import sys
-if './' not in sys.path: sys.path.append('../')
+if './' not in sys.path: sys.path.append('./')
 
 
-from screws.frozen import FrozenOnly
-from root.config import *
+from screws.freeze.main import FrozenOnly
+from root.config.main import *
 
 import matplotlib.pyplot as plt
-# from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
+
+
+
+
 
 
 class _3dCSCG_Field_Visualize(FrozenOnly):
@@ -52,7 +55,6 @@ class _3dCSCG_Field_matplot_Visualize(FrozenOnly):
             return self.___PLOT_boundary_values_of_vector___(*args, **kwargs)
         else:
             raise NotImplementedError(f"can not matplot boundary values of {self._f_}.")
-
 
     def ___PLOT_boundary_values_of_scalar___(self,
         density=500000, colormap='coolwarm',
@@ -118,8 +120,6 @@ class _3dCSCG_Field_matplot_Visualize(FrozenOnly):
 
 
         plt.show()
-
-
 
     def ___PLOT_boundary_values_of_vector___(self,
         density=500000, colormap='coolwarm',
@@ -244,9 +244,13 @@ class _3dCSCG_Field_matplot_Visualize(FrozenOnly):
 
 
 
-if __name__ == '__main__':
 
-    # mpiexec -n 6 python _3dCSCG\field\main.py
+
+
+
+
+if __name__ == '__main__':
+    # mpiexec -n 6 python _3dCSCG\fields\base\visualize.py
     from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
 
     mesh = MeshGenerator('crazy', c=0.)([1,1,2], show_info=True)

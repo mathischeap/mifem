@@ -3,29 +3,43 @@ import os
 import pandas as pd
 from tqdm import tqdm
 from time import time, sleep
-from screws.frozen import FrozenClass
-from screws.miscellaneous import NumpyStyleDocstringReader
-from screws.miscellaneous import MyTimer, randomStringDigits
+from screws.freeze.main import FrozenClass
+from screws.miscellaneous.timer import NumpyStyleDocstringReader
+from screws.miscellaneous.timer import MyTimer, randomStringDigits
 import inspect
 import pickle
 
-from root.config import *
+from root.config.main import *
 
-from tools.iterators.base.monitor import IteratorMonitor
+from tools.iterators.base.monitor.main import IteratorMonitor
 
 class Iterator(FrozenClass):
     """A parent of all iterators.
 
-    :param auto_save_frequency: After `auto_save_frequency` iterations, we will do the auto save to `RDF_filename`.csv
-        And if auto_save_frequency = True, this frequency will be decided by the program according to `monitor_factor`.
-    :param float monitor_factor: A float between 0 or >0.1. When it is 0, no monitor. When it is 1, normal frequency.
+    :param auto_save_frequency:
+        After `auto_save_frequency` iterations, we will do the auto save to `RDF_filename`.csv
+        And if auto_save_frequency = True, this frequency will be decided by the program according
+        to `monitor_factor`.
+    :param float monitor_factor:
+        A float between 0 or >0.1. When it is 0, no monitor. When it is 1, normal frequency.
         When it > 1, higher frequency.
-    :param RDF_filename: We will save the RDF to this file (as well as the auto save). And if it already exists, we
+    :param RDF_filename:
+        We will save the RDF to this file (as well as the auto save). And if it already exists, we
         first read RDF from it.
-    :param name: The name of this iterator. And we also name the graph report picture file as:
+    :param name:
+        The name of this iterator. And we also name the graph report picture file as:
         'MPI_IGR_' + name + stamp.
+    :param save_to_mitr:
+        Do we save the results into the `.mitr` file?
     """
-    def __init__(self, auto_save_frequency=True, RDF_filename=None, monitor_factor=1, name=None, save_to_miter=False):
+    def __init__(self,
+        auto_save_frequency=True,
+        monitor_factor=1,
+        RDF_filename=None,
+        name=None,
+        save_to_mitr=False
+        ):
+
         # these four will be initialized in the particular iterator.
         assert hasattr(self, '_t0_')
         assert hasattr(self, '_dt_')
@@ -47,7 +61,7 @@ class Iterator(FrozenClass):
         stamp = cOmm.bcast(stamp, root=mAster_rank)
         self.standard_properties.name = name
         self.standard_properties.stamp = stamp
-        self._save_to_miter_ = save_to_miter
+        self._save_to_mitr_ = save_to_mitr
         self._freeze_self_()
 
     @property
@@ -102,8 +116,6 @@ class Iterator(FrozenClass):
     def monitor(self):
         """The monitor of this iterator."""
         return self._monitor_
-
-
 
     def __call__(self, solver, initial):
         """
@@ -255,10 +267,14 @@ class Iterator(FrozenClass):
         self._message_ = message
 
 
-
     def ___PRIVATE_append_outputs_to_RDF___(self, outputs):
         """"""
         self.RDF.loc[self.running_step-1] = [self.t, self.dt] + list(outputs[3:])
+
+
+
+    #-------------- core methods: run and read ------------------------------------------------
+
 
     def run(self):
         """To run the iterator.
@@ -312,13 +328,13 @@ class Iterator(FrozenClass):
                     self.___PRIVATE_append_outputs_to_RDF___(outputs)
 
                 # update monitor ...
-                self.monitor.DO_update() # always update monitor ...
+                self.monitor.do.update() # always update monitor ...
 
                 if _pass == 0: # not already in RDF
                     # update auto save
-                    self.monitor.DO_auto_save()
-                    self.monitor.DO_generate_graph_report()
-                    self.monitor.DO_send_email_to_users()
+                    self.monitor.do.auto_save()
+                    self.monitor.do.generate_graph_report()
+                    self.monitor.do.send_email_to_users()
 
                 # noinspection PyUnboundLocalVariable
                 pbar.update(1)
@@ -357,7 +373,7 @@ class Iterator(FrozenClass):
                 filename = RDF_filename
                 if filename[-4:] == '.csv': filename = filename[:-4]
 
-                if self._save_to_miter_: # we only do this when we set ``save_to_miter`` to be True.
+                if self._save_to_mitr_: # we only do this when we set ``save_to_miter`` to be True.
 
                     # noinspection PyBroadException
                     try: # try to save the iterator to .mitr file.
@@ -396,3 +412,5 @@ class Iterator(FrozenClass):
         else:
             # `read` can not resume iterator; just for retrieve info like: t0, dt, steps, solver source, solver dir ...
             return None
+
+    # ==============================================================================================

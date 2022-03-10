@@ -9,8 +9,8 @@
 """
 import sys
 if './' not in sys.path: sys.path.append('./')
-from root.config import *
-from screws.frozen import FrozenOnly
+from root.config.main import *
+from screws.freeze.main import FrozenOnly
 from importlib import import_module
 from _3dCSCG.forms.standard.base.numbering.do.main import _3dCSCG_Standard_Form_Numbering_DO_
 
@@ -42,10 +42,10 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
         self._numbering_parameters_ = {'scheme_name': self._scheme_name_}
         self._numbering_parameters_.update(self._parameters_)
         self._DO_ = _3dCSCG_Standard_Form_Numbering_DO_(self)
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         """"""
         self._local_ = None
         self._gathering_ = None
@@ -184,7 +184,7 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
         calling this property will be extremely expensive.
 
         """
-        if self._sf_.IS_hybrid is False: # for non-hybrid forms, no dofs are at the same location.
+        if self._sf_.IS.hybrid is False: # for non-hybrid forms, no dofs are at the same location.
             return list()
         else:
             if self._sf_.k == 3: # a volume form, return empty list
@@ -260,7 +260,7 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
         :param side_name:
         :return:
         """
-        assert self._sf_.NUM_basis == GM.GLOBAL_shape[1]
+        assert self._sf_.num.basis == GM.GLOBAL_shape[1]
         if self._localSideCache0_ is None: self._localSideCache0_ = dict()
         if side_name not in self._localSideCache0_:
             if   side_name == 'N': indices = self.local[0][ 0, :, :]
@@ -281,7 +281,7 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
         :param side_name:
         :return:
         """
-        assert self._sf_.NUM_basis == GM.GLOBAL_shape[1]
+        assert self._sf_.num.basis == GM.GLOBAL_shape[1]
         if self._localSideCache1_ is None: self._localSideCache1_ = dict()
         if side_name not in self._localSideCache1_:
             if   side_name == 'N':
@@ -316,7 +316,7 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
         :param side_name:
         :return:
         """
-        assert self._sf_.NUM_basis == GM.GLOBAL_shape[1]
+        assert self._sf_.num.basis == GM.GLOBAL_shape[1]
         if self._localSideCache2_ is None: self._localSideCache2_ = dict()
         if side_name not in self._localSideCache2_:
             if   side_name == 'N': indices = self.local[0][ 0, :, :]

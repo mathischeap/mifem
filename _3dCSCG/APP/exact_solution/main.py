@@ -7,7 +7,7 @@
          TU Delft, Delft, Netherlands
 
 """
-from screws.frozen import FrozenClass
+from screws.freeze.main import FrozenClass
 
 
 
@@ -24,7 +24,7 @@ class _3dCSCG_ExactSolution(FrozenClass):
         self.___define_parameters___ = None
         self._freeze_self_()
 
-    def ___set_status___(self, status):
+    def ___PRIVATE_set_status___(self, status):
         assert status._es_ is self
         self._status_ = status
 

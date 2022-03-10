@@ -8,7 +8,7 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('../')
+if './' not in sys.path: sys.path.append('./')
 from _2dCSCG.forms.trace.base.main import _2dCSCG_Standard_Trace
 
 
@@ -72,7 +72,7 @@ class _2dCSCG_1Trace_Outer(_2dCSCG_Standard_Trace):
         """
         raise NotImplementedError
 
-    def ___DO_resemble___(self, obj_or_filename):
+    def ___PRIVATE_do_resemble___(self, obj_or_filename):
         """
 
         :param obj_or_filename:

@@ -3,10 +3,10 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from root.config import rAnk
+from root.config.main import rAnk
 
 
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 from _3dCSCG.mesh.trace.elements.element.coordinate_transformation import _3dCSCG_Trace_Element_CoordinateTransformation
 

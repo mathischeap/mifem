@@ -7,7 +7,7 @@
          TU Delft, Delft, Netherlands
 
 """
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 
 
 
@@ -57,7 +57,7 @@ class _3dCSCG_Node_Numbering_Naive(FrozenOnly):
         # num_basis_onside = self._tf_.NUM_basis_onside
         # NBO = [num_basis_onside['N'], num_basis_onside['W'],  num_basis_onside['B']]
         #
-        # type_amount_dict = self._mesh_.trace.elements.___DO_find_type_and_amount_numbered_before___()
+        # type_amount_dict = self._mesh_.trace.elements.___PRIVATE_find_type_and_amount_numbered_before___()
         #
         # for i in self._mesh_.trace.elements:
         #     t_e_i = self._mesh_.trace.elements[i]

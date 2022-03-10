@@ -5,7 +5,7 @@ Parallel runners.
 
 
 
-from root.config import *
+from root.config.main import *
 from tools.deprecated.serial_runners.INSTANCES.matrix3d_input_runner import Matrix3dInputRunner
 
 

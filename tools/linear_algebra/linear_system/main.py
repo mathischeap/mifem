@@ -6,10 +6,11 @@ We make a class to represent a linear system.
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from screws.frozen import FrozenClass
+from screws.freeze.main import FrozenClass
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_ColumnVector, EWC_SparseMatrix
 from tools.linear_algebra.linear_system.customize import ___LinearSystem_Customize___
-
+from tools.linear_algebra.linear_system.condition import ___LinearSystem_Condition___
+from tools.linear_algebra.linear_system.solve.main import ___LinearSystem_Solve___
 
 
 
@@ -45,38 +46,35 @@ class LinearSystem(FrozenClass):
         self._b_ = b
 
         # noinspection PyUnresolvedReferences
-        self._local_distribution_ = [self._GMr_.local_dofs_distribution,
-                                     self._GMc_.local_dofs_distribution,]
+        self._local_distribution_ = [ self._GMr_.local_dofs_distribution,
+                                      self._GMc_.local_dofs_distribution ]
 
         assert A.bmat_shape[0] == len(self._local_distribution_[0]), "bmat_shape dis-match GMr shape."
         assert A.bmat_shape[1] == len(self._local_distribution_[1]), "bmat_shape dis-match GMc shape."
 
         self._customize_ = ___LinearSystem_Customize___(self)
+        self._condition_ = ___LinearSystem_Condition___(self)
+        self._solve_ = ___LinearSystem_Solve___(self)
 
         self._freeze_self_()
 
+    # ------- functional ---------------------------------------------------------------------------
+    @property
+    def customize(self):
+        """Adjust Ax=b by adjusting EWC matrix A and EWC vector b."""
+        return self._customize_
 
-    def assemble_and_solve(self, solver_name, **solver_kwargs):
-        """
-        Assemble and solve self.
+    @property
+    def condition(self):
+        """Get access to the conditions of this Linear System."""
+        return self._condition_
 
-        We first assemble self into a global system and then solve the global system.
+    @property
+    def solve(self):
+        return self._solve_
 
-        :param solver_name:
-        :param solver_kwargs:
-        :return: a tuple of 5 outputs:
-            1. (DistributedVector or DistributedVector) results -- The result vector.
-            2. (int) info -- The info which provides convergence information:
 
-                * 0 : successful exit
-                * >0 : convergence to tolerance not achieved, number of iterations
-                * -1 : divergence
-
-            3. (float) beta -- The residual.
-            4. (int) ITER -- The number of used iterations.
-            5. (str) message
-
-        """
+    # ------- properties ---------------------------------------------------------------------------
 
     @property
     def assembled(self):
@@ -105,7 +103,7 @@ class LinearSystem(FrozenClass):
         """The local num of dofs of the variables compositing A.
         For example, if A = ([E, F], [C, D]), and
         self.local_distribution = [[29, 6], [29, 6]],
-        then, locally, E is of shape (29, 29)
+        then, locally, E is of shape (29, 29), F is of shape (19, 6) and so on for C and D.
 
         """
         return self._local_distribution_
@@ -117,19 +115,17 @@ class LinearSystem(FrozenClass):
 
     @property
     def local_shape(self):
-        """Return (a, b): A[i] is a sparse matrix of shape = (a, b)."""
+        """Return (a, b): A[i] locally in each mesh element is a sparse matrix of shape = (a, b)."""
         return self._A_.shape[1:]
 
     @property
     def GLOBAL_shape(self):
-        """Return (P, Q): A.assembled is a sparse matrix of shape = (P, Q)."""
+        """Return (P, Q): A.assembled will be a sparse matrix of shape = (P, Q)."""
         # noinspection PyUnresolvedReferences
         return self.GMr.GLOBAL_num_dofs, self.GMc.GLOBAL_num_dofs
 
-    @property
-    def customize(self):
-        """Adjust Ax=b by adjusting EWC matrix A and EWC vector b."""
-        return self._customize_
+
+
 
 
 
@@ -177,4 +173,4 @@ if __name__ == '__main__':
 
     Axb = LinearSystem(A, b)
 
-    print(Axb.GLOBAL_shape)
+    # print(Axb.GLOBAL_shape)

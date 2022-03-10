@@ -20,11 +20,11 @@ Components:
 """
 import matplotlib.pyplot as plt
 from typing import Dict, Union
-from root.config import *
-from inheriting.CSCG.mesh.main_BASE import CSCG_MESH_BASE
-from screws.decorators import accepts, memoize5#, memoize2
+from root.config.main import *
+from inheriting.CSCG.mesh.base import CSCG_MESH_BASE
+from screws.decorators.accepts import accepts, memoize5#, memoize2
 from screws.exceptions import ElementsLayoutError, ElementSidePairError
-from screws.miscellaneous import break_list_into_parts
+from screws.miscellaneous.timer import break_list_into_parts
 from _3dCSCG.mesh.elements.main import _3dCSCG_Mesh_Elements
 from _3dCSCG.mesh.periodic_setting.main import _3dCSCG_PeriodicDomainSetting
 from _3dCSCG.mesh.deprecated.coordinate_transformation.transformer import CoordinateTransformation as ___DCT___
@@ -74,7 +74,6 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                 'chaotic': A very chaotic one. We better not save it because, when we re-build it, it will
                     randomly generate the element distribution again. So we will actually get different meshes
                     even we call same amount of cores, which sometimes is OKAY, but sometimes is not.
-
         """
         assert domain.ndim == 3, " <Mesh> "
         self._domain_ = domain
@@ -142,7 +141,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         """
         When we reach here, each entry of `element_layout` can only be
             (1) a positive int
-            (2) a 1d array whose each entry is positive.
+            (2) a 1d array whose entry is positive.
 
         So element_layout = (a, b, c), a or b or c can only be one of (1) and (2) above.
 
@@ -195,10 +194,6 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         _num_elements_in_region_ = np.prod(_element_layout_)
 
         return _element_layout_, _element_ratio_, _element_spacing_, _num_elements_in_region_
-
-
-
-
 
 
 
@@ -635,7 +630,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         """
         local_elements = dict() # keys are regions name, values are indices of local elements
         for i in self.elements:
-            rn, lid = self.___DO_find_region_name_and_local_indices_of_element___(i)
+            rn, lid = self.___PRIVATE_do_find_region_name_and_local_indices_of_element___(i)
             if rn not in local_elements:
                 local_elements[rn] = (list(), list(), list())
             indices = local_elements[rn]
@@ -976,7 +971,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         RP = []
 
         for i in self._element_indices_:
-            region_name, local_indices = self.___DO_find_region_name_and_local_indices_of_element___(i)
+            region_name, local_indices = self.___PRIVATE_do_find_region_name_and_local_indices_of_element___(i)
             _em_i_ = self.___PRIVATE_fetch_side_element___(region_name, local_indices)
             self.___element_map___[i] = _em_i_
 
@@ -987,7 +982,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
 
         if len(self._element_indices_) == 0: # to make sure we initialized the memoize cache.
-            self.___DO_find_region_name_and_local_indices_of_element___(-1)
+            self.___PRIVATE_do_find_region_name_and_local_indices_of_element___(-1)
 
     def ___PRIVATE_initializing_periodic_setting___(self):
 
@@ -1009,7 +1004,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
         sideIndexDict = {'N': 0, 'S': 1, 'W': 2, 'E': 3, 'B': 4, 'F': 5}
         for eachPair in ___USEFUL_periodicElementSidePairs___:
-            pairType, elements, sides = self.___DO_parse_element_side_pair___(eachPair)[:3]
+            pairType, elements, sides = self.___PRIVATE_do_parse_element_side_pair___(eachPair)[:3]
             if pairType == 'regular|regular':
                 elementOne, elementTwo = elements
                 sideOne, sideTwo = sides
@@ -1042,7 +1037,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
             self.___boundary_element_sides___[bn] = ()
 
         for i in self._element_indices_:
-            region_name, local_indices = self.___DO_find_region_name_and_local_indices_of_element___(i)
+            region_name, local_indices = self.___PRIVATE_do_find_region_name_and_local_indices_of_element___(i)
             _em_i_ = self.___element_map___[i]
             for j in range(len(_em_i_)):
                 if _em_i_[j] in self.domain._boundary_names_:
@@ -1091,7 +1086,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
 
     @staticmethod
-    def ___DO_parse_element_side_pair___(eP: str):
+    def ___PRIVATE_do_parse_element_side_pair___(eP: str):
         """Element side pairs are also used for trace element keys."""
         if eP.count('-') == 1:
             # must be regular pair to domain boundary!
@@ -1115,17 +1110,9 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         else:
             raise Exception('elementSidePair format wrong!')
 
-    def ___DO_find_region_name_of_element___(self, i):
-        """ Find the regions of ith element. """
-        region_name = None
-        for num_elements_accumulation in self._num_elements_accumulation_:
-            if i < num_elements_accumulation:
-                region_name = self._num_elements_accumulation_[num_elements_accumulation]
-                break
-        return region_name
 
     @memoize5 # must use memoize
-    def ___DO_find_region_name_and_local_indices_of_element___(self, i):
+    def ___PRIVATE_do_find_region_name_and_local_indices_of_element___(self, i):
         """ Find the regions and the local numbering of ith element. """
         if i == -1: return None # to make sure we initialized the memoize cache.
         region_name = None
@@ -1156,100 +1143,6 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                         self.___TEST_cache___[j] = [rnj, LIj]
                 return self.___TEST_cache___[i]
         return region_name, local_indices
-
-    def ___DO_find_reference_origin_and_size_of_element_of_given_local_indices___(
-        self, region_name, local_indices):
-        origin = [None for _ in range(self.ndim)]
-        delta = [None for _ in range(self.ndim)]
-        for i in range(self.ndim):
-            origin[i] = self._element_spacing_[region_name][i][local_indices[i]]
-            delta[i] = self._element_ratio_[region_name][i][local_indices[i]]
-        return tuple(origin), tuple(delta)
-
-    def ___DO_find_reference_origin_and_size_of_element___(self, i):
-        """
-        Find the origin, the UL corner(2D), NWB corner (3D), and the size of
-        the ith element in the reference regions [0,1]^ndim.
-        """
-        region_name, local_indices = self.___DO_find_region_name_and_local_indices_of_element___(i)
-        return self.___DO_find_reference_origin_and_size_of_element_of_given_local_indices___(
-            region_name, local_indices)
-
-    def ___DO_find_slave_of_element___(self, i: int) -> int:
-        """Find the core rank of mesh element #i."""
-        DISTRI = self._element_distribution_
-        if isinstance(i, str): i = int(i)
-        if sIze <= 6 or not self.___is_occupying_all_cores___:
-            for nC in range(sIze):
-                if i in DISTRI[nC]: return nC
-            raise Exception()
-        midCore0 = 0
-        midCore1 = sIze // 2
-        midCore2 = sIze
-        while i not in DISTRI[midCore1] and midCore1 - midCore0 > 2 and midCore2 - midCore1 > 2:
-            if i > max(DISTRI[midCore1]):
-                midCore0 = midCore1
-                midCore1 = (midCore0 + midCore2) // 2
-            elif i < min(DISTRI[midCore1]):
-                midCore2 = midCore1
-                midCore1 = (midCore0 + midCore2) // 2
-            else:
-                raise Exception
-        if i in DISTRI[midCore1]:
-            return midCore1
-        elif i > np.max(DISTRI[midCore1]):
-            for noCore in range(midCore1, midCore2):
-                if i in DISTRI[noCore]: return noCore
-        elif i < np.min(DISTRI[midCore1]):
-            for noCore in range(midCore0, midCore1):
-                if i in DISTRI[noCore]: return noCore
-        else:
-            raise Exception
-
-    def ___DO_regionwsie_stack___(self, *nda_s):
-        """
-        Wo should only use it in one core (first collect all data to this core).
-
-        We use this method to stack a ndarray regions-wise. This function is very useful
-        in plotting reconstruction data. Since in a regions, the elements are structure,
-        we can plot element by element. But if we group data from elements of the same
-        regions, then we can plot regions by regions. This very increase the plotting speed
-        significantly.
-
-        Parameters
-        ----------
-        nda_s : ndarray
-            The ndarray to be stacked. The ndim of the 'nda' must be self.ndim + 1. and
-            np.shape('nda')[0] must == self._num_total_elements_.
-
-        Returns
-        -------
-        output : tuple
-        """
-        _SD_ = tuple()
-        for nda in nda_s:
-            assert np.ndim(nda) == self.ndim + 1
-            assert np.shape(nda)[0] == self._num_total_elements_
-            _sd_ = dict()
-            ijk = np.shape(nda)[1:]
-            I, J, K = ijk
-            ALL_element_global_numbering_ = \
-                self.___PRIVATE_generate_ALL_element_global_numbering___()
-            for Rn in ALL_element_global_numbering_:
-                region_data_shape = [ijk[i] * self._element_layout_[Rn][i] for i in range(3)]
-                _sd_[Rn] = np.zeros(region_data_shape)
-                for k in range(self._element_layout_[Rn][2]):
-                    for j in range(self._element_layout_[Rn][1]):
-                        for i in range(self._element_layout_[Rn][0]):
-                            _sd_[Rn][i * I:(i + 1) * I, j * J:(j + 1) * J, k * K:(k + 1) * K] = \
-                                nda[ALL_element_global_numbering_[Rn][i, j, k]]
-            _SD_ += (_sd_,)
-        _SD_ = _SD_[0] if len(nda_s) == 1 else _SD_
-        return _SD_
-
-
-
-
 
     @property
     def _element_global_numbering_(self):

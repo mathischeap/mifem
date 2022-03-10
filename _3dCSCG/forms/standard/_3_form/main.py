@@ -8,8 +8,8 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('../')
-from root.config import *
+if './' not in sys.path: sys.path.append('./')
+from root.config.main import *
 from scipy import sparse as spspa
 from screws.quadrature import Quadrature
 from _3dCSCG.forms.standard.base.main import _3dCSCG_Standard_Form
@@ -78,10 +78,12 @@ class _3dCSCG_3Form(_3dCSCG_Standard_Form):
                 if self.func.ftype == 'standard':
                     return self.___PRIVATE_discretize_standard_ftype___(update_cochain=update_cochain, **kwargs)
                 else:
-                    raise NotImplementedError(f"3dCSCG 3-form cannot (target func) discretize _3dCSCG_ScalarField of ftype={self.func.ftype}")
+                    raise NotImplementedError(
+                        f"3dCSCG 3-form cannot (target func) discretize _3dCSCG_ScalarField of ftype={self.func.ftype}")
 
             else:
-                raise NotImplementedError(f'3dCSCG 3-form can not (target func) discretize {self.TW.func.body.__class__}.')
+                raise NotImplementedError(
+                    f'3dCSCG 3-form can not (target func) discretize {self.TW.func.body.__class__}.')
         else:
             raise NotImplementedError(f"3dCSCG 3-form cannot discretize while targeting at {target}.")
 
@@ -98,10 +100,10 @@ class _3dCSCG_3Form(_3dCSCG_Standard_Form):
         if self.___DISCRETIZE_STANDARD_CACHE___ is None \
             or quad_degree != self.___DISCRETIZE_STANDARD_CACHE___[0]:
             magic_factor = 0.125
-            xi = np.zeros((self.NUM_basis, p[0]+1, p[1]+1, p[2]+1))
-            et = np.zeros((self.NUM_basis, p[0]+1, p[1]+1, p[2]+1))
-            si = np.zeros((self.NUM_basis, p[0]+1, p[1]+1, p[2]+1))
-            volume = np.zeros(self.NUM_basis)
+            xi = np.zeros((self.num.basis, p[0]+1, p[1]+1, p[2]+1))
+            et = np.zeros((self.num.basis, p[0]+1, p[1]+1, p[2]+1))
+            si = np.zeros((self.num.basis, p[0]+1, p[1]+1, p[2]+1))
+            volume = np.zeros(self.num.basis)
             for k in range(self.p[2]):
                 for j in range(self.p[1]):
                     for i in range(self.p[0]):
@@ -197,18 +199,19 @@ class _3dCSCG_3Form(_3dCSCG_Standard_Form):
                 if ri in regions:
                     INDICES.append(i)
 
-        iJC = dict()
+        biJC = dict()
         for i in INDICES:
             element = self.mesh.elements[i]
             typeWr2Metric = element.type_wrt_metric.mark
             xyz[i] = element.coordinate_transformation.mapping(*xietasigma)
-            if typeWr2Metric in iJC:
-                det_iJ = iJC[typeWr2Metric]
+            if typeWr2Metric in biJC:
+                basis_det_iJ = biJC[typeWr2Metric]
             else:
                 det_iJ = element.coordinate_transformation.inverse_Jacobian(*xietasigma)
+                basis_det_iJ = basis[0] * det_iJ
                 if isinstance(typeWr2Metric, str):
-                    iJC[typeWr2Metric] = det_iJ
-            v = np.einsum('ij, i -> j', basis[0], self.cochain.local[i], optimize='greedy') * det_iJ
+                    biJC[typeWr2Metric] = basis_det_iJ
+            v = np.einsum('ij, i -> j', basis_det_iJ, self.cochain.local[i], optimize='greedy')
             if ravel:
                 value[i] = [v,]
             else:
@@ -216,6 +219,47 @@ class _3dCSCG_3Form(_3dCSCG_Standard_Form):
                 xyz[i] = [xyz[i][j].reshape(shape, order='F') for j in range(3)]
                 value[i] = [v.reshape(shape, order='F'),]
         return xyz, value
+
+    def ___PRIVATE_make_reconstruction_matrix_on_grid___(self, xi, et, sg):
+        """Make the reconstruction matrices for all mesh elements. These matrices are stored in
+        a dict whose keys are the numbers of mesh elements and values are the local reconstruction
+        matrices.
+
+        Let `RM` be the reconstruction matrix (or the tuple of three matrices).
+        If we want to do the local reconstruction, we do
+
+            RM[i] @ f.cochain.local[i]
+
+        and we will get the reconstructions of the form `f` on `meshgrid(xi, eta, sigma)` in mesh-element
+        #i. And if `f` is a scalar form, we get a 1d array. And if `f` is a vector form, we get a
+        tuple of three 1d arrays (its three components along x, y, z directions.)
+
+        :param xi: 1d array
+        :param et: 1d array
+        :param sg: 1d array
+        :return:
+        """
+        xietasigma, basis = self.do.evaluate_basis_at_meshgrid(xi, et, sg)
+        biJC = dict()
+        RM = dict()
+        for i in self.mesh.elements:
+            element = self.mesh.elements[i]
+            typeWr2Metric = element.type_wrt_metric.mark
+            if isinstance(typeWr2Metric, str):
+                if typeWr2Metric in biJC:
+                    RM[i] = biJC[typeWr2Metric]
+                else:
+                    det_iJ = element.coordinate_transformation.inverse_Jacobian(*xietasigma)
+                    basis_det_iJ = (basis[0] * det_iJ).T
+                    biJC[typeWr2Metric] = basis_det_iJ
+                    RM[i] = basis_det_iJ
+            else:
+                det_iJ = element.coordinate_transformation.inverse_Jacobian(*xietasigma)
+                basis_det_iJ = basis[0] * det_iJ
+                RM[i] = basis_det_iJ.T
+        return RM
+
+
 
     def ___PRIVATE_operator_inner___(self, _, i, xietasigma, quad_weights, bfSelf, bfOther):
         """Note that here we only return a local matrix."""
@@ -246,7 +290,7 @@ class _3dCSCG_3Form(_3dCSCG_Standard_Form):
 
 
 if __name__ == '__main__':
-    # mpiexec python _3dCSCG\form\standard\_3_form.py
+    # mpiexec python _3dCSCG\forms\standard\_3_form\main.py
 
     from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
@@ -262,6 +306,6 @@ if __name__ == '__main__':
     f3.TW.___DO_push_all_to_instant___()
     f3.do.discretize()
 
-    from tools.CSCG.partial_dofs import PartialDofs
-
-    pd = PartialDofs(f3)
+    # from tools.CSCG.partial_dofs import PartialDofs
+    #
+    # pd = PartialDofs(f3)

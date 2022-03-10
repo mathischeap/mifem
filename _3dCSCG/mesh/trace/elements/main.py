@@ -5,13 +5,13 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from root.config import *
-from screws.frozen import FrozenOnly
+from root.config.main import *
+from screws.freeze.main import FrozenOnly
 
 
 
-from screws.customized_warnings import TraceElementWarning
-from screws.functions._3d import angle_between_two_vectors
+from screws.warnings.trace_element import TraceElementWarning
+from screws.functions._3d_space.angle import angle_between_two_vectors
 from itertools import combinations
 
 from _3dCSCG.mesh.trace.elements.DO import _3dCSCG_Trace_Elements_DO
@@ -49,7 +49,7 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
         self.___multi_elements_metric___ = None
 
 
-    def ___DO_find_type_and_amount_numbered_before___(self):
+    def ___PRIVATE_find_type_and_amount_numbered_before___(self):
         """
         :return: A dictionary. For example, ``{..., 107: [32, 33, 42], ...}``, it means
             we have 32 'NS', 33 'WE' and 42 'BF' trace elements numbered before 107. We can see that

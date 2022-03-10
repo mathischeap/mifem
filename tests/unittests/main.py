@@ -2,13 +2,9 @@
 """
 Here we put all unittests in mpi environment here.
 
-To run all test, do
+To run all test with given number of threads, do
 
->> mpiexec python tests/unittests/main.py
-
-This calls all cores. To call particular number of cores, say ``3`` cores, do
-
->> mpiexec -n 3 python tests/unittests/main.py
+>> mpiexec -n 6 python tests/unittests/main.py
 
 It is always suggested testing the library multiple time with different numbers of cores.
 
@@ -16,10 +12,10 @@ It is always suggested testing the library multiple time with different numbers 
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from root.config import *
+from root.config.main import *
 
 if rAnk == mAster_rank:
-    from screws.miscellaneous import count_files_and_lines
+    from screws.miscellaneous.timer import count_files_and_lines
     files, lines = count_files_and_lines('./')
 
 t_start = MPI.Wtime()
@@ -33,6 +29,7 @@ from _3dCSCG.tests.unittests.main import * # comment this line to skip these tes
 
 if rAnk == mAster_rank:
     print(f"\n [Global] tests start...\n")
+
 
 
 from tests.unittests.mifem import *

@@ -2,7 +2,7 @@
 """
 
 """
-from screws.frozen import FrozenOnly
+from screws.freeze.main import FrozenOnly
 from _2dCSCG.mesh.domain.boundaries.boundary.main import Boundary
 
 
