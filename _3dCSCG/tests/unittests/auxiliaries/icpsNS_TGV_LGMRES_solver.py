@@ -50,7 +50,6 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
     L = 1
     V0 = 1
     nu = 0 if Re > 9999 else V0 * L / Re
-    rho = 1
 
     Re, N, k, steps = int(Re), int(N), int(k), int(steps)
 
@@ -70,7 +69,7 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
     space = SpaceInvoker('polynomials')([('Lobatto', N), ('Lobatto', N), ('Lobatto', N)], show_info=show_info)
     FC = FormCaller(mesh, space)
     Volume = mesh.domain.volume
-    es = ExactSolutionSelector(mesh)('icpsNS:TGV1', nu=nu, rho=rho, L=L, V0=V0, show_info=show_info)
+    es = ExactSolutionSelector(mesh)('icpsNS:TGV1', nu=nu, L=L, V0=V0, show_info=show_info)
     P0 = FC('0-f', is_hybrid=False, orientation='inner', name='inner-total-pressure')
     u1 = FC('1-f', is_hybrid=False, orientation='inner', name='inner-velocity')
     w2 = FC('2-f', is_hybrid=False, orientation='inner', name='inner-vorticity')

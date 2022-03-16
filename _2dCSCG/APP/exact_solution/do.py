@@ -51,6 +51,11 @@ class ExactSolution_do(FrozenOnly):
             raise Exception()
 
 
+    def generate_random_valid_time_instances(self, amount=None):
+        return self._es_.status.___PRIVATE_generate_random_valid_time_instances___(amount=amount)
+
+
+
 
 if __name__ == '__main__':
     # mpiexec -n 4 python _2dCSCG\APP\exact_solution\do.py

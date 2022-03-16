@@ -14,6 +14,8 @@ class ShearLayerRollup(EulerBase):
 
     """
     def __init__(self, es, delta=pi/15, epsilon=0.05):
+        self._delta_ = delta
+        self._epsilon_ = epsilon
         super(ShearLayerRollup, self).__init__(es)
         #-------- check the domain ---------------------------------------------------------------
         assert self.mesh.domain.name == 'CrazyPeriodic', \
@@ -23,10 +25,6 @@ class ShearLayerRollup(EulerBase):
         assert tuple(bx) == (0, 2*pi) and tuple(by) == (0, 2*pi), \
             f"ShearLayerRollup can only work in [0, 2pi]^2 periodic domain"
         #-----------------------------------------------------------------------------------------
-        self._melt_self_()
-        self._delta_ = delta
-        self._epsilon_ = epsilon
-        self._freeze_self_()
 
     @property
     def valid_time(self):

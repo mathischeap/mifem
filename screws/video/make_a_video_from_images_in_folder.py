@@ -1,6 +1,8 @@
 import cv2
 import os
 from root.config.main import rAnk, mAster_rank
+from screws.miscellaneous.timer import MyTimer
+from screws.miscellaneous.random_string.digits import randomStringDigits
 
 def make_a_video_from_images_in_folder(image_folder, video_name=None, duration=5, clear_images=False):
     """Each image will be a frame of the video. Images must be named in an increasing sequence
@@ -15,11 +17,20 @@ def make_a_video_from_images_in_folder(image_folder, video_name=None, duration=5
     """
     if rAnk != mAster_rank: return
 
-    if video_name is None:
-        video_name = image_folder + '/' + 'video.avi'
 
     image_file_extensions = ('png', 'jpg', 'jpeg')
     all_files = os.listdir(image_folder)
+
+    if video_name is None:
+        if 'video.avi' in all_files:
+            video_name = image_folder + '/video_' + \
+                         MyTimer.current_time_with_no_special_characters() + \
+                         '_' + randomStringDigits(5) + '.avi'
+        else:
+            video_name = image_folder + '/video.avi'
+    else:
+        pass
+
 
     images = list()
     for file in all_files:

@@ -173,12 +173,8 @@ class ExactSolutionSelector(FrozenOnly):
 
         cOmm.barrier()  # for safety reason
         assert ID in self.___coded_exact_solution___(), f"Exact solution ID={ID} not found."
-        pathAndName = self.___coded_exact_solution___()[ID].split('.')
-
-        classPath = pathAndName[:-1]
-        classPath = self.___exact_solution_path___() + '.'.join(classPath)
-
-        className = pathAndName[-1]
+        className = self.___coded_exact_solution___()[ID]
+        classPath = self.___exact_solution_path___()[ID]
 
         ES =  ExactSolution(self._mesh_)
         status = getattr(import_module(classPath), className)(ES, **kwargs)
@@ -194,13 +190,16 @@ class ExactSolutionSelector(FrozenOnly):
 
     @classmethod
     def ___coded_exact_solution___(cls):
-        return {'sL:sincos1': 'scalar_Laplace.SinCos.SinCos1',
-                'Euler:shear_layer_rollup': 'Euler.shear_layer_rollup.ShearLayerRollup',
+        return {'sL:sincos1'              : 'SinCos1',
+                'Euler:shear_layer_rollup': 'ShearLayerRollup',
+                'icpsNS:TGV'              : 'TaylorGreenVortex',
                 }
 
     @classmethod
     def ___exact_solution_path___(cls):
-        return '_2dCSCG.APP.exact_solution.status.'
+        return {'sL:sincos1'              : '_2dCSCG.APP.exact_solution.status.scalar_Laplace.SinCos',
+                'Euler:shear_layer_rollup': '_2dCSCG.APP.exact_solution.status.Euler.shear_layer_rollup',
+                'icpsNS:TGV'              : '_2dCSCG.APP.exact_solution.status.incompressible_Navier_Stokes.Taylor_Green_vortex'}
 
 
 

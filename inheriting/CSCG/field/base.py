@@ -117,6 +117,11 @@ class CSCG_Continuous_FORM_BASE(FrozenClass):
         self._current_time_ = current_time
 
 
+
+
+
+
+
     #----------- VALID TIME -----------------------------------------------------------------
     @property
     def valid_time(self):
@@ -131,9 +136,9 @@ class CSCG_Continuous_FORM_BASE(FrozenClass):
     def ___PRIVATE_set_vt_to___(self, valid_time):
         """
         :param valid_time:
-            None: It can be everything and be changed whenever you want.
-            'valid_only_at_its_first_instant': as it says...
-            int or float: Can only be this particular time instance.
+            - None                             : It can be everything and be changed whenever you want.
+            - 'valid_only_at_its_first_instant': as it says...
+            - int or float                     : Can only be this particular time instance.
         :return:
         """
         if valid_time is None:
@@ -171,6 +176,17 @@ class CSCG_Continuous_FORM_BASE(FrozenClass):
         else:
             raise Exception(f'current_time = {ct} ({ct.__class__.__name__}) '
                             f'(valid_time={self.valid_time}) is illegal.')
+
+
+
+
+
+
+
+
+
+
+
 
 
     #====================== BELOW: children must have these methods =======================

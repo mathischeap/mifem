@@ -2,14 +2,14 @@
 
 from numpy import sin, pi
 from _3dCSCG.fields.vector.main import _3dCSCG_VectorField
-from _3dCSCG.APP.exact_solution.status.icpsNS.base import icpsNS_Base
+from _3dCSCG.APP.exact_solution.status.incompressible_Navier_Stokes.base import incompressible_NavierStokes_Base
 
 
 # noinspection PyAbstractClass
-class Closed_Unit_Cube_Disspation1(icpsNS_Base):
+class Closed_Unit_Cube_Disspation1(incompressible_NavierStokes_Base):
     """A modified case that the solution along t is not linear."""
-    def __init__(self, es, nu=1, rho=1):
-        super(Closed_Unit_Cube_Disspation1, self).__init__(es, nu, rho)
+    def __init__(self, es, nu=1):
+        super(Closed_Unit_Cube_Disspation1, self).__init__(es, nu)
         name = es.mesh.domain.domain_input.__class__.__name__
         bounds = es.mesh.domain.domain_input.bounds
         c = es.mesh.domain.domain_input.c
@@ -67,10 +67,10 @@ class Closed_Unit_Cube_Disspation1(icpsNS_Base):
 
 
 # noinspection PyAbstractClass
-class Constant_X_direction_body_force(icpsNS_Base):
+class Constant_X_direction_body_force(incompressible_NavierStokes_Base):
     """"""
-    def __init__(self, es, nu=1, rho=1, f=1):
-        super(Constant_X_direction_body_force, self).__init__(es, nu, rho)
+    def __init__(self, es, nu=1, f=1):
+        super(Constant_X_direction_body_force, self).__init__(es, nu)
         self._melt_self_()
         assert isinstance(f, (int, float)), f"f={f} wrong, need to be int or float."
         self._f_ = f
@@ -123,10 +123,10 @@ class Constant_X_direction_body_force(icpsNS_Base):
 
 
 # noinspection PyAbstractClass
-class Still(icpsNS_Base):
+class Still(incompressible_NavierStokes_Base):
     """"""
     def __init__(self, es):
-        super(Still, self).__init__(es, 1, 1)
+        super(Still, self).__init__(es, 1)
         self._melt_self_()
         self._freeze_self_()
 

@@ -254,7 +254,7 @@ def test_mifem_NO2_3dCSCG_save_read():
 
 
 if __name__ == '__main__':
-    # mpiexec -n 12 python TESTS\unittest_mifem.py
+    # mpiexec -n 5 python tests\unittests\mifem.py
 
     test_mifem_NO2_3dCSCG_save_read()
 

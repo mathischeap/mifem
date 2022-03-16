@@ -13,10 +13,9 @@ class _3dCSCG_ES_DO(FrozenOnly):
         self._freeze_self_()
 
 
-
     def compute_Ln_norm_of(self, what, time=0, n=2, quad_degree=None):
         """
-        We compute the :math:`L^n`-norm of the attribute name ``what``.
+        We compute the :math:`L^n`-norm of the attribute name ``what`` at `time`.
 
         :param str what:
         :param float time:
@@ -49,3 +48,7 @@ class _3dCSCG_ES_DO(FrozenOnly):
 
         else:
             raise Exception()
+
+    def generate_random_valid_time_instances(self, amount=None):
+        return self._es_.status.___PRIVATE_generate_random_valid_time_instances___(
+            amount=amount)

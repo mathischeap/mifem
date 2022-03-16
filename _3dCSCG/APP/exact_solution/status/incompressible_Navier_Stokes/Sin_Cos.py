@@ -8,20 +8,20 @@
 
 """
 from numpy import sin, cos, pi
-from _3dCSCG.APP.exact_solution.status.icpsNS.base import icpsNS_Base
+from _3dCSCG.APP.exact_solution.status.incompressible_Navier_Stokes.base import incompressible_NavierStokes_Base
 from _3dCSCG.fields.vector.main import _3dCSCG_VectorField
 
 
 
 # noinspection PyAbstractClass
-class SinCosRebholz_Conservation(icpsNS_Base):
+class SinCosRebholz_Conservation(incompressible_NavierStokes_Base):
     """
     The sin cos test case for the conservation, see Section 5.2 of paper:
         [An Energy- and helicity-conserving finite element scheme for the Navier-Stokes
          equations, Leo G. Rebholz, 2007]
     """
     def __init__(self, es):
-        super(SinCosRebholz_Conservation, self).__init__(es, 0, 1)
+        super(SinCosRebholz_Conservation, self).__init__(es, 0)
 
     @property
     def valid_time(self):
@@ -69,14 +69,14 @@ class SinCosRebholz_Conservation(icpsNS_Base):
 
 
 
-class SinCosRebholz_Dissipation(icpsNS_Base):
+class SinCosRebholz_Dissipation(incompressible_NavierStokes_Base):
     """
     The sin cos test case for the conservation, see Section 5.3 of paper:
         [An Energy- and helicity-conserving finite element scheme for the Navier-Stokes
          equations, Leo G. Rebholz, 2007]
     """
-    def __init__(self, es, nu=1, rho=1):
-        super(SinCosRebholz_Dissipation, self).__init__(es, nu, rho)
+    def __init__(self, es, nu=1):
+        super(SinCosRebholz_Dissipation, self).__init__(es, nu)
 
     def u(self, t, x, y, z): return (2 - t) * cos(2 * pi * z)
 
@@ -137,10 +137,10 @@ class SinCosRebholz_Dissipation(icpsNS_Base):
 
 
 
-class SinCos_Modified_Dissipation(icpsNS_Base):
+class SinCos_Modified_Dissipation(incompressible_NavierStokes_Base):
     """A modified case that the solution along t is not linear."""
-    def __init__(self, es, nu=1, rho=1):
-        super(SinCos_Modified_Dissipation, self).__init__(es, nu, rho)
+    def __init__(self, es, nu=1):
+        super(SinCos_Modified_Dissipation, self).__init__(es, nu)
 
     def u(self, t, x, y, z): return (1 - sin(2*pi*t)) * cos(2 * pi * z)
 
@@ -201,14 +201,14 @@ class SinCos_Modified_Dissipation(icpsNS_Base):
 
 
 # noinspection PyAbstractClass
-class SinCos_Conservation_Conservative_Body_Force(icpsNS_Base):
+class SinCos_Conservation_Conservative_Body_Force(incompressible_NavierStokes_Base):
     """
     The sin cos test case for the conservation, see Section 5.2 of paper:
         [An Energy- and helicity-conserving finite element scheme for the Navier-Stokes
          equations, Leo G. Rebholz, 2007]
     """
     def __init__(self, es):
-        super(SinCos_Conservation_Conservative_Body_Force, self).__init__(es, 0, 1)
+        super(SinCos_Conservation_Conservative_Body_Force, self).__init__(es, 0)
 
     @property
     def valid_time(self):
@@ -256,14 +256,14 @@ class SinCos_Conservation_Conservative_Body_Force(icpsNS_Base):
         return self._bodyForce_
 
 # noinspection PyAbstractClass
-class SinCos_Conservation_Conservative_Body_Force1(icpsNS_Base):
+class SinCos_Conservation_Conservative_Body_Force1(incompressible_NavierStokes_Base):
     """
     The sin cos test case for the conservation, see Section 5.2 of paper:
         [An Energy- and helicity-conserving finite element scheme for the Navier-Stokes
          equations, Leo G. Rebholz, 2007]
     """
     def __init__(self, es):
-        super(SinCos_Conservation_Conservative_Body_Force1, self).__init__(es, 0, 1)
+        super(SinCos_Conservation_Conservative_Body_Force1, self).__init__(es, 0)
 
     @property
     def valid_time(self):
@@ -311,14 +311,14 @@ class SinCos_Conservation_Conservative_Body_Force1(icpsNS_Base):
         return self._bodyForce_
 
 # noinspection PyAbstractClass
-class SinCos_Conservation_Conservative_Body_Force_POLYNOMIALS(icpsNS_Base):
+class SinCos_Conservation_Conservative_Body_Force_POLYNOMIALS(incompressible_NavierStokes_Base):
     """
     The sin cos test case for the conservation, see Section 5.2 of paper:
         [An Energy- and helicity-conserving finite element scheme for the Navier-Stokes
          equations, Leo G. Rebholz, 2007]
     """
     def __init__(self, es):
-        super(SinCos_Conservation_Conservative_Body_Force_POLYNOMIALS, self).__init__(es, 0, 1)
+        super(SinCos_Conservation_Conservative_Body_Force_POLYNOMIALS, self).__init__(es, 0)
 
     @property
     def valid_time(self):
@@ -369,14 +369,14 @@ class SinCos_Conservation_Conservative_Body_Force_POLYNOMIALS(icpsNS_Base):
 
 
 # noinspection PyAbstractClass
-class SinCos_Conservation_Conservative_Body_Force_CONSTANT(icpsNS_Base):
+class SinCos_Conservation_Conservative_Body_Force_CONSTANT(incompressible_NavierStokes_Base):
     """
     The sin cos test case for the conservation, see Section 5.2 of paper:
         [An Energy- and helicity-conserving finite element scheme for the Navier-Stokes
          equations, Leo G. Rebholz, 2007]
     """
     def __init__(self, es):
-        super(SinCos_Conservation_Conservative_Body_Force_CONSTANT, self).__init__(es, 0, 1)
+        super(SinCos_Conservation_Conservative_Body_Force_CONSTANT, self).__init__(es, 0)
 
     @property
     def valid_time(self):

@@ -42,6 +42,10 @@ class ExactSolution(FrozenClass):
         return self._status_
 
     @property
+    def valid_time(self):
+        return self._status_.valid_time
+
+    @property
     def boundary_condition(self):
         """The boundary condition."""
         raise NotImplementedError()
@@ -61,5 +65,7 @@ class ExactSolution(FrozenClass):
 
     def __eq__(self, other):
         return self.standard_properties.parameters == other.standard_properties.parameters
+
+
 
 

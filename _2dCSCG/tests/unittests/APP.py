@@ -7,6 +7,8 @@
          TU Delft, Delft, the Netherlands
 
 """
+import os
+
 import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
@@ -14,7 +16,8 @@ from _2dCSCG.tests.unittests.auxiliaries.scalar_Laplace_essential_BC import scal
 from _2dCSCG.tests.unittests.auxiliaries.scalar_Laplace_essential_BC_iterative_solver import \
     scalar_Laplace_solver_iterative_solver
 
-
+from _2dCSCG.tests.unittests.auxiliaries.Euler_shear_layer_rollup_direct import \
+    Euler_shear_layer_rollup_direct_test
 
 
 
@@ -45,8 +48,33 @@ def test_APP_NO2_scalar_Laplace_essential_BC_iterative_solver():
 
 
 
+def test_APP_NO3_Euler_ShearLayerRollup_Direct_test():
+    """"""
+    if rAnk == mAster_rank:
+        print(">>> [test_APP_NO3_Euler_ShearLayerRollup_Direct_test] ...... ", flush=True)
+    K = 4 # K * K elements (uniform)
+    N = 2  # polynomial degree
+    dt = 0.2
+    t = 1
+    image_folder = './APP_test_No3_images_direct'
+    RDF_filename = 'shear_layer_rollup_direct_test'
+
+    SI = Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename)
+
+    if rAnk == mAster_rank:
+        os.remove(image_folder + '/video.avi')
+        os.rmdir(image_folder)
+        os.remove(RDF_filename + '.csv')
+
+        data = SI.RDF.to_numpy()
+        np.testing.assert_array_almost_equal(data[-1,:],
+                np.array([ 1.00000000e+00,  2.00000000e-01,  3.72918243e+01,  1.65078977e+01,
+                -8.43769499e-15,  9.19714222e-14]),)
+
+    return 1
+
 if __name__ == '__main__':
     # mpiexec -n 4 python _2dCSCG\tests\unittests\APP.py
-    test_APP_NO1_scalar_Laplace_essential_BC()
-    test_APP_NO2_scalar_Laplace_essential_BC_iterative_solver()
+    test_APP_NO3_Euler_ShearLayerRollup_Direct_test()
+    # test_APP_NO2_scalar_Laplace_essential_BC_iterative_solver()
 

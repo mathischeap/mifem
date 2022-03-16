@@ -298,12 +298,9 @@ class ExactSolutionSelector(FrozenOnly):
 
         cOmm.barrier()  # for safety reason
         assert ID in self.___coded_exact_solution___(), f"Exact solution ID={ID} not found."
-        pathAndName = self.___coded_exact_solution___()[ID].split('.')
+        className = self.___coded_exact_solution___()[ID]
+        classPath = self.___exact_solution_path___()[ID]
 
-        classPath = pathAndName[:-1]
-        classPath = self.___exact_solution_path___() + '.'.join(classPath)
-
-        className = pathAndName[-1]
         ES =  _3dCSCG_ExactSolution(self._mesh_)
         status = getattr(import_module(classPath), className)(ES, **kwargs)
         ES.___PRIVATE_set_status___(status)
@@ -319,28 +316,38 @@ class ExactSolutionSelector(FrozenOnly):
 
     @classmethod
     def ___coded_exact_solution___(cls):
-        return {'icpsNS:TGV1': 'icpsNS.Taylor_Green_vortex.TGV1',
-                'icpsNS:sincosRC': 'icpsNS.Sin_Cos.SinCosRebholz_Conservation',
+        return {'icpsNS:TGV1'    : 'TGV1',
+                'icpsNS:sincosRC': 'SinCosRebholz_Conservation',
+                'icpsNS:sincos_CCBF'  : 'SinCos_Conservation_Conservative_Body_Force',
+                'icpsNS:sincos_CCBF1' : 'SinCos_Conservation_Conservative_Body_Force1',
+                'icpsNS:sincos_CCBF_P': 'SinCos_Conservation_Conservative_Body_Force_POLYNOMIALS',
+                'icpsNS:sincos_CCBF_C': 'SinCos_Conservation_Conservative_Body_Force_CONSTANT',
+                'icpsNS:sincosRD': 'SinCosRebholz_Dissipation',
+                'icpsNS:sincosMD': 'SinCos_Modified_Dissipation',
+                'icpsNS:CUCD1': 'Closed_Unit_Cube_Disspation1',
+                'icpsNS:CBFx' : 'Constant_X_direction_body_force',
+                'icpsNS:still': 'Still',
 
-                'icpsNS:sincos_CCBF': 'icpsNS.Sin_Cos.SinCos_Conservation_Conservative_Body_Force',
-                'icpsNS:sincos_CCBF1': 'icpsNS.Sin_Cos.SinCos_Conservation_Conservative_Body_Force1',
-                'icpsNS:sincos_CCBF_P': 'icpsNS.Sin_Cos.SinCos_Conservation_Conservative_Body_Force_POLYNOMIALS',
-                'icpsNS:sincos_CCBF_C': 'icpsNS.Sin_Cos.SinCos_Conservation_Conservative_Body_Force_CONSTANT',
-
-                'icpsNS:sincosRD': 'icpsNS.Sin_Cos.SinCosRebholz_Dissipation',
-                'icpsNS:sincosMD': 'icpsNS.Sin_Cos.SinCos_Modified_Dissipation',
-                'icpsNS:CUCD1': 'icpsNS.others.Closed_Unit_Cube_Disspation1',
-                'icpsNS:CBFx': 'icpsNS.others.Constant_X_direction_body_force',
-                'icpsNS:still': 'icpsNS.others.Still',
-
-
-                'Poisson:sincos1': "Poisson.Sin_Cos.Poisson_SinCos1",
-
+                'Poisson:sincos1': "Poisson_SinCos1",
                 }
 
     @classmethod
     def ___exact_solution_path___(cls):
-        return '_3dCSCG.APP.exact_solution.status.'
+        _path_icpsNS_ = '_3dCSCG.APP.exact_solution.status.incompressible_Navier_Stokes.'
+        return {'icpsNS:TGV1'    : _path_icpsNS_ + 'Taylor_Green_vortex',
+                'icpsNS:sincosRC': _path_icpsNS_ + 'Sin_Cos',
+                'icpsNS:sincos_CCBF'  :  _path_icpsNS_ + 'Sin_Cos',
+                'icpsNS:sincos_CCBF1' :  _path_icpsNS_ + 'Sin_Cos',
+                'icpsNS:sincos_CCBF_P':  _path_icpsNS_ + 'Sin_Cos',
+                'icpsNS:sincos_CCBF_C': _path_icpsNS_ + 'Sin_Cos',
+                'icpsNS:sincosRD':  _path_icpsNS_ + 'Sin_Cos',
+                'icpsNS:sincosMD':  _path_icpsNS_ + 'Sin_Cos',
+                'icpsNS:CUCD1':  _path_icpsNS_ + 'others',
+                'icpsNS:CBFx' :  _path_icpsNS_ + 'others',
+                'icpsNS:still':  _path_icpsNS_ + 'others',
+
+                'Poisson:sincos1': "_3dCSCG.APP.exact_solution.status.Poisson.Sin_Cos",
+                }
 
 
 

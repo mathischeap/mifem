@@ -1,23 +1,30 @@
-"""
-
-The 2d Euler flows (incompressible, constant density, inviscid Navier-Stokes flows).
-
-"""
 
 
-import numpy as np
+
+
 from _2dCSCG.APP.exact_solution.status.base import Base
-from screws.numerical.time_plus_2d_space.partial_derivative import NumericalPartialDerivative_txy
 from screws.numerical.time_plus_2d_space.partial_derivative_as_functions import \
     NumericalPartialDerivative_txy_Functions
+from screws.numerical.time_plus_2d_space.partial_derivative import NumericalPartialDerivative_txy
 
 from _2dCSCG.fields.vector.main import _2dCSCG_VectorField
 from _2dCSCG.fields.scalar.main import _2dCSCG_ScalarField
 
-class EulerBase(Base):
+import numpy as np
+
+
+
+class incompressibleNavierStokesBase(Base):
     """ """
-    def __init__(self, es):
-        super(EulerBase, self).__init__(es)
+    def __init__(self, es, nu):
+        """
+
+        :param es:
+        :param nu: The kinematic viscosity nu = mu / rho
+        """
+        super(incompressibleNavierStokesBase, self).__init__(es)
+        assert isinstance(nu, (int, float)) and nu >= 0, f'kinematic viscosity  = {nu} is wrong.'
+        self._nu_ = nu
 
         self._velocity_ = None
         self._vorticity_ = None
@@ -26,15 +33,24 @@ class EulerBase(Base):
         self._gradient_of_pressure_ = None
         self._total_pressure_ = None
         self._kinetic_energy_distribution_ = None
+        self._curl_of_omega_ = None
 
         self._NPDf_u_ = None
         self._NPDf_v_ = None
         self._NPDf_p_ = None
         self._NPDf_tp_ = None
-
+        self._NPDf_omega_ = None
         self._freeze_self_()
 
+    @property
+    def nu(self):
+        """The kinematic viscosity."""
+        return self._nu_
 
+    @property
+    def Re(self):
+        """Reynolds number. It will also depend on the computational domain and velocity."""
+        raise NotImplementedError()
 
     def u(self, t, x, y): # u-component of velocity
         raise NotImplementedError()
@@ -71,7 +87,7 @@ class EulerBase(Base):
     def velocity(self):
         """A scalar field of the kinetic energy distribution."""
         if self._velocity_ is None:
-            self._velocity_ =_2dCSCG_VectorField(
+            self._velocity_ = _2dCSCG_VectorField(
                 self.mesh, [self.u, self.v], valid_time=self.valid_time, name='velocity')
         return self._velocity_
 
@@ -85,6 +101,33 @@ class EulerBase(Base):
             self._vorticity_ =_2dCSCG_ScalarField(
                 self.mesh, self.omega, valid_time=self.valid_time, name='vorticity')
         return self._vorticity_
+
+    def omega_t(self, t, x, y):
+        if self._NPDf_omega_ is None:
+            self._NPDf_omega_ = NumericalPartialDerivative_txy_Functions(self.omega)
+        return self._NPDf_omega_('t')(t, x, y)
+    def omega_x(self, t, x, y):
+        if self._NPDf_omega_ is None:
+            self._NPDf_omega_ = NumericalPartialDerivative_txy_Functions(self.omega)
+        return self._NPDf_omega_('x')(t, x, y)
+    def omega_y(self, t, x, y):
+        if self._NPDf_omega_ is None:
+            self._NPDf_omega_ = NumericalPartialDerivative_txy_Functions(self.omega)
+        return self._NPDf_omega_('y')(t, x, y)
+
+    def ___minus_omega_x___(self, t, x, y):
+        return - self.omega_x(t, x, y)
+
+    @property
+    def curl_of_omega(self):
+        if self._curl_of_omega_ is None:
+            self._curl_of_omega_ = _2dCSCG_VectorField(
+                self.mesh,
+                [self.omega_y, self.___minus_omega_x___],
+                valid_time=self.valid_time,
+                name='curl_of_omega')
+        return self._curl_of_omega_
+
 
     def p(self, t, x, y): # static pressure
         raise NotImplementedError()
@@ -136,10 +179,11 @@ class EulerBase(Base):
 
 
     def fx(self, t, x, y):
-        return self.u_t(t,x,y) - self.omega(t, x, y) * self.v(t, x, y)  + self._tp_x_(t, x, y)
+        return self.u_t(t,x,y) - self.omega(t, x, y) * self.v(t, x, y)  \
+               + self.nu * self.omega_y(t, x ,y) + self._tp_x_(t, x, y)
     def fy(self, t, x, y):
-        return self.v_t(t,x,y) + self.omega(t, x, y) * self.u(t, x, y)  + self._tp_y_(t, x, y)
-
+        return self.v_t(t,x,y) + self.omega(t, x, y) * self.u(t, x, y)  \
+               - self.nu * self.omega_x(t, x ,y) + self._tp_y_(t, x, y)
 
     @property
     def body_force(self):
@@ -149,12 +193,12 @@ class EulerBase(Base):
                 self.mesh, [self.fx, self.fy], valid_time=self.valid_time, name='body_force')
         return self._body_force_
 
-
     # noinspection PyUnusedLocal
     @staticmethod
     def source_term(t, x, y):
         """By default, we have divergence free condition; the source term is zero."""
         return 0 * x
+
 
     def ___PreFrozenChecker___(self):
         """Will be called before freezing self."""
@@ -164,12 +208,11 @@ class EulerBase(Base):
         if len(x) == 0: return
 
         for t in TS:
-
-            t = float(t)
-
             try:
-                fx = self.u_t(t,x,y) - self.omega(t, x, y) * self.v(t, x, y) + self._tp_x_(t, x, y)
-                fy = self.v_t(t,x,y) + self.omega(t, x, y) * self.u(t, x, y) + self._tp_y_(t, x, y)
+                fx = self.u_t(t,x,y) - self.omega(t, x, y) * self.v(t, x, y)  \
+                   + self.nu * self.omega_y(t, x ,y) + self._tp_x_(t, x, y)
+                fy = self.v_t(t,x,y) + self.omega(t, x, y) * self.u(t, x, y)  \
+                   - self.nu * self.omega_x(t, x ,y) + self._tp_y_(t, x, y)
                 FX = self.fx(t, x, y)
                 FY = self.fy(t, x, y)
                 np.testing.assert_array_almost_equal(FX - fx, 0, decimal=5)

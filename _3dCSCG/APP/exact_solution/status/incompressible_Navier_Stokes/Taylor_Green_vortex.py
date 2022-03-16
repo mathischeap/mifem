@@ -8,11 +8,10 @@
 
 """
 from numpy import sin, cos
-from _3dCSCG.APP.exact_solution.status.icpsNS.base import icpsNS_Base
+from _3dCSCG.APP.exact_solution.status.incompressible_Navier_Stokes.base import incompressible_NavierStokes_Base
 
 
-# noinspection PyMethodOverriding,PyAbstractClass
-class TGV1(icpsNS_Base):
+class TGV1(incompressible_NavierStokes_Base):
     """
     This is a 3D Taylor-Green Vortex initial condition. And for `t != 0`, the
     solution is not correct. So we can only use it as our initial condition.
@@ -22,10 +21,10 @@ class TGV1(icpsNS_Base):
 
     Reynolds number
     """
-    def __init__(self,es, nu=0, rho=1, L=1, V0=1):
+    def __init__(self,es, nu=0, L=1, V0=1):
         self._L_ = L
         self._V0_ = V0
-        super(TGV1, self).__init__(es, nu, rho)
+        super(TGV1, self).__init__(es, nu)
 
     @property
     def valid_time(self):

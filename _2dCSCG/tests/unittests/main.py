@@ -39,6 +39,7 @@ passed_2dCSCG_tests += test_Space_NO1_polynomial_space()
 
 passed_2dCSCG_tests += test_APP_NO1_scalar_Laplace_essential_BC()
 passed_2dCSCG_tests += test_APP_NO2_scalar_Laplace_essential_BC_iterative_solver()
+passed_2dCSCG_tests += test_APP_NO3_Euler_ShearLayerRollup_Direct_test()
 
 passed_2dCSCG_tests += test_Fields_NO1_vector()
 passed_2dCSCG_tests += test_Fields_NO2_scalar()

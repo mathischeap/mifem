@@ -6,7 +6,7 @@ from screws.freeze.main import FrozenOnly
 from _3dCSCG.mesh.do.find import _3dCSCG_Mesh_DO_FIND
 import numpy as np
 
-
+import random
 
 
 
@@ -67,3 +67,44 @@ class _3dCSCG_Mesh_DO(FrozenOnly):
             _SD_ += (_sd_,)
         _SD_ = _SD_[0] if len(nda_s) == 1 else _SD_
         return _SD_
+
+
+    def generate_random_coordinates(self):
+        """ We will generate some random coordinates with in this domain in a format of local mesh
+        element wise. They are mainly for testing purposes.
+
+        :return: two 1d array representing x, y coordinates.
+        """
+        amount = random.randint(20, 200) # 3*amount points in #amount local mesh elements.
+
+        assert isinstance(amount, int) and amount > 0, \
+            f"amount={amount} ({amount.__class__.__name__}) is wrong."
+
+        mesh = self._mesh_
+        num_local_mesh_elements = mesh.elements.num
+
+        if num_local_mesh_elements == 0:
+            return np.array([]), np.array([]), np.array([])
+
+        elif num_local_mesh_elements <= amount: # we will use all local mesh elements
+            USED = mesh.elements.indices
+
+        else:
+            USED = random.sample(mesh.elements.indices, amount)
+
+        xi, et, sg = [np.random.rand(3) * 2 - 1 for _ in range(3)]
+        X = list()
+        Y = list()
+        Z = list()
+        for i in USED:
+            element = mesh.elements[i]
+            x, y, z = element.coordinate_transformation.mapping(xi, et, sg)
+            X.append(x)
+            Y.append(y)
+            Z.append(z)
+
+        X = np.concatenate(X)
+        Y = np.concatenate(Y)
+        Z = np.concatenate(Z)
+
+        return X, Y, Z
