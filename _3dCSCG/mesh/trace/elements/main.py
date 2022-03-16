@@ -9,18 +9,12 @@ from root.config.main import *
 from screws.freeze.main import FrozenOnly
 
 
-
-from screws.warnings.trace_element import TraceElementWarning
-from screws.functions._3d_space.angle import angle_between_two_vectors
-from itertools import combinations
-
 from _3dCSCG.mesh.trace.elements.DO import _3dCSCG_Trace_Elements_DO
+from _3dCSCG.mesh.trace.elements.selfcheck import _3dCSCG_Trace_Elements_SELFCHECK
 from _3dCSCG.mesh.trace.elements.group import _3dCSCG_Trace_Elements_Group
 from _3dCSCG.mesh.trace.elements.coordinate_transformation import _3dCSCG_Trace_Elements_CoordinateTransformation
 from _3dCSCG.mesh.trace.elements.element.main import _3dCSCG_Trace_Element
 
-import warnings
-import matplotlib.pyplot as plt
 
 
 class _3dCSCG_Trace_Elements(FrozenOnly):
@@ -130,13 +124,13 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
         return self._group_
 
     @property
-    def DO(self):
+    def do(self):
         if self._DO_ is None:
             self._DO_ = _3dCSCG_Trace_Elements_DO(self)
         return self._DO_
 
     @property
-    def SELFCHECK(self):
+    def selfcheck(self):
         if self._SELFCHECK_ is None:
             self._SELFCHECK_ = _3dCSCG_Trace_Elements_SELFCHECK(self)
         return self._SELFCHECK_
@@ -165,7 +159,7 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
         """
         if self._Q_ is None:
             self._Q_, self._AvQ_, self._WorstQ_, self._BestQ_ = \
-                self.___PRIVATE_get_quality_of_trace_elements___
+                self.do.get_quality_of_trace_elements()
         return self._Q_
 
     @property
@@ -175,65 +169,9 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
         return self._ct_
 
     @property
-    def ___PRIVATE_get_quality_of_trace_elements___(self):
-        """
-
-        :return: A dict whose keys are the numbers of local trace
-            elements and values are the qualities of the trace elements.
-        """
-        r = np.array([-0.5, -0.5, 0.5, 0.5, 0, 0.75, 0.75, -0.75, -0.75])
-        s = np.array([-0.5, 0.5, -0.5, 0.5, 0, -0.75, 0.75, -0.75, 0.75])
-
-        xi, et, sg = np.array([0, ]), np.array([0, ]), np.array([0, ])
-        rc, sc = np.array([0, ]), np.array([0, ])
-
-        LEN = len(r)
-        assert len(s) == LEN, f"r, s length dis-match."
-        Q = dict()
-        Qs = list()
-        for i in self:
-            te = self[i]
-            e = te.CHARACTERISTIC_element
-            side = te.CHARACTERISTIC_side
-
-            uv = te.coordinate_transformation.___PRIVATE_outward_unit_normal_vector___(r, s, from_element=e, side=side)
-            vx, vy, vz = uv
-            V = [[vx[_], vy[_], vz[_]] for _ in range(LEN)]
-            comb = combinations(V, 2)
-            angle = list()
-            for v1v2 in comb:
-                angle.append(angle_between_two_vectors(*v1v2))
-            angle = max(angle)
-            quality_0 =  float(1 - angle / np.pi)
-
-            me = self._mesh_.elements[e]
-            me_ct = me.coordinate_transformation.mapping(xi, et, sg)
-            te_ct = te.coordinate_transformation.mapping(rc, sc, from_element=e, side=side)
-            te_uv = te.coordinate_transformation.___PRIVATE_outward_unit_normal_vector___(rc, sc, from_element=e, side=side)
-            v_inner = (me_ct[0]-te_ct[0], me_ct[1]-te_ct[1], me_ct[2]-te_ct[2])
-            v_outer = te_uv
-            angle = angle_between_two_vectors(v_inner, v_outer)
-            quality_1 = float(angle / np.pi)
-
-
-            _ = min([quality_0, quality_1])
-            Q[i] = _
-            Qs.append(_)
-
-        if len(Qs) > 0:
-            AvQ = sum(Qs) / len(Qs)
-            WorstQ = min(Qs)
-            BestQ = max(Qs)
-        else:
-            AvQ = None
-            WorstQ = None
-            BestQ = None
-
-        return Q, AvQ, WorstQ, BestQ
-
-    @property
     def _multi_elements_metric_(self):
-        """"""
+        """Return a dict whose keys are the mark of type_wrt_metric of trace elements. And the values
+        are the amount of trace elements that possess this type_wrt_metric."""
         if self.___multi_elements_metric___ is None:
             self.___multi_elements_metric___ = dict()
 
@@ -253,7 +191,7 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
     @property
     def GLOBAL_num(self):
         """
-        (int) The total number of trace elements.
+        (int) The total number of trace elements across all cores.
 
         :return:
         """
@@ -436,309 +374,6 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
         else:
             raise Exception("evaluation_points shape wrong dimension wrong.")
 
-    def ___DO_illustrate_trace_element___(self, i, density_factor=2):
-        """We illustrate the trace element #i with matplotlib on the
-        mesh elements which share this trace element.
-
-        To call this method, call it from all cores, otherwise, it does
-        not work.
-
-        :param int i: The trace element #i will be illustrated.
-        :param int density_factor: be in [1,10], not be too large.
-        :return:
-        """
-        # wo first find which core is going to do the plot _____________
-        if i in self:
-            in_or_out = rAnk
-            I_am_in = True
-        else:
-            in_or_out = -1
-            I_am_in = False
-
-        who_are_in = cOmm.gather(in_or_out, root=mAster_rank)
-        if rAnk != mAster_rank:
-            who_will_do_it = None
-            in_how_many_cores = None
-            the_other_core = None
-        else:
-            who_will_do_it = max(who_are_in)
-            in_how_many_cores = 0
-            the_other_core = None
-            for _ in who_are_in:
-                if _ != -1:
-                    if _ !=who_will_do_it:
-                        assert the_other_core is None
-                        the_other_core = _
-                    in_how_many_cores += 1
-
-        who_will_do_it = cOmm.bcast(who_will_do_it, root=mAster_rank)
-        in_how_many_cores = cOmm.bcast(in_how_many_cores, root=mAster_rank)
-        the_other_core = cOmm.bcast(the_other_core, root=mAster_rank)
-
-        sent_to = recv_from = None
-
-        if in_how_many_cores == 1:
-            if rAnk == who_will_do_it:
-                assert self[i].IS_shared_by_cores is False, "trivial check"
-            else:
-                assert I_am_in is False, "trivial check"
-        elif in_how_many_cores == 2:
-            if I_am_in and rAnk != who_will_do_it:
-                assert rAnk == the_other_core, "trivial check"
-                # print(rAnk, ': I am going to provide data to rAnk ', who_will_do_it)
-                sent_to = who_will_do_it
-            elif I_am_in and rAnk == who_will_do_it:
-                recv_from = the_other_core
-            else:
-                I_am_in = False
-        else:
-            raise Exception(f"can only have two cores sharing one trace element!")
-
-        DATA2 = None
-        r = s = cs = cr = uv_r = uv_s = None
-        # prepare coordinate data first _____________________________________________
-        if rAnk == who_will_do_it or I_am_in:
-            density = 5 + 4 * density_factor
-            i0 = 1 + density_factor
-            i1 = 2 * density_factor + 2
-            i2 = 3 * density_factor + 3
-            _ = np.linspace(-1, 1, density)
-            r, s = np.meshgrid(_, _, indexing='ij')
-            anchors = ( # the points we will plot the outward unit norm vector
-                [i0, i0],
-                [i0, i2],
-                [i2, i0],
-                [i2, i2],
-                [i1, i1],
-            )
-            uv_r = np.array([r[indices[0],indices[1]] for indices in anchors])
-            uv_s = np.array([s[indices[0],indices[1]] for indices in anchors])
-            cr, cs = np.array([r[i1, i1],]), np.array([s[i1, i1],])
-            np.testing.assert_almost_equal(cr, 0)
-            np.testing.assert_almost_equal(cs, 0)
-
-        # Now lets prepare the data for the second subplot______________
-        if in_how_many_cores == 1:
-            if rAnk == who_will_do_it:
-                if self[i].IS_on_mesh_boundary:
-                    DATA2 = self[i].NON_CHARACTERISTIC_position # a string
-                else:
-                    ncp = self[i].NON_CHARACTERISTIC_position
-                    other_element = int(ncp[:-1])
-                    element = other_element
-                    side = ncp[-1]
-                    tes = self.map[element]
-                    DATA2 = dict()
-                    DATA2['element'] = element
-                    DATA2['side'] = side
-                    DATA2['tes'] = tes
-                    for _, tei in enumerate(tes):
-                        _side_ = 'NSWEBF'[_]
-                        te = self._elements_[tei]
-                        X, Y, Z = te.coordinate_transformation.mapping(r, s, from_element=element, side=_side_)
-
-                        if tei == i and _side_ == side:
-                            x, y, z = te.coordinate_transformation.mapping(uv_r, uv_s, from_element=element, side=_side_)
-                            uvx, uvy, uvz = te.coordinate_transformation.___PRIVATE_outward_unit_normal_vector___(uv_r, uv_s, from_element=element, side=_side_)
-                            DATA2[str(tei)+_side_] = [(X, Y, Z), (x, y, z), (uvx, uvy, uvz)]
-                        else:
-                            x, y, z = te.coordinate_transformation.mapping(cr, cs, from_element=element, side=_side_)
-                            DATA2[str(tei)+_side_] = [(X, Y, Z), (x, y, z), _side_]
-
-            else:
-                pass
-        else: # in_how_many_cores == 2
-            if rAnk == the_other_core:
-                element = self[i].CHARACTERISTIC_element
-                side = self[i].CHARACTERISTIC_side
-                tes = self.map[element]
-                DATA2 = dict()
-                DATA2['element'] = element
-                DATA2['side'] = side
-                DATA2['tes'] = tes
-                # noinspection PyTypeChecker
-                assert tes.count(i) == 1, f"must be the case."
-                for _, tei in enumerate(tes):
-                    _side_ = 'NSWEBF'[_]
-
-                    te = self._elements_[tei]
-                    X, Y, Z = te.coordinate_transformation.mapping(r, s, from_element=element, side=_side_)
-                    if tei == i:
-                        x, y, z = te.coordinate_transformation.mapping(uv_r, uv_s, from_element=element, side=_side_)
-                        uvx, uvy, uvz = te.coordinate_transformation.___PRIVATE_outward_unit_normal_vector___(uv_r, uv_s, from_element=element, side=_side_)
-                        DATA2[str(tei)+_side_] = [(X, Y, Z), (x, y, z), (uvx, uvy, uvz)]
-                    else:
-                        x, y, z = te.coordinate_transformation.mapping(cr, cs, from_element=element, side=_side_)
-                        DATA2[str(tei)+_side_] = [(X, Y, Z), (x, y, z),  _side_   ]
-
-                DATA2['rank'] = rAnk
-                cOmm.send(DATA2, dest=sent_to, tag=who_will_do_it)
-            elif rAnk == who_will_do_it:
-                DATA2 = cOmm.recv(source=recv_from, tag=who_will_do_it)
-            else:
-                pass
-
-        # let's do the plots ____________________________________________
-        if rAnk == who_will_do_it:
-            element = self[i].CHARACTERISTIC_element
-            side = self[i].CHARACTERISTIC_side
-            tes = self.map[element]
-            assert i in tes, "trivial check"
-            # noinspection PyTypeChecker
-            assert 'NSWEBF'[tes.index(i)] == side
-
-            fig = plt.figure(figsize=(14,6))
-            TITLE = f"**trace element {i}**"
-            if self[i].IS_on_periodic_boundary:
-                TITLE += ' (periodic)'
-            fig.suptitle(TITLE)
-
-            ax = fig.add_subplot(121, projection='3d')
-            for _, tei in enumerate(tes):
-                te = self._elements_[tei]
-                _side_ = 'NSWEBF'[_]
-                X, Y, Z = te.coordinate_transformation.mapping(r, s, from_element=element, side=_side_)
-                if tei == i and _side_ == side:
-                    ax.plot_surface(X, Y, Z) # plot the trace element
-                    x, y, z = te.coordinate_transformation.mapping(uv_r, uv_s, from_element=element, side=_side_)
-                    uvx, uvy, uvz = te.coordinate_transformation.___PRIVATE_outward_unit_normal_vector___(uv_r, uv_s, from_element=element, side=_side_)
-
-                    x_range = np.max(X) - np.min(X)
-                    y_range = np.max(Y) - np.min(Y)
-                    z_range = np.max(Z) - np.min(Z)
-                    mean_range = (x_range + y_range + z_range) / 6
-
-                    ax.quiver(x, y, z, uvx*mean_range, uvy*mean_range, uvz*mean_range, color='r', linewidth=0.5)
-                    ax.text(x[-1] + 0.5*uvx[-1]*mean_range, y[-1] + 0.5*uvy[-1]*mean_range, z[-1] + 0.5*uvz[-1]*mean_range,
-                            side, color='green', ha='center', va='center', ma='center')
-                else:
-                    ax.plot_surface(X, Y, Z, color=(0.7,0.7,0.7,0.5))
-                    x, y, z = te.coordinate_transformation.mapping(cr, cs, from_element=element, side=_side_)
-                    ax.text(x[0], y[0], z[0], 'NSWEBF'[_],
-                            color='k', ha='center', va='center', ma='center')
-
-            ax.set_xlabel(r'$x$')
-            ax.set_ylabel(r'$y$')
-            ax.set_zlabel(r'$z$')
-
-            if in_how_many_cores == 1 and isinstance(DATA2, str):
-                plt.title(f"in rank {rAnk}, on [{side}] of element {element}.")
-            elif in_how_many_cores == 1 and isinstance(DATA2, dict):
-                plt.title(f"in rank {rAnk}, on [{side}] of characteristic element {element}.")
-            elif in_how_many_cores == 2:
-                plt.title(f"in rank {rAnk}, on [{side}] of characteristic element {element}.")
-            else:
-                raise Exception()
-
-            ax = fig.add_subplot(122, projection='3d')
-            if isinstance(DATA2, dict):
-                element = DATA2['element']
-                side_0 = side
-                side = DATA2['side']
-                tes = DATA2['tes']
-                assert i in tes, "trivial check"
-                # noinspection PyTypeChecker
-                # assert 'NSWEBF'[tes.index(i)] == side
-                assert side+side_0 in ('NS', 'SN', 'WE', 'EW', 'BF', 'FB')
-                for _, tei in enumerate(tes):
-                    _side_ = 'NSWEBF'[_]
-                    if tei == i and _side_ == side:
-                        XYZ, xyz, uv_xyz = DATA2[str(tei)+_side_]
-                        ax.plot_surface(*XYZ)  # plot the trace element
-                        uvx, uvy, uvz = uv_xyz
-                        x, y, z = xyz
-                        X, Y, Z = XYZ
-                        x_range = np.max(X) - np.min(X)
-                        y_range = np.max(Y) - np.min(Y)
-                        z_range = np.max(Z) - np.min(Z)
-                        mean_range = (x_range + y_range + z_range) / 6
-                        ax.quiver(*xyz, uvx*mean_range, uvy*mean_range, uvz*mean_range, color='r', linewidth=0.5)
-                        ax.text(x[-1] + 0.5*uvx[-1]*mean_range, y[-1] + 0.5*uvy[-1]*mean_range, z[-1] + 0.5*uvz[-1]*mean_range,
-                                side, color='green', ha='center', va='center', ma='center')
-                    else:
-                        XYZ, xyz, _s_ = DATA2[str(tei)+_side_]
-                        ax.plot_surface(*XYZ, color=(0.7, 0.7, 0.7, 0.5))
-                        x, y, z = xyz
-                        ax.text(x[0], y[0], z[0], _s_,
-                                color='k', ha='center', va='center', ma='center')
-
-            ax.set_xlabel(r'$x$')
-            ax.set_ylabel(r'$y$')
-            ax.set_zlabel(r'$z$')
-            if in_how_many_cores == 1 and isinstance(DATA2, str):
-                plt.title(f"on mesh boundary: <{DATA2}>")
-            elif in_how_many_cores == 1 and isinstance(DATA2, dict):
-                plt.title(f"in rank {rAnk}, on [{side}] of element {element}.")
-            elif in_how_many_cores == 2:
-                plt.title(f"in rank {DATA2['rank']}, on [{side}] of characteristic element {element}.")
-            else:
-                raise Exception()
-            plt.show()
-
-    def ___SELFCHECK_outward_unit_normal_vector___(self):
-        """This is a self check program to check that we obtain the
-        correct outward unit normal vector(s) for a trace element.
-
-        Notice this self check program does not give error. It will only
-        give warning; it can only find something may be wrong.
-
-        We basically compute the angle between the outward norm vector
-        and the vector pointing the mesh element center. If the angle
-        is pi (180 degree), of course, the outward normal vector is
-        correct. If it is 0, then we have a wrong outward normal vector.
-        """
-        # the center of the mesh element.
-        xi, et, sg = np.array([0,]), np.array([0,]), np.array([0,])
-        # the center of the trace element.
-        rc, sc = np.array([0,]), np.array([0,])
-        for i in self:
-            te = self[i]
-            e1 = te.CHARACTERISTIC_element
-            s1 = te.CHARACTERISTIC_side
-            E = [e1,]
-            S = [s1,]
-            if not te.IS_on_mesh_boundary:
-                p2 = te.NON_CHARACTERISTIC_position
-                e2 = int(p2[:-1])
-                s2 = p2[-1]
-                if e2 in self._mesh_.elements:
-                    E.append(e2)
-                    S.append(s2)
-            for e, s in zip(E, S):
-                me = self._mesh_.elements[e]
-                me_ct = me.coordinate_transformation.mapping(xi, et, sg)
-                te_ct = te.coordinate_transformation.mapping(rc, sc, from_element=e, side=s)
-                te_uv = te.coordinate_transformation.___PRIVATE_outward_unit_normal_vector___(rc, sc, from_element=e, side=s)
-
-                v_inner = (me_ct[0]-te_ct[0], me_ct[1]-te_ct[1], me_ct[2]-te_ct[2])
-                v_outer = te_uv
-                angle = angle_between_two_vectors(v_inner, v_outer)
-
-                if angle < np.pi/4:
-                    warnings.warn(
-                        f"___PRIVATE_outward_unit_normal_vector___ of trace element "
-                        f"#{i} may be wrong",
-                        TraceElementWarning)
-                elif angle < np.pi/2:
-                    warnings.warn(
-                        f"the mesh element #{e} may be very distorted.",
-                        TraceElementWarning)
-                else:
-                    pass
-
-
-class _3dCSCG_Trace_Elements_SELFCHECK(FrozenOnly):
-    """We find some specific groups of elements."""
-
-    def __init__(self, trace_elements):
-        self._elements_ = trace_elements
-        self._freeze_self_()
-
-    def outward_unit_normal_vector(self, *args, **kwargs):
-        return self._elements_.___SELFCHECK_outward_unit_normal_vector___(*args, **kwargs)
-
-
-
 
 
 
@@ -755,19 +390,19 @@ if __name__ == '__main__':
     from _3dCSCG.main import MeshGenerator
     elements = [3, 4, 2]
     mesh = MeshGenerator('crazy_periodic', c=0.3, bounds=([0,1], [0,1], [0,1]))(elements)
-    mesh.trace.elements.SELFCHECK.outward_unit_normal_vector()
+    mesh.trace.elements.selfcheck.outward_unit_normal_vector()
     Q = mesh.trace.elements.quality
-    print(mesh.quality)
-    print(mesh.trace.quality)
+    # print(mesh.quality)
+    # print(mesh.trace.quality)
 
-    mesh.trace.elements.do.illustrate_trace_element(1)
+    # mesh.trace.elements.do.illustrate_trace_element(1)
 
     # te0 = mesh.trace.elements[0]
 
     # print(te0.IS_on_periodic_boundary)
 
-    for i in range(mesh.trace.elements.GLOBAL_num):
-        mesh.trace.elements.do.illustrate_trace_element(i)
+    # for i in range(mesh.trace.elements.GLOBAL_num):
+    #     mesh.trace.elements.do.illustrate_trace_element(i)
         # if i in mesh.trace.elements:
         #     te = mesh.trace.elements[i]
         #

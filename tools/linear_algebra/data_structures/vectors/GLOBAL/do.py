@@ -8,8 +8,8 @@ class GlobalVectorDo(FrozenOnly):
         self._v_ = GV
         self._freeze_self_()
 
-    def gather_V_to_core(self, *args, **kwargs):
-        return self._v_.___PRIVATE_gather_V_to_core___(*args, **kwargs)
+    def gather_V_to_core(self, **kwargs):
+        return self._v_.___PRIVATE_gather_V_to_core___(**kwargs)
 
     def resemble_row_distribution_of(self, GM):
         return self._v_.___PRIVATE_resemble_row_distribution_of___(GM)

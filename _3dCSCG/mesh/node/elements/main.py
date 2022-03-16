@@ -28,7 +28,7 @@ class _3dCSCG_Node_Elements(FrozenOnly):
         # non-hybrid numbering ...
         mesh = self._mesh_
 
-        if mesh.domain.IS_periodic:
+        if mesh.domain.IS.periodic:
             if rAnk == mAster_rank:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:
@@ -269,6 +269,7 @@ class _3dCSCG_Node_Elements(FrozenOnly):
                 if position[0] in ___:
                     element = int(position[:-3])
                     if element not in shared_by_elements[node]:
+                        # noinspection PyUnresolvedReferences
                         shared_by_elements[node].append(element)
                 else:
                     assert position in bns, f"position={position} is wrong."

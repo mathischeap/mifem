@@ -146,7 +146,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         global_numbering = None
         # non-hybrid numbering ...
         mesh = self._sf_.mesh
-        if mesh.domain.IS_periodic:
+        if mesh.domain.IS.periodic:
             if rAnk == mAster_rank:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:
@@ -292,7 +292,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         global_numbering = None
         # non-hybrid numbering ...
         mesh = self._sf_.mesh
-        if mesh.domain.IS_periodic:
+        if mesh.domain.IS.periodic:
             if rAnk == mAster_rank:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:
@@ -464,7 +464,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         global_numbering = None
         # non-hybrid numbering ...
         mesh = self._sf_.mesh
-        if mesh.domain.IS_periodic:
+        if mesh.domain.IS.periodic:
             if rAnk == mAster_rank:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:

@@ -10,7 +10,6 @@
 
 from _2dCSCG.forms.base import _2dCSCG_FORM_BASE
 from _2dCSCG.forms.standard.base.numbering.main import _2dCSCG_Standard_Form_Numbering
-from _2dCSCG.forms.standard.base.visualize.main import _2dCSCG_FormVisualize
 from _2dCSCG.forms.standard.base.do import _2dCSCG_Standard_Form_DO
 from _2dCSCG.forms.standard.base.cochain import _2dCSCG_Standard_Form_Cochain
 from _2dCSCG.forms.standard.base.coboundary import _2dCSCG_Standard_Form_Coboundary
@@ -52,7 +51,6 @@ class _2dCSCG_Standard_Form(CSCG_Standard_Form, _2dCSCG_FORM_BASE, ndim=2):
         self._coboundary_ = _2dCSCG_Standard_Form_Coboundary(self)
         self._matrices_ = _2dCSCG_Standard_Form_Matrices(self)
         self._operators_ = _2dCSCG_Standard_Form_Operators(self)
-        self._visualize_ = _2dCSCG_FormVisualize(self)
         self._DO_ = _2dCSCG_Standard_Form_DO(self)
 
 
@@ -79,10 +77,6 @@ class _2dCSCG_Standard_Form(CSCG_Standard_Form, _2dCSCG_FORM_BASE, ndim=2):
     @property
     def operators(self):
         return self._operators_
-
-    @property
-    def visualize(self):
-        return self._visualize_
 
     @property
     def do(self):

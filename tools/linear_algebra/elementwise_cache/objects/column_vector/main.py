@@ -32,39 +32,42 @@ class EWC_ColumnVector(FrozenOnly):
             self._elements_ = mesh_elements.elements
         else:
             raise Exception()
-        self.____CT_DG____ = None
 
-        EMPTY = False
-        IS_Number = False
+        # --------- parse data type ---------------------------------------------------------------
+        DATA_TYPE = None
 
         if data_generator.__class__.__name__ in ('int', 'float', 'int32', 'int64'):
-            IS_Number = True
-
-        if cache_key_generator is None and IS_Number: # make empty sparse vector.
-            # noinspection PyTypeChecker
-            if data_generator % 1 == 0:
-
-                EMPTY = True
-                self.___EMPTY_LENGTH___ = data_generator
-
-            else:
-                raise Exception(f"empty sparse vector of local length={data_generator} is wrong.")
-
-        elif cache_key_generator is None:
-            cache_key_generator = 'no_cache' # do NOT CHANGE THIS DEFAULT SETTING!!!
-
-        else:
+            DATA_TYPE = 'EMPTY'
+        else: # default data type
             pass
 
-        if EMPTY:
+        #---------- parse default cache_key_generator ---------------------------------------------
+        if cache_key_generator is None:
+
+            if DATA_TYPE == 'EMPTY': # make empty sparse vector.
+
+                # noinspection PyTypeChecker
+                if data_generator % 1 == 0:
+
+                    self.___EMPTY_LENGTH___ = data_generator
+
+                else:
+                    raise Exception(f"empty sparse vector of local length={data_generator} is wrong.")
+
+            else:
+                cache_key_generator = 'no_cache' # do NOT CHANGE THIS DEFAULT SETTING!!!
+
+        else: # have given a generator, use it.
+            pass
+
+        #--------- get DG and KG -------------------------------------------------------------------
+
+        if DATA_TYPE == 'EMPTY':
+
             self._DG_ = self.___PRIVATE_empty_data_generator___
             self._KG_ = self.___PRIVATE_constant_cache_key_generator___
 
-        else:
-            try:
-                _ = data_generator % 1
-            except TypeError: # check `data_generator` is not a number!
-                pass
+        elif DATA_TYPE is None:
 
             if cache_key_generator == 'no_cache':  # do not cache
                 # use this when nothing is the same over all elements, we make the data whenever it is called.
@@ -83,6 +86,10 @@ class EWC_ColumnVector(FrozenOnly):
                 self._DG_ = data_generator
                 self._KG_ = cache_key_generator
 
+        else:
+            raise Exception(f"DATA_TYPE = {DATA_TYPE} wrong!")
+
+        #--------------------------------------- DONE ----------------------------------------
 
         self._gathering_matrix_ = None
         self.___PRIVATE_reset_cache___()
@@ -90,6 +97,7 @@ class EWC_ColumnVector(FrozenOnly):
         self.___NC___ = '>NC<'
         self.___IS_NC___ = False
         self.___IS_CT___ = False
+        self.____CT_DG____ = None
         self.___CHECK_repeat_CT___ = True
         self.___repeat_CK___ = ''
         self._con_shape_ = con_shape

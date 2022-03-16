@@ -34,7 +34,7 @@ class _2dCSCG_Mesh_DO(FrozenOnly):
                 edgeTwo = pairTypeINFO[2]
                 return 'regular|regular', \
                        [elementOne, elementTwo], edgeOne + edgeTwo, None  # None for future extension.
-                # for all kinds of pair, return has follow this same rule!
+                # for all kinds of pair, return has followed this same rule!
             else:
                 raise ElementEdgePairError(f"Pair: {pairTypeINFO} is not understandable.")
         else:
@@ -51,10 +51,9 @@ class _2dCSCG_Mesh_DO(FrozenOnly):
     def regionwsie_stack(self, *ndas):
         """
         We use this method to stack a ndarray regions-wise. This function is very useful
-        in plotting reconstruction data. Since in a regions, the elements are structure,
+        in plotting reconstruction data. Since in a regions, the elements are structured,
         we can plot element by element. But if we group data from elements of the same
-        regions, then we can plot regions by regions. This very increase the plotting speed
-        significantly.
+        regions, then we can plot regions by regions. This very much increases the plotting speed.
 
         Parameters
         ----------

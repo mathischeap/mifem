@@ -2,7 +2,7 @@
 
 
 
-from tools.linear_algebra.elementwise_cache.operators.bmat.sparse_matrix import ___bmat_EWC_sparse_matrices___
+from tools.linear_algebra.elementwise_cache.operators.bmat.sparse_matrix.main import ___bmat_EWC_sparse_matrices___
 
 
 
@@ -17,7 +17,7 @@ def bmat(blocks):
     assert isinstance(blocks, (list, tuple)), "please put blocks in list or tuple."
     J = None
     for i, bR in enumerate(blocks):
-        assert isinstance(bR, (list, tuple)), "please put blocks in list or tuple."
+        assert isinstance(bR, (list, tuple)), f" {bR.__class__.__name__}: please put blocks in list or tuple."
         if J is None:
             J = len(bR)
         else:

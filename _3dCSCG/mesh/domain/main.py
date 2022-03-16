@@ -8,7 +8,7 @@ from _3dCSCG.mesh.domain.regions.main import Regions
 from _3dCSCG.mesh.domain.regions.region.main import Region
 from _3dCSCG.mesh.domain.visualize.main import _3dCSCG_Domain_Visualize
 from _3dCSCG.mesh.domain.boundaries import _3dCSCG_Boundaries
-
+from _3dCSCG.mesh.domain.IS import _3dCSCG_Domain_IS
 
 class _3dCSCG_Domain(FrozenOnly):
     """We have the whole ``_3dCSCG_Domain`` (all same) in all cores. This
@@ -27,6 +27,7 @@ class _3dCSCG_Domain(FrozenOnly):
         self._visualize_ = None
         self._boundaries_ = None
         self.___define_parameters___ = None
+        self._IS_ = _3dCSCG_Domain_IS(self)
         self._freeze_self_()
 
     @property
@@ -99,7 +100,6 @@ class _3dCSCG_Domain(FrozenOnly):
 
         """
         return self._regions_
-
 
 
     def ___PRIVATE_parse_domain_input___(self, di):
@@ -181,8 +181,8 @@ class _3dCSCG_Domain(FrozenOnly):
             A tuple where self._region_corner_pool_[i] indicates the coordinates of the
             regions corner globally numbered as i.
         self._global_region_corner_numbering_ : dict
-            A dict whose names indicate regions, and whose valune[j].ravel('F')
-            indicates the golobal numbering of [NWB, SWB, NEB, SEB, NWF, SWF,
+            A dict whose names indicate regions, and whose value[j].ravel('F')
+            indicates the global numbering of [NWB, SWB, NEB, SEB, NWF, SWF,
             NEB, SEB] [j] corner.
 
         """
@@ -201,7 +201,7 @@ class _3dCSCG_Domain(FrozenOnly):
                     _current_number_ += 1
                     _corner_pool_.append(_corner_)
             _rcgn_[rn] = np.array(_rcgn_[rn]).reshape((2, 2, 2), order='F')
-        self._region_corner_coordinates_pool_ = tuple(_corner_pool_)
+        # self._region_corner_coordinates_pool_ = tuple(_corner_pool_)
         self._region_corner_global_numbering_ = _rcgn_
 
     def ___PRIVATE_generate_region_map___(self):
@@ -223,13 +223,14 @@ class _3dCSCG_Domain(FrozenOnly):
 
         for rn in self.regions():  # go through all regions
             _rm_[rn] = [list() for _ in range(self.regions(rn).num_sides())]
-            for i in range(self.regions(rn).num_sides()):  # go through all 6 sides of each regions.
+            for i in range(self.regions(rn).num_sides()):  # go through all 6 sides of each region.
                 self_corner_indices = self.___PRIVATE_found_side_corner_global_numbering___(rn, i)
                 for rnrn in self.regions().keys():  # go through all regions except self
                     if rnrn != rn:
                         for ii in range(self.regions(rn).num_sides()):  # go through all 6 sides of the regions.
                             other_corner_indices = self.___PRIVATE_found_side_corner_global_numbering___(rnrn, ii)
                             if np.all(self_corner_indices == other_corner_indices):
+                                # noinspection PyUnresolvedReferences
                                 _rm_[rn][i].append(rnrn)
 
         # We then find the sides on the domain boundaries______________________
@@ -243,7 +244,7 @@ class _3dCSCG_Domain(FrozenOnly):
         _rsodb_ = {}
         for rn in self._region_names_:  # go through all regions
             _rsodb_[rn] = [0 for _ in range(self.regions(rn).num_sides())]
-            for i in range(self.regions(rn).num_sides()):  # go through all 6 sides of each regions.
+            for i in range(self.regions(rn).num_sides()):  # go through all 6 sides of each region.
                 try:
                     assert np.shape(_rm_[rn][i]) == (1,)
                 except AssertionError:
@@ -277,6 +278,7 @@ class _3dCSCG_Domain(FrozenOnly):
                         " <Domain3D> : region_map[{}][{}] = {} is wrong, check the domain_input.".format(
                             rn, i, _rm_[rn][i])
 
+            # noinspection PyUnresolvedReferences
             _rsodb_[rn] = tuple(_rsodb_[rn])
             _rm_[rn] = tuple(_rm_[rn])
 
@@ -284,7 +286,7 @@ class _3dCSCG_Domain(FrozenOnly):
         _region_side_correct_pairing_ = ({0, 1}, {2, 3}, {4, 5})
         _risp_ = ()
         for rn in self._region_names_:  # go through all regions
-            for i in range(self.regions(rn).num_sides()):  # go through all sides of each regions.
+            for i in range(self.regions(rn).num_sides()):  # go through all sides of each region.
                 if not _rsodb_[rn][i]:
                     assert {i, _rm_[_rm_[rn][i]].index(rn)} in _region_side_correct_pairing_, \
                         " <Domain3D> : regions['{}']-side[{}] is paired up with regions['{}']-side[{}]".format(
@@ -336,13 +338,14 @@ class _3dCSCG_Domain(FrozenOnly):
         """
         if corner in pool:
             return True, pool.index(corner)
-        for i in pool:
-            if np.sqrt((i[0] - corner[0]) ** 2 + (i[1] - corner[1]) ** 2 + (i[2] - corner[2]) ** 2) <= 1e-13:
-                return True, i
+        for _, i in enumerate(pool):
+            if np.sqrt(
+                    (i[0] - corner[0]) ** 2 +
+                    (i[1] - corner[1]) ** 2 +
+                    (i[2] - corner[2]) ** 2   ) <= 1e-9:
+                return True, _
         return False, -1
 
-
-
     @property
-    def IS_periodic(self):
-        return True if len(self.domain_input.periodic_boundary_pairs) != 0 else False
+    def IS(self):
+        return self._IS_

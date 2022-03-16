@@ -140,9 +140,9 @@ class _3dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         plt.tight_layout()
         if saveto is not None and saveto != '':
             plt.savefig(saveto, bbox_inches='tight')
-            plt.close()
         else:
             plt.show()
+        plt.close('all')
         #================================================================================
         return fig
 
@@ -273,9 +273,9 @@ class _3dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         plt.tight_layout()
         if saveto is not None and saveto != '':
             plt.savefig(saveto, bbox_inches='tight')
-            plt.close()
         else:
             plt.show()
+        plt.close('all')
         #===============================================================================================
         return fig
 

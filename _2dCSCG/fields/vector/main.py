@@ -14,13 +14,13 @@ import numpy as np
 from types import FunctionType, MethodType
 # from SCREWS.frozen import FrozenOnly
 # from BASE.elementwise_cache import EWC_ColumnVector
-from _2dCSCG.fields.base.main import _2dCSCG_Continuous_FORM_BASE
+from _2dCSCG.fields.base import _2dCSCG_Continuous_FORM_BASE
 from functools import partial
 from screws.functions.time_plus_2d_space._0_ import _0t_
 # from scipy import sparse as spspa
-from _2dCSCG.fields.vector.do import _2dCSCG_VectorField_DO
-
-
+from _2dCSCG.fields.vector.do.main import _2dCSCG_VectorField_DO
+from _2dCSCG.fields.vector.numerical.main import _2dCSCG_VectorField_Numerical
+from _2dCSCG.fields.vector.visualize.main import _2dCSCG_VectorField_Visualize
 
 class _2dCSCG_VectorField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
     """The continuous vector field."""
@@ -31,6 +31,8 @@ class _2dCSCG_VectorField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
         self.___PRIVATE_set_func___(func, ftype=ftype)
         self._previous_func_id_time_ = (None, None, None)
         self._do_ = _2dCSCG_VectorField_DO(self)
+        self._numerical_ = _2dCSCG_VectorField_Numerical(self)
+        self._visualize_ = _2dCSCG_VectorField_Visualize(self)
         self._freeze_self_()
 
     def ___PRIVATE_set_func___(self, func, ftype='standard'):
@@ -52,6 +54,8 @@ class _2dCSCG_VectorField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
                     assert fci.__code__.co_argcount >= 4
                 elif isinstance(fci, (int, float)) and fci == 0:
                     func[i] = _0t_
+                elif callable(fci): # any other callable objects, we do not do check anymore.
+                    pass
                 else:
                     raise Exception()
             self._func_ = func
@@ -89,53 +93,29 @@ class _2dCSCG_VectorField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
     def shape(self):
         return (2, )
 
-    def reconstruct(self, xi, eta, time=None,ravel=False, i=None):
-        """
-
-        :param time:
-        :param xi:
-        :param eta:
-        :param ravel:
-        :param i:
-        :return:
-        """
-        if time is None:
-            time = self.current_time
-        else:
-            self.current_time = time
-
-        xi, eta = np.meshgrid(xi, eta, indexing='ij')
-        xyz = dict()
-        value = dict()
-        if self.ftype == 'standard':
-            INDICES = self.mesh.elements.indices if i is None else [i,]
-            func = self.___DO_evaluate_func_at_time___(time)
-            for i in INDICES:
-                element = self.mesh.elements[i]
-                xyz_i = element.coordinate_transformation.mapping(xi, eta)
-                vx_i = func[0](*xyz_i)
-                vy_i = func[1](*xyz_i)
-
-                if ravel:
-                    xyz[i] = [I.ravel('F') for I in xyz_i]
-                    value[i] = [vx_i.ravel('F'), vy_i.ravel('F')]
-                else:
-                    xyz[i] = xyz_i
-                    value[i] = [vx_i, vy_i]
-        else:
-            raise NotImplementedError(f"reconstruct not implemented for ftype: {self.ftype}")
-        return xyz, value
+    def reconstruct(self, *args, **kwargs):
+        return self.do.reconstruct(*args, **kwargs)
 
     @property
     def do(self):
         return self._do_
+
+    @property
+    def numerical(self):
+        return self._numerical_
+
+    @property
+    def visualize(self):
+        return self._visualize_
+
+
 
 
 
 
 
 if __name__ == '__main__':
-    # mpiexec -n 6 python _2dCSCG\field\vector.py
+    # mpiexec -n 6 python _2dCSCG\fields\vector\main.py
     from _2dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
 
     mesh = MeshGenerator('crazy', c=0.)([2,2], show_info=True)
@@ -145,6 +125,5 @@ if __name__ == '__main__':
     def p(t, x, y): return t + np.cos(np.pi*x) * np.cos(2*np.pi*y) * (x+1) * (y+1)
     def q(t, x, y): return t + np.cos(2*np.pi*x) * np.cos(np.pi*y) * (x+1) * (y+1)
     VV = FC('vector', [p,q])
-    VV.current_time = 1
 
-    VV.visualize()
+    VV.visualize(time=1)

@@ -28,7 +28,7 @@ class Iterator(FrozenClass):
         first read RDF from it.
     :param name:
         The name of this iterator. And we also name the graph report picture file as:
-        'MPI_IGR_' + name + stamp.
+        'MPI_IGR_' + name.
     :param save_to_mitr:
         Do we save the results into the `.mitr` file?
     """
@@ -52,15 +52,11 @@ class Iterator(FrozenClass):
             self._monitor_ = IteratorMonitor(self, auto_save_frequency, RDF_filename, monitor_factor)
             if name is None:
                 name ='Iterator-' + randomStringDigits(8) + '-' + str(id(self))[-5:]
-            stamp = randomStringDigits(6)
         else:
             self._monitor_ = None
             name = None
-            stamp = None
         name = cOmm.bcast(name, root=mAster_rank)
-        stamp = cOmm.bcast(stamp, root=mAster_rank)
         self.standard_properties.name = name
-        self.standard_properties.stamp = stamp
         self._save_to_mitr_ = save_to_mitr
         self._freeze_self_()
 
@@ -224,6 +220,7 @@ class Iterator(FrozenClass):
                 self.___shut_down_reason___ = ''
 
         assert shut_down in (1, 0, True, False), "Now, shut_down must be 1, 0, True or False."
+
         if shut_down:
             assert isinstance(self.___shut_down_reason___, str), "Shut down reason need to be str, now is not!"
         else:
@@ -287,7 +284,8 @@ class Iterator(FrozenClass):
             sleep(0.05)
             self.monitor._ft_firstRun_ = time()
             self.monitor._preparation_time_ = time() - self.monitor._ft_start_time_
-            pbar = tqdm(total=self.max_steps, desc = MyTimer.current_time() + ' <' + self.__class__.__name__ + '>')
+            pbar = tqdm(total=self.max_steps,
+                        desc = MyTimer.current_time() + ' <' + self.__class__.__name__ + '>')
 
         IN = 0 # if in the while loop.
 
@@ -356,12 +354,12 @@ class Iterator(FrozenClass):
                     self.RDF.to_csv(self.monitor.RDF_filename, header=True)
 
                 except:
-                    sleep(10) # wait 10 seconds
+                    sleep(5) # wait 5 seconds
                     # noinspection PyBroadException
                     try: # try once more
                         self.RDF.to_csv(self.monitor.RDF_filename, header=True)
                     except:
-                        sleep(10) # wait 10 seconds
+                        sleep(5) # wait 5 seconds
                         # noinspection PyBroadException
                         try: # try once more
                             self.RDF.to_csv(self.monitor.RDF_filename, header=True)

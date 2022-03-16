@@ -1,7 +1,6 @@
 
 
 
-
 from screws.freeze.main import FrozenOnly
 from root.config.main import rAnk, mAster_rank, cOmm, np
 from tools.linear_algebra.data_structures.vectors.locally_full.do import LocallyFullVectorDo
@@ -13,6 +12,7 @@ class LocallyFullVector(FrozenOnly):
         """
 
         :param V:
+            - A tuple or list of CSCG forms : we make a LocallyFullVector from their `cochain.globe`
             - GlobalVector or DistributedVector
             - csc_matrix of shape (x, 1)
             - 1d array.
@@ -20,7 +20,21 @@ class LocallyFullVector(FrozenOnly):
 
         """
         # ------- parse input ---------------------------------------------------------------
-        if str(V.__class__.__name__) in ("GlobalVector", "DistributedVector"):
+        if isinstance(V, (tuple, list)): # tuple of forms
+            if all(hasattr(Vi, 'standard_properties') for Vi in V) and \
+                all('CSCG_form' in Vi.standard_properties.tags for Vi in V):
+
+                globe_cochains = list()
+                for f in V:
+                    if f.cochain.local is not None:
+                        globe_cochains.append(LocallyFullVector(f.cochain.globe))
+                    else:
+                        globe_cochains.append(LocallyFullVector(f.numbering.gathering.GLOBAL_num_dofs))
+
+                v = np.concatenate([f.V for f in globe_cochains])
+                self._V_ = v
+
+        elif str(V.__class__.__name__) in ("GlobalVector", "DistributedVector"):
             v = V.V
             v = cOmm.gather(v, root=mAster_rank)
             if rAnk == mAster_rank:

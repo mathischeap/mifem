@@ -43,10 +43,10 @@ class _3dCSCG_Trace_Numbering(FrozenOnly):
         self._numbering_parameters_ = {'scheme_name': self._scheme_name_}
         self._numbering_parameters_.update(self._parameters_)
         self._DO_ = _3dCSCG_Trace_Numbering_DO(self)
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         self._local_ = None
         self._gathering_ = None
         self._trace_element_wise_ = None
@@ -144,7 +144,7 @@ class _3dCSCG_Trace_Numbering(FrozenOnly):
 
     @property
     def trace_element_wise(self):
-        """(dict) Return a dictionary of gathering vectors."""
+        """(dict) Return a dictionary of trace-element-wise gathering vectors."""
         if self._trace_element_wise_ is None:
             self.___PRIVATE_do_numbering___()
         return self._trace_element_wise_

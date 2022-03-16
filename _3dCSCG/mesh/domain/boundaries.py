@@ -36,11 +36,28 @@ class _3dCSCG_Boundaries(FrozenOnly):
     def distribution_regularities(self):
         """How the boundaries are distributed. Return a list containing one or some of:
 
-            (1) "Regular:one-regions-corner-interface": Any two of boundaries,
-                if they connect with each other, should approach each other from
-                the same regions. Topologically* (regions like orthogonal
+            (1) "Regular:interfaces-not-shared-by-regions": Any two of boundaries,
+                if they connected to each other, thy should approach each other from
+                the same regions. Topologically (if we consider regions like orthogonal
                 structured mesh cells), all connected boundaries are
                 perpendicular (90 degree, NOT 270 degree!!!!) to each other.
+
+                So, below boundaries will not have this regularity:
+
+                ------------<boundary 1>----x-----<boundary 2>-----
+                |                           |                     |
+                |                           |                     |
+                |          R:R_one          |        R:R_two      |
+                |                           |                     |
+                |                           |                     |
+                |                           |                     |
+                ---------------------------------------------------
+
+                because the interface "x" is shared by two regions.
+
+            (2) to be added...
+
+            (3) ...
 
         """
         if self._distribution_regularities_ is not None:
@@ -49,7 +66,7 @@ class _3dCSCG_Boundaries(FrozenOnly):
         self._distribution_regularities_ = list()
 
         if self.___PRIVATE_if_is_Regular__one_region_corner_interface___():
-            self._distribution_regularities_.append("Regular:one-regions-corner-interface")
+            self._distribution_regularities_.append("Regular:interfaces-not-shared-by-regions")
 
 
         return self._distribution_regularities_
@@ -65,7 +82,7 @@ class _3dCSCG_Boundaries(FrozenOnly):
             ToF = True
             # for test reasons we
             NUM = self._domain_.regions.num
-            if NUM == 1: # only one region, then must be a Regular:one-regions-corner-interface
+            if NUM == 1: # only one region, then must be a Regular:one-region-corner-interface
                 pass
             else:
                 MAP = self._domain_.regions.map

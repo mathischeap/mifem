@@ -3,8 +3,8 @@ from screws.freeze.main import FrozenOnly
 from _3dCSCG.forms.standard._2_form.main import _3dCSCG_2Form
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
 from _3dCSCG.forms.standard._1_form.special.vortex_detection import ___3dCSCG_1Form_Vortex_Detection___
-from _3dCSCG.forms.standard._1_form.special.components.cross_product_1__ip_1 import ___3dCSCG_1Form_CrossProduct_1__ip_1___
-from _3dCSCG.forms.standard._1_form.special.components.cross_product_2__ip_2 import ___3dCSCG_1Form_CrossProduct_2__ip_2___
+from _3dCSCG.forms.standard._1_form.special.helpers.cross_product_1__ip_1 import ___3dCSCG_1Form_CrossProduct_1__ip_1___
+from _3dCSCG.forms.standard._1_form.special.helpers.cross_product_2__ip_2 import ___3dCSCG_1Form_CrossProduct_2__ip_2___
 
 
 

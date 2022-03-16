@@ -37,16 +37,21 @@ class DistributedVector(FrozenOnly):
                 raise Exception(f"Only accept 1- or 2-d array, now it is {np.ndim(V)}.")
         elif V is None:
             assert rAnk != mAster_rank, "in master core, can not give None."
+        elif V.__class__.__name__ == 'csr_matrix':
+            V = V.tocsc()
+            assert V.shape[1] == 1
+        elif V.__class__.__name__ == 'csc_matrix':
+            assert V.shape[1] == 1
         else:
-            pass
+            raise Exception()
 
         # --------------- check input ------------------------------------------------------
-        if V.__class__.__name__ == 'csr_matrix': V = V.tocsc()
         if rAnk == mAster_rank:
             assert spspa.isspmatrix_csc(V), "I need a scipy csc sparse matrix"
             shape = V.shape
         else:
             shape = None
+
         shape = cOmm.bcast(shape, root=mAster_rank)
         if rAnk != mAster_rank:
             if V is None:

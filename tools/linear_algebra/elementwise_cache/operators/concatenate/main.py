@@ -3,7 +3,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from tools.linear_algebra.elementwise_cache.operators.concatenate.column_vector import ___concatenate_EWC_sparse_vectors___
+from tools.linear_algebra.elementwise_cache.operators.concatenate.column_vector.main import ___concatenate_EWC_sparse_vectors___
 from tools.linear_algebra.elementwise_cache.operators.bmat.main import bmat
 
 

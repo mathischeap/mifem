@@ -11,7 +11,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 from scipy import sparse as spspa
-from screws.quadrature import Quadrature
+from _3dCSCG.forms.standard._3_form.discretize.main import _3dCSCG_Discretize
 from _3dCSCG.forms.standard.base.main import _3dCSCG_Standard_Form
 from _3dCSCG.forms.standard._3_form.special import _3Form_Special
 
@@ -38,10 +38,10 @@ class _3dCSCG_3Form(_3dCSCG_Standard_Form):
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_standard_3form')
         self._special_ = _3Form_Special(self)
         self.___PRIVATE_reset_cache___()
+        self._discretize_ = _3dCSCG_Discretize(self)
         self._freeze_self_()
 
     def ___PRIVATE_reset_cache___(self):
-        self.___DISCRETIZE_STANDARD_CACHE___ = None
         super().___PRIVATE_reset_cache___()
 
     def ___PRIVATE_TW_FUNC_body_checker___(self, func_body):
@@ -58,98 +58,10 @@ class _3dCSCG_3Form(_3dCSCG_Standard_Form):
     def special(self):
         return self._special_
 
-    def discretize(self, update_cochain=True, target='func', **kwargs):
-        """
-        Discretize the current function (a scalar field) to cochain.
+    @property
+    def discretize(self):
+        return self._discretize_
 
-        It is actually a wrapper of multiple methods that discretize functions of different types (a scalar
-        field can be defined and represented in different ways in `python`, right?).
-
-        :param bool update_cochain: (`default`: ``True``) If we update cochain with the output? Sometimes we
-            may do not want to do so since we just want to use this method do some external jobs.
-        :param target:
-        :param kwargs: Keyword arguments to be passed to the particular discretize method.
-        :return: The cochain.
-        :rtype: Its type can be different according to the particular discretize method.
-        """
-        if target == 'func':
-            if self.TW.func.body.__class__.__name__ == '_3dCSCG_ScalarField':
-
-                if self.func.ftype == 'standard':
-                    return self.___PRIVATE_discretize_standard_ftype___(update_cochain=update_cochain, **kwargs)
-                else:
-                    raise NotImplementedError(
-                        f"3dCSCG 3-form cannot (target func) discretize _3dCSCG_ScalarField of ftype={self.func.ftype}")
-
-            else:
-                raise NotImplementedError(
-                    f'3dCSCG 3-form can not (target func) discretize {self.TW.func.body.__class__}.')
-        else:
-            raise NotImplementedError(f"3dCSCG 3-form cannot discretize while targeting at {target}.")
-
-    def ___PRIVATE_discretize_standard_ftype___(self, update_cochain:bool=True, quad_degree=None):
-        """
-        The return cochain is 'locally full local cochain', which means it is mesh-element-wise
-        local cochain. So:
-
-        cochainLocal is a dict, whose keys are mesh element numbers, and values (1-d arrays) are
-        the local cochains.
-        """
-        p = [self.dqp[i] + 1 for i in range(self.ndim)] if quad_degree is None else quad_degree
-        quad_nodes, quad_weights = Quadrature(p).quad
-        if self.___DISCRETIZE_STANDARD_CACHE___ is None \
-            or quad_degree != self.___DISCRETIZE_STANDARD_CACHE___[0]:
-            magic_factor = 0.125
-            xi = np.zeros((self.num.basis, p[0]+1, p[1]+1, p[2]+1))
-            et = np.zeros((self.num.basis, p[0]+1, p[1]+1, p[2]+1))
-            si = np.zeros((self.num.basis, p[0]+1, p[1]+1, p[2]+1))
-            volume = np.zeros(self.num.basis)
-            for k in range(self.p[2]):
-                for j in range(self.p[1]):
-                    for i in range(self.p[0]):
-                        m = i + j*self.p[0] + k*self.p[0]*self.p[1]
-                        xi[m,...] = (quad_nodes[0][:,np.newaxis].repeat(p[1]+1,
-                          axis=1)[:,:,np.newaxis].repeat(p[2]+1, axis=2) + 1)\
-                                  * (self.space.nodes[0][i+1]-self.space.nodes[0][i]
-                                  )/2 + self.space.nodes[0][i]
-                        et[m,...] = (quad_nodes[1][np.newaxis,:].repeat(p[0]+1,
-                          axis=0)[:,:,np.newaxis].repeat(p[2]+1, axis=2) + 1)\
-                                  * (self.space.nodes[1][j+1]-self.space.nodes[1][j]
-                                  )/2 + self.space.nodes[1][j]
-                        si[m,...] = (quad_nodes[2][np.newaxis,:].repeat(p[1]+1,
-                          axis=0)[np.newaxis,:,:].repeat(p[0]+1, axis=0) + 1)\
-                                  * (self.space.nodes[2][k+1]-self.space.nodes[2][k]
-                                  )/2 + self.space.nodes[2][k]
-                        volume[m] = (self.space.nodes[0][i+1]-self.space.nodes[0][i]) \
-                                  * (self.space.nodes[1][j+1]-self.space.nodes[1][j]) \
-                                  * (self.space.nodes[2][k+1]-self.space.nodes[2][k]) * magic_factor
-            self.___DISCRETIZE_STANDARD_CACHE___ = quad_degree, xi, et, si, volume
-        else:
-            xi, et, si, volume = self.___DISCRETIZE_STANDARD_CACHE___[1:]
-        cochainLocal = dict()
-        f = self.func.body[0]
-        JC = dict()
-        for i in self.mesh.elements.indices:
-            element = self.mesh.elements[i]
-            typeWr2Metric = element.type_wrt_metric.mark
-            xyz = element.coordinate_transformation.mapping(xi, et, si)
-            if typeWr2Metric in JC:
-                detJ = JC[typeWr2Metric]
-            else:
-                detJ = element.coordinate_transformation.Jacobian(xi, et, si)
-                if isinstance(typeWr2Metric, str):
-                    JC[typeWr2Metric] = detJ
-            fxyz = f(*xyz)
-            cochainLocal[i] = np.einsum('jklm, k, l, m, j -> j',
-                fxyz*detJ, quad_weights[0], quad_weights[1], quad_weights[2],
-                volume, optimize='greedy'
-            )
-        # isKronecker? ...
-        if not self.space.IS_Kronecker: raise NotImplementedError()
-        # pass to cochain.local ...
-        if update_cochain: self.cochain.local = cochainLocal
-        # ...
-        return 'locally full local cochain', cochainLocal
 
     def reconstruct(self, xi, eta, sigma, ravel=False, i=None, regions=None):
         """

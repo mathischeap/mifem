@@ -21,4 +21,3 @@ class _2dCSCG_Mesh_Visualize(FrozenOnly):
     @property
     def matplot(self):
         return self._matplot_
-

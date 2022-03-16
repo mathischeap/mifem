@@ -161,22 +161,22 @@ class FormCaller(FrozenOnly):
                         f"when make algebraic dual standard form from prime form, " \
                         f"kwargs must be empty, now it is={kwargs}."
                     prime = args[0]
-                    pcn = str(prime.__class__)
+                    pcn = prime.__class__.__name__
 
                     if ID == '0-adf':
-                        assert pcn == "<class '_3dCSCG.forms.standard._0_form.main._3dCSCG_0Form'>"
+                        assert pcn == '_3dCSCG_0Form'
                     elif ID == '1-adf':
-                        assert pcn == "<class '_3dCSCG.forms.standard._1_form.main._3dCSCG_1Form'>"
+                        assert pcn == '_3dCSCG_1Form'
                     elif ID == '2-adf':
-                        assert pcn == "<class '_3dCSCG.forms.standard._2_form.main._3dCSCG_2Form'>"
+                        assert pcn == '_3dCSCG_2Form'
                     elif ID == '3-adf':
-                        assert pcn == "<class '_3dCSCG.forms.standard._3_form.main._3dCSCG_3Form'>"
+                        assert pcn == '_3dCSCG_3Form'
                     elif ID == '0-adt':
-                        assert pcn == "<class '_3dCSCG.forms.trace._0_trace._3dCSCG_0Trace'>"
+                        assert pcn == '_3dCSCG_0Trace'
                     elif ID == '1-adt':
-                        assert pcn == "<class '_3dCSCG.forms.trace._1_trace._3dCSCG_1Trace'>"
+                        assert pcn == '_3dCSCG_1Trace'
                     elif ID == '2-adt':
-                        assert pcn == "<class '_3dCSCG.forms.trace._2_trace._3dCSCG_2Trace'>"
+                        assert pcn == '_3dCSCG_2Trace'
                     else:
                         raise Exception(f"ID={ID} do not accept a single prime form instance as input.")
 
@@ -262,9 +262,9 @@ class FormCaller(FrozenOnly):
                 'vector': "_3dCSCG.fields.vector.main : _3dCSCG_VectorField",
                 'tensor': "_3dCSCG.fields.tensor.main : _3dCSCG_TensorField",
 
-                '0-t': form_path + "trace._0_trace : _3dCSCG_0Trace",
-                '1-t': form_path + "trace._1_trace : _3dCSCG_1Trace",
-                '2-t': form_path + "trace._2_trace : _3dCSCG_2Trace",
+                '0-t': form_path + "trace._0_trace.main : _3dCSCG_0Trace",
+                '1-t': form_path + "trace._1_trace.main : _3dCSCG_1Trace",
+                '2-t': form_path + "trace._2_trace.main : _3dCSCG_2Trace",
 
                 '0-e': form_path + "edge._0_edge : _3dCSCG_0Edge",
                 '1-e': form_path + "edge._1_edge : _3dCSCG_1Edge",

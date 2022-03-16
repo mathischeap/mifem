@@ -7,3 +7,4 @@ sentry-sdk>=0.7.14
 tabulate >= 0.8.3
 tqdm >= 4.14.0
 mpi4py >= 3.0.3
+opencv-python >= 4.5.5.64

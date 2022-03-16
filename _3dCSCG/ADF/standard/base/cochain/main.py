@@ -34,7 +34,7 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Cochain(FrozenOnly):
         """
         if self._local_ is None:
             self._local_ = ____3dCSCG_ADSF_Cochain_Local____(self)
-            # the local cochain will be renew automatically if the local cochain of the prime form is renewed.
+            # the local cochain will be renewed in real-time if the local cochain of the prime form is renewed.
         return self._local_
 
     @local.setter

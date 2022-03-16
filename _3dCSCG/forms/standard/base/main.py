@@ -193,10 +193,11 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
             func = cOmm.bcast(func, root=mAster_rank)
             self.func._body_ = func
             # noinspection PyUnresolvedReferences
-            self.___PRIVATE_discretize_standard_ftype___()
+            self.discretize._standard_()
+            # self.___PRIVATE_discretize_standard_ftype___()
             self.func._body_ = None
 
-    def ___PRIVATE_do_compute_Ln_energy_with___(self, other=None, M=None):
+    def ___PRIVATE_do_compute_L2_energy_with___(self, other=None, M=None):
         """
         Compute (self, other)_{L2}.
 

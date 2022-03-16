@@ -11,7 +11,7 @@ from _3dCSCG.mesh.domain.inputs.allocator import DomainInputAllocator
 from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
 import random
 import os
-from _3dCSCG.tests.random_objects import random_3D_mesh_of_elements_around
+from _3dCSCG.tests.random_objects.form_caller import random_mesh_of_elements_around
 
 
 def test_Mesh_NO0_element_division_and_numbering_quality():
@@ -1246,7 +1246,7 @@ def test_Mesh_NO9_edge_node_mesh():
     else:
         LOAD = None
     LOAD = cOmm.bcast(LOAD, root=mAster_rank)
-    mesh = random_3D_mesh_of_elements_around(LOAD, mesh_pool=['bridge_arch_cracked',], EDM_pool=['chaotic',])
+    mesh = random_mesh_of_elements_around(LOAD, mesh_pool=['bridge_arch_cracked', ], EDM_pool=['chaotic', ])
     # add to mesh_pool to test it with more meshes.
     MN = mesh.node
     MNE = MN.elements

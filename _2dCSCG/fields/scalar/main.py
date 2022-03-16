@@ -12,12 +12,13 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 from types import FunctionType, MethodType
-from _2dCSCG.fields.base.main import _2dCSCG_Continuous_FORM_BASE
+from _2dCSCG.fields.base import _2dCSCG_Continuous_FORM_BASE
 from functools import partial
 import numpy as np
 from screws.functions.time_plus_2d_space._0_ import _0t_
-from _2dCSCG.fields.scalar.do import _2dCSCG_ScalarField_DO
-
+from _2dCSCG.fields.scalar.do.main import _2dCSCG_ScalarField_DO
+from _2dCSCG.fields.scalar.numerical.main import _2dCSCG_ScalarField_Numerical
+from _2dCSCG.fields.scalar.visualize.main import _2dCSCG_ScalarField_Visualize
 
 class _2dCSCG_ScalarField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
     """The continuous scalar field."""
@@ -28,6 +29,8 @@ class _2dCSCG_ScalarField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
         self.___PRIVATE_set_func___(func, ftype=ftype)
         self._previous_func_id_time_ = (None, None, None)
         self._DO_ = _2dCSCG_ScalarField_DO(self)
+        self._numerical_ = _2dCSCG_ScalarField_Numerical(self)
+        self._visualize_ = _2dCSCG_ScalarField_Visualize(self)
         self._freeze_self_()
 
 
@@ -46,6 +49,8 @@ class _2dCSCG_ScalarField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
                 assert func.__code__.co_argcount >= 4
             elif isinstance(func, (int, float)) and func == 0:
                 func = _0t_
+            elif callable(func): # any other callable objects, we do not do check anymore.
+                pass
             else:
                 raise Exception(f"func={func} is a {func.__class__}, cannot be understood.")
             self._func_ = [func,]
@@ -81,46 +86,20 @@ class _2dCSCG_ScalarField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
     def shape(self):
         return (1,)
 
-    def reconstruct(self, xi, eta, time=None, ravel=False, i=None):
-        """
-
-        :param time:
-        :param xi:
-        :param eta:
-        :param ravel:
-        :param i:
-        :return:
-        """
-        if time is None:
-            time = self.current_time
-        else:
-            self.current_time = time
-
-        xi, eta = np.meshgrid(xi, eta, indexing='ij')
-        xyz = dict()
-        value = dict()
-        if self.ftype == 'standard':
-            INDICES = self.mesh.elements.indices if i is None else [i,]
-            func = self.___DO_evaluate_func_at_time___(time)[0]
-            for i in INDICES:
-                element = self.mesh.elements[i]
-                xyz_i = element.coordinate_transformation.mapping(xi, eta)
-                v_i = func(*xyz_i)
-
-                if ravel:
-                    xyz[i] = [I.ravel('F') for I in xyz_i]
-                    value[i] = [v_i.ravel('F'),]
-                else:
-                    xyz[i] = xyz_i
-                    value[i] = [v_i,]
-        else:
-            raise NotImplementedError(f"reconstruct not implemented for ftype: {self.ftype}")
-        return xyz, value
+    def reconstruct(self, *args, **kwargs):
+        return self.do.reconstruct(*args, **kwargs)
 
     @property
     def do(self):
         return self._DO_
 
+    @property
+    def numerical(self):
+        return self._numerical_
+
+    @property
+    def visualize(self):
+        return self._visualize_
 
 
 

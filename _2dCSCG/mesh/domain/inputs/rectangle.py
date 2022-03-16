@@ -21,13 +21,10 @@ class Rectangle(DomainInputBase):
     x
 
     """
-    def __init__(self, p_UL=(0,0), p_DL=(1,0), p_UR=(0,1), p_DR=(1,1), region_layout=(2,2)):
+    def __init__(self, p_UL=(0,0), width=1, length=1, region_layout=(2,2)):
         """
 
         :param p_UL:
-        :param p_DL:
-        :param p_UR:
-        :param p_DR:
         :param region_layout: How many regions along each direction. For example,
             `region_layout` = (2,3)
             we will have 2 regions along x direction, and 3 regions along y direction. So all
@@ -40,15 +37,7 @@ class Rectangle(DomainInputBase):
                (region_layout[0] > 0 and region_layout[0] % 1==0) and \
                (region_layout[1] > 0 and region_layout[1] % 1==0), \
             f"region_layout = {region_layout} wrong!"
-        # check four points form a rectangle parallel to the axes ----------------------------------
-        assert p_UL[1] == p_DL[1] and p_UL[0] < p_DL[0], f"Left edge not parallel to x axis."
-        assert p_UL[0] == p_UR[0] and p_UL[1] < p_UR[1], f"Upper edge not parallel to y axis."
-        assert p_UR[1] == p_DR[1] and p_UR[0] < p_DR[0], f"Left edge not parallel to x axis."
-        assert p_DL[0] == p_DR[0] and p_DL[1] < p_DR[1], f"Upper edge not parallel to y axis."
-        width = p_DL[0] - p_UL[0]
-        assert width == p_DR[0] - p_UR[0], f"not a rectangle"
-        length =  p_UR[1] - p_UL[1]
-        assert length == p_DR[1] - p_DL[1], f"not a rectangle"
+        assert width > 0 and length > 0
         # new we parse the four corners of all regions ---------------------------------------------
         L0, L1 = region_layout
         x_step = width / L0
@@ -68,6 +57,7 @@ class Rectangle(DomainInputBase):
                                                           (x + x_step, y + y_step))
                 region_sequence += (region_name,)
                 Rs[i][j] = region_name
+
 
         boundary_region_edges = dict()
         boundary_region_edges['Upper'] = tuple()

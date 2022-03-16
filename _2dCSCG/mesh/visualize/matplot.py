@@ -1,7 +1,5 @@
 
 
-
-
 import sys
 if './' not in sys.path: sys.path.append('./')
 
@@ -12,6 +10,10 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 
 from screws.freeze.main import FrozenOnly
+
+
+
+
 
 class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
     def __init__(self, mesh):
@@ -86,6 +88,16 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
             for dx_lines in RI[rn][1]:  # plot dx mesh lines
                 ax.plot(dx_lines[0], dx_lines[1], color=element_color, linewidth=element_linewidth)
 
+        RB = self._mesh_.domain.visualize.matplot(
+                density=4*150*self._mesh_.domain.regions.num, do_plot=False)
+        reodb = self._mesh_.domain.regions.edges_on_domain_boundaries
+        for rn in self._mesh_.domain.regions.names:
+            for ei in range(4):
+                if reodb[rn][ei] == 1: # plot the domain boundary
+                    ax.plot(RB[rn][ei][0], RB[rn][ei][1], color='k', linewidth=element_linewidth*3)
+                else:
+                    ax.plot(RB[rn][ei][0], RB[rn][ei][1], color='b', linewidth=element_linewidth*2)
+
         # prepare colors for different cores...
         if corlormap is None: corlormap = 'tab20'
         color = cm.get_cmap(corlormap, sIze)
@@ -114,9 +126,10 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         #__________ SAVE TO ___________________________________________________________
         if saveto is not None and saveto != '':
             plt.savefig(saveto, bbox_inches='tight')
-            plt.close()
         else:
             plt.show()
+
+        plt.close('all')
         #-------------------------------------------------------------------------------
         return fig
 
@@ -233,14 +246,16 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         return RB, RBN, boundary_name_color_dict, pb_text
 
 
+
+
     def _matplot_mesh_(self, paper_version=False, region_boundary=True, density=6000, usetex=False,
         show_numbering=True, saveto=None, corlormap='tab10', fontsize=12,
         xlim=None, ylim=None, labelsize=15, ticksize=15, show_boundary_names=True,
         domain_boundary_linewidth=3, region_boundary_linewidth=0.8, element_linewidth=0.4,
         element_color='red'):
         """
-        :param paper_version: Plot a mesh suitable for a paper. Other, we plot much more information which makes
-            the plot messed.
+        :param paper_version: Plot a mesh suitable for a paper. Other, we plot much more
+            information which makes the plot messed.
         :param region_boundary:
         :param density:
         :param usetex:
@@ -381,7 +396,7 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
                     ax.plot(RB[rn][ei][0], RB[rn][ei][1],
                             color=boundary_name_color_dict[bn], linewidth=domain_boundary_linewidth)
                     ax.plot(RB[rn][ei][0], RB[rn][ei][1],
-                            color='k', linewidth=0.1*domain_boundary_linewidth)
+                            color='k', linewidth=0.1*domain_boundary_linewidth) # Not an error, we just plot a thin line in line
                 else:
                     if region_boundary: # plot the regions boundary
                         ax.plot(RB[rn][ei][0], RB[rn][ei][1], color='b', linewidth=region_boundary_linewidth)
@@ -419,9 +434,9 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         #__________ SAVE TO ___________________________________________________________
         if saveto is not None and saveto != '':
             plt.savefig(saveto, bbox_inches='tight')
-            plt.close()
         else:
             plt.show()
+        plt.close('all')
         #------------------------------------------------------------------------------
         return fig
 

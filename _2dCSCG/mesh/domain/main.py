@@ -14,6 +14,7 @@ from _2dCSCG.mesh.domain.regions.main import Regions
 from _2dCSCG.mesh.domain.regions.region.main import Region
 from _2dCSCG.mesh.domain.visualize import _2dCSCG_Domain_Visualize
 from _2dCSCG.mesh.domain.boundaries.main import _2dCSCG_Domain_Boundaries
+from _2dCSCG.mesh.domain.IS import _2dCSCG_Domain_IS
 
 
 class _2dCSCG_Domain(FrozenOnly):
@@ -31,6 +32,7 @@ class _2dCSCG_Domain(FrozenOnly):
         self._visualize_ = _2dCSCG_Domain_Visualize(self) # will only do thing in master core.
         self._boundaries_ = _2dCSCG_Domain_Boundaries(self)
         self.___define_parameters___ = None
+        self._IS_ = _2dCSCG_Domain_IS(self)
         self._freeze_self_()
 
     @property
@@ -60,7 +62,7 @@ class _2dCSCG_Domain(FrozenOnly):
 
     def ___PRIVATE_parse_interpolators_(self):
         """
-        Here only get the interpolator names actually. The interpolation class
+        Here only get the interpolator names. The interpolation class
         will be obtained in the regions itself.
 
         We get the `_interpolators_` from the `domain_input`:
@@ -161,7 +163,6 @@ class _2dCSCG_Domain(FrozenOnly):
         """
         return self._regions_
 
-
     @property
-    def IS_periodic(self):
-        return True if len(self.domain_input.periodic_boundary_pairs) != 0 else False
+    def IS(self):
+        return self._IS_

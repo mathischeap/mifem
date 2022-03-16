@@ -328,17 +328,17 @@ class icpsNS_Base(Base):
     @lru_cache(maxsize=8)
     def helicity(self, t):
         """Helicity at time `t`."""
-        return self.___PRIVATE_compute_L_norm_of___('helicity_distribution', time=t, n=1)
+        return self._es_.do.compute_Ln_norm_of('helicity_distribution', time=t, n=1)
 
     @lru_cache(maxsize=8)
     def kinetic_energy(self, t):
         """Kinetic energy at time `t`."""
-        return self.___PRIVATE_compute_L_norm_of___('kinetic_energy_distribution', time=t, n=1)
+        return self._es_.do.compute_Ln_norm_of('kinetic_energy_distribution', time=t, n=1)
 
     @lru_cache(maxsize=8)
     def enstrophy(self, t):
         """Enstrophy at time `t`."""
-        return self.___PRIVATE_compute_L_norm_of___('enstrophy_distribution', time=t, n=1)
+        return self._es_.do.compute_Ln_norm_of('enstrophy_distribution', time=t, n=1)
 
 
 

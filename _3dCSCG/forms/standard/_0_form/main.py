@@ -13,6 +13,7 @@ from root.config.main import *
 from scipy import sparse as spspa
 from _3dCSCG.forms.standard.base.main import _3dCSCG_Standard_Form
 from _3dCSCG.forms.standard._0_form.special.main import _0Form_Special
+from _3dCSCG.forms.standard._0_form.discretize.main import _3dCSCG_Discretize
 
 
 
@@ -41,6 +42,7 @@ class _3dCSCG_0Form(_3dCSCG_Standard_Form):
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_standard_0form')
         self._special_ = _0Form_Special(self)
         self.___PRIVATE_reset_cache___()
+        self._discretize_ = _3dCSCG_Discretize(self)
         self._freeze_self_()
 
     def ___PRIVATE_TW_FUNC_body_checker___(self, func_body):
@@ -71,118 +73,11 @@ class _3dCSCG_0Form(_3dCSCG_Standard_Form):
     def special(self):
         return self._special_
 
-    def discretize(self, update_cochain=True, target='func'):
-        """
-        Discretize the current function (a scalar field) to cochain.
-
-        It is actually a wrapper of multiple methods that discretize functions of different types (a scalar
-        field can be defined and represented in different ways in `python`, right?).
-
-        :param bool update_cochain: (`default`: ``True``) If we update cochain with the output? Sometimes we
-            may do not want to do so since we just want to use this method do some external jobs.
-        :param target:
-        :return: The cochain.
-        :rtype: Its type can be different according to the particular discretize method.
-        """
-        if target == 'func':
-            if self.TW.func.body.__class__.__name__ == '_3dCSCG_ScalarField':
-                if self.func.ftype == 'standard':
-                    return self.___PRIVATE_discretize_standard_ftype___(update_cochain=update_cochain)
-                else:
-                    raise NotImplementedError(f"3dCSCG 0-form cannot (target func) discretize _3dCSCG_ScalarField of ftype={self.func.ftype}")
-
-            else:
-                raise NotImplementedError(f'3dCSCG 0-form can not (target func) discretize {self.TW.func.body.__class__}.')
-
-        elif target == 'BC':
-            if self.TW.BC.body.__class__.__name__ == '_3dCSCG_ScalarField':
-                if self.BC.ftype == 'standard':
-                    # always do not update cochain & and target always be "BC"
-                    return self.___PRIVATE_discretize_standard_ftype___(update_cochain=False, target='BC')
-
-                elif self.BC.ftype == "boundary-wise":
-                    # we will always not update cochain & and always set target to be "BC"
-                    return self.___PRIVATE_discretize_boundary_wise_ftype___()
-
-                else:
-                    raise NotImplementedError(f"3dCSCG 0-form cannot (target BC) discretize _3dCSCG_ScalarField of ftype={self.BC.ftype}")
-
-            else:
-                raise NotImplementedError(f'3dCSCG 0-form can not (target BC) discretize {self.TW.BC.body.__class__}.')
-        else:
-            raise NotImplementedError(f"3dCSCG 0-form cannot discretize while targeting at {target}.")
+    @property
+    def discretize(self):
+        return self._discretize_
 
 
-    def ___PRIVATE_discretize_standard_ftype___(self, update_cochain=True, target='func'):
-        """
-        The return cochain is 'locally full local cochain', which means it is mesh-element-wise
-        local cochain. So:
-
-        cochainLocal is a dict, whose keys are mesh element numbers, and values (1-d arrays) are
-        the local cochains.
-        """
-        nodes = list(np.meshgrid(*self.space.nodes, indexing='ij'))
-        nodes = [nodes[i].ravel('F') for i in range(3)]
-        cochainLocal = dict()
-        if target == 'func':
-            FUNC = self.func.body[0]
-        elif target == 'BC':
-            FUNC = self.BC.body[0]
-            assert update_cochain is False, \
-                f"When target is {target}, cannot update cochain!"
-        else:
-            raise NotImplementedError(
-                f"_0Form.___PRIVATE_discretize_standard_ftype___ "
-                f"does not work for target={target}.")
-        for i in self.mesh.elements:
-            element = self.mesh.elements[i]
-            xyz = element.coordinate_transformation.mapping(*nodes)
-            cochainLocal[i] = FUNC(*xyz)
-        # isKronecker? ...
-        if not self.space.IS_Kronecker: raise NotImplementedError()
-        # pass to cochain.local ...
-        if update_cochain: self.cochain.local = cochainLocal
-        # ...
-        return 'locally full local cochain', cochainLocal
-
-    def ___PRIVATE_discretize_boundary_wise_ftype___(self):
-        """
-
-        'Boundary only local cochain' means we return a dict, its keys are mesh-element numbers,
-        its values are also dictionaries whose keys are mesh-element-side names, like 'N', 'S' and
-        so on, and values are the mesh-element-side(trace-element)-wise local cochains. For example
-        cochainLocal = {
-                1: {'N': [4, 3, 1, 1.5, ...], 'W': [...]},
-                23: {...},
-                ...}
-        We know we have cochains for mesh-element #1, #23, ..., and for mesh element #1, we have
-        local cochain on its North side and West side.
-        """
-        nodes = list(np.meshgrid(*self.space.nodes, indexing='ij'))
-        nodes = [nodes[i].ravel('F') for i in range(3)]
-        FUNC = self.BC.body
-        RANGE_element_sides = self.mesh.boundaries.range_of_element_sides
-        cochainLocal = dict()
-        for bn in FUNC:
-            func_bn = FUNC[bn][0]
-            element_sides = RANGE_element_sides[bn]
-            elements, sides = list(), list()
-            for element_side in element_sides:
-                element = int(element_side[:-1])
-                side = element_side[-1]
-                elements.append(element)
-                sides.append(side)
-            for i, side in zip(elements, sides):
-                element = self.mesh.elements[i]
-                xyz = element.coordinate_transformation.mapping(*nodes)
-                local_cochain = func_bn(*xyz)
-                local_dofs = self.numbering.do.find.local_dofs_on_element_side(side)
-                if i not in cochainLocal:
-                    cochainLocal[i] = dict()
-
-                cochainLocal[i][side] = local_cochain[local_dofs]
-
-        return 'Boundary only local cochain', cochainLocal
 
 
 

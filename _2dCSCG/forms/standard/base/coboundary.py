@@ -32,5 +32,3 @@ class _2dCSCG_Standard_Form_Coboundary(CSCG_Standard_Form_Coboundary_BASE):
         else:
             raise Exception()
         return getattr(import_module(nextPath), nextName)
-
-

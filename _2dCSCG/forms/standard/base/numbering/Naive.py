@@ -145,7 +145,7 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         global_numbering = None
         # non-hybrid numbering ...
         mesh = self._sf_.mesh
-        if mesh.domain.IS_periodic:
+        if mesh.domain.IS.periodic:
             if rAnk == mAster_rank:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:
@@ -264,7 +264,7 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         global_numbering = None
         # non-hybrid numbering ...
         mesh = self._sf_.mesh
-        if mesh.domain.IS_periodic:
+        if mesh.domain.IS.periodic:
             if rAnk == mAster_rank:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:
@@ -402,14 +402,14 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         global_numbering = None
         # non-hybrid numbering ...
         mesh = self._sf_.mesh
-        if mesh.domain.IS_periodic:
+        if mesh.domain.IS.periodic:
             if rAnk == mAster_rank:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:
                     regionElementLayout = baseElementLayout[rn]
                     assert all(np.array(regionElementLayout) > 1), \
                         f" elements.layout[{rn}]={regionElementLayout} wrong," \
-                        f" needs (>1, >1, >1) to make it work for periodic domain."
+                        f" needs (>1, >1) to make it work for periodic domain."
 
         if rAnk != mAster_rank:
             element_map = mesh.elements.map

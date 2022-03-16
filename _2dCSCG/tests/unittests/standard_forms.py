@@ -2,10 +2,13 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
-from _2dCSCG.tests.random_objects import random_2D_FormCaller_of_total_load_around
+from _2dCSCG.tests.random_objects.form_caller import random_FormCaller_of_total_load_around
 from _2dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
 from scipy.sparse import linalg as spspalinalg
 import random
+from tools.linear_algebra.linear_system.main import LinearSystem
+from tools.linear_algebra.elementwise_cache.operators.bmat.main import bmat
+from tools.linear_algebra.elementwise_cache.operators.concatenate.main import concatenate
 
 
 
@@ -427,14 +430,10 @@ def test_Form_NO5_cross_product():
     R2.TW.func.do.set_func_body_as(scalar2)
     R2.TW.do.push_all_to_instant(t)
     R2.discretize()
-    L2e = R2.do.compute_Ln_energy(n=1, quad_degree=[8, 7])[0]
 
     CP = w0.special.cross_product_1f__ip_1f(u1, e1)
     for i in mesh.elements:
         cpi = CP[i].toarray()
-        result = np.einsum('j, jk, k ->', e1.cochain.local[i], cpi, u1.cochain.local[i],
-                           optimize='greedy')
-        assert abs(result - L2e[i])  < 0.01
         result = np.einsum('j, jk, k ->', u1.cochain.local[i], cpi, u1.cochain.local[i],
                            optimize='greedy')
         np.testing.assert_almost_equal(result, 0)
@@ -454,7 +453,7 @@ def test_Form_NO6_reconstruction_matrices():
         load = None
         IH = None
     load, IH = cOmm.bcast([load, IH], root=mAster_rank)
-    FC = random_2D_FormCaller_of_total_load_around(load)
+    FC = random_FormCaller_of_total_load_around(load)
 
     def P(t, x, y): return - 1.76*np.pi * np.sin(2.1*np.pi*x) * np.cos(1.11*np.pi*y) + t/2
     def Q(t, x, y): return np.pi * np.cos(3.52*np.pi*x) * np.sin(2*np.pi*y) + t
@@ -525,6 +524,90 @@ def test_Form_NO6_reconstruction_matrices():
     return 1
 
 
+
+def test_Form_NO7_weak_curl():
+    """"""
+    if rAnk == mAster_rank:
+        print(f"~~~ [test_Form_NO7_weak_curl]... ", flush=True)
+    else:
+        pass
+
+    # --- test 1: non-hybrid; periodic boundary condition ----------------------------------
+    def u(t, x, y): return - np.pi * np.sin(2*np.pi*x) * np.cos(2*np.pi*y) + t/1.554
+    def v(t, x, y): return np.pi * np.cos(2*np.pi*x) * np.sin(2*np.pi*y) + t*1.23
+    mesh = MeshGenerator('crazy_periodic', c=0.1)([25, 15], EDM=None)
+    space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 4)])
+    FC = FormCaller(mesh, space)
+    U = FC('vector', (u, v))
+    curl_U = U.numerical.curl
+
+    w0 = FC('0-f-o', is_hybrid=False)  # w0 = curl (u1)
+    u1 = FC('1-f-o', is_hybrid=False)  # w0 = curl (u1)
+
+    u1.TW.func.do.set_func_body_as(U)
+    u1.TW.current_time = 1
+    u1.TW.do.push_all_to_instant()
+    u1.discretize()
+
+    M0 = w0.matrices.mass
+
+    M1 = u1.matrices.mass
+    E01 = w0.matrices.incidence.T
+    b = concatenate([E01 @ M1 @ u1.cochain.EWC,])
+    A = bmat(([M0,],))
+
+    A.gathering_matrices = (w0, w0)
+    b.gathering_matrix = w0
+    LS = LinearSystem(A, b)
+
+    result = LS.solve('GMRES')(0, restart=100, maxiter=50)
+
+    w0.TW.func.do.set_func_body_as(curl_U)
+    w0.TW.current_time = 1
+    w0.TW.do.push_all_to_instant()
+    result[0].do.distributed_to(w0)
+
+    assert w0.error.L() < 0.0015, f"periodic boundary condition test fails."
+
+    #--------------------- 0 tangent velocity boundary condition ----------------------
+    def u(t, x, y): return np.cos(2.5984*np.pi*x) * np.sin(2*np.pi*y) + t
+    def v(t, x, y): return np.sin(2*np.pi*x) * np.cos(3.2158*np.pi*y) + t
+    mesh = MeshGenerator('crazy', c=0.1)([25, 15], EDM=None)
+    space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 4)])
+    FC = FormCaller(mesh, space)
+    U = FC('vector', (u, v))
+    curl_U = U.numerical.curl
+
+    w0 = FC('0-f-o', is_hybrid=False)  # w0 = curl (u1)
+    u1 = FC('1-f-o', is_hybrid=False)  # w0 = curl (u1)
+
+    u1.TW.func.do.set_func_body_as(U)
+    u1.TW.current_time = 0
+    u1.TW.do.push_all_to_instant()
+    u1.discretize()
+
+    M0 = w0.matrices.mass
+
+    M1 = u1.matrices.mass
+    E01 = w0.matrices.incidence.T
+    b = concatenate([E01 @ M1 @ u1.cochain.EWC,])
+    A = bmat(([M0,],))
+
+    A.gathering_matrices = (w0, w0)
+    b.gathering_matrix = w0
+    LS = LinearSystem(A, b)
+
+    result = LS.solve('GMRES')(0, restart=100, maxiter=50)
+
+    w0.TW.func.do.set_func_body_as(curl_U)
+    w0.TW.current_time = 0
+    w0.TW.do.push_all_to_instant()
+    result[0].do.distributed_to(w0)
+
+    assert w0.error.L() < 0.0006, f"0-tangent velocity boundary condition test fails."
+
+
+    return 1
 
 
 

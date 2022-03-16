@@ -10,7 +10,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 from _2dCSCG.forms.standard._0_form.outer.special.main import _0Form_Outer_Special
-from _2dCSCG.forms.standard._0_form.base import _0Form_BASE
+from _2dCSCG.forms.standard._0_form.base.main import _0Form_BASE
 
 class _2dCSCG_0Form_Outer(_0Form_BASE):
     """
@@ -25,6 +25,7 @@ class _2dCSCG_0Form_Outer(_0Form_BASE):
     def __init__(self, mesh, space, is_hybrid=True,
         numbering_parameters='Naive',  name='outer-oriented-0-form'):
         super().__init__(mesh, space, is_hybrid, 'outer', numbering_parameters, name)
+        super().__init_0form_base__()
         self._k_ = 0
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_outer_0form')
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_0form')

@@ -13,8 +13,9 @@ from importlib import import_module
 class PreconditionerAllocator(FrozenOnly):
     """"""
     def __init__(self, ID):
-        assert ID in self.___defined_preconditioners___(), f"Preconditioner ID={ID} is not implemented yet. Please use " \
-                                                           f"one of {self.___defined_preconditioners___().keys()}"
+        assert ID in self.___defined_preconditioners___(), \
+            f"Preconditioner ID={ID} is not implemented yet. Please use " \
+            f"one of {self.___defined_preconditioners___().keys()}"
         cls_name = self.___defined_preconditioners___()[ID]
         cls_path = self.___preconditioners_path___() + ID
         self._preconditioner_class_ = getattr(import_module(cls_path), cls_name)

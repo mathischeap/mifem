@@ -10,7 +10,7 @@ if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 from screws.miscellaneous.timer import MyTimer
 import random
-from _3dCSCG.tests.random_objects import random_3D_FormCaller_of_total_load_around
+from _3dCSCG.tests.random_objects.form_caller import random_3D_FormCaller_of_total_load_around
 
 
 
@@ -26,9 +26,10 @@ def test_Form_NO0_3dCSCG_Field_numerical():
 
     t = random.random() * 10
     I, J, K = random.randint(2,10), random.randint(4,8), random.randint(3,9)
-    x = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, I)
-    y = np.linspace(-0.8-random.random()/5, 0.8+random.random()/5, J)
-    z = np.linspace(-0.95-random.random()/20, 0.95+random.random()/20, K)
+    xi = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, I)
+    et = np.linspace(-0.8-random.random()/5, 0.8+random.random()/5, J)
+    sg = np.linspace(-0.95-random.random()/20, 0.95+random.random()/20, K)
+    x, y, z = np.meshgrid(xi, et, sg, indexing='ij')
 
     #================ test for scalar ======================================================================
     def func(t, x, y, z): return np.sin(2*np.pi*x) * np.sin(np.pi*y) * np.sin(np.pi*z) * t
@@ -259,9 +260,10 @@ def test_Form_NO1_3dCSCG_VectorField():
     t2 = random.random() * 10
     t3 = random.random() * 10
     I, J, K = random.randint(2,10), random.randint(4,8), random.randint(3,9)
-    x = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, I)
-    y = np.linspace(-0.8-random.random()/5, 0.8+random.random()/5, J)
-    z = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, K)
+    xi = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, I)
+    et = np.linspace(-0.8-random.random()/5, 0.8+random.random()/5, J)
+    sg = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, K)
+    x, y, z = np.meshgrid(xi, et, sg, indexing='ij')
 
     if rAnk == mAster_rank:
         load = random.randint(100, 499)
@@ -278,7 +280,7 @@ def test_Form_NO1_3dCSCG_VectorField():
     N.current_time = t + t1
     assert N.current_time == W.current_time + t1, f"N and W has decoupled!"
     assert N.standard_properties.name == "norm-component-of-" + W.standard_properties.name, f"The naming rule."
-    R_xyz, R_v = N.reconstruct(x, y, z, i='on_mesh_boundaries')
+    R_xyz, R_v = N.reconstruct(xi, et, sg, i='on_mesh_boundaries')
     for i in R_xyz:
         xyz = R_xyz[i]
         te = N.mesh.trace.elements[i]
@@ -303,7 +305,7 @@ def test_Form_NO1_3dCSCG_VectorField():
     T_para.current_time = t + t2
     assert T_para.current_time == W.current_time + t2, f"T_para and W has decoupled!"
     assert T_para.standard_properties.name == "T-para-component-of-" + W.standard_properties.name, f"The naming rule."
-    R_xyz, R_v = T_para.reconstruct(x, y, z, i='on_mesh_boundaries')
+    R_xyz, R_v = T_para.reconstruct(xi, et, sg, i='on_mesh_boundaries')
     for i in R_xyz:
         xyz = R_xyz[i]
         te = T_para.mesh.trace.elements[i]
@@ -325,8 +327,8 @@ def test_Form_NO1_3dCSCG_VectorField():
 
     #now we test norm component + parallel component = the vector on all trace elements ------------------
     T_para.current_time = t + t1
-    N_xyz, N_v = N.reconstruct(x, y, z) # on all trace-elements
-    P_xyz, P_v = T_para.reconstruct(x, y, z) # on all trace-elements
+    N_xyz, N_v = N.reconstruct(xi, et, sg) # on all trace-elements
+    P_xyz, P_v = T_para.reconstruct(xi, et, sg) # on all trace-elements
     for i in N_xyz:
         xyz = N_xyz[i]
         nv = N_v[i]
@@ -342,7 +344,7 @@ def test_Form_NO1_3dCSCG_VectorField():
     T_perp.current_time = t + t3
     assert T_perp.current_time == W.current_time + t3, f"T_perp and W has decoupled!"
     assert T_perp.standard_properties.name == "T-perp-component-of-" + W.standard_properties.name, f"The naming rule."
-    R_xyz, R_v = T_perp.reconstruct(x, y, z, i='on_mesh_boundaries')
+    R_xyz, R_v = T_perp.reconstruct(xi, et, sg, i='on_mesh_boundaries')
     for i in R_xyz:
         xyz = R_xyz[i]
         te = T_perp.mesh.trace.elements[i]
@@ -430,9 +432,10 @@ def test_Form_NO2_3dCSCG_ScalarField():
 
     t = random.random() * 10
     I, J, K = random.randint(2,10), random.randint(4,8), random.randint(3,9)
-    x = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, I)
-    y = np.linspace(-0.8-random.random()/5, 0.8+random.random()/5, J)
-    z = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, K)
+    xi = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, I)
+    et = np.linspace(-0.8-random.random()/5, 0.8+random.random()/5, J)
+    sg = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, K)
+    x, y, z = np.meshgrid(xi, et, sg, indexing='ij')
 
     if rAnk == mAster_rank:
         load = random.randint(100, 499)
@@ -486,9 +489,10 @@ def test_Form_NO3_3dCSCG_TensorField():
 
     t = random.random() * 10
     I, J, K = random.randint(2,10), random.randint(4,8), random.randint(3,9)
-    x = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, I)
-    y = np.linspace(-0.8-random.random()/5, 0.8+random.random()/5, J)
-    z = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, K)
+    xi = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, I)
+    et = np.linspace(-0.8-random.random()/5, 0.8+random.random()/5, J)
+    sg = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, K)
+    x, y, z = np.meshgrid(xi, et, sg, indexing='ij')
 
     def T00(t, x, y, z): return 2 * t * np.sin(np.pi * x) * np.cos(3 * np.pi * y) * np.cos(np.pi * z)
     def T01(t, x, y, z): return 1.2 * t * np.sin(2 * np.pi * x) * np.cos(np.pi * y) * np.sin(np.pi * z)
@@ -602,5 +606,5 @@ def test_Form_NO3_3dCSCG_TensorField():
 
 
 if __name__ == '__main__':
-    # mpiexec -n 6 python _3dCSCG\TESTS\unittest_fields.py
+    # mpiexec -n 6 python _3dCSCG\tests\unittests\fields.py
     test_Form_NO1_3dCSCG_VectorField()

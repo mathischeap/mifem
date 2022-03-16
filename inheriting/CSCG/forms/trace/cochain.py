@@ -200,7 +200,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
     @property
     def local(self):
         """
-        The local cochain.
+        The local cochain. Must be full (all local mesh elements have their local cochains.)
 
         :return: A dict whose keys are local element indices and values are cochain in corresponding elements.
         :rtype: Dict[int, numpy.ndarray]

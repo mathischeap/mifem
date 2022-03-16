@@ -17,6 +17,7 @@ from tools.linear_algebra.data_structures.global_matrix.directed_graph import __
 from tools.linear_algebra.data_structures.global_matrix.undirected_graph import ___GM_Undirected_Graph___
 from tools.linear_algebra.data_structures.global_matrix.adjust import ___GM_ADJUST___
 from tools.linear_algebra.data_structures.global_matrix.condition import ___GM_CONDITION___
+from tools.linear_algebra.data_structures.global_matrix.helpers.split_A import ___split_A___
 
 from tools.linear_algebra.data_structures.vectors.GLOBAL.main import GlobalVector
 from tools.linear_algebra.data_structures.vectors.locally_full.main import LocallyFullVector
@@ -59,7 +60,6 @@ class GlobalMatrix(FrozenOnly):
         self._condition_ = ___GM_CONDITION___(self)
         self._undirected_graph_ = ___GM_Undirected_Graph___(self)
         self._directed_graph_ = ___GM_Directed_Graph___(self)
-        self.IS_regularly_distributed = False
         self._adjust_ = ___GM_ADJUST___(self)
         self._DO_ = ___GM_DO___(self)
         self._IS_ = ___GM_IS___(self)
@@ -129,10 +129,10 @@ class GlobalMatrix(FrozenOnly):
     def T(self):
         """Transpose."""
         GMT = GlobalMatrix(self.M.T)
-        if self.IS_regularly_distributed == 'row':
-            GMT.IS_regularly_distributed = 'column'
-        elif self.IS_regularly_distributed == 'column':
-            GMT.IS_regularly_distributed = 'row'
+        if self.IS.regularly_distributed == 'row':
+            GMT.IS.regularly_distributed = 'column'
+        elif self.IS.regularly_distributed == 'column':
+            GMT.IS.regularly_distributed = 'row'
         else:
             pass
         return GMT
@@ -140,7 +140,7 @@ class GlobalMatrix(FrozenOnly):
     def __neg__(self):
         """ - self """
         GM = GlobalMatrix(-self.M)
-        GM.IS_regularly_distributed = self.IS_regularly_distributed
+        GM.IS.regularly_distributed = self.IS.regularly_distributed
         return GM
 
     def __mul__(self, other):
@@ -152,7 +152,7 @@ class GlobalMatrix(FrozenOnly):
         """
         assert isinstance(other, (int, float))
         GM = GlobalMatrix(other * self.M)
-        GM.IS_regularly_distributed = self.IS_regularly_distributed
+        GM.IS.regularly_distributed = self.IS.regularly_distributed
         return GM
 
     def __rmul__(self, other):
@@ -164,7 +164,7 @@ class GlobalMatrix(FrozenOnly):
         """
         assert isinstance(other, (int, float))
         GM = GlobalMatrix(other * self.M)
-        GM.IS_regularly_distributed = self.IS_regularly_distributed
+        GM.IS.regularly_distributed = self.IS.regularly_distributed
         return GM
 
     # noinspection PyMethodParameters
@@ -184,14 +184,14 @@ class GlobalMatrix(FrozenOnly):
                     M = A.M @ B.M
                 else:
                     M = spspa.csc_matrix((A.shape[0], B.shape[1]))
-            elif A.IS_regularly_distributed in (True, 'row', 'column') or \
-                B.IS_regularly_distributed in (True, 'row', 'column'):
+            elif A.IS.regularly_distributed in (True, 'row', 'column') or \
+                B.IS.regularly_distributed in (True, 'row', 'column'):
                 M = A.___PRIVATE_MATMUL_rowMajor_dot_columnMajor___(A, B)
             else:
                 raise Exception(f'Neither A, B is regular, dot them will be very expensive.')
             # ...
             GM = GlobalMatrix(M)
-            GM.IS_regularly_distributed = True
+            GM.IS.regularly_distributed = True
             return GM
         elif B.__class__.__name__ == 'GlobalVector':
             # not fast but okay (only do it once), use the master to collect/distribute vector.
@@ -292,14 +292,14 @@ class GlobalMatrix(FrozenOnly):
         C = None
         AM = A.M
         BM = B.M
-        if A.IS_regularly_distributed: # True, row or column
+        if A.IS.regularly_distributed: # True, row or column
             for i in range(sIze):
                 N = cOmm.bcast(BM, root=i)
                 if C is None:
                     C = AM @ N
                 else:
                     C += AM @ N
-        elif B.IS_regularly_distributed: # True, row or column
+        elif B.IS.regularly_distributed: # True, row or column
             for i in range(sIze):
                 M = cOmm.bcast(AM, root=i)
                 if C is None:
@@ -330,6 +330,10 @@ class GlobalMatrix(FrozenOnly):
         :return:
         """
         if core is None: core = mAster_rank
+
+        if core == mAster_rank and self.IS.master_dominating:
+            # In this case, we directly return.
+            return self.M
 
         splitting_factor = int(splitting_factor)
         assert splitting_factor > 0, f"splitting_factor={splitting_factor} wrong, must be > 0."
@@ -520,42 +524,17 @@ class GlobalMatrix(FrozenOnly):
 
     def ___PRIVATE_self_regularity_checker___(self):
         """"""
-        if self.IS_regularly_distributed == 'row':
+        if self.IS.regularly_distributed == 'row':
             assert self.___PRIVATE_check_row_major___()
-        elif self.IS_regularly_distributed == 'column':
+        elif self.IS.regularly_distributed == 'column':
             assert self.___PRIVATE_check_col_major___()
-        elif self.IS_regularly_distributed:
+        elif self.IS.regularly_distributed:
             assert self.___PRIVATE_check_row_major___() or self.___PRIVATE_check_col_major___()
         else:
             pass
 
 
 
-
-
-
-def ___split_A___(indptr, splitting_factor, PS):
-    """A private function to help split global matrix into parts.
-
-    :param indptr:
-    :param splitting_factor:
-    :param PS:
-    :return:
-    """
-    assert len(indptr) == PS+1
-    ST = 0
-    __ = splitting_factor
-    SL = [0, ]
-    for i, ind in enumerate(indptr):
-        if ind >= __:
-            ST += 1
-            SL.append(i)
-            __ += splitting_factor
-    if SL[-1] != PS :
-        ST += 1
-        SL.append(PS)
-    assert ST >= 1 and ST == len(SL)-1
-    return ST, SL
 
 
 

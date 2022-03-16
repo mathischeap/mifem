@@ -106,8 +106,8 @@ class SendAdminAnHTMLEmail(FrozenOnly):
                   <body>
                     <p>Best regards,<br>
                        <em> <font color="cyan">mifem</font> </em> <br>
-                       Hosted at: <font color="blue">https://gitlab.com/zhangyi_aero/mifem</font> <br>
-                       Contact: <font color="blue">zhangyi_aero@hotmail.com or y.zhang-14@tudelft.nl</font> <br>
+                       Hosted at: <font color="blue">https://github.com/mathischeap/mifem</font> <br>
+                       Contact: <font color="blue">zhangyi_aero@hotmail.com or zhangyi55@mail.sysu.edu.cn</font> <br>
                        Email composed at <font color="Crimson">{MyTimer.current_time()[1:-1]}</font> from host: < {local_machine_name} @ {local_IP} > <br>
                        KEY-CODE: {self._key_code_}
                     </p>

@@ -13,14 +13,18 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 import numpy as np
-from _3dCSCG.fields.base.main import _3dCSCG_Continuous_FORM_BASE
+from _3dCSCG.fields.base import _3dCSCG_Continuous_FORM_BASE
 from types import FunctionType, MethodType
 from screws.functions.time_plus_3d_space.constant import CFG
 from functools import partial
-from _3dCSCG.fields.tensor.do import _3dCSCG_TensorField_DO
+from _3dCSCG.fields.tensor.do.main import _3dCSCG_TensorField_DO
 from _3dCSCG.fields.tensor.numerical import _3dCSCG_TensorField_Numerical
+from _3dCSCG.fields.tensor.helpers.add import ___TENSOR_ADD_HELPER_1___
+from _3dCSCG.fields.tensor.helpers.sub import ___TENSOR_SUB_HELPER_1___
+from _3dCSCG.fields.tensor.helpers.neg import ___TENSOR_NEG_HELPER_1___
 
 
+from _3dCSCG.fields.tensor.visualize.main import _3dCSCG_TensorField_Visualize
 
 
 
@@ -41,6 +45,7 @@ class _3dCSCG_TensorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
         self.___PRIVATE_set_func___(func, ftype=ftype)
         self._previous_func_id_time_ = (None, None, None)
         self._DO_ = _3dCSCG_TensorField_DO(self)
+        self._visualize_ = _3dCSCG_TensorField_Visualize(self)
         self._numerical_ = None
         self._freeze_self_()
 
@@ -118,80 +123,8 @@ class _3dCSCG_TensorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
 
 
-    def reconstruct(self, xi, eta, sigma, time=None, ravel=False, i=None, where=None):
-        """
-
-        :param time:
-        :param xi:
-        :param eta:
-        :param sigma:
-        :param ravel:
-        :param i:
-            (1) for where == 'mesh-element' and self.ftype == "standard":
-                i is None or int: the mesh element #i, if i is None, then we do it in all local mesh elements.
-        :param where:
-        :return:
-        """
-        # we deal with default `where` input ---------------------------------------------------------------
-        if where is None:
-            if self.ftype == "standard":
-                where = "mesh-element"
-            else:
-                where = "mesh-element"
-        else:
-            pass
-
-        # we deal with `time` input ---------------------------------------------------------------
-        if time is None:
-            time = self.current_time
-        else:
-            self.current_time = time
-
-        # we get the current function ---------------------------------------------------------------
-        func = self.___DO_evaluate_func_at_time___(time)
-
-        # we do the reconstruction accordingly ---------------------------------------------------------------
-        if where == 'mesh-element':  # input `i` means mesh element, we reconstruct it in mesh elements
-
-            xi, eta, sigma = np.meshgrid(xi, eta, sigma, indexing='ij')
-            xyz = dict()
-            value = dict()
-
-            if self.ftype == "standard":
-                if isinstance(i, int):
-                    INDICES = [i,]
-                elif i is None:
-                    INDICES = self.mesh.elements.indices
-
-                else:
-                    raise NotImplementedError(f"_3dCSCG_TensorField of 'standard' ftype"
-                                              f" mesh-element-reconstruction currently doesn't accept i={i}.")
-
-                for i in INDICES:
-                    element = self.mesh.elements[i]
-                    xyz_i = element.coordinate_transformation.mapping(xi, eta, sigma)
-                    v00, v01, v02 = func[0][0](*xyz_i), func[0][1](*xyz_i), func[0][2](*xyz_i)
-                    v10, v11, v12 = func[1][0](*xyz_i), func[1][1](*xyz_i), func[1][2](*xyz_i)
-                    v20, v21, v22 = func[2][0](*xyz_i), func[2][1](*xyz_i), func[2][2](*xyz_i)
-                    if ravel:
-                        xyz[i] = [I.ravel('F') for I in xyz_i]
-                        value[i] = ([v00.ravel('F'), v01.ravel('F'), v02.ravel('F')],
-                                    [v10.ravel('F'), v11.ravel('F'), v12.ravel('F')],
-                                    [v20.ravel('F'), v21.ravel('F'), v22.ravel('F')])
-                    else:
-                        xyz[i] = xyz_i
-                        value[i] = ([v00, v01, v02],
-                                    [v10, v11, v12],
-                                    [v20, v21, v22])
-
-            else:
-                raise NotImplementedError(f"_3dCSCG_TensorField mesh-reconstruct not implemented for ftype: {self.ftype}")
-
-            return xyz, value
-
-        else:
-            raise NotImplementedError(f"_3dCSCG_TensorField cannot reconstruct 3dCSCG tensor field on {where}.")
-
+    def reconstruct(self, *args, **kwargs):
+        return self.do.reconstruct(*args, **kwargs)
 
 
 
@@ -202,6 +135,10 @@ class _3dCSCG_TensorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
     @property
     def do(self):
         return self._DO_
+
+    @property
+    def visualize(self):
+        return self._visualize_
 
     @property
     def numerical(self):
@@ -324,30 +261,6 @@ class _3dCSCG_TensorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
             raise Exception(f"cannot do _3dCSCG_TensorField + {other.__class__}")
 
 
-class ___TENSOR_NEG_HELPER_1___(object):
-    def __init__(self, v):
-        self._v_ = v
-
-    def __call__(self, t, x, y, z):
-        return - self._v_(t, x, y, z)
-
-class ___TENSOR_SUB_HELPER_1___(object):
-    def __init__(self, w, u):
-        self._w_ = w
-        self._u_ = u
-
-    def __call__(self, t, x, y, z):
-        return self._w_(t, x, y, z) - self._u_(t, x, y, z)
-
-class ___TENSOR_ADD_HELPER_1___(object):
-    def __init__(self, w, u):
-        self._w_ = w
-        self._u_ = u
-
-    def __call__(self, t, x, y, z):
-        return self._w_(t, x, y, z) + self._u_(t, x, y, z)
-
-
 
 
 
@@ -355,7 +268,7 @@ class ___TENSOR_ADD_HELPER_1___(object):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 6 python _3dCSCG\field\tensor.py
+    # mpiexec -n 6 python _3dCSCG\fields\tensor\main.py
     from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
 
     mesh = MeshGenerator('crazy', c=0.)([1,1,2], show_info=True)

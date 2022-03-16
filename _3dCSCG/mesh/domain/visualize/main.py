@@ -182,3 +182,4 @@ class _3dCSCG_Domain_Visualize(FrozenOnly):
         fig.tight_layout()
 
         plt.show()
+        plt.close('all')

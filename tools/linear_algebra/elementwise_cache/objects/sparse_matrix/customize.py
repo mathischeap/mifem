@@ -232,8 +232,7 @@ class SpaMat_Customize(FrozenOnly):
                     self.___customizations___[e].append(('salv', ([i, j], v)))
 
 
-
-        else: # These cores has no business with the setting the value, they only need to make the value to be zero.
+        else: # These cores have no business with the setting the value, they only need to make the value to be zero.
             if TBG is None: # these cores have no business at all.
                 pass
             else:

@@ -29,7 +29,19 @@ class ___GM_CONDITION___(FrozenOnly):
             w, v = nplinalg.eig(M)
         else:
             w, v = None, None
+        w, v = cOmm.bcast([w, v], root=mAster_rank)
         return w, v
+
+    @property
+    def condition_number(self):
+        M = self._gm_.___PRIVATE_gather_M_to_core___(core=mAster_rank) # does not clear the local value.
+        if rAnk == mAster_rank:
+            M = M.toarray()
+            cn = nplinalg.cond(M)
+        else:
+            cn = None
+        cn = cOmm.bcast(cn, root=mAster_rank)
+        return cn
 
     @property
     def sparsity(self):
@@ -42,6 +54,3 @@ class ___GM_CONDITION___(FrozenOnly):
         else:
             sparsity = None
         return cOmm.bcast(sparsity, root=mAster_rank)
-
-
-

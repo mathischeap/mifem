@@ -11,5 +11,5 @@ class DistributedVectorDo(FrozenOnly):
     def distributed_to(self, *args, **kwargs):
         self._v_.___PRIVATE_be_distributed_to___(*args, **kwargs)
 
-    def gather_V_to_core(self, *args, **kwargs):
-        return self._v_.___PRIVATE_gather_V_to_core___(*args, **kwargs)
+    def gather_V_to_core(self, **kwargs):
+        return self._v_.___PRIVATE_gather_V_to_core___(**kwargs)

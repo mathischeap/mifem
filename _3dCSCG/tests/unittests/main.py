@@ -58,6 +58,7 @@ passed_3dCSCG_tests += test_Form_No8_edge_forms()
 passed_3dCSCG_tests += test_Form_No9_node_forms()
 passed_3dCSCG_tests += test_Form_No10_standard_form_dofs()
 passed_3dCSCG_tests += test_Form_No11_reconstruction_matrices()
+passed_3dCSCG_tests += test_Form_NO12_weak_curl()
 
 
 passed_3dCSCG_tests += test_Space_NO1_basis_functions_mapping_test()

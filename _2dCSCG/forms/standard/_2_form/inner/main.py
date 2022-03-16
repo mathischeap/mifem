@@ -10,7 +10,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 from _2dCSCG.forms.standard._2_form.inner.special import _2Form_Inner_Special
-from _2dCSCG.forms.standard._2_form.base import _2Form_BASE
+from _2dCSCG.forms.standard._2_form.base.main import _2Form_BASE
 
 class _2dCSCG_2Form_Inner(_2Form_BASE):
     """
@@ -25,6 +25,7 @@ class _2dCSCG_2Form_Inner(_2Form_BASE):
     def __init__(self, mesh, space, is_hybrid=True,
         numbering_parameters='Naive',  name='inner-oriented-2-form'):
         super().__init__(mesh, space, is_hybrid, 'inner', numbering_parameters, name)
+        super().__init_2form_base__()
         self._k_ = 2
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_inner_2form')
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_2form')
@@ -60,13 +61,15 @@ if __name__ == '__main__':
     f2.TW.current_time = 0
     f2.TW.do.push_all_to_instant()
     f2.discretize()
-    print(f2.error.L())
 
-    # from root.mifem import save
+    f2.visualize()
+    # print(f2.error.L())
     #
-    # save(f2, 'test_2d_f2_i')
-
-
-    from tools.CSCG.partial_dofs import PartialDofs
-
-    pd = PartialDofs(f2)
+    # # from root.mifem import save
+    # #
+    # # save(f2, 'test_2d_f2_i')
+    #
+    #
+    # from tools.CSCG.partial_cochain.partial_dofs.main import PartialDofs
+    #
+    # pd = PartialDofs(f2)

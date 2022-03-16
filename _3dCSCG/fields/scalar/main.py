@@ -12,18 +12,19 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 from types import FunctionType, MethodType
-from _3dCSCG.fields.base.main import _3dCSCG_Continuous_FORM_BASE
+from _3dCSCG.fields.base import _3dCSCG_Continuous_FORM_BASE
 from functools import partial
 from root.config.main import *
 from screws.functions.time_plus_3d_space.constant import CFG
 
-from _3dCSCG.fields.scalar.do import _3dCSCG_ScalarField_DO
+from _3dCSCG.fields.scalar.do.main import _3dCSCG_ScalarField_DO
 from _3dCSCG.fields.scalar.numerical import _3dCSCG_ScalarField_Numerical
 
+from _3dCSCG.fields.scalar.helpers.neg import ___SCALAR_NEG_HELPER_1___
+from _3dCSCG.fields.scalar.helpers.add import ___SCALAR_ADD_HELPER_1___
+from _3dCSCG.fields.scalar.helpers.sub import ___SCALAR_SUB_HELPER_1___
 
-
-
-
+from _3dCSCG.fields.scalar.visualize.main import _3dCSCG_ScalarField_Visualize
 
 
 class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
@@ -42,6 +43,7 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
         self.___PRIVATE_set_func___(func, ftype=ftype)
         self._previous_func_id_time_ = (None, None, None)
         self._DO_ = _3dCSCG_ScalarField_DO(self)
+        self._visualize_ = _3dCSCG_ScalarField_Visualize(self)
         self._numerical_ = None
         self._freeze_self_()
 
@@ -151,152 +153,16 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
     def shape(self):
         return (1,)
 
-    def reconstruct(self, xi, eta, sigma, time=None, ravel=False, i=None, where=None):
-        """
-
-        :param time:
-        :param xi:
-        :param eta:
-        :param sigma:
-        :param ravel:
-        :param i:
-            (1) for where == 'mesh-element' and self.ftype == "standard":
-                i is None or int: the mesh element #i, if i is None, then we do it in all local mesh elements.
-        :param where:
-        :return:
-        """
-        # we deal with default `where` input ---------------------------------------------------------------
-        if where is None:
-            if self.ftype == "standard":
-                where = "mesh-element"
-            elif self.ftype in ("boundary-wise", "trace-element-wise"):
-                where = "trace-element"
-            else:
-                where = "mesh-element"
-        else:
-            pass
-
-        # we deal with `time` input ---------------------------------------------------------------
-        if time is None:
-            time = self.current_time
-        else:
-            self.current_time = time
-
-        # we get the current function ---------------------------------------------------------------
-        func = self.___DO_evaluate_func_at_time___(time)
-
-        # we do the reconstruction accordingly ---------------------------------------------------------------
-        if where == 'mesh-element': # input `i` means mesh element, we reconstruct it in mesh elements
-            xi, eta, sigma = np.meshgrid(xi, eta, sigma, indexing='ij')
-            xyz = dict()
-            value = dict()
-
-            if self.ftype == "standard":
-                assert isinstance(i, int) or i is None, f"We currently only accept int or None for i"
-                INDICES = self.mesh.elements.indices if i is None else [i, ]
-
-                for i in INDICES:
-                    element = self.mesh.elements[i]
-                    xyz_i = element.coordinate_transformation.mapping(xi, eta, sigma)
-                    v_i = func[0](*xyz_i)
-
-                    if ravel:
-                        xyz[i] = [I.ravel('F') for I in xyz_i]
-                        value[i] = [v_i.ravel('F'),]
-                    else:
-                        xyz[i] = xyz_i
-                        value[i] = [v_i,]
-            else:
-                raise NotImplementedError(f"_3dCSCG_ScalarField mesh-reconstruct not implemented for ftype: {self.ftype}")
-
-            return xyz, value
-
-        elif where == 'trace-element': # input `i` means trace element, we reconstruct it on trace elements
-
-            xyz = dict()
-            value = dict()
-
-            if self.ftype == 'boundary-wise':
-
-                if i in (None, 'on_mesh_boundaries'):
-                    RTE = self.mesh.boundaries.range_of_trace_elements
-                    INDICES = list()
-                    for bn in self.func:
-                        INDICES.extend(RTE[bn])
-
-                else:
-                    raise NotImplementedError(f"_3dCSCG_ScalarField of ftype 'boundary-wise'"
-                                              f"trace-element-reconstruction currently doesn't accept i={i}.")
-
-                for I in INDICES:
-                    te = self.mesh.trace.elements[I]
-                    assert te.IS_on_mesh_boundary, f"must be the case!"
-                    xyz_i = te.coordinate_transformation.mapping(xi, eta, sigma, parse_3_1d_eps=True)
-
-                    bn = te.on_mesh_boundary
-                    assert bn in func, f"trace element #{I} is on <{bn}> which is not covered by boundary-wise func."
-                    func_i = func[bn][0]
-
-                    v_i = func_i(*xyz_i)
-
-                    if ravel:
-                        xyz[I] = [_.ravel('F') for _ in xyz_i]
-                        value[I] = [v_i.ravel('F'),]
-                    else:
-                        xyz[I] = xyz_i
-                        value[I] = [v_i,]
-
-            elif self.ftype == 'trace-element-wise':
-
-                if i is None: # we reconstruct on all valid local trace elements
-                    INDICES = list()
-                    # noinspection PyUnresolvedReferences
-                    INDICES.extend(func.keys())
-                elif i == 'on_mesh_boundaries': # we only reconstruct on all the valid local trace elements which are also on mesh boundaries.
-                    CMB = self.covered_mesh_boundaries # will contain all mesh boundary names.
-                    RTE = self.mesh.boundaries.range_of_trace_elements
-                    boundary_trace_elements = list() # local trace elements on all mesh boundaries
-                    for mb in CMB:
-                        boundary_trace_elements.extend(RTE[mb])
-                    ___ = list()
-                    # noinspection PyUnresolvedReferences
-                    ___.extend(func.keys())
-                    INDICES = list()
-                    for I in ___:
-                        if I in boundary_trace_elements:
-                            INDICES.append(I)
-
-                else:
-                    raise NotImplementedError(f"_3dCSCG_ScalarField of 'trace-element-wise' ftype "
-                                              f"trace-element-reconstruction currently don't accept i={i}."
-                                              f"i must be one of (None, 'on_mesh_boundaries').")
-
-                for I in INDICES: # go through all valid local trace elements
-
-                    xyz_i, v_i = func[I](xi, eta, sigma)
-
-                    if ravel:
-                        xyz[I] = [_.ravel('F') for _ in xyz_i]
-                        value[I] = [v_i[0].ravel('F') ,]
-                    else:
-                        xyz[I] = xyz_i
-                        value[I] = v_i
-
-
-            else:
-                raise NotImplementedError(f"_3dCSCG_ScalarField trace-reconstruct not implemented for ftype: {self.ftype}")
-
-            return xyz, value
-
-        else:
-            raise NotImplementedError(f"_3dCSCG_ScalarField cannot reconstruct on {where}.")
-
-
+    def reconstruct(self, *args, **kwargs):
+        return self.do.reconstruct(*args, **kwargs)
 
     @property
     def do(self):
         return self._DO_
 
+    @property
+    def visualize(self):
+        return self._visualize_
     @property
     def numerical(self):
         """The numerical property: A wrapper of all numerical methods, properties."""
@@ -372,28 +238,7 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
 
 
-class ___SCALAR_NEG_HELPER_1___(object):
-    def __init__(self, v):
-        self._v_ = v
 
-    def __call__(self, t, x, y, z):
-        return - self._v_(t, x, y, z)
-
-class ___SCALAR_SUB_HELPER_1___(object):
-    def __init__(self, w, u):
-        self._w_ = w
-        self._u_ = u
-
-    def __call__(self, t, x, y, z):
-        return self._w_(t, x, y, z) - self._u_(t, x, y, z)
-
-class ___SCALAR_ADD_HELPER_1___(object):
-    def __init__(self, w, u):
-        self._w_ = w
-        self._u_ = u
-
-    def __call__(self, t, x, y, z):
-        return self._w_(t, x, y, z) + self._u_(t, x, y, z)
 
 
 

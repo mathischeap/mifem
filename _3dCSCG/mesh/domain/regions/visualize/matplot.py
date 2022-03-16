@@ -124,4 +124,5 @@ class _3dCSCG_Regions_Visualize_Matplot_(FrozenOnly):
                   ', <regions topology>')
         fig.tight_layout()
         plt.show()
+        plt.close('all')
         return fig

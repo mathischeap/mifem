@@ -7,7 +7,7 @@ from _3dCSCG.forms.standard._2_form.special.vortex_detection import ___3dCSCG_2F
 from screws.freeze.main import FrozenOnly
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
 
-from _3dCSCG.forms.standard._2_form.special.components.cross_product_2__ip_2 import ___3dCSCG_2Form_CrossProduct_2__ip_2___
+from _3dCSCG.forms.standard._2_form.special.helpers.cross_product_2__ip_2 import ___3dCSCG_2Form_CrossProduct_2__ip_2___
 
 
 

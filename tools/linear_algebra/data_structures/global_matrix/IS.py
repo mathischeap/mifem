@@ -2,11 +2,13 @@
 from root.config.main import rAnk, mAster_rank, cOmm, MPI
 from screws.freeze.main import FrozenOnly
 
+
+
 class ___GM_IS___(FrozenOnly):
     def __init__(self, gm):
         self._gm_ = gm
+        self._regularly_distributed_ = False
         self._freeze_self_()
-
 
     @property
     def globally_empty(self):
@@ -16,17 +18,17 @@ class ___GM_IS___(FrozenOnly):
 
     @property
     def regularly_distributed(self):
-        if self._IS_regularly_distributed_ is True:
+        if self._regularly_distributed_ is True:
             assert self._gm_.mtype in ('csr', 'csc'), \
                 "M has to be csr or csc matrix when IS_regularly_distributed=True "
-        elif self._IS_regularly_distributed_ == 'row':
+        elif self._regularly_distributed_ == 'row':
             assert self._gm_.mtype == 'csr'
             #     pass
             # else:
             #     if saFe_mode:
             #         assert self.do.___PRIVATE_check_if_Iam_row_major___() == (True, 0), \
             #             "It is not a row major matrix."
-        elif self._IS_regularly_distributed_ == 'column':
+        elif self._regularly_distributed_ == 'column':
             assert self._gm_.mtype == 'csc'
             #     pass
             # else:
@@ -35,7 +37,7 @@ class ___GM_IS___(FrozenOnly):
             #             "It is not a column major matrix."
         else:
             pass
-        return self._IS_regularly_distributed_
+        return self._regularly_distributed_
 
     @regularly_distributed.setter
     def regularly_distributed(self, regularly_distributed):
@@ -44,9 +46,10 @@ class ___GM_IS___(FrozenOnly):
         does neither (because the check is not fast at all).
         """
         assert regularly_distributed in (True, 'row', 'column', False), \
-            f"IS_regularly_distributed={regularly_distributed} wrong, " \
+            f"regularly_distributed={regularly_distributed} wrong, " \
             f"can only be one of (True, 'row', 'column', False)."
-        self._IS_regularly_distributed_ = regularly_distributed
+        self._regularly_distributed_ = regularly_distributed
+
 
     @property
     def master_dominating(self):

@@ -56,7 +56,7 @@ class Poisson_Base(Base):
 
     def ___check_self___(self):
         """
-        A default checker. If you do not want to run this check, override ___check_self___ method in the
+        A default checker. If you do not want to run this check, override ___PRIVATE_check_self___ method in the
         particular class.
 
         :return:
@@ -154,5 +154,5 @@ class Poisson_Base(Base):
     @lru_cache(maxsize=8)
     def kinetic_energy(self, t):
         """Kinetic energy at time `t`."""
-        return self.___PRIVATE_compute_L_norm_of___('kinetic_energy_distribution', time=t, n=1)
+        return self._es_.do.compute_Ln_norm_of('kinetic_energy_distribution', time=t, n=1)
 

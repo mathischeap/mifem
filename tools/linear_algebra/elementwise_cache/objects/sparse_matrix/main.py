@@ -2,11 +2,19 @@
 import types
 from screws.freeze.main import FrozenOnly
 from scipy import sparse as spspa
-from scipy.sparse import linalg as spspalinalg
 from root.config.main import *
 from tools.linear_algebra.data_structures.global_matrix.main import GlobalMatrix
 from tools.linear_algebra.gathering.chain_matrix.main import Chain_Gathering_Matrix
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.customize import SpaMat_Customize
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.matmul import ___MATMUL___
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.vecmul import ___VECMUL___
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.add import ___ADD___
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.sub import ___SUB___
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.truediv import ___TRUE_DIV___
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.transpose import ___TRANSPOSE___
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.inv import ___LinearAlgebraINV___
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.neg import ___NEG___
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.mul import ___MUL___
 
 from tools.linear_algebra.elementwise_cache.objects.column_vector.main import EWC_ColumnVector
 
@@ -17,8 +25,24 @@ class EWC_SparseMatrix(FrozenOnly):
     Element-wise cached sparse matrix (2D).
 
     :param mesh_elements:
-    :param data_generator: When `data_generator = (x, y)` where `x`, `y` are positive integers, we make it empty sparse
-        matrix in all elements.
+    :param data_generator:
+        1) `data_generator = (int, int )` and `cache_key_generator = None `
+            we make locally empty sparse matrix of shape `data_generator`.
+        2)  `data_generator = (int, int )` and `cache_key_generator = constant `
+            we make locally empty sparse matrix of shape `data_generator`. (just like situation 1).
+        3) `data_generator = ('identity', int-a, int-b)` and `cache_key_generator = constant `
+            We will make identity local sparse matrix of shape (int-a, int-b) in all mesh elements.
+        4) `cache_key_generator = 'all_diff'`
+            The local sparse matrix will be all different in all mesh elements.
+        5) `cache_key_generator = 'constant'`
+            The local sparse matrix will be all same in all mesh elements.
+        6) `cache_key_generator = 'no_cache'`
+            We will not cache the sparse matrix.
+        .) `cache_key_generator = else`:
+            we have a customized `cache_key_generator`
+
+        When `data_generator = (x, y)` where `x`, `y` are positive integers, we make it empty sparse
+            matrix in all elements.
     :param cache_key_generator:
     :param bmat_shape: If this EWC instance is made from a bmat and if yes, what is the bmat shape.
         if bmat_shape = False: it is not from a bmat
@@ -28,7 +52,15 @@ class EWC_SparseMatrix(FrozenOnly):
 
     """
     def __init__(self, mesh_elements, data_generator, cache_key_generator=None, bmat_shape=False):
+        """
 
+        :param mesh_elements:
+        :param data_generator:
+        :type data_generator: list, tuple, callable
+        :param cache_key_generator:
+        :param bmat_shape: Do not set this. It is an indicator used to indicate if we are generating
+            a EWC_matrix by `bmat` other EWC_matrices.
+        """
         # check mesh elements ---------------------------------------------------------------
         if mesh_elements.__class__.__name__ in ('_3dCSCG_Mesh_Elements', '_2dCSCG_Mesh_Elements'):
             self._elements_ = mesh_elements
@@ -36,42 +68,68 @@ class EWC_SparseMatrix(FrozenOnly):
             self._elements_ = mesh_elements.elements
         else:
             raise Exception()
-        self.____CT_DG____ = None
 
-        # we can accept a dictionary as a data generator, we will wrap it with a method ...
+        # we can accept a dictionary as a data generator, we will wrap it with a method -----------
         if isinstance(data_generator, dict):
             self.___dict_DG___ = data_generator
             data_generator = self.___PRIVATE_dict_2_method_data_generator___
         else:
             pass
 
-        # Check if we make empty sparse matrices ------------------------------------------------
-        if cache_key_generator is None:# We make an empty sparse matrix of shape `data_generator` in each element.
-            EMPTY = True
-        elif cache_key_generator == 'constant' and isinstance(data_generator, (list, tuple)):
-            if len(data_generator) == 2 and \
-                all([data_generator[i] % 1 == 0 and data_generator[i] > 0 for i in range(2)]):
-                EMPTY = True
-            else:
-                EMPTY = False
-        else:
-            EMPTY = False
+        #---------------parse data type ------------------------------------------------------------
+        DATA_TYPE = None
+        if isinstance(data_generator, (list, tuple)) and data_generator[0] == 'identity':
+            # data_generator[1] = a (int), (a, a) be the shape of the local identity matrix.
+            DATA_TYPE = "IDENTITY"
 
-        # If we are making empty sparse matrices ---------------------------------------------------
-        if EMPTY:
+        elif isinstance(data_generator, (list, tuple)) and len(data_generator) == 2 and \
+                all([data_generator[i] % 1 == 0 and data_generator[i] > 0 for i in range(2)]):
+            # the `data_generator` is the shape of the empty local sparse matrix.
+            DATA_TYPE = "EMPTY"
+        else:
+            pass
+
+        #---- parse default cache_key_generator ----------------------------------------------------
+        if cache_key_generator is None:
+
+            if DATA_TYPE == 'IDENTITY':
+                pass
+            elif DATA_TYPE == 'EMPTY':
+                pass
+            else:
+                cache_key_generator = 'constant'
+        else:
+            pass
+
+        # ----  we are making identity sparse matrices ----------------------------------------
+        if DATA_TYPE == "IDENTITY":
+
+            SHAPE = data_generator[1]
+            assert len(data_generator) == 2 and (SHAPE % 1 == 0 and SHAPE > 0), \
+                f"`data_generator` = {data_generator} is wrong. To generate identity local matrix, " \
+                f"use, for example, data_generator = ('identity, i) where i is an positive integer " \
+                f"representing the shape, (i, i), of the local identity matrix." \
+
+            self.___IDENTITY_SHAPE___ = SHAPE
+            self._DG_ = self.___PRIVATE_identity_cache_data_generator___
+            self._KG_ = self.___PRIVATE_constant_cache_key_generator___
+
+        # we are making empty sparse matrices ---------------------------------------------------
+        elif DATA_TYPE == "EMPTY":
             assert isinstance(data_generator, (list, tuple)) and len(data_generator) == 2, \
                 f"When `cache_key_generator` is None, we make empty sparse matrix in all elements, thus " \
                 f"`data_generator` must be a tuple or list of length 2. Now it is {data_generator}."
 
-            assert all([data_generator[i] % 1 == 0 and data_generator[i]>0 for i in range(2)]), \
+            assert all([data_generator[i] % 1 == 0 and data_generator[i] > 0 for i in range(2)]), \
                 f"`data_generator` = {data_generator} is wrong. Two members should be int and > 0."
 
             self.___EMPTY_SHAPE___ = data_generator
             self._DG_ = self.___PRIVATE_empty_cache_data_generator___
             self._KG_ = self.___PRIVATE_constant_cache_key_generator___
 
-        # we are not making empty sparse matrices --------------------------------------------------
-        else:
+
+        # we are making regular sparse matrices --------------------------------------------------
+        elif DATA_TYPE is None: # regular
             if cache_key_generator == 'all_diff': # all elements return different things but still cache all.
                 # although all different, we cache everything because it may be used over iterations.
                 self._DG_ = data_generator
@@ -97,13 +155,19 @@ class EWC_SparseMatrix(FrozenOnly):
                 self._DG_ = data_generator
                 self._KG_ = cache_key_generator
 
+        else:
+            raise NotImplementedError(f"cannot deal with data type = {DATA_TYPE}.")
+
+        #--------------------------------------------------------------------------------------
         self._gathering_matrices_0_ = None
         self._gathering_matrices_1_ = None
         self.___PRIVATE_reset_cache___()
-        self.___NC___ = '>NC<'
         self.___CT___ = '>CT<'
-        self.___IS_NC___ = False
+        self.___NC___ = '>NC<'
         self.___IS_CT___ = False
+        self.___IS_NC___ = False
+        self.____CT_DG____ = None # the cache for constant data.
+        self.___CHECK_repeat_CT___ = True
         self.___CHECK_repeat_CT___ = True
         self.___repeat_CK___ = ''
         self._customize_ = SpaMat_Customize(self)
@@ -121,21 +185,25 @@ class EWC_SparseMatrix(FrozenOnly):
         """cache key will be different for all elements since we use their id."""
         return str(id(self._elements_[i]))
 
+    # noinspection PyUnusedLocal
     def ___PRIVATE_constant_cache_key_generator___(self, i):
-        assert i in self.elements
         return self.___CT___
 
+    # noinspection PyUnusedLocal
     def ___PRIVATE_constant_cache_data_generator___(self, i):
-        assert i in self.elements
         return self.___DGD___
 
+    # noinspection PyUnusedLocal
     def ___PRIVATE_empty_cache_data_generator___(self, i):
         """"""
-        assert i in self.elements
         return spspa.csr_matrix(self.___EMPTY_SHAPE___)
 
+    # noinspection PyUnusedLocal
+    def ___PRIVATE_identity_cache_data_generator___(self, i):
+        return spspa.identity(self.___IDENTITY_SHAPE___, format='csr')
+
+    # noinspection PyUnusedLocal
     def ___PRIVATE_no_cache_key_generator___(self, i):
-        assert i in self.elements
         return self.___NC___
 
     def ___PRIVATE_dict_2_method_data_generator___(self, i):
@@ -281,6 +349,7 @@ class EWC_SparseMatrix(FrozenOnly):
         elif self.___IS_CT___:
             RETURN = self.____CT_DG____
         else:
+            # noinspection PyCallingNonCallable
             ck = self._KG_(item)
 
             if self.___CHECK_repeat_CT___:
@@ -377,6 +446,8 @@ class EWC_SparseMatrix(FrozenOnly):
     def bmat_shape(self):
         return self._bmat_shape_
 
+
+
     def __mul__(self, other):
         """
         multiply self with other int of float, a * 7.
@@ -440,6 +511,7 @@ class EWC_SparseMatrix(FrozenOnly):
         return EWC_SparseMatrix(self._elements_, DKC.__DG_call__, DKC.__KG_call__)
 
     def __matmul__ (self, other):
+        """"""
         if other.__class__.__name__ == 'EWC_SparseMatrix':
             assert self._elements_._mesh_ == other._elements_._mesh_
             DKC = ___MATMUL___(self, other)
@@ -447,6 +519,11 @@ class EWC_SparseMatrix(FrozenOnly):
         elif other.__class__.__name__ == 'EWC_ColumnVector':
             DKC = ___VECMUL___(self, other)
             return EWC_ColumnVector(self._elements_, DKC.__DG_call__, DKC.__KG_call__)
+
+        elif hasattr(other, 'standard_properties') and 'CSCG_form' in other.standard_properties.tags:
+            DKC = ___VECMUL___(self, other.cochain.EWC)
+            return EWC_ColumnVector(self._elements_, DKC.__DG_call__, DKC.__KG_call__)
+
         else:
             raise NotImplementedError()
 
@@ -466,102 +543,3 @@ class EWC_SparseMatrix(FrozenOnly):
         """inv of self."""
         data_generator = ___LinearAlgebraINV___(self)
         return EWC_SparseMatrix(self._elements_, data_generator, self._KG_)
-
-
-
-
-
-
-
-
-
-class ___MUL___(FrozenOnly):
-    def __init__(self, ewc, number):
-        assert isinstance(number, (int, float))
-        self._ewc_ = ewc
-        self._number_ = number
-        self._freeze_self_()
-
-    def __call__(self, item):
-        return self._ewc_[item] * self._number_
-
-class ___TRUE_DIV___(FrozenOnly):
-    def __init__(self, ewc, number):
-        self._ewc_ = ewc
-        self._number_ = number
-        self._freeze_self_()
-
-    def __call__(self, item):
-        return self._ewc_[item] / self._number_
-
-class ___SUB___(FrozenOnly):
-    def __init__(self, EWC1, EWC2):
-        self._ewc1_ = EWC1
-        self._ewc2_ = EWC2
-        self._freeze_self_()
-
-    def __DG_call__(self, item):
-        return self._ewc1_[item] - self._ewc2_[item]
-
-    def __KG_call__(self, item):
-        return self._ewc1_._KG_(item) + self._ewc2_._KG_(item)
-
-class ___NEG___(FrozenOnly):
-    def __init__(self, ewc):
-        self._ewc_ = ewc
-        self._freeze_self_()
-
-    def __call__(self, item):
-        return - self._ewc_[item]
-
-class ___TRANSPOSE___(FrozenOnly):
-    def __init__(self, ewc):
-        self._ewc_ = ewc
-        self._freeze_self_()
-
-    def __call__(self, item):
-        return self._ewc_[item].T
-
-class ___LinearAlgebraINV___(FrozenOnly):
-    def __init__(self, ewc):
-        self._ewc_ = ewc
-        self._freeze_self_()
-
-    def __call__(self, item):
-        return spspalinalg.inv(self._ewc_[item])
-
-class ___ADD___(FrozenOnly):
-    def __init__(self, EWC1, EWC2):
-        self._ewc1_ = EWC1
-        self._ewc2_ = EWC2
-        self._freeze_self_()
-
-    def __DG_call__(self, item):
-        return self._ewc1_[item] + self._ewc2_[item]
-
-    def __KG_call__(self, item):
-        return self._ewc1_._KG_(item) + self._ewc2_._KG_(item)
-
-class ___MATMUL___(FrozenOnly):
-    def __init__(self, EWC1, EWC2):
-        self._ewc1_ = EWC1
-        self._ewc2_ = EWC2
-        self._freeze_self_()
-
-    def __DG_call__(self, item):
-        return self._ewc1_[item] @ self._ewc2_[item]
-
-    def __KG_call__(self, item):
-        return self._ewc1_._KG_(item) + self._ewc2_._KG_(item)
-
-class ___VECMUL___(FrozenOnly):
-    def __init__(self, EWC_S, EWC_V):
-        self._ewc_S_ = EWC_S
-        self._ewc_V_ = EWC_V
-        self._freeze_self_()
-
-    def __DG_call__(self, item):
-        return self._ewc_S_[item] @ self._ewc_V_[item]
-
-    def __KG_call__(self, item):
-        return self._ewc_S_._KG_(item) + self._ewc_V_._KG_(item)

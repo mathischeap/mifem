@@ -13,8 +13,13 @@ from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionS
 from root.mifem.save import save
 import random
 from screws.exceptions import ThreeDimensionalTransfiniteInterpolationError
-from _3dCSCG.tests.random_objects import random_3D_mesh_and_space_of_total_load_around
-from _3dCSCG.tests.random_objects import random_3D_FormCaller_of_total_load_around
+from _3dCSCG.tests.random_objects.form_caller import random_mesh_and_space_of_total_load_around
+from _3dCSCG.tests.random_objects.form_caller import random_3D_FormCaller_of_total_load_around
+
+from tools.linear_algebra.linear_system.main import LinearSystem
+from tools.linear_algebra.elementwise_cache.operators.bmat.main import bmat
+from tools.linear_algebra.elementwise_cache.operators.concatenate.main import concatenate
+
 
 
 def test_Form_NO1_discretization_and_reconstruction():
@@ -438,7 +443,7 @@ def test_Form_NO1b_trace_form_Rd_and_Rc():
     else:
         load, t = None, None
     load, t = cOmm.bcast([load, t], root=mAster_rank)
-    mesh, space = random_3D_mesh_and_space_of_total_load_around(load, exclude_periodic = True)
+    mesh, space = random_mesh_and_space_of_total_load_around(load, exclude_periodic = True)
     FC = FormCaller(mesh, space)
     flux = FC('scalar', p)
     velo = FC('vector', (uuu, vvv, www))
@@ -611,7 +616,7 @@ def test_Form_NO3_incidence_matrices():
     np.testing.assert_almost_equal(es.status.enstrophy(0), 59.217626406536155)
     # so kinetic_energy = 0.5 * (L^2 norm of velocity)**2
     np.testing.assert_almost_equal(
-        es.status.___PRIVATE_compute_L_norm_of___('velocity', time=0, n=2), np.sqrt(3))
+        es.do.compute_Ln_norm_of('velocity', time=0, n=2), np.sqrt(3))
 
     f0 = FC('0-f', is_hybrid=True)
 
@@ -1296,6 +1301,95 @@ def test_Form_No11_reconstruction_matrices():
     return 1
 
 
+
+
+def test_Form_NO12_weak_curl():
+    """"""
+    if rAnk == mAster_rank:
+        print(f"~~~ [test_Form_NO12_weak_curl]... ", flush=True)
+    else:
+        pass
+
+    # --- test 1: non-hybrid; periodic boundary condition ----------------------------------
+    def u(t, x, y, z): return - np.sin(2*np.pi*x) * np.cos(2*np.pi*y) * np.sin(2*np.pi*z) + t/1.554
+    def v(t, x, y, z): return np.cos(2*np.pi*x) * np.sin(2*np.pi*y) * np.cos(2*np.pi*z) + t*1.23
+    def w(t, x, y, z): return np.sin(2*np.pi*x) * np.sin(2*np.pi*y) * np.cos(2*np.pi*z) + t/2.196
+    mesh = MeshGenerator('crazy_periodic', c=0.0)([8, 10, 6], EDM=None)
+    space = SpaceInvoker('polynomials')([3,2,4])
+    FC = FormCaller(mesh, space)
+    U = FC('vector', (u, v, w))
+    curl_U = U.numerical.curl
+
+    w1 = FC('1-f', is_hybrid=False)  # w1 = curl (u2)
+    u2 = FC('2-f', is_hybrid=False)  # w1 = curl (u2)
+
+    u2.TW.func.do.set_func_body_as(U)
+    u2.TW.current_time = 1
+    u2.TW.do.push_all_to_instant()
+    u2.discretize()
+
+    M1 = w1.matrices.mass
+
+    M2 = u2.matrices.mass
+    E12 = w1.matrices.incidence.T
+    b = concatenate([E12 @ M2 @ u2.cochain.EWC,])
+    A = bmat(([M1,],))
+
+    A.gathering_matrices = (w1, w1)
+    b.gathering_matrix = w1
+    LS = LinearSystem(A, b)
+
+    result = LS.solve('GMRES')(0, restart=50, maxiter=10)
+
+    w1.TW.func.do.set_func_body_as(curl_U)
+    w1.TW.current_time = 1
+    w1.TW.do.push_all_to_instant()
+    result[0].do.distributed_to(w1)
+
+    assert w1.error.L() < 0.05, f"periodic boundary condition test fails."
+
+    # --- test 2:  0 tangent velocity boundary condition ----------------------
+    def u(t, x, y, z): return - np.cos(1.11*np.pi*x) * np.sin(2*np.pi*y) * np.sin(2*np.pi*z) + t/1.554
+    def v(t, x, y, z): return np.sin(2*np.pi*x) * np.cos(0.85*np.pi*y) * np.sin(2*np.pi*z) + t*1.23
+    def w(t, x, y, z): return np.sin(2*np.pi*x) * np.sin(2*np.pi*y) * np.cos(1.3*np.pi*z) + t/2.196
+    mesh = MeshGenerator('crazy', c=0.0)([8, 10, 6], EDM=None)
+    space = SpaceInvoker('polynomials')([3,2,4])
+    FC = FormCaller(mesh, space)
+    U = FC('vector', (u, v, w))
+    curl_U = U.numerical.curl
+
+    w1 = FC('1-f', is_hybrid=False)  # w1 = curl (u2)
+    u2 = FC('2-f', is_hybrid=False)  # w1 = curl (u2)
+
+    u2.TW.func.do.set_func_body_as(U)
+    u2.TW.current_time = 0
+    u2.TW.do.push_all_to_instant()
+    u2.discretize()
+
+    M1 = w1.matrices.mass
+
+    M2 = u2.matrices.mass
+    E12 = w1.matrices.incidence.T
+    b = concatenate([E12 @ M2 @ u2.cochain.EWC,])
+    A = bmat(([M1,],))
+
+    A.gathering_matrices = (w1, w1)
+    b.gathering_matrix = w1
+    LS = LinearSystem(A, b)
+
+    result = LS.solve('GMRES')(0, restart=50, maxiter=10)
+
+    w1.TW.func.do.set_func_body_as(curl_U)
+    w1.TW.current_time = 0
+    w1.TW.do.push_all_to_instant()
+    result[0].do.distributed_to(w1)
+
+    assert w1.error.L() < 0.06, f"0 tangent velocity boundary condition test fails."
+
+
+    return 1
+
+
 if __name__ == '__main__':
     # mpiexec -n 4 python _3dCSCG\tests\unittests\standard_forms.py
-    test_Form_NOx_cross_product_3()
+    test_Form_NO12_weak_curl()

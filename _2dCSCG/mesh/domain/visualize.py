@@ -173,6 +173,7 @@ class _2dCSCG_Domain_Visualize(FrozenOnly):
 
         if saveto is not None and saveto != '':
             plt.savefig(saveto, bbox_inches='tight')
-
-        plt.show()
+        else:
+            plt.show()
+        plt.close('all')
         return fig

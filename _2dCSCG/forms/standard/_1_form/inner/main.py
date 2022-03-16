@@ -12,7 +12,8 @@ if './' not in sys.path: sys.path.append('./')
 from _2dCSCG.forms.standard._1_form.inner.special import _1Form_Inner_Special
 import numpy as np
 from scipy import sparse as spspa
-from _2dCSCG.forms.standard._1_form.base import _1Form_BASE
+from _2dCSCG.forms.standard._1_form.base.main import _1Form_BASE
+from _2dCSCG.forms.standard._1_form.inner.discretize.main import _2dCSCG_S1Fi_Discretize
 
 
 
@@ -29,10 +30,12 @@ class _2dCSCG_1Form_Inner(_1Form_BASE):
     def __init__(self, mesh, space, is_hybrid=True,
         numbering_parameters='Naive',  name='inner-oriented-1-form'):
         super().__init__(mesh, space, is_hybrid, 'inner', numbering_parameters, name)
+        super().__init_1form_base__()
         self._k_ = 1
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_1form_Inner')
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_1form')
         self._special_ = _1Form_Inner_Special(self)
+        self._discretize_ = _2dCSCG_S1Fi_Discretize(self)
         self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
@@ -40,109 +43,9 @@ class _2dCSCG_1Form_Inner(_1Form_BASE):
     def special(self):
         return self._special_
 
-    def ___PRIVATE_discretize_standard_ftype___(self, update_cochain=True, target='func', quad_degree=None):
-        """
-        The return cochain is 'locally full local cochain', which means it is mesh-element-wise
-        local cochain. So:
-
-        cochainLocal is a dict, whose keys are mesh element numbers, and values (1-d arrays) are
-        the local cochains.
-
-        :param update_cochain:
-        :param target:
-        :param quad_degree:
-        :return:
-        """
-        if self.___DISCRETIZE_STANDARD_CACHE___ is None or \
-            quad_degree != self.___DISCRETIZE_STANDARD_CACHE___['quadDegree']:
-            self.___DISCRETIZE_STANDARD_CACHE___ = dict()
-
-            xi, eta, edge_size_d_xi, quad_weights = \
-                self.___PRIVATE_discretize_preparation___(d_='x', quad_degree=quad_degree)
-            self.___DISCRETIZE_STANDARD_CACHE___['X'] = (xi, eta)
-
-            xi, eta, edge_size_d_eta, quad_weights = \
-                self.___PRIVATE_discretize_preparation___(d_='y', quad_degree=quad_degree)
-            self.___DISCRETIZE_STANDARD_CACHE___['Y'] = (xi, eta)
-
-            edge_size = (edge_size_d_xi, edge_size_d_eta)
-            self.___DISCRETIZE_STANDARD_CACHE___['edge'] = edge_size
-            self.___DISCRETIZE_STANDARD_CACHE___['quad_weights'] = quad_weights
-            self.___DISCRETIZE_STANDARD_CACHE___['quadDegree'] = quad_degree
-        else:
-            pass
-
-        xi_x, eta_x = self.___DISCRETIZE_STANDARD_CACHE___['X']
-        xi_y, eta_y = self.___DISCRETIZE_STANDARD_CACHE___['Y']
-        quad_weights = self.___DISCRETIZE_STANDARD_CACHE___['quad_weights']
-        edge_size = self.___DISCRETIZE_STANDARD_CACHE___['edge']
-
-        local_dx = dict()
-        local_dy = dict()
-
-        # --- target --------------------------------------------------------
-        if target == 'func':
-            FUNC = self.func.body
-        else:
-            raise NotImplementedError(f"I cannot deal with target = {target}.")
-        # =======================================================================
-
-        JXC, JYC = dict(), dict()
-        for i in self.mesh.elements.indices:
-            element = self.mesh.elements[i]
-            typeWr2Metric = element.type_wrt_metric.mark
-
-            smctm = element.coordinate_transformation.mapping(xi_x, eta_x)
-            if typeWr2Metric in JXC:
-                J = JXC[typeWr2Metric]
-            else:
-                J = element.coordinate_transformation.Jacobian_matrix(xi_x, eta_x)
-                if isinstance(typeWr2Metric, str):
-                    JXC[typeWr2Metric] = J
-            if isinstance(typeWr2Metric, str) and typeWr2Metric[:4] == 'Orth':
-                u = FUNC[0](*smctm)
-                local_dx[i] = np.einsum(
-                    'jk, j, k -> k', J[0][0]*u, quad_weights[0], edge_size[0] * 0.5, optimize='greedy'
-                )
-            else:
-                J = (J[0][0], J[1][0])
-                u = FUNC[0](*smctm)
-                v = FUNC[1](*smctm)
-                local_dx[i] = np.einsum(
-                    'jk, j, k -> k', J[0]*u + J[1]*v, quad_weights[0], edge_size[0] * 0.5, optimize='greedy'
-                )
-
-            smctm = element.coordinate_transformation.mapping(xi_y, eta_y)
-            if typeWr2Metric in JYC:
-                J = JYC[typeWr2Metric]
-            else:
-                J = element.coordinate_transformation.Jacobian_matrix(xi_y, eta_y)
-                if isinstance(typeWr2Metric, str):
-                    JYC[typeWr2Metric] = J
-            if isinstance(typeWr2Metric, str) and typeWr2Metric[:4] == 'Orth':
-                v = FUNC[1](*smctm)
-                local_dy[i] = np.einsum(
-                    'jk, j, k -> k', J[1][1]*v, quad_weights[1], edge_size[1]*0.5, optimize='greedy'
-                )
-            else:
-                J = (J[0][1], J[1][1])
-                u = FUNC[0](*smctm)
-                v = FUNC[1](*smctm)
-                local_dy[i] = np.einsum(
-                    'jk, j, k -> k', J[0]*u + J[1]*v, quad_weights[1], edge_size[1]*0.5, optimize='greedy'
-                )
-
-        del JXC, JYC
-        # isisKronecker? ...
-        if not self.space.IS_Kronecker: raise NotImplementedError()
-        # give it to cochain.local ...
-        cochainLocal = dict()
-        for i in self.mesh.elements.indices:
-            cochainLocal[i] = np.hstack((local_dx[i], local_dy[i]))
-        if update_cochain:
-            self.cochain.local = cochainLocal
-        # ...
-        return 'locally full local cochain', cochainLocal
+    @property
+    def discretize(self):
+        return self._discretize_
 
 
     def reconstruct(self, xi, eta, ravel=False, i=None):
@@ -288,7 +191,7 @@ class _2dCSCG_1Form_Inner(_1Form_BASE):
 
 
 if __name__ == '__main__':
-    # mpiexec python _2dCSCG\form\standard\_1_form_inner.py
+    # mpiexec -n 3 python _2dCSCG\forms\standard\_1_form\inner\main.py
     from _2dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
     mesh = MeshGenerator('crazy', c=0.0,bounds=([0,1],[0,1]))([1,1])
@@ -300,15 +203,16 @@ if __name__ == '__main__':
 
     f1 = FC('1-f-i', is_hybrid=True)
 
-    M0 = f1.matrices.mass[0]
-    print(M0.toarray())
+    # M0 = f1.matrices.mass[0]
+    # print(M0.toarray())
 
-    # f1.TW.func.do.set_func_body_as(ES, 'velocity')
-    # f1.TW.current_time = 0
-    # f1.TW.do.push_all_to_instant()
-    # f1.discretize()
+    f1.TW.func.do.set_func_body_as(ES, 'velocity')
+    f1.TW.current_time = 0
+    f1.TW.do.push_all_to_instant()
+    f1.discretize()
     # print(f1.error.L())
     #
     # from root.mifem import save
     #
     # save(f1, 'test_2d_f1_i')
+    f1.visualize()

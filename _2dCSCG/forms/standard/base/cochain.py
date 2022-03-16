@@ -20,7 +20,7 @@ class _2dCSCG_Standard_Form_Cochain(CSCG_Standard_Form_Cochain_BASE):
         :rtype: Dict[int, numpy.ndarray]
         """
         assert self._sf_.k not in (0, 2), \
-            " <Cochain> : %r is a scalar form; has no idea of axes, use cochain.globis." % self._sf_
+            " <Cochain> : %r is a scalar form; has no idea of axes, use cochain.globe." % self._sf_
         numOfBasisComponents = self._sf_.num.basis_components
         localAlongAxis = dict()
         for i in self._sf_.mesh.elements:

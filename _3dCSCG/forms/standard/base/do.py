@@ -1,6 +1,10 @@
 
+
 from screws.freeze.main import FrozenOnly
 from root.config.main import *
+
+
+
 
 class _3dCSCG_Standard_Form_DO(FrozenOnly):
     def __init__(self, sf):
@@ -18,6 +22,7 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
             self._sf_.k, quad_degree, quad_type=quad_type, compute_xietasigma=compute_xietasigma)
 
     def resemble(self, *args, **kwargs):
+        """get cochain from another form (with a different mesh.)"""
         return self._sf_.___PRIVATE_do_resemble___(*args, **kwargs)
 
     def interpolate(self, data_set):
@@ -38,19 +43,79 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
         :param M:
         :return:
         """
-        return self._sf_.___PRIVATE_do_compute_Ln_energy_with___(other=other, M=M)
+        return self._sf_.___PRIVATE_do_compute_L2_energy_with___(other=other, M=M)
+
+    def compute_Ln_energy(self, n=2, quad_degree=None):
+        """So compute int_{Omega}( self ** n). When n = 2, it is equal to
+        `self.compute_L2_energy_with()`.
+
+        :param n:
+        :param quad_degree:
+        :return:
+        """
+        sf = self._sf_
+
+        if sf.k in (0, 3):
+            OneOrThree = 1
+        else:
+            OneOrThree = 3
+
+        if quad_degree is None: quad_degree = [sf.dqp[i] + 1 for i in range(3)]
+
+        quad_nodes, _, quad_weights = sf.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
+
+        Jacobian = sf.mesh.elements.coordinate_transformation.QUAD_1d.Jacobian(quad_degree, 'Gauss')
+
+        _, SV = sf.reconstruct(*quad_nodes, ravel=True)
+
+        local_energy = 0
+        for i in sf.mesh.elements.indices:
+            detJ = Jacobian[i]
+            LEIntermediate = np.sum([SV[i][m]**n for m in range(OneOrThree)], axis=0)
+            local_energy += np.sum( LEIntermediate * detJ * quad_weights )
+
+        global_energy = cOmm.allreduce(local_energy, op=MPI.SUM)
+
+        return global_energy
+
+    def compute_Ln_norm(self, n=2, quad_degree=None):
+        """Compute  ||self ||_{L^n} = ( int_{Omega}(self^n) )^(1/n) , which is  the n-root of Ln-energy.
+
+        :param n: {default n=2} ||self ||_{L^2}
+        :param quad_degree:
+        :return:
+        """
+        total_energy = self.compute_Ln_energy(n=n, quad_degree=quad_degree)
+        return total_energy**(1/n)
+
+    def compute_Ln_norm_of_coboundary(self, n=2, quad_degree=None):
+        """Compute || d(self) ||_{L^n} .
+
+        We can, for example, use this method to conveniently evaluate how good the conservation of
+        mass  d · u = 0 is satisfied with following measures:
+
+            || d · u ||_{L^2} or || d · u ||_{L^infinity}
+
+        """
+        d_self = self._sf_.coboundary()
+        Ln_norm_of_d_self = d_self.do.compute_Ln_norm(n=n, quad_degree=quad_degree)
+        return Ln_norm_of_d_self
+
+
 
     def compute_Ln_diff_from(self, other, n=2, quad_degree=None):
         """ compute: ||self - other||_{L^n} = n-root{ int_{Omega}(self - other)^n }."""
         sf = self._sf_
         of = other
         assert '3dCSCG_standard_form' in of.standard_properties.tags, "Other should be a _3dCSCG standard form."
+
         if sf.k in (0, 3):
-            assert sf.k in (0, 3)
+            assert of.k in (0, 3)
             OneOrThree = 1
         else:
             assert of.k in (1, 2)
             OneOrThree = 3
+
         if sf.mesh == of.mesh:
             if quad_degree is None: quad_degree = [np.max([sf.dqp[i], of.dqp[i]]) + 1 for i in range(3)]
             quad_nodes, _, quad_weights = sf.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
@@ -72,6 +137,12 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
             return globalError
         else:
             raise NotImplementedError('Can only work on forms from the same mesh now.')
+
+
+
+
+
+
 
     def discretize(self, *args, **kwargs):
         return self._sf_.discretize(*args, **kwargs)

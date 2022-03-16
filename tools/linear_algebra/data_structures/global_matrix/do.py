@@ -31,4 +31,3 @@ class ___GM_DO___(FrozenOnly):
     def gather_M_to_core(self, **kwargs):
         """A wrapper of `___PRIVATE_gather_M_to_core___` method."""
         return self._gm_.___PRIVATE_gather_M_to_core___(**kwargs)
-

@@ -52,6 +52,17 @@ class MeshGenerator(FrozenOnly):
         for key in self._kwargs_:
             dp[key] = self._kwargs_[key]
         mesh.domain.___define_parameters___ = dp
+
+        if show_info and rAnk == mAster_rank:
+            str_element_layout = str(element_layout)
+            if len(str_element_layout) < 40:
+                print( "   <element_layout input>: {}".format(str_element_layout))
+            else:
+                print( "   <element_layout input>: {}...".format(str_element_layout[:40]))
+            for rn in mesh.elements.layout:
+                print(f"   <element_layout>: {rn} {mesh.elements.layout[rn]}")
+            print(f"   <total elements>: {mesh.elements.GLOBAL_num}", flush=True)
+
         cOmm.barrier()  # for safety reason
 
         return mesh
@@ -141,7 +152,7 @@ class FormCaller(FrozenOnly):
                 'scalar': "_2dCSCG.fields.scalar.main : _2dCSCG_ScalarField",
                 'vector': "_2dCSCG.fields.vector.main : _2dCSCG_VectorField",
 
-                '1-t-o': form_path + "trace._1_trace.outer : _2dCSCG_1Trace_Outer",
+                '1-t-o': form_path + "trace._1_trace.outer.main : _2dCSCG_1Trace_Outer",
                 }
 
 
@@ -183,7 +194,9 @@ class ExactSolutionSelector(FrozenOnly):
 
     @classmethod
     def ___coded_exact_solution___(cls):
-        return {'sL:sincos1': 'scalar_Laplace.SinCos.SinCos1',}
+        return {'sL:sincos1': 'scalar_Laplace.SinCos.SinCos1',
+                'Euler:shear_layer_rollup': 'Euler.shear_layer_rollup.ShearLayerRollup',
+                }
 
     @classmethod
     def ___exact_solution_path___(cls):
@@ -197,13 +210,14 @@ if __name__ == "__main__":
     # mpiexec python _2dCSCG\main.py
 
     # mesh = MeshGenerator('cic',)([14,14])
-    mesh = MeshGenerator('rectangle', region_layout=(3,4))([5,5])
+    mesh = MeshGenerator('rectangle', p_UL=(-1,-1),region_layout=(3,5))([5,5], show_info=True)
     # mesh = MeshGenerator('cic')([3,3], show_info=True, EDM='chaotic')
 
     # print(mesh.___PRIVATE_element_division_and_numbering_quality___())
     mesh.visualize.matplot.element_division()
-    mesh.visualize()
-    mesh.domain.visualize()
+
+    # mesh.visualize()
+    # mesh.domain.visualize()
 
     # mesh.domain.regions.visualize()
 

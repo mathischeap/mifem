@@ -1,5 +1,5 @@
 from screws.freeze.inheriting.frozen_only import FrozenOnly
-from _2dCSCG.forms.standard.base.operators.components.inner import ___Operators_Inner___
+from _2dCSCG.forms.standard.base.operators.helpers.inner import ___Operators_Inner___
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
 
 
@@ -23,4 +23,3 @@ class _2dCSCG_Standard_Form_Operators(FrozenOnly):
     def wedge(self, other, quad_degree=None):
         data = self._sf_.___PRIVATE_operator_wedge___(other, quad_degree=quad_degree)
         return EWC_SparseMatrix(self._sf_.mesh.elements, data, 'constant')
-

@@ -10,7 +10,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 from _2dCSCG.forms.standard._0_form.inner.special.main import _0Form_Inner_Special
-from _2dCSCG.forms.standard._0_form.base import _0Form_BASE
+from _2dCSCG.forms.standard._0_form.base.main import _0Form_BASE
 
 class _2dCSCG_0Form_Inner(_0Form_BASE):
     """
@@ -25,6 +25,7 @@ class _2dCSCG_0Form_Inner(_0Form_BASE):
     def __init__(self, mesh, space, is_hybrid=True,
         numbering_parameters='Naive',  name='inner-oriented-0-form'):
         super().__init__(mesh, space, is_hybrid, 'inner', numbering_parameters, name)
+        super().__init_0form_base__()
         self._k_ = 0
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_inner_0form')
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_0form')
@@ -48,7 +49,7 @@ if __name__ == '__main__':
 
     from _2dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
-    mesh = MeshGenerator('crazy', c=0.3)([50,45])
+    mesh = MeshGenerator('rectangle', p_UL=(-1,-1),region_layout=(3,5))([5,5], show_info=True)
     # mesh = MeshGenerator('chp1',)([2,2])
     space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',4)])
     FC = FormCaller(mesh, space)
@@ -65,6 +66,5 @@ if __name__ == '__main__':
     f0.TW.current_time = 0
     f0.TW.do.push_all_to_instant()
     f0.discretize()
-    print(f0.error.L())
 
-    f0.visualize.matplot()
+    f0.visualize.matplot.contour()

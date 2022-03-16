@@ -32,7 +32,7 @@ class scalar_Laplace_Base(Base):
         self._potential_ = None
         self._velocity_ = None
         self._source_ = None
-        self.___check_self___()
+        self.___PRIVATE_check_self___()
         self._freeze_self_()
 
     # to be overridden (must) ...
@@ -81,7 +81,7 @@ class scalar_Laplace_Base(Base):
         r, s = np.meshgrid(r, s, indexing='ij')
         return r, s
 
-    def ___check_self___(self):
+    def ___PRIVATE_check_self___(self):
         """
         We use this general method to do the check, in particular exact solution, we can define particular
         check method by override this method.

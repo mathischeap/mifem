@@ -3,7 +3,7 @@
 
 
 
-from tools.CSCG.partial_cochain import PartialCochain
+from tools.CSCG.partial_cochain.main import PartialCochain
 from screws.freeze.inheriting.frozen_only import FrozenOnly
 
 

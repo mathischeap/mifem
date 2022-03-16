@@ -31,8 +31,8 @@ class SendAdminAnEmail(FrozenOnly):
         MESSAGE += "“" + message + "”\n\n"
         MESSAGE += 'Best regards,\n'
         MESSAGE += 'mifem\n'
-        MESSAGE += 'Hosted at: https://gitlab.com/zhangyi_aero/mifem\n'
-        MESSAGE += 'Contact: zhangyi_aero@hotmail.com or y.zhang-14@tudelft.nl'
+        MESSAGE += 'Hosted at: https://github.com/mathischeap/mifem\n'
+        MESSAGE += 'Contact: zhangyi_aero@hotmail.com or zhangyi55@mail.sysu.edu.cn'
         self._MESSAGE_ = MESSAGE
 
     def __call__(self, message, subject=None):

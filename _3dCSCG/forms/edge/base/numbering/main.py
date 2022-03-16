@@ -40,10 +40,10 @@ class _3dCSCG_Edge_Numbering(FrozenOnly):
         self._numbering_parameters_ = {'scheme_name': self._scheme_name_}
         self._numbering_parameters_.update(self._parameters_)
         self._DO_ = _3dCSCG_Edge_Numbering_DO(self)
-        self.RESET_cache()
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
-    def RESET_cache(self):
+    def ___PRIVATE_reset_cache___(self):
         self._gathering_ = None
         self._edge_element_wise_ = None
         self._local_num_dofs_ = None

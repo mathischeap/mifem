@@ -16,28 +16,53 @@ from screws.freeze.main import FrozenOnly
 
 class ParallelSolverDistributor(FrozenOnly):
     """"""
-    def __init__(self, solver_name, routine='auto', name="no-name-solver"):
+    def __init__(self, solver_ID, routine='auto', name="no-name-solver"):
         """"""
-        self._sn_ = solver_name
-        solver_path = self.___parallel_solver_path___() + solver_name + '.main'
+        solver_name = self.___coded_parallel_solvers___()[solver_ID]
+        solver_path = self.___parallel_solver_path___()[solver_ID ]
         self._solver_ = getattr(import_module(solver_path), solver_name)(routine, name)
 
     def __call__(self, A, b,  *args, **kwargs):
-        """"""
+        """
+        :return: Return a tuple of 5 outputs:
+
+            1. (LocallyFullVector) results -- The result vector.
+            2. (int) info -- The info which provides convergence information:
+
+                * 0 : successful exit
+                * >0 : convergence to tolerance not achieved, number of iterations
+                * -1 : divergence
+
+            3. (float) beta -- The residual.
+            4. (int) ITER -- The number of outer iterations.
+            5. (str) message
+
+        """
         assert A.__class__.__name__ == "GlobalMatrix", \
             f"A needs to be a GlobalMatrix'. Now I get {A.__class__}."
         assert b.__class__.__name__ == "GlobalVector", \
             f"b needs to be a 'GlobalVector'. Now I get {b.__class__}."
-        return self._solver_(A, b, *args, **kwargs)
+        Results = self._solver_(A, b, *args, **kwargs)
+        assert Results[0].__class__.__name__ == 'LocallyFullVector', f"results must be a LocallyFullVector!"
+        return Results
 
     @classmethod
     def ___parallel_solver_path___(cls):
-        return "tools.linear_algebra.solvers.parallel."
+        root = "tools.linear_algebra.solvers.parallel."
+        return {
+            'GMRES'   : root + 'GMRES.main',
+            'LGMRES'  : root + 'LGMRES.main',
+            'BiCGSTAB': root + 'BiCGSTAB.main',
+            'direct'  : root + 'direct.main'
+        }
 
     @classmethod
     def ___coded_parallel_solvers___(cls):
         """"""
-        return {'GMRES', 'LGMRES', 'BiCGSTAB'}
+        return {'GMRES'   : 'GMRES',
+                'LGMRES'  : 'LGMRES',
+                'BiCGSTAB': 'BiCGSTAB',
+                'direct'  : 'Direct'}
 
 
 

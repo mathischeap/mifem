@@ -212,7 +212,7 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
     # ------------- DEPENDENT PROPERTIES (MAJOR): When set, clear BRANCHES by set _branches_ to None -------------------
     @property
     def local(self):
-        """The local cochain.
+        """The local cochain. Must be full. So all local mesh elements must have their local cochains!
 
         :return: A dict whose keys are local element indices and values are cochains (1-d arrays) in corresponding
             elements.

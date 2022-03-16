@@ -71,6 +71,7 @@ passed_GLOBAL_tests += test_SCREWS_NO2_sending_an_email_to_admin()
 passed_GLOBAL_tests += test_LinearSolver_No0_GMRES()
 passed_GLOBAL_tests += test_LinearSolver_No1_BiCGSTAB()
 passed_GLOBAL_tests += test_LinearSolver_No2_LooseGMRES()
+passed_GLOBAL_tests += test_LinearSolver_No3_direct()
 
 passed_GLOBAL_tests += test_LinearAlgebra_No0_EWC_ColumnVector()
 

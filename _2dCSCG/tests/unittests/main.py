@@ -14,6 +14,7 @@ from _2dCSCG.tests.unittests.standard_forms import *
 from _2dCSCG.tests.unittests.mesh import *
 from _2dCSCG.tests.unittests.spaces import *
 from _2dCSCG.tests.unittests.APP import *
+from _2dCSCG.tests.unittests.fields import *
 
 t_3dCSCG_start = MPI.Wtime()
 
@@ -27,18 +28,23 @@ passed_2dCSCG_tests += test_Form_NO3_mass_matrices()
 passed_2dCSCG_tests += test_Form_NO4_Hodge()
 passed_2dCSCG_tests += test_Form_NO5_cross_product()
 passed_2dCSCG_tests += test_Form_NO6_reconstruction_matrices()
+passed_2dCSCG_tests += test_Form_NO7_weak_curl()
 
 passed_2dCSCG_tests += test_Mesh_NO1_mesh_topology()
 passed_2dCSCG_tests += test_Mesh_NO2_mesh_coordinate_transformation()
 passed_2dCSCG_tests += test_Mesh_NO3_mesh_coordinate_transformation_QUAD()
 passed_2dCSCG_tests += test_Mesh_NO4_mesh_trace_topology()
 
-
 passed_2dCSCG_tests += test_Space_NO1_polynomial_space()
-
 
 passed_2dCSCG_tests += test_APP_NO1_scalar_Laplace_essential_BC()
 passed_2dCSCG_tests += test_APP_NO2_scalar_Laplace_essential_BC_iterative_solver()
+
+passed_2dCSCG_tests += test_Fields_NO1_vector()
+passed_2dCSCG_tests += test_Fields_NO2_scalar()
+
+
+
 
 if rAnk == mAster_rank:
     print("\n<{}> _2dCSCG tests passed; cost {:.3f} seconds.\n".format(

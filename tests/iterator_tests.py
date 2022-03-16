@@ -2,7 +2,7 @@
 """
 Here we test our iterators.
 
-$ mpiexec -n 4 python tests\iterator_tests.py
+$ mpiexec -n 2 python tests\iterator_tests.py
 
 """
 import sys
@@ -40,10 +40,9 @@ def ___TEST_SOLVER___(tk, tk1):
 
 
 SI = SimpleIterator(t0=0, dt=0.1, max_steps=100000,
-                    auto_save_frequency=5,
-                    monitor_factor=10000,
+                    monitor_factor=1,
                     RDF_filename='RDF_filename',
-                    name=None)
+                    name='test-iterator')
 
 
 SI(___TEST_SOLVER___, [1,])

@@ -52,6 +52,7 @@ class Regions(FrozenOnly):
 
     @property
     def num(self):
+        """How many global (NOT local) regions!"""
         return self._domain_._num_regions_
 
     @property
@@ -93,7 +94,7 @@ class Regions(FrozenOnly):
                     _current_number_ += 1
                     _corner_pool_.append(_corner_)
             _rcgn_[rn] = np.array(_rcgn_[rn]).reshape((2, 2), order='F')
-        self._corner_coordinates_pool_ = tuple(_corner_pool_)
+        # self._corner_coordinates_pool_ = tuple(_corner_pool_)
         self._corner_global_numbering_ = _rcgn_
 
     @staticmethod
@@ -114,9 +115,9 @@ class Regions(FrozenOnly):
         """
         if corner in pool:
             return True, pool.index(corner)
-        for i in pool:
-            if np.sqrt((i[0] - corner[0]) ** 2 + (i[1] - corner[1]) ** 2) <= 1e-13:
-                return True, i
+        for _, i in enumerate(pool):
+            if np.sqrt((i[0] - corner[0]) ** 2 + (i[1] - corner[1]) ** 2) <= 1e-9:
+                return True, _
         return False, -1
 
     def ___generate_region_map___(self):
@@ -144,6 +145,7 @@ class Regions(FrozenOnly):
                             other_corner_indices = self.___found_edge_corner_global_numbering___(rnrn, ii)
                             # noinspection PyTypeChecker
                             if all(self_corner_indices == other_corner_indices):
+                                # noinspection PyUnresolvedReferences
                                 _rm_[rn][i].append(rnrn)
         # We then find the sides on the domain boundaries______________________________
         for bn in self._domain_._boundary_names_:  # we of course go through all domain boundaries
@@ -155,7 +157,7 @@ class Regions(FrozenOnly):
         _rsodb_ = {}
         for rn in self.names:  # go through all regions
             _rsodb_[rn] = [0 for _ in range(4)]
-            for i in range(4):  # go through all 4 edges of each regions.
+            for i in range(4):  # go through all 4 edges of each region.
                 try:
                     assert np.shape(_rm_[rn][i]) == (1,)
                 except AssertionError:

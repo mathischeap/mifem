@@ -6,6 +6,7 @@ import datetime
 from screws.miscellaneous.timer import MyTimer
 from time import time
 from tools.iterators.base.monitor.do import IteratorMonitorDo
+from tools.iterators.base.monitor.IS import IteratorMonitorIS
 
 class IteratorMonitor(FrozenOnly):
     """The monitor class for the Iterator.
@@ -58,15 +59,18 @@ class IteratorMonitor(FrozenOnly):
         self._estimated_end_time_ = datetime.datetime.now()
         # ...
         self._do_ = IteratorMonitorDo(self)
+        self._IS_ = IteratorMonitorIS(self)
         self._freeze_self_()
 
     def ___PRIVATE_set_factor___(self, factor):
+        """"""
         if factor in (False, 0):
             factor = 0
         elif factor is True:
             factor = 1
         else:
-            assert factor >= 0.1, f"monitor factor={factor} wrong, should be False, True or >=0.1"
+            assert factor >= 0.1, \
+                f"monitor factor={factor} wrong, should be `False`, `True` or `>= 0.1`"
         if factor == 0:
             self.___graph_report_time___ = 999999
             self.___email_report_time___ = 999999
@@ -76,14 +80,16 @@ class IteratorMonitor(FrozenOnly):
             self.___email_report_time___ = (1 / factor) * self.___email_report_default_time___
             self.___auto_save_time___ = (1 / factor) * self.___auto_save_default_time___
 
-        if self.___graph_report_time___ < 60: self.___graph_report_time___ = 60
-        if self.___email_report_time___ < 720: self.___email_report_time___ = 720
-        if self.___auto_save_time___ < 600: self.___auto_save_time___ = 600
+        if self.___graph_report_time___ < 60: self.___graph_report_time___ = 60 # 最快60秒报告一次
+        if self.___email_report_time___ < 720: self.___email_report_time___ = 720 # 最快12分钟报告一次
+        if self.___auto_save_time___ < 600: self.___auto_save_time___ = 600 # 最快10分钟报告一次
 
         self._factor_ = factor
         # even it is 0, the monitor still do the recording background, but no report.
         self.___last_graph_save_time___ = time()
         self.___last_email_sent_time___ = time()
+
+
     def ___PRIVATE_set_auto_save_frequency___(self, AS):
         self._last_auto_save_time_ = None
         if AS is True:
@@ -124,10 +130,10 @@ class IteratorMonitor(FrozenOnly):
     def RDF_filename(self):
         """(str)"""
         return self._RDF_filename_
+
     @property
-    def IS_open(self):
-        """(bool) Return ``True`` if the iterator is open (no max_steps, stop when shut_down)."""
-        return self._isOpen_
+    def IS(self):
+        return self._IS_
 
     @property
     def summary_html(self):

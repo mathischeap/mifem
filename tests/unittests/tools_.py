@@ -30,8 +30,8 @@ import tools.linear_algebra.elementwise_cache.operators.concatenate.main as mif
 from tools.linear_algebra.linear_system.main import LinearSystem
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_ColumnVector
 from tools.run.reader import ParallelMatrix3dInputRunner, RunnerDataReader
-from tools.CSCG.partial_dofs import PartialDofs
-from _3dCSCG.tests.random_objects import random_3D_mesh_and_space_of_total_load_around
+from tools.CSCG.partial_cochain.partial_dofs.main import PartialDofs
+from _3dCSCG.tests.random_objects.form_caller import random_mesh_and_space_of_total_load_around
 
 def ___TEST_SOLVER___(tk, tk1):
     """
@@ -494,6 +494,7 @@ def test_TOOLS_NO3_GlobalMatrix_GlobalVector_operators_test():
 
     return 1
 
+
 def test_TOOLS_NO4_GlobalMatrix_GlobalVector_operators_test():
     """"""
     if rAnk == mAster_rank:
@@ -842,7 +843,7 @@ def ___generate_random_row_major_GM___(i, j, s=None):
     A[no_empty_rows,:] = _[no_empty_rows,:]
     A = A.tocsr()
     A = GlobalMatrix(A)
-    A.IS_regularly_distributed = 'row'
+    A.IS.regularly_distributed = 'row'
     A.___PRIVATE_self_regularity_checker___()
 
     return A
@@ -878,7 +879,7 @@ def ___generate_random_col_major_GM___(i, j, s=None):
     A[:,no_empty_cols] = _[:,no_empty_cols]
     A = A.tocsc()
     A = GlobalMatrix(A)
-    A.IS_regularly_distributed = 'column'
+    A.IS.regularly_distributed = 'column'
     A.___PRIVATE_self_regularity_checker___()
 
     return A
@@ -1469,9 +1470,9 @@ def test_TOOLS_NO13_EWC_Customize_CSCG_partial_dofs():
         LOAD = None
     ISH, LOAD = cOmm.bcast([ISH, LOAD], root=mAster_rank)
 
-    mesh, space = random_3D_mesh_and_space_of_total_load_around(LOAD,
-        exclude_periodic=True,
-        domain_boundary_distribution_regularities='Regular:one-regions-corner-interface')
+    mesh, space = random_mesh_and_space_of_total_load_around(LOAD,
+                                                             exclude_periodic=True,
+                                                             domain_boundary_distribution_regularities='Regular:interfaces-not-shared-by-regions')
 
     #-------- test partial_dofs only having boundary dofs involved====
     bns = mesh.boundaries.names
@@ -1518,8 +1519,8 @@ def test_TOOLS_NO13_EWC_Customize_CSCG_partial_dofs():
                 assert M[i].nnz > 1
 
     # ------------ test for f2 -------------------------------------------------
-    mesh, space = random_3D_mesh_and_space_of_total_load_around(int(LOAD*2/3),
-        exclude_periodic=True)
+    mesh, space = random_mesh_and_space_of_total_load_around(int(LOAD * 2 / 3),
+                                                             exclude_periodic=True)
 
     #-------- test partial_dofs only having boundary dofs involved===
     bns = mesh.boundaries.names
@@ -1670,7 +1671,7 @@ def test_TOOLS_NO14_partial_cochain_with_3dCSCG_form_BC():
         time = None
     ISH, LOAD, time = cOmm.bcast([ISH, LOAD, time], root=mAster_rank)
 
-    mesh, space = random_3D_mesh_and_space_of_total_load_around(LOAD, exclude_periodic=True)
+    mesh, space = random_mesh_and_space_of_total_load_around(LOAD, exclude_periodic=True)
 
     bns = mesh.boundaries.names
     if rAnk == mAster_rank:
@@ -1878,7 +1879,7 @@ def test_TOOLS_NO15_linear_system_apply_BC():
         time = None
     LOAD, time = cOmm.bcast([LOAD, time], root=mAster_rank)
 
-    mesh, space = random_3D_mesh_and_space_of_total_load_around(LOAD, exclude_periodic=True, mesh_boundary_num='>=2')
+    mesh, space = random_mesh_and_space_of_total_load_around(LOAD, exclude_periodic=True, mesh_boundary_num='>=2')
     FC = FormCaller(mesh, space)
 
     def Pressure(t, x, y, z): return 2.5 + t + np.cos(np.pi * x) * np.cos(2 * np.pi * y) * np.cos(3 * np.pi * z)
@@ -2101,8 +2102,8 @@ def test_TOOLS_NO15_linear_system_apply_BC():
 
 
 if __name__ == '__main__':
-    # mpiexec -n 5 python TESTS\unittest_tools.py
+    # mpiexec -n 5 python tests\unittests\tools_.py
 
-    test_TOOLS_NO11_test_ParallelMatrix3dInputRunner()
+    test_TOOLS_NO13_EWC_Customize_CSCG_partial_dofs()
 
 

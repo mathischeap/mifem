@@ -12,21 +12,23 @@ if './' not in sys.path: sys.path.append('./')
 
 from root.config.main import *
 from types import FunctionType, MethodType
-from screws.freeze.main import FrozenOnly
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_ColumnVector
-from _3dCSCG.fields.base.main import _3dCSCG_Continuous_FORM_BASE
+from _3dCSCG.fields.base import _3dCSCG_Continuous_FORM_BASE
 from functools import partial
-from scipy import sparse as spspa
 from screws.functions.time_plus_3d_space.constant import CFG
 
 from importlib import import_module
-from _3dCSCG.fields.vector.numerical import _3dCSCG_VectorField_Numerical
-from _3dCSCG.fields.vector.do import _3dCSCG_VectorField_DO
-from _3dCSCG.fields.vector.component import _3dCSCG_VectorField_Components
+from _3dCSCG.fields.vector.numerical.main import _3dCSCG_VectorField_Numerical
+from _3dCSCG.fields.vector.do.main import _3dCSCG_VectorField_DO
+from _3dCSCG.fields.vector.component.main import _3dCSCG_VectorField_Components
+from _3dCSCG.fields.vector.helpers.neg import ___VECTOR_NEG_HELPER_1___
+from _3dCSCG.fields.vector.helpers.sub import ___VECTOR_SUB_HELPER_1___
+from _3dCSCG.fields.vector.helpers.add import ___VECTOR_ADD_HELPER_1___
+from _3dCSCG.fields.vector.helpers.flux import ___VECTOR_FLUX___
+from _3dCSCG.fields.vector.helpers.inner_product_with_1form import _VF_InnerWith1Form
+from _3dCSCG.fields.vector.helpers.inner_product_with_2form import _VF_InnerWith2Form
 
-
-
-
+from _3dCSCG.fields.vector.visualize.main import _3dCSCG_VectorField_Visualize
 
 
 class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
@@ -45,6 +47,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
         self.___PRIVATE_set_func___(func, ftype=ftype)
         self._previous_func_id_time_ = (None, None, None)
         self._DO_ = _3dCSCG_VectorField_DO(self)
+        self._visualize_ = _3dCSCG_VectorField_Visualize(self)
         self._numerical_ = None
         self._components_ = None
         self._freeze_self_()
@@ -171,268 +174,9 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
     def shape(self):
         return (3,)
 
-    def reconstruct(self, xi, eta, sigma,
-        time=None,
-        ravel=False,
-        i=None, where=None,
-        structured=True):
-        """
+    def reconstruct(self, *args, **kwargs):
+        return self.do.reconstruct(*args, **kwargs)
 
-        :param xi: if `structured`, `xi` must be 1d array.
-        :param eta: if `structured`, `eta` must be 1d array.
-        :param sigma: if `structured`, `sigma` must be 1d array.
-        :param time:
-        :param ravel:
-        :param i:
-            (1) for where == 'mesh-element' and self.ftype == "standard":
-                i is None or int: the mesh element #i, if i is None, then we do it in all local mesh elements.
-        :param where:
-        :param structured: When `structured`, we must have xi, eta and sigma be 1d, so we do meshgrid from
-            them. This is to keep it consistent with the reconstruct of forms.
-
-            When not `structured`, then it is free. we reconstruct on (xi, eta, sigma), no matter the dimensions.
-
-        :return:
-
-        """
-        # we deal with default `where` input ---------------------------------------------------------------
-        if where is None:
-            if self.ftype == "standard":
-                where = "mesh-element"
-            elif self.ftype in ("boundary-wise", "trace-element-wise"):
-                where = "trace-element"
-            else:
-                where = "mesh-element"
-        else:
-            pass
-
-        # we deal with `time` input ---------------------------------------------------------------
-        if time is None:
-            time = self.current_time
-        else:
-            self.current_time = time
-
-        # we deal with `structured` input ---------------------------------------------------------------
-        if structured:
-            pass # we stay at this method
-        else:
-            # we go to the unstructured reconstruction method and return here!
-            return self.___PRIVATE_unstructured_reconstruction___(
-                xi, eta, sigma, time, ravel, i, where, structured)
-
-        # we get the current function ---------------------------------------------------------------
-        func = self.___DO_evaluate_func_at_time___(time)
-
-        # we do the reconstruction accordingly ---------------------------------------------------------------
-        if where == 'mesh-element':  # input `i` means mesh element, we reconstruct it in mesh elements
-
-            xi, eta, sigma = np.meshgrid(xi, eta, sigma, indexing='ij')
-            xyz = dict()
-            value = dict()
-
-
-            if self.ftype == "standard":
-                if isinstance(i, int):
-                    INDICES = [i,]
-                elif i is None:
-                    INDICES = self.mesh.elements.indices
-
-                else:
-                    raise NotImplementedError(f"_3dCSCG_VectorField of 'standard' ftype"
-                                              f" mesh-element-reconstruction currently doesn't accept i={i}.")
-
-                for i in INDICES:
-                    element = self.mesh.elements[i]
-                    xyz_i = element.coordinate_transformation.mapping(xi, eta, sigma)
-                    vx_i = func[0](*xyz_i)
-                    vy_i = func[1](*xyz_i)
-                    vz_i = func[2](*xyz_i)
-
-                    if ravel:
-                        xyz[i] = [I.ravel('F') for I in xyz_i]
-                        value[i] = [vx_i.ravel('F'), vy_i.ravel('F'), vz_i.ravel('F')]
-                    else:
-                        xyz[i] = xyz_i
-                        value[i] = [vx_i, vy_i, vz_i]
-            else:
-                raise NotImplementedError(f"mesh-reconstruct not implemented for ftype: {self.ftype}")
-
-            return xyz, value
-
-        elif where == 'trace-element': # input `i` means trace element, we reconstruct it on trace elements
-
-            xyz = dict()
-            value = dict()
-
-            if self.ftype == 'standard':
-                if isinstance(i, int):
-                    INDICES = [i,]
-                elif i == 'on_mesh_boundaries': # then we plot on all mesh boundaries (mesh elements on the boundaries)
-                    INDICES = list()
-                    RTE = self.mesh.boundaries.range_of_trace_elements
-                    for bn in RTE:
-                        INDICES.extend(RTE[bn])
-                else:
-                    raise NotImplementedError(f"_3dCSCG_VectorField of 'standard' ftype"
-                                              f" trace-element-reconstruction currently don't accept i={i}.")
-
-                for I in INDICES:
-                    te = self.mesh.trace.elements[I]
-                    xyz_i = te.coordinate_transformation.mapping(xi, eta, sigma, parse_3_1d_eps=True)
-
-                    vx_i = func[0](*xyz_i)
-                    vy_i = func[1](*xyz_i)
-                    vz_i = func[2](*xyz_i)
-
-                    if ravel:
-                        xyz[I] = [_.ravel('F') for _ in xyz_i]
-                        value[I] = [vx_i.ravel('F'), vy_i.ravel('F'), vz_i.ravel('F')]
-                    else:
-                        xyz[I] = xyz_i
-                        value[I] = [vx_i, vy_i, vz_i,]
-
-            elif self.ftype == 'boundary-wise':
-
-                if i in (None, 'on_mesh_boundaries'):
-                    INDICES = list()
-                    RTE = self.mesh.boundaries.range_of_trace_elements
-                    for bn in self.func: # this may not contain all mesh boundaries, only valid ones.
-                        INDICES.extend(RTE[bn])
-
-                else:
-                    raise NotImplementedError(f"_3dCSCG_VectorField of 'boundary-wise' ftype"
-                                              f" trace-element-reconstruction currently don't accept i={i}.")
-
-                for I in INDICES:
-
-                    te = self.mesh.trace.elements[I]
-                    assert te.IS_on_mesh_boundary, f"must be the case because ftype == 'boundary-wise!"
-                    xyz_i = te.coordinate_transformation.mapping(xi, eta, sigma, parse_3_1d_eps=True)
-
-                    bn = te.on_mesh_boundary
-                    assert bn in func, f"trace element #{I} is on <{bn}> which is not covered by boundary-wise func."
-                    func_i = func[bn]
-
-                    vx_i = func_i[0](*xyz_i)
-                    vy_i = func_i[1](*xyz_i)
-                    vz_i = func_i[2](*xyz_i)
-
-                    if ravel:
-                        xyz[I] = [_.ravel('F') for _ in xyz_i]
-                        value[I] = [vx_i.ravel('F'), vy_i.ravel('F'), vz_i.ravel('F')]
-                    else:
-                        xyz[I] = xyz_i
-                        value[I] = [vx_i, vy_i, vz_i,]
-
-            elif self.ftype == 'trace-element-wise':
-
-                if i is None: # we reconstruct on all valid local trace elements
-                    INDICES = list()
-                    # noinspection PyUnresolvedReferences
-                    INDICES.extend(func.keys())
-                elif i == 'on_mesh_boundaries': # we only reconstruct on all the valid local trace elements which are also on mesh boundaries.
-                    CMB = self.covered_mesh_boundaries # will contain all mesh boundary names.
-                    RTE = self.mesh.boundaries.range_of_trace_elements
-                    boundary_trace_elements = list() # local trace elements on all mesh boundaries
-                    for mb in CMB:
-                        boundary_trace_elements.extend(RTE[mb])
-                    ___ = list()
-                    # noinspection PyUnresolvedReferences
-                    ___.extend(func.keys())
-                    INDICES = list()
-                    for I in ___:
-                        if I in boundary_trace_elements:
-                            INDICES.append(I)
-
-                else:
-                    raise NotImplementedError(f"_3dCSCG_VectorField of 'trace-element-wise' ftype "
-                                              f"trace-element-reconstruction currently don't accept i={i}."
-                                              f"i must be one of (None, 'on_mesh_boundaries').")
-
-                for I in INDICES: # go through all valid local trace elements
-
-                    xyz_i, v_i = func[I](xi, eta, sigma)
-
-                    if ravel:
-                        xyz[I] = [_.ravel('F') for _ in xyz_i]
-                        value[I] = [_.ravel('F') for _ in v_i]
-                    else:
-                        xyz[I] = xyz_i
-                        value[I] = v_i
-
-            else:
-                raise NotImplementedError(f"_3dCSCG_VectorField trace-element-wise-reconstruction "
-                                          f"not implemented for ftype: {self.ftype}")
-
-            return xyz, value
-
-        else:
-            raise NotImplementedError(f"_3dCSCG_VectorField cannot reconstruct on {where}.")
-
-    def ___PRIVATE_unstructured_reconstruction___(self, xi, eta, sigma, time, ravel, i, where, structured):
-        """
-        Note that even (xi, eta, sigma) are unstructured (we will not meshgrid them), their dimension can be
-        arbitrary but their shapes must be same. So we can still do ravel to the results, but the raveled
-        results may be scatter randomly.
-
-        :param xi:
-        :param eta:
-        :param sigma:
-        :param time:
-        :param ravel:
-        :param i:
-            (1) for where == 'mesh-element' and self.ftype == "standard":
-                i is None or int: the mesh element #i, if i is None, then we do it in all local mesh elements.
-        :param where:
-        :param structured: it must be False
-
-        :return:
-        """
-        assert not structured, f"Must be unstructured reconstruction!"
-
-        if where == 'trace-element':  # input `i` means trace element, we reconstruct it in mesh elements
-
-            xyz = dict()
-            value = dict()
-            func = self.___DO_evaluate_func_at_time___(time)
-
-            if self.ftype == 'standard':
-                RTE = self.mesh.boundaries.range_of_trace_elements
-
-                if i is None:
-                    INDICES = list()  # will reconstruct for all local trace elements on the mesh boundaries.
-                    for bn in RTE:
-                        INDICES.extend(RTE[bn])
-                elif isinstance(i, int):# when i is int, we reconstruct on this particular trace element #i.
-                    # so this may be running locally. Cause each trace element is a local instance.
-                    INDICES = [i,]
-                else:
-                    raise NotImplementedError(
-                        f"currently only accept i=None, so reconstruct for all valid trace-elements.")
-
-                for i in INDICES:
-                    te = self.mesh.trace.elements[i]
-                    assert te.IS_on_mesh_boundary, f"must be the case!"
-                    xyz_i = te.coordinate_transformation.mapping(xi, eta, sigma, picking=True)
-
-                    vx_i = func[0](*xyz_i)
-                    vy_i = func[1](*xyz_i)
-                    vz_i = func[2](*xyz_i)
-
-                    if ravel:
-                        xyz[i] = [I.ravel('F') for I in xyz_i]
-                        value[i] = [vx_i.ravel('F'), vy_i.ravel('F'), vz_i.ravel('F')]
-                    else:
-                        xyz[i] = xyz_i
-                        value[i] = [vx_i, vy_i, vz_i, ]
-
-            else:
-                raise NotImplementedError(f"trace-unstructured-reconstruct not implemented for ftype: {self.ftype}")
-
-            return xyz, value
-
-        else:
-            raise NotImplementedError(f"Can not reconstruct (unstructured) on {where}.")
 
     def ___PRIVATE_do_inner_product_with_space_of___(self, other, quad_degree=None):
         """
@@ -461,6 +205,10 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
     @property
     def do(self):
         return self._DO_
+
+    @property
+    def visualize(self):
+        return self._visualize_
 
     @property
     def numerical(self):
@@ -582,186 +330,6 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                 raise Exception(f"cannot do {self.ftype} _3dCSCG_VectorField - {other.ftype} _3dCSCG_VectorField")
         else:
             raise Exception(f"cannot do _3dCSCG_VectorField + {other.__class__}")
-
-
-
-
-
-class ___VECTOR_NEG_HELPER_1___(object):
-    def __init__(self, v):
-        self._v_ = v
-
-    def __call__(self, t, x, y, z):
-        return - self._v_(t, x, y, z)
-
-class ___VECTOR_SUB_HELPER_1___(object):
-    def __init__(self, w, u):
-        self._w_ = w
-        self._u_ = u
-
-    def __call__(self, t, x, y, z):
-        return self._w_(t, x, y, z) - self._u_(t, x, y, z)
-
-class ___VECTOR_ADD_HELPER_1___(object):
-    def __init__(self, w, u):
-        self._w_ = w
-        self._u_ = u
-
-    def __call__(self, t, x, y, z):
-        return self._w_(t, x, y, z) + self._u_(t, x, y, z)
-
-
-
-class ___VECTOR_FLUX___(object):
-    """Here we will wrap the reconstruction of standard vector such that it works like a function. Then we
-    can use it to build flux scalar."""
-    def __init__(self, vf, i):
-        """
-
-        :param vf: the vector
-        :param i: for trace element #i
-        """
-        self._vf_ = vf
-        self._i_ = i
-        self._te_ = vf.mesh.trace.elements[i]
-
-    def __call__(self, t, xi, et, sg):
-        """This actually includes a reconstruction. So we will call from xi, et, sg.
-
-        :param t: at time t
-        :param xi: must be a 1d array.
-        :param et: must be a 1d array.
-        :param sg: must be a 1d array.
-        :return:
-        """
-        vf = self._vf_
-        i = self._i_
-
-        if vf.ftype == 'standard':
-
-            xyz, w = vf.reconstruct(xi, et, sg,
-                                    time=t,
-                                    i=i,
-                                    ravel=False,
-                                    where='trace-element',
-                                    structured=True)
-            xyz = xyz[i]
-            w = w[i]
-            n = self._te_.coordinate_transformation.unit_normal_vector(xi, et, sg, parse_3_1d_eps=True)
-            w_dot_n = w[0]*n[0] + w[1]*n[1] + w[2]*n[2]
-            return xyz, (w_dot_n,) # xyz and the norm scalar.
-
-        else:
-            raise Exception(f"We cannot reconstruct from txyz for {self._vf_.ftype} vector.")
-
-class _VF_InnerWith2Form(FrozenOnly):
-    def __init__(self, vf, _2f, quad_degree):
-        if quad_degree is None: quad_degree = [_2f.dqp[i]+1 for i in range(3)]
-        quad_nodes, _, quad_weights = _2f.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
-        _, bf2 = _2f.do.evaluate_basis_at_meshgrid(*quad_nodes, compute_xietasigma=False)
-        self._g0_, self._g1_, self._g2_ = bf2
-        self._JM_ = _2f.mesh.elements.coordinate_transformation.QUAD_1d.Jacobian_matrix(quad_degree, 'Gauss')
-        self._mapping_ = _2f.mesh.elements.coordinate_transformation.QUAD_1d.mapping(quad_degree, 'Gauss')
-        self._vf_ = vf
-        self._qw_ = quad_weights
-        self._mesh_ = _2f.mesh
-        self._freeze_self_()
-
-    def __call__(self, i):
-        """
-        :param i: # element.
-        :return:
-        """
-        mark = self._mesh_.elements[i].type_wrt_metric.mark
-        xyz = self._mapping_[i]
-        _f0_, _f1_, _f2_ = self._vf_.do.evaluate_func_at_time()
-        f0, f1, f2 = _f0_(*xyz), _f1_(*xyz), _f2_(*xyz)
-        g0, g1, g2 = self._g0_, self._g1_, self._g2_
-        JM = self._JM_[i]
-        if isinstance(mark, str) and mark[:4] == 'Orth':
-            v0 = np.einsum('w, iw -> i', f0 * JM[0][0] * self._qw_, g0, optimize='greedy')
-            v1 = np.einsum('w, iw -> i', f1 * JM[1][1] * self._qw_, g1, optimize='greedy')
-            v2 = np.einsum('w, iw -> i', f2 * JM[2][2] * self._qw_, g2, optimize='greedy')
-        else:
-            v0 = np.einsum('w, iw -> i', (f0*JM[0][0] + f1*JM[1][0] + f2*JM[2][0])*self._qw_, g0, optimize='greedy')
-            v1 = np.einsum('w, iw -> i', (f0*JM[0][1] + f1*JM[1][1] + f2*JM[2][1])*self._qw_, g1, optimize='greedy')
-            v2 = np.einsum('w, iw -> i', (f0*JM[0][2] + f1*JM[1][2] + f2*JM[2][2])*self._qw_, g2, optimize='greedy')
-        RETURN = spspa.csr_matrix(np.concatenate([v0, v1, v2])).T
-
-
-        return RETURN
-
-class _VF_InnerWith1Form(FrozenOnly):
-    def __init__(self, vf, _1f, quad_degree):
-        if quad_degree is None: quad_degree = [_1f.dqp[i]+1 for i in range(3)]
-        quad_nodes, _, quad_weights = _1f.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
-        _, bf1 = _1f.do.evaluate_basis_at_meshgrid(*quad_nodes, compute_xietasigma=False)
-        self._g0_, self._g1_, self._g2_ = bf1
-        self._JM_ = _1f.mesh.elements.coordinate_transformation.QUAD_1d.Jacobian_matrix(quad_degree, 'Gauss')
-        self._mapping_ = _1f.mesh.elements.coordinate_transformation.QUAD_1d.mapping(quad_degree, 'Gauss')
-        self._qw_ = quad_weights
-        self._mesh_ = _1f.mesh
-        self._vf_ = vf
-        self.RESET_cache()
-        self._freeze_self_()
-
-    def RESET_cache(self):
-        self._J_cache_ = dict()
-
-    def ___PRIVATE_J___(self, i, mark):
-        """"""
-        if mark in self._J_cache_:
-            return self._J_cache_[mark]
-        else:
-            JM = self._JM_[i]
-            if isinstance(mark, str) and mark[:4] == 'Orth':
-                J00 = JM[1][1] * JM[2][2]
-                J01 = None
-                J02 = None
-                J10 = None
-                J11 = JM[2][2] * JM[0][0]
-                J12 = None
-                J20 = None
-                J21 = None
-                J22 = JM[0][0] * JM[1][1]
-            else:
-                J00 = JM[1][1]*JM[2][2] - JM[1][2]*JM[2][1]
-                J01 = JM[2][1]*JM[0][2] - JM[2][2]*JM[0][1]
-                J02 = JM[0][1]*JM[1][2] - JM[0][2]*JM[1][1]
-                J10 = JM[1][2]*JM[2][0] - JM[1][0]*JM[2][2]
-                J11 = JM[2][2]*JM[0][0] - JM[2][0]*JM[0][2]
-                J12 = JM[0][2]*JM[1][0] - JM[0][0]*JM[1][2]
-                J20 = JM[1][0]*JM[2][1] - JM[1][1]*JM[2][0]
-                J21 = JM[2][0]*JM[0][1] - JM[2][1]*JM[0][0]
-                J22 = JM[0][0]*JM[1][1] - JM[0][1]*JM[1][0]
-            J = (J00, J01, J02, J10, J11, J12, J20, J21, J22)
-            self._J_cache_[mark] = J
-            return J
-
-    def __call__(self, i):
-        """
-        :param i: # element.
-        :return:
-        """
-        mark = self._mesh_.elements[i].type_wrt_metric.mark
-        xyz = self._mapping_[i]
-        _f0_, _f1_, _f2_ = self._vf_.do.evaluate_func_at_time()
-        f0, f1, f2 = _f0_(*xyz), _f1_(*xyz), _f2_(*xyz)
-        g0, g1, g2 = self._g0_, self._g1_, self._g2_
-        J00, J01, J02, J10, J11, J12, J20, J21, J22 = self.___PRIVATE_J___(i, mark)
-        if isinstance(mark, str) and mark[:4] == 'Orth':
-            v0 = np.einsum('w, iw -> i', f0 * J00 * self._qw_, g0, optimize='greedy')
-            v1 = np.einsum('w, iw -> i', f1 * J11 * self._qw_, g1, optimize='greedy')
-            v2 = np.einsum('w, iw -> i', f2 * J22 * self._qw_, g2, optimize='greedy')
-        else:
-            v0 = np.einsum('w, iw -> i', (f0*J00 + f1*J01 + f2*J02) * self._qw_, g0, optimize='greedy')
-            v1 = np.einsum('w, iw -> i', (f0*J10 + f1*J11 + f2*J12) * self._qw_, g1, optimize='greedy')
-            v2 = np.einsum('w, iw -> i', (f0*J20 + f1*J21 + f2*J22) * self._qw_, g2, optimize='greedy')
-        RETURN = spspa.csr_matrix(np.concatenate([v0, v1, v2])).T
-
-        return RETURN
-
-
 
 
 

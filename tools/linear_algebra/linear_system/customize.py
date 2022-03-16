@@ -56,3 +56,7 @@ class ___LinearSystem_Customize___(FrozenOnly):
             self._LS_.b.customize.\
                 set_entries_according_to_two_CSCG_partial_cochains(
                 i, pd, pc=pc, interpreted_as=interpreted_as)
+
+    def identify_global_row(self, r):
+        """We set the row #r to be all zero except M(r, r) = 1."""
+        self._LS_.A.customize.identify_global_row(r)

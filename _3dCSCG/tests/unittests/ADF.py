@@ -7,7 +7,7 @@ from root.mifem.save import save, read
 import os
 
 from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
-from _3dCSCG.tests.random_objects import random_3D_mesh_and_space_of_total_load_around
+from _3dCSCG.tests.random_objects.form_caller import random_mesh_and_space_of_total_load_around
 
 
 def test_ADF_NO1_general_tests_standard_forms():
@@ -91,7 +91,7 @@ def test_ADF_NO2_general_tests_trace_forms():
     else:
         load = None
     load = cOmm.bcast(load, root=mAster_rank)
-    mesh, space = random_3D_mesh_and_space_of_total_load_around(load)
+    mesh, space = random_mesh_and_space_of_total_load_around(load)
     FC = FormCaller(mesh, space)
 
     dt0 = FC('0-adt', numbering_parameters={'scheme_name': 'Naive', })

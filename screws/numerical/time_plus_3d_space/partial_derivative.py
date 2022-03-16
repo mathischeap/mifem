@@ -1,4 +1,6 @@
 
+import sys
+if './' not in sys.path: sys.path.append('./')
 
 from abc import ABC
 from scipy.misc import derivative
@@ -164,3 +166,23 @@ class NumericalPartialDerivative_txyz(ABC):
                 self.check_partial_x(px_func, tolerance=tolerance),
                 self.check_partial_y(py_func, tolerance=tolerance),
                 self.check_partial_z(pz_func, tolerance=tolerance))
+
+
+if __name__ == '__main__':
+    # mpiexec -n 6 python screws\numerical\time_plus_3d_space\partial_derivative.py
+
+    def func(t, x, y, z): return np.sin(np.pi*x) * np.sin(np.pi*y) * np.sin(np.pi*z) * t
+
+    def Pt(t, x, y, z): return np.sin(np.pi*x) * np.sin(np.pi*y) * np.sin(np.pi*z) + 0*t
+    def Px(t, x, y, z): return np.pi*np.cos(np.pi*x) * np.sin(np.pi*y) * np.sin(np.pi*z) * t
+    def Py(t, x, y, z): return np.pi*np.sin(np.pi*x) * np.cos(np.pi*y) * np.sin(np.pi*z) * t
+    def Pz(t, x, y, z): return np.pi*np.sin(np.pi*x) * np.sin(np.pi*y) * np.cos(np.pi*z) * t
+
+    t = 5
+    x = np.random.rand(11, 12, 13)
+    y = np.random.rand(11, 12, 13)
+    z = np.random.rand(11, 12, 13)
+
+    NP = NumericalPartialDerivative_txyz(func, t, x, y, z)
+    assert all(NP.check_total(Pt, Px, Py, Pz))
+

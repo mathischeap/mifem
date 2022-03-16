@@ -14,6 +14,7 @@ from screws.functions._3d_space.Cartesian_cylinder_coordinate_switcher import Ca
 from screws.numerical.time_plus_3d_space.partial_derivative_as_functions import NumericalPartialDerivative_txyz_Functions
 from screws.numerical.time_plus_3d_space.partial_derivative import NumericalPartialDerivative_txyz
 from screws.emails.plain import SendAdminAnEmail, SendAdminAnHTMLEmail
+from screws.miscellaneous.generalized_piecewise_function import genpiecewise
 
 from functools import partial
 
@@ -184,9 +185,41 @@ def test_SCREWS_NO3_4d_functions():
 
 
 
+def test_SCREWS_NO4_generalized_piecewise_function():
+    """ """
+    if rAnk == mAster_rank:
+        print("-4- [test_SCREWS_NO4_generalized_piecewise_function] ...... ", flush=True)
+
+    def FUNC1(t, x, y, z): return - 1 - x * y - z * t
+    def FUNC2(t, x, y, z): return + 2 + x + y * z - t
+    def FUNC3(t, x, y, z): return - 3 - x + y * z - t
+    def FUNC4(t, x, y, z): return + 4 - x * y + z + t
+
+    x = np.random.rand(10,10)
+    y = np.random.rand(10,10)
+    z = np.random.rand(10,10)
+    t = 1
+
+    cond1, cond2 = y <= 0.5, (y > 0.5) & (y<=1)
+    RESULT = genpiecewise([t, x, y, z], [cond1, cond2], [FUNC3, FUNC4])
+    #
+    assert np.all(FUNC3(t, x[cond1], y[cond1], z[cond1]) == RESULT[cond1])
+    assert np.all(FUNC4(t, x[cond2], y[cond2], z[cond2]) == RESULT[cond2])
+
+
+    cond1, cond2, cond3, cond4 = y <= 0.25, \
+                                 (0.25 < y) & (y <= 0.5), \
+                                 (0.5  < y) & (y <= 0.75), \
+                                 0.75 < y
+    RESULT = genpiecewise([t, x, y, z], [cond1, cond2, cond3, cond4], [FUNC1, FUNC2, FUNC3, FUNC4])
+    assert np.all(FUNC1(t, x[cond1], y[cond1], z[cond1]) == RESULT[cond1])
+    assert np.all(FUNC2(t, x[cond2], y[cond2], z[cond2]) == RESULT[cond2])
+    assert np.all(FUNC3(t, x[cond3], y[cond3], z[cond3]) == RESULT[cond3])
+    assert np.all(FUNC4(t, x[cond4], y[cond4], z[cond4]) == RESULT[cond4])
+
 
 
 if __name__ == '__main__':
-    # mpiexec python TESTS\unittest_screws.py
+    # mpiexec python tests\unittests\screws_.py
 
-    test_SCREWS_NO2_sending_an_email_to_admin(force_to_do=True)
+    test_SCREWS_NO4_generalized_piecewise_function()

@@ -10,9 +10,10 @@ See paper:
 from tools.linear_algebra.preconditioners.allocator import PreconditionerAllocator
 from screws.miscellaneous.timer import MyTimer
 from root.config.main import rAnk, mAster_rank
-from tools.linear_algebra.solvers.parallel.LGMRES.components.mpi_v0 import ___mpi_v0_LGMRES___
+from tools.linear_algebra.solvers.parallel.LGMRES.helpers.mpi_v0 import ___mpi_v0_LGMRES___
 
 from tools.linear_algebra.solvers.parallel.base import ParallelSolverBase
+from tools.linear_algebra.data_structures.vectors.locally_full.main import LocallyFullVector
 
 
 class LGMRES(ParallelSolverBase):
@@ -45,7 +46,7 @@ class LGMRES(ParallelSolverBase):
         :param kwargs: possible other args for particular routine.
         :return: Return a tuple of 5 outputs:
 
-                1. (DistributedVector) results -- The result vector.
+                1. (LocallyFullVector) results -- The result vector.
                 2. (int) info -- The info which provides convergence information:
 
                     * 0 : successful exit
@@ -60,15 +61,24 @@ class LGMRES(ParallelSolverBase):
         """
         message = "LGMRES-" + MyTimer.current_time()
 
+        # ---- parse x0 ------------------------------------------------
+        if x0 == 0: # we make it an empty LocallyFullVector
+            x0 = LocallyFullVector(len(b))
+        else:
+            pass
         assert x0.__class__.__name__ == "LocallyFullVector", \
-                         f"x0 needs to be a 'LocallyFullVector'. Now I get {b.__class__}."
+                         f"x0 needs to be a 'LocallyFullVector'. Now I get {x0.__class__}."
+        #--------------------------------------------------------------------
 
         assert maxiter >= 1 and maxiter % 1 == 0, f"maxiter={maxiter} must be >= 1."
         assert m >= 3 and m % 1 == 0, f"restart={m} must be >= 3."
         assert k >= 0 and k % 1 == 0, f"restart={k} must be >= 0."
         if k == 0:
             if rAnk == mAster_rank:
-                print(">>> WARNING: if k = 0, LGMRES is equivalent to GMRES and is slower than GMRES. So please use GMRES.")
+                print(">>> WARNING: if k = 0, LGMRES is equivalent to GMRES and is slower than GMRES. "
+                      "So please use GMRES.")
+        else:
+            pass
         assert tol > 0 and atol > 0, f"tol={tol} and atol={atol} wrong, they must be > 0."
 
         # -------  Decide preconditioner ---------------------------------------------------------------
@@ -76,9 +86,6 @@ class LGMRES(ParallelSolverBase):
 
         preconditioner_ID, preconditioner_kwargs = preconditioner
         if preconditioner_ID is not None:
-            assert preconditioner_ID in PreconditionerAllocator.___defined_preconditioners___(), \
-                f"preconditioner={preconditioner_ID} is not coded, try one of " \
-                f"{PreconditionerAllocator.___defined_preconditioners___().keys()}"
             preconditioner = PreconditionerAllocator(preconditioner_ID)(A, **preconditioner_kwargs)
         else:
             preconditioner = None

@@ -10,8 +10,8 @@ SIAM J. ScI. STAT. COMPUT., 1986]
 from tools.linear_algebra.preconditioners.allocator import PreconditionerAllocator
 from screws.miscellaneous.timer import MyTimer
 
-from tools.linear_algebra.solvers.parallel.GMRES.components.mpi_v0 import ___mpi_v0_gmres___
-from tools.linear_algebra.solvers.parallel.GMRES.components.mpi_v1 import ___mpi_v1_gmres___
+from tools.linear_algebra.solvers.parallel.GMRES.helpers.mpi_v0 import ___mpi_v0_gmres___
+from tools.linear_algebra.solvers.parallel.GMRES.helpers.mpi_v1 import ___mpi_v1_gmres___
 from tools.linear_algebra.data_structures.vectors.locally_full.main import LocallyFullVector
 
 from tools.linear_algebra.solvers.parallel.base import ParallelSolverBase
@@ -46,7 +46,7 @@ class GMRES(ParallelSolverBase):
         :param kwargs: possible other kwargs for particular routine.
         :return: Return a tuple of 5 outputs:
 
-                1. (DistributedVector) results -- The result vector.
+                1. (LocallyFullVector) results -- The result vector.
                 2. (int) info -- The info which provides convergence information:
 
                     * 0 : successful exit
@@ -81,9 +81,6 @@ class GMRES(ParallelSolverBase):
 
         preconditioner_ID, preconditioner_kwargs = preconditioner
         if preconditioner_ID is not None:
-            assert preconditioner_ID in PreconditionerAllocator.___defined_preconditioners___(), \
-                f"preconditioner={preconditioner_ID} is not coded, try one of " \
-                f"{PreconditionerAllocator.___defined_preconditioners___().keys()}"
             preconditioner = PreconditionerAllocator(preconditioner_ID)(A, **preconditioner_kwargs)
         else:
             preconditioner = None

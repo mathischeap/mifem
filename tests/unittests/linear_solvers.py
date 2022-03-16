@@ -68,6 +68,8 @@ def ___generate_A_b_of_Manguoglu_Paper___():
                                                        (0   , 0, 0, 0, 0, 0, 0, 0.1, 0.6)]))
         np.testing.assert_array_almost_equal(V, np.array([1,1,1,1,1,1,1,1,1]))
 
+    if sIze > 1: assert not A.IS.master_dominating, f"designed to be."
+
     return A, b
 
 
@@ -257,8 +259,32 @@ def test_LinearSolver_No2_LooseGMRES():
     return 1
 
 
+def test_LinearSolver_No3_direct():
+    """"""
+    if rAnk == mAster_rank:
+        print("ddd [test_LinearSolver_No3_direct] ...... ", flush=True)
 
 
+    A, b = ___generate_A_b_of_Manguoglu_Paper___()
+
+    x0, info, beta, ITer, message = ParallelSolverDistributor("direct")(A, b, COD=False)
+    x0 = x0.V
+    np.testing.assert_array_almost_equal(x0, np.array([-3.23891085,  3.44129703,  1.7765975 , -2.7063454 ,
+                                                       -0.11510028,
+                                                        0.94048189,  0.36495389,  0.54018445,  1.57663592]))
+
+    np.testing.assert_almost_equal(A.condition.condition_number, 85.3100212781)
+
+    x0, info, beta, ITer, message = ParallelSolverDistributor("direct")(A, b, COD=True)
+    x0 = x0.V
+    np.testing.assert_array_almost_equal(x0, np.array([-3.23891085,  3.44129703,  1.7765975 , -2.7063454 ,
+                                                       -0.11510028,
+                                                        0.94048189,  0.36495389,  0.54018445,  1.57663592]))
+
+    assert A.IS.master_dominating # the COD=True has triggered this!
+    np.testing.assert_almost_equal(A.condition.condition_number, 85.3100212781)
+
+    return 1
 
 if __name__ == '__main__':
     # mpiexec -n 4 python tests\unittests\linear_solvers.py
@@ -266,3 +292,4 @@ if __name__ == '__main__':
     test_LinearSolver_No2_LooseGMRES()
     test_LinearSolver_No1_BiCGSTAB()
     test_LinearSolver_No0_GMRES()
+    test_LinearSolver_No3_direct()

@@ -25,8 +25,8 @@ class LinearSystem(FrozenClass):
         :param A: A 2-d list or tuple of matrix blocks.
         :param b: A 1-d list or tuple of vector blocks.
         """
-        assert A.__class__ is EWC_SparseMatrix, "A type wrong."
-        assert b.__class__ is EWC_ColumnVector, "b type wrong."
+        assert A.__class__ is EWC_SparseMatrix, "A type wrong, must be an EWC_SparseMatrix."
+        assert b.__class__ is EWC_ColumnVector, "b type wrong, must be an EWC_ColumnVector."
 
         assert A.bmat_shape is not False, f"A must be a bmat EWC to protect the blocks"
         assert b.con_shape is not False, f"b must be a concatenate EWC to protect the blocks"
@@ -138,10 +138,10 @@ if __name__ == '__main__':
     # mpiexec -n 5 python TOOLS\linear_algebra\linear_system\main.py
 
     from _3dCSCG.main import FormCaller
-    from _3dCSCG.tests.random_objects import random_3D_mesh_and_space_of_total_load_around
+    from _3dCSCG.tests.random_objects.form_caller import random_mesh_and_space_of_total_load_around
     from tools.linear_algebra.elementwise_cache.operators.concatenate.main import bmat, concatenate
 
-    mesh, space = random_3D_mesh_and_space_of_total_load_around(500, exclude_periodic=True, mesh_boundary_num='>=2')
+    mesh, space = random_mesh_and_space_of_total_load_around(500, exclude_periodic=True, mesh_boundary_num='>=2')
     FC = FormCaller(mesh, space)
 
     f2 = FC('2-f', is_hybrid=True)

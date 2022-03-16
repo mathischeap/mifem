@@ -3,6 +3,9 @@ import numpy as np
 from screws.freeze.main import FrozenOnly
 import codecs
 from screws.emails.plain import SendAdminAnHTMLEmail, whether_internet_connected, SendAdminAnEmail
+import matplotlib
+
+
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import os
@@ -17,6 +20,7 @@ class IteratorMonitorDo(FrozenOnly):
     def __init__(self, monitor):
         """"""
         self._monitor_ = monitor
+        self._do_first_auto_save_ = True
         self._freeze_self_()
 
 
@@ -46,64 +50,82 @@ class IteratorMonitorDo(FrozenOnly):
         monitor._last_run_cost_ = time() - monitor._current_time_
         monitor._current_time_ = time()
         monitor._total_cost_ = monitor._current_time_ - monitor._ft_start_time_
-        if monitor._last_run_cost_ > 0.25:  # we only consider cost long enough iteration as effective.
-            monitor._effective_run_cost_ += monitor._last_run_cost_
-            monitor._effective_run_num_ += 1
-            monitor._average_each_run_cost_ = monitor._effective_run_cost_ / monitor._effective_run_num_
-            monitor._estimated_remaining_time_ = monitor._average_each_run_cost_ * (
-                    monitor._max_steps_ - monitor._computed_steps_
-            )
-            if monitor._estimated_remaining_time_ > 3600*24*99:
-                monitor._estimated_remaining_time_ = 3600*24*99 + 23*3600 + 59*60 + 59.999
-            monitor._estimated_end_time_ = datetime.datetime.now() + datetime.timedelta(
-                seconds=monitor._estimated_remaining_time_)
 
-            if monitor._do_first_assessment_: # will see first 5 iterations to see the estimated time.
-                monitor._do_first_assessment_counter_ += 1
-                monitor._do_first_assessment_estimate_ += monitor._estimated_remaining_time_
-                est = monitor._do_first_assessment_estimate_ / monitor._do_first_assessment_counter_
-                if est > monitor.___email_report_time___:
-                    monitor._do_first_email_warning_report_ = True
-                if est > monitor.___graph_report_time___:
-                    monitor._do_first_graph_warning_report_ = True
-                if (monitor._do_first_email_warning_report_ and monitor._do_first_graph_warning_report_) or \
-                    monitor._do_first_assessment_counter_ >= 5:
-                    monitor._do_first_assessment_ = False
-                    del monitor._do_first_assessment_counter_, monitor._do_first_assessment_estimate_
+        if self._monitor_.IS.open:
 
-            monitor._times_ = np.append(monitor._times_, monitor._last_run_cost_)
+            raise NotImplementedError()
+
         else:
-            # this is a interesting choice. No clue why I chose do so
-            monitor._times_ = np.append(monitor._times_, np.nan)
-        monitor._TIMES_ = np.append(monitor._TIMES_, monitor._total_cost_)
 
-        if (monitor._max_steps_ == monitor._computed_steps_) or monitor._iterator_.shut_down:
-            # make sure we have correct _estimated_remaining_time_ when iterator is done
-            monitor._estimated_remaining_time_ = 0
-            monitor._estimated_end_time_ = datetime.datetime.now()
+            if monitor._last_run_cost_ > 0.25:  # we only consider cost long enough iteration as effective.
+                monitor._effective_run_cost_ += monitor._last_run_cost_
+                monitor._effective_run_num_ += 1
+                monitor._average_each_run_cost_ = monitor._effective_run_cost_ / monitor._effective_run_num_
+                monitor._estimated_remaining_time_ = monitor._average_each_run_cost_ * (
+                        monitor._max_steps_ - monitor._computed_steps_
+                )
+                if monitor._estimated_remaining_time_ > 3600*24*99:
+                    monitor._estimated_remaining_time_ = 3600*24*99 + 23*3600 + 59*60 + 59.999
+                monitor._estimated_end_time_ = datetime.datetime.now() + datetime.timedelta(
+                    seconds=monitor._estimated_remaining_time_)
+
+                if monitor._do_first_assessment_: # will see first 5 iterations to see the estimated time.
+                    monitor._do_first_assessment_counter_ += 1
+                    monitor._do_first_assessment_estimate_ += monitor._estimated_remaining_time_
+                    est = monitor._do_first_assessment_estimate_ / monitor._do_first_assessment_counter_
+                    if est > monitor.___email_report_time___:
+                        monitor._do_first_email_warning_report_ = True
+                    if est > monitor.___graph_report_time___:
+                        monitor._do_first_graph_warning_report_ = True
+                    if (monitor._do_first_email_warning_report_ and monitor._do_first_graph_warning_report_) or \
+                        monitor._do_first_assessment_counter_ >= 5:
+                        monitor._do_first_assessment_ = False
+                        del monitor._do_first_assessment_counter_, monitor._do_first_assessment_estimate_
+
+                monitor._times_ = np.append(monitor._times_, monitor._last_run_cost_)
+            else:
+                # this is a interesting choice. No clue why I chose to do so
+                monitor._times_ = np.append(monitor._times_, np.nan)
+            monitor._TIMES_ = np.append(monitor._TIMES_, monitor._total_cost_)
+
+            if (monitor._max_steps_ == monitor._computed_steps_) or monitor._iterator_.shut_down:
+                # make sure we have correct _estimated_remaining_time_ when iterator is done
+                monitor._estimated_remaining_time_ = 0
+                monitor._estimated_end_time_ = datetime.datetime.now()
+
+
+
+
 
     # noinspection PyBroadException
     def auto_save(self):
         monitor = self._monitor_
+
         if monitor.RDF_filename is not None:
+
             if monitor._last_auto_save_time_ is None:
                 monitor._last_auto_save_time_ = monitor._ft_firstRun_
             gap_time = time() - monitor._last_auto_save_time_
+
             if monitor.auto_save_frequency is True:
-                if gap_time > monitor.___auto_save_time___:
+
+                if gap_time > monitor.___auto_save_time___ or self._do_first_auto_save_:
                     try:
                         # if PermissionError, we do not stop the iteration
                         monitor._iterator_.RDF.to_csv(monitor.RDF_filename, header=True)
                         monitor._last_auto_save_time_ = time()
                     except: # wait 10 seconds
-                        sleep(10)
+                        sleep(5)
                         try: # try once more
                             monitor._iterator_.RDF.to_csv(monitor.RDF_filename, header=True)
                         except: # just skip it
                             pass
+                    self._do_first_auto_save_ = False
                 else:
                     pass
+
             elif monitor.auto_save_frequency > 0:
+
                 if ((monitor._computed_steps_ % monitor.auto_save_frequency == 0) and
                     gap_time > 0.1*monitor.___auto_save_time___) or \
                     gap_time > monitor.___auto_save_time___:
@@ -151,11 +173,14 @@ class IteratorMonitorDo(FrozenOnly):
 
             if not monitor._ever_do_graph_report_: monitor._ever_do_graph_report_ = True
 
-            if monitor.IS_open: return self.___PRIVATE_generate_open_graph_report___()
+            if monitor.IS.open: return self.___PRIVATE_generate_open_graph_report___()
 
             save_time = MyTimer.current_time()[1:-1]
             indices = self.___PRIVATE_select_reasonable_amount_of_data___(1000, last_num=100)
             RDF = monitor._iterator_.RDF.iloc[indices]
+
+            matplotlib.use('Agg') # make sure we use the right backend.
+
             plt.rc('text', usetex=False)
             num_subplots = RDF.shape[1] + 3 # We plot 2 extra: 't iteration' and 't accumulation' + solver message
             colors = cm.get_cmap('cool_r', num_subplots - 5)
@@ -199,6 +224,10 @@ class IteratorMonitorDo(FrozenOnly):
                                         message += '\n'
                                         new_line = 0
                         message += '\n\n'
+
+                    if monitor._iterator_.shut_down:
+                        message += '>>> SHUT-DOWN <<<'
+
                     plt.text(0.1, 8.5, message, color= 'black', fontsize=12,
                              ha='left', va='top', wrap=True)
                 elif di == 't':
@@ -407,7 +436,7 @@ class IteratorMonitorDo(FrozenOnly):
 
                 # ... further things.
                 if judge_sd:
-                    pass # May be we wanna some special sign when iteration terminated by the solver
+                    pass # Maybe we wanna some special sign when iteration terminated by the solver
 
                 # ...
 
@@ -426,7 +455,7 @@ class IteratorMonitorDo(FrozenOnly):
             # noinspection PyBroadException
             try: # in case saving fail
                 plt.savefig('MPI_IGR_{}.png'.format(
-                    monitor._iterator_.standard_properties.name+'-'+monitor._iterator_.standard_properties.stamp), dpi=225,
+                    monitor._iterator_.standard_properties.name), dpi=225,
                     bbox_inches='tight', facecolor='honeydew')
             except:
                 pass
@@ -442,7 +471,7 @@ class IteratorMonitorDo(FrozenOnly):
         # last step save and has cost long enough
         judge1 = (monitor._computed_steps_ == monitor._max_steps_ or monitor._iterator_.shut_down) and \
                   (monitor._total_cost_ > monitor.___email_report_time___ or monitor._ever_do_email_report_)
-        # intermediate save: has cost a certain time or it will cost long time, so we do a first report
+        # intermediate save: has cost a certain time, or it will cost long time, so we do a first report
         judge2 = ((monitor._current_time_ - monitor.___last_email_sent_time___) > monitor.___email_report_time___) or \
                  monitor._do_first_email_warning_report_
         # to judge special iteration stop: shut down by the solver.
@@ -457,7 +486,7 @@ class IteratorMonitorDo(FrozenOnly):
 
             if not monitor._ever_do_email_report_: monitor._ever_do_email_report_ = True
 
-            if monitor.IS_open: return self.___PRIVATE_generate_open_email_report___()
+            if monitor.IS.open: return self.___PRIVATE_generate_open_email_report___()
 
             # noinspection PyBroadException
             try:
@@ -465,13 +494,13 @@ class IteratorMonitorDo(FrozenOnly):
                 indices = self.___PRIVATE_select_reasonable_amount_of_data___(20, last_num=5)
                 RDF = monitor._iterator_.RDF.iloc[indices]
                 RDF.to_html('{}_temp_html.html'.format(
-                    monitor._iterator_.standard_properties.name+'-'+monitor._iterator_.standard_properties.stamp))
+                    monitor._iterator_.standard_properties.name))
                 rdf = codecs.open("{}_temp_html.html".format(
-                    monitor._iterator_.standard_properties.name+'-'+monitor._iterator_.standard_properties.stamp), 'r')
+                    monitor._iterator_.standard_properties.name), 'r')
                 html += rdf.read()
                 rdf.close()
                 os.remove("{}_temp_html.html".format(
-                    monitor._iterator_.standard_properties.name+'-'+monitor._iterator_.standard_properties.stamp))
+                    monitor._iterator_.standard_properties.name))
                 html += """
                 </body>
                 </html>
@@ -498,7 +527,7 @@ class IteratorMonitorDo(FrozenOnly):
 
                 html = header + html
                 recent_IGR = 'MPI_IGR_{}.png'.format(
-                    monitor._iterator_.standard_properties.name+'-'+monitor._iterator_.standard_properties.stamp)
+                    monitor._iterator_.standard_properties.name)
 
                 # noinspection PyBroadException
                 try: # in case attaching picture fail

@@ -133,15 +133,21 @@ class CSCG_Continuous_FORM_BASE(FrozenClass):
         :param valid_time:
             None: It can be everything and be changed whenever you want.
             'valid_only_at_its_first_instant': as it says...
+            int or float: Can only be this particular time instance.
         :return:
         """
         if valid_time is None:
+            # can be any time.
             pass
         elif valid_time == 'valid_only_at_its_first_instant':
             # as the string says, we can only set its ``current_time`` once.
             pass
+        elif isinstance(valid_time, (int, float)):
+            # current_time can only be this single time instance: `current_time` = `valid_time`.
+            pass
         else:
             raise Exception(f'valid_time = {valid_time} format wrong.')
+
         self._valid_time_ = valid_time
 
     def ___PRIVATE_check_ct_in_vt___(self, ct):
@@ -158,8 +164,13 @@ class CSCG_Continuous_FORM_BASE(FrozenClass):
                 raise Exception(f"time is `valid_only_at_its_first_instant`. "
                                 f"current_time = {self._current_time_}, "
                                 f"can not change it to {ct}.")
+        elif isinstance(self.valid_time, (int, float)):
+            if ct != self.valid_time:
+                raise Exception(f"{self} can only be valid at time {self.valid_time}."
+                                f" Now set to {ct}.")
         else:
-            raise Exception(f'current_time = {ct} can not be checked')
+            raise Exception(f'current_time = {ct} ({ct.__class__.__name__}) '
+                            f'(valid_time={self.valid_time}) is illegal.')
 
 
     #====================== BELOW: children must have these methods =======================

@@ -15,6 +15,7 @@ class _2dCSCG_Domain_Boundaries(FrozenOnly):
         self._boundaries_ = {}
         for bn in self.names:
             self._boundaries_[bn] = Boundary(self, bn)
+        self._distribution_regularities_ = None
         self._freeze_self_()
 
     def __getitem__(self, bn):
@@ -38,4 +39,24 @@ class _2dCSCG_Domain_Boundaries(FrozenOnly):
         return self._domain_.domain_input.boundary_region_edges
 
 
+    @property
+    def distribution_regularities(self):
+        """How the boundaries are distributed. Return a list containing one or some of:
 
+            (1) to be added...
+            (2) ...
+
+        """
+        if self._distribution_regularities_ is not None:
+            return self._distribution_regularities_
+
+        self._distribution_regularities_ = list()
+
+
+        #--------- below we do all the regularity checks ---------------------------------
+
+        # TODO: to be added
+
+        #==================================================================================
+
+        return self._distribution_regularities_

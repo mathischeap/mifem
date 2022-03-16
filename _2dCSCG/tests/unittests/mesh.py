@@ -75,21 +75,20 @@ def test_Mesh_NO1_mesh_topology():
     for i in mesh.elements:
         element = mesh.elements[i]
         mark = element.type_wrt_metric.mark
-        assert mark[:13] == 'Parallelogram'
+        assert mark[:13] == 'Parallelogram', "error!"
     mesh = MeshGenerator('quadrangle', p_UL=(0,0), p_DL=(1,0), p_UR=(0,1), p_DR=(1,1))(
         [3, 4], EDM=None)
     for i in mesh.elements:
         element = mesh.elements[i]
         mark = element.type_wrt_metric.mark
-        assert mark[:4] == 'Orth'
+        assert mark[:4] == 'Orth', "error!"
     mesh = MeshGenerator('quadrangle', p_UL=(1,0), p_DL=(2,1), p_UR=(0,1), p_DR=(1,2))(
         [3, 4], EDM=None)
     for i in mesh.elements:
         element = mesh.elements[i]
         mark = element.type_wrt_metric.mark
-        assert mark[:13] == 'Parallelogram'
-
-
+        assert mark[:13] == 'Parallelogram', "error!"
+    
     return 1
 
 
