@@ -137,8 +137,8 @@ class LinearSystem(FrozenClass):
 if __name__ == '__main__':
     # mpiexec -n 5 python TOOLS\linear_algebra\linear_system\main.py
 
-    from _3dCSCG.master import FormCaller
-    from _3dCSCG.tests.random_objects.form_caller import random_mesh_and_space_of_total_load_around
+    from objects.CSCG._3d.master import FormCaller
+    from objects.CSCG._3d.__tests__.random_objects.form_caller import random_mesh_and_space_of_total_load_around
     from tools.linear_algebra.elementwise_cache.operators.concatenate.main import bmat, concatenate
 
     mesh, space = random_mesh_and_space_of_total_load_around(500, exclude_periodic=True, mesh_boundary_num='>=2')

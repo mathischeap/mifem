@@ -42,7 +42,7 @@ class SendAdminAnEmail(FrozenOnly):
 
         # noinspection PyBroadException
         try:
-            with open('root/___private_developer_code___.txt', 'r') as f:
+            with open('root/config/___private_developer_code___.txt', 'r') as f:
                 PDCs = f.readlines()
             key_code = PDCs[0]
             DC_abc, DC_bbb, DC_from, DC_name, DC_email1, DC_email2, DC_HS = PDCs[1:8]

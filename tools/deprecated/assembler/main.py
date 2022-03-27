@@ -89,7 +89,7 @@ class Assembler(FrozenOnly):
 if __name__ == '__main__':
     # mpiexec python TOOLS\assembler\main.py
     import numpy as np
-    from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller
+    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
     mesh = MeshGenerator('crazy', c=0.1)([2,2,2])
     space = SpaceInvoker('polynomials')([('Lobatto',1), ('Lobatto',1), ('Lobatto',1)])
     FC = FormCaller(mesh, space)
