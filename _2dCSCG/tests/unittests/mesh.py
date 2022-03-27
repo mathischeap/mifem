@@ -2,7 +2,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
-from _2dCSCG.main import MeshGenerator
+from _2dCSCG.master import MeshGenerator
 from _2dCSCG.mesh.domain.inputs.allocator import DomainInputFinder
 import random
 from screws.quadrature import Quadrature

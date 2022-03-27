@@ -3,6 +3,7 @@
 
 
 from _3dCSCG.mesh.domain.inputs.base import _3dDomainInputBase
+from screws.decorators.classproperty.main import classproperty
 
 
 
@@ -34,3 +35,14 @@ class Lid_Driven_Cavity(_3dDomainInputBase):
     @property
     def lwh(self):
         return self._lwh_
+
+
+
+    @classproperty
+    def statistic(cls):
+        raise NotImplementedError()
+
+
+    @classproperty
+    def random_parameters(cls):
+        raise NotImplementedError()

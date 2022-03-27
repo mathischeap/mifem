@@ -84,8 +84,9 @@ class IteratorMonitorDo(FrozenOnly):
 
                 monitor._times_ = np.append(monitor._times_, monitor._last_run_cost_)
             else:
-                # this is a interesting choice. No clue why I chose to do so
+                # this is an interesting choice. No clue why I did this
                 monitor._times_ = np.append(monitor._times_, np.nan)
+
             monitor._TIMES_ = np.append(monitor._TIMES_, monitor._total_cost_)
 
             if (monitor._max_steps_ == monitor._computed_steps_) or monitor._iterator_.shut_down:
@@ -105,7 +106,9 @@ class IteratorMonitorDo(FrozenOnly):
 
             if monitor._last_auto_save_time_ is None:
                 monitor._last_auto_save_time_ = monitor._ft_firstRun_
+
             gap_time = time() - monitor._last_auto_save_time_
+
 
             if monitor.auto_save_frequency is True:
 
@@ -113,34 +116,58 @@ class IteratorMonitorDo(FrozenOnly):
                     try:
                         # if PermissionError, we do not stop the iteration
                         monitor._iterator_.RDF.to_csv(monitor.RDF_filename, header=True)
-                        monitor._last_auto_save_time_ = time()
-                    except: # wait 10 seconds
-                        sleep(5)
+                    except: # wait 3 seconds
+                        sleep(3)
                         try: # try once more
                             monitor._iterator_.RDF.to_csv(monitor.RDF_filename, header=True)
                         except: # just skip it
                             pass
+                    monitor._last_auto_save_time_ = time()
                     self._do_first_auto_save_ = False
+
                 else:
                     pass
+
 
             elif monitor.auto_save_frequency > 0:
 
                 if ((monitor._computed_steps_ % monitor.auto_save_frequency == 0) and
                     gap_time > 0.1*monitor.___auto_save_time___) or \
-                    gap_time > monitor.___auto_save_time___:
+                    gap_time > monitor.___auto_save_time___ or \
+                    self._do_first_auto_save_: # we always have a look at the first iteration.
                     # important. When read from csv, it is very fast, so we do not save.
                     try: # if PermissionError, we do not stop the iteration
                         monitor._iterator_.RDF.to_csv(monitor.RDF_filename, header=True)
-                        monitor._last_auto_save_time_ = time()
-                    except: # wait 10 seconds
-                        sleep(10)
+                    except: # wait 3 seconds
+                        sleep(3)
                         try: # try once moe
                             monitor._iterator_.RDF.to_csv(monitor.RDF_filename, header=True)
                         except: # just skip it
                             pass
+                    monitor._last_auto_save_time_ = time()
+                    self._do_first_auto_save_ = False
+
+                else:
+                    pass
+
+
+            elif self._monitor_._real_time_monitor_:
+
+                try:
+                    # if PermissionError, we do not stop the iteration
+                    monitor._iterator_.RDF.to_csv(monitor.RDF_filename, header=True)
+                except: # wait 3 seconds
+                    sleep(3)
+                    try: # try once more
+                        monitor._iterator_.RDF.to_csv(monitor.RDF_filename, header=True)
+                    except: # just skip it
+                        pass
+                monitor._last_auto_save_time_ = time()
+
+
             else:
                 pass
+
         else:
             pass
 
@@ -152,28 +179,36 @@ class IteratorMonitorDo(FrozenOnly):
         """"""
         raise NotImplementedError()
 
+
+
+
+
     def generate_graph_report(self):
         """"""
-        # do A LAST REPORT BEFORE STOP:
         monitor = self._monitor_
+
+        if monitor.IS.open: return self.___PRIVATE_generate_open_graph_report___()
+
+        # do A LAST REPORT BEFORE STOP:
         judge1 = \
             ((monitor._computed_steps_ == monitor._max_steps_) or monitor._iterator_.shut_down) and \
             (monitor._total_cost_ > monitor.___graph_report_time___ or monitor._ever_do_graph_report_)
 
-        # intermediate save: has cost a certain time or it will cost long time, so we do a first report
+        # intermediate save: has cost a certain time, or it will cost long time, so we do a first report
         judge2 = ((monitor._current_time_ - monitor.___last_graph_save_time___) > monitor.___graph_report_time___) or \
             monitor._do_first_graph_warning_report_
+
+        # real time monitoring: each single time step, we have a look
+        judge3 = self._monitor_._real_time_monitor_
 
         # to judge special iteration stop: shut down by the solver.
         judge_sd = monitor._iterator_.shut_down
 
         if monitor._do_first_graph_warning_report_: monitor._do_first_graph_warning_report_ = False
 
-        if judge1 or judge2: # now we need to do the reporting.
+        if judge1 or judge2 or judge3: # now we need to do the reporting.
 
             if not monitor._ever_do_graph_report_: monitor._ever_do_graph_report_ = True
-
-            if monitor.IS.open: return self.___PRIVATE_generate_open_graph_report___()
 
             save_time = MyTimer.current_time()[1:-1]
             indices = self.___PRIVATE_select_reasonable_amount_of_data___(1000, last_num=100)
@@ -467,7 +502,19 @@ class IteratorMonitorDo(FrozenOnly):
     def send_email_to_users(self):
         """"""
         if not whether_internet_connected(): return
+
+        hostname = socket.gethostname()
+        if hostname not in ('DT-YI-HT20', 'DESKTOP-SYSU-YiZhang'): return
+
+
+
         monitor = self._monitor_
+
+        if monitor.IS.open: return self.___PRIVATE_generate_open_email_report___()
+
+
+
+
         # last step save and has cost long enough
         judge1 = (monitor._computed_steps_ == monitor._max_steps_ or monitor._iterator_.shut_down) and \
                   (monitor._total_cost_ > monitor.___email_report_time___ or monitor._ever_do_email_report_)
@@ -486,7 +533,6 @@ class IteratorMonitorDo(FrozenOnly):
 
             if not monitor._ever_do_email_report_: monitor._ever_do_email_report_ = True
 
-            if monitor.IS.open: return self.___PRIVATE_generate_open_email_report___()
 
             # noinspection PyBroadException
             try:

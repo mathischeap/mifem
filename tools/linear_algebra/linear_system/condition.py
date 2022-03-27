@@ -6,3 +6,9 @@ class ___LinearSystem_Condition___(FrozenOnly):
     def __init__(self, ls):
         self._LS_ = ls
         self._freeze_self_()
+
+
+    @property
+    def condition_number(self):
+        """The condition number of the A matrix"""
+        return self._LS_.A.assembled.condition.condition_number

@@ -1,7 +1,7 @@
 
 
 
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 
 
 class CSCG_Standard_Form_Coboundary_BASE(FrozenOnly):

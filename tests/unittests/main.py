@@ -36,7 +36,10 @@ from tests.unittests.mifem import *
 from tests.unittests.tools_ import *
 from tests.unittests.screws_ import *
 from tests.unittests.linear_solvers import *
-from tests.unittests.linear_algebra import *
+from tests.unittests.EWC.column_vector import test_LinearAlgebra_EWC_No0_ColumnVector
+from tests.unittests.EWC.operators import test_LinearAlgebra_EWC_No1_Operators
+
+from tests.unittests.gathering_matrix.find import test_GatheringMatrix_find
 
 t_global_start = MPI.Wtime()
 
@@ -73,7 +76,11 @@ passed_GLOBAL_tests += test_LinearSolver_No1_BiCGSTAB()
 passed_GLOBAL_tests += test_LinearSolver_No2_LooseGMRES()
 passed_GLOBAL_tests += test_LinearSolver_No3_direct()
 
-passed_GLOBAL_tests += test_LinearAlgebra_No0_EWC_ColumnVector()
+passed_GLOBAL_tests += test_LinearAlgebra_EWC_No0_ColumnVector()
+passed_GLOBAL_tests += test_LinearAlgebra_EWC_No1_Operators()
+
+passed_GLOBAL_tests += test_GatheringMatrix_find()
+
 
 
 total_Tests = passed_2dCSCG_tests + passed_3dCSCG_tests + passed_GLOBAL_tests

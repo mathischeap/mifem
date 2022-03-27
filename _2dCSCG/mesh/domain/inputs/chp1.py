@@ -1,6 +1,9 @@
 
 from _2dCSCG.mesh.domain.inputs.base import DomainInputBase
 import numpy as np
+from screws.decorators.classproperty.main import classproperty
+
+
 
 class CircleHolePlate1(DomainInputBase):
     """ """
@@ -61,3 +64,15 @@ class CircleHolePlate1(DomainInputBase):
         self.region_type_wr2_metric = 'transfinite'
         self.internal_parameters = list()
         # ------------------------------------------------------------------------------
+
+
+    @classproperty
+    def statistic(cls):
+        return {'periodic': False,
+                'region num': 4,
+                'mesh boundary num': 5, # the amount of mesh boundaries (instead of domain boundaries)
+                }
+
+    @classproperty
+    def random_parameters(cls):
+        return {}

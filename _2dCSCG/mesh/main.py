@@ -31,7 +31,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
         self.___PRIVATE_BASE_parse_element_distribution_method___()
         self.___PRIVATE_BASE_analyze_element_distribution___()
 
-
+        self.___character_num_elements___ = dict()
         self.___PRIVATE_generate_element_global_numbering___()
         self.___PRIVATE_optimize_element_distribution___()
 
@@ -170,7 +170,6 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
                     pass
                 current_num += self._num_elements_in_region_[rn]
 
-
         elif EDM == "chaotic":
             current_num = 0
             for rn in rns:
@@ -228,23 +227,29 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
 
                         else:
 
-                            # in this regions, the element numbering will be range(start, end).
+                            # in this region, the element numbering will be range(start, end).
                             start = current_num
                             end = current_num + self._num_elements_in_region_[rn]
 
-
                             #!-Once we use _element_distribution_, _element_indices_, or _num_local_elements_, wo do this
-                            if hasattr(self, '___character_num_elements___'):
+                            if rn in self.___character_num_elements___:
                                 # to make sure that after optimization, the does not change
-                                character_num_elements = self.___character_num_elements___
+                                character_num_elements = self.___character_num_elements___[rn]
                             else:
                                 character_num_elements = list()
+
                                 for core in cores_for_this_region:
                                     character_num_elements.append(len(self._element_distribution_[core]))
+
                                 character_num_elements = int(np.mean(character_num_elements))
+
                                 if character_num_elements <= 0: character_num_elements = 1
+
                                 assert character_num_elements <= self._num_elements_in_region_[rn]
-                                self.___character_num_elements___ = character_num_elements
+
+                                self.___character_num_elements___[rn] = character_num_elements
+
+
                             #!------------------------------------------------------------------------------------------!
 
                             if character_num_elements <= 3:
@@ -407,7 +412,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
 
 
     def ___PRIVATE_optimize_element_distribution___(self):
-        """After generating global element numbering, we can further do a optimization to further reduce the element
+        """After generating global element numbering, we can further do an optimization to further reduce the element
         edge shearing between cores. This will adjust a bit the element distribution in cores, but should not adjust
         too much.
 
@@ -695,7 +700,3 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
     @property
     def boundaries(self):
         return self._boundaries_
-
-
-
-

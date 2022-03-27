@@ -242,7 +242,7 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
 if __name__ == '__main__':
     # mpiexec -n 5 python _3dCSCG\forms\trace\_1_trace.py
 
-    from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
     mesh = MeshGenerator('crazy', c=0.1)([2,3,2])
     space = SpaceInvoker('polynomials')([('Lobatto',5), ('Lobatto',4), ('Lobatto',6)])

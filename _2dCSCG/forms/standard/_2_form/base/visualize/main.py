@@ -1,4 +1,4 @@
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 from _2dCSCG.forms.standard._2_form.base.visualize.matplot import _2dCSCG_S2F_VIS_Matplot
 
 

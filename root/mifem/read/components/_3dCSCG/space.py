@@ -2,7 +2,7 @@
 
 
 
-from _3dCSCG.main import SpaceInvoker as _3dCSCG_SpaceInvoker
+from _3dCSCG.master import SpaceInvoker as _3dCSCG_SpaceInvoker
 
 
 

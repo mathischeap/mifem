@@ -67,11 +67,19 @@ def test_APP_NO3_Euler_ShearLayerRollup_Direct_test():
         os.remove(RDF_filename + '.csv')
 
         data = SI.RDF.to_numpy()
+
         np.testing.assert_array_almost_equal(data[-1,:],
-                np.array([ 1.00000000e+00,  2.00000000e-01,  3.72918243e+01,  1.65078977e+01,
-                -8.43769499e-15,  9.19714222e-14]),)
+                np.array([1.00000000e+00, 2.00000000e-01, 4.23959684e+01, 1.68439419e+01,
+                          0.00000000e+00, 1.65772729e-14]),)
 
     return 1
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     # mpiexec -n 4 python _2dCSCG\tests\unittests\APP.py

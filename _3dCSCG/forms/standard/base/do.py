@@ -43,40 +43,98 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
         :param M:
         :return:
         """
-        return self._sf_.___PRIVATE_do_compute_L2_energy_with___(other=other, M=M)
+        if other is None: other = self._sf_
+        assert self._sf_.mesh == other.mesh, "Meshes do not match."
+        if M is None: M = self._sf_.operators.inner(other)
 
-    def compute_Ln_energy(self, n=2, quad_degree=None):
+        if len(self._sf_.mesh.elements) == 0:
+            LOCAL = 0
+
+        elif self._sf_.mesh.elements.IS.homogeneous_according_to_types_wrt_metric:
+            i = self._sf_.mesh.elements.indices[0]
+            repM = M[i].toarray() # representative Mass matrix
+            LOCAL = np.einsum('ij, ki, kj -> ',
+                              repM,
+                              self._sf_.cochain.array,
+                              other.cochain.array,
+                              optimize='greedy')
+        else:
+            LOCAL = list()
+            for i in self._sf_.mesh.elements:
+                LOCAL.append(self._sf_.cochain.local[i] @ M[i] @ other.cochain.local[i])
+            LOCAL = np.sum(LOCAL)
+
+        return cOmm.allreduce(LOCAL, op=MPI.SUM)
+
+    def compute_Ln_energy(self, n=2, quad_degree=None, vectorized=False):
         """So compute int_{Omega}( self ** n). When n = 2, it is equal to
         `self.compute_L2_energy_with()`.
 
         :param n:
         :param quad_degree:
+        :param vectorized: {bool} Do we use vectorized reconstruction?
         :return:
         """
         sf = self._sf_
+        assert n >= 1 and isinstance(n ,int), f'n={n} is wrong.'
+
+        if quad_degree is None: quad_degree = [sf.dqp[i] + 1 for i in range(3)]
+        quad_nodes, _, quad_weights = sf.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
 
         if sf.k in (0, 3):
             OneOrThree = 1
         else:
             OneOrThree = 3
 
-        if quad_degree is None: quad_degree = [sf.dqp[i] + 1 for i in range(3)]
+        #-------- vectorized --------------------------------------------------------
+        if vectorized:  # we use the vectorized reconstruction
+            reconstruction = sf.reconstruct(*quad_nodes, ravel=True, vectorized=True, value_only=True)
 
-        quad_nodes, _, quad_weights = sf.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
+            if reconstruction[0] is None: # no local mesh elements
 
-        Jacobian = sf.mesh.elements.coordinate_transformation.QUAD_1d.Jacobian(quad_degree, 'Gauss')
+                total_energy = 0 # total energy in this core is 0
 
-        _, SV = sf.reconstruct(*quad_nodes, ravel=True)
+            else:
+                reconstruction = np.sum([reconstruction[_]**n for _ in range(OneOrThree)], axis=0)
+                xi, et, sg = np.meshgrid(*quad_nodes, indexing='ij')
+                xi = xi.ravel('F')
+                et = et.ravel('F')
+                sg = sg.ravel('F')
+                detJ = sf.mesh.elements.coordinate_transformation.vectorized.Jacobian(xi, et, sg)
 
-        local_energy = 0
-        for i in sf.mesh.elements.indices:
-            detJ = Jacobian[i]
-            LEIntermediate = np.sum([SV[i][m]**n for m in range(OneOrThree)], axis=0)
-            local_energy += np.sum( LEIntermediate * detJ * quad_weights )
+                if sf.mesh.elements.IS.homogeneous_according_to_types_wrt_metric:
 
-        global_energy = cOmm.allreduce(local_energy, op=MPI.SUM)
+                    total_energy = np.einsum('kw, w, w -> ',
+                                             reconstruction,
+                                             detJ,
+                                             quad_weights,
+                                             optimize='optimal')
 
-        return global_energy
+                else:
+
+                    total_energy = np.einsum('kw, kw, w -> ',
+                                             reconstruction,
+                                             detJ,
+                                             quad_weights,
+                                             optimize='optimal')
+
+            total_energy = cOmm.allreduce(total_energy, op=MPI.SUM)
+
+        #-------- non-vectorized --------------------------------------------------------
+        else:
+
+            Jacobian = sf.mesh.elements.coordinate_transformation.QUAD_1d.Jacobian(quad_degree, 'Gauss')
+
+            _, SV = sf.reconstruct(*quad_nodes, ravel=True)
+            local_energy = 0
+            for i in sf.mesh.elements.indices:
+                detJ = Jacobian[i]
+                LEIntermediate = np.sum([SV[i][m]**n for m in range(OneOrThree)], axis=0)
+                local_energy += np.sum( LEIntermediate * detJ * quad_weights )
+
+            total_energy = cOmm.allreduce(local_energy, op=MPI.SUM)
+
+        return total_energy
 
     def compute_Ln_norm(self, n=2, quad_degree=None):
         """Compute  ||self ||_{L^n} = ( int_{Omega}(self^n) )^(1/n) , which is  the n-root of Ln-energy.

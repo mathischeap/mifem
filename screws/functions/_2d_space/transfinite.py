@@ -21,7 +21,7 @@ Aerodynamics, AE
 TU Delft
 """
 import numpy as np
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 from screws.numerical._2d_space.Jacobian_21 import NumericalJacobian_xy_t_21
 
 

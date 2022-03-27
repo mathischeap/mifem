@@ -11,7 +11,7 @@ class ___GM_ADJUST___(FrozenOnly):
         self._gm_ = gm
         self._freeze_self_()
 
-    # PRIVATE, very low efficiency, please do not use --------------------- BELOW --------------------------------------
+    # PRIVATE, very low efficiency, please do not use --------------------- BELOW ------------------
     def ___PRIVATE_clear_row___(self, r):
         """
         Make row #i all zero.
@@ -41,5 +41,4 @@ class ___GM_ADJUST___(FrozenOnly):
             self._gm_._M_[i, j] = value
         else:
             self._gm_._M_[i, j] = 0
-    # -------------------------- ABOVE ---------------------------------------------------------------------------------
-
+    # -------------------------- ABOVE -------------------------------------------------------------

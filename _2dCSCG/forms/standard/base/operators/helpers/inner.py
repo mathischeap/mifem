@@ -1,6 +1,6 @@
 
 
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 import numpy as np
 
 class ___Operators_Inner___(FrozenOnly):

@@ -47,7 +47,7 @@ class _2dCSCG_2Form_Inner(_2Form_BASE):
 if __name__ == '__main__':
     # mpiexec python _2dCSCG\form\standard\_2_form_inner.py
 
-    from _2dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
+    from _2dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
     mesh = MeshGenerator('crazy', c=0.3)([50,45])
     # mesh = MeshGenerator('chp1',)([2,2])

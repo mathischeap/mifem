@@ -3,7 +3,7 @@
 import sys
 if './' not in sys.path: sys.path.append('../__unittest_scripts__/')
 
-from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
+from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 from tools.linear_algebra.data_structures.global_matrix.main import GlobalMatrix, GlobalVector
 from scipy import sparse as spspa
 from tools.iterators.simple import SimpleIterator

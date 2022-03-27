@@ -6,7 +6,7 @@ from root.config.main import *
 from root.mifem.save import save, read
 import os
 
-from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
+from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 from _3dCSCG.tests.random_objects.form_caller import random_mesh_and_space_of_total_load_around
 
 

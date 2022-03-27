@@ -1,4 +1,4 @@
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 
 
 
@@ -12,4 +12,10 @@ class _3dCSCG_Domain_IS(FrozenOnly):
 
     @property
     def periodic(self):
-        return True if len(self._d_.domain_input.periodic_boundary_pairs) != 0 else False
+        """If this computation domain involve periodic boundaries."""
+        return len(self._d_.domain_input.periodic_boundary_pairs) != 0
+
+    @property
+    def fully_periodic(self):
+        """This domain is fully periodic, so \partial \Omega = \empty"""
+        return self._d_.domain_input.periodic_boundaries == set(self._d_.boundaries.names)

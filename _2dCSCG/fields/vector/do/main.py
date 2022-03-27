@@ -1,5 +1,5 @@
 
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 from _2dCSCG.fields.vector.do.reconstruct.main import _2dCSCG_Vector_Do_Reconstruct
 
 

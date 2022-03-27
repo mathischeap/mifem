@@ -28,6 +28,3 @@ class ____3dCSCG_ADTF_Cochain_Local____(FrozenOnly):
     def __len__(self):
         """Actually return how many mesh elements in this core."""
         return len(self._PC_.local)
-
-
-

@@ -9,7 +9,7 @@ from root.config.main import rAnk
 from screws.freeze.main import FrozenOnly
 
 from _3dCSCG.mesh.trace.elements.element.coordinate_transformation import _3dCSCG_Trace_Element_CoordinateTransformation
-
+from _3dCSCG.mesh.trace.elements.element.visualize import _3dCSCG_TraceElement_VIS
 
 
 
@@ -44,6 +44,7 @@ class _3dCSCG_Trace_Element(FrozenOnly):
         if self.IS_on_mesh_boundary:
             assert self.NON_CHARACTERISTIC_position[0] not in '1234567890'
         self._ct_ = None
+        self._visualize_ = None
         self._type_wrt_metric_ = None
         self._freeze_self_()
         # # do a check for periodic trace element ________________________
@@ -68,6 +69,12 @@ class _3dCSCG_Trace_Element(FrozenOnly):
         if self._ct_ is None:
             self._ct_ = _3dCSCG_Trace_Element_CoordinateTransformation(self)
         return self._ct_
+
+    @property
+    def visualize(self):
+        if self._visualize_ is None:
+            self._visualize_ = _3dCSCG_TraceElement_VIS(self)
+        return self._visualize_
 
     @property
     def normal_direction(self):
@@ -197,15 +204,15 @@ class _3dCSCG_Trace_Element(FrozenOnly):
 
 if __name__ == '__main__':
     # mpiexec -n 12 python _3dCSCG\mesh\trace\elements\element\main.py
-    from _3dCSCG.main import MeshGenerator
+    from _3dCSCG.master import MeshGenerator
     elements = [3, 4, 2]
     mesh = MeshGenerator('crazy_periodic', c=0.3, bounds=([0,1], [0,1], [0,1]))(elements)
-    mesh.trace.elements.SELFCHECK.outward_unit_normal_vector()
-    Q = mesh.trace.elements.quality
-    print(mesh.quality)
-    print(mesh.trace.quality)
+    # mesh.trace.elements.selfcheck.outward_unit_normal_vector()
+    # Q = mesh.trace.elements.quality
+    # print(mesh.quality)
+    # print(mesh.trace.quality)
 
-    mesh.trace.elements.do.illustrate_trace_element(1)
+    # mesh.trace.elements.do.illustrate_trace_element(1)
 
     # te0 = mesh.trace.elements[0]
 
@@ -215,4 +222,5 @@ if __name__ == '__main__':
         if i in mesh.trace.elements:
             te = mesh.trace.elements[i]
 
-            print(rAnk, te.type_wrt_metric.mark)
+            # print(rAnk, te.type_wrt_metric.mark)
+            te.visualize()

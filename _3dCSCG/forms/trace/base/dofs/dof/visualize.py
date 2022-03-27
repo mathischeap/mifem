@@ -34,7 +34,7 @@ class _3dCSCG_Trace_forms_DOF_VISUALIZE(FrozenOnly):
 
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\form\trace\dofs\dof\main.py
-    from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
     mesh = MeshGenerator('crazy', c=0.3)(None)
     space = SpaceInvoker('polynomials')([('Lobatto',1), ('Lobatto',1), ('Lobatto',1)])

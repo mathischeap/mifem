@@ -175,7 +175,7 @@ class _3dCSCG_0Edge(_3dCSCG_Edge, ABC):
 
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\forms\edge\_0_edge.py
-    from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
     mesh = MeshGenerator('crazy', c=0.25)([5,6,7])
     space = SpaceInvoker('polynomials')([('Lobatto',10), ('Lobatto',10), ('Lobatto',10)])

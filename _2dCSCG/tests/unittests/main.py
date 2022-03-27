@@ -10,7 +10,8 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 passed_2dCSCG_tests = 0
 
-from _2dCSCG.tests.unittests.standard_forms import *
+from _2dCSCG.tests.unittests.standard_forms.general import *
+from _2dCSCG.tests.unittests.standard_forms.dofs import test_standard_forms_DOFS
 from _2dCSCG.tests.unittests.mesh import *
 from _2dCSCG.tests.unittests.spaces import *
 from _2dCSCG.tests.unittests.APP import *
@@ -29,6 +30,7 @@ passed_2dCSCG_tests += test_Form_NO4_Hodge()
 passed_2dCSCG_tests += test_Form_NO5_cross_product()
 passed_2dCSCG_tests += test_Form_NO6_reconstruction_matrices()
 passed_2dCSCG_tests += test_Form_NO7_weak_curl()
+passed_2dCSCG_tests += test_standard_forms_DOFS()
 
 passed_2dCSCG_tests += test_Mesh_NO1_mesh_topology()
 passed_2dCSCG_tests += test_Mesh_NO2_mesh_coordinate_transformation()

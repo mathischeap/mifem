@@ -338,7 +338,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\fields\vector\main.py
-    from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
+    from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller
 
     mesh = MeshGenerator('crazy', c=0.)([1,1,1], show_info=True)
     space = SpaceInvoker('polynomials')([('Lobatto',1), ('Lobatto',1), ('Lobatto',1)], show_info=True)

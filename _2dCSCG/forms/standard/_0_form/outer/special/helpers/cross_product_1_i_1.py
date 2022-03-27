@@ -1,6 +1,6 @@
 
 
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 import numpy as np
 from scipy.sparse import csc_matrix
 
@@ -53,8 +53,8 @@ class ___2dCSCG_0_o_Form_CrossProduct_0_X_1__ip_1___(FrozenOnly):
         RMe = e1.do.make_reconstruction_matrix_on_grid(*quad_nodes)
 
         xi, et = np.meshgrid(*quad_nodes, indexing='ij')
-        xi = xi.ravel()
-        et = et.ravel()
+        xi = xi.ravel('F')
+        et = et.ravel('F')
         detJ = w0.mesh.elements.coordinate_transformation.Jacobian(xi, et)
 
         CP_IP_3dM = dict()

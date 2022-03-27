@@ -1,4 +1,4 @@
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 
 from _3dCSCG.forms.standard._2_form.discretize.vector.boundary_wise import _3dCSCG_Discretize_BoundaryWise
 from _3dCSCG.forms.standard._2_form.discretize.vector.standard import _3dCSCG_Discretize_Standard

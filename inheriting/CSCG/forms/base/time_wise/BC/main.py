@@ -1,4 +1,4 @@
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 from inheriting.CSCG.forms.base.time_wise.BC.do import CSCG_FTWBC_DO
 
 

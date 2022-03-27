@@ -1,6 +1,6 @@
 import numpy as np
 
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 from root.config.main import cOmm, MPI
 
 
@@ -37,50 +37,92 @@ class _2dCSCG_Standard_Form_DO(FrozenOnly):
         """
         return self._sf_.___PRIVATE_make_reconstruction_matrix_on_grid___(xi, eta)
 
-    def compute_Ln_energy(self, n=2, quad_degree=None):
+    def compute_Ln_energy(self, n=2, quad_degree=None, vectorized=True):
         """Compute int_{Omega}(self^n).
 
         :param n: default n=2, we compute the L2 inner product between self and self: (self, self)_{L2}.
         :param quad_degree:
+        :param vectorized: {bool} Do we use vectorized reconstruction?
         :return:
         """
         f = self._sf_
+        assert n >= 1 and isinstance(n ,int), f'n={n} is wrong.'
+        #-------- parse quad_degree ---------------------------------------------------
         if quad_degree is None:
-            if n <= 1:
+            if n == 1:
                 quad_degree = f.dqp
-            elif n == 'infinity':
-                quad_degree = [int(f.dqp[_] * 2) for _ in range(2)]
             else:
-                quad_degree = [int(f.dqp[_] * (1 + (n-1)/2)) for _ in range(2)]
+                quad_degree = [int(f.dqp[_] * (n/2) + 1) for _ in range(2)]
         else:
             pass
         assert len(quad_degree) == 2 and all([isinstance(_, int) for _ in quad_degree]), \
             f"quad_degree = {quad_degree} is illegal."
 
+        if f.k in (0, 2):
+            OneOrTwo = 1
+        else:
+            OneOrTwo = 2
+
         quad_nodes, _, quad_weights_1d = \
             f.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
-        xi, et = np.meshgrid(*quad_nodes, indexing='ij')
-        xi = xi.ravel()
-        et = et.ravel()
-        reconstruction = f.reconstruct(*quad_nodes, ravel=True)[1]
-        detJ = f.mesh.elements.coordinate_transformation.Jacobian(xi, et)
 
-        total_energy = 0
-        if f.k in (0, 2): # scalar form
-            for i in f.mesh.elements:
+        #-------- vectorized --------------------------------------------------------
+        if vectorized: # we use the vectorized reconstruction
+            reconstruction = f.reconstruct(*quad_nodes, ravel=True, vectorized=True,
+                                           value_only=True)
 
-                if n == 'infinity':
-                    Ei = np.max(np.abs(reconstruction[i][0]))
+            if reconstruction[0] is None: # no local mesh elements
+
+                total_energy = 0 # total energy in this core is 0
+
+            else:
+                reconstruction = np.sum([reconstruction[_]**n for _ in range(OneOrTwo)], axis=0)
+                xi, et = np.meshgrid(*quad_nodes, indexing='ij')
+                xi = xi.ravel('F')
+                et = et.ravel('F')
+                detJ = f.mesh.elements.coordinate_transformation.vectorized.Jacobian(xi, et)
+
+                if f.mesh.elements.IS.homogeneous_according_to_types_wrt_metric:
+
+                    total_energy = np.einsum('kw, w, w -> ',
+                                             reconstruction,
+                                             detJ,
+                                             quad_weights_1d,
+                                             optimize='optimal')
 
                 else:
+
+                    total_energy = np.einsum('kw, kw, w -> ',
+                                             reconstruction,
+                                             detJ,
+                                             quad_weights_1d,
+                                             optimize='optimal')
+
+            total_energy = cOmm.allreduce(total_energy, op=MPI.SUM)
+
+        #-------- non-vectorized --------------------------------------------------------
+        else:
+            xi, et = np.meshgrid(*quad_nodes, indexing='ij')
+            xi = xi.ravel('F')
+            et = et.ravel('F')
+            reconstruction = f.reconstruct(*quad_nodes, ravel=True)[1]
+            detJ = f.mesh.elements.coordinate_transformation.Jacobian(xi, et)
+
+            total_energy = 0
+            if f.k in (0, 2): # scalar form
+                # print(f.k, 'form@', rAnk, flush=True)
+                for i in f.mesh.elements:
                     v = reconstruction[i][0]**n
                     Ei = np.sum(v * quad_weights_1d * detJ[i])
+                    total_energy += Ei
 
-                total_energy += Ei
-        else:
-            raise NotImplementedError('Not implemented for 1-form.')
+            else:  # vector form
+                for i in f.mesh.elements:
+                    v = reconstruction[i][0]**n + reconstruction[i][1]**n
+                    Ei = np.sum(v * quad_weights_1d * detJ[i])
+                    total_energy += Ei
 
-        total_energy = cOmm.allreduce(total_energy, op=MPI.SUM)
+            total_energy = cOmm.allreduce(total_energy, op=MPI.SUM)
 
         return total_energy
 
@@ -94,10 +136,24 @@ class _2dCSCG_Standard_Form_DO(FrozenOnly):
         if other is None: other = self._sf_
         assert self._sf_.mesh == other.mesh, "Meshes do not match."
         if M is None: M = self._sf_.operators.inner(other)
-        LOCAL = list()
-        for i in self._sf_.mesh.elements:
-            LOCAL.append(self._sf_.cochain.local[i] @ M[i] @ other.cochain.local[i])
-        LOCAL = np.sum(LOCAL)
+
+        if len(self._sf_.mesh.elements) == 0:
+            LOCAL = 0
+
+        elif self._sf_.mesh.elements.IS.homogeneous_according_to_types_wrt_metric:
+            i = self._sf_.mesh.elements.indices[0]
+            repM = M[i].toarray() # representative Mass matrix
+            LOCAL = np.einsum('ij, ki, kj -> ',
+                              repM,
+                              self._sf_.cochain.array,
+                              other.cochain.array,
+                              optimize='greedy')
+        else:
+            LOCAL = list()
+            for i in self._sf_.mesh.elements:
+                LOCAL.append(self._sf_.cochain.local[i] @ M[i] @ other.cochain.local[i])
+            LOCAL = np.sum(LOCAL)
+
         return cOmm.allreduce(LOCAL, op=MPI.SUM)
 
     def compute_Ln_norm(self, n=2, quad_degree=None):

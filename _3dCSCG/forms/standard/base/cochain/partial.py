@@ -6,4 +6,3 @@ class _3dCSCG_Standard_Form_Cochain_Partial(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
         self._freeze_self_()
-

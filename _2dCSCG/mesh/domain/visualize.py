@@ -175,5 +175,6 @@ class _2dCSCG_Domain_Visualize(FrozenOnly):
             plt.savefig(saveto, bbox_inches='tight')
         else:
             plt.show()
-        plt.close('all')
+
+        plt.close()
         return fig

@@ -1,4 +1,4 @@
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 from _2dCSCG.fields.scalar.do.reconstruct.mesh_element.standard import OnMeshElement_for_Standard
 
 class _2dCSCG_Scalr_Do_Reconstruct(FrozenOnly):

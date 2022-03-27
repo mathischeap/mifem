@@ -13,6 +13,7 @@ import inspect
 import numpy as np
 from typing import Dict
 from screws.freeze.main import FrozenOnly
+from screws.decorators.classproperty.main import classproperty
 
 class _3dDomainInputBase(FrozenOnly):
     def __init__(self, domain_name='domain without name'):
@@ -166,7 +167,6 @@ class _3dDomainInputBase(FrozenOnly):
                     regions.add(rn)
         return regions
 
-
     @property
     def region_corner_coordinates(self):
         """
@@ -201,11 +201,11 @@ class _3dDomainInputBase(FrozenOnly):
         Returns
         -------
         region_boundary_type : dict
-            A dict that contains the regions boundary info. The keys indicate
-            the regions boundary, the value indicate the info. value[0] indicate
+            A dict that contains the region boundary info. The keys indicate
+            the region boundary, the value indicate the info. value[0] indicate
             the type, value[1:] indicate the rest info which will be parsed
             into full information. The not mentioned regions boundaries will be
-            set into default type: ('plane', )
+            set into default type: ('plane',)
             
             Notice that the value will be sent to side_geometries eventually. And
             if this info (value[1:]) to be parsed, it will be done there in
@@ -302,3 +302,16 @@ class _3dDomainInputBase(FrozenOnly):
         self._region_type_wr2_metric_ = rTwr2M
 
 
+
+
+
+
+
+    @classproperty
+    def statistic(cls):
+        raise NotImplementedError()
+
+
+    @classproperty
+    def random_parameters(cls):
+        raise NotImplementedError()

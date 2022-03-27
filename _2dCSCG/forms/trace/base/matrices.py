@@ -1,6 +1,6 @@
 
 
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 
 
 class _2dCSCG_TraceMatrices(FrozenOnly):

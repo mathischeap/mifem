@@ -299,7 +299,7 @@ class _3dCSCG_Mesh_Element_CT(FrozenOnly):
 
 if __name__ == '__main__':
     # mpiexec -n 5 python _3dCSCG\mesh\elements\element\main.py
-    from _3dCSCG.main import MeshGenerator
+    from _3dCSCG.master import MeshGenerator
     elements = [2, 2, 2]
     mesh = MeshGenerator('crazy', c=0.3, bounds=([0,3], [0,3], [0,3]))(elements)
 

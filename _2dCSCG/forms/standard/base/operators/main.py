@@ -1,6 +1,17 @@
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+
+
+
+
+from screws.freeze.base import FrozenOnly
 from _2dCSCG.forms.standard.base.operators.helpers.inner import ___Operators_Inner___
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
+
+
+
+
+
+
+
 
 
 class _2dCSCG_Standard_Form_Operators(FrozenOnly):

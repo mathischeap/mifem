@@ -73,7 +73,7 @@ class _2dCSCG_1Trace_Outer(_2dCSCG_1Trace):
 if __name__ == '__main__':
     # mpiexec python _2dCSCG\form\trace\_1_trace_outer.py
 
-    from _2dCSCG.main import *
+    from _2dCSCG.master import *
     # from mifem import read, save
 
     mesh = MeshGenerator('cic')([2,2])

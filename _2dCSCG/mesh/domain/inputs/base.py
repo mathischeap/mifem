@@ -9,10 +9,14 @@ INTRO
          Delft, the Netherlands
 
 """
+
 import inspect
 from screws.freeze.main import FrozenOnly
 from typing import Dict, Union
 import numpy as np
+from screws.decorators.classproperty.main import classproperty
+
+
 
 
 class DomainInputBase(FrozenOnly):
@@ -243,6 +247,10 @@ class DomainInputBase(FrozenOnly):
         self._periodic_boundaries_ = bnPOOL
 
 
+
+
+
+
     @property
     def periodic_boundary_pairs(self):
         return self._periodic_boundary_pairs_
@@ -260,7 +268,7 @@ class DomainInputBase(FrozenOnly):
 
     @property
     def periodic_boundaries_involved_regions(self):
-        """"""
+        """The regions that involve periodic boundaries."""
         regions = set()
         for pb in self.periodic_boundaries:
             region_sides = self.boundary_region_edges[pb]
@@ -269,6 +277,8 @@ class DomainInputBase(FrozenOnly):
                 if rn not in regions:
                     regions.add(rn)
         return regions
+
+
 
 
 
@@ -309,3 +319,16 @@ class DomainInputBase(FrozenOnly):
         self._region_type_wr2_metric_ = rTwr2M
 
 
+
+
+
+
+    # class properties -------------------------
+    @classproperty
+    def statistic(cls):
+        raise NotImplementedError()
+
+
+    @classproperty
+    def random_parameters(cls):
+        raise NotImplementedError()

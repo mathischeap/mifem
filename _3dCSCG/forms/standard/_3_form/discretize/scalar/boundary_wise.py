@@ -1,4 +1,4 @@
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 
 
 class _3dCSCG_Discretize_BoundaryWise(FrozenOnly):

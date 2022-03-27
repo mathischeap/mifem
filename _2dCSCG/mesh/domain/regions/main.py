@@ -13,8 +13,8 @@ import numpy as np
 from screws.freeze.main import FrozenOnly
 from screws.decorators.accepts import accepts
 
-
-
+from _2dCSCG.mesh.domain.regions.visualize import _2dCSCG_Regions_Vis
+from _2dCSCG.mesh.domain.regions.topology import _2dCSCG_Regions_Topology
 
 
 class Regions(FrozenOnly):
@@ -22,6 +22,8 @@ class Regions(FrozenOnly):
     def __init__(self, domain, regions):
         self._domain_ = domain
         self._regions_ = regions
+        self._topology_ = None
+        self._visualize_ = None
         for key in regions: assert regions[key].__class__.__name__ == 'Region'
         self.___generate_global_corner_numbering___()
         self.___generate_region_map___()
@@ -257,3 +259,16 @@ class Regions(FrozenOnly):
 
         """
         return self._edges_on_domain_boundaries_
+
+    @property
+    def visualize(self):
+        if self._visualize_ is None:
+            self._visualize_ = _2dCSCG_Regions_Vis(self)
+        return self._visualize_
+
+
+    @property
+    def topology(self):
+        if self._topology_ is None:
+            self._topology_ = _2dCSCG_Regions_Topology(self)
+        return self._topology_

@@ -6,6 +6,8 @@ from _3dCSCG.forms.standard.base.visualize.matplot import _3dCSCG_standard_form_
 from _3dCSCG.forms.standard.base.visualize.tecplot_ import _3dCSCG_standard_form_Tecplot
 
 
+
+
 class _3dCSCG_FormVisualize(FrozenOnly):
     """The visualization property/component of standard forms."""
     def __init__(self, sf):

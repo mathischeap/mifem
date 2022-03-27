@@ -23,7 +23,7 @@ class _3dCSCG_Node(_3dCSCG_FORM_BASE, ndim=3):
     :param space:
     :param str orientation: 'inner' or 'outer'.
     :param numbering_parameters: The parameters for the numbering. Including scheme name and other parameters.
-        When it is a string, we use it as scheme name and it has not other parameters.
+        When it is a string, we use it as the scheme name, and it has not other parameters.
     :type numbering_parameters: dict, str
     :param str name:
     """
@@ -42,6 +42,10 @@ class _3dCSCG_Node(_3dCSCG_FORM_BASE, ndim=3):
         # self._matrices_ = _3dCSCG_Trace_Matrices(self)
         # self._coboundary_ = _3dCSCG_Trace_Coboundary(self)
         # self._DO_ = _3dCSCG_Trace_DO(self)
+
+
+
+
 
 
 

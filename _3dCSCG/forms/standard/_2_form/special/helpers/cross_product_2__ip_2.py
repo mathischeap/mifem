@@ -1,7 +1,7 @@
 
 import numpy as np
 from scipy import sparse as spspa
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 
 
 class ___3dCSCG_2Form_CrossProduct_2__ip_2___(FrozenOnly):

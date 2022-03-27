@@ -50,7 +50,7 @@ class _3dCSCG_S2_ADF(_3dCSCG_Algebra_DUAL_Standard_Form):
 
 if __name__ == "__main__":
     # mpiexec -n 6 python _3dCSCG\ADF\standard\_2_AD_form.py
-    from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
+    from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller
 
     mesh = MeshGenerator('crazy',c=0.0, bounds=([-1,1],[-1,1],[-1,1]))(
                                         [12, 12, 12], EDM=None, show_info=True)

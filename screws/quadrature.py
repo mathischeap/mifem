@@ -8,10 +8,14 @@ Aerodynamics, AE
 TU Delft
 
 """
+
 import numpy as np
 from functools import partial
 from scipy.special import legendre, roots_legendre
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
+
+
+
 
 
 class Quadrature(FrozenOnly):
@@ -76,8 +80,6 @@ class Quadrature(FrozenOnly):
                 assert self.p[i] >= 2
             else:
                 raise Exception()
-
-
 
     @property
     def ndim(self):

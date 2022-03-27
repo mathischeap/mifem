@@ -33,11 +33,12 @@ class Iterator(FrozenClass):
         Do we save the results into the `.mitr` file?
     """
     def __init__(self,
-        auto_save_frequency=True,
-        monitor_factor=1,
-        RDF_filename=None,
-        name=None,
-        save_to_mitr=False
+        auto_save_frequency = True,
+        monitor_factor = 1,
+        RDF_filename = None,
+        real_time_monitor = False,
+        name = None,
+        save_to_mitr = False
         ):
 
         # these four will be initialized in the particular iterator.
@@ -49,7 +50,11 @@ class Iterator(FrozenClass):
         self._running_step_ = 1
         self._computed_steps_ = 0
         if rAnk == mAster_rank:
-            self._monitor_ = IteratorMonitor(self, auto_save_frequency, RDF_filename, monitor_factor)
+            self._monitor_ = IteratorMonitor(self,
+                                             auto_save_frequency,
+                                             RDF_filename,
+                                             monitor_factor,
+                                             real_time_monitor)
             if name is None:
                 name ='Iterator-' + randomStringDigits(8) + '-' + str(id(self))[-5:]
         else:

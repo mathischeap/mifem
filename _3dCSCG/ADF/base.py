@@ -19,4 +19,3 @@ class _3dCSCG_Algebra_DUAL_FORM_BASE(CSCG_Algebra_DUAL_FORM_BASE):
 
     def ___PRIVATE_generate_mass_matrix___(self):
         raise NotImplementedError()
-

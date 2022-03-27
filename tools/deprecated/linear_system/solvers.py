@@ -259,7 +259,7 @@ class icpsNS(_Solver_Base_):
 
         if self._OS1_GMA_ is None:
             GMP3, GMu2 = A10.gathering_matrices
-            self._OS1_GMA_ = GMu2.GMs[0].DO_hstack(GMP3.GMs[0])
+            self._OS1_GMA_ = GMu2.GMs[0].do.hstack(GMP3.GMs[0])
 
         alpha_inv.gathering_matrices = (self._OS1_GMA_, self._OS1_GMA_)
         alpha_inv = alpha_inv.assembled

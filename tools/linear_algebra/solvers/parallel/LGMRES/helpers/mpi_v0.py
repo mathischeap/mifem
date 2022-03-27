@@ -137,7 +137,8 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-3, atol=1e
                 # noinspection PyUnboundLocalVariable
                 residuals.append(beta)
 
-        JUDGE, stop_iteration, info, JUDGE_explanation = ___gmres_stop_criterion___(tol, atol, ITER, maxiter, BETA)
+        JUDGE, stop_iteration, info, JUDGE_explanation = \
+            ___gmres_stop_criterion___(tol, atol, ITER, maxiter, BETA)
         if stop_iteration: break
         # ...
 

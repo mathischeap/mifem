@@ -45,7 +45,7 @@ if __name__ == '__main__':
     # mpiexec python _2dCSCG\form\standard\_2_form_outer.py
     # import numpy as np
 
-    from _2dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
+    from _2dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
     mesh = MeshGenerator('crazy', c=0.0,bounds=([0,1],[0,1]))([1,1])
     # mesh = MeshGenerator('chp1',)([2,2])

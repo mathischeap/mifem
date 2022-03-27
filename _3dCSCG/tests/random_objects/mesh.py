@@ -2,7 +2,7 @@
 
 from root.config.main import *
 import random
-from _3dCSCG.main import MeshGenerator
+from _3dCSCG.master import MeshGenerator
 
 
 
@@ -32,21 +32,20 @@ def random_mesh_of_elements_around(elements_num,
     assert isinstance(elements_num, (int, float)) and elements_num >= 1, \
         f"element_num = {elements_num} is wrong, must be a number and >= 1."
 
+    RP = MeshGenerator.___domain_input_random_parameters___()
+    Statistic = MeshGenerator.___domain_input_statistic___()
 
-    #------(1) EDIT the dict -> mesh_name_region_num :: we will select from this dict ----------------
+
+    mesh_name_region_num = dict()
     if exclude_periodic:
-        mesh_name_region_num = {  # add new meshes to this pool.
-            # mesh name: how many regions
-            'crazy': 1,
-            'bridge_arch_cracked': 4,
-        }
+        for mesh_id in Statistic:
+            if not Statistic[mesh_id]['periodic']:
+                mesh_name_region_num[mesh_id] = Statistic[mesh_id]['region num']
     else:
-        mesh_name_region_num = { # add new meshes to this pool.
-            # mesh name: how many regions
-            'crazy': 1,
-            'crazy_periodic': 1,
-            'bridge_arch_cracked': 4,
-        }
+        for mesh_id in Statistic:
+            mesh_name_region_num[mesh_id] = Statistic[mesh_id]['region num']
+
+
 
     if mesh_pool is not None:
         if isinstance(mesh_pool, str):
@@ -64,12 +63,13 @@ def random_mesh_of_elements_around(elements_num,
         pass
 
 
-    #---------(2) EDIT the dict -> mesh_name_boundary_num :: parse mesh_boundary_num -----------------
-    mesh_name_boundary_num = {
-            'crazy': 6,
-            'crazy_periodic': 0, # crazy_periodic mesh has no mesh boundary.
-            'bridge_arch_cracked': 8,
-    }
+
+    mesh_name_boundary_num = dict()
+    for mesh_id in Statistic:
+        mesh_name_boundary_num[mesh_id] = Statistic[mesh_id]['mesh boundary num']
+
+
+
 
     if mesh_boundary_num is None:
         pass
@@ -83,25 +83,7 @@ def random_mesh_of_elements_around(elements_num,
     else:
         raise NotImplementedError(f"Do not understand mesh_boundary_num={mesh_boundary_num}.")
 
-    # -------(3) EDIT the dict -> mesh_personal_parameters :: random personal parameters ------------
-    if rAnk == mAster_rank:
-        mesh_personal_parameters = { # edit below when new mesh is added to above pool.
-            'crazy':{'c': random.randint(0,3)*random.random()/10,
-                     'bounds': [(-random.random(), random.random()+0.5),
-                                (-random.random(), random.random()+0.5),
-                                (-random.random(), random.random()+0.5)]
-                      },
-
-            'crazy_periodic': {'c': random.randint(0,3)*random.random()/10,
-                               'bounds': [(-random.random(), random.random()+0.5),
-                                          (-random.random(), random.random()+0.5),
-                                          (-random.random(), random.random()+0.5)]
-                               },
-        }
-    else:
-        mesh_personal_parameters = None
-
-    mesh_personal_parameters = cOmm.bcast(mesh_personal_parameters, root=mAster_rank)
+    mesh_personal_parameters = RP
 
     assert len(mesh_name_region_num) > 0, f"cannot find a proper mesh."
 
@@ -144,6 +126,7 @@ def random_mesh_of_elements_around(elements_num,
     else:
         personal_parameters = dict()
 
+
     if rAnk == mAster_rank:
         region_num = mesh_name_region_num[mesh_name]
         if elements_num < region_num:
@@ -181,10 +164,15 @@ def random_mesh_of_elements_around(elements_num,
         #===========================================================================================
 
         FFF = random.sample((factor0, factor1, factor2), 3)
-
         element_layout = list()
-        for f in FFF:
-            element_layout.append([random.randint((f+1), 6*(f+1)) for _ in range(f)])
+
+        a = random.random()
+
+        if a > 0.25: # 75% chance to use non-uniform element_layout
+            for f in FFF:
+                element_layout.append([random.randint((f+1), 6*(f+1)) for _ in range(f)])
+        else: # uniform element_layout
+            element_layout = FFF
 
     else:
         element_layout = None

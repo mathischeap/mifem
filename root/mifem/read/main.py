@@ -40,7 +40,8 @@ def read(filename, read_individuals=None):
             OBJ = OBJ[:-1]
 
             for info in save_info_tuple:
-                assert info is None or isinstance(info, dict) # saving info for every obj must be None or a dict.
+                assert info is None or isinstance(info, dict)
+                # saving info for every obj must be None or a dict.
 
         else:
             pass

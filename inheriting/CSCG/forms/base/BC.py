@@ -1,10 +1,7 @@
 
 
-
-
-
 from tools.CSCG.partial_cochain.main import PartialCochain
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 
 
 
@@ -15,6 +12,15 @@ class CSCG_Form_BC(FrozenOnly):
         self._valid_boundaries_ = None # can not put it in ___PRIVATE_reset_cache___ method
         self.___PRIVATE_reset_cache___()
         self._freeze_self_()
+
+
+    def ___PRIVATE_reset_cache___(self):
+        self._body_ = None
+        self._ftype_ = None
+        self._partial_cochain_ = None
+
+
+
 
 
     @property
@@ -35,10 +41,7 @@ class CSCG_Form_BC(FrozenOnly):
         return self._ftype_
 
 
-    def ___PRIVATE_reset_cache___(self):
-        self._body_ = None
-        self._ftype_ = None
-        self._partial_cochain_ = None
+
 
     @property
     def valid_boundaries(self):
@@ -55,10 +58,15 @@ class CSCG_Form_BC(FrozenOnly):
 
         for i, bn in enumerate(valid_boundaries):
             assert bn in self._f_.mesh.boundaries.names, \
-                f"boundary_names[{i}]: {bn} is not in mesh.boundaries.names: {self._f_.mesh.boundaries.names}"
+                f"boundary_names[{i}]: {bn} is not in mesh.boundaries.names: " \
+                f"{self._f_.mesh.boundaries.names}"
 
         self._valid_boundaries_ = valid_boundaries
         self._partial_cochain_ = None
+
+
+
+
 
 
     @property

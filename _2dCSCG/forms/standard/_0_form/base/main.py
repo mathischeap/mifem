@@ -4,13 +4,14 @@ from scipy import sparse as spspa
 from _2dCSCG.forms.standard.base.main import _2dCSCG_Standard_Form
 from _2dCSCG.forms.standard._0_form.base.discretize.main import _2dCSCG_S0F_Discretize
 from _2dCSCG.forms.standard._0_form.base.visualize.main import _2dCSCG_S0F_VIS
-
+from _2dCSCG.forms.standard._0_form.base.reconstruct import _2dCSCG_S0F_Reconstruct
 
 class _0Form_BASE(_2dCSCG_Standard_Form):
     """"""
     def __init_0form_base__(self):
         self._discretize_ = _2dCSCG_S0F_Discretize(self)
         self._visualize_ = _2dCSCG_S0F_VIS(self)
+        self._reconstruct_ = None
 
     @property
     def visualize(self):
@@ -24,13 +25,13 @@ class _0Form_BASE(_2dCSCG_Standard_Form):
             assert func_body.ftype in ('standard',), \
                 f"2dCSCG 0form FUNC do not accept func _2dCSCG_ScalarField of ftype {func_body.ftype}."
         else:
-            raise Exception(f"3dCSCG 0form FUNC do not accept func {func_body.__class__}")
+            raise Exception(f"2dCSCG 0form FUNC do not accept func {func_body.__class__}")
 
 
     def ___PRIVATE_TW_BC_body_checker___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
-        assert func_body.ndim == self.ndim == 3
-        raise Exception(f"3dCSCG 0form BC do not accept func {func_body.__class__}")
+        assert func_body.ndim == self.ndim == 2
+        raise Exception(f"2dCSCG 0form BC do not accept func {func_body.__class__}")
 
 
     def ___PRIVATE_reset_cache___(self):
@@ -40,23 +41,11 @@ class _0Form_BASE(_2dCSCG_Standard_Form):
     def discretize(self):
         return self._discretize_
 
-    def reconstruct(self, xi, eta, ravel=False, i=None):
-        xietasigma, basis = self.do.evaluate_basis_at_meshgrid(xi, eta)
-        xyz = dict()
-        value = dict()
-        shape = [len(xi), len(eta)]
-        INDICES = self.mesh.elements.indices if i is None else [i, ]
-        for i in INDICES:
-            element = self.mesh.elements[i]
-            xyz[i] = element.coordinate_transformation.mapping(*xietasigma)
-            v = np.einsum('ij, i -> j', basis[0], self.cochain.local[i], optimize='optimal')
-            if ravel:
-                value[i] = [v,]
-            else:
-                # noinspection PyUnresolvedReferences
-                xyz[i] = [xyz[i][j].reshape(shape, order='F') for j in range(2)]
-                value[i] = [v.reshape(shape, order='F'),]
-        return xyz, value
+    @property
+    def reconstruct(self):
+        if self._reconstruct_ is None:
+            self._reconstruct_ = _2dCSCG_S0F_Reconstruct(self)
+        return self._reconstruct_
 
     def ___PRIVATE_make_reconstruction_matrix_on_grid___(self, xi, eta):
         """
@@ -78,8 +67,6 @@ class _0Form_BASE(_2dCSCG_Standard_Form):
         for i in INDICES:
             RM[i] = rmi
         return RM
-
-
 
 
 

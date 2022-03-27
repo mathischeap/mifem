@@ -4,7 +4,7 @@ Here we store some customize generators.
 """
 
 
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 
 
 

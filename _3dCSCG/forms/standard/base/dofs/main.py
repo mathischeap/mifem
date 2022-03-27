@@ -1,10 +1,10 @@
 
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 from screws.freeze.main import FrozenOnly
 
-from _3dCSCG.forms.standard.base.dofs.visualize import _3dCSCG_SF_DOFs_VISUALIZE
+from _3dCSCG.forms.standard.base.dofs.visualize.main import _3dCSCG_SF_DOFs_VISUALIZE
 from _3dCSCG.forms.standard.base.dofs.dof.main import _3dCSCG_Standard_forms_DOF
 
 
@@ -18,7 +18,7 @@ class _3dCSCG_Standard_forms_DOFs(FrozenOnly):
         self._freeze_self_()
 
     def __iter__(self):
-        for i in range(self._GM_.GLOBAL_num_dofs):
+        for i in range(self.GLOBAL_num):
             yield i
 
     def __contains__(self, i):
@@ -26,7 +26,7 @@ class _3dCSCG_Standard_forms_DOFs(FrozenOnly):
         if i % 1 != 0:
             return False
         else:
-            if 0 <= i < self._GM_.GLOBAL_num_dofs:
+            if 0 <= i < self.GLOBAL_num:
                 return True
             else:
                 return False
@@ -58,21 +58,22 @@ class _3dCSCG_Standard_forms_DOFs(FrozenOnly):
         else:
             return list(), list()
 
-
     @property
     def visualize(self):
         if self._visualize_ is None:
             self._visualize_ = _3dCSCG_SF_DOFs_VISUALIZE(self)
         return self._visualize_
 
-
+    @property
+    def GLOBAL_num(self):
+        return self._sf_.num.GLOBAL_dofs
 
 
 
 
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\form\standard\dofs\main.py
-    from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
     mesh = MeshGenerator('crazy', c=0.3)([3,3,3])
     space = SpaceInvoker('polynomials')([('Lobatto',1), ('Lobatto',1), ('Lobatto',1)])

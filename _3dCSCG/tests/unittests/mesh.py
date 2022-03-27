@@ -8,7 +8,7 @@ from root.config.main import *
 from screws.quadrature import Quadrature
 from screws.exceptions import ThreeDimensionalTransfiniteInterpolationError
 from _3dCSCG.mesh.domain.inputs.allocator import DomainInputAllocator
-from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
+from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller
 import random
 import os
 from _3dCSCG.tests.random_objects.form_caller import random_mesh_of_elements_around

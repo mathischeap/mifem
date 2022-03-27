@@ -183,6 +183,7 @@ class _2dCSCG_VectorField_Visualize_matplot(FrozenOnly):
                                 ax.text(RBN[rn][ei][0], RBN[rn][ei][1],
                                         '$<$' + bn + '$>$',
                                         c=boundary_name_color_dict[bn], ha='center', va='center')
+
             plt.xlabel('$x$')
             plt.ylabel('$y$')
             if title is True: plt.title(r"$(\cdot, v)$")

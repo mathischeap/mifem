@@ -2,7 +2,7 @@
 
 
 
-from _3dCSCG.main import MeshGenerator as _3dCSCG_MeshGenerator
+from _3dCSCG.master import MeshGenerator as _3dCSCG_MeshGenerator
 
 
 

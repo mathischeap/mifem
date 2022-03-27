@@ -107,6 +107,6 @@ class Gathering_Vector(FrozenOnly):
             >>> A.index(5)
             2
         """
-        WHERE =  np.where(self._full_vector_ == i)[0]
+        WHERE =  np.where(self.full_vector == i)[0]
         assert len(WHERE) == 1, f"We must only find one dof is numbered i."
         return WHERE[0]

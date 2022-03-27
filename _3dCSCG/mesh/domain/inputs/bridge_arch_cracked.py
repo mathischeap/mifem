@@ -4,6 +4,9 @@
 
 from _3dCSCG.mesh.domain.inputs.base import _3dDomainInputBase
 import numpy as np
+from screws.decorators.classproperty.main import classproperty
+
+
 
 class BridgeArchCracked(_3dDomainInputBase):
     def __init__(self, domain_name="BridgeArch",
@@ -97,3 +100,14 @@ class BridgeArchCracked(_3dDomainInputBase):
     def beta(self):
         return self._beta_
 
+
+    @classproperty
+    def statistic(cls):
+        return {'periodic': False,
+                'region num': 4,
+                'mesh boundary num': 8, # the amount of mesh boundaries (instead of domain boundaries)
+                }
+
+    @classproperty
+    def random_parameters(cls):
+        return dict()

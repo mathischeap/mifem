@@ -20,6 +20,7 @@ class _2dCSCG_Regular_PBP(FrozenOnly):
         edgeOne, edgeTwo = thePair.split('=')
         regionEdgesOne =  self._baseMesh_.domain.domain_input.boundary_region_edges[edgeOne]
         regionEdgesTwo =  self._baseMesh_.domain.domain_input.boundary_region_edges[edgeTwo]
+
         self.___CHECK_REGION_EDGE_PAIRS___(regionEdgesOne, regionEdgesTwo)
         self._freeze_self_()
 

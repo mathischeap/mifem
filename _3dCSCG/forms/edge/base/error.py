@@ -91,7 +91,7 @@ class _3dCSCG_Edge_Error(FrozenOnly):
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\forms\edge\base\error.py
 
-    from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
     mesh = MeshGenerator('crazy', c=0.)([5,6,7])
     space = SpaceInvoker('polynomials')([('Lobatto',5), ('Lobatto',5), ('Lobatto',5)])

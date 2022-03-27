@@ -8,8 +8,12 @@ from root.config.main import *
 from tools.linear_algebra.gathering.chain_matrix.main import Chain_Gathering_Matrix
 from tools.linear_algebra.data_structures.global_matrix.main import GlobalVector
 
-from tools.linear_algebra.elementwise_cache.objects.column_vector.customize import SpaVec_Customize
+from tools.linear_algebra.elementwise_cache.objects.column_vector.helpers.add import ___CV_ADD___
+from tools.linear_algebra.elementwise_cache.objects.column_vector.helpers.neg import ___CV_NEG___
+from tools.linear_algebra.elementwise_cache.objects.column_vector.helpers.sub import ___CV_SUB___
 
+from tools.linear_algebra.elementwise_cache.objects.column_vector.customize import SpaVec_Customize
+from tools.linear_algebra.elementwise_cache.objects.column_vector.assembler import EWC_ColumnVector_Assembler
 
 class EWC_ColumnVector(FrozenOnly):
     """
@@ -17,8 +21,9 @@ class EWC_ColumnVector(FrozenOnly):
 
     example::
 
-        EWC_ColumnVector(mesh, 5) : generate an empty vector of shape (5,1) for all elements.
-
+        - EWC_ColumnVector(mesh, 5) : generate an empty local vector of shape (5,1) for all elements.
+        - EWC_ColumnVector(mesh, form): make an empty local vector of shape (form.num.basis, 1).
+            So, equivalent to EWC_ColumnVector(mesh, form.num.basis)
 
     :param mesh_elements:
     :param data_generator:
@@ -26,6 +31,13 @@ class EWC_ColumnVector(FrozenOnly):
     :type con_shape: bool, tuple, list
     """
     def __init__(self, mesh_elements, data_generator, cache_key_generator=None, con_shape=False):
+        """
+
+        :param mesh_elements:
+        :param data_generator: {}
+        :param cache_key_generator:
+        :param con_shape:
+        """
         if mesh_elements.__class__.__name__ in ('_3dCSCG_Mesh_Elements', '_2dCSCG_Mesh_Elements'):
             self._elements_ = mesh_elements
         elif mesh_elements.__class__.__name__ in ('_3dCSCG_Mesh', '_2dCSCG_Mesh'):
@@ -38,6 +50,12 @@ class EWC_ColumnVector(FrozenOnly):
 
         if data_generator.__class__.__name__ in ('int', 'float', 'int32', 'int64'):
             DATA_TYPE = 'EMPTY'
+        elif hasattr(data_generator, 'standard_properties') and \
+            'CSCG_form' in data_generator.standard_properties.tags:
+            # data_generator is a CSCG form.
+            DATA_TYPE = 'EMPTY'
+            data_generator = data_generator.num.basis
+            # equivalent to EWC_ColumnVector(mesh, form.num.basis)
         else: # default data type
             pass
 
@@ -68,6 +86,8 @@ class EWC_ColumnVector(FrozenOnly):
             self._KG_ = self.___PRIVATE_constant_cache_key_generator___
 
         elif DATA_TYPE is None:
+
+            assert callable(data_generator), f"data_generator={data_generator} is not callable!"
 
             if cache_key_generator == 'no_cache':  # do not cache
                 # use this when nothing is the same over all elements, we make the data whenever it is called.
@@ -103,6 +123,7 @@ class EWC_ColumnVector(FrozenOnly):
         self._con_shape_ = con_shape
         self._customize_ = SpaVec_Customize(self)
         self._shape_ = None
+        self._assembler_ = None
         self._freeze_self_()
 
     def ___PRIVATE_reset_cache___(self):
@@ -144,6 +165,12 @@ class EWC_ColumnVector(FrozenOnly):
             assert self._gathering_matrix_.shape + (1,) == self._shape_
 
     @property
+    def assembler(self):
+        if self._assembler_ is None:
+            self._assembler_ = EWC_ColumnVector_Assembler(self)
+        return self._assembler_
+
+    @property
     def assembled(self):
         """
         Return an assembled global vector.
@@ -151,22 +178,7 @@ class EWC_ColumnVector(FrozenOnly):
         :return:
         :rtype: GlobalVector
         """
-        assert self.gathering_matrix is not None, "I have no gathering matrix"
-        GI = self.gathering_matrix
-        DEP = GI.GLOBAL_num_dofs
-        ROW = list()
-        DAT = list()
-        for i in self:
-            Vi = self[i]
-            indices = Vi.indices
-            data = Vi.data
-            ROW.extend(GI[i][indices])
-            DAT.extend(data)
-        b = GlobalVector(spspa.csc_matrix((DAT, ROW, [0, len(ROW)]), shape=(DEP, 1)))
-
-        assert b.shape == (GI.GLOBAL_num_dofs, 1)
-
-        return b
+        return self.assembler()
 
     @property
     def elements(self):
@@ -299,6 +311,7 @@ class EWC_ColumnVector(FrozenOnly):
         assert other.__class__.__name__ == 'EWC_ColumnVector'
         assert self._elements_._mesh_ == other._elements_._mesh_
         DKC = ___CV_SUB___(self, other)
+        # noinspection PyTypeChecker
         return EWC_ColumnVector(self._elements_, DKC, DKC.__KG_call__)
 
     def __add__(self, other):
@@ -306,48 +319,14 @@ class EWC_ColumnVector(FrozenOnly):
         assert other.__class__.__name__ == 'EWC_ColumnVector'
         assert self._elements_._mesh_ == other._elements_._mesh_
         DKC = ___CV_ADD___(self, other)
+        # noinspection PyTypeChecker
         return EWC_ColumnVector(self._elements_, DKC, DKC.__KG_call__)
 
     def __neg__(self):
         """- EWC_ColumnVector"""
         data_generator = ___CV_NEG___(self)
+        # noinspection PyTypeChecker
         RETURN = EWC_ColumnVector(self._elements_, data_generator, self._KG_)
         if self.gathering_matrix is not None:
             RETURN.gathering_matrix = self.gathering_matrix
         return RETURN
-
-class ___CV_SUB___(FrozenOnly):
-    def __init__(self, v1, v2):
-        self._v1_ = v1
-        self._v2_ = v2
-        self._freeze_self_()
-
-    def __call__(self, i):
-        """"""
-        return self._v1_[i] - self._v2_[i]
-
-    def __KG_call__(self, i):
-        """"""
-        return self._v1_._KG_(i) + self._v1_._KG_(i)
-
-class ___CV_ADD___(FrozenOnly):
-    def __init__(self, v1, v2):
-        self._v1_ = v1
-        self._v2_ = v2
-        self._freeze_self_()
-
-    def __call__(self, i):
-        """"""
-        return self._v1_[i] + self._v2_[i]
-
-    def __KG_call__(self, i):
-        """"""
-        return self._v1_._KG_(i) + self._v1_._KG_(i)
-
-class ___CV_NEG___(FrozenOnly):
-    def __init__(self, V):
-        self._V_ = V
-        self._freeze_self_()
-
-    def __call__(self, i):
-        return - self._V_[i]

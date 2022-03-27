@@ -3,7 +3,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from _2dCSCG.main import FormCaller
+from _2dCSCG.master import FormCaller
 
 from _2dCSCG.tests.random_objects.mesh_and_space import random_mesh_and_space_of_total_load_around, \
     random_mesh_of_elements_around, random_space_of_degrees_around

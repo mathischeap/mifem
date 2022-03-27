@@ -1,7 +1,7 @@
 
 from root.config.main import *
 import random
-from _2dCSCG.main import SpaceInvoker
+from _2dCSCG.master import SpaceInvoker
 
 
 def random_space_of_degrees_around(overall_degrees):

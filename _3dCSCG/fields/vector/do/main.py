@@ -28,5 +28,3 @@ class _3dCSCG_VectorField_DO(FrozenOnly):
     @property
     def cross_product(self):
         return self._cp_
-
-

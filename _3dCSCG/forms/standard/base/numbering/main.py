@@ -348,7 +348,7 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
 
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\forms\standard\base\numbering\main.py
-    from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
+    from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller
 
     mesh = MeshGenerator('crazy')([1, 1, 2])
     space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3), ('Lobatto',3)])

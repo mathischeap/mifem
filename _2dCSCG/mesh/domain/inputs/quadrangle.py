@@ -1,5 +1,6 @@
 
 from _2dCSCG.mesh.domain.inputs.base import DomainInputBase
+from screws.decorators.classproperty.main import classproperty
 
 
 class Quadrangle(DomainInputBase):
@@ -15,3 +16,15 @@ class Quadrangle(DomainInputBase):
         self.region_interpolators = 'transfinite'
         self.region_type_wr2_metric = {'R:R': 'transfinite'}
         self.region_sequence = ('R:R',)
+
+
+    @classproperty
+    def statistic(cls):
+        return {'periodic': False,
+                'region num': 1,
+                'mesh boundary num': 4, # the amount of mesh boundaries (instead of domain boundaries)
+                }
+
+    @classproperty
+    def random_parameters(cls):
+        return dict()

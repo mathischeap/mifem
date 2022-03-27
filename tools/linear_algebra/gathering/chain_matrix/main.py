@@ -9,7 +9,7 @@ from root.config.main import *
 from tools.linear_algebra.gathering.chain_matrix.find import ___Chain_Gathering_Matrix_FIND___
 
 from tools.linear_algebra.gathering.vector import Gathering_Vector
-from tools.linear_algebra.gathering.matrix import Gathering_Matrix
+from tools.linear_algebra.gathering.matrix.main import Gathering_Matrix
 
 
 class Chain_Gathering_Matrix(FrozenOnly):

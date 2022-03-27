@@ -7,8 +7,9 @@
          TU Delft, Delft, Netherlands
 
 """
-from screws.freeze.main import FrozenClass
 
+
+from screws.freeze.main import FrozenClass
 
 from _3dCSCG.APP.exact_solution.do import _3dCSCG_ES_DO
 from _3dCSCG.APP.exact_solution.visualize import ExactSolution_Visualize

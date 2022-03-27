@@ -23,7 +23,7 @@ class ___Chain_Gathering_Matrix_FIND___(FrozenOnly):
             finding. When `N=None`, then we always check all local elements.
         :return:
 
-            An list of int(s) represent the local element number(s) that has the dof numbered `m` or None if no
+            A list of int(s) represent the local element number(s) that has the dof numbered `m` or None if no
             local element  contains that dof. Therefore, maybe in multiple cores, the method does not return None.
 
             We also return `where` (int): GMs[where] has the dof `m`. When the first output is None, we do not return where.
@@ -40,9 +40,9 @@ class ___Chain_Gathering_Matrix_FIND___(FrozenOnly):
         if not isinstance(m, int): m = int(m)
 
         if N is None:
-            if self._CGM_.mesh_type == '_2dCSCG': # if in a _3dCSCG mesh, of course, dofs can mostly shared by 4 elements.
+            if self._CGM_.mesh_type == '_2dCSCG': # if in a _3dCSCG mesh, of course, dofs can mostly be shared by 4 elements.
                 N = 4
-            elif self._CGM_.mesh_type == '_3dCSCG': # if in a _3dCSCG mesh, of course, dofs can mostly shared by 8 elements.
+            elif self._CGM_.mesh_type == '_3dCSCG': # if in a _3dCSCG mesh, of course, dofs can mostly be shared by 8 elements.
                 N = 8
             else:
                 pass
@@ -112,7 +112,7 @@ class ___Chain_Gathering_Matrix_FIND___(FrozenOnly):
                     ELE.append(int(i))
                     n += 1
 
-                    if n == N: # we have find enough elements. Lets break the loop.
+                    if n == N: # we have found enough elements. Let's break the loop.
                         break
 
         if ELE == list():

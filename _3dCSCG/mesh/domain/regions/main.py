@@ -8,10 +8,9 @@ A template for Region Class.
 """
 from screws.freeze.main import FrozenOnly
 from _3dCSCG.mesh.domain.regions.visualize.main import _3dCSCG_Regions_Visualize
+from _3dCSCG.mesh.domain.regions.topology import _3dCSCG_Regions_Topology
 
 
-from root.config.main import *
-from typing import Dict, Tuple
 
 
 
@@ -20,6 +19,7 @@ class Regions(FrozenOnly):
     def __init__(self, domain, regions):
         self._domain_ = domain
         self._regions_ = regions
+        self._topology_ = None
         for key in regions: assert regions[key].__class__.__name__ == 'Region'
         self._orthogonality_ = None
         self._visualize_ = _3dCSCG_Regions_Visualize(self)
@@ -98,70 +98,8 @@ class Regions(FrozenOnly):
     def visualize(self):
         return self._visualize_
 
-
-    def ___PRIVATE_parse_topology_1___(self):
-
-        if rAnk != mAster_rank: return
-
-        MAP = self.map
-        names: Tuple[str] = self.names
-
-        region_coordinates_pool: Dict[str] = dict()
-        connection_pool: Dict[str] = dict()
-
-        now_look_at = names[0]
-        looked = list()
-        we_have_found = list()
-
-        while 1:
-            looked.append(now_look_at)
-
-            if len(region_coordinates_pool) == 0:
-                region_coordinates_pool[now_look_at] = np.array([0,0,0])
-
-            whats = MAP[now_look_at]
-
-            i = 0
-            for w in whats:
-                if w[:2] == 'R:':
-                    if w not in looked:
-                        we_have_found.append(w)
-                    i += 1
-
-            if len(names) > 1:
-                assert i > 0, f"regions[{now_look_at}] is not connected."
-
-            for j, w in enumerate(whats):
-                if w[:2] == 'R:':
-                    side = 'NSWEBF'[j]
-                    if w not in region_coordinates_pool:
-                        if side == 'N':
-                            region_coordinates_pool[w] = region_coordinates_pool[now_look_at] + np.array([-1, 0, 0])
-                        elif side == 'S':
-                            region_coordinates_pool[w] = region_coordinates_pool[now_look_at] + np.array([1, 0, 0])
-                        elif side == 'W':
-                            region_coordinates_pool[w] = region_coordinates_pool[now_look_at] + np.array([0, -1, 0])
-                        elif side == 'E':
-                            region_coordinates_pool[w] = region_coordinates_pool[now_look_at] + np.array([0, 1, 0])
-                        elif side == 'B':
-                            region_coordinates_pool[w] = region_coordinates_pool[now_look_at] + np.array([0, 0, -1])
-                        elif side == 'F':
-                            region_coordinates_pool[w] = region_coordinates_pool[now_look_at] + np.array([0, 0, 1])
-                        else:
-                            raise Exception()
-                        connection_pool[now_look_at + '-' + w] = \
-                            np.vstack(
-                                [region_coordinates_pool[now_look_at],
-                                 region_coordinates_pool[w]]).T
-
-            if len(looked) == len(names):
-                break
-
-            while 1:
-                to_look = we_have_found.pop()
-                if to_look not in looked: # we will for sure find one, otherwise, we should have
-                    break
-
-            now_look_at = to_look
-
-        return region_coordinates_pool, connection_pool
+    @property
+    def topology(self):
+        if self._topology_ is None:
+            self._topology_ = _3dCSCG_Regions_Topology(self)
+        return self._topology_

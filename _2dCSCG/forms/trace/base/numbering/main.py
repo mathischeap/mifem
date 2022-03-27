@@ -13,9 +13,6 @@ from _2dCSCG.forms.trace.base.numbering.visualize import _2dCSCG_Trace_Numbering
 
 
 
-
-
-
 class _2dCSCG_Trace_Numbering(FrozenOnly):
     def __init__(self, tf, numbering_parameters):
         # ... parse number and numbering parameters ...

@@ -71,7 +71,7 @@ class Region(RegionTopology, FrozenOnly):
 
     @property
     def volume(self):
-        """ Return the volume of this regions."""
+        """ Return the volume of this region."""
         if self._volume_ is None:
             p = 20  # we use this many high order numerical quadrature.
             qx, qy, qz, quad_weights = Quadrature([p, p, p], category='Gauss').quad_ndim_ravel

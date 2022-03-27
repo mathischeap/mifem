@@ -108,6 +108,13 @@ class EulerBase(Base):
             self._NPDf_p_ = NumericalPartialDerivative_txy_Functions(self.p)
         return self._NPDf_p_('y')(t, x, y)
 
+    @property
+    def total_pressure(self):
+        """A scalar field of the kinetic energy distribution."""
+        if self._total_pressure_ is None:
+            self._total_pressure_ =_2dCSCG_ScalarField(
+                self.mesh, self._tp_, valid_time=self.valid_time, name='total pressure')
+        return self._total_pressure_
 
     def _tp_(self, t, x, y): #total pressure
         return self.p(t, x, y) + self.___kinetic_energy_distribution___(t, x, y)

@@ -9,8 +9,8 @@ if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 from root.mifem.save import save, read
 import random, os
-from _3dCSCG.tests.random_objects.form_caller import random_3D_FormCaller_of_total_load_around
-from _3dCSCG.main import ExactSolutionSelector, FormCaller, MeshGenerator, SpaceInvoker
+from _3dCSCG.tests.random_objects.form_caller import random_FormCaller_of_total_load_around
+from _3dCSCG.master import ExactSolutionSelector, FormCaller, MeshGenerator, SpaceInvoker
 
 
 
@@ -95,7 +95,7 @@ def test_edge_forms_No0_save_read():
     else:
         load, t = None, None
     load, t = cOmm.bcast([load, t], root=mAster_rank)
-    FC = random_3D_FormCaller_of_total_load_around(load, exclude_periodic=True)
+    FC = random_FormCaller_of_total_load_around(load, exclude_periodic=True)
     ESS = ExactSolutionSelector(FC.mesh)('icpsNS:sincosRD')
     scalar = FC('scalar', p)
 

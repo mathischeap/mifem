@@ -10,8 +10,8 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
-from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
-from _3dCSCG.tests.random_objects.form_caller import random_3D_FormCaller_of_total_load_around
+from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller
+from _3dCSCG.tests.random_objects.form_caller import random_FormCaller_of_total_load_around
 import random
 
 
@@ -122,7 +122,7 @@ def test_Naive_Numbering_NO5_0trace():
     else:
         load= None
     load = cOmm.bcast(load, root=mAster_rank)
-    FC = random_3D_FormCaller_of_total_load_around(load)
+    FC = random_FormCaller_of_total_load_around(load)
 
     t0 = FC('0-t', numbering_parameters={'scheme_name': 'Naive',})
 
@@ -160,7 +160,7 @@ def test_Naive_Numbering_NO6_1trace():
     else:
         load= None
     load = cOmm.bcast(load, root=mAster_rank)
-    FC = random_3D_FormCaller_of_total_load_around(load, EDM_pool=('chaotic',))
+    FC = random_FormCaller_of_total_load_around(load, EDM_pool=('chaotic',))
 
     t1 = FC('1-t', numbering_parameters={'scheme_name': 'Naive',})
 

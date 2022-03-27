@@ -10,7 +10,7 @@ if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 from screws.miscellaneous.timer import MyTimer
 import random
-from _3dCSCG.tests.random_objects.form_caller import random_3D_FormCaller_of_total_load_around
+from _3dCSCG.tests.random_objects.form_caller import random_FormCaller_of_total_load_around
 
 
 
@@ -22,7 +22,7 @@ def test_Form_NO0_3dCSCG_Field_numerical():
     else:
         load= None
     load = cOmm.bcast(load, root=mAster_rank)
-    FC = random_3D_FormCaller_of_total_load_around(load, exclude_periodic=False)
+    FC = random_FormCaller_of_total_load_around(load, exclude_periodic=False)
 
     t = random.random() * 10
     I, J, K = random.randint(2,10), random.randint(4,8), random.randint(3,9)
@@ -272,7 +272,7 @@ def test_Form_NO1_3dCSCG_VectorField():
     load = cOmm.bcast(load, root=mAster_rank)
 
     #----------------- use crazy mesh --------------------------------------------------------
-    FC = random_3D_FormCaller_of_total_load_around(load, mesh_pool=('crazy',))
+    FC = random_FormCaller_of_total_load_around(load, mesh_pool=('crazy',))
     W = FC('vector', (w0, w1, w2))
     W.current_time = t
     # ------ norm component ------------------------------------------------------------------
@@ -365,7 +365,7 @@ def test_Form_NO1_3dCSCG_VectorField():
             raise Exception()
 
     # ---------------- generate a new random mesh ----------------------------------------------
-    FC = random_3D_FormCaller_of_total_load_around(load, exclude_periodic=True)
+    FC = random_FormCaller_of_total_load_around(load, exclude_periodic=True)
     W = FC('vector', (w0, w1, w2))
     U = FC('vector', (u0, u1, u2))
 
@@ -442,7 +442,7 @@ def test_Form_NO2_3dCSCG_ScalarField():
     else:
         load= None
     load = cOmm.bcast(load, root=mAster_rank)
-    FC = random_3D_FormCaller_of_total_load_around(load, exclude_periodic=False)
+    FC = random_FormCaller_of_total_load_around(load, exclude_periodic=False)
 
     A = FC('scalar', www)
     B = FC('scalar', uuu)
@@ -523,7 +523,7 @@ def test_Form_NO3_3dCSCG_TensorField():
     else:
         load= None
     load = cOmm.bcast(load, root=mAster_rank)
-    FC = random_3D_FormCaller_of_total_load_around(load, exclude_periodic=False)
+    FC = random_FormCaller_of_total_load_around(load, exclude_periodic=False)
 
     w = FC('tensor', ([T00, T01, T02], [T10, T11, T12], [T20, T21, T22]))
     u = FC('tensor', ([t00, t01, t02], [t10, t11, t12], [t20, t21, t22]))

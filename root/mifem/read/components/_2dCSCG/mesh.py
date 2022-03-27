@@ -1,6 +1,6 @@
 
 
-from _2dCSCG.main import MeshGenerator as _2dCSCG_MeshGenerator
+from _2dCSCG.master import MeshGenerator as _2dCSCG_MeshGenerator
 
 
 def ___restore__2dCSCG_Mesh___(parameters, mesh_cache):

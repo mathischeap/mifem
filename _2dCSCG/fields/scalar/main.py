@@ -20,6 +20,11 @@ from _2dCSCG.fields.scalar.do.main import _2dCSCG_ScalarField_DO
 from _2dCSCG.fields.scalar.numerical.main import _2dCSCG_ScalarField_Numerical
 from _2dCSCG.fields.scalar.visualize.main import _2dCSCG_ScalarField_Visualize
 
+
+
+
+
+
 class _2dCSCG_ScalarField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
     """The continuous scalar field."""
     def __init__(self, mesh, func, ftype='standard', valid_time=None, name='scalar-field'):
@@ -106,7 +111,7 @@ class _2dCSCG_ScalarField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
 
 if __name__ == '__main__':
     # mpiexec -n 6 python _2dCSCG\field\scalar.py
-    from _2dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
+    from _2dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller
 
     mesh = MeshGenerator('crazy', c=0.)([2,2], show_info=True)
     space = SpaceInvoker('polynomials')([('Lobatto',1), ('Lobatto',1)], show_info=True)

@@ -38,7 +38,7 @@ class _3dCSCG_T0_ADF(_3dCSCG_Algebra_DUAL_Trace_Form):
 
 if __name__ == "__main__":
     # mpiexec -n 6 python _3dCSCG\ADF\trace\_0_AD_trace.py
-    from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
+    from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
     # mesh = MeshGenerator('bridge_arch_cracked')([8,9,7], EDM='SWV0', show_info=True)
     mesh = MeshGenerator('crazy')([3, 3, 3], EDM=None, show_info=True)

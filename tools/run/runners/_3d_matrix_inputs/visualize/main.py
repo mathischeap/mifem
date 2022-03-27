@@ -30,4 +30,3 @@ class ___SlaveParallelMatrix3dInputRunnerVisualize___(FrozenOnly):
     @staticmethod
     def loglog(*args, **kwargs):
         return None
-

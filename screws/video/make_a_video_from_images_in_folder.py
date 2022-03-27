@@ -1,8 +1,16 @@
+
+
+
 import cv2
 import os
 from root.config.main import rAnk, mAster_rank
 from screws.miscellaneous.timer import MyTimer
 from screws.miscellaneous.random_string.digits import randomStringDigits
+
+
+
+
+
 
 def make_a_video_from_images_in_folder(image_folder, video_name=None, duration=5, clear_images=False):
     """Each image will be a frame of the video. Images must be named in an increasing sequence

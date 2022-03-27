@@ -197,23 +197,6 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
             # self.___PRIVATE_discretize_standard_ftype___()
             self.func._body_ = None
 
-    def ___PRIVATE_do_compute_L2_energy_with___(self, other=None, M=None):
-        """
-        Compute (self, other)_{L2}.
-
-        :param other:
-        :param M:
-        :return:
-        """
-        if other is None: other = self
-        assert self.mesh == other.mesh, "Meshes do not match."
-        if M is None: M = self.operators.inner(other)
-        LOCAL = list()
-        for i in self.mesh.elements:
-            LOCAL.append(self.cochain.local[i] @ M[i] @ other.cochain.local[i])
-        LOCAL = np.sum(LOCAL)
-        return cOmm.allreduce(LOCAL, op=MPI.SUM)
-
     def ___PRIVATE_saving_info___(self):
         """"""
         my_info = dict()

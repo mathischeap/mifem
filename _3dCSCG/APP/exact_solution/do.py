@@ -3,7 +3,7 @@
 import numpy as np
 from root.config.main import cOmm, MPI
 from screws.quadrature import Quadrature
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 
 
 class _3dCSCG_ES_DO(FrozenOnly):

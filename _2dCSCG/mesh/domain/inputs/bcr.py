@@ -6,6 +6,7 @@ from screws.numerical._1d_space.derivative import NumericalDerivative_fx
 
 import numpy as np
 
+from screws.decorators.classproperty.main import classproperty
 
 
 def X(t): return 5 * t
@@ -110,3 +111,15 @@ class BottomCustomizedRectangle(DomainInputBase):
     def bottom_Jacobian(self):
         return self._bottom_Jacobian_
 
+
+
+    @classproperty
+    def statistic(cls):
+        return {'periodic': False,
+                'region num': 1,
+                'mesh boundary num': 4, # the amount of mesh boundaries (instead of domain boundaries)
+                }
+
+    @classproperty
+    def random_parameters(cls):
+        return {}

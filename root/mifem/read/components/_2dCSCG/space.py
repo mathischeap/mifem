@@ -1,6 +1,6 @@
 
 
-from _2dCSCG.main import SpaceInvoker as _2dCSCG_SpaceInvoker
+from _2dCSCG.master import SpaceInvoker as _2dCSCG_SpaceInvoker
 
 def ___restore__2dCSCG_Space___(parameters, space_cache):
     cache_tag = str(parameters)

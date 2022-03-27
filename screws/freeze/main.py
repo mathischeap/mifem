@@ -3,7 +3,7 @@ import sys
 if './' not in sys.path: sys.path.append('../')
 import pickle
 from root.config.main import rAnk, mAster_rank
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 from screws.freeze.standard_properties import StandardProperties
 
 
@@ -52,8 +52,10 @@ class FrozenClass(FrozenOnly):
 
     # noinspection PyMethodMayBeStatic
     def ___PRIVATE_saving_info___(self):
-        """For a particular class, we can define its saving info by overriding this method. By doing this, we can
-        use this info for special reading routine when reading multiple objects at once. For example, if we read four
-        forms who have the same mesh and the same space, then we do not need to rebuild this mesh (or space) for four
-        times. So we have to put information into the save file when saving these four forms."""
+        """For a particular class, we can define its saving info by overriding this method.
+
+        When we save multiple instances in a list or tuple at once, we will attach their
+        `___PRIVATE_saving_info___` at the end of the list or tuple. Currently, this information has
+        no impact. This function is just reserved, for future extensions.
+        """
         return None

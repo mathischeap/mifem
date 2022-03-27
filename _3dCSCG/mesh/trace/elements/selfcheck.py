@@ -2,7 +2,7 @@
 
 
 from screws.warnings.trace_element import TraceElementWarning
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 import numpy as np
 from screws.functions._3d_space.angle import angle_between_two_vectors
 

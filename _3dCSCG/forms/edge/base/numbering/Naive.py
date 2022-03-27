@@ -153,7 +153,7 @@ class _3dCSCG_Edge_Numbering_Naive(FrozenOnly):
 
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\form\edge\numbering\Naive.py
-    from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
     mesh = MeshGenerator('crazy', c=0.25)([3,4,5])
     space = SpaceInvoker('polynomials')([('Lobatto',2), ('Lobatto',1), ('Lobatto',3)])

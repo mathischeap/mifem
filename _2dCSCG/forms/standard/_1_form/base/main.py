@@ -45,13 +45,13 @@ class _1Form_BASE(_2dCSCG_Standard_Form):
             assert func_body.ftype in ('standard',), \
                 f"2dCSCG 1form FUNC do not accept func _2dCSCG_VectorField of ftype {func_body.ftype}."
         else:
-            raise Exception(f"3dCSCG 1form FUNC do not accept func {func_body.__class__}")
+            raise Exception(f"2dCSCG 1form FUNC do not accept func {func_body.__class__}")
 
 
     def ___PRIVATE_TW_BC_body_checker___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
-        assert func_body.ndim == self.ndim == 3
-        raise Exception(f"3dCSCG 0form BC do not accept func {func_body.__class__}")
+        assert func_body.ndim == self.ndim == 2
+        raise Exception(f"2dCSCG 0form BC do not accept func {func_body.__class__}")
 
     def ___PRIVATE_discretize_preparation___(self, d_='', quad_degree=None):
         p = [self.dqp[i] + 3 for i in range(self.ndim)] if quad_degree is None else quad_degree

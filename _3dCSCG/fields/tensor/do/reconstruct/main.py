@@ -1,4 +1,4 @@
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 from _3dCSCG.fields.tensor.do.reconstruct.mesh_element.standard import OnMeshElement_Standard
 from _3dCSCG.fields.tensor.do.reconstruct.trace_element.trace_element_wise import OnTraceElement_TraceElementWise
 from _3dCSCG.fields.tensor.do.reconstruct.trace_element.boundary_wise import OnTraceElement_BoundaryWise

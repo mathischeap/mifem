@@ -260,7 +260,7 @@ class SelectiveMatrix(FrozenOnly):
 
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\space\topology\selective_matrix.py
-    from _3dCSCG.main import SpaceInvoker
+    from _3dCSCG.master import SpaceInvoker
 
     space = SpaceInvoker('polynomials')([('Lobatto',2), ('Lobatto',1), ('Lobatto',3)])
 

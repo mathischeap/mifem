@@ -13,6 +13,10 @@ class SpaMat_Customize(FrozenOnly):
         self.___customizations___ = dict()
         self._freeze_self_()
 
+    def clear(self):
+        """clear all existing customizations."""
+        self.___customizations___ = dict()
+
     @property
     def _customizations_(self):
         """For example
@@ -35,8 +39,6 @@ class SpaMat_Customize(FrozenOnly):
         :return:
         """
 
-        # print('CUSTOMIZATION')
-
         if e not in self._customizations_:
 
             pass
@@ -45,7 +47,6 @@ class SpaMat_Customize(FrozenOnly):
             assert spspa.isspmatrix_csc(RETURN) or spspa.isspmatrix_csr(RETURN)
 
             CUSi = self._customizations_[e] # customizations for the output of #e element.
-
 
 
             for cus in CUSi:
@@ -84,9 +85,6 @@ class SpaMat_Customize(FrozenOnly):
                     if not spspa.isspmatrix_lil( RETURN): RETURN = RETURN.tolil()
                     RETURN[factors[0], :] = 0
                     RETURN[factors[0], factors[1]] = 1
-                    # print(e, key, factors)
-                    # print(len(factors[0]))
-
 
                 # Not Implemented --------------------------------------------- BELOW ----------------------------------
                 else:
@@ -111,6 +109,9 @@ class SpaMat_Customize(FrozenOnly):
         :param r:
         :return:
         """
+        assert not self._spa_mat_.do.___locker___, f"the assembled matrix is locked!"
+        assert not self._spa_mat_.do.___sparsity_locker___, f"the sparsity is locked!"
+
         assert r % 1 == 0, f"r={r}({r.__class__.__name__}) is wrong."
         if isinstance(r, float): r = int(r)
 
@@ -136,6 +137,8 @@ class SpaMat_Customize(FrozenOnly):
         :param rs:
         :return:
         """
+        assert not self._spa_mat_.do.___locker___, f"the assembled matrix is locked!"
+        assert not self._spa_mat_.do.___sparsity_locker___, f"the sparsity is locked!"
         raise NotImplementedError()
 
 
@@ -148,6 +151,9 @@ class SpaMat_Customize(FrozenOnly):
         :param v:
         :return:
         """
+        assert not self._spa_mat_.do.___locker___, f"the assembled matrix is locked!"
+        assert not self._spa_mat_.do.___sparsity_locker___, f"the sparsity is locked!"
+
         assert i % 1 == 0, f"i={i}({i.__class__.__name__}) is wrong."
         if isinstance(i, float): i = int(i)
         assert j % 1 == 0, f"j={j}({j.__class__.__name__}) is wrong."
@@ -251,6 +257,9 @@ class SpaMat_Customize(FrozenOnly):
         :param r:
         :return:
         """
+        assert not self._spa_mat_.do.___locker___, f"the assembled matrix is locked!"
+        assert not self._spa_mat_.do.___sparsity_locker___, f"the sparsity is locked!"
+
         assert r % 1 == 0, f"r={r}({r.__class__.__name__}) is wrong."
         if isinstance(r, float): r = int(r)
         self.clear_global_row(r)
@@ -263,6 +272,9 @@ class SpaMat_Customize(FrozenOnly):
         :param rs:
         :return:
         """
+        assert not self._spa_mat_.do.___locker___, f"the assembled matrix is locked!"
+        assert not self._spa_mat_.do.___sparsity_locker___, f"the sparsity is locked!"
+
         raise NotImplementedError()
 
 
@@ -284,6 +296,9 @@ class SpaMat_Customize(FrozenOnly):
         :param interpreted_as:
         :return:
         """
+        assert not self._spa_mat_.do.___locker___, f"the assembled matrix is locked!"
+        assert not self._spa_mat_.do.___sparsity_locker___, f"the sparsity is locked!"
+
         if pds.__class__.__name__ == 'PartialCochain': pds = pds.dofs
 
         assert self._spa_mat_.elements._mesh_ == pds._mesh_, \
@@ -347,6 +362,9 @@ class SpaMat_Customize(FrozenOnly):
         :param interpreted_as:
         :return:
         """
+        assert not self._spa_mat_.do.___locker___, f"the assembled matrix is locked!"
+        assert not self._spa_mat_.do.___sparsity_locker___, f"the sparsity is locked!"
+
         if row_pds.__class__.__name__ == 'PartialCochain':
             row_pds = row_pds.dofs
         if col_pds.__class__.__name__ == 'PartialCochain':
@@ -404,10 +422,7 @@ class SpaMat_Customize(FrozenOnly):
                 self.___customizations___[e].append(
                     ('ilrsac', (row_local_dofs, col_local_dofs)))
 
-                # print(row_local_dofs, col_local_dofs)
-
         else:
             raise Exception(f"Cannot off-diagonally identify global rows through "
                             f"SCG_partial_dofs interpreted "
                             f"as <{interpreted_as}>.")
-

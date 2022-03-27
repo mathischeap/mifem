@@ -8,10 +8,12 @@ CONTINUOUS FORMS are special, they do not inherit the main class of form!
          TU Delft, Delft, Netherlands
 
 """
+
+
 from abc import ABC
-
-
 from inheriting.CSCG.field.base import CSCG_Continuous_FORM_BASE
+
+
 
 
 class _2dCSCG_Continuous_FORM_BASE(CSCG_Continuous_FORM_BASE, ABC):

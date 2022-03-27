@@ -28,6 +28,8 @@ class InterpolationSearcher(FrozenOnly):
     @classmethod
     def ___interpolator_path___(cls):
         """ """
-        return {'transfinite': "_2dCSCG.mesh.domain.regions.region.interpolations.transfinite.main",
-                'crazy': "_2dCSCG.mesh.domain.regions.region.interpolations.crazy",
+        base_path = '.'.join(str(cls).split(' ')[1][1:-2].split('.')[:-2]) + '.'
+
+        return {'transfinite':  base_path + "transfinite.main",
+                'crazy': base_path + "crazy",
                 }

@@ -67,7 +67,7 @@ class PartialDofs(FrozenOnly):
 
 if __name__ == '__main__':
     # mpiexec -n 4 python TOOLS\CSCG\partial_cochain\partial_dofs\main.py
-    from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
     # from root.config import *
 
     mesh = MeshGenerator('crazy', c=0.0)([3,3,3])

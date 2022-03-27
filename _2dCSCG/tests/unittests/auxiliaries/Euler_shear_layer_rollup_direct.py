@@ -12,7 +12,7 @@ from root.config.main import rAnk, mAster_rank
 import os
 
 from tools.iterators.simple import SimpleIterator
-from _2dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
+from _2dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 from tools.linear_algebra.elementwise_cache.objects.column_vector.main import EWC_ColumnVector
 from tools.linear_algebra.elementwise_cache.operators.bmat.main import bmat
 from tools.linear_algebra.elementwise_cache.operators.concatenate.main import concatenate
@@ -30,7 +30,6 @@ def Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename
     # image_folder = './images_direct'
     # RDF_filename = 'shear_layer_rollup_p2_direct'
     # iterator_name='shear-layer-rollup-p2-direct'
-    c = 0  # curvature
     image_levels = [-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6]
 
     t0 = 0
@@ -45,7 +44,10 @@ def Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename
         else:
             os.mkdir(image_folder)
 
-    mesh = MeshGenerator('crazy_periodic', bounds=[[0, 2 * pi], [0, 2 * pi]], c=c)([K, K])
+    mesh = MeshGenerator('rectangle_periodic',
+                         p_UL=(0,0), width=2 * pi, length=2 * pi,
+                         region_layout=(2,2))([K, K])
+
     space = SpaceInvoker('polynomials')([('Lobatto',N), ('Lobatto',N)])
     FC = FormCaller(mesh, space)
     es = ExactSolutionSelector(mesh)("Euler:shear_layer_rollup")
@@ -121,8 +123,10 @@ def Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename
     b = concatenate([b1, b2])
     b.gathering_matrix = (u, P)
 
+
     LSuP = LinearSystem(A, b)
-    LS.customize.identify_global_row(-1)
+    LSuP.customize.identify_global_row(-1)
+    LSuP.A.do.lock_sparsity()
 
     A = bmat(([0.5 * M0, ],))
     A.gathering_matrices = (w, w)
@@ -130,6 +134,8 @@ def Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename
     b = concatenate([E01 @ M1 @ u - 0.5 * M0 @ w, ])
     b.gathering_matrix = w
     LS_w = LinearSystem(A, b)
+    LS_w.A.do.lock_sparsity()
+    LS_w.A.do.lock_assembled_matrix()
 
     w.visualize.matplot.contour(levels=image_levels,
                                 saveto=image_folder + '/' + str(next(IC)),

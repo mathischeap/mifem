@@ -138,7 +138,7 @@ class _2dCSCG_Mesh_Boundaries(FrozenOnly):
 
 if __name__ == "__main__":
     # mpiexec python _2dCSCG\mesh\boundaries.py
-    from _2dCSCG.main import MeshGenerator
+    from _2dCSCG.master import MeshGenerator
     mesh = MeshGenerator('crazy', bounds=((0,3),(0,3)))([2,3])
     mesh.boundaries.___PRIVATE_parse_boundaries___()
     print(rAnk, mesh.boundaries.range_of_element_edges)

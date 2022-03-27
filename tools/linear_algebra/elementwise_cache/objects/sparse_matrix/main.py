@@ -3,7 +3,6 @@ import types
 from screws.freeze.main import FrozenOnly
 from scipy import sparse as spspa
 from root.config.main import *
-from tools.linear_algebra.data_structures.global_matrix.main import GlobalMatrix
 from tools.linear_algebra.gathering.chain_matrix.main import Chain_Gathering_Matrix
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.customize import SpaMat_Customize
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.matmul import ___MATMUL___
@@ -15,6 +14,11 @@ from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.transp
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.inv import ___LinearAlgebraINV___
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.neg import ___NEG___
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.mul import ___MUL___
+
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.assembler import EWC_SparseMatrix_Assembler
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.do import EWC_SparseMatrix_Do
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.IS import EWC_SparseMatrix_IS
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.visualize import EWC_SparseMatrix_Vis
 
 from tools.linear_algebra.elementwise_cache.objects.column_vector.main import EWC_ColumnVector
 
@@ -161,7 +165,7 @@ class EWC_SparseMatrix(FrozenOnly):
         #--------------------------------------------------------------------------------------
         self._gathering_matrices_0_ = None
         self._gathering_matrices_1_ = None
-        self.___PRIVATE_reset_cache___()
+        self._cache_ = dict() # do not use self.___PRIVATE_reset_cache___()
         self.___CT___ = '>CT<'
         self.___NC___ = '>NC<'
         self.___IS_CT___ = False
@@ -173,11 +177,16 @@ class EWC_SparseMatrix(FrozenOnly):
         self._customize_ = SpaMat_Customize(self)
         self._bmat_shape_ = bmat_shape
         self._shape_ = None
+        self._assembler_ = None
+        self._do_ = None
+        self._IS_ = None
+        self._visualize_ = None
         self._freeze_self_()
 
 
     def ___PRIVATE_reset_cache___(self):
         self._cache_ = dict()
+        self.assembler.___PRIVATE_reset_cache___()
 
 
 
@@ -268,64 +277,42 @@ class EWC_SparseMatrix(FrozenOnly):
             assert self._gathering_matrices_0_.shape + \
                    self._gathering_matrices_1_.shape[1:] == self._shape_
 
+    @property
+    def IS(self):
+        """The assembler"""
+        if self._IS_ is None:
+            self._IS_ = EWC_SparseMatrix_IS(self)
+        return self._IS_
+
+    @property
+    def visualize(self):
+        if self._visualize_ is None:
+            self._visualize_ = EWC_SparseMatrix_Vis(self)
+        return self._visualize_
+
+    @property
+    def do(self):
+        """The assembler"""
+        if self._do_ is None:
+            self._do_ = EWC_SparseMatrix_Do(self)
+        return self._do_
+
+    @property
+    def assembler(self):
+        """The assembler"""
+        if self._assembler_ is None:
+            self._assembler_ = EWC_SparseMatrix_Assembler(self)
+        return self._assembler_
 
     @property
     def assembled(self):
         """
-        Assemble self in a global matrix.
+        We will call the assembler with the default routine to assemble self into a global matrix.
 
         :return:
         :rtype GlobalMatrix:
         """
-        assert self.gathering_matrices[0] is not None, "I have no gathering matrix"
-        assert self.gathering_matrices[1] is not None, "I have no gathering matrix"
-        GI = self.gathering_matrices[0]
-        GJ = self.gathering_matrices[1]
-        DEP = GI.GLOBAL_num_dofs
-        WID = GJ.GLOBAL_num_dofs
-        ROW = list()
-        COL = list()
-        DAT = list()
-
-        A = spspa.csc_matrix((DEP, WID)) # initialize a sparse matrix
-
-        for i in self:
-            Mi = self[i]
-            indices = Mi.indices
-            indptr = Mi.indptr
-            data = Mi.data
-            nums = np.diff(indptr)
-            if Mi.__class__.__name__ == 'csc_matrix':
-                for j, num in enumerate(nums):
-                    idx = indices[indptr[j]:indptr[j+1]]
-                    ROW.extend(GI[i][idx])
-                    COL.extend([GJ[i][j],]*num)
-            elif Mi.__class__.__name__ == 'csr_matrix':
-                for j, num in enumerate(nums):
-                    idx = indices[indptr[j]:indptr[j+1]]
-                    ROW.extend([GI[i][j],]*num)
-                    COL.extend(GJ[i][idx])
-            else:
-                raise Exception("I can not handle %r."%Mi)
-            DAT.extend(data)
-
-            if len(DAT) > 1e7: # every 5 million data, we make it into sparse matrix.
-                _ = spspa.csc_matrix((DAT, (ROW, COL)), shape=(DEP, WID)) # we make it into sparse
-                del ROW, COL, DAT
-                A += _
-                del _
-                ROW = list()
-                COL = list()
-                DAT = list()
-
-        _ = spspa.csc_matrix((DAT, (ROW, COL)), shape=(DEP, WID))  # we make it into sparse
-        del ROW, COL, DAT
-        A += _
-        del _
-
-        assert A.shape == (GI.GLOBAL_num_dofs, GJ.GLOBAL_num_dofs)
-
-        return GlobalMatrix(A)
+        return self.assembler()
 
     @property
     def GLOBAL_len(self):

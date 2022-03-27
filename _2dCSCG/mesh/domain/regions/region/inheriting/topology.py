@@ -37,7 +37,8 @@ class RegionTopology:
 
     @classmethod
     def _corner_name_to_index_dict_(cls):
-        return {'UL': 0, 'DL': 1, 'UR': 2, 'DR': 3}
+        return {'UL': 0, 'DL': 1, 'UR': 2, 'DR': 3,
+                'LU': 0, 'LD': 1, 'RU': 2, 'RD': 3}
 
     @classmethod
     def _corner_name_to_index_(cls, _corner_name_):

@@ -32,6 +32,8 @@ def ___scipy_sparse_linalg_v0___(A, b, COD=True):
     cOmm.barrier()
     t0 = time()
     # ...
+    if COD is None: COD = True
+
     A = A.do.gather_M_to_core(core=mAster_rank, clean_local=COD)
     b = b.do.gather_V_to_core(core=mAster_rank, clean_local=COD)
 

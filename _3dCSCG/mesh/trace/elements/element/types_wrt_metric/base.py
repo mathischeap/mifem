@@ -36,4 +36,3 @@ class TraceElementTypeWr2MetricBase(FrozenOnly):
     @property
     def ___IS_3dCSCG_TraceElementTypeWr2Metric___(self):
         return True
-

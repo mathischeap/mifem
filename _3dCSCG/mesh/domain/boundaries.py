@@ -1,9 +1,9 @@
 """
-This is a class for the boundaries of the domain. A more useful class is the one for the boundaries of the mesh. See
-module "boundaries" for the mesh class.
+This is a class for the boundaries of the domain. A more useful class is the one for the boundaries
+of the mesh. See module "boundaries" for the mesh class.
 
-If two boundaries are periodic, in other words, they are internal, we will still have them contained in this domain
-boundaries class.
+If two boundaries are periodic, in other words, they are internal, we will still have them contained
+in this domain boundaries class.
 
 In the mesh.boundaries class, the periodic boundaries will not be shown.
 """
@@ -74,7 +74,8 @@ class _3dCSCG_Boundaries(FrozenOnly):
 
     def ___PRIVATE_if_is_Regular__one_region_corner_interface___(self):
         """
-        Return True if the interface of any two connected boundaries is regular (on the corner edge of a regions).
+        Return True if the interface of any two connected boundaries is regular (on the corner edge
+        of a regions).
 
         :return: bool
         """
@@ -126,9 +127,12 @@ class _3dCSCG_Boundaries(FrozenOnly):
 
 
 
+
+
+
 if __name__ == '__main__':
     # mpiexec -n 5 python _3dCSCG\mesh\domain\boundaries.py
-    from _3dCSCG.main import MeshGenerator
+    from _3dCSCG.master import MeshGenerator
     elements = [3, 4, 2]
     # mesh = MeshGenerator('bridge_arch_cracked')(elements)
     mesh = MeshGenerator('crazy')(elements)

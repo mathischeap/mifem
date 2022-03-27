@@ -1,7 +1,7 @@
 
 from screws.freeze.main import FrozenOnly
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
-from _3dCSCG.forms.standard.base.operators.components.inner import ___Operators_3dCSCG_sf_Inner___
+from _3dCSCG.forms.standard.base.operators.helpers.inner import ___Operators_3dCSCG_sf_Inner___
 
 
 
@@ -30,6 +30,3 @@ class _3dCSCG_Standard_Form_Operators(FrozenOnly):
 
     def cross_product(self, *args, **kwargs):
         return self._sf_.special.cross_product(*args, **kwargs)
-
-
-

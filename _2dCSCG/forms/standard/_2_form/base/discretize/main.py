@@ -1,4 +1,4 @@
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 from _2dCSCG.forms.standard._2_form.base.discretize.scalar.standard import _2dCSCG_S2F_Discretize_StandardScalar
 
 class _2dCSCG_S2F_Discretize(FrozenOnly):

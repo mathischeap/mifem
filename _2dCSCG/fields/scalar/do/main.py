@@ -1,7 +1,7 @@
 
 
 
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 from _2dCSCG.fields.scalar.do.reconstruct.main import _2dCSCG_Scalr_Do_Reconstruct
 
 

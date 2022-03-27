@@ -1,5 +1,5 @@
 
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 
 
 class CSCG_standard_form_NUM(FrozenOnly):
@@ -27,3 +27,7 @@ class CSCG_standard_form_NUM(FrozenOnly):
     def dofs(self):
         """(int) Return number of dofs in this core."""
         return self._f_.numbering.num_of_dofs_in_this_core
+
+    @property
+    def GLOBAL_dofs(self):
+        return self._f_.numbering.gathering.GLOBAL_num_dofs

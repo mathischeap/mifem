@@ -3,7 +3,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 from _3dCSCG.forms.trace._0_trace.discretize.vector.standard.flux import _3dCSCG_0Trace_Discretize_StandardVector_Flux
 from _3dCSCG.forms.trace._0_trace.discretize.scalar.standard import _3dCSCG_0Trace_Discretize_StandardScalar
 
@@ -71,7 +71,7 @@ class _3dCSCG_0Trace_Discretize(FrozenOnly):
 if __name__ == '__main__':
     # mpiexec -n 5 python _3dCSCG\forms\trace\_0_trace\discretize\main.py
 
-    from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
+    from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller
 
     mesh = MeshGenerator('crazy', c=0.)([2,2,2])
     space = SpaceInvoker('polynomials')([('Lobatto',5), ('Lobatto',5), ('Lobatto',5)])

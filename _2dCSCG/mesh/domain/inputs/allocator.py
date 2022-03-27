@@ -1,7 +1,9 @@
 
 
+import sys
+if './' not in sys.path: sys.path.append('./')
+
 from screws.freeze.main import FrozenOnly
-from screws.exceptions import MeshError
 from importlib import import_module
 
 
@@ -15,17 +17,16 @@ class DomainInputFinder(FrozenOnly):
         ID : str
 
         """
-        try:
-            mesh_class = self.___defined_DI___()[ID]
-        except KeyError:
-            raise MeshError(" <DomainInputFinder> : mesh ID = {} is wrong.".format(ID))
-        cls_name = mesh_class
-        cls_path = self.___DI_path___() + '.' + ID
+        assert ID in self.___defined_DI___(), f" <DomainInputFinder> : mesh ID = {ID} is wrong."
+        cls_name = self.___defined_DI___()[ID]
+        cls_path = self.___DI_path___()[ID]
         self._DomainInput_ = getattr(import_module(cls_path), cls_name)
         self._freeze_self_()
 
     def __call__(self, *args, **kwargs):
         """ """
+
+
         return self._DomainInput_(*args, **kwargs)
 
     @classmethod
@@ -42,14 +43,31 @@ class DomainInputFinder(FrozenOnly):
                   'crazy_periodic': "CrazyPeriodic",
                   'bcr': "BottomCustomizedRectangle",
                   'cic': "CylinderInChannel",
-                  'rectangle': "Rectangle"}
+                  'rectangle': "Rectangle",
+                  'rectangle_periodic': "RectanglePeriodic",}
         return _dict_
 
     @classmethod
     def ___DI_path___(cls):
         """ """
-        return '_2dCSCG.mesh.domain.inputs'
+        base_path = '.'.join(str(cls).split(' ')[1][1:-2].split('.')[:-2]) + '.'
+
+        return {'chp1' : base_path + "chp1",
+                'chp2' : base_path + "chp2",
+                'crazy': base_path + "crazy",
+                'quadrangle'    : base_path + 'quadrangle',
+                'crazy_periodic': base_path + "crazy_periodic",
+                'bcr': base_path + "bcr",
+                'cic': base_path + "cic",
+                'rectangle': base_path + "rectangle",
+                'rectangle_periodic': base_path + "rectangle_periodic",}
+
+
+
+
+
 
 
 if __name__ == "__main__":
-    di = DomainInputFinder('rectangle')()
+    # mpiexec python _2dCSCG\main.py
+    di = DomainInputFinder('rectangle_periodic')()

@@ -18,12 +18,18 @@ class ShearLayerRollup(EulerBase):
         self._epsilon_ = epsilon
         super(ShearLayerRollup, self).__init__(es)
         #-------- check the domain ---------------------------------------------------------------
-        assert self.mesh.domain.name == 'CrazyPeriodic', \
-            f"Shear-Layer-Rollup exact solution only works in crazy_periodic domain, " \
-            f"now it is {self.mesh.domain.name}."
-        bx, by = self.mesh.domain.domain_input.bounds
-        assert tuple(bx) == (0, 2*pi) and tuple(by) == (0, 2*pi), \
-            f"ShearLayerRollup can only work in [0, 2pi]^2 periodic domain"
+        if self.mesh.domain.name == 'CrazyPeriodic':
+            bx, by = self.mesh.domain.domain_input.bounds
+            assert tuple(bx) == (0, 2*pi) and tuple(by) == (0, 2*pi), \
+                f"ShearLayerRollup can only work in [0, 2pi]^2 periodic domain"
+        elif self.mesh.domain.name == 'RectanglePeriodic':
+            p_UL = self.mesh.domain.domain_input.p_UL
+            width = self.mesh.domain.domain_input.width
+            length = self.mesh.domain.domain_input.length
+            assert p_UL == (0, 0) and width == 2*pi and length == 2*pi
+        else:
+            raise Exception()
+
         #-----------------------------------------------------------------------------------------
 
     @property
@@ -61,7 +67,7 @@ class ShearLayerRollup(EulerBase):
 
 if __name__ == '__main__':
     # mpiexec -n 4 python _2dCSCG\APP\exact_solution\status\Euler\shear_layer_rollup.py
-    from _2dCSCG.main import MeshGenerator, ExactSolutionSelector
+    from _2dCSCG.master import MeshGenerator, ExactSolutionSelector
     mesh = MeshGenerator('crazy_periodic', bounds=[[0, 2*pi], [0, 2*pi]], c=0.3)([2, 2])
     es = ExactSolutionSelector(mesh)("Euler:shear_layer_rollup", show_info=True)
 

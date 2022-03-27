@@ -1,5 +1,5 @@
 
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 
 
 class CSCG_FTWF_DO(FrozenOnly):

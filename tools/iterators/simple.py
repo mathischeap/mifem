@@ -32,8 +32,8 @@ class SimpleIterator(Iterator):
 
     def ___PRIVATE_update_dt___(self):
         """
-        For SimpleIterator, dt is always the same. But we have this method to remind us that we need a
-        update method for all iterators.
+        For SimpleIterator, dt is always the same. But we have this method to remind us that we need
+        the update method for all iterators.
 
         :return:
         """

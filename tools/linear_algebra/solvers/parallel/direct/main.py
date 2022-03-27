@@ -12,7 +12,7 @@ class Direct(ParallelSolverBase):
         super().__init__(routine, name)
 
 
-    def __call__(self, A, b, COD=True,
+    def __call__(self, A, b, COD=None,
                  **kwargs
         ):
         """
@@ -50,8 +50,7 @@ class Direct(ParallelSolverBase):
                 raise Exception(f"routine={self._routine_} is wrong.")
 
         # ---------- Do the computation ----------------------------------------------------------------
-        results, info, beta, ITER, solver_message = \
-        ROUTINE(A, b, COD=COD)
+        results, info, beta, ITER, solver_message = ROUTINE(A, b, COD=COD)
 
         _ = kwargs # trivial; just leave freedom for future updates for kwargs.
 

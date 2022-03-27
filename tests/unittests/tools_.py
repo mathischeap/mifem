@@ -20,10 +20,10 @@ from tools.linear_algebra.data_structures.global_matrix.main import GlobalVector
 from tools.linear_algebra.deprecated.data_structure_old0 import GlobalMatrix as GlobalMatrixOld
 import tools.linear_algebra.deprecated.gmres as gmres
 import tools.linear_algebra.solvers.serial.deprecated as serial_spspalinalg
-from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
-from _2dCSCG.main import MeshGenerator as MeshGenerator2D
-from _2dCSCG.main import SpaceInvoker as SpaceInvoker2D
-from _2dCSCG.main import FormCaller as FormCaller2D
+from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller
+from _2dCSCG.master import MeshGenerator as MeshGenerator2D
+from _2dCSCG.master import SpaceInvoker as SpaceInvoker2D
+from _2dCSCG.master import FormCaller as FormCaller2D
 from tools.linear_algebra.gathering.chain_matrix.main import Chain_Gathering_Matrix
 from tools.linear_algebra.elementwise_cache.operators.concatenate.main import bmat, concatenate
 import tools.linear_algebra.elementwise_cache.operators.concatenate.main as mif
@@ -2104,6 +2104,6 @@ def test_TOOLS_NO15_linear_system_apply_BC():
 if __name__ == '__main__':
     # mpiexec -n 5 python tests\unittests\tools_.py
 
-    test_TOOLS_NO13_EWC_Customize_CSCG_partial_dofs()
+    test_TOOLS_NO15_linear_system_apply_BC()
 
 

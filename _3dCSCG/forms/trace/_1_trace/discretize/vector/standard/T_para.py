@@ -3,7 +3,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 import numpy as np
 from screws.quadrature import Quadrature
 
@@ -252,7 +252,7 @@ class _3dCSCG_1Trace_Discretize_StandardVector_T_para(FrozenOnly):
 if __name__ == '__main__':
     # mpiexec -n 5 python _3dCSCG\forms\trace\_1_trace\discretize\vector\standard\T_para.py
 
-    from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
+    from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller
 
     mesh = MeshGenerator('crazy', c=0.)([2,2,2])
     space = SpaceInvoker('polynomials')([('Lobatto',5), ('Lobatto',5), ('Lobatto',5)])

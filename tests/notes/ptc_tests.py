@@ -9,7 +9,7 @@ if './' not in sys.path: sys.path.append('../others/')
 
 import numpy as np
 
-from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
+from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller
 
 
 # mesh = MeshGenerator('crazy', c=0.2, bounds=((0, 1), (0, 1), (0, 1)))([1, 1, 1])

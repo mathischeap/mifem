@@ -2,6 +2,13 @@
 
 from _2dCSCG.mesh.domain.inputs.base import DomainInputBase
 import numpy as np
+from screws.decorators.classproperty.main import classproperty
+
+import random
+from root.config.main import mAster_rank, rAnk, cOmm
+
+
+
 
 
 class CrazyPeriodic(DomainInputBase):
@@ -36,3 +43,33 @@ class CrazyPeriodic(DomainInputBase):
     def c(self):
         return self._c_
 
+
+
+    @classproperty
+    def statistic(cls):
+        raise NotImplementedError()
+
+    @classproperty
+    def random_parameters(cls):
+        raise NotImplementedError()
+
+
+
+    @classproperty
+    def statistic(cls):
+        return {'periodic': True,
+                'region num': 1,
+                'mesh boundary num': 0, # the amount of mesh boundaries (instead of domain boundaries)
+                }
+
+    @classproperty
+    def random_parameters(cls):
+        if rAnk == mAster_rank:
+            rp = {'c': random.randint(0,3)*random.random()/10,
+                  'bounds': [(-random.random(), random.random()+0.5),
+                             (-random.random(), random.random()+0.5)]
+                   }
+        else:
+            rp = None
+
+        return cOmm.bcast(rp, root=mAster_rank)

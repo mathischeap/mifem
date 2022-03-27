@@ -1,6 +1,7 @@
 
 
 from _3dCSCG.mesh.domain.inputs.base import _3dDomainInputBase
+from screws.decorators.classproperty.main import classproperty
 
 class Periodic_Square_Channel(_3dDomainInputBase):
     """A periodic square channel domain.
@@ -51,3 +52,12 @@ class Periodic_Square_Channel(_3dDomainInputBase):
         return self._lwh_
 
 
+
+    @classproperty
+    def statistic(cls):
+        raise NotImplementedError()
+
+
+    @classproperty
+    def random_parameters(cls):
+        raise NotImplementedError()

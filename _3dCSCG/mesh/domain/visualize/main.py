@@ -83,12 +83,21 @@ class _3dCSCG_Domain_Visualize(FrozenOnly):
         frame.plot().activate()
 
 
-    def matplot(self, density=1e4, corlormap='tab10',
+    def matplot(self, density=1000, corlormap='tab10',
         show_internal_region_sides=False,
         show_boundary_names=True,
         distinguish_boundaries_by_color=True,
         aspect='equal',):
-        """"""
+        """
+
+        :param density:
+        :param corlormap:
+        :param show_internal_region_sides:
+        :param show_boundary_names:
+        :param distinguish_boundaries_by_color:
+        :param aspect:
+        :return:
+        """
         # we can do everything in the master core.
         if rAnk != mAster_rank: return
 
@@ -155,6 +164,7 @@ class _3dCSCG_Domain_Visualize(FrozenOnly):
                         ax.plot_surface(*xyz, color=(1,1,1,0.6))
 
                     if show_boundary_names:
+                        x, y, z = xyz
                         x_range = [np.min(x), np.max(x)]
                         y_range = [np.min(y), np.max(y)]
                         z_range = [np.min(z), np.max(z)]
@@ -179,7 +189,8 @@ class _3dCSCG_Domain_Visualize(FrozenOnly):
         plt.title(self._domain_.name + ', ID: '+
                   self._domain_.parameters['ID'] +
                   ', <domain>')
-        fig.tight_layout()
 
+        fig.tight_layout()
         plt.show()
-        plt.close('all')
+        plt.close(fig)
+        return fig

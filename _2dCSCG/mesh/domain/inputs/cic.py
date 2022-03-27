@@ -2,6 +2,7 @@
 
 from _2dCSCG.mesh.domain.inputs.base import DomainInputBase
 import numpy as np
+from screws.decorators.classproperty.main import classproperty
 
 class CylinderInChannel(DomainInputBase):
     """ Just like the class name say, this is a cylinder in channel domain."""
@@ -96,3 +97,17 @@ class CylinderInChannel(DomainInputBase):
     @property
     def lo(self):
         return self._lo_
+
+
+
+
+    @classproperty
+    def statistic(cls):
+        return {'periodic': False,
+                'region num': 6,
+                'mesh boundary num': 5, # the amount of mesh boundaries (instead of domain boundaries)
+                }
+
+    @classproperty
+    def random_parameters(cls):
+        return {}

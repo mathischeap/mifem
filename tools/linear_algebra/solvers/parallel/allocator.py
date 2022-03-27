@@ -45,17 +45,6 @@ class ParallelSolverDistributor(FrozenOnly):
         Results = self._solver_(A, b, *args, **kwargs)
         assert Results[0].__class__.__name__ == 'LocallyFullVector', f"results must be a LocallyFullVector!"
         return Results
-
-    @classmethod
-    def ___parallel_solver_path___(cls):
-        root = "tools.linear_algebra.solvers.parallel."
-        return {
-            'GMRES'   : root + 'GMRES.main',
-            'LGMRES'  : root + 'LGMRES.main',
-            'BiCGSTAB': root + 'BiCGSTAB.main',
-            'direct'  : root + 'direct.main'
-        }
-
     @classmethod
     def ___coded_parallel_solvers___(cls):
         """"""
@@ -63,6 +52,17 @@ class ParallelSolverDistributor(FrozenOnly):
                 'LGMRES'  : 'LGMRES',
                 'BiCGSTAB': 'BiCGSTAB',
                 'direct'  : 'Direct'}
+
+
+    @classmethod
+    def ___parallel_solver_path___(cls):
+        base_path = '.'.join(str(cls).split(' ')[1][1:-2].split('.')[:-2]) + '.'
+        return {
+            'GMRES'   : base_path + 'GMRES.main',
+            'LGMRES'  : base_path + 'LGMRES.main',
+            'BiCGSTAB': base_path + 'BiCGSTAB.main',
+            'direct'  : base_path + 'direct.main'
+        }
 
 
 

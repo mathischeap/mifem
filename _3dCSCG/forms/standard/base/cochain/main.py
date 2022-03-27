@@ -1,5 +1,5 @@
 
-from inheriting.CSCG.forms.standard.cochain import CSCG_Standard_Form_Cochain_BASE
+from inheriting.CSCG.forms.standard.cochain.main import CSCG_Standard_Form_Cochain_BASE
 from _3dCSCG.forms.standard.base.cochain.partial import _3dCSCG_Standard_Form_Cochain_Partial
 
 
@@ -65,4 +65,3 @@ class _3dCSCG_Standard_Form_Cochain(CSCG_Standard_Form_Cochain_BASE):
         if self._partial_ is None:
             self._partial_ = _3dCSCG_Standard_Form_Cochain_Partial(self)
         return self._partial_
-

@@ -14,7 +14,7 @@ import numpy as np
 from scipy import sparse as spspa
 from _2dCSCG.forms.standard._1_form.base.main import _1Form_BASE
 from _2dCSCG.forms.standard._1_form.inner.discretize.main import _2dCSCG_S1Fi_Discretize
-
+from _2dCSCG.forms.standard._1_form.inner.reconstruct import _2dCSCG_Si1F_Reconstruct
 
 
 class _2dCSCG_1Form_Inner(_1Form_BASE):
@@ -36,6 +36,7 @@ class _2dCSCG_1Form_Inner(_1Form_BASE):
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_1form')
         self._special_ = _1Form_Inner_Special(self)
         self._discretize_ = _2dCSCG_S1Fi_Discretize(self)
+        self._reconstruct_ = None
         self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
@@ -47,36 +48,14 @@ class _2dCSCG_1Form_Inner(_1Form_BASE):
     def discretize(self):
         return self._discretize_
 
+    @property
+    def reconstruct(self):
+        if self._reconstruct_ is None:
+            self._reconstruct_ = _2dCSCG_Si1F_Reconstruct(self)
+        return self._reconstruct_
 
-    def reconstruct(self, xi, eta, ravel=False, i=None):
-        xietasigma, basis = self.do.evaluate_basis_at_meshgrid(xi, eta)
-        xyz = dict()
-        value = dict()
-        shape = [len(xi), len(eta)]
-        INDICES = self.mesh.elements.indices if i is None else [i,]
-        iJ = self.mesh.elements.coordinate_transformation.inverse_Jacobian_matrix(*xietasigma)
-        for i in INDICES:
-            element = self.mesh.elements[i]
-            xyz[i] = element.coordinate_transformation.mapping(*xietasigma)
-            u = np.einsum('ij, i -> j', basis[0], self.cochain.___PRIVATE_local_on_axis___('x', i), optimize='optimal')
-            v = np.einsum('ij, i -> j', basis[1], self.cochain.___PRIVATE_local_on_axis___('y', i), optimize='optimal')
-            value[i] = [None, None]
-            typeWr2Metric = element.type_wrt_metric.mark
-            iJi = iJ[i]
-            if isinstance(typeWr2Metric, str) and typeWr2Metric[:4] == 'Orth':
-                value[i][0] = u*iJi[0][0]
-                value[i][1] = v*iJi[1][1]
-            else:
-                for j in range(2):
-                    value[i][j] = u*iJi[0][j] + v*iJi[1][j]
-            if ravel:
-                pass
-            else:
-                # noinspection PyUnresolvedReferences
-                xyz[i] = [xyz[i][j].reshape(shape, order='F') for j in range(2)]
-                # noinspection PyUnresolvedReferences
-                value[i] = [value[i][j].reshape(shape, order='F') for j in range(2)]
-        return xyz, value
+
+
 
     def ___PRIVATE_make_reconstruction_matrix_on_grid___(self, xi, eta):
         """
@@ -192,7 +171,7 @@ class _2dCSCG_1Form_Inner(_1Form_BASE):
 
 if __name__ == '__main__':
     # mpiexec -n 3 python _2dCSCG\forms\standard\_1_form\inner\main.py
-    from _2dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
+    from _2dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
     mesh = MeshGenerator('crazy', c=0.0,bounds=([0,1],[0,1]))([1,1])
     # mesh = MeshGenerator('chp1',)([2,2])

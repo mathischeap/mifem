@@ -20,6 +20,7 @@ class _2dCSCG_PeriodicDomainSetting(FrozenOnly):
         """ """
         self._baseMesh_ = baseMesh
         self._periodic_boundary_pairs_keys_ = givenPairs
+
         self.___INITIALIZING_INDIVIDUAL_BOUNDARY_PAIRS___()
         self._periodic_region_edge_pairs_ = None
         self._freeze_self_()

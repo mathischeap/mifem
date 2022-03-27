@@ -9,19 +9,15 @@ TU Delft
 """
 
 from screws.freeze.main import FrozenOnly
-from screws.exceptions import MeshError
 from importlib import import_module
 
 
 class DomainInputAllocator(FrozenOnly):
     """ We use this finder to get a `DomainInput`."""
     def __init__(self, ID):
-        try:
-            mesh_class = self.___defined_DI___()[ID]
-        except KeyError:
-            raise MeshError(" <DomainInputFinder> : mesh ID = {} is wrong.".format(ID))
-        cls_name = mesh_class
-        cls_path = self.___DI_path___() + '.' + ID
+        assert ID in self.___defined_DI___(), f" <DomainInputFinder> : mesh ID = {ID} is wrong."
+        cls_name = self.___defined_DI___()[ID]
+        cls_path = self.___DI_path___()[ID]
         self._DomainInput_ = getattr(import_module(cls_path), cls_name)
         self._freeze_self_()
     
@@ -47,4 +43,11 @@ class DomainInputAllocator(FrozenOnly):
     @classmethod
     def ___DI_path___(cls):
         """ """
-        return '_3dCSCG.mesh.domain.inputs'
+        base_path = '.'.join(str(cls).split(' ')[1][1:-2].split('.')[:-2]) + '.'
+        return {'crazy'              : base_path + "crazy",
+                'crazy_periodic'     : base_path + "crazy_periodic",
+                'bridge_arch_cracked': base_path + "bridge_arch_cracked",
+                'psc': base_path + "psc",
+                'pwc': base_path + "pwc",
+                'LDC': base_path + "LDC",
+                  }

@@ -20,12 +20,18 @@ class TaylorGreenVortex(incompressibleNavierStokesBase):
         """
         super(TaylorGreenVortex, self).__init__(es, nu)
         #-------- check the domain ---------------------------------------------------------------
-        assert self.mesh.domain.name == 'CrazyPeriodic', \
-            f"Shear-Layer-Rollup exact solution only works in crazy_periodic domain, " \
-            f"now it is {self.mesh.domain.name}."
-        bx, by = self.mesh.domain.domain_input.bounds
-        assert tuple(bx) == (0, 2) and tuple(by) == (0, 2), \
-            f"ShearLayerRollup can only work in [0, 2]^2 periodic domain"
+        if self.mesh.domain.name == 'CrazyPeriodic':
+            bx, by = self.mesh.domain.domain_input.bounds
+            assert tuple(bx) == (0, 2) and tuple(by) == (0, 2), \
+                f"ShearLayerRollup can only work in [0, 2]^2 periodic domain"
+        elif self.mesh.domain.name == 'RectanglePeriodic':
+            p_UL = self.mesh.domain.domain_input.p_UL
+            width = self.mesh.domain.domain_input.width
+            length = self.mesh.domain.domain_input.length
+            assert p_UL == (0, 0) and width == 2 and length == 2, \
+                f"ShearLayerRollup can only work in [0, 2]^2 periodic domain"
+        else:
+            raise Exception(f"ShearLayerRollup can only work in [0, 2]^2 periodic domain")
         #-----------------------------------------------------------------------------------------
 
 
@@ -42,18 +48,18 @@ class TaylorGreenVortex(incompressibleNavierStokesBase):
         return 0.25 * (cos(2*pi*x) + cos(2*pi*y)) * exp(- 4 * pi**2 * self.nu * t)
 
 
-    def fx(self, t, x, y):
-        return 0 * x
-
-    def fy(self, t, x, y):
-        return 0 * y
+    # def fx(self, t, x, y):
+    #     return 0 * x
+    #
+    # def fy(self, t, x, y):
+    #     return 0 * y
 
 
 
 if __name__ == '__main__':
     # mpiexec -n 4 python _2dCSCG\APP\exact_solution\status\incompressible_Navier_Stokes\Taylor_Green_vortex.py
-    from _2dCSCG.main import MeshGenerator, ExactSolutionSelector
-    mesh = MeshGenerator('crazy_periodic', bounds=[[0, 2], [0, 2]], c=0.)([2, 2])
+    from _2dCSCG.master import MeshGenerator, ExactSolutionSelector
+    mesh = MeshGenerator('crazy_periodic', bounds=[[0, 2], [0, 2]], c=0.0)([2, 2])
     es = ExactSolutionSelector(mesh)("icpsNS:TGV", show_info=True)
 
     es.status.body_force.visualize(time=10)

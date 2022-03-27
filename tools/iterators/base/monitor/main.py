@@ -15,15 +15,17 @@ class IteratorMonitor(FrozenOnly):
     :param auto_save_frequency:
     :param RDF_filename:
     :param factor:
+    :param real_time_monitor:
     """
-    def __init__(self, iterator, auto_save_frequency, RDF_filename, factor: float):
+    def __init__(self, iterator, auto_save_frequency, RDF_filename, factor: float, real_time_monitor: bool):
         assert rAnk == mAster_rank, "Should only initialize and use it in master core."
-        self.___auto_save_default_time___ = 3600 # seconds: 1 hour           --> affected by ``factor``
         self.___graph_report_default_time___ = 600 # seconds; 10 minutes     --> affected by ``factor``
+        self.___auto_save_default_time___ = 600  # seconds: 10 minutes       --> affected by ``factor``
         self.___email_report_default_time___ = 3600 * 12 # seconds; 12 hours --> affected by ``factor``
         self.___PRIVATE_set_factor___(factor)
         self.___PRIVATE_set_auto_save_frequency___(auto_save_frequency)
         self.___PRIVATE_set_RDF_filename___(RDF_filename)
+        self._real_time_monitor_ = real_time_monitor
 
         self._iterator_ = iterator
         # Following are all timing related ...
@@ -72,17 +74,17 @@ class IteratorMonitor(FrozenOnly):
             assert factor >= 0.1, \
                 f"monitor factor={factor} wrong, should be `False`, `True` or `>= 0.1`"
         if factor == 0:
-            self.___graph_report_time___ = 999999
-            self.___email_report_time___ = 999999
-            self.___auto_save_time___    = 999999
+            self.___graph_report_time___ = 9999999
+            self.___auto_save_time___    = 9999999
+            self.___email_report_time___ = 9999999
         else:
             self.___graph_report_time___ = (1 / factor) * self.___graph_report_default_time___
-            self.___email_report_time___ = (1 / factor) * self.___email_report_default_time___
             self.___auto_save_time___ = (1 / factor) * self.___auto_save_default_time___
+            self.___email_report_time___ = (1 / factor) * self.___email_report_default_time___
 
-        if self.___graph_report_time___ < 60: self.___graph_report_time___ = 60 # 最快60秒报告一次
-        if self.___email_report_time___ < 720: self.___email_report_time___ = 720 # 最快12分钟报告一次
-        if self.___auto_save_time___ < 600: self.___auto_save_time___ = 600 # 最快10分钟报告一次
+        if self.___graph_report_time___ < 60: self.___graph_report_time___ = 60   # 最快60秒报告一次
+        if self.___auto_save_time___ < 60: self.___auto_save_time___ = 60         # 最快60秒报告一次
+        if self.___email_report_time___ < 3600: self.___email_report_time___ = 3600 # 最快1小时报告一次
 
         self._factor_ = factor
         # even it is 0, the monitor still do the recording background, but no report.

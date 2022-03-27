@@ -50,8 +50,8 @@ def ___generate_A_b_of_Manguoglu_Paper___():
         Ar = A - AR0
         br = b - BR0
 
-    A = GlobalMatrix(spspa.csc_matrix(Ar))
-    b = GlobalVector(spspa.csc_matrix(br))
+    A = GlobalMatrix(spspa.csr_matrix(Ar))
+    b = GlobalVector(spspa.csr_matrix(br))
 
     M = A.___PRIVATE_gather_M_to_core___()
     V = b.___PRIVATE_gather_V_to_core___()
@@ -258,7 +258,6 @@ def test_LinearSolver_No2_LooseGMRES():
 
     return 1
 
-
 def test_LinearSolver_No3_direct():
     """"""
     if rAnk == mAster_rank:
@@ -285,6 +284,16 @@ def test_LinearSolver_No3_direct():
     np.testing.assert_almost_equal(A.condition.condition_number, 85.3100212781)
 
     return 1
+
+
+
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     # mpiexec -n 4 python tests\unittests\linear_solvers.py

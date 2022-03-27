@@ -74,6 +74,9 @@ class SendAdminAnHTMLEmail(FrozenOnly):
 
         self._freeze_self_()
 
+
+
+
     def __call__(self, HTML_message, subject=None, attachment_images=None):
         """By calling the object, we send the message."""
         assert rAnk == mAster_rank, "Should only call it in master core."

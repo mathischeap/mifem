@@ -35,7 +35,7 @@ class _3dCSCG_S1_ADF(_3dCSCG_Algebra_DUAL_Standard_Form):
 
 if __name__ == "__main__":
     # mpiexec -n 6 python _3dCSCG\ADF\standard\_1_AD_form.py
-    from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
+    from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller
     import numpy as np
 
     # mesh = MeshGenerator('bridge_arch_cracked')([8,9,7], EDM='SWV0', show_info=True)

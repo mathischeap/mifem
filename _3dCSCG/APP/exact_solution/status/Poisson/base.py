@@ -1,6 +1,6 @@
 """The 3d Poisson problem, k = 1.
 
-The Poisson equation:
+The Poisson equation: (k=1)
 - div (k grad phi) = f
 
 And in the mixed formulation:
@@ -16,15 +16,15 @@ for example (temperature, heat flux and heat source) and so on.
 
 """
 
-
-
-import random
 import numpy as np
-from functools import partial, lru_cache
+from functools import lru_cache
 from _3dCSCG.APP.exact_solution.status.base import Base
-from screws.numerical._3d_space.Jacobian_33 import NumericalPartialDerivative_xyz
 from _3dCSCG.fields.vector.main import _3dCSCG_VectorField
 from _3dCSCG.fields.scalar.main import _3dCSCG_ScalarField
+
+from screws.numerical.time_plus_3d_space.partial_derivative import NumericalPartialDerivative_txyz
+from screws.numerical.time_plus_3d_space.partial_derivative_as_functions import \
+    NumericalPartialDerivative_txyz_Functions
 
 
 class Poisson_Base(Base):
@@ -34,56 +34,13 @@ class Poisson_Base(Base):
         self._velocity_ = None
         self._source_term_ = None
         self._kineticEnergyDistribution_ = None
-        self.___check_self___()
+
+        self._NPDf_p_ = None
+        self._NPDf_px_ = None
+        self._NPDf_py_ = None
+        self._NPDf_pz_ = None
         self._freeze_self_()
 
-
-    @property
-    def ___check_domain___(self):
-        """
-        We use this general domain to do the check, in particular exact solution, we can define new domain
-        by override this method.
-
-        """
-        times = [random.uniform(-5, 5) for _ in range(3)]
-        r = np.linspace(random.uniform(-1, -0.1), random.uniform(0.1, 1), random.randint(3, 5))
-        s = np.linspace(random.uniform(-1, -0.2), random.uniform(0.2, 1), random.randint(3, 5))
-        t = np.linspace(random.uniform(-1, -0.3), random.uniform(0.3, 1), random.randint(3, 5))
-        r, s, t = np.meshgrid(r, s, t, indexing='ij')
-        dt = 0.000001
-        return (r, s, t), times, dt
-
-
-    def ___check_self___(self):
-        """
-        A default checker. If you do not want to run this check, override ___PRIVATE_check_self___ method in the
-        particular class.
-
-        :return:
-        """
-        rst, times, dt = self.___check_domain___
-        for time in times:
-            phi = partial(self.phi, time)
-            u = partial(self.u, time)
-            v = partial(self.v, time)
-            w = partial(self.w, time)
-            P_phi = NumericalPartialDerivative_xyz(phi, *rst)
-            assert all(P_phi.check_total(u, v, w))
-
-            ux = partial(self.u_x, time)
-            vy = partial(self.v_y, time)
-            wz = partial(self.w_z, time)
-
-            P_u = NumericalPartialDerivative_xyz(u, *rst)
-            P_v = NumericalPartialDerivative_xyz(v, *rst)
-            P_w = NumericalPartialDerivative_xyz(w, *rst)
-
-            assert P_u.check_partial_x(ux)
-            assert P_v.check_partial_y(vy)
-            assert P_w.check_partial_z(wz)
-
-            f = partial(self.f, time)(*rst)
-            np.testing.assert_array_almost_equal(f, -(ux(*rst) + vy(*rst) + wz(*rst)))
 
 
     # to be overridden (must) ...
@@ -93,51 +50,66 @@ class Poisson_Base(Base):
 
     def u(self, t, x, y, z):
         """phi_x"""
-        raise NotImplementedError()
-    def u_x(self, t, x, y, z):
-        raise NotImplementedError()
-
+        if self._NPDf_p_ is None:
+            self._NPDf_p_ = NumericalPartialDerivative_txyz_Functions(self.phi)
+        return self._NPDf_p_('x')(t, x, y, z)
     def v(self, t, x, y, z):
         """phi_y"""
-        raise NotImplementedError()
-    def v_y(self, t, x, y, z):
-        raise NotImplementedError()
-
+        if self._NPDf_p_ is None:
+            self._NPDf_p_ = NumericalPartialDerivative_txyz_Functions(self.phi)
+        return self._NPDf_p_('y')(t, x, y, z)
     def w(self, t, x, y, z):
         """phi_z"""
-        raise NotImplementedError()
+        if self._NPDf_p_ is None:
+            self._NPDf_p_ = NumericalPartialDerivative_txyz_Functions(self.phi)
+        return self._NPDf_p_('z')(t, x, y, z)
+
+
+    def u_x(self, t, x, y, z):
+        if self._NPDf_px_ is None:
+            self._NPDf_px_ = NumericalPartialDerivative_txyz_Functions(self.u)
+        return self._NPDf_px_('x')(t, x, y, z)
+
+    def v_y(self, t, x, y, z):
+        if self._NPDf_py_ is None:
+            self._NPDf_py_ = NumericalPartialDerivative_txyz_Functions(self.v)
+        return self._NPDf_py_('y')(t, x, y, z)
+
     def w_z(self, t, x, y, z):
-        raise NotImplementedError()
+        if self._NPDf_pz_ is None:
+            self._NPDf_pz_ = NumericalPartialDerivative_txyz_Functions(self.w)
+        return self._NPDf_pz_('z')(t, x, y, z)
 
-
-    def _f_(self, t, x, y, z):
-        """To define a specific f, we override self.f, please do not self._f_."""
-        return - self.u_x(t, x, y, z) - self.v_y(t, x, y, z) - self.w_z(t, x, y, z)
 
     def f(self, t, x, y, z):
-        return self._f_(t, x, y, z)
-
-
-    # BELOW: properties ....................................................................
-
+        return - self.u_x(t, x, y, z) - self.v_y(t, x, y, z) - self.w_z(t, x, y, z)
 
 
     @property
-    def pressure(self):
+    def potential(self):
         if self._potential_ is None:
-            self._potential_ = _3dCSCG_ScalarField(self.mesh, self.phi, valid_time=self.valid_time)
+            self._potential_ = _3dCSCG_ScalarField(self.mesh,
+                                                   self.phi,
+                                                   valid_time=self.valid_time,
+                                                   name='potential')
         return self._potential_
 
     @property
     def velocity(self):
         if self._velocity_ is None:
-            self._velocity_ = _3dCSCG_VectorField(self.mesh, (self.u, self.v, self.w), valid_time=self.valid_time)
+            self._velocity_ = _3dCSCG_VectorField(self.mesh,
+                                                  (self.u, self.v, self.w),
+                                                  valid_time=self.valid_time,
+                                                  name='velocity')
         return self._velocity_
 
     @property
     def source_term(self):
         if self._source_term_ is None:
-            self._source_term_ = _3dCSCG_ScalarField(self.mesh, self.phi, valid_time=self.valid_time)
+            self._source_term_ = _3dCSCG_ScalarField(self.mesh,
+                                                     self.f,
+                                                     valid_time=self.valid_time,
+                                                     name='source_term')
         return self._source_term_
 
 
@@ -147,7 +119,10 @@ class Poisson_Base(Base):
         """A scalar field of the kinetic energy distribution."""
         if self._kineticEnergyDistribution_ is None:
             self._kineticEnergyDistribution_ =_3dCSCG_ScalarField(
-                self.mesh, self.___kinetic_energy_distribution___, valid_time=self.valid_time)
+                self.mesh,
+                self.___kinetic_energy_distribution___,
+                valid_time=self.valid_time,
+                name='kinetic_energy_distribution')
         return self._kineticEnergyDistribution_
     def ___kinetic_energy_distribution___(self, t, x, y, z):
         return 0.5 * (self.u(t, x, y, z)**2 + self.v(t, x, y, z)**2 + self.w(t, x, y, z)**2)
@@ -156,3 +131,50 @@ class Poisson_Base(Base):
         """Kinetic energy at time `t`."""
         return self._es_.do.compute_Ln_norm_of('kinetic_energy_distribution', time=t, n=1)
 
+
+    def ___PreFrozenChecker___(self):
+        """
+        We use this general method to do the check, in particular exact solution, we can define particular
+        check method by override this method.
+        """
+        TS = self.___PRIVATE_generate_random_valid_time_instances___()
+        x, y, z = self._mesh_.do.generate_random_coordinates()
+
+        if len(x) == 0: return
+
+        for t in TS:
+
+            t = float(t)
+
+            try:
+                Pu = NumericalPartialDerivative_txyz(self.phi, t, x, y, z)
+                assert Pu.check_partial_x(self.u)
+                assert Pu.check_partial_x(self.v)
+                assert Pu.check_partial_x(self.w)
+            except NotImplementedError:
+                pass
+
+            try:
+                Pu = NumericalPartialDerivative_txyz(self.u, t, x, y, z)
+                assert Pu.check_partial_x(self.u_x)
+            except NotImplementedError:
+                pass
+
+            try:
+                Pu = NumericalPartialDerivative_txyz(self.v, t, x, y, z)
+                assert Pu.check_partial_y(self.v_y)
+            except NotImplementedError:
+                pass
+
+            try:
+                Pu = NumericalPartialDerivative_txyz(self.w, t, x, y, z)
+                assert Pu.check_partial_z(self.w_z)
+            except NotImplementedError:
+                pass
+
+            try:
+                f = - self.u_x(t, x, y, z) - self.v_y(t, x, y, z) - self.w_z(t, x, y, z)
+                F = self.f(t, x, y, z)
+                np.testing.assert_array_almost_equal(F - f, 0, decimal=5)
+            except NotImplementedError:
+                pass

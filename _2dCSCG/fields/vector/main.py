@@ -22,6 +22,10 @@ from _2dCSCG.fields.vector.do.main import _2dCSCG_VectorField_DO
 from _2dCSCG.fields.vector.numerical.main import _2dCSCG_VectorField_Numerical
 from _2dCSCG.fields.vector.visualize.main import _2dCSCG_VectorField_Visualize
 
+
+
+
+
 class _2dCSCG_VectorField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
     """The continuous vector field."""
     def __init__(self, mesh, func, ftype='standard', valid_time=None, name='vector-field'):
@@ -116,7 +120,7 @@ class _2dCSCG_VectorField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
 
 if __name__ == '__main__':
     # mpiexec -n 6 python _2dCSCG\fields\vector\main.py
-    from _2dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
+    from _2dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller
 
     mesh = MeshGenerator('crazy', c=0.)([2,2], show_info=True)
     space = SpaceInvoker('polynomials')([('Lobatto',1), ('Lobatto',1)], show_info=True)

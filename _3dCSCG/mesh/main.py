@@ -89,6 +89,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         self.___PRIVATE_BASE_parse_element_distribution_method___()
         self.___PRIVATE_BASE_analyze_element_distribution___()
 
+        self.___character_num_elements___ = dict()
         self.___PRIVATE_generate_element_global_numbering___()
         self.___PRIVATE_optimize_element_distribution___()
 
@@ -309,22 +310,23 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                             start = current_num
                             end = current_num + self._num_elements_in_region_[rn]
 
-
-
                             #!-Once we use _element_distribution_, _element_indices_, or _num_local_elements_, wo do this
-                            if not hasattr(self, '___character_num_elements___'):
-                                self.___character_num_elements___ = dict()
                             if rn in self.___character_num_elements___:
                                 # to make sure that after optimization, character_num_elements does not change
                                 character_num_elements = self.___character_num_elements___[rn]
+
                             else:
                                 character_num_elements = list()
                                 for core in cores_for_this_region:
                                     character_num_elements.append(len(self._element_distribution_[core]))
                                 character_num_elements = int(np.mean(character_num_elements))
+
                                 if character_num_elements <= 0: character_num_elements = 1
+
                                 assert character_num_elements <= self._num_elements_in_region_[rn]
+
                                 self.___character_num_elements___[rn] = character_num_elements
+
                             #!------------------------------------------------------------------------------------------!
 
 

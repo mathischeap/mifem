@@ -1,7 +1,7 @@
 
 
 
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 
 class ParallelSolverBase(FrozenOnly):
     """A base for all parallel solvers, direct or iterative."""

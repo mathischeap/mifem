@@ -20,7 +20,7 @@ class _3dCSCG_Edge_Elements_CT(FrozenOnly):
 
 if __name__ == '__main__':
     # mpiexec -n 12 python _3dCSCG\mesh\edge\elements\coordinate_transformation.py
-    from _3dCSCG.main import MeshGenerator
+    from _3dCSCG.master import MeshGenerator
     elements = [2, 2, 2]
     # mesh = MeshGenerator('crazy_periodic', c=0.0, bounds=([0,3], [0,3], [0,3]))(elements)
     mesh = MeshGenerator('bridge_arch_cracked')(elements)

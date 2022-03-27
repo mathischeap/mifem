@@ -99,6 +99,9 @@ class SendAdminAnEmail(FrozenOnly):
 
 
 
+
+
+
 if __name__ == '__main__':
     # mpiexec -n 8 python SCREWS\emails\plain.py
     if rAnk == mAster_rank:

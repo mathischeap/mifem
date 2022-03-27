@@ -1,7 +1,7 @@
 """where = mesh_element"""
 
 
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 
 
 class OnMeshElement_for_Standard(FrozenOnly):

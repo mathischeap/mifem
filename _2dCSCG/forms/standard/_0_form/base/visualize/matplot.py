@@ -3,7 +3,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 from root.config.main import np, sEcretary_rank, cOmm, rAnk
 import matplotlib
 import matplotlib.pyplot as plt
@@ -86,7 +86,13 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
         :return:
         """
         density = int(np.ceil(np.sqrt(density / self._mesh_.elements.GLOBAL_num)))
-        rs = [np.linspace(-1, 1, density) for _ in range(self._sf_.ndim)]
+
+        rs = list()
+        for _ in range(self._sf_.ndim):
+            __ = np.linspace(-1, 1, density+1)
+            __ = (__[:-1] + __[1:]) / 2
+            rs.append(__)
+
         xy, v = self._sf_.reconstruct(*rs)
 
         xy = cOmm.gather(xy, root=sEcretary_rank)
@@ -115,7 +121,6 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
 
         x, y, v = self._mesh_.do.regionwsie_stack(x, y, v)
 
-
         if saveto is not None: matplotlib.use('Agg')
         plt.rc('text', usetex=usetex)
         plt.rcParams['text.latex.preamble'] = r"\usepackage{amsmath}"
@@ -136,27 +141,29 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
             else:
                 raise Exception(f"plot_type={plot_type} is wrong. Should be one of ('contour', 'contourf')")
 
-        if show_boundaries:
-            RB, RBN, boundary_name_color_dict, pb_text = \
-                self._mesh_.visualize.matplot.___PRIVATE_DO_generate_boundary_data___(
-                    50, usetex=usetex)[0:4]
 
-            reo_db = self._mesh_.domain.regions.edges_on_domain_boundaries
+        RB, RBN, boundary_name_color_dict, pb_text = \
+            self._mesh_.visualize.matplot.___PRIVATE_DO_generate_boundary_data___(
+                50, usetex=usetex)[0:4]
 
-            for rn in self._mesh_.domain.regions.names:
-                for ei in range(4):
-                    if reo_db[rn][ei] == 1:
-                        bn = self._mesh_.domain.regions.map[rn][ei]
+        reo_db = self._mesh_.domain.regions.edges_on_domain_boundaries
+
+        for rn in self._mesh_.domain.regions.names:
+            for ei in range(4):
+                if reo_db[rn][ei] == 1:
+                    bn = self._mesh_.domain.regions.map[rn][ei]
+                    if show_boundaries:
                         # noinspection PyUnresolvedReferences
                         ax.plot(RB[rn][ei][0], RB[rn][ei][1], color=boundary_name_color_dict[bn],
                                 linewidth=3)
-                        # noinspection PyUnresolvedReferences
-                        ax.plot(RB[rn][ei][0], RB[rn][ei][1], color='k',
-                                linewidth=0.25*3)
+                    # noinspection PyUnresolvedReferences
+                    ax.plot(RB[rn][ei][0], RB[rn][ei][1], color='k',
+                            linewidth=0.75)
 
-                    if RBN[rn][ei] is None:
-                        pass
-                    else:
+                if RBN[rn][ei] is None:
+                    pass
+                else:
+                    if show_boundaries:
                         bn = self._mesh_.domain.regions.map[rn][ei]
                         if bn in pb_text:
                             # noinspection PyUnresolvedReferences
@@ -210,7 +217,7 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
 if __name__ == '__main__':
     # mpiexec -n 3 python _2dCSCG\forms\standard\_0_form\base\visualize\matplot.py
 
-    from _2dCSCG.main import MeshGenerator, ExactSolutionSelector, SpaceInvoker, FormCaller
+    from _2dCSCG.master import MeshGenerator, ExactSolutionSelector, SpaceInvoker, FormCaller
     from numpy import pi
     mesh = MeshGenerator('crazy_periodic', bounds=[[0, 2*pi], [0, 2*pi]], c=0.1)([15, 15])
     space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 3)], show_info=True)

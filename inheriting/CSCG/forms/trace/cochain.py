@@ -5,7 +5,7 @@ from scipy import sparse as spspa
 from screws.exceptions import LocalCochainShapeError
 from scipy.sparse import lil_matrix, csr_matrix, csc_matrix
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_ColumnVector
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 
 
 class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):

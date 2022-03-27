@@ -68,9 +68,7 @@ def count_files_and_lines(start, files=0, lines=0, header=True, begin_start=None
         # skip following ...
         if thing[-4:] == '.pyc':
             pass
-        elif thing[:12] == '_CONTENTS_':
-            pass
-        elif thing[:11] == '__GENERAL__':
+        elif thing[:12] == '__contents__':
             pass
         elif thing[:4] == 'venv':
             pass

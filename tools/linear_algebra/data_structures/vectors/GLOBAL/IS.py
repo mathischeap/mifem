@@ -1,4 +1,4 @@
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 from root.config.main import rAnk, mAster_rank, MPI, cOmm
 
 class GlobalVectorIS(FrozenOnly):

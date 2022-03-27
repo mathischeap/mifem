@@ -1,6 +1,6 @@
 
 
-from _3dCSCG.main import ExactSolutionSelector as _3dCSCG_ExactSolutionSelector
+from _3dCSCG.master import ExactSolutionSelector as _3dCSCG_ExactSolutionSelector
 from root.mifem.read.components._3dCSCG.mesh import ___restore__3dCSCG_Mesh___
 
 

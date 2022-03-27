@@ -5,21 +5,26 @@ mesh.domain.regions.map shown.
 
 However, in mesh.boundaries, the periodic boundaries are not considered.
 
-Therefore, for a periodic domain, mesh.boundaries will have no valid boundary. But mesh.domain.boundaries has.
+Therefore, for a periodic domain, mesh.boundaries will have no valid boundary.
+But mesh.domain.boundaries has.
 
-This is very important. The reason we have this is because of the logic we used to code the mesh. We first
-generate the mesh.elements.map through `regions.map`, then we adjust the elements.map through studying the
-periodic setting. This I know is not very good. But the thing is when I first code it, I did not consider
-periodic boundaries. So ...
+This is very important. The reason we have this is because of the logic we used to code the mesh.
+We first generate the mesh.elements.map through `regions.map`, then we adjust the elements.map
+through studying the periodic setting. This I know is not very good. But the thing is
+when I first code it, I did not consider periodic boundaries. So ...
 """
 
 import sys
-if './' not in sys.path: sys.path.append('../')
+if './' not in sys.path: sys.path.append('./')
 
 from root.config.main import *
 from screws.freeze.main import FrozenOnly
 
 from _3dCSCG.mesh.boundaries.boundary.main import _3dCSCG_Mesh_Boundary
+from _3dCSCG.mesh.boundaries.visualize import _3dCSCG_MeshBoundaries_VIS
+
+
+
 
 
 
@@ -29,11 +34,13 @@ class _3dCSCG_Mesh_Boundaries(FrozenOnly):
     def __init__(self, mesh):
         assert mesh.__class__.__name__ == '_3dCSCG_Mesh'
         self._mesh_ = mesh
+        self._boundaries_dict_ = dict()
+        self._visualize_ = _3dCSCG_MeshBoundaries_VIS(self)
         self.___PRIVATE_reset_cache___()
+        self._range_of_region_sides_ = None
         self._freeze_self_()
 
     def ___PRIVATE_reset_cache___(self):
-        self._boundaries_dict_ = None
         self._names_ = None
         self._RANGE_element_sides_ = None
         self._RANGE_trace_elements_ = None
@@ -99,6 +106,10 @@ class _3dCSCG_Mesh_Boundaries(FrozenOnly):
         return self._names_
 
     @property
+    def visualize(self):
+        return self._visualize_
+
+    @property
     def range_of_element_sides(self):
         """(dict) Return a dict that contains the local element sides on each boundary."""
         if self._RANGE_element_sides_ is None:
@@ -111,6 +122,32 @@ class _3dCSCG_Mesh_Boundaries(FrozenOnly):
         if self._RANGE_trace_elements_ is None:
             self.___PRIVATE_parse_boundaries___()
         return self._RANGE_trace_elements_
+
+    @property
+    def range_of_region_sides(self):
+        """(dict) Return a dict that contains the (global, NOT local!) region faces on each boundary.
+
+        Because we stored information of all regions in each core. So we do not distinguish local
+        region sides at all.
+
+        Remember, in 3dCSCG (2dCSCG) meshes, region sides (edges) cannot be split into different
+        boundaries.
+
+        If the domain is not periodic, then sum(range_of_region_sides) must cover the whale
+        domain boundary!
+        """
+        if self._range_of_region_sides_ is not None: return self._range_of_region_sides_
+
+        periodic_boundaries = self._mesh_.domain._domain_input_.periodic_boundaries
+        BRS = self._mesh_.domain._domain_input_.boundary_region_sides
+        RRS = dict()
+        for bn in BRS:
+            if bn in periodic_boundaries:
+                RRS[bn] = list()
+            else:
+                RRS[bn] = BRS[bn]
+        self._range_of_region_sides_ = RRS
+        return self._range_of_region_sides_
 
 
     def __getitem__(self, bn):
@@ -135,11 +172,19 @@ class _3dCSCG_Mesh_Boundaries(FrozenOnly):
 
 
 if __name__ == "__main__":
-    # mpiexec python _3dCSCG\mesh\boundaries.py
-    from _3dCSCG.main import MeshGenerator
-    mesh = MeshGenerator('crazy')([4,2,[1,2,4,2,1]])
+    # mpiexec -n 6 python _3dCSCG\mesh\boundaries\main.py
+    from _3dCSCG.master import MeshGenerator
+    mesh = MeshGenerator('bridge_arch_cracked')([4,2,[1,2,4,2,1]])
     # mesh = MeshGenerator('crazy', bounds=((0,3),(0,3),(0,3)))([2,1,1])
     # mesh.boundaries.___PRIVATE_parse_boundaries___()
-    print(rAnk, mesh.boundaries.range_of_element_sides)
+    # print(rAnk, mesh.boundaries.range_of_element_sides)
     # print(rAnk, mesh.boundaries.names)
     # print(rAnk, mesh.boundaries.names, mesh.domain.boundaries.names)
+    mesh.domain.visualize()
+
+    # boundaries = mesh.boundaries
+
+    # print(boundaries.range_of_region_sides)
+    # print(mesh.domain.regions.sides_on_domain_boundaries)
+    # print(boundaries.range_of_element_sides)
+    # boundaries.visualize()

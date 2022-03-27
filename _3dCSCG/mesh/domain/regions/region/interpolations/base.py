@@ -150,6 +150,7 @@ class InterpolationBase(FrozenOnly):
         return N31.scipy_partial('z')
 
 
+
 # ----- particular interpolations below ------------------------------------------------------
 
 

@@ -1,6 +1,6 @@
 
 
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 
 class CSCG_Form_TimeWise_DO(FrozenOnly):
     def __init__(self, tw):

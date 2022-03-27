@@ -21,7 +21,7 @@ class EdgeGeometryDispatcher(FrozenOnly):
             " <Region> : EdgeGeometry: {} is not coded. ".format(et[0])
         self._et_ = et
         cls_name = self.___coded_edge_geometries___()[et[0]]
-        cls_path = self.___edge_geometries_path___() + '.' + et[0]
+        cls_path = self.___edge_geometries_path___()[et[0]]
         self._cls_ = getattr(import_module(cls_path), cls_name)
         self._freeze_self_()
 
@@ -40,4 +40,10 @@ class EdgeGeometryDispatcher(FrozenOnly):
     @classmethod
     def ___edge_geometries_path___(cls):
         """ """
-        return '_2dCSCG.mesh.domain.regions.region.edge_geometries'
+        base_path = '.'.join(str(cls).split(' ')[1][1:-2].split('.')[:-2]) + '.'
+        # bast_path = '_2dCSCG.mesh.domain.regions.region.edge_geometries.'
+        return {'straight': base_path + 'straight',
+                'free': base_path + 'free',
+                'acw': base_path + 'acw',
+                'aacw': base_path + 'aacw',
+                'customized': base_path + 'customized'}

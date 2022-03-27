@@ -28,5 +28,3 @@ class ElementTypeWr2MetricBase(FrozenOnly):
     @property
     def ___IS_2dCSCG_ElementTypeWr2Metric___(self):
         return True
-
-

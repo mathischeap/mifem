@@ -4,8 +4,8 @@ if './' not in sys.path: sys.path.append('./')
 
 from root.config.main import *
 import random
-from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller
-from _3dCSCG.tests.random_objects.form_caller import random_3D_FormCaller_of_total_load_around
+from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller
+from _3dCSCG.tests.random_objects.form_caller import random_FormCaller_of_total_load_around
 # from scipy.sparse import csc_matrix
 # from TOOLS.linear_algebra.data_structures import LocallyFullVector
 
@@ -20,7 +20,7 @@ def test_trace_NO__general_tests():
     else:
         load= None
     load = cOmm.bcast(load, root=mAster_rank)
-    FC = random_3D_FormCaller_of_total_load_around(load, exclude_periodic=True)
+    FC = random_FormCaller_of_total_load_around(load, exclude_periodic=True)
 
     # --------- trace forms -------------------------------------------------------
     t0 = FC('0-t')
@@ -50,7 +50,7 @@ def test_trace_NO0_trace_0_form_Rd_and_Rc():
     load, t = cOmm.bcast([load, t], root=mAster_rank)
 
     #----------------- use crazy mesh ----------------------------------------
-    FC = random_3D_FormCaller_of_total_load_around(load, exclude_periodic=True)
+    FC = random_FormCaller_of_total_load_around(load, exclude_periodic=True)
     def pressure(t, x, y, z): return np.cos(1.5*np.pi*x) * np.sin(2*np.pi*y) * np.sin(np.pi*z-0.125)**2 * (1.25 - np.sin(t/2))
     P = FC('scalar', pressure)
     f0 = FC('0-f', is_hybrid=True)
@@ -106,7 +106,7 @@ def test_trace_NO1_trace_1_form_Rd_and_Rc():
         load= None
         t = None
     load, t = cOmm.bcast([load, t], root=mAster_rank)
-    FC = random_3D_FormCaller_of_total_load_around(load, exclude_periodic=True)
+    FC = random_FormCaller_of_total_load_around(load, exclude_periodic=True)
     velocity = FC('vector', (uuu, vvv, www))
 
     # first we test the Selective matrix --------------------------------------------------
@@ -192,7 +192,7 @@ def test_trace_NO2_trace_2_form_Rd_and_Rc():
     load, t = cOmm.bcast([load, t], root=mAster_rank)
 
     #----------------- use crazy mesh ----------------------------------------
-    FC = random_3D_FormCaller_of_total_load_around(load, exclude_periodic=True)
+    FC = random_FormCaller_of_total_load_around(load, exclude_periodic=True)
 
     def u(t, x, y, z): return np.cos(np.pi*x) + np.sin(np.pi*y) * np.sin(np.pi*z-0.125)**2 + t/2
     def v(t, x, y, z): return np.sin(np.pi*x) + np.sin(np.pi*y) * np.sin(np.pi*z-0.125)**2 + t/2
@@ -242,7 +242,7 @@ def test_trace_NO3_trace_matrices():
     else:
         load= None
     load = cOmm.bcast(load, root=mAster_rank)
-    FC = random_3D_FormCaller_of_total_load_around(load, exclude_periodic=False)
+    FC = random_FormCaller_of_total_load_around(load, exclude_periodic=False)
 
     if rAnk == mAster_rank:
         print(f"+++ [test_trace_NO3_trace_matrices] @load = {load} ...... ", flush=True)

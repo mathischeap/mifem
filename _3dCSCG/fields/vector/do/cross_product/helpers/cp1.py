@@ -1,4 +1,12 @@
 
+
+
+
+
+
+
+
+
 class ___VF_CROSS_PRODUCT_HELPER_1___(object):
     def __init__(self, f0, f1, f2, f3):
         self._f0_ = f0

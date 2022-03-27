@@ -52,9 +52,12 @@ class _2dCSCG_Mesh_DO(FrozenOnly):
     def regionwsie_stack(self, *ndas):
         """
         We use this method to stack a ndarray regions-wise. This function is very useful
-        in plotting reconstruction data. Since in a regions, the elements are structured,
-        we can plot element by element. But if we group data from elements of the same
-        regions, then we can plot regions by regions. This very much increases the plotting speed.
+        in plotting reconstruction data. Since in a region, the date are structured mesh element wise,
+        so we can only plot element by element. But if we group data from elements of the same
+        region, then we can plot region by region. This very much increases the plotting speed.
+
+        We better first collect all data to one core. That means we should always call this method
+        from a single core, mostly, the master core.
 
         Parameters
         ----------

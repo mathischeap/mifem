@@ -4,16 +4,21 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 from screws.freeze.main import FrozenOnly
 
-from _2dCSCG.mesh.elements.coordinate_transformation import _2dCSCG_Mesh_Elements_CT
+from _2dCSCG.mesh.elements.coordinate_transformation.main import _2dCSCG_Mesh_Elements_CT
 from root.config.main import *
 from _2dCSCG.mesh.elements.element.main import _2dCSCG_Mesh_Element
-
+from _2dCSCG.mesh.elements.IS import _2dCSCG_MeshElements_IS
+from _2dCSCG.mesh.elements.visualize import _2dCSCG_MeshElements_VIS
+from _2dCSCG.mesh.elements.find import _2dCSCG_MeshElements_Find
 
 class _2dCSCG_Mesh_Elements(FrozenOnly):
     """"""
     def __init__(self, mesh):
         self._mesh_ = mesh
         self._elements_ = dict()
+        self._IS_ = None
+        self._visualize_ = None
+        self._find_ = None
         self._ct_ = _2dCSCG_Mesh_Elements_CT(self)
         for i in self.indices:
             self._elements_[i] = _2dCSCG_Mesh_Element(self, i)
@@ -28,9 +33,14 @@ class _2dCSCG_Mesh_Elements(FrozenOnly):
     def ___PRIVATE_parse_elements_type_wrt_metric___(self):
         counter: dict = dict()
         self._multi_elements_metric_: dict = dict()
+        self._num_local_orthogonal_elements_ = 0
         for i in self:
             ei = self[i]
             mki = ei.type_wrt_metric.mark
+
+            if isinstance(mki, str) and mki[:4] == 'Orth':
+                self._num_local_orthogonal_elements_ += 1
+
             if mki in counter:
                 ei._type_wrt_metric_ = self[counter[mki]]._type_wrt_metric_
                 if mki in self._multi_elements_metric_:
@@ -53,10 +63,28 @@ class _2dCSCG_Mesh_Elements(FrozenOnly):
         for type_name in MEM:
             A -= MEM[type_name] - 1
         Statistic['amount of types wrt metric'] = A
-        Statistic['similarity according to types wrt metric'] = (self.num-A)/(self.num-1) # in [0, 1]
+        if self.num == 0:
+            similarity = 'nan'
+        elif self.num == 1:
+            similarity = 1
+        else:
+            similarity = (self.num - A) / (self.num - 1)
+        Statistic['similarity according to types wrt metric'] = similarity # in [0, 1]
+        Statistic['num_local_orthogonal_elements'] = self._num_local_orthogonal_elements_
 
         return Statistic
 
+    @property
+    def IS(self):
+        if self._IS_ is None:
+            self._IS_ = _2dCSCG_MeshElements_IS(self)
+        return self._IS_
+
+    @property
+    def visualize(self):
+        if self._visualize_ is None:
+            self._visualize_ = _2dCSCG_MeshElements_VIS(self)
+        return self._visualize_
 
     @property
     def GLOBAL_num(self):
@@ -129,16 +157,21 @@ class _2dCSCG_Mesh_Elements(FrozenOnly):
         return mark
 
 
+    @property
+    def find(self):
+        if self._find_ is None:
+            self._find_ = _2dCSCG_MeshElements_Find(self)
+        return self._find_
 
 
 
 if __name__ == '__main__':
     # mpiexec python _2dCSCG\mesh\elements\main.py
-    from _2dCSCG.main import MeshGenerator
+    from _2dCSCG.master import MeshGenerator
 
     # mesh = MeshGenerator('crazy', c=0.3)([50,45])
     # mesh = MeshGenerator('chp1',)([2,2])
-    mesh = MeshGenerator('crazy', c=0.1, bounds=([0,1],[0,1]))([10,10])
+    mesh = MeshGenerator('crazy', c=0., bounds=([0,1],[0,1]))([10,10])
     elements = mesh.elements
     S = elements.statistic
-    print(S)
+    print(elements.IS.homogeneous_according_to_types_wrt_metric)

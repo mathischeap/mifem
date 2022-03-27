@@ -29,7 +29,7 @@ class _2dCSCG_Standard_Trace(CSCG_Trace_Form, _2dCSCG_FORM_BASE, ndim=2):
     :param bool is_hybrid:
     :param str orientation: 'inner' or 'outer'.
     :param numbering_parameters: The parameters for the numbering. Including scheme name and other parameters.
-        When it is a string, we use it as scheme name and it has not other parameters.
+        When it is a string, we use it as scheme name, and it has not other parameters.
     :type numbering_parameters: dict, str
     :param str name:
     """

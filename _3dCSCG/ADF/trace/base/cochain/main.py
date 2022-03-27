@@ -4,10 +4,9 @@ from screws.freeze.main import FrozenOnly
 from _3dCSCG.ADF.trace.base.cochain.local import ____3dCSCG_ADTF_Cochain_Local____
 
 
-
-
 class _3dCSCG_Algebra_DUAL_Trace_Form_Cochain(FrozenOnly):
-    """The cochain of algebra dual form is equal to the mass matrix dot the cochain of the prime form.
+    """The cochain of algebra dual form is equal to the mass matrix dot the cochain of the prime
+    form.
 
     dual_cochain = mass_matrix dot prime_cochain.
 
@@ -22,16 +21,16 @@ class _3dCSCG_Algebra_DUAL_Trace_Form_Cochain(FrozenOnly):
 
     @property
     def local(self):
-        """We know that the local cochain of the prime form is a dict whose keys are local element numbers and values
-        are the local cochains (1-d array). While for algebra dual standard forms, we make a EWC_ColumnVector for it
-        since we do not want to save the local cochain of the algebra dual form. We will generate the cochain when
-        we call it in real time.
+        """We know that the local cochain of the prime form is a dict whose keys are local element
+        numbers and values are the local cochains (1-d array). While for algebra dual standard
+        forms, we make a EWC_ColumnVector for it since we do not want to save the local cochain of
+        the algebra dual form. We will generate the cochain when we call it in real time.
 
         :return:
         """
         if self._local_ is None:
             self._local_ = ____3dCSCG_ADTF_Cochain_Local____(self)
-            # the local cochain will be renew automatically if the local cochain of the prime form is renewed.
+            # the local cochain will be renewed automatically if the local cochain of the prime form is renewed.
         return self._local_
 
     @local.setter
@@ -61,7 +60,9 @@ class _3dCSCG_Algebra_DUAL_Trace_Form_Cochain(FrozenOnly):
         raise NotImplementedError()
 
     def __getitem__(self, i):
-        """If `i` is an element number in this core, we should be able to return a local cochain of it (if not None)"""
+        """If `i` is an element number in this core, we should be able to return a local cochain of
+        it (if not None)
+        """
         return self.local[i]
 
     def __contains__(self, i):

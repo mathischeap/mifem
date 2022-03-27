@@ -3,7 +3,8 @@
 from screws.freeze.main import FrozenOnly
 
 from importlib import import_module
-from screws.numerical.time_plus_3d_space.partial_derivative_as_functions import NumericalPartialDerivative_txyz_Functions
+from screws.numerical.time_plus_3d_space.partial_derivative_as_functions import \
+    NumericalPartialDerivative_txyz_Functions
 
 
 class _3dCSCG_TensorField_Numerical(FrozenOnly):

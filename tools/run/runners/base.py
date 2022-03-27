@@ -38,4 +38,3 @@ class ParallelRunnerBase(FrozenOnly):
     @property
     def ___results___(self):
         return NotImplementedError()
-

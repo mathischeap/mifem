@@ -3,6 +3,10 @@
 from screws.freeze.main import FrozenOnly
 from _2dCSCG.fields.vector.visualize.matplot import _2dCSCG_VectorField_Visualize_matplot
 
+
+
+
+
 class _2dCSCG_VectorField_Visualize(FrozenOnly):
     def __init__(self, cf):
         self._cf_ = cf

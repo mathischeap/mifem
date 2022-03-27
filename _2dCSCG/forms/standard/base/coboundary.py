@@ -5,6 +5,10 @@ from inheriting.CSCG.forms.standard.coboundary import CSCG_Standard_Form_Cobound
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
 
 
+
+
+
+
 class _2dCSCG_Standard_Form_Coboundary(CSCG_Standard_Form_Coboundary_BASE):
     def __init__(self, sf):
         super().__init__(sf)

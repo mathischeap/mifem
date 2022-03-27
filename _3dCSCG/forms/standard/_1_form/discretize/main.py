@@ -1,4 +1,4 @@
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 
 from _3dCSCG.forms.standard._1_form.discretize.vector.boundary_wise import _3dCSCG_Discretize_BoundaryWise
 from _3dCSCG.forms.standard._1_form.discretize.vector.standard import _3dCSCG_Discretize_Standard
@@ -39,5 +39,3 @@ class _3dCSCG_Discretize(FrozenOnly):
                 raise NotImplementedError(f'3dCSCG 1-form can not discretize {SELF.TW.func.body.__class__}.')
         else:
             raise NotImplementedError(f"3dCSCG 1-form cannot discretize while targeting at {target}.")
-
-

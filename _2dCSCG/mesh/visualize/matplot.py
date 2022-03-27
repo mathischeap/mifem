@@ -436,7 +436,8 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
             plt.savefig(saveto, bbox_inches='tight')
         else:
             plt.show()
-        plt.close('all')
+
+        plt.close()
         #------------------------------------------------------------------------------
         return fig
 

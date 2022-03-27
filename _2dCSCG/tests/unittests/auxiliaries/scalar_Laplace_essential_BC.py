@@ -2,7 +2,7 @@
 """ """
 
 from tools.deprecated.linear_system.main import LinearSystem
-from _2dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
+from _2dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 from tools.linear_algebra.data_structures.global_matrix.main import GlobalVector, GlobalMatrix
 from scipy import sparse as spspa
 
@@ -30,7 +30,7 @@ def scalar_Laplace_solver(c, Kx, Ky, Nx, Ny):
        f = FC('2-f-o', is_hybrid=False)
 
        B0 = GlobalVector(spspa.csc_matrix((u.GLOBAL_num_dofs, 1)))
-       f.TW.func.___DO_set_func_body_as___(ES, "source")
+       f.TW.func.___DO_set_func_body_as___(ES, "source_term")
        f.TW.___DO_push_all_to_instant___(0)
        f.discretize()
        B1 = f.cochain.EWC

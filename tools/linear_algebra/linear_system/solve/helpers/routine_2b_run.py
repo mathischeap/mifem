@@ -1,9 +1,9 @@
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 
 
 
 class RoutineToBeRun(FrozenOnly):
-    """This actually is a wrapper to save A, b to pass them to the routine."""
+    """This actually is a wrapper of the solver A and b."""
     def __init__(self, routine, A, b):
         """"""
         self._r_ = routine

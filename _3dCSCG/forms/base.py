@@ -311,7 +311,7 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
 
 if __name__ == '__main__':
     # mpiexec -n 4 python _3dCSCG\forms\base.py
-    from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
     mesh = MeshGenerator('crazy', c=0.0)([5,5,5])
     space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3), ('Lobatto',3)])

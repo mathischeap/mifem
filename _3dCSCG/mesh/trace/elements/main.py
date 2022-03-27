@@ -9,10 +9,10 @@ from root.config.main import *
 from screws.freeze.main import FrozenOnly
 
 
-from _3dCSCG.mesh.trace.elements.DO import _3dCSCG_Trace_Elements_DO
+from _3dCSCG.mesh.trace.elements.do import _3dCSCG_Trace_Elements_DO
 from _3dCSCG.mesh.trace.elements.selfcheck import _3dCSCG_Trace_Elements_SELFCHECK
 from _3dCSCG.mesh.trace.elements.group import _3dCSCG_Trace_Elements_Group
-from _3dCSCG.mesh.trace.elements.coordinate_transformation import _3dCSCG_Trace_Elements_CoordinateTransformation
+from _3dCSCG.mesh.trace.elements.coordinate_transformation.main import _3dCSCG_Trace_Elements_CoordinateTransformation
 from _3dCSCG.mesh.trace.elements.element.main import _3dCSCG_Trace_Element
 
 
@@ -387,7 +387,7 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
 
 if __name__ == '__main__':
     # mpiexec -n 12 python _3dCSCG\mesh\trace\elements\main.py
-    from _3dCSCG.main import MeshGenerator
+    from _3dCSCG.master import MeshGenerator
     elements = [3, 4, 2]
     mesh = MeshGenerator('crazy_periodic', c=0.3, bounds=([0,1], [0,1], [0,1]))(elements)
     mesh.trace.elements.selfcheck.outward_unit_normal_vector()

@@ -60,3 +60,15 @@ class ___LinearSystem_Customize___(FrozenOnly):
     def identify_global_row(self, r):
         """We set the row #r to be all zero except M(r, r) = 1."""
         self._LS_.A.customize.identify_global_row(r)
+
+
+    def set_unknown_to(self, r, v):
+        """Consider ths system is Ax=b. We first clear A[r,:], then set A[r, r] = 1 and b[r] = v,
+        So the unknown x[r] will equal to v.
+
+        :param r:
+        :param v:
+        :return:
+        """
+        self._LS_.A.customize.identify_global_row(r)
+        self._LS_.b.customize.set_assembled_V_i_to(r, v)

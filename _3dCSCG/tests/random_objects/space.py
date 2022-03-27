@@ -1,6 +1,6 @@
 
 
-from _3dCSCG.main import SpaceInvoker
+from _3dCSCG.master import SpaceInvoker
 from root.config.main import rAnk, mAster_rank, np, cOmm
 import random
 

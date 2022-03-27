@@ -17,7 +17,7 @@ class PreconditionerAllocator(FrozenOnly):
             f"Preconditioner ID={ID} is not implemented yet. Please use " \
             f"one of {self.___defined_preconditioners___().keys()}"
         cls_name = self.___defined_preconditioners___()[ID]
-        cls_path = self.___preconditioners_path___() + ID
+        cls_path = self.___preconditioners_path___()[ID]
         self._preconditioner_class_ = getattr(import_module(cls_path), cls_name)
         self._freeze_self_()
 
@@ -33,11 +33,10 @@ class PreconditionerAllocator(FrozenOnly):
         domain_input), we add a nickname for it here.
 
         """
-        _dict_ = {'Jacobian': "JacobianPreconditioner",
-                 }
-        return _dict_
+        return {'Jacobian': "JacobianPreconditioner",}
 
     @classmethod
     def ___preconditioners_path___(cls):
         """ """
-        return 'tools.linear_algebra.preconditioners.'
+        base_path = '.'.join(str(cls).split(' ')[1][1:-2].split('.')[:-2]) + '.'
+        return {'Jacobian': base_path + 'Jacobian',}

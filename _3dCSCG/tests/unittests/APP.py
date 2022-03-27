@@ -108,6 +108,6 @@ def test_APP_NO2_icpsNS_no_hybrid_TGV():
 
 
 if __name__ == '__main__':
-    # mpiexec python _3dCSCG\TESTS\unittest_APP.py
-    # test_APP_NO1_icpsNS_no_hybrid_manu_conserving()
+    # mpiexec -n 4 python _3dCSCG\tests\unittests\APP.py
+    test_APP_NO1_icpsNS_no_hybrid_manu_conserving()
     test_APP_NO2_icpsNS_no_hybrid_TGV()

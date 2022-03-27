@@ -1,7 +1,7 @@
 
 
 
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 
 
 from _2dCSCG.fields.vector.do.reconstruct.mesh_element.standard import OnMeshElement_for_Standard
@@ -52,4 +52,3 @@ class _2dCSCG_Vector_Do_Reconstruct(FrozenOnly):
                 raise NotImplementedError()
         else:
             raise NotImplementedError()
-

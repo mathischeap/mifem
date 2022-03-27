@@ -4,7 +4,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 from tools.linear_algebra.linear_system.main import LinearSystem
-from _2dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
+from _2dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 from tools.linear_algebra.elementwise_cache.objects.column_vector.main import EWC_ColumnVector
 from tools.linear_algebra.elementwise_cache.operators.bmat.main import bmat
 from tools.linear_algebra.elementwise_cache.operators.concatenate.main import concatenate
@@ -35,7 +35,7 @@ def scalar_Laplace_solver_iterative_solver(c, Kx, Ky, Nx, Ny):
     B0 = EWC_ColumnVector(mesh, u.num.basis)
     B0.gathering_matrix = u
 
-    f.TW.func.do.set_func_body_as(ES, "source")
+    f.TW.func.do.set_func_body_as(ES, "source_term")
     f.TW.do.push_all_to_instant(0)
     f.discretize()
     B1 = f.cochain.EWC

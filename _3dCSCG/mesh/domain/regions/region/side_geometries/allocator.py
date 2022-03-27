@@ -20,7 +20,7 @@ class SideGeometryAllocator(FrozenOnly):
             " <Region> : SideGeometry: {} is not coded. ".format(st[0])
         self._st_ = st
         cls_name = self.___coded_side_geometries___()[st[0]]
-        cls_path = self.___side_geometries_path___() + '.' + st[0]
+        cls_path = self.___side_geometries_path___()[st[0]]
         self._cls_ = getattr(import_module(cls_path), cls_name)
         self._freeze_self_()
         
@@ -38,4 +38,7 @@ class SideGeometryAllocator(FrozenOnly):
     @classmethod
     def ___side_geometries_path___(cls):
         """ """
-        return '_3dCSCG.mesh.domain.regions.region.side_geometries'
+        base_path = '.'.join(str(cls).split(' ')[1][1:-2].split('.')[:-2]) + '.'
+        return {'free': base_path + 'free',
+                'plane': base_path + 'plane',
+                'customized' : base_path + 'customized',}

@@ -9,12 +9,12 @@ if './' not in sys.path: sys.path.append('./')
 import os
 from root.config.main import *
 from scipy.sparse import linalg as spspalinalg
-from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
+from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 from root.mifem.save import save
 import random
 from screws.exceptions import ThreeDimensionalTransfiniteInterpolationError
 from _3dCSCG.tests.random_objects.form_caller import random_mesh_and_space_of_total_load_around
-from _3dCSCG.tests.random_objects.form_caller import random_3D_FormCaller_of_total_load_around
+from _3dCSCG.tests.random_objects.form_caller import random_FormCaller_of_total_load_around
 
 from tools.linear_algebra.linear_system.main import LinearSystem
 from tools.linear_algebra.elementwise_cache.operators.bmat.main import bmat
@@ -1205,7 +1205,7 @@ def test_Form_No10_standard_form_dofs():
     else:
         load = None
     load = cOmm.bcast(load, root=mAster_rank)
-    FC = random_3D_FormCaller_of_total_load_around(load)
+    FC = random_FormCaller_of_total_load_around(load)
 
     f0 = FC('0-f', is_hybrid=False)
     dofs = f0.dofs
@@ -1229,7 +1229,7 @@ def test_Form_No11_reconstruction_matrices():
         load = None
         IH = None
     load, IH = cOmm.bcast([load, IH], root=mAster_rank)
-    FC = random_3D_FormCaller_of_total_load_around(load)
+    FC = random_FormCaller_of_total_load_around(load, mesh_pool=('crazy',))
     a = random.random()
     b = random.random()
     c = random.random()
@@ -1281,10 +1281,16 @@ def test_Form_No11_reconstruction_matrices():
     f.TW.do.push_all_to_instant()
     f.discretize()
     R = f.reconstruct(xi, et, sg, ravel=True)[1]
+    RR = f.reconstruct(xi, et, sg, ravel=True, vectorized=True, value_only=True)[0]
     MR = f.do.make_reconstruction_matrix_on_grid(xi, et, sg)
-    for i in MR:
+    for _, i in enumerate(MR):
         r = MR[i] @ f.cochain.local[i]
         np.testing.assert_almost_equal(np.max(np.abs(r - R[i][0])), 0)
+        np.testing.assert_almost_equal(np.max(np.abs(r - RR[_,:])), 0)
+
+    LnEnF = f.do.compute_Ln_energy(vectorized=False)
+    LnEnT = f.do.compute_Ln_energy(vectorized=True)
+    np.testing.assert_almost_equal(LnEnF, LnEnT, decimal=5)
 
     #------------ 3-form -------------------------------------------------------
     f = FC('3-f', is_hybrid=IH)
@@ -1293,10 +1299,12 @@ def test_Form_No11_reconstruction_matrices():
     f.TW.do.push_all_to_instant()
     f.discretize()
     R = f.reconstruct(xi, et, sg, ravel=True)[1]
+    RR = f.reconstruct(xi, et, sg, ravel=True, vectorized=True, value_only=True)[0]
     MR = f.do.make_reconstruction_matrix_on_grid(xi, et, sg)
-    for i in MR:
+    for _, i in enumerate(MR):
         r = MR[i] @ f.cochain.local[i]
         np.testing.assert_almost_equal(np.max(np.abs(r - R[i][0])), 0)
+        np.testing.assert_almost_equal(np.max(np.abs(r - RR[_,:])), 0)
 
     return 1
 
@@ -1392,4 +1400,4 @@ def test_Form_NO12_weak_curl():
 
 if __name__ == '__main__':
     # mpiexec -n 4 python _3dCSCG\tests\unittests\standard_forms.py
-    test_Form_NO12_weak_curl()
+    test_Form_No11_reconstruction_matrices()

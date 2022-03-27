@@ -344,7 +344,7 @@ class GlobalMatrix(FrozenOnly):
                 if rAnk == core:
                     self._M_ = np.sum(M)
                 else:
-                    self._M_ = spspa.csc_matrix(self.shape)
+                    self._M_ = spspa.csr_matrix(self.shape)
             else:
                 assert core == mAster_rank, "This routine only work for root=master yet!"
                 tree = tRee(2)
@@ -367,7 +367,7 @@ class GlobalMatrix(FrozenOnly):
                         cOmm.send(ST, **Hi[1])
                         if ST == 1:
                             cOmm.send(self.M, **Hi[1])
-                            self._M_ = spspa.csc_matrix(self.shape)
+                            self._M_ = spspa.csr_matrix(self.shape)
                         else:
                             for t in range(ST):
                                 if self.mtype == 'csr':
@@ -377,7 +377,7 @@ class GlobalMatrix(FrozenOnly):
                                 else:
                                     raise Exception()
                                 cOmm.send(tbs, **Hi[1])
-                            self._M_ = spspa.csc_matrix(self.shape)
+                            self._M_ = spspa.csr_matrix(self.shape)
 
                     elif Hi[0] == 'recv':
                         RT = cOmm.recv(**Hi[1])

@@ -878,7 +878,7 @@ class _3dCSCG_standard_form_Matplot(FrozenOnly):
 
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\form\standard\visualize\matplot.py
-    from _3dCSCG.main import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
+    from _3dCSCG.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
     mesh = MeshGenerator('crazy', c=0.0)([2,3,4])
     space = SpaceInvoker('polynomials')([('Lobatto',4), ('Lobatto',3), ('Lobatto',2)])

@@ -1,4 +1,4 @@
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 from root.config.main import np, sEcretary_rank, cOmm, rAnk
 import matplotlib
 import matplotlib.pyplot as plt

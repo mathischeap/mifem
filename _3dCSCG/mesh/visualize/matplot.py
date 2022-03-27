@@ -22,7 +22,7 @@ class _3dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         return self.grid(*args, **kwargs)
 
 
-    def grid(self, elements=None, density=50000, usetex=False,
+    def grid(self, elements=None, density=10000, usetex=False,
         saveto = None, linewidth=0.6, aspect='equal',):
         """ We compute the grid from mesh element, so even for periodic boundaries, the grid will be full.
 
@@ -282,9 +282,10 @@ class _3dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
 
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\mesh\visualize\matplot.py
-    from _3dCSCG.main import MeshGenerator
+    from _3dCSCG.master import MeshGenerator
     elements = [3, 3, 3]
-    mesh = MeshGenerator('crazy', c=0.25)(elements)
+    mesh = MeshGenerator('bridge_arch_cracked')(elements)
+    # mesh = MeshGenerator('crazy', c=0.25)(elements)
     # mesh = MeshGenerator('crazy_periodic', c=0.0, bounds=([0, 3], [0, 3], [0, 3]))(elements)
     # mesh = MeshGenerator('bridge_arch_cracked')(elements)
     # mesh = MeshGenerator('psc')(elements)

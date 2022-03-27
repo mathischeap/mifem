@@ -1,28 +1,36 @@
 
 
-from root.config.main import *
 from screws.freeze.main import FrozenOnly
 import matplotlib.pyplot as plt
-from matplotlib import cm
 
+
+from root.config.main import np, rAnk, mAster_rank
 
 class _3dCSCG_Regions_Visualize_Matplot_(FrozenOnly):
     def __init__(self, visualize):
         self._regions_ = visualize._regions_
+        self._domain_ = self._regions_._domain_
         self._freeze_self_()
 
 
     def __call__(self, *args, **kwargs):
         """"""
-        return self.topology(*args, **kwargs)
+        return self.connection(*args, **kwargs)
 
 
-    def topology(self, aspect='equal'):
+
+    def connection(self, density=5000,):
         """"""
-        if rAnk != mAster_rank: return # only need the master core.
+        # we can do everything in the master core.
+        if rAnk != mAster_rank: return
 
-        region_coordinates_pool, connection_pool = self._regions_.___PRIVATE_parse_topology_1___()
-
+        density = int( np.ceil( np.sqrt(density / (self._regions_.num * 6)) ) )
+        r = np.linspace(0, 1, density)
+        O = np.zeros(density)
+        I = np.ones(density)
+        FH = np.linspace(0, 0.5, int(density/2))
+        SH = np.linspace(0.5, 1, int(density/2))
+        H = np.ones(int(density/2)) * 0.5
 
         fig = plt.figure(figsize=(12, 8))
         ax = fig.add_subplot(111, projection='3d')
@@ -35,94 +43,82 @@ class _3dCSCG_Regions_Visualize_Matplot_(FrozenOnly):
         ax.yaxis._axinfo["grid"]['color'] =  (1,1,1,0)
         ax.zaxis._axinfo["grid"]['color'] =  (1,1,1,0)
 
-        H = 0.5
-        x_lim, y_lim, z_lim = [list() for _ in range(3)]
+        for rn in self._regions_:
+            region = self._regions_[rn]
 
-        MAP = self._regions_.map
-        BNS = self._regions_._domain_.boundaries.names
-        colors = cm.get_cmap('cool_r', len(BNS))
-        COLORS = dict()
-        for i, _ in enumerate(BNS):
-            COLORS[_] = colors(i)
+            xyz = region.interpolation.mapping(O, O, r)
+            ax.plot(*xyz, color='gray', linewidth=0.75)
+            xyz = region.interpolation.mapping(O, I, r)
+            ax.plot(*xyz, color='gray', linewidth=0.75)
+            xyz = region.interpolation.mapping(I, O, r)
+            ax.plot(*xyz, color='gray', linewidth=0.75)
+            xyz = region.interpolation.mapping(I, I, r)
+            ax.plot(*xyz, color='gray', linewidth=0.75)
+            xyz = region.interpolation.mapping(r, O, O)
+            ax.plot(*xyz, color='gray', linewidth=0.75)
+            xyz = region.interpolation.mapping(r, I, O)
+            ax.plot(*xyz, color='gray', linewidth=0.75)
+            xyz = region.interpolation.mapping(r, O, I)
+            ax.plot(*xyz, color='gray', linewidth=0.75)
+            xyz = region.interpolation.mapping(r, I, I)
+            ax.plot(*xyz, color='gray', linewidth=0.75)
+            xyz = region.interpolation.mapping(I, r, O)
+            ax.plot(*xyz, color='gray', linewidth=0.75)
+            xyz = region.interpolation.mapping(O, r, O)
+            ax.plot(*xyz, color='gray', linewidth=0.75)
+            xyz = region.interpolation.mapping(O, r, I)
+            ax.plot(*xyz, color='gray', linewidth=0.75)
+            xyz = region.interpolation.mapping(I, r, I)
+            ax.plot(*xyz, color='gray', linewidth=0.75)
 
-        for rn in region_coordinates_pool:
-            ax.scatter(*region_coordinates_pool[rn], marker='s')
+            center = region.interpolation.mapping(0.5, 0.5, 0.5)
+            ax.scatter(*center, marker='s', color='b')
 
-            ax.text(*region_coordinates_pool[rn], rn,
-                    ha='center', va='center', ma='center')
 
-            x, y, z = region_coordinates_pool[rn]
+        # ---- now we plot the connection of region centers ---------------------------
+        map = self._regions_.map
+        for rn in map:   # go through all regions
 
-            line = ([x-H, x-H, x-H, x-H, x-H],
-                    [y-H, y+H, y+H, y-H, y-H],
-                    [z-H, z-H, z+H, z+H, z-H])
-            ax.plot(*line, '-', color=(0.5,0.5,0.5,0.15))
+            region = self._regions_[rn]
 
-            line = ([x+H, x+H, x+H, x+H, x+H],
-                    [y-H, y+H, y+H, y-H, y-H],
-                    [z-H, z-H, z+H, z+H, z-H])
-            ax.plot(*line, '-', color=(0.5,0.5,0.5,0.15))
+            for i, side in enumerate('NSWEBF'):
 
-            line = ([x-H, x+H],
-                    [y-H, y-H],
-                    [z-H, z-H])
-            ax.plot(*line, '-', color=(0.5,0.5,0.5,0.15))
+                object_at_this_side = map[rn][i]
 
-            line = ([x-H, x+H],
-                    [y+H, y+H],
-                    [z-H, z-H])
-            ax.plot(*line, '-', color=(0.5,0.5,0.5,0.15))
+                if object_at_this_side in self._regions_: # we find a region at this side
 
-            line = ([x-H, x+H],
-                    [y-H, y-H],
-                    [z+H, z+H])
-            ax.plot(*line, '-', color=(0.5,0.5,0.5,0.15))
-
-            line = ([x-H, x+H],
-                    [y+H, y+H],
-                    [z+H, z+H])
-            ax.plot(*line, '-', color=(0.5,0.5,0.5,0.15))
-
-            SIDES = MAP[rn]
-            for s, what in zip('NSWEBF', SIDES):
-                if what in BNS:
-                    if s == 'N':
-                        ax.text(x-H, y, z, '<'+what+'>', color=COLORS[what], ha='center', va='center', ma='center')
-                    elif s == 'S':
-                        ax.text(x+H, y, z, '<'+what+'>', color=COLORS[what], ha='center', va='center', ma='center')
-                    elif s == 'W':
-                        ax.text(x, y-H, z, '<'+what+'>', color=COLORS[what], ha='center', va='center', ma='center')
-                    elif s == 'E':
-                        ax.text(x, y+H, z, '<'+what+'>', color=COLORS[what], ha='center', va='center', ma='center')
-                    elif s == 'B':
-                        ax.text(x, y, z-H, '<'+what+'>', color=COLORS[what], ha='center', va='center', ma='center')
-                    elif s == 'F':
-                        ax.text(x, y, z+H, '<'+what+'>', color=COLORS[what], ha='center', va='center', ma='center')
+                    if side == 'N':
+                        xyz = region.interpolation.mapping(FH, H, H)
+                        ax.plot(*xyz, '--', color='r', linewidth=0.75)
+                    elif side == 'S':
+                        xyz = region.interpolation.mapping(SH, H, H)
+                        ax.plot(*xyz, '--', color='r', linewidth=0.75)
+                    elif side == 'W':
+                        xyz = region.interpolation.mapping(H, FH, H)
+                        ax.plot(*xyz, '--', color='r', linewidth=0.75)
+                    elif side == 'E':
+                        xyz = region.interpolation.mapping(H, SH, H)
+                        ax.plot(*xyz, '--', color='r', linewidth=0.75)
+                    elif side == 'B':
+                        xyz = region.interpolation.mapping(H, H, FH)
+                        ax.plot(*xyz, '--', color='r', linewidth=0.75)
+                    elif side == 'F':
+                        xyz = region.interpolation.mapping(H, H, SH)
+                        ax.plot(*xyz, '--', color='r', linewidth=0.75)
                     else:
                         raise Exception()
-                else:
-                    assert what[:2] == 'R:'
 
-            if aspect == 'equal':
-                x_lim.extend([x-H, x+H])
-                y_lim.extend([y-H, y+H])
-                z_lim.extend([z-H, z+H])
+                else: # it must be the domain boundary, not the mesh boundary by the way.
 
-        for cn in connection_pool:
-            ax.plot(*connection_pool[cn], '--', color='gray')
+                    assert object_at_this_side in self._domain_.boundaries.names
 
-        if aspect == 'equal':
-            ax.set_box_aspect((np.ptp(x_lim), np.ptp(y_lim), np.ptp(z_lim)))
+        ax.tick_params(labelsize=12)
+        ax.set_xlabel(r'$x$', fontsize=15)
+        ax.set_ylabel(r'$y$', fontsize=15)
+        ax.set_zlabel(r'$z$', fontsize=15)
+        plt.title(self._domain_.name + ', ID: '+ self._domain_.parameters['ID'] + ', <regions-connection>')
 
-        ax.tick_params(labelsize=10)
-        ax.set_xlabel(r'$x$', fontsize=12)
-        ax.set_ylabel(r'$y$', fontsize=12)
-        ax.set_zlabel(r'$z$', fontsize=12)
-        plt.title(self._regions_._domain_.name +
-                  ', ID: ' +
-                  self._regions_._domain_.parameters['ID'] +
-                  ', <regions topology>')
         fig.tight_layout()
         plt.show()
-        plt.close('all')
+        plt.close()
         return fig

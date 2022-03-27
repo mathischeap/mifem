@@ -16,7 +16,7 @@ from _2dCSCG.forms.standard.base.coboundary import _2dCSCG_Standard_Form_Cobound
 from _2dCSCG.forms.standard.base.matrices import _2dCSCG_Standard_Form_Matrices
 from _2dCSCG.forms.standard.base.error import _2dCSCG_Standard_Form_Error
 from _2dCSCG.forms.standard.base.operators.main import _2dCSCG_Standard_Form_Operators
-
+from _2dCSCG.forms.standard.base.dofs.main import _2dCSCG_SF_dofs
 
 from inheriting.CSCG.forms.standard.main import CSCG_Standard_Form
 
@@ -29,7 +29,7 @@ class _2dCSCG_Standard_Form(CSCG_Standard_Form, _2dCSCG_FORM_BASE, ndim=2):
     :param is_hybrid:
     :param orientation:
     :param numbering_parameters: The parameters for the numbering. Including scheme name and other parameters.
-        When it is a string, we use it as scheme name and it has not other parameters.
+        When it is a string, we use it as the scheme name, and it has not other parameters.
     :type numbering_parameters: dict, str
     :param name:
     """
@@ -52,6 +52,7 @@ class _2dCSCG_Standard_Form(CSCG_Standard_Form, _2dCSCG_FORM_BASE, ndim=2):
         self._matrices_ = _2dCSCG_Standard_Form_Matrices(self)
         self._operators_ = _2dCSCG_Standard_Form_Operators(self)
         self._DO_ = _2dCSCG_Standard_Form_DO(self)
+        self._dofs_ = None
 
 
     @property
@@ -82,6 +83,12 @@ class _2dCSCG_Standard_Form(CSCG_Standard_Form, _2dCSCG_FORM_BASE, ndim=2):
     def do(self):
         """If it has too many do methods, we group them in to do."""
         return self._DO_
+
+    @property
+    def dofs(self):
+        if self._dofs_ is None:
+            self._dofs_ = _2dCSCG_SF_dofs(self)
+        return self._dofs_
 
     def ___PRIVATE_reset_cache___(self):
         self.cochain.___PRIVATE_reset_cache___()

@@ -5,14 +5,19 @@ from screws.decorators.accepts import accepts
 from screws.freeze.main import FrozenOnly
 from scipy import sparse as spspa
 import numpy as np
-
-
+from root.config.main import cOmm, rAnk, mAster_rank, sIze
 
 class SpaVec_Customize(FrozenOnly):
     def __init__(self, spa_vec):
         self._spa_vec_ = spa_vec
         self.___customizations___ = dict()
+        self._customizations_to_be_applied_ = dict()
         self._freeze_self_()
+
+    def clear(self):
+        """clear all existing customizations."""
+        self.___customizations___ = dict()
+        self._customizations_to_be_applied_ = dict()
 
     @property
     def _customizations_(self):
@@ -21,10 +26,78 @@ class SpaVec_Customize(FrozenOnly):
                 ...,
                 5: [('cletr', 16), ...],  # The first customization for #5 element output is "clear local entry #16".
                     Customization are executed in a positive sequence.
-                ...
+                ...,
         }
         """
-        return self.___customizations___
+        if self.___customizations___ != dict():
+            self.___PRIVATE_sent_to_applying___()
+        return self._customizations_to_be_applied_
+
+
+    def ___PRIVATE_sent_to_applying___(self):
+        """We renew _customizations_to_be_applied_ according to ___customizations___."""
+
+        for e in self.___customizations___:
+
+            if e not in self._customizations_to_be_applied_:
+                self._customizations_to_be_applied_[e] = (list(),  # indices
+                                                          list()) # values)
+
+            CUSi = self.___customizations___[e]  # customizations for the output of #e element.
+            indices, values = self._customizations_to_be_applied_[e]
+
+            for cus in CUSi:
+
+                key, factors = cus
+
+
+                # clear a local row of the EWC-sparse-matrix ----------------- BELOW ---------
+                if key == 'cletr':  # Clear Local EnTRy #factors
+                    # `factors` will be an int
+                    if factors.__class__.__name__ in ("int", "int32", "int64"):
+                        pass
+                    elif isinstance(factors, float):
+                        assert factors % 1 == 0, f"factors={factors} wrong, when `cletr`, factors must be an int."
+                    else:
+                        raise Exception(
+                            f"factors={factors} wrong, when `cletr`, factors must be an int.")
+
+                    if factors not in indices:
+                        indices.append(factors)
+                        values.append(0)
+                    else:
+                        ind = indices.index(factors)
+                        values[ind] = 0
+
+
+                elif key == 'slet':  # set local entry to
+                    i, v = factors
+
+                    if i not in indices:
+                        indices.append(i)
+                        values.append(v)
+                    else:
+                        ind = indices.index(i)
+                        values[ind] = v
+
+
+                elif key == 'slest':  # Set Local Entries To
+                    I, V = factors
+                    for i, v in zip(I, V):
+                        if i not in indices:
+                            indices.append(i)
+                            values.append(v)
+                        else:
+                            ind = indices.index(i)
+                            values[ind] = v
+
+                # Not Implemented ---------------- BELOW --------
+                else:
+                    raise NotImplementedError(f"Can not handle customization key={key}.")
+                # ================================ ABOVE =======
+
+        self.___customizations___ = dict() # we have to clear ___customizations___ to avoid multiple renewing.
+
 
     def ___PRIVATE_do_execute_customization___(self, RETURN, e):
         """Execute all added customization.
@@ -39,39 +112,22 @@ class SpaVec_Customize(FrozenOnly):
 
         else:
             assert spspa.isspmatrix_csc(RETURN), "We need to start with a (1d) csc matrix."
-
-            CUSi = self._customizations_[e] # customizations for the output of #e element.
-            for cus in CUSi:
-
-                key, factors = cus
-
-                # clear a local row of the EWC-sparse-matrix ----------------- BELOW -----------------------------------
-                if key == 'cletr': # Clear Local EnTRy #factors
-                    # `factors` will be an int
-                    if factors.__class__.__name__ in ("int", "int32", "int64"):
-                        pass
-                    elif isinstance(factors, float):
-                        assert factors % 1 == 0, f"factors={factors} wrong, when `cletr`, factors must be an int."
-                    else:
-                        raise Exception(f"factors={factors} wrong, when `cletr`, factors must be an int.")
-
-                    if not spspa.isspmatrix_lil(RETURN): RETURN = RETURN.tolil()
-                    RETURN[factors, 0] = 0
-                elif key == 'slest': # Set Local Entries To
-                    if not spspa.isspmatrix_lil( RETURN): RETURN = RETURN.tolil()
-                    RETURN[factors[0], 0] = factors[1]
-
-                # Not Implemented --------------------------------------------- BELOW ----------------------------------
-                else:
-                    raise NotImplementedError(f"Can not handle customization key={key}.")
-                #============================================================== ABOVE ==================================
+            RETURN = RETURN.tolil()
+            indices, values = self._customizations_[e]
+            RETURN[indices, 0] = values
 
         if not spspa.isspmatrix_csc(RETURN): RETURN = RETURN.tocsc()
-        assert RETURN.shape[1] == 1, f"A vector must to csc_matrix of shape (x, 1), now its shape is {RETURN.shape}."
+        assert RETURN.shape[1] == 1, f"A vector must to csc_matrix of shape (x, 1), " \
+                                     f"now its shape is {RETURN.shape}."
         return RETURN
 
+
+
+
+
+
     @accepts('self', (int, float, 'int32', 'int64'),
-             ('PartialDofs', 'PartialCochain'), (int, float))
+            ('PartialDofs', 'PartialCochain'), (int, float))
     def set_constant_entries_according_to_CSCG_partial_dofs(
             self, i, pd, constant, interpreted_as='local_dofs'):
         """ We do:
@@ -104,13 +160,16 @@ class SpaVec_Customize(FrozenOnly):
             LDR_row = GM.local_dofs_ranges[i]
             start_row = LDR_row.start
             dofs = pd.interpreted_as.local_dofs
+
             for e in dofs:
+
                 local_dofs = np.array(dofs[e]) + start_row
+                CONSTANT = constant * np.ones(len(local_dofs))
 
                 if e not in self.___customizations___:
                     self.___customizations___[e] = list()
 
-                self.___customizations___[e].append(('slest', (local_dofs, constant)))
+                self.___customizations___[e].append(('slest', (local_dofs, CONSTANT)))
 
         else:
             raise NotImplementedError(f"interpreted_as={interpreted_as} not implemented.")
@@ -168,3 +227,79 @@ class SpaVec_Customize(FrozenOnly):
 
         else:
             raise NotImplementedError(f"interpreted_as={interpreted_as} not implemented.")
+
+    def set_assembled_V_i_to(self, i, v):
+        """Let V be the assembled vector (csc_matrix of shape (x,1)), we set V[i] = v.
+
+        :param i:
+        :param v:
+        :return:
+        """
+        assert i % 1 == 0, f"i={i}({i.__class__.__name__}) is wrong."
+        assert isinstance(v, (int, float))
+
+        if not isinstance(i, int): i = int(i)
+
+        rCGM = self._spa_vec_.gathering_matrix
+        assert rCGM is not None, "I have no gathering_matrix!"
+
+        rO = rCGM.find.elements_and_local_indices_of_dof(i)
+
+        if rO is None:
+            elements, indices = None, None
+        else:
+            elements, indices = rO
+
+        all_elements = cOmm.gather(elements, root=mAster_rank)
+
+        if rAnk == mAster_rank:
+            ELEMENTS = set()
+            for _ES_ in all_elements:
+                if _ES_ is not None:
+                    ELEMENTS.update(_ES_)
+
+            ELEMENTS = list(ELEMENTS)
+            assert len(ELEMENTS) > 0, f"I do not find any!"
+            ELEMENTS.sort()
+            the_element = ELEMENTS[0]
+        else:
+            the_element = None
+        the_element = cOmm.bcast(the_element, root=mAster_rank)
+
+        if rO is None:
+            I_am_in = sIze
+        else:
+            if the_element in elements:
+                I_am_in = rAnk
+            else:
+                I_am_in = sIze
+
+        who_are_in = cOmm.gather(I_am_in, root=mAster_rank)
+        if rAnk == mAster_rank:
+            use_who = min(who_are_in)
+            assert use_who != sIze, "Something is wrong, we need to find a correct core."
+        else:
+            use_who = None
+        use_who = cOmm.bcast(use_who, root=mAster_rank)
+
+        if use_who == rAnk:
+            assert the_element == elements[0], "Must be like this!"
+
+            for e, i in zip(elements, indices):
+
+                if e not in self.___customizations___:
+                    self.___customizations___[e] = list()
+
+                if e == the_element:
+                    self.___customizations___[e].append(('slet', (i, v)))
+                else:
+                    self.___customizations___[e].append(('cletr', i))
+
+        else:
+            if elements is None:
+                pass
+            else:
+                for e, i in zip(elements, indices):
+                    if e not in self.___customizations___:
+                        self.___customizations___[e] = list()
+                    self.___customizations___[e].append(('cletr', i))

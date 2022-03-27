@@ -20,7 +20,7 @@ class TypeWr2MetricAllocator(FrozenOnly):
             " <TypeWr2MetricGiver> : typeWr2Metric named '{}' is not coded.".format(ID)
         self._ID_ = ID
         cls_name = self.___coded_typeWr2Metric___()[ID]
-        cls_path = self.___typeWr2Metric_path___() + '.' + ID
+        cls_path = self.___typeWr2Metric_path___()[ID]
         self._itp_ = getattr(import_module(cls_path), cls_name)
         self._freeze_self_()
 
@@ -36,4 +36,7 @@ class TypeWr2MetricAllocator(FrozenOnly):
 
     @classmethod
     def ___typeWr2Metric_path___(cls):
-        return "_3dCSCG.mesh.domain.regions.region.types_wrt_metric"
+        base_path = '.'.join(str(cls).split(' ')[1][1:-2].split('.')[:-2]) + '.'
+        return {'chaotic': base_path + 'chaotic',
+                'crazy': base_path + 'crazy',
+                'transfinite': base_path + 'transfinite',}

@@ -5,15 +5,15 @@ if './' not in sys.path: sys.path.append('./')
 import os
 from root.config.main import *
 
-from _2dCSCG.main import MeshGenerator as _2dCSCG_MeshGenerator
-from _2dCSCG.main import SpaceInvoker as _2dCSCG_SpaceInvoker
-from _2dCSCG.main import FormCaller as _2dCSCG_FormCaller
-from _2dCSCG.main import ExactSolutionSelector as _2dCSCG_ExactSolutionSelector
+from _2dCSCG.master import MeshGenerator as _2dCSCG_MeshGenerator
+from _2dCSCG.master import SpaceInvoker as _2dCSCG_SpaceInvoker
+from _2dCSCG.master import FormCaller as _2dCSCG_FormCaller
+from _2dCSCG.master import ExactSolutionSelector as _2dCSCG_ExactSolutionSelector
 
-from _3dCSCG.main import MeshGenerator as _3dCSCG_MeshGenerator
-from _3dCSCG.main import SpaceInvoker as _3dCSCG_SpaceInvoker
-from _3dCSCG.main import ExactSolutionSelector as _3dCSCG_ExactSolutionSelector
-from _3dCSCG.main import FormCaller as _3dCSCG_FormCaller
+from _3dCSCG.master import MeshGenerator as _3dCSCG_MeshGenerator
+from _3dCSCG.master import SpaceInvoker as _3dCSCG_SpaceInvoker
+from _3dCSCG.master import ExactSolutionSelector as _3dCSCG_ExactSolutionSelector
+from _3dCSCG.master import FormCaller as _3dCSCG_FormCaller
 from root.mifem.save import save, read
 
 import random
@@ -82,7 +82,7 @@ def test_mifem_NO1_2dCSCG_save_read():
         F1 = read('_2dCSCG_f1i')
         np.testing.assert_almost_equal(F1.error.L(), f1_L2_error)
 
-        f2.TW.func.___DO_set_func_body_as___(es, 'source')
+        f2.TW.func.___DO_set_func_body_as___(es, 'source_term')
         f2.TW.___DO_push_all_to_instant___(0)
         f2.discretize()
         f2_L2_error = f2.error.L()
@@ -165,6 +165,8 @@ def test_mifem_NO2_3dCSCG_save_read():
     save(t2, '_3dCSCG_2trace')
     T2 = read('_3dCSCG_2trace')
 
+
+
     t1 = FC('1-t')
     t1.TW.func.do.set_func_body_as(es, 'velocity')
     t1.TW.current_time = 13
@@ -209,6 +211,12 @@ def test_mifem_NO2_3dCSCG_save_read():
 
     save([mesh, MESH, t2, f1, T2, F1, SPACE, space], 'Some_objects')
     SR_mesh, SR_MESH, SR_t2, SR_f1, SR_T2, SR_F1, SR_SPACE, SR_space = read('Some_objects')
+
+    assert SR_t2.mesh is SR_f1.mesh
+    assert SR_t2.mesh is SR_F1.mesh
+    assert SR_t2.mesh is SR_MESH
+    assert SR_t2.space is SR_F1.space
+
 
     cOmm.barrier()
 

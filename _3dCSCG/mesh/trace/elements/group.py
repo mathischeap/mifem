@@ -35,7 +35,7 @@ class _3dCSCG_Trace_Elements_Group(FrozenOnly):
 
 if __name__ == '__main__':
     # mpiexec -n 12 python _3dCSCG\mesh\trace\elements\group.py
-    from _3dCSCG.main import MeshGenerator
+    from _3dCSCG.master import MeshGenerator
     elements = [3, 4, 2]
     mesh = MeshGenerator('crazy_periodic', c=0.3, bounds=([0,1], [0,1], [0,1]))(elements)
     mesh.trace.elements.SELFCHECK.outward_unit_normal_vector()

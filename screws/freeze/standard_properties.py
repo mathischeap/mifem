@@ -5,7 +5,7 @@ if seNtry_on: sentry_sdk.init("https://79fb951c3ea7457c8c3f47c3dfb026ce@sentry.i
 
 from screws.exceptions import StatisticError
 from screws.exceptions import ParametersError
-from screws.freeze.inheriting.frozen_only import FrozenOnly
+from screws.freeze.base import FrozenOnly
 
 
 class StandardProperties(FrozenOnly):

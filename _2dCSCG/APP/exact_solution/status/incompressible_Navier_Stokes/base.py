@@ -52,7 +52,7 @@ class incompressibleNavierStokesBase(Base):
         """Reynolds number. It will also depend on the computational domain and velocity."""
         raise NotImplementedError()
 
-    def u(self, t, x, y): # u-component of velocity
+    def u(self, t, x, y): # u, x-component of velocity
         raise NotImplementedError()
 
     def u_t(self, t, x, y):
@@ -68,7 +68,7 @@ class incompressibleNavierStokesBase(Base):
             self._NPDf_u_ = NumericalPartialDerivative_txy_Functions(self.u)
         return self._NPDf_u_('y')(t, x, y)
 
-    def v(self, t, x, y): # v-component of velocity
+    def v(self, t, x, y): # v, y-component of velocity
         raise NotImplementedError()
     def v_t(self, t, x, y):
         if self._NPDf_v_ is None:
@@ -151,6 +151,13 @@ class incompressibleNavierStokesBase(Base):
             self._NPDf_p_ = NumericalPartialDerivative_txy_Functions(self.p)
         return self._NPDf_p_('y')(t, x, y)
 
+    @property
+    def total_pressure(self):
+        """A scalar field of the kinetic energy distribution."""
+        if self._total_pressure_ is None:
+            self._total_pressure_ =_2dCSCG_ScalarField(
+                self.mesh, self._tp_, valid_time=self.valid_time, name='total pressure')
+        return self._total_pressure_
 
     def _tp_(self, t, x, y): #total pressure
         return self.p(t, x, y) + self.___kinetic_energy_distribution___(t, x, y)

@@ -19,7 +19,7 @@ class InterpolationAllocator(FrozenOnly):
             " <InterpolationSearcher> : interpolation named '{}' is not coded.".format(ID)
         self._ID_ = ID
         cls_name = self.___coded_interpolator___()[ID]
-        cls_path = self.___interpolator_path___() + '.' + ID
+        cls_path = self.___interpolator_path___()[ID]
         self._itp_ = getattr(import_module(cls_path), cls_name)
         self._freeze_self_()
 
@@ -37,4 +37,7 @@ class InterpolationAllocator(FrozenOnly):
     @classmethod
     def ___interpolator_path___(cls):
         """ """
-        return "_3dCSCG.mesh.domain.regions.region.interpolations"
+        base_path = '.'.join(str(cls).split(' ')[1][1:-2].split('.')[:-2]) + '.'
+        return {'crazy': base_path + 'crazy',
+                'transfinite': base_path + 'transfinite',
+                'bridge_arch_cracked': base_path + 'bridge_arch_cracked',}

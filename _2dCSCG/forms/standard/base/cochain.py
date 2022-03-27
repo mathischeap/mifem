@@ -3,7 +3,7 @@
 
 
 
-from inheriting.CSCG.forms.standard.cochain import CSCG_Standard_Form_Cochain_BASE
+from inheriting.CSCG.forms.standard.cochain.main import CSCG_Standard_Form_Cochain_BASE
 
 
 
