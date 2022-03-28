@@ -3,14 +3,14 @@ A class that represent a part of the dofs of a form.
 
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path: sys.path.append('/')
 
 
 
 from screws.freeze.main import FrozenOnly
 from typing import Dict
-from tools.CSCG.partial_cochain.partial_dofs.include_from import _PartialDofs_Include_from_
-from tools.CSCG.partial_cochain.partial_dofs.interpretation.main import _PartialDofs_Interpretation_
+from objects.CSCG.base.forms.base.BC.partial_cochain.partial_dofs.include_from import _PartialDofs_Include_from_
+from objects.CSCG.base.forms.base.BC.partial_cochain.partial_dofs.interpretation.main import _PartialDofs_Interpretation_
 
 class PartialDofs(FrozenOnly):
     """"""

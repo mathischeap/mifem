@@ -1,6 +1,6 @@
 
 
-from tools.CSCG.partial_cochain.main import PartialCochain
+from objects.CSCG.base.forms.base.BC.partial_cochain.main import PartialCochain
 from screws.freeze.base import FrozenOnly
 
 

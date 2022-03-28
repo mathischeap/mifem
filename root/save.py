@@ -13,11 +13,15 @@ from root.read.main import read
 
 def save(obj, filename):
     """
-    Save a mifem object to file (`.mi` extension).
 
-    :param obj:
-    :param filename:
-    :return:
+    Parameters
+    ----------
+    obj
+    filename
+
+    Returns
+    -------
+
     """
     filename = check_filename_mi(filename)
     if isinstance(obj, (list, tuple)):

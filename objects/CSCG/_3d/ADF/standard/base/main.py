@@ -3,7 +3,7 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 
 from objects.CSCG._3d.ADF.base import _3dCSCG_Algebra_DUAL_FORM_BASE

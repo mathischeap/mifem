@@ -19,7 +19,16 @@ class _3dCSCG_Mesh_DO_FIND(FrozenOnly):
 
 
     def region_name_of_element(self, i):
-        """ Find the regions of ith element. """
+        """Find the regions of ith element.
+
+        Parameters
+        ----------
+        i
+
+        Returns
+        -------
+
+        """
         region_name = None
         for num_elements_accumulation in self._mesh_._num_elements_accumulation_:
             if i < num_elements_accumulation:
@@ -28,6 +37,16 @@ class _3dCSCG_Mesh_DO_FIND(FrozenOnly):
         return region_name
 
     def region_name_and_local_indices_of_element(self, i):
+        """
+
+        Parameters
+        ----------
+        i
+
+        Returns
+        -------
+
+        """
         return self._mesh_.___PRIVATE_do_find_region_name_and_local_indices_of_element___(i)
 
     def reference_origin_and_size_of_element_of_given_local_indices(self, region_name, local_indices):
@@ -48,7 +67,19 @@ class _3dCSCG_Mesh_DO_FIND(FrozenOnly):
             region_name, local_indices)
 
     def slave_of_element(self, i: int) -> int:
-        """Find the core rank of mesh element #i."""
+        """Find the core rank of mesh element #i.
+
+        Parameters
+        ----------
+        i : int
+            The number of the mesh element.
+
+        Returns
+        -------
+        midCore1 : int
+            The core the mesh element #`i` is in.
+
+        """
         DISTRI = self._mesh_._element_distribution_
         if isinstance(i, str): i = int(i)
         if sIze <= 6 or not self._mesh_.___is_occupying_all_cores___:

@@ -6,8 +6,9 @@ from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EW
 
 
 class _3dCSCG_Algebra_DUAL_Standard_Form_Coboundary(FrozenOnly):
-    """This is one of the key properties of a standard algebraic dual form. To perform the coboundary, now we need the
-    help of another dual trace form.
+    """This is one of the key properties of a algebraic dual form.
+
+    To perform the coboundary, now we need the help of another dual trace form.
     """
     def __init__(self, dsf):
         self._dsf_ = dsf

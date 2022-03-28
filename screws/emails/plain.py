@@ -40,6 +40,12 @@ class SendAdminAnEmail(FrozenOnly):
         assert rAnk == mAster_rank, "Should only call it in master core."
         hostname = socket.gethostname()
 
+        if hostname not in ('DT-YI-HT20', 'DESKTOP-SYSU-YiZhang'):
+            return 0
+
+        if not whether_internet_connected():
+           return 0
+
         # noinspection PyBroadException
         try:
             with open('root/config/___private_developer_code___.txt', 'r') as f:
@@ -49,13 +55,9 @@ class SendAdminAnEmail(FrozenOnly):
         except:
             return 0
 
-        if not whether_internet_connected():
-           return 0
-
         in_the_wall = whether_in_the_great_fire_wall()
 
-        # edit or add condition here when I am working from new machine (only for the library holder)
-        if in_the_wall and hostname in ('DT-YI-HT20', 'DESKTOP-SYSU-YiZhang'):
+        if in_the_wall:
             # noinspection PyBroadException
             try:
                 # build connection: I am in the wall!

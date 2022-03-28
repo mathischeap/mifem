@@ -3,8 +3,8 @@
 
 
 from screws.freeze.main import FrozenOnly
-from tools.CSCG.partial_cochain.partial_dofs.interpretation.local import _PartialDofs_Interpretation_Local_
-from tools.CSCG.partial_cochain.partial_dofs.interpretation.GLOBAL import _PartialDofs_Interpretation_Globe_
+from objects.CSCG.base.forms.base.BC.partial_cochain.partial_dofs.interpretation.local import _PartialDofs_Interpretation_Local_
+from objects.CSCG.base.forms.base.BC.partial_cochain.partial_dofs.interpretation.GLOBAL import _PartialDofs_Interpretation_Globe_
 
 
 

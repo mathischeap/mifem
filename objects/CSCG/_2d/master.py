@@ -103,10 +103,10 @@ class MeshGenerator(FrozenOnly):
 class SpaceInvoker(FrozenOnly):
     def __init__(self, ID):
         cOmm.barrier()  # for safety reason
-        assert ID in _2dCSCG_SpaceAllocator.___defined_spaces___(), \
+        assert ID in _2dCSCG_SpaceAllocator.___space_name___(), \
             " <SpaceInvoker> : space <{}> is not coded yet.".format(ID)
         self._ID_ = ID
-        cls_name = _2dCSCG_SpaceAllocator.___defined_spaces___()[ID]
+        cls_name = _2dCSCG_SpaceAllocator.___space_name___()[ID]
         cls_path = _2dCSCG_SpaceAllocator.___space_path___()[ID]
         self._space_ = getattr(import_module(cls_path), cls_name)
         self._freeze_self_()
@@ -188,7 +188,8 @@ class ExactSolutionSelector(FrozenOnly):
             print(f"   <ES kwargs>: {kwargs}", flush=True)
 
         cOmm.barrier()  # for safety reason
-        assert ID in _2dCSCG_ExactSolutionAllocator.___exact_solution_name___(), f"Exact solution ID={ID} not found."
+        assert ID in _2dCSCG_ExactSolutionAllocator.___exact_solution_name___(), \
+            f"Exact solution ID={ID} not found."
         className = _2dCSCG_ExactSolutionAllocator.___exact_solution_name___()[ID]
         classPath = _2dCSCG_ExactSolutionAllocator.___exact_solution_path___()[ID]
 

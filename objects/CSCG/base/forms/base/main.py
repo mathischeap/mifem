@@ -12,7 +12,7 @@ from screws.freeze.main import FrozenClass
 
 from objects.CSCG.base.forms.base.time_wise.main import CSCG_Form_TimeWise
 from objects.CSCG.base.forms.base.func import CSCG_Form_Func
-from objects.CSCG.base.forms.base.BC import CSCG_Form_BC
+from objects.CSCG.base.forms.base.BC.main import CSCG_Form_BC
 
 
 

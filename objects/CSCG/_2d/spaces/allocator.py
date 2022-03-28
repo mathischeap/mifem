@@ -10,7 +10,7 @@ class _2dCSCG_SpaceAllocator(FrozenOnly):
 
 
     @classmethod
-    def ___defined_spaces___(cls):
+    def ___space_name___(cls):
         return {'polynomials': "_2dCSCG_PolynomialSpace"}
 
 

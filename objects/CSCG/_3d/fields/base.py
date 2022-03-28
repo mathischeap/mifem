@@ -23,9 +23,11 @@ class _3dCSCG_Continuous_FORM_BASE(CSCG_Continuous_FORM_BASE, ABC):
     def __init__(self, mesh, ftype, valid_time):
         """
 
-        :param mesh:
-        :param ftype:
-        :param valid_time:
+        Parameters
+        ----------
+        mesh
+        ftype
+        valid_time
         """
         assert mesh.__class__.__name__ == '_3dCSCG_Mesh', "Need a 3dCSCG mesh."
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_field')

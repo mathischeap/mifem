@@ -6,12 +6,12 @@ dofs. These two properties are named: dofs (an instance of PartialDofs) and coch
 """
 
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path: sys.path.append('/')
 
-from tools.CSCG.partial_cochain.partial_dofs.main import PartialDofs
+from objects.CSCG.base.forms.base.BC.partial_cochain.partial_dofs.main import PartialDofs
 from screws.freeze.main import FrozenOnly
-from tools.CSCG.partial_cochain.include_from import _PartialCochain_Include_from_
-from tools.CSCG.partial_cochain.interpretation import _PartialCochain_Interpretation_
+from objects.CSCG.base.forms.base.BC.partial_cochain.include_from import _PartialCochain_Include_from_
+from objects.CSCG.base.forms.base.BC.partial_cochain.interpretation import _PartialCochain_Interpretation_
 
 
 class PartialCochain(FrozenOnly):
