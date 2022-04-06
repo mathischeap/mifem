@@ -27,6 +27,10 @@ class Regions(FrozenOnly):
         for key in regions: assert regions[key].__class__.__name__ == 'Region'
         self.___generate_global_corner_numbering___()
         self.___generate_region_map___()
+
+        for rn in self:
+            self[rn]._MAP_ = self._region_map_[rn]
+
         self._freeze_self_()
 
     def __call__(self, i=None):
@@ -116,6 +120,7 @@ class Regions(FrozenOnly):
 
         """
         if corner in pool:
+            # noinspection PyUnresolvedReferences
             return True, pool.index(corner)
         for _, i in enumerate(pool):
             if np.sqrt((i[0] - corner[0]) ** 2 + (i[1] - corner[1]) ** 2) <= 1e-9:

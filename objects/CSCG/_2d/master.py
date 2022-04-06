@@ -1,6 +1,6 @@
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 from objects.CSCG._2d.exact_solutions.main import ExactSolution
 from importlib import import_module

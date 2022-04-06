@@ -35,8 +35,14 @@ class _PartialDofs_Interpretation_Local_(FrozenOnly):
             if indi[:2] == '1-': # type-1 indicators
                 side = indi[2]
                 # so the numbering property must have this method implemented.
-                dofs = self._form_.numbering.do.\
-                    find.local_dofs_on_element_side(side)
+                if  self._mesh_.ndim == 3:
+                    dofs = self._form_.numbering.do.\
+                        find.local_dofs_on_element_side(side)
+                elif self._mesh_.ndim == 2:
+                    dofs = self._form_.numbering.do.\
+                        find.local_dofs_on_element_edge(side)
+                else:
+                    raise Exception()
                 DOFs.extend(dofs)
             else:
                 raise NotImplementedError(

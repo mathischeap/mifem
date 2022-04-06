@@ -4,7 +4,7 @@ The trace (face) elements of a mesh.
 """
 
 import sys
-if './' not in sys.path: sys.path.append('../')
+if './' not in sys.path: sys.path.append('./')
 
 from root.config.main import *
 from screws.freeze.main import FrozenOnly
@@ -64,7 +64,7 @@ if __name__ == '__main__':
     from objects.CSCG._3d.master import MeshGenerator
     elements = [3, 4, 2]
     mesh = MeshGenerator('crazy_periodic', c=0.3, bounds=([0,1], [0,1], [0,1]))(elements)
-    mesh.trace.elements.SELFCHECK.outward_unit_normal_vector()
+    mesh.trace.elements.selfcheck.outward_unit_normal_vector()
     Q = mesh.trace.elements.quality
     print(mesh.quality)
     print(mesh.trace.quality)

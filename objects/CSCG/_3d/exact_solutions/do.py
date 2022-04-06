@@ -1,4 +1,5 @@
-
+"""
+"""
 
 import numpy as np
 from root.config.main import cOmm, MPI
@@ -14,8 +15,7 @@ class _3dCSCG_ES_DO(FrozenOnly):
 
 
     def compute_Ln_norm_of(self, what, time=0, n=2, quad_degree=None):
-        """
-        We compute the :math:`L^n`-norm of the attribute name ``what`` at `time`.
+        """We compute the :math:`L^n`-norm of the attribute name ``what`` at `time`.
 
         :param str what:
         :param float time:
@@ -50,5 +50,15 @@ class _3dCSCG_ES_DO(FrozenOnly):
             raise Exception()
 
     def generate_random_valid_time_instances(self, amount=None):
+        """
+
+        Parameters
+        ----------
+        amount : None
+
+        Returns
+        -------
+
+        """
         return self._es_.status.___PRIVATE_generate_random_valid_time_instances___(
             amount=amount)

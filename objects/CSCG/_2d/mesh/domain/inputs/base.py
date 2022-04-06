@@ -246,11 +246,6 @@ class DomainInputBase(FrozenOnly):
             assert newLengthPOOL == lengthPOOL + 2, "Boundary(s) used for multiple periodic pairs!"
         self._periodic_boundaries_ = bnPOOL
 
-
-
-
-
-
     @property
     def periodic_boundary_pairs(self):
         return self._periodic_boundary_pairs_
@@ -260,6 +255,9 @@ class DomainInputBase(FrozenOnly):
         """ """
         self.___PRIVATE_periodic_boundary_requirement_checker___(pBd)
         self._periodic_boundary_pairs_ = pBd
+
+
+
 
     @property
     def periodic_boundaries(self):

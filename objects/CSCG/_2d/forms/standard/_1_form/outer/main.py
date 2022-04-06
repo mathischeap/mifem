@@ -8,7 +8,7 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 from objects.CSCG._2d.forms.standard._1_form.outer.special import _1Form_Outer_Special
 import numpy as np
 from scipy import sparse as spspa
@@ -171,18 +171,18 @@ class _2dCSCG_1Form_Outer(_1Form_BASE):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python _2dCSCG\forms\standard\_1_form\outer\main.py
+    # mpiexec -n 4 python objects\CSCG\_2d\forms\standard\_1_form\outer\main.py
     from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
     # mesh = MeshGenerator('crazy', c=0.3)([50,45])
     # mesh = MeshGenerator('chp1',)([2,2])
-    mesh = MeshGenerator('crazy', c=0.0, bounds=([0,1],[0,1]))([10,10])
+    mesh = MeshGenerator('crazy', c=0.0, bounds=([0,1],[0,1]))([1,1])
     space = SpaceInvoker('polynomials')([('Lobatto',2), ('Lobatto',2)])
     FC = FormCaller(mesh, space)
 
     ES = ExactSolutionSelector(mesh)('sL:sincos1')
 
-    f1 = FC('1-f-o', is_hybrid=True)
+    u = FC('1-f-o', is_hybrid=True)
 
     # M0 = f1.matrices.mass[0]
     # print(M0.toarray())
@@ -190,11 +190,15 @@ if __name__ == '__main__':
     # E21 = f1.matrices.incidence[0]
     # print(E21.toarray())
 
-    f1.TW.func.do.set_func_body_as(ES, 'velocity')
-    f1.TW.current_time = 0
-    f1.TW.do.push_all_to_instant()
-    f1.discretize()
-    print(f1.error.L())
+    u.TW.func.do.set_func_body_as(ES, 'velocity')
+    u.TW.current_time = 0
+    u.TW.do.push_all_to_instant()
+    u.discretize()
+
+    MF = u.matrices.mass
+    MF.gathering_matrices = (u, u)
+    MF = MF.assembled
+    MF.visualize.spy()
 
 
     #

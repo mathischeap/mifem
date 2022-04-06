@@ -1,11 +1,10 @@
 """ """
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 from objects.CSCG._3d.ADF.base import _3dCSCG_Algebra_DUAL_FORM_BASE
 
-from objects.CSCG.base.ADF.trace.main import CSCG_Algebra_DUAL_Trace_Form
 from scipy import sparse as spspa
 
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
@@ -13,24 +12,23 @@ from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EW
 from objects.CSCG._3d.ADF.trace.base.do import _3dCSCG_Algebra_DUAL_Trace_Form_DO
 from objects.CSCG._3d.ADF.trace.base.cochain.main import _3dCSCG_Algebra_DUAL_Trace_Form_Cochain
 from objects.CSCG._3d.ADF.trace.base.coboundary import _3dCSCG_Algebra_DUAL_Trace_Form_Coboundary
+from objects.CSCG._3d.ADF.trace.base.IS import _3dCSCG_ADT_TF_IS
+from objects.CSCG._3d.ADF.trace.base.num import _3dCSCG_ADF_T_NUM
 
-
-
-
-
-
-class _3dCSCG_Algebra_DUAL_Trace_Form(CSCG_Algebra_DUAL_Trace_Form, _3dCSCG_Algebra_DUAL_FORM_BASE):
+class _3dCSCG_Algebra_DUAL_Trace_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
     """"""
     def __init__(self, ndim, mesh, space, orientation, name):
         """"""
-        super().__init__(ndim, mesh, space)
-        super(_3dCSCG_Algebra_DUAL_Trace_Form, self).___init___()
+        super(_3dCSCG_Algebra_DUAL_Trace_Form, self).__init__(ndim, mesh, space)
+
         self._orientation_ = orientation
         self.standard_properties.name = name
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_standard_algebra_dual_trace')
         self._DO_ = _3dCSCG_Algebra_DUAL_Trace_Form_DO(self)
         self._cochain_ = _3dCSCG_Algebra_DUAL_Trace_Form_Cochain(self)
         self._coboundary_ = _3dCSCG_Algebra_DUAL_Trace_Form_Coboundary(self)
+        self._IS_ = None
+        self._num_ = None
 
     def ___PRIVATE_reset_cache___(self):
         """"""
@@ -46,13 +44,15 @@ class _3dCSCG_Algebra_DUAL_Trace_Form(CSCG_Algebra_DUAL_Trace_Form, _3dCSCG_Alge
         assert self.prime.IS.hybrid is self.IS.hybrid    , "prime must be hybrid form, now it is not."
 
     def ___PRIVATE_generate_mass_matrix___(self):
-        """For algebra dual forms, this method will only be called once. The result (a mass matrix) will be cached in
-        `self._mass_matrix_` because we think it is an essential property for algebra dual forms and it will be used
+        """For algebra dual forms, this method will only be called once.
+        The result (a mass matrix) will be cached in
+        `self._mass_matrix_` because we think it is an essential property for algebra dual forms,
+        and it will be used
         for multiple times. Therefore, we cache it somewhere.
 
         :return: A tuple of two outputs: the mass matrix and the inverse mass matrix.
         """
-        TEW_mass = self.prime.matrices.mass
+        TEW_mass = self.prime.matrices.mass_TEW
         # we now need to make a mesh-element-wise mass matrix
         MAP = self.mesh.trace.elements.map
         local_cache = dict()
@@ -104,7 +104,17 @@ class _3dCSCG_Algebra_DUAL_Trace_Form(CSCG_Algebra_DUAL_Trace_Form, _3dCSCG_Alge
     def coboundary(self):
         return self._coboundary_
 
+    @property
+    def IS(self):
+        if self._IS_ is None:
+            self._IS_ = _3dCSCG_ADT_TF_IS(self)
+        return self._IS_
 
+    @property
+    def num(self):
+        if self._num_ is None:
+            self._num_ = _3dCSCG_ADF_T_NUM(self)
+        return self._num_
 
 
 

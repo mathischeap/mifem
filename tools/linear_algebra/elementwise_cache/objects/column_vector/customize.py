@@ -175,7 +175,7 @@ class SpaVec_Customize(FrozenOnly):
             raise NotImplementedError(f"interpreted_as={interpreted_as} not implemented.")
 
     @accepts('self', (int, float, 'int32', 'int64'), ('PartialDofs', 'PartialCochain'))
-    def set_entries_according_to_two_CSCG_partial_cochains(
+    def set_entries_according_to_CSCG_partial_cochains(
         self, i, pd, pc=None, interpreted_as='local_dofs'):
         """We do:
         block[i][row_pds.dofs, 1] = col_pds.cochain

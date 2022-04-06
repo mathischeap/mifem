@@ -38,7 +38,7 @@ class _3dCSCG_Trace_Matrices(FrozenOnly):
         return self._S_
 
     @property
-    def mass(self):
+    def mass_TEW(self):
         """Return the mass matrix. It is a dict, keys are trace-element numbers, and values are the mass
         matrices on the trace elements."""
         if self._mass_ is None:

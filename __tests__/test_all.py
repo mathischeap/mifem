@@ -41,7 +41,6 @@ from __tests__.unittests.main import passed_GLOBAL_tests # comment to skip these
 
 
 
-
 total_Tests = passed_2dCSCG_tests + passed_3dCSCG_tests + passed_GLOBAL_tests
 
 if rAnk == mAster_rank:

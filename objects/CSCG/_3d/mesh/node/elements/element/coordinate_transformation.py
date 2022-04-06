@@ -22,7 +22,7 @@ class _3dCSCG_Node_Element_CT(FrozenOnly):
         :param corner: We compute it from this corner.
         :return:
         """
-        if self._ne_.IS_on_periodic_boundary:
+        if self._ne_.IS.on_periodic_boundary:
             assert from_element is not None, \
                 "to compute the physical position of a node element on periodic " \
                 "boundary, we have to provide from which element you " \

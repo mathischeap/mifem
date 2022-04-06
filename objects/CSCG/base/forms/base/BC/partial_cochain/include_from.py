@@ -20,17 +20,32 @@ class _PartialCochain_Include_from_(FrozenOnly):
 
         cochain_type, cochain = f.discretize(target='BC')
 
+
         if cochain_type == 'locally full local cochain': # cochain.local, and locally full for all dofs in mesh elements.
-            for i in local_dofs_indicators:
-                if i not in self._cochain_:
-                    self._cochain_[i] = list()
-                assert len(local_dofs_indicators[i]) > 0, f"empty for element #{i}"
+            if f.ndim == 3:
+                for i in local_dofs_indicators:
+                    if i not in self._cochain_:
+                        self._cochain_[i] = list()
+                    assert len(local_dofs_indicators[i]) > 0, f"empty for element #{i}"
 
-                for side in local_dofs_indicators[i]:
-                    dofs = f.numbering.do. \
-                        find.local_dofs_on_element_side(side)
+                    for side in local_dofs_indicators[i]:
+                        dofs = f.numbering.do. \
+                            find.local_dofs_on_element_side(side)
 
-                    self._cochain_[i].extend(cochain[i][dofs])
+                        self._cochain_[i].extend(cochain[i][dofs])
+            elif f.ndim == 2:
+                for i in local_dofs_indicators:
+                    if i not in self._cochain_:
+                        self._cochain_[i] = list()
+                    assert len(local_dofs_indicators[i]) > 0, f"empty for element #{i}"
+
+                    for side in local_dofs_indicators[i]:
+                        dofs = f.numbering.do. \
+                            find.local_dofs_on_element_edge(side)
+
+                        self._cochain_[i].extend(cochain[i][dofs])
+            else:
+                raise Exception()
 
         elif cochain_type == 'Boundary only local cochain':
             # only cochains for dofs on mesh element side (boundary of the mesh).

@@ -129,7 +129,7 @@ class DistributedVector(FrozenOnly):
             indices = 0
             V = self.V
             for form in args:
-                GLOBAL_num_dofs = form.GLOBAL_num_dofs
+                GLOBAL_num_dofs = form.num.GLOBAL_dofs
                 form.cochain.globe = DistributedVector(V[indices:indices+GLOBAL_num_dofs, 0])
                 indices += GLOBAL_num_dofs
         else:

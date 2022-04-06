@@ -56,6 +56,13 @@ class EWC_ColumnVector(FrozenOnly):
             DATA_TYPE = 'EMPTY'
             data_generator = data_generator.num.basis
             # equivalent to EWC_ColumnVector(mesh, form.num.basis)
+        elif hasattr(data_generator, 'prime') and \
+            hasattr(data_generator.prime, 'standard_properties') and \
+            'CSCG_form' in data_generator.prime.standard_properties.tags:
+            # data_generator is a CSCG AD-form.
+            DATA_TYPE = 'EMPTY'
+            data_generator = data_generator.prime.num.basis
+            # equivalent to EWC_ColumnVector(mesh, ad_form.prime.num.basis)
         else: # default data type
             pass
 
@@ -157,7 +164,11 @@ class EWC_ColumnVector(FrozenOnly):
                 if _.__class__.__name__ == 'Gathering_Matrix':
                     cgm0.append(_)
                 else:
-                    cgm0.append(_.numbering.gathering)
+                    if hasattr(_, '___IS_ADF___') and _.___IS_ADF___:
+                        cgm0.append(_.prime.numbering.gathering)
+                    else:
+                        cgm0.append(_.numbering.gathering)
+
             gathering_matrix = Chain_Gathering_Matrix(cgm0)
         self._gathering_matrix_ = gathering_matrix
 

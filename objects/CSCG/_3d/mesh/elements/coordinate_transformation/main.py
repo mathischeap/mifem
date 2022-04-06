@@ -3,7 +3,7 @@
 
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 from objects.CSCG._3d.mesh.elements.coordinate_transformation.quad_1d import _3dCSCG_ECT_1d_QUAD
 from objects.CSCG._3d.mesh.elements.coordinate_transformation.quad_3d import _3dCSCG_ECT_3d_QUAD

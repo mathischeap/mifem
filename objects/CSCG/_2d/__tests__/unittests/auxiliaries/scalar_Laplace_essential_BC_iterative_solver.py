@@ -13,12 +13,17 @@ from tools.linear_algebra.elementwise_cache.operators.concatenate.main import co
 def scalar_Laplace_solver_iterative_solver(c, Kx, Ky, Nx, Ny):
     """
 
-    :param c:
-    :param Kx:
-    :param Ky:
-    :param Nx:
-    :param Ny:
-    :return:
+    Parameters
+    ----------
+    c
+    Kx
+    Ky
+    Nx
+    Ny
+
+    Returns
+    -------
+
     """
     mesh = MeshGenerator('crazy', c=c, bounds=[(0,1), (0,1)])([Kx, Ky], EDM=None)
     space = SpaceInvoker('polynomials')([('Lobatto', Nx), ('Lobatto', Ny)])

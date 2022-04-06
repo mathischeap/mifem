@@ -16,7 +16,7 @@ class LocallyFullVector(FrozenOnly):
             - GlobalVector or DistributedVector
             - csc_matrix of shape (x, 1)
             - 1d array.
-            - int: we make a zero 1d array of shape (V, )
+            - int: we make a zero 1d array of shape (V,)
 
         """
         # ------- parse input ---------------------------------------------------------------
@@ -53,7 +53,8 @@ class LocallyFullVector(FrozenOnly):
             raise Exception(f"Cannot build LocallyFullVector from {V.__class__.__name__}.")
 
         # ------- check input ---------------------------------------------------------------
-        assert self._V_.__class__.__name__ == 'ndarray' and np.ndim(self._V_) == 1, "V must be a 1-d array."
+        assert self._V_.__class__.__name__ == 'ndarray' and np.ndim(self._V_) == 1, \
+            "V must be a 1-d array."
         self._do_ = None
         self._freeze_self_()
 
@@ -67,28 +68,6 @@ class LocallyFullVector(FrozenOnly):
 
     def __len__(self):
         return self.shape[0]
-
-    def ___PRIVATE_be_distributed_to___(self, *args, method='sequence'):
-        """
-        Consider this vector represents cochains of some forms in sequence, we can distribute this vector to the forms.
-
-        :param args: the forms.
-        :param method: It can be one of:
-
-            1. ``sequence`` -- We distribute the values in sequence to *args.
-
-        :return:
-        """
-        if method == 'sequence':
-            indices = 0
-            V = self.V # V now is 1-d array already.
-            for form in args:
-                GLOBAL_num_dofs = form.GLOBAL_num_dofs
-                # Below we make new locally full vector then distribute it.
-                form.cochain.globe = LocallyFullVector(V[indices:indices+GLOBAL_num_dofs])
-                indices += GLOBAL_num_dofs
-        else:
-            raise NotImplementedError(f'distribution method: {method} not coded.')
 
     @property
     def do(self):

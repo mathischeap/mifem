@@ -2,6 +2,7 @@
 
 from screws.freeze.main import FrozenOnly
 
+from objects.CSCG._2d.mesh.trace.elements.element.IS import _2dCSCG_TraceElement_IS
 from objects.CSCG._2d.mesh.trace.elements.element.coordinate_transformation import _2dCSCG_Trace_Element_CoordinateTransformation
 from root.config.main import rAnk
 
@@ -35,9 +36,10 @@ class _2dCSCG_Trace_Element(FrozenOnly):
         self._onpb_ = onpb
         assert self.CHARACTERISTIC_element in self._elements_._mesh_.elements, \
             "CHARACTERISTIC_element must be int the same core."
-        if self.IS_on_mesh_boundary:
+        if self._ondb_:
             assert self.NON_CHARACTERISTIC_position[0] not in '1234567890'
         self._ct_ = _2dCSCG_Trace_Element_CoordinateTransformation(self)
+        self._IS_ = None
         self._freeze_self_()
 
     @property
@@ -47,6 +49,12 @@ class _2dCSCG_Trace_Element(FrozenOnly):
     @property
     def coordinate_transformation(self):
         return self._ct_
+
+    @property
+    def IS(self):
+        if self._IS_ is None:
+            self._IS_ = _2dCSCG_TraceElement_IS(self)
+        return self._IS_
 
     @property
     def normal_direction(self):
@@ -79,28 +87,8 @@ class _2dCSCG_Trace_Element(FrozenOnly):
         return self._i_
 
     @property
-    def IS_on_mesh_boundary(self):
-        return self._ondb_
-
-    @property
-    def IS_on_periodic_boundary(self):
-        return self._onpb_
-
-    @property
-    def IS_shared_by_cores(self):
-        """"""
-        if self.IS_on_mesh_boundary:
-            return False
-        else:
-            if int(self._p1_[:-1]) in self._elements_._mesh_.elements and \
-                int(self._p2_[:-1]) in self._elements_._mesh_.elements:
-                return False
-            else:
-                return True
-
-    @property
     def shared_with_core(self):
-        if self.IS_shared_by_cores:
+        if self.IS.shared_by_cores:
             if int(self._p1_[:-1]) in self._elements_._mesh_.elements:
                 CORE = self._elements_._mesh_.do.find.slave_of_element(int(self._p2_[:-1]))
             elif int(self._p2_[:-1]) in self._elements_._mesh_.elements:

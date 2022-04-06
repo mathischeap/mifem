@@ -1,12 +1,12 @@
 
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 from root.config.main import *
 from screws.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.node.elements.element.main import _3dCSCG_Node_Element
-
+from objects.CSCG._3d.mesh.node.elements.do.main import _3dCSCG_NodeMesh_Do
 
 class _3dCSCG_Node_Elements(FrozenOnly):
     """"""
@@ -18,6 +18,7 @@ class _3dCSCG_Node_Elements(FrozenOnly):
         self._MAP_ = self.___PRIVATE_generating_node_element_map___()
         self._locations_ = self.___PRIVATE_generating_node_elements___()
         self._elements_ = dict()
+        self._do_ = None
         self._freeze_self_()
 
     def ___PRIVATE_generating_node_element_map___(self):
@@ -32,10 +33,12 @@ class _3dCSCG_Node_Elements(FrozenOnly):
             if rAnk == mAster_rank:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:
-                    regionElementLayout = baseElementLayout[rn]
-                    assert all(np.array(regionElementLayout) > 1), \
-                        f" elements.layout[{rn}]={regionElementLayout} wrong," \
-                        f" needs (>1, >1, >1) to make it work for periodic regions."
+                    region = mesh.domain.regions[rn]
+                    if region.IS.periodic_to_self:
+                        regionElementLayout = baseElementLayout[rn]
+                        assert all(np.array(regionElementLayout) > 1), \
+                            f" elements.layout[{rn}]={regionElementLayout} wrong," \
+                            f" needs (>1, >1, >1) to make it work for periodic domain."
 
 
 
@@ -319,6 +322,12 @@ class _3dCSCG_Node_Elements(FrozenOnly):
         return self._GLOBAL_num_
 
     @property
+    def do(self):
+        if self._do_ is None:
+            self._do_ = _3dCSCG_NodeMesh_Do(self)
+        return self._do_
+
+    @property
     def num(self):
         """Return how many local trace elements.
         (int)
@@ -348,13 +357,13 @@ class _3dCSCG_Node_Elements(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 12 python _3dCSCG\mesh\node\elements\main.py
+    # mpiexec -n 4 python objects\CSCG\_3d\mesh\node\elements\main.py
     from objects.CSCG._3d.master import MeshGenerator
     elements = [2, 2, 2]
-    mesh = MeshGenerator('crazy_periodic', c=0.0, bounds=([0,3], [0,3], [0,3]))(elements)
+    mesh = MeshGenerator('crazy', c=0.0, bounds=([0,3], [0,3], [0,3]))(elements)
     # mesh = MeshGenerator('bridge_arch_cracked')(elements)
     nodes = mesh.node.elements
 
-    # print(rAnk, mesh.___local_periodic_element_sides___)
-
-    print(nodes.GLOBAL_num)
+    for i in nodes:
+        node = nodes[i]
+        print(i, node.positions)

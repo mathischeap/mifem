@@ -166,7 +166,7 @@ def test_Mesh_NO2a_trace_elements_CT():
     MM = dict()
     for i in tes:
         te = tes[i]
-        if te.IS_shared_by_cores:
+        if te.IS.shared_by_cores:
             POSITION[i] = te.CHARACTERISTIC_side
             MAPPING[i] = te.coordinate_transformation.mapping(xi, et)
             METRIC[i] = te.coordinate_transformation.metric(xi, et)
@@ -986,10 +986,10 @@ def test_Mesh_NO5_mesh_trace_topology():
             else:
                 SD.extend([rAnk, shared_with_core])
 
-            if e.IS_on_mesh_boundary:
+            if e.IS.on_mesh_boundary:
                 assert e.positions[1] in mesh.domain.boundaries.names
-            if e.IS_on_periodic_boundary:
-                assert not e.IS_on_mesh_boundary
+            if e.IS.on_periodic_boundary:
+                assert not e.IS.on_mesh_boundary
                 assert e.positions[1][0] in '0123456789'
 
         SD = cOmm.gather(SD, root=sEcretary_rank)

@@ -40,8 +40,7 @@ class _2dCSCG_VectorField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
         self._freeze_self_()
 
     def ___PRIVATE_set_func___(self, func, ftype='standard'):
-        """
-        Use this method to set up the function body and function type.
+        """Use this method to set up the function body and function type.
 
         Whenever define a new funcType, edit the currentFunc for the new type.
         """
@@ -68,13 +67,13 @@ class _2dCSCG_VectorField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
         self._ftype_ = ftype
 
     def ___DO_evaluate_func_at_time___(self, time=None):
-        """
-        Evaluate the function at a particular time; reduce the number of variables from 4 to 3.
+        """Evaluate the function at a particular time; reduce the number of variables from 4 to 3.
 
         :param float time: The time function is evaluated at.
-        :return: A list of shape (3,) which can be sent to, for example, the instant function component of a form.
-            They should be callable with ``(x,y,z)`` coordinates.
+        :return: A list of shape (3,) which can be sent to, for example, the instant function
+            component of a form. They should be callable with `(x,y,z)` coordinates.
         :rtype: list
+
         """
         if time is None:
             time = self.current_time

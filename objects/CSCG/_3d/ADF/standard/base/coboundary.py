@@ -42,9 +42,9 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Coboundary(FrozenOnly):
             E = - E_T
             T = T_T
 
-            next_prime_form_Path = base_path + 'forms.standard._2_form.main'
+            next_prime_form_Path = base_path + 'forms.standard._2s.main'
             next_prime_form_Name = '_3dCSCG_2Form'
-            next_dual_form_Path = base_path + 'ADF.standard._2_AD_form'
+            next_dual_form_Path = base_path + 'ADF.standard._2s.main'
             next_dual_form_Name = '_3dCSCG_S2_ADF'
 
         elif self._dsf_.k == 2: # dual gradient operator: (E_{curl}^T, -T_N^T)
@@ -53,9 +53,9 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Coboundary(FrozenOnly):
             E = E_T
             T = - T_T
 
-            next_prime_form_Path = base_path + 'forms.standard._1_form.main'
+            next_prime_form_Path = base_path + 'forms.standard._1s.main'
             next_prime_form_Name = '_3dCSCG_1Form'
-            next_dual_form_Path = base_path + 'ADF.standard._1_AD_form'
+            next_dual_form_Path = base_path + 'ADF.standard._1s.main'
             next_dual_form_Name = '_3dCSCG_S1_ADF'
 
         elif self._dsf_.k == 1: # dual gradient operator: (-E_{grad}^T, T_N^T)
@@ -64,9 +64,9 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Coboundary(FrozenOnly):
             E = - E_T
             T = T_T
 
-            next_prime_form_Path = base_path + 'forms.standard._0_form.main'
+            next_prime_form_Path = base_path + 'forms.standard._0s.main'
             next_prime_form_Name = '_3dCSCG_0Form'
-            next_dual_form_Path = base_path + 'ADF.standard._0_AD_form'
+            next_dual_form_Path = base_path + 'ADF.standard._0s.main'
             next_dual_form_Name = '_3dCSCG_S0_ADF'
 
         else:
@@ -122,4 +122,3 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Coboundary(FrozenOnly):
             self._E_ = E
 
         return self._E_
-

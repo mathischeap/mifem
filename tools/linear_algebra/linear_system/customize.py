@@ -19,10 +19,13 @@ class ___LinearSystem_Customize___(FrozenOnly):
         :param interpreted_as: how we interpret the `pd` and `pc`.
         :return:
         """
+        if hasattr(pd, 'standard_properties') and \
+             'CSCG_form' in pd.standard_properties.tags:
+            pd = pd.BC.partial_cochain
+
         # check 1: ---------------------------------
         if i == j:
-            assert pc is None, f"when pc is None, we must have i==j, " \
-                               f"now i={i}, j={j}."
+            assert pc is None, f"when i == j is None, we must have pc is None."
 
         # check 2: ---------------------------------
         if pc is None:
@@ -32,6 +35,11 @@ class ___LinearSystem_Customize___(FrozenOnly):
             assert pd.__class__.__name__ == 'PartialCochain', \
                 "I need a PartialCochain when pc is None."
             pc = pd
+        elif hasattr(pc, 'standard_properties') and \
+             'CSCG_form' in pc.standard_properties.tags:
+            pc = pc.BC.partial_cochain
+        else:
+            pass
 
         # check 3: ---------------------------------
         assert pc.__class__.__name__ == 'PartialCochain', f"pc must be a PartialCochain."
@@ -47,14 +55,14 @@ class ___LinearSystem_Customize___(FrozenOnly):
                 identify_global_rows_according_to_CSCG_partial_dofs(
                 i, pd, interpreted_as=interpreted_as)
             self._LS_.b.customize.\
-                set_entries_according_to_two_CSCG_partial_cochains(
+                set_entries_according_to_CSCG_partial_cochains(
                 i, pd, interpreted_as=interpreted_as)
         else:
             self._LS_.A.customize.\
                 off_diagonally_identify_rows_according_to_two_CSCG_partial_dofs(
                 i, j, pd, pc, interpreted_as=interpreted_as)
             self._LS_.b.customize.\
-                set_entries_according_to_two_CSCG_partial_cochains(
+                set_entries_according_to_CSCG_partial_cochains(
                 i, pd, pc=pc, interpreted_as=interpreted_as)
 
     def identify_global_row(self, r):

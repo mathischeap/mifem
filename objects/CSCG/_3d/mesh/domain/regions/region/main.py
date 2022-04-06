@@ -14,7 +14,7 @@ from objects.CSCG._3d.mesh.domain.regions.region.sides.main import Sides
 from objects.CSCG._3d.mesh.domain.regions.region.sub_geometry.main import RegionSubGeometry
 
 from objects.CSCG._3d.mesh.domain.regions.region.inheriting.topology import RegionTopology
-
+from objects.CSCG._3d.mesh.domain.regions.region.IS import _3dCSCG_Region_IS
 
 
 class Region(RegionTopology, FrozenOnly):
@@ -47,7 +47,13 @@ class Region(RegionTopology, FrozenOnly):
         self.___is_orthogonal___ = None
         self._sides_ = Sides(self)
         self._sub_geometry_ = RegionSubGeometry(self)
+        self._IS_ = None
+        self._MAP_ = None
         self._freeze_self_()
+
+    @property
+    def map(self):
+        return self._MAP_
 
     @property
     def type_wrt_metric(self):
@@ -86,6 +92,12 @@ class Region(RegionTopology, FrozenOnly):
     @property
     def sub_geometry(self):
         return self._sub_geometry_
+
+    @property
+    def IS(self):
+        if self._IS_ is None:
+            self._IS_ = _3dCSCG_Region_IS(self)
+        return self._IS_
 
     def ___PRIVATE_PARSE_type_wrt_metric___(self):
         if self._domain_input_.region_type_wr2_metric is None:

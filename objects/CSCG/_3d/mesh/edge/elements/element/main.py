@@ -3,11 +3,11 @@
 
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.edge.elements.element.coordinate_transformation import _3dCSCG_Edge_Element_CT
-
+from objects.CSCG._3d.mesh.edge.elements.element.IS import _3dCSCG_EdgeElement_IS
 
 
 
@@ -23,6 +23,7 @@ class _3dCSCG_Edge_Element(FrozenOnly):
         self._cp_ = None
         self._ce_ = None
         self._cce_ = None
+        self._IS_ = None
         self._freeze_self_()
 
     @property
@@ -61,20 +62,19 @@ class _3dCSCG_Edge_Element(FrozenOnly):
         return self._ct_
 
     @property
+    def IS(self):
+        if self._IS_ is None:
+            self._IS_ = _3dCSCG_EdgeElement_IS(self)
+        return self._IS_
+
+    @property
     def shared_by_mesh_elements(self):
         return self._elements_._shared_by_elements_[self._i_]
 
     @property
     def on_mesh_boundaries(self):
+        """This edge element is on these mesh boundaries"""
         return self._elements_._on_mesh_boundaries_[self._i_]
-
-    @property
-    def IS_on_mesh_boundary(self):
-        return True if len(self.on_mesh_boundaries) > 0 else False
-
-    @property
-    def IS_on_periodic_boundary(self):
-        return self._elements_._IS_on_periodic_boundary_[self._i_]
 
 
     @property
@@ -83,7 +83,8 @@ class _3dCSCG_Edge_Element(FrozenOnly):
         if self._cp_ is None:
 
             for pos in self.positions:
-                element, corner_edge = pos[:-2], pos[-2:] # before reach boundary names, we must have found it. So no worries.
+                element, corner_edge = pos[:-2], pos[-2:]
+                # before reach boundary names, we must have found it. So no worries.
                 element = int(element)
                 if element in self._elements_._MAP_:
                     self._cp_ = pos
@@ -119,7 +120,7 @@ class _3dCSCG_Edge_Element(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 12 python _3dCSCG\mesh\edge\elements\element\main.py
+    # mpiexec -n 4 python objects\CSCG\_3d\mesh\edge\elements\element\main.py
     from objects.CSCG._3d.master import MeshGenerator
     elements = [2, 2, 2]
     # mesh = MeshGenerator('crazy_periodic', c=0.0, bounds=([0,3], [0,3], [0,3]))(elements)
@@ -128,4 +129,4 @@ if __name__ == '__main__':
 
     for i in edges:
         edge = edges[i]
-        print(edge.i, edge.positions, edge.direction)
+        print(edge.i, edge.positions, edge.direction, edge.IS.on_mesh_boundary)

@@ -1,4 +1,3 @@
-
 """
 
 """
@@ -8,21 +7,23 @@ if './' not in sys.path: sys.path.append('./')
 
 from objects.CSCG._3d.ADF.base import _3dCSCG_Algebra_DUAL_FORM_BASE
 
-from objects.CSCG.base.ADF.standard.main import CSCG_Algebra_DUAL_Standard_Form
-
 from objects.CSCG._3d.ADF.standard.base.do import _3dCSCG_Algebra_DUAL_Standard_Form_DO
 from objects.CSCG._3d.ADF.standard.base.cochain.main import _3dCSCG_Algebra_DUAL_Standard_Form_Cochain
 from objects.CSCG._3d.ADF.standard.base.coboundary import _3dCSCG_Algebra_DUAL_Standard_Form_Coboundary
+from objects.CSCG._3d.ADF.standard.base.IS import _3dCSCG_ADF_SF_IS
+from objects.CSCG._3d.ADF.standard.base.num import _3dCSCG_ADF_SF_NUM
+from objects.CSCG._3d.ADF.standard.base.error import _3dCSCG_ADF_SF_Error
 
 
 
-class _3dCSCG_Algebra_DUAL_Standard_Form(CSCG_Algebra_DUAL_Standard_Form, _3dCSCG_Algebra_DUAL_FORM_BASE):
+
+
+class _3dCSCG_Algebra_DUAL_Standard_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
     """"""
 
     def __init__(self, ndim, mesh, space, orientation, name):
         """"""
         super().__init__(ndim, mesh, space)
-        super().___init___()
         assert orientation in ('inner', 'outer'), " orientation needs to be 'inner' or 'outer'."
         self._orientation_ = orientation
         self.standard_properties.name = name
@@ -30,6 +31,9 @@ class _3dCSCG_Algebra_DUAL_Standard_Form(CSCG_Algebra_DUAL_Standard_Form, _3dCSC
         self._DO_ = _3dCSCG_Algebra_DUAL_Standard_Form_DO(self)
         self._cochain_ = _3dCSCG_Algebra_DUAL_Standard_Form_Cochain(self)
         self._coboundary_ = _3dCSCG_Algebra_DUAL_Standard_Form_Coboundary(self)
+        self._IS_ = None
+        self._num_ = None
+        self._error_ = None
 
     def ___PRIVATE_reset_cache___(self):
         """"""
@@ -46,7 +50,7 @@ class _3dCSCG_Algebra_DUAL_Standard_Form(CSCG_Algebra_DUAL_Standard_Form, _3dCSC
 
     def ___PRIVATE_generate_mass_matrix___(self):
         """For algebra dual forms, this method will only be called once. The result (a mass matrix) will be cached in
-        `self._mass_matrix_` because we think it is an essential property for algebra dual forms and it will be used
+        `self._mass_matrix_` because we think it is an essential property for algebra dual forms, and it will be used
         for multiple times. Therefore, we cache it somewhere for the dual standard forms.
 
         :return:  A tuple of two outputs: the mass matrix and the inverse mass matrix.
@@ -56,8 +60,13 @@ class _3dCSCG_Algebra_DUAL_Standard_Form(CSCG_Algebra_DUAL_Standard_Form, _3dCSC
         return MM, iMM
 
     @property
+    def orientation(self):
+        """An AD standard form can be either inner or outer."""
+        return self._orientation_
+
+    @property
     def DO(self):
-        """If has too many do methods, we group them in to do."""
+        """If it has too many do methods, we group them in to do."""
         return self._DO_
 
     @property
@@ -68,6 +77,23 @@ class _3dCSCG_Algebra_DUAL_Standard_Form(CSCG_Algebra_DUAL_Standard_Form, _3dCSC
     def coboundary(self):
         return self._coboundary_
 
+    @property
+    def IS(self):
+        if self._IS_ is None:
+            self._IS_ = _3dCSCG_ADF_SF_IS(self)
+        return self._IS_
+
+    @property
+    def num(self):
+        if self._num_ is None:
+            self._num_ = _3dCSCG_ADF_SF_NUM(self)
+        return self._num_
+
+    @property
+    def error(self):
+        if self._error_ is None:
+            self._error_ = _3dCSCG_ADF_SF_Error(self)
+        return self._error_
 
 
 

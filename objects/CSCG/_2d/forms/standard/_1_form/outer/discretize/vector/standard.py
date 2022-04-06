@@ -56,6 +56,8 @@ class _2dCSCG_S1Fo_Discretize_StandardVector(FrozenOnly):
         # --- target --------------------------------------------------------
         if target == 'func':
             FUNC = SELF.func.body
+        elif target == 'BC':
+            FUNC = SELF.BC.body
         else:
             raise NotImplementedError(f"I cannot deal with target = {target}.")
         # =======================================================================

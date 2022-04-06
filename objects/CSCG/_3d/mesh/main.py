@@ -501,7 +501,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                         else:
                             raise Exception("SHOULD NEVER REACH HERE.")
 
-                    # give EGN to dict: ___element_global_numbering___ if this regions is numbered.
+                    # give EGN to dict: ___element_global_numbering___ if this region is numbered.
                     ___element_global_numbering___[rn] = EGN
 
                 else: # this regions is not numbered, lets pass.

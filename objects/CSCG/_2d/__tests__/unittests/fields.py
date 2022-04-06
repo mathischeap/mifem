@@ -1,6 +1,6 @@
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 import random
 from objects.CSCG._2d.__tests__.random_objects.form_caller import random_FormCaller_of_total_load_around
@@ -117,6 +117,6 @@ def test_Fields_NO2_scalar():
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python _2dCSCG\tests\unittests\fields.py
+    # mpiexec -n 4 python objects\CSCG\_2d\__tests__\unittests\fields.py
     test_Fields_NO1_vector()
     test_Fields_NO2_scalar()

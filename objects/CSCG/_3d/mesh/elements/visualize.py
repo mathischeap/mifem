@@ -1,7 +1,7 @@
 
 
 import sys
-if './' not in sys.path: sys.path.append('visualize/')
+if './' not in sys.path: sys.path.append('./')
 from screws.freeze.base import FrozenOnly
 
 from root.config.main import rAnk, mAster_rank, np, sEcretary_rank
@@ -124,7 +124,7 @@ class _3dCSCG_MeshElements_VIS(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 3 python _3dCSCG\mesh\elements\visualize\main.py
+    # mpiexec -n 3 python objects\CSCG\_3d\mesh\elements\visualize.py
     from objects.CSCG._3d.master import MeshGenerator
     elements = [3, 3, 3]
     # mesh = MeshGenerator('crazy', c=0.0, bounds=([0,1], [0,1], [0,1]))(elements)

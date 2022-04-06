@@ -26,7 +26,12 @@ class _PartialDofs_Include_from_(FrozenOnly):
             assert bn in mesh.boundaries.names, \
                 f"boundary named {bn} is not found!"
 
-        Res = mesh.boundaries.range_of_element_sides
+        if mesh.ndim == 3:
+            Res = mesh.boundaries.range_of_element_sides
+        elif mesh.ndim == 2:
+            Res = mesh.boundaries.range_of_element_edges
+        else:
+            raise Exception()
 
         new_added = dict()
 

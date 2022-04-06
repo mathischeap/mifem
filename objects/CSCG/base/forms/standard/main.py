@@ -12,11 +12,6 @@ class CSCG_Standard_Form:
         self._num_ = CSCG_standard_form_NUM(self)
 
     @property
-    def GLOBAL_num_dofs(self):
-        """(int) Return number of total dofs."""
-        return self.numbering.gathering.GLOBAL_num_dofs
-
-    @property
     def orientation(self):
         return self._orientation_
 

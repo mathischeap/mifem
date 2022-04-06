@@ -48,12 +48,14 @@ class _3dCSCG_Domain_Visualize(FrozenOnly):
 
         for region_name in self._domain_.regions():
             region = self._domain_.regions(region_name)
+
             if nodes is None: nodes = 5
 
             if isinstance(nodes, int):
                 assert nodes >= 2, " <Region3D> : density={} wrong".format(nodes)
                 r = s = t = np.linspace(0, 1, nodes)
             else:
+                # noinspection PyUnresolvedReferences
                 r, s, t = nodes[region_name]
 
             size_x = np.size(r)
@@ -153,8 +155,6 @@ class _3dCSCG_Domain_Visualize(FrozenOnly):
                     y_lim.append(np.min(y))
                     z_lim.append(np.max(z))
                     z_lim.append(np.min(z))
-                else:
-                    x, y, z = None, None, None
 
                 if is_boundary:
                     if distinguish_boundaries_by_color:

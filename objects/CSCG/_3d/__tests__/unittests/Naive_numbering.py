@@ -143,7 +143,7 @@ def test_Naive_Numbering_NO5_0trace():
 
             END = NEW_END
 
-    num_of_dofs_in_this_core = t0.numbering.num_of_dofs_in_this_core
+    num_of_dofs_in_this_core = t0.numbering.num_local_dofs
     LOCAL_NUMBERING = set()
     GM = t0.numbering.gathering
     for i in GM:
@@ -182,7 +182,7 @@ def test_Naive_Numbering_NO6_1trace():
             END = NEW_END
 
 
-    num_of_dofs_in_this_core = t1.numbering.num_of_dofs_in_this_core
+    num_of_dofs_in_this_core = t1.numbering.num_local_dofs
     LOCAL_NUMBERING = set()
     GM = t1.numbering.gathering
     for i in GM:
@@ -202,7 +202,7 @@ def test_Naive_Numbering_NO4_2trace():
     t2 = FC('2-t', numbering_parameters='Naive')
 
     GM = t2.numbering.gathering
-    num_of_dofs_in_this_core = t2.numbering.num_of_dofs_in_this_core
+    num_of_dofs_in_this_core = t2.numbering.num_local_dofs
     LOCAL_NUMBERING = set()
     benchmark = np.array(
         [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],

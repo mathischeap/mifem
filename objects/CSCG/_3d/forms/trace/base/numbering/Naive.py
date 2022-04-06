@@ -183,7 +183,7 @@ class _3dCSCG_Trace_Form_Numbering_Naive(FrozenOnly):
         extraInfo = None
 
         num_basis_onside = self._tf_.num.basis_onside
-        NBO = [num_basis_onside['N'], num_basis_onside['W'],  num_basis_onside['B']]
+        NBO = [num_basis_onside['N'], num_basis_onside['W'], num_basis_onside['B']]
 
         type_amount_dict = self._mesh_.trace.elements.___PRIVATE_find_type_and_amount_numbered_before___()
 

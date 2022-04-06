@@ -14,7 +14,7 @@ from objects.CSCG._3d.forms.edge.base.matrices import _3dCSCG_Edge_Matrices
 from objects.CSCG._3d.forms.edge.base.cochain import _3dCSCG_Edge_Cochain
 from objects.CSCG._3d.forms.edge.base.error import _3dCSCG_Edge_Error
 from objects.CSCG._3d.forms.edge.base.do import _3dCSCG_Edge_DO
-
+from objects.CSCG._3d.forms.edge.base.num import _3dCSCG_EdgeForm_Num
 
 class _3dCSCG_Edge(_3dCSCG_FORM_BASE, ndim=3):
     """
@@ -41,24 +41,13 @@ class _3dCSCG_Edge(_3dCSCG_FORM_BASE, ndim=3):
         self._cochain_ = _3dCSCG_Edge_Cochain(self)
         self._error_ = _3dCSCG_Edge_Error(self)
         self._DO_ = _3dCSCG_Edge_DO(self)
+        self._num_ = None
 
         # self._visualize_ = _3dCSCG_Trace_Visualize(self)
         # self._coboundary_ = _3dCSCG_Trace_Coboundary(self)
 
     def ___PRIVATE_reset_cache___(self):
         """"""
-
-    @property
-    def NUM_basis(self):
-        """(int) Return an int which represent the number of basis function one mesh element has."""
-        return self._NUM_basis_
-
-    @property
-    def NUM_basis_components(self):
-        """Return a dict, keys are corner-edge names, values are the num basis on this corner edge.
-        """
-        return self._NUM_basis_components_
-
     @property
     def orientation(self):
         return self._orientation_
@@ -83,3 +72,9 @@ class _3dCSCG_Edge(_3dCSCG_FORM_BASE, ndim=3):
     @property
     def do(self):
         return self._DO_
+
+    @property
+    def num(self):
+        if self._num_ is None:
+            self._num_ = _3dCSCG_EdgeForm_Num(self)
+        return self._num_

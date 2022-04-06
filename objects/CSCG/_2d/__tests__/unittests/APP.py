@@ -10,7 +10,7 @@
 import os
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 from objects.CSCG._2d.__tests__.unittests.auxiliaries.scalar_Laplace_essential_BC import scalar_Laplace_solver
 from objects.CSCG._2d.__tests__.unittests.auxiliaries.scalar_Laplace_essential_BC_iterative_solver import \
@@ -82,7 +82,7 @@ def test_APP_NO3_Euler_ShearLayerRollup_Direct_test():
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python _2dCSCG\tests\unittests\APP.py
+    # mpiexec -n 4 python objects\CSCG\_2d\__tests__\unittests\APP.py
     test_APP_NO3_Euler_ShearLayerRollup_Direct_test()
     # test_APP_NO2_scalar_Laplace_essential_BC_iterative_solver()
 

@@ -65,7 +65,6 @@ class InterpolationBase(FrozenOnly):
         assert np.shape(r) == np.shape(s) == np.shape(t), \
             " <Interpolation> : inputs shape dis-match."
 
-
         return r, s, t
     
     def __call__(self, r, s, t):

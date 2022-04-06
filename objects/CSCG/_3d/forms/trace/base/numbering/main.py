@@ -60,7 +60,7 @@ class _3dCSCG_Trace_Numbering(FrozenOnly):
             getattr(self._numberer_, self._tf_.__class__.__name__)()
 
     @property
-    def num_of_dofs_in_this_core(self):
+    def num_local_dofs(self):
         if self._local_num_dofs_ is None:
             self.___PRIVATE_do_numbering___()
         return self._local_num_dofs_

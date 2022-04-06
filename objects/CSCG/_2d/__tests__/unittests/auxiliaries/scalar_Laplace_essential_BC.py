@@ -13,12 +13,17 @@ from scipy import sparse as spspa
 def scalar_Laplace_solver(c, Kx, Ky, Nx, Ny):
        """
 
-       :param c:
-       :param Kx:
-       :param Ky:
-       :param Nx:
-       :param Ny:
-       :return:
+       Parameters
+       ----------
+       c
+       Kx
+       Ky
+       Nx
+       Ny
+
+       Returns
+       -------
+
        """
        mesh = MeshGenerator('crazy', c=c, bounds=[(0,1), (0,1)])([Kx, Ky], EDM='debug')
        space = SpaceInvoker('polynomials')([('Lobatto', Nx), ('Lobatto', Ny)])
@@ -29,7 +34,7 @@ def scalar_Laplace_solver(c, Kx, Ky, Nx, Ny):
        p = FC('2-f-o', is_hybrid=False)
        f = FC('2-f-o', is_hybrid=False)
 
-       B0 = GlobalVector(spspa.csc_matrix((u.GLOBAL_num_dofs, 1)))
+       B0 = GlobalVector(spspa.csc_matrix((u.num.GLOBAL_dofs, 1)))
        f.TW.func.___DO_set_func_body_as___(ES, "source_term")
        f.TW.___DO_push_all_to_instant___(0)
        f.discretize()
@@ -50,7 +55,7 @@ def scalar_Laplace_solver(c, Kx, Ky, Nx, Ny):
        M1 = M1.assembled
        E21 = E21.assembled
        E12M2 = E12M2.assembled
-       lhs22 = GlobalMatrix((p.GLOBAL_num_dofs, p.GLOBAL_num_dofs))
+       lhs22 = GlobalMatrix((p.num.GLOBAL_dofs, p.num.GLOBAL_dofs))
 
        lhs = ([M1, E12M2 ],
               [E21, lhs22])

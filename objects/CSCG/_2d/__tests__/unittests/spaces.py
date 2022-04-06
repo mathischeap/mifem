@@ -1,6 +1,6 @@
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 from objects.CSCG._2d.master import SpaceInvoker
 
@@ -47,5 +47,5 @@ def test_Space_NO1_polynomial_space():
 
 
 if __name__ == '__main__':
-    # mpiexec python _2dCSCG\TESTS\unittest_space.py
+    # mpiexec -n 4 python objects\CSCG\_2d\__tests__\unittests\spaces.py
     test_Space_NO1_polynomial_space()

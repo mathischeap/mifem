@@ -21,7 +21,7 @@ class _3dCSCG_Node_Numbering_Naive(FrozenOnly):
 
 
     def _3dCSCG_0Node(self):
-        """Do the numbering if it is an node 0-form:
+        """Do the numbering if it is a node 0-form:
         :class:`_3dCSCG.form.edge._0_node._0Node`.
 
         :returns: A tuple of 4 outputs:

@@ -19,7 +19,7 @@ def make_a_video_from_images_in_folder(image_folder, video_name=None, duration=5
 
     :param image_folder:
     :param video_name:
-    :param duration: The video will be of time `duration`  seconds.
+    :param duration: The video will be of time `duration` seconds.
     :param clear_images: {bool,} Do we delete the used images when we have released the video?
     :return:
     """

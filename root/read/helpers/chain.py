@@ -1,6 +1,6 @@
 
-import pickle
 
+import pickle
 
 
 def chain(filename):

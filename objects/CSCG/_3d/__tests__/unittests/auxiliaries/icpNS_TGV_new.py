@@ -150,7 +150,7 @@ def NoHy_TGV_NEW(N=2, k=4, t=15, steps=480, Re=500,
 
     iR = GMRES(name='pre_TGV_GMRES')(iA, ib, X0, atol=atol, restart=restart, maxiter=maxiter,
                plot_residuals=False)[0]
-    iR.___PRIVATE_be_distributed_to___(u1, P0)
+    iR.do.distributed_to(u1, P0)
 
     w2.cochain.local = u1.coboundary.cochain_local
     KE1_t0h = 0.5 * u1.do.compute_L2_energy_with(M=M1) / Volume
@@ -259,7 +259,7 @@ def NoHy_TGV_NEW(N=2, k=4, t=15, steps=480, Re=500,
         del SYS_oA, SYS_ob
 
         OUT_R[0] = oR
-        oR.___PRIVATE_be_distributed_to___(u2, w1, P3)
+        oR.do.distributed_to(u2, w1, P3)
 
         du2 = u2.coboundary()
         du2.TW.func.do.set_func_body_as(es.status.divergence_of_velocity)
@@ -281,7 +281,7 @@ def NoHy_TGV_NEW(N=2, k=4, t=15, steps=480, Re=500,
 
         INN_R[0] = iR
         _u1_old_cochain_ = u1.cochain.local
-        iR.___PRIVATE_be_distributed_to___(u1, P0)
+        iR.do.distributed_to(u1, P0)
 
         _u1_new_cochain_ = u1.cochain.local
 

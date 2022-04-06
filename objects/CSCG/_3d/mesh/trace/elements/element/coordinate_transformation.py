@@ -26,7 +26,7 @@ class _3dCSCG_Trace_Element_CoordinateTransformation(FrozenOnly):
         :param parse_3_1d_eps: If `parse_ep` is True, then we have *ep is xi, eta, sigma, and they are all 1d,
             between [-1,1], we will pick up two from them according the side and do the mesh grid.
         """
-        if self._te_.IS_on_periodic_boundary:
+        if self._te_.IS.on_periodic_boundary:
             assert from_element is not None, \
                 "to compute the mapping of a trace element on periodic " \
                 "boundary, we have to provide from which element you " \

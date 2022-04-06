@@ -1,8 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
-import matplotlib as mpl
+
 
 # create some fake data
 x = y = np.arange(-4.0, 4.0, 0.02)

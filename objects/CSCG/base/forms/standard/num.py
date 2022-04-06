@@ -26,7 +26,7 @@ class CSCG_standard_form_NUM(FrozenOnly):
     @property
     def dofs(self):
         """(int) Return number of dofs in this core."""
-        return self._f_.numbering.num_of_dofs_in_this_core
+        return self._f_.numbering.num_local_dofs
 
     @property
     def GLOBAL_dofs(self):

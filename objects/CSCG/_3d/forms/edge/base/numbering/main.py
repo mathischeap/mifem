@@ -52,16 +52,14 @@ class _3dCSCG_Edge_Numbering(FrozenOnly):
         self._local_ = None
         self._boundary_dofs_ = None
 
-    @property
-    def do(self):
-        return self._DO_
+
 
     def ___PRIVATE_do_numbering___(self):
         self._gathering_, self._edge_element_wise_, self._local_num_dofs_, self._extra_ = \
             getattr(self._numberer_, self._ef_.__class__.__name__)()
 
     @property
-    def num_of_dofs_in_this_core(self):
+    def num_local_dofs(self):
         if self._local_num_dofs_ is None:
             self.___PRIVATE_do_numbering___()
         return self._local_num_dofs_
@@ -84,3 +82,9 @@ class _3dCSCG_Edge_Numbering(FrozenOnly):
         if self._edge_element_wise_ is None:
             self.___PRIVATE_do_numbering___()
         return self._edge_element_wise_
+
+
+
+    @property
+    def do(self):
+        return self._DO_

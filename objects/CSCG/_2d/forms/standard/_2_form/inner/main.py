@@ -8,8 +8,8 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('/')
-from objects.CSCG._2d.forms.standard._2_form.inner.special import _2Form_Inner_Special
+if './' not in sys.path: sys.path.append('./')
+from objects.CSCG._2d.forms.standard._2_form.inner.special.main import _2Form_Inner_Special
 from objects.CSCG._2d.forms.standard._2_form.base.main import _2Form_BASE
 
 class _2dCSCG_2Form_Inner(_2Form_BASE):

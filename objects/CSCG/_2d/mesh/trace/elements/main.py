@@ -60,7 +60,7 @@ class _2dCSCG_Trace_Elements(FrozenOnly):
 
                 type_amount_dict[i] = POOL[i]
 
-                if not tei.IS_shared_by_cores:
+                if not tei.IS.shared_by_cores:
                     del POOL[i]
                 else:
                     CORE = tei.shared_with_core

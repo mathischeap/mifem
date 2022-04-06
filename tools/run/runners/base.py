@@ -2,7 +2,6 @@
 from screws.freeze.main import FrozenOnly
 
 class ParallelRunnerBase(FrozenOnly):
-
     """A template for all parallel runners."""
     def __init__(self):
         """"""

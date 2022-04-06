@@ -14,8 +14,6 @@ def random_mesh_of_elements_around(elements_num,
                                    ):
     """We generate a random mesh of almost ``elements_num`` elements.
 
-    Make sure we edit (1), (2), (3), (4) when new mesh is coded.
-
     :param elements_num:
     :param exclude_periodic: If we exclude the periodic domains.
     :param mesh_boundary_num: we will select mesh which satisfies this requirement.
@@ -23,8 +21,8 @@ def random_mesh_of_elements_around(elements_num,
         that match at least one of `domain_boundary_distribution_regularities`
         (``domain_boundary_distribution_regularity`` \cap mesh.domain.boundaries.distribution_regularities != empty)
     :param mesh_pool: if `mesh_pool` is not None, we will not select mesh from this pool.
-    :param EDM_pool: if `EDM_pool` is not None, we will use one of the EDM from this pool. Otherwise, we use
-        EDM = None for the mesh generator.
+    :param EDM_pool: if `EDM_pool` is not None, we will use one of the EDM from this pool.
+        Otherwise, we use EDM = None for the mesh generator.
     :return:
     """
 
@@ -90,10 +88,6 @@ def random_mesh_of_elements_around(elements_num,
         raise NotImplementedError(f"Do not understand mesh_boundary_num={mesh_boundary_num}.")
 
 
-    mesh_personal_parameters = RP
-
-
-
 
     assert len(mesh_name_region_num) > 0, f"cannot find a proper mesh."
 
@@ -130,7 +124,7 @@ def random_mesh_of_elements_around(elements_num,
 
         del mesh_name_region_num[mesh_name]
 
-    personal_parameters = mesh_personal_parameters[mesh_name]
+    personal_parameters = RP[mesh_name]
     test_mesh = MeshGenerator(mesh_name, **personal_parameters)([1,1])
 
     if rAnk == mAster_rank:

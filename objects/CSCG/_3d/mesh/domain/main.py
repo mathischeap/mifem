@@ -6,6 +6,9 @@ from objects.CSCG._3d.mesh.domain.visualize.main import _3dCSCG_Domain_Visualize
 from objects.CSCG._3d.mesh.domain.boundaries import _3dCSCG_Boundaries
 from objects.CSCG._3d.mesh.domain.IS import _3dCSCG_Domain_IS
 
+
+
+
 class _3dCSCG_Domain(_3dCSCG_DomainBase):
     """We have the whole ``_3dCSCG_Domain`` (all same) in all cores. This
     is very important.
@@ -20,6 +23,8 @@ class _3dCSCG_Domain(_3dCSCG_DomainBase):
         self._boundaries_ = None
         self.___define_parameters___ = None
         self._IS_ = _3dCSCG_Domain_IS(self)
+        for rn in self.regions:
+            self.regions[rn]._MAP_ = self._region_map_[rn]
         self._freeze_self_()
 
     @property

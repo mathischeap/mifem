@@ -10,7 +10,7 @@ A BASE for all forms except continuous forms.
 
 """
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 import numpy as np
 from objects.CSCG.base.forms.base.main import CSCG_FORM_BASE
@@ -35,7 +35,6 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_form')
         assert self.ndim == 3, "CHECK ndim"
 
-
     @property
     def dqp(self):
         """Return the Default Quadrature degree (P) for variant integrations."""
@@ -43,7 +42,6 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
             return self.p
         else:
             raise NotImplementedError()
-
 
 
 

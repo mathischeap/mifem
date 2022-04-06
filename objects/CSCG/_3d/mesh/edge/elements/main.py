@@ -2,9 +2,7 @@
 
 
 import sys
-if './' not in sys.path: sys.path.append('/')
-
-
+if './' not in sys.path: sys.path.append('./')
 
 
 from screws.freeze.main import FrozenOnly
@@ -13,6 +11,12 @@ from root.config.main import *
 
 from objects.CSCG._3d.mesh.edge.elements.element.main import _3dCSCG_Edge_Element
 from objects.CSCG._3d.mesh.edge.elements.coordinate_transformation import _3dCSCG_Edge_Elements_CT
+from objects.CSCG._3d.mesh.edge.elements.do.main import _3dCSCG_Edge_Elements_DO
+
+
+
+
+
 
 
 class _3dCSCG_Edge_Elements(FrozenOnly):
@@ -24,6 +28,7 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
         self._MAP_ = self.___PRIVATE_generating_edge_element_map___()
         self._locations_ = self.___PRIVATE_generating_edge_locations___()
         self._elements_ = dict()
+        self._do_ = None
         self._ct_ = _3dCSCG_Edge_Elements_CT(self)
         self.___PRIVATE_reset_cache___()
         self._freeze_self_()
@@ -41,10 +46,12 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
             if rAnk == mAster_rank:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:
-                    regionElementLayout = baseElementLayout[rn]
-                    assert all(np.array(regionElementLayout) > 1), \
-                        f" elements.layout[{rn}]={regionElementLayout} wrong," \
-                        f" needs (>1, >1, >1) to make it work for periodic domain."
+                    region = mesh.domain.regions[rn]
+                    if region.IS.periodic_to_self:
+                        regionElementLayout = baseElementLayout[rn]
+                        assert all(np.array(regionElementLayout) > 1), \
+                            f" elements.layout[{rn}]={regionElementLayout} wrong," \
+                            f" needs (>1, >1, >1) to make it work for periodic domain."
 
         if rAnk != mAster_rank:
             element_map = mesh.elements.map
@@ -485,7 +492,7 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
         :param element_corner_edge:
         :return:
         """
-        assert len(ep3) == 3 and all([np.ndim(epi) == 1 for epi in ep3]), f"When we parse_1d_3ep, we need 3 evaluation_points of ndim=1 ."
+        assert len(ep3) == 3 and all([np.ndim(epi) == 1 for epi in ep3]), f"we must parse_1d_3ep, we need 3 evaluation_points of ndim=1 ."
 
         for i, ep in enumerate(ep3):
             assert np.max(ep) <= 1 and np.min(ep) >= -1 and np.all(
@@ -527,6 +534,15 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
     def coordinate_transformation(self):
         """We will not cache the outputs because it is very fast anyway."""
         return self._ct_
+
+    @property
+    def do(self):
+        if self._do_ is None:
+            self._do_ = _3dCSCG_Edge_Elements_DO(self)
+        return self._do_
+
+
+
 
 
 

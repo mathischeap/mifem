@@ -15,6 +15,10 @@ class _3dCSCG_SF_Allocator(FrozenOnly):
                 '1-t': "_3dCSCG_1Trace",
                 '2-t': "_3dCSCG_2Trace",
 
+                '0-Tr': "_3dCSCG_0Tr",
+                '1-Tr': "_3dCSCG_1Tr",
+                '2-Tr': "_3dCSCG_2Tr",
+
                 '0-e': "_3dCSCG_0Edge",
                 '1-e': "_3dCSCG_1Edge",
 
@@ -25,17 +29,21 @@ class _3dCSCG_SF_Allocator(FrozenOnly):
     def ___forms_path___(cls):
         base_path = '.'.join(str(cls).split(' ')[1][1:-2].split('.')[:-2]) + '.'
 
-        return {'3-f': base_path + "standard._3_form.main",
-                '2-f': base_path + "standard._2_form.main",
-                '1-f': base_path + "standard._1_form.main",
-                '0-f': base_path + "standard._0_form.main",
+        return {'3-f': base_path + "standard._3s.main",
+                '2-f': base_path + "standard._2s.main",
+                '1-f': base_path + "standard._1s.main",
+                '0-f': base_path + "standard._0s.main",
 
-                '0-t': base_path + "trace._0_trace.main",
-                '1-t': base_path + "trace._1_trace.main",
-                '2-t': base_path + "trace._2_trace.main",
+                '0-t': base_path + "trace._0tr.main",
+                '1-t': base_path + "trace._1tr.main",
+                '2-t': base_path + "trace._2tr.main",
 
-                '0-e': base_path + "edge._0_edge",
-                '1-e': base_path + "edge._1_edge",
+                '0-Tr': base_path + "Tr._0Tr.main",
+                '1-Tr': base_path + "Tr._1Tr.main",
+                '2-Tr': base_path + "Tr._2Tr.main",
 
-                '0-n': base_path + "node._0_node",
+                '0-e': base_path + "edge._0eg.main",
+                '1-e': base_path + "edge._1eg.main",
+
+                '0-n': base_path + "node._0nd.main",
                 }

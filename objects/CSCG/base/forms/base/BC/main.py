@@ -1,6 +1,7 @@
 
 
 from objects.CSCG.base.forms.base.BC.partial_cochain.main import PartialCochain
+from objects.CSCG.base.forms.base.BC.partial_cochain.partial_dofs.main import PartialDofs
 from screws.freeze.base import FrozenOnly
 
 
@@ -18,6 +19,7 @@ class CSCG_Form_BC(FrozenOnly):
         self._body_ = None
         self._ftype_ = None
         self._partial_cochain_ = None
+        self._partial_dofs_ = None
 
 
 
@@ -41,8 +43,6 @@ class CSCG_Form_BC(FrozenOnly):
         return self._ftype_
 
 
-
-
     @property
     def valid_boundaries(self):
         return self._valid_boundaries_
@@ -63,9 +63,7 @@ class CSCG_Form_BC(FrozenOnly):
 
         self._valid_boundaries_ = valid_boundaries
         self._partial_cochain_ = None
-
-
-
+        self._partial_dofs_ = None
 
 
 
@@ -80,3 +78,18 @@ class CSCG_Form_BC(FrozenOnly):
             pc.include.boundaries(self.valid_boundaries)
             self._partial_cochain_ = pc
         return self._partial_cochain_
+
+
+
+    @property
+    def partial_dofs(self):
+        """We will interpret the BC as a PartialCochain instance which then can
+        further be interpreted as data structures that can be used by,
+        for example, EWC sparse matrices.
+        """
+        if self._partial_cochain_ is None:
+            pd = PartialDofs(self._f_)
+            pd.include.boundaries(self.valid_boundaries)
+            self._partial_dofs_ = pd
+        return self._partial_dofs_
+

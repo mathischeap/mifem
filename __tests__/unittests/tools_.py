@@ -1060,8 +1060,8 @@ def test_TOOLS_NO10_test_EWC_SparseMatrix_Customize():
         assert s[1] == f3.num.basis
         assert s[2] == f2.num.basis
 
-        f2_GND = f2.GLOBAL_num_dofs
-        f3_GND = f3.GLOBAL_num_dofs
+        f2_GND = f2.num.GLOBAL_dofs
+        f3_GND = f3.num.GLOBAL_dofs
         GND = f2_GND + f3_GND
         BMAT = [[M3, E32],[E32.T, None]]
         SYSTEM = bmat(BMAT)
@@ -1123,8 +1123,8 @@ def test_TOOLS_NO10_test_EWC_SparseMatrix_Customize():
         M1 = f1.matrices.mass
         E10 = f0.matrices.incidence
 
-        f0_GND = f0.GLOBAL_num_dofs
-        f1_GND = f1.GLOBAL_num_dofs
+        f0_GND = f0.num.GLOBAL_dofs
+        f1_GND = f1.num.GLOBAL_dofs
         GND = f0_GND + f1_GND
         BMAT = [[M1, E10],[E10.T, None]]
         SYSTEM = bmat(BMAT)
@@ -1471,8 +1471,8 @@ def test_TOOLS_NO13_EWC_Customize_CSCG_partial_dofs():
     ISH, LOAD = cOmm.bcast([ISH, LOAD], root=mAster_rank)
 
     mesh, space = random_mesh_and_space_of_total_load_around(LOAD,
-                                                             exclude_periodic=True,
-                                                             domain_boundary_distribution_regularities='Regular:interfaces-not-shared-by-regions')
+             exclude_periodic=True,
+             domain_boundary_distribution_regularities='Regular:interfaces-not-shared-by-regions')
 
     #-------- test partial_dofs only having boundary dofs involved====
     bns = mesh.boundaries.names
@@ -1510,9 +1510,9 @@ def test_TOOLS_NO13_EWC_Customize_CSCG_partial_dofs():
         for bn in BNS[0]:
             bd.extend(Gbd[bn])
 
-        bd = np.array(bd) + f1.GLOBAL_num_dofs
+        bd = np.array(bd) + f1.num.GLOBAL_dofs
 
-        for i in range(f1.GLOBAL_num_dofs + f0.GLOBAL_num_dofs):
+        for i in range(f1.num.GLOBAL_dofs + f0.num.GLOBAL_dofs):
             if i in bd:
                 assert M[i].nnz == 1, f"M[i].nnz={M[i].nnz}"
             else:
@@ -1555,7 +1555,7 @@ def test_TOOLS_NO13_EWC_Customize_CSCG_partial_dofs():
         for bn in BNS[2]:
             bdf2.extend(Gbd_f2[bn])
 
-        bdf2 = np.array(bdf2) + f3.GLOBAL_num_dofs
+        bdf2 = np.array(bdf2) + f3.num.GLOBAL_dofs
 
         for i in bdf2:
             assert M[i].nnz == 1, f"M[i].nnz={M[i].nnz}"
@@ -1603,7 +1603,7 @@ def test_TOOLS_NO13_EWC_Customize_CSCG_partial_dofs():
             gt = AT2[e]
             gf = AF2[e]
 
-            gt = gt + f2.GLOBAL_num_dofs + f3.GLOBAL_num_dofs
+            gt = gt + f2.num.GLOBAL_dofs + f3.num.GLOBAL_dofs
 
             for i, j in zip(gt, gf):
                 assert M[i].nnz == 1 and M[i,j] == 1
@@ -1807,14 +1807,14 @@ def test_TOOLS_NO14_partial_cochain_with_3dCSCG_form_BC():
         np.testing.assert_array_almost_equal(local_cochain, cochain_exact)
 
 
-    # test set_entries_according_to_two_CSCG_partial_cochains for EWC vectors.
+    # test set_entries_according_to_CSCG_partial_cochains for EWC vectors.
     cf0 = EWC_ColumnVector(mesh, f0.num.basis)
     cf2 = EWC_ColumnVector(mesh, f2.num.basis)
     ct2 = EWC_ColumnVector(mesh, t2.num.basis)
 
     b = concatenate([cf0, cf2, ct2])
     b.gathering_matrix = [f0, f2, t2]
-    b.customize.set_entries_according_to_two_CSCG_partial_cochains(2, t2pc)
+    b.customize.set_entries_according_to_CSCG_partial_cochains(2, t2pc)
     B = b.assembled
     B = B.___PRIVATE_gather_V_to_core___()
 
@@ -1830,7 +1830,7 @@ def test_TOOLS_NO14_partial_cochain_with_3dCSCG_form_BC():
         ALL = list()
         for e in At2:
             ALL.extend(At2[e])
-        ALL = np.array(ALL) + f0.GLOBAL_num_dofs + f2.GLOBAL_num_dofs
+        ALL = np.array(ALL) + f0.num.GLOBAL_dofs + f2.num.GLOBAL_dofs
 
         for i, bi in enumerate(B):
             if i in ALL:
@@ -1855,7 +1855,7 @@ def test_TOOLS_NO14_partial_cochain_with_3dCSCG_form_BC():
     B = b.assembled
     B = B.___PRIVATE_gather_V_to_core___()
     if rAnk == mAster_rank:
-        ALL = ALL - f0.GLOBAL_num_dofs - f2.GLOBAL_num_dofs
+        ALL = ALL - f0.num.GLOBAL_dofs - f2.num.GLOBAL_dofs
         for i, bi in enumerate(B):
             if i in ALL:
                 assert bi == -2.1415
@@ -1968,8 +1968,8 @@ def test_TOOLS_NO15_linear_system_apply_BC():
         dofs_changed = list() # the rows that been changed in the global matrix.
         for bn in BNS:
             dofs_changed.extend(t2GBD[bn])
-        dofs_changed = np.array(dofs_changed) + f2.GLOBAL_num_dofs \
-                       + f3.GLOBAL_num_dofs
+        dofs_changed = np.array(dofs_changed) + f2.num.GLOBAL_dofs \
+                       + f3.num.GLOBAL_dofs
         for i in dofs_changed:
             assert aA[i].nnz == 1 and aA[i,i] == 1 and ab[i] != 0
 
@@ -1984,7 +1984,7 @@ def test_TOOLS_NO15_linear_system_apply_BC():
         ab_SUB = ab[NOT_changed]
         assert np.all(ab_SUB==0), f"not change places must be all zero!"
         aA_SUB = aA[NOT_changed,:]
-        aA_SUB = aA_SUB[f2.GLOBAL_num_dofs:, f2.GLOBAL_num_dofs:]
+        aA_SUB = aA_SUB[f2.num.GLOBAL_dofs:, f2.num.GLOBAL_dofs:]
         assert aA_SUB.nnz == 0, f"not change places must be all zero!"
 
 
@@ -2002,7 +2002,7 @@ def test_TOOLS_NO15_linear_system_apply_BC():
 
         for e in AT2:
             gt = AT2[e]
-            gt = gt + f2.GLOBAL_num_dofs + f3.GLOBAL_num_dofs
+            gt = gt + f2.num.GLOBAL_dofs + f3.num.GLOBAL_dofs
 
             for i in gt:
                 assert aA[i].nnz == 1 and aA[i,i] == 1 and ab[i] != 0
@@ -2022,7 +2022,7 @@ def test_TOOLS_NO15_linear_system_apply_BC():
         ab = ab[not_changed]
         assert np.all(ab==0), f"not change places must be all zero!"
         aA = aA[not_changed,:]
-        aA = aA[f2.GLOBAL_num_dofs:, f2.GLOBAL_num_dofs:]
+        aA = aA[f2.num.GLOBAL_dofs:, f2.num.GLOBAL_dofs:]
         assert aA.nnz == 0, f"not change places must be all zero!"
 
     t2BC2 = PartialDofs(t2)
@@ -2043,14 +2043,14 @@ def test_TOOLS_NO15_linear_system_apply_BC():
         dofs_changed = list() # the rows that been changed in the global matrix.
         for bn in t2GBD: # all the boundary dofs.
             dofs_changed.extend(t2GBD[bn])
-        dofs_changed = np.array(dofs_changed) + f2.GLOBAL_num_dofs \
-                       + f3.GLOBAL_num_dofs
+        dofs_changed = np.array(dofs_changed) + f2.num.GLOBAL_dofs \
+                       + f3.num.GLOBAL_dofs
 
         dofs_changed_2 = list() # the rows that been changed in the global matrix in the second apply_strong_BC
         for bn in BNS_com: # all the boundary dofs.
             dofs_changed_2.extend(t2GBD[bn])
-        dofs_changed_2 = np.array(dofs_changed_2) + f2.GLOBAL_num_dofs \
-                       + f3.GLOBAL_num_dofs
+        dofs_changed_2 = np.array(dofs_changed_2) + f2.num.GLOBAL_dofs \
+                       + f3.num.GLOBAL_dofs
 
         for i in dofs_changed:
             assert aA[i].nnz == 1 and ab[i] != 0
@@ -2068,7 +2068,7 @@ def test_TOOLS_NO15_linear_system_apply_BC():
         ab_SUB = ab[NOT_changed]
         assert np.all(ab_SUB==0), f"not change places must be all zero!"
         aA_SUB = aA[NOT_changed,:]
-        aA_SUB = aA_SUB[f2.GLOBAL_num_dofs:, f2.GLOBAL_num_dofs:]
+        aA_SUB = aA_SUB[f2.num.GLOBAL_dofs:, f2.num.GLOBAL_dofs:]
         assert aA_SUB.nnz == 0, f"not change places must be all zero!"
 
         # noinspection PyUnboundLocalVariable
@@ -2093,7 +2093,7 @@ def test_TOOLS_NO15_linear_system_apply_BC():
         for e in AT2:
             gt = AT2[e]
             gf = AF2[e]
-            gt = gt + f2.GLOBAL_num_dofs + f3.GLOBAL_num_dofs
+            gt = gt + f2.num.GLOBAL_dofs + f3.num.GLOBAL_dofs
             for i, j in zip(gt, gf):
                 assert aA[i].nnz == 1 and aA[i,j] == 1 and ab[i] != 0
                 assert i not in NOT_changed, f"dof #{i} must be changed"

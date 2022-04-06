@@ -251,7 +251,12 @@ class EWC_SparseMatrix(FrozenOnly):
                 if _.__class__.__name__ == 'Gathering_Matrix':
                     cgm0.append(_)
                 else:
-                    cgm0.append(_.numbering.gathering)
+                    if hasattr(_, '___IS_ADF___') and _.___IS_ADF___:
+                        cgm0.append(_.prime.numbering.gathering)
+                    else:
+                        cgm0.append(_.numbering.gathering)
+
+
             CGM0 = Chain_Gathering_Matrix(cgm0)
 
         if CGM1.__class__.__name__ == 'Chain_Gathering_Matrix':
@@ -264,7 +269,11 @@ class EWC_SparseMatrix(FrozenOnly):
                 if _.__class__.__name__ == 'Gathering_Matrix':
                     cgm1.append(_)
                 else:
-                    cgm1.append(_.numbering.gathering)
+                    if hasattr(_, '___IS_ADF___') and _.___IS_ADF___:
+                        cgm1.append(_.prime.numbering.gathering)
+                    else:
+                        cgm1.append(_.numbering.gathering)
+
             CGM1 = Chain_Gathering_Matrix(cgm1)
 
         assert CGM0.__class__.__name__ == 'Chain_Gathering_Matrix', "I need Chain_Gathering_Matrix!"

@@ -11,11 +11,6 @@ class CSCG_Trace_Form:
         self._num_ = CSCG_trace_form_NUM(self)
 
     @property
-    def GLOBAL_num_dofs(self):
-        """(int) Return the total number of dofs this trace form has."""
-        return self.numbering.gathering.GLOBAL_num_dofs
-
-    @property
     def orientation(self):
         """(str) The orientation."""
         return self._orientation_

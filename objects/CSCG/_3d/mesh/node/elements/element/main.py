@@ -3,7 +3,7 @@
 
 from screws.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.node.elements.element.coordinate_transformation import _3dCSCG_Node_Element_CT
-
+from objects.CSCG._3d.mesh.node.elements.element.IS import _3dCSCG_NodeElement_IS
 
 
 
@@ -18,6 +18,7 @@ class _3dCSCG_Node_Element(FrozenOnly):
         self._cp_ = None
         self._ce_ = None
         self._cc_ = None
+        self._IS_ = None
         self._freeze_self_()
 
     @property
@@ -26,7 +27,7 @@ class _3dCSCG_Node_Element(FrozenOnly):
 
     @property
     def positions(self):
-        """This node element is at these positions."""
+        """This node element is at these positions (all)."""
         return self._positions_
 
     @property
@@ -36,20 +37,19 @@ class _3dCSCG_Node_Element(FrozenOnly):
         return self._ct_
 
     @property
+    def IS(self):
+        if self._IS_ is None:
+            self._IS_ = _3dCSCG_NodeElement_IS(self)
+        return self._IS_
+
+
+    @property
     def shared_by_mesh_elements(self):
         return self._elements_._shared_by_elements_[self._i_]
 
     @property
     def on_mesh_boundaries(self):
         return self._elements_._on_mesh_boundaries_[self._i_]
-
-    @property
-    def IS_on_mesh_boundary(self):
-        return True if len(self.on_mesh_boundaries) > 0 else False
-
-    @property
-    def IS_on_periodic_boundary(self):
-        return self._elements_._IS_on_periodic_boundary_[self._i_]
 
 
     @property
@@ -82,6 +82,6 @@ class _3dCSCG_Node_Element(FrozenOnly):
         return self._cc_
     @property
     def CHARACTERISTIC_region(self):
-        """We mainly consider this node element is in this regions."""
+        """We mainly consider this node element is in this region."""
         region = self._elements_._mesh_.do.FIND_region_name_of_element(self.CHARACTERISTIC_element)
         return region

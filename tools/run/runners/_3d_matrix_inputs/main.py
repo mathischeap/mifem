@@ -42,7 +42,7 @@ class ParallelMatrix3dInputRunner(ParallelRunnerBase):
         :param criterion: The criterion of how to parse the inputs `I1`, `I2`, `I3`. It can be one of
             'standard' :
                 The 'standard' criterion stands for that: `i0` and `i1` are main
-                variables and they do not change along `i2`. So we need `i0` and `i1`
+                variables, and they do not change along `i2`. So we need `i0` and `i1`
                 to be iterable. And each `i0[.]` or `i1[.]` need to be iterable.
 
                 For example: `i0` and `i1`:
@@ -103,5 +103,3 @@ class ParallelMatrix3dInputRunner(ParallelRunnerBase):
         R = cOmm.bcast(R, root=mAster_rank)
 
         return R
-
-

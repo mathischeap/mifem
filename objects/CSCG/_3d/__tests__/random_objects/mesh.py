@@ -83,12 +83,10 @@ def random_mesh_of_elements_around(elements_num,
     else:
         raise NotImplementedError(f"Do not understand mesh_boundary_num={mesh_boundary_num}.")
 
-    mesh_personal_parameters = RP
-
     assert len(mesh_name_region_num) > 0, f"cannot find a proper mesh."
 
-    #------- check: domain_boundary_distribution_regularities -------------------------------------
 
+    #-------- find a random mesh from the pool ----------------------------------------
     while 1:
 
         if len(mesh_name_region_num) == 0:
@@ -118,17 +116,22 @@ def random_mesh_of_elements_around(elements_num,
         if r in dbd_regularities: break
 
         del mesh_name_region_num[mesh_name]
+    #==================== mesh_name =============================================================
 
-
-
-    if mesh_name in mesh_personal_parameters:
-        personal_parameters = mesh_personal_parameters[mesh_name]
-    else:
-        personal_parameters = dict()
+    personal_parameters = RP[mesh_name]
+    test_mesh = MeshGenerator(mesh_name, **personal_parameters)([1, 1, 1])
 
 
     if rAnk == mAster_rank:
         region_num = mesh_name_region_num[mesh_name]
+
+        if region_num == 'unknown':
+            region_num = test_mesh.domain.regions.num
+        elif isinstance(region_num, int):
+            pass
+        else:
+            raise Exception(f"region_num={region_num} wrong, can only be positive integer or 'unknown")
+
         if elements_num < region_num:
             elements_num = region_num
 
@@ -156,6 +159,10 @@ def random_mesh_of_elements_around(elements_num,
 
         #------ (4) EDIT :: special requests for particular meshes ---------------------------------
         if mesh_name == 'crazy_periodic':
+            if factor0 == 1: factor0 = 2
+            if factor1 == 1: factor1 = 2
+            if factor2 == 1: factor2 = 2
+        if mesh_name == 'cuboid_periodic':
             if factor0 == 1: factor0 = 2
             if factor1 == 1: factor1 = 2
             if factor2 == 1: factor2 = 2

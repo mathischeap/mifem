@@ -4,7 +4,7 @@
 
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 from objects.CSCG._2d.__tests__.random_objects.form_caller import random_FormCaller_of_total_load_around
 import random
@@ -35,7 +35,7 @@ def test_standard_forms_DOFS():
     F2 = [FC('2-f-o', is_hybrid=IH), FC('2-f-i', is_hybrid=IH)]
 
     for f in F0:
-        dof = f.dofs.find.dof_at_corner_of_region(region_name, 'RD')
+        dof = f.dofs.do.find.dof_at_corner_of_region(region_name, 'RD')
 
     return 1
 
@@ -43,5 +43,5 @@ def test_standard_forms_DOFS():
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python _2dCSCG\tests\unittests\standard_forms\dofs.py
+    # mpiexec -n 4 python objects\CSCG\_2d\__tests__\unittests\standard_forms\dofs.py
     test_standard_forms_DOFS()

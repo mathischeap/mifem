@@ -88,28 +88,32 @@ class Poisson_Base(Base):
     @property
     def potential(self):
         if self._potential_ is None:
-            self._potential_ = _3dCSCG_ScalarField(self.mesh,
-                                                   self.phi,
-                                                   valid_time=self.valid_time,
-                                                   name='potential')
+            self._potential_ = _3dCSCG_ScalarField(
+                self.mesh,
+                self.phi,
+                valid_time=self.valid_time,
+                name='potential')
         return self._potential_
+
 
     @property
     def velocity(self):
         if self._velocity_ is None:
-            self._velocity_ = _3dCSCG_VectorField(self.mesh,
-                                                  (self.u, self.v, self.w),
-                                                  valid_time=self.valid_time,
-                                                  name='velocity')
+            self._velocity_ = _3dCSCG_VectorField(
+                self.mesh,
+                (self.u, self.v, self.w),
+                valid_time=self.valid_time,
+                name='velocity')
         return self._velocity_
 
     @property
     def source_term(self):
         if self._source_term_ is None:
-            self._source_term_ = _3dCSCG_ScalarField(self.mesh,
-                                                     self.f,
-                                                     valid_time=self.valid_time,
-                                                     name='source_term')
+            self._source_term_ = _3dCSCG_ScalarField(
+                 self.mesh,
+                 self.f,
+                 valid_time=self.valid_time,
+                 name='source_term')
         return self._source_term_
 
 
@@ -149,8 +153,8 @@ class Poisson_Base(Base):
             try:
                 Pu = NumericalPartialDerivative_txyz(self.phi, t, x, y, z)
                 assert Pu.check_partial_x(self.u)
-                assert Pu.check_partial_x(self.v)
-                assert Pu.check_partial_x(self.w)
+                assert Pu.check_partial_y(self.v)
+                assert Pu.check_partial_z(self.w)
             except NotImplementedError:
                 pass
 

@@ -14,9 +14,9 @@ class NumericalDerivative_fx(FrozenOnly):
         Parameters
         ----------
         dx :
-            The interval. The smaller, the more accurate.
+            The interval. The smaller, more accurate.
         n :
-            nth order derivative.
+            `n`th order derivative.
         order:
             How many points are used to approximate the derivative.
 

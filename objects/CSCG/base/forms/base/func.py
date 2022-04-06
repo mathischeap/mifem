@@ -29,4 +29,3 @@ class CSCG_Form_Func(FrozenOnly):
         :rtype: str
         """
         return self._ftype_
-

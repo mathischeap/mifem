@@ -1,8 +1,8 @@
 
 
+from root.config.main import *
 from screws.freeze.main import FrozenClass
 
-from root.config.main import *
 
 class CSCG_Continuous_FORM_BASE(FrozenClass):
     """"""
@@ -79,7 +79,7 @@ class CSCG_Continuous_FORM_BASE(FrozenClass):
             _CMB_ = list()
             for i in self.func: # valid local trace elements
                 te = self.mesh.trace.elements[i]
-                if te.IS_on_mesh_boundary:
+                if te.IS.on_mesh_boundary:
                     omb = te.on_mesh_boundary
                     if omb not in _CMB_:
                         _CMB_.append(omb)

@@ -1,6 +1,6 @@
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 from objects.CSCG._2d.__tests__.random_objects.form_caller import random_FormCaller_of_total_load_around
 from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller
@@ -652,7 +652,7 @@ def test_Form_NO7_weak_curl():
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python _2dCSCG\tests\unittests\standard_forms.py
+    # mpiexec -n 4 python objects\CSCG\_2d\__tests__\unittests\standard_forms\general.py
     # test_Form_NO5_cross_product()
     test_Form_NO6_reconstruction_matrices()
     # test_Form_NO6_reconstruction_matrices()

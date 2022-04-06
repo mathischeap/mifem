@@ -39,7 +39,11 @@ class _3dDomainInputBase(FrozenOnly):
 
     @property
     def internal_parameters(self):
-        """Internal parameters only affect internal metric, does not affect the domain shape."""
+        """Internal parameters only affect internal metric, does not affect the domain shape.
+
+        When we compare two domain, for example, to see if they are equal to each other, we will
+        skip all `internal_parameters`.
+        """
         return self._internal_parameters_
 
     @internal_parameters.setter
@@ -296,6 +300,11 @@ class _3dDomainInputBase(FrozenOnly):
 
     @region_type_wr2_metric.setter
     def region_type_wr2_metric(self, rTwr2M: Dict[str, str]):
+        if isinstance(rTwr2M, str):
+            _D_ = dict()
+            for region_name in self.region_corner_coordinates:
+                _D_[region_name] = rTwr2M
+            rTwr2M = _D_
         assert isinstance(rTwr2M, dict), "region_type_wr2_metric needs to be a dictionary."
         for key in rTwr2M:
             assert key in self.region_corner_coordinates, f"Region name={key} not valid."

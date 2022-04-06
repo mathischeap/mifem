@@ -12,7 +12,7 @@ from objects.CSCG.base.forms.standard.cochain.dofwise import CSCG_SF_Cochain_Dof
 class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
-        self._local_ = None # this is a key property, should not reset it.
+        self._local_ = None
         self.___PRIVATE_reset_cache___()
         self._dofwise_ = None
         self._freeze_self_()
@@ -110,7 +110,7 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
     @property
     def globe(self):
         GM = self._sf_.numbering.gathering
-        globe = lil_matrix((1, self._sf_.GLOBAL_num_dofs))
+        globe = lil_matrix((1, self._sf_.num.GLOBAL_dofs))
         for i in GM: # go through all local elements
             globe[0, GM[i].full_vector] = self.local[i]
         globe = globe.tocsr().T
@@ -124,7 +124,7 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
             GLOBE = cOmm.gather(globe, root=mAster_rank)
 
             if rAnk == mAster_rank:
-                measure = np.zeros(self._sf_.GLOBAL_num_dofs, dtype=int)
+                measure = np.zeros(self._sf_.num.GLOBAL_dofs, dtype=int)
                 for G in GLOBE:
                     indices = G.indices
                     measure[indices] += 1
@@ -135,7 +135,7 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
                 globe = csr_matrix(_____).T
 
             else:
-                globe = csc_matrix((self._sf_.GLOBAL_num_dofs,1))
+                globe = csc_matrix((self._sf_.num.GLOBAL_dofs,1))
 
             GDV = DistributedVector(globe)
             assert GDV.IS.master_dominating
@@ -150,7 +150,7 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
         :return:
         """
         if globe.__class__.__name__ == 'DistributedVector':
-            assert globe.V.shape == (self._sf_.GLOBAL_num_dofs, 1), "globe cochain shape wrong."
+            assert globe.V.shape == (self._sf_.num.GLOBAL_dofs, 1), "globe cochain shape wrong."
             # gather vector to master core ...
             if globe.IS.master_dominating:
                 # no need to gather
@@ -159,7 +159,7 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
                 V = globe.V
                 V = cOmm.gather(V, root=mAster_rank)
                 if rAnk == mAster_rank:
-                    VV = np.empty((self._sf_.GLOBAL_num_dofs,))
+                    VV = np.empty((self._sf_.num.GLOBAL_dofs,))
                     for v in V:
                         indices = v.indices
                         data = v.data
@@ -176,7 +176,7 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
                         # noinspection PyUnboundLocalVariable
                         to_be_sent = spspa.csc_matrix(
                             (VV[lr[0]:lr[1]], range(lr[0],lr[1]), [0, lr[1]-lr[0]]),
-                            shape=(self._sf_.GLOBAL_num_dofs, 1))
+                            shape=(self._sf_.num.GLOBAL_dofs, 1))
                     TO_BE_SENT.append(to_be_sent)
             else:
                 TO_BE_SENT = None
@@ -252,6 +252,8 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
 
         except AssertionError:
             raise LocalCochainShapeError("Cannot set local cochain.")
+
+        self.___PRIVATE_reset_cache___()
         self._local_ = local
 
 

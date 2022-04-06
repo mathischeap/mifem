@@ -11,7 +11,7 @@
 from screws.freeze.main import FrozenOnly
 from importlib import import_module
 from objects.CSCG._2d.forms.standard.base.numbering.visualize import _2dCSCG_Numbering_Visualize
-
+from objects.CSCG._2d.forms.standard.base.numbering.do.main import _2dCSCG_SF_numbering_do
 
 
 class _2dCSCG_Standard_Form_Numbering(FrozenOnly):
@@ -40,6 +40,7 @@ class _2dCSCG_Standard_Form_Numbering(FrozenOnly):
         self._numbering_parameters_ = {'scheme_name': self._scheme_name_}
         self._numbering_parameters_.update(self._parameters_)
         self._visualize_ = _2dCSCG_Numbering_Visualize(sf)
+        self._do_ = None
         self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
@@ -55,17 +56,21 @@ class _2dCSCG_Standard_Form_Numbering(FrozenOnly):
             getattr(self._numberer_, self._sf_.__class__.__name__)()
 
     @property
-    def num_of_dofs_in_this_core(self):
-        if self._local_num_dofs_ is None:
-            self.___PRIVATE_do_numbering___()
-        return self._local_num_dofs_
-
-    @property
     def local(self):
         """The local numbering in mesh element."""
         if self._local_ is None:
             self._local_ = getattr(self._sf_.space.local_numbering, self._sf_.__class__.__name__)
         return self._local_
+
+
+
+
+
+    @property
+    def num_local_dofs(self):
+        if self._local_num_dofs_ is None:
+            self.___PRIVATE_do_numbering___()
+        return self._local_num_dofs_
 
     @property
     def gathering(self):
@@ -74,15 +79,23 @@ class _2dCSCG_Standard_Form_Numbering(FrozenOnly):
         return self._gathering_
 
     @property
-    def boundary_dofs(self):
-        raise NotImplementedError(f"Boundary dofs are not coded in numbering scheme yet.")
-
-    @property
     def extra(self):
         if self._extra_ is None:
             self.___PRIVATE_do_numbering___()
         return self._extra_
 
+
+
+    @property
+    def boundary_dofs(self):
+        raise NotImplementedError(f"Boundary dofs are not coded in numbering scheme yet.")
+
     @property
     def visualize(self):
         return self._visualize_
+
+    @property
+    def do(self):
+        if self._do_ is None:
+            self._do_ = _2dCSCG_SF_numbering_do(self)
+        return self._do_

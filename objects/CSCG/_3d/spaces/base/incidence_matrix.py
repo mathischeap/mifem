@@ -11,6 +11,9 @@ import numpy as np
 from screws.freeze.main import FrozenOnly
 from scipy.sparse import csc_matrix
 
+
+
+
 class IncidenceMatrix(FrozenOnly):
     """ 
     Clearly, the incidence matrix of a form only depends on the local numbering and the basis function degree. We have

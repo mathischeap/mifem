@@ -145,15 +145,19 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
 
         global_numbering = None
         # non-hybrid numbering ...
+
+
         mesh = self._sf_.mesh
         if mesh.domain.IS.periodic:
             if rAnk == mAster_rank:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:
-                    regionElementLayout = baseElementLayout[rn]
-                    assert all(np.array(regionElementLayout) > 1), \
-                        f" elements.layout[{rn}]={regionElementLayout} wrong," \
-                        f" needs (>1, >1, >1) to make it work for periodic domain."
+                    region = mesh.domain.regions[rn]
+                    if region.IS.periodic_to_self:
+                        regionElementLayout = baseElementLayout[rn]
+                        assert all(np.array(regionElementLayout) > 1), \
+                            f" elements.layout[{rn}]={regionElementLayout} wrong," \
+                            f" needs (>1, >1, >1) to make it work for periodic domain."
 
         if rAnk != mAster_rank:
             element_map = mesh.elements.map
@@ -296,10 +300,12 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
             if rAnk == mAster_rank:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:
-                    regionElementLayout = baseElementLayout[rn]
-                    assert all(np.array(regionElementLayout) > 1), \
-                        f" elements.layout[{rn}]={regionElementLayout} wrong," \
-                        f" needs (>1, >1, >1) to make it work for periodic domain."
+                    region = mesh.domain.regions[rn]
+                    if region.IS.periodic_to_self:
+                        regionElementLayout = baseElementLayout[rn]
+                        assert all(np.array(regionElementLayout) > 1), \
+                            f" elements.layout[{rn}]={regionElementLayout} wrong," \
+                            f" needs (>1, >1, >1) to make it work for periodic domain."
 
         if rAnk != mAster_rank:
             element_map = mesh.elements.map
@@ -468,10 +474,12 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
             if rAnk == mAster_rank:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:
-                    regionElementLayout = baseElementLayout[rn]
-                    assert all(np.array(regionElementLayout) > 1), \
-                        f" elements.layout[{rn}]={regionElementLayout} wrong," \
-                        f" needs (>1, >1, >1) to make it work for periodic domain."
+                    region = mesh.domain.regions[rn]
+                    if region.IS.periodic_to_self:
+                        regionElementLayout = baseElementLayout[rn]
+                        assert all(np.array(regionElementLayout) > 1), \
+                            f" elements.layout[{rn}]={regionElementLayout} wrong," \
+                            f" needs (>1, >1, >1) to make it work for periodic domain."
 
         if rAnk != mAster_rank:
             element_map = mesh.elements.map

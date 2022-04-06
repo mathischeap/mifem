@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.main import FrozenOnly
 from root.config.main import *
@@ -10,7 +10,6 @@ from objects.CSCG._3d.mesh.elements.coordinate_transformation.main import _3dCSC
 from objects.CSCG._3d.mesh.elements.do.main import _3dCSCG_Mesh_Elements_DO
 from objects.CSCG._3d.mesh.elements.visualize import _3dCSCG_MeshElements_VIS
 from objects.CSCG._3d.mesh.elements.IS import _3dCSCG_MeshElements_IS
-from objects.CSCG._3d.mesh.elements.find import _3dCSCG_MeshElements_Find
 
 
 class _3dCSCG_Mesh_Elements(FrozenOnly):
@@ -21,7 +20,6 @@ class _3dCSCG_Mesh_Elements(FrozenOnly):
         self._DO_ = None
         self._visualize_ = None
         self._IS_ = None
-        self._find_ = None
         self._ct_ = _3dCSCG_Mesh_Elements_CT(self)
         for i in self.indices:
             self._elements_[i] = _3dCSCG_Mesh_Element(self, i)
@@ -184,11 +182,7 @@ class _3dCSCG_Mesh_Elements(FrozenOnly):
         if not isinstance(mark, str): mark = str(mark)
         return mark
 
-    @property
-    def find(self):
-        if self._find_ is None:
-            self._find_ = _3dCSCG_MeshElements_Find(self)
-        return self._find_
+
 
 
 
@@ -196,7 +190,7 @@ class _3dCSCG_Mesh_Elements(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python _3dCSCG\mesh\elements\main.py
+    # mpiexec -n 4 python objects\CSCG\_3d\mesh\elements\main.py
     from objects.CSCG._3d.master import MeshGenerator
     elements = [1, 1, 1]
     mesh = MeshGenerator('crazy', c=0.0, bounds=([0,1], [0,1], [0,1]))(elements)

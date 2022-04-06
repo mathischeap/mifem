@@ -3,13 +3,13 @@
 
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 from root.config.main import *
 from screws.freeze.main import FrozenOnly
 
 
-from objects.CSCG._3d.mesh.trace.elements.do import _3dCSCG_Trace_Elements_DO
+from objects.CSCG._3d.mesh.trace.elements.do.main import _3dCSCG_Trace_Elements_DO
 from objects.CSCG._3d.mesh.trace.elements.selfcheck import _3dCSCG_Trace_Elements_SELFCHECK
 from objects.CSCG._3d.mesh.trace.elements.group import _3dCSCG_Trace_Elements_Group
 from objects.CSCG._3d.mesh.trace.elements.coordinate_transformation.main import _3dCSCG_Trace_Elements_CoordinateTransformation
@@ -85,7 +85,7 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
 
                 type_amount_dict[i] = POOL[i]
 
-                if not tei.IS_shared_by_cores:
+                if not tei.IS.shared_by_cores:
                     del POOL[i]
                 else:
                     CORE = tei.shared_with_core
@@ -287,7 +287,7 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
         :param evaluation_points:
         :param element_side:
         :param parse_3_1d_eps: If `parse_ep` is True, then we have *ep is xi, eta, sigma, and they are all 1d,
-            between [-1,1], we will pick up two from them according the the side and do the mesh grid.
+            between [-1,1], we will pick up two from them according the side and do the mesh grid.
 
             When `parse_3_1d_eps`, we will automatically do the picking! So `picking` must be False.
 
@@ -395,14 +395,14 @@ if __name__ == '__main__':
     # print(mesh.quality)
     # print(mesh.trace.quality)
 
-    # mesh.trace.elements.do.illustrate_trace_element(1)
+    # mesh.trace.elements.do.illustrate_element(1)
 
     # te0 = mesh.trace.elements[0]
 
-    # print(te0.IS_on_periodic_boundary)
+    # print(te0.IS.on_periodic_boundary)
 
     # for i in range(mesh.trace.elements.GLOBAL_num):
-    #     mesh.trace.elements.do.illustrate_trace_element(i)
+    #     mesh.trace.elements.do.illustrate_element(i)
         # if i in mesh.trace.elements:
         #     te = mesh.trace.elements[i]
         #

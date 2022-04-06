@@ -5,7 +5,7 @@ For standard forms only.
 """
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 import os
 from root.config.main import *
 from scipy.sparse import linalg as spspalinalg
@@ -444,6 +444,7 @@ def test_Form_NO1b_trace_form_Rd_and_Rc():
         load, t = None, None
     load, t = cOmm.bcast([load, t], root=mAster_rank)
     mesh, space = random_mesh_and_space_of_total_load_around(load, exclude_periodic = True)
+
     FC = FormCaller(mesh, space)
     flux = FC('scalar', p)
     velo = FC('vector', (uuu, vvv, www))
@@ -1399,5 +1400,5 @@ def test_Form_NO12_weak_curl():
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python _3dCSCG\tests\unittests\standard_forms.py
-    test_Form_No11_reconstruction_matrices()
+    # mpiexec -n 4 python objects\CSCG\_3d\__tests__\unittests\standard_forms.py
+    test_Form_NO1b_trace_form_Rd_and_Rc()

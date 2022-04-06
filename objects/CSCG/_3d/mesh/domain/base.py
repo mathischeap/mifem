@@ -142,7 +142,8 @@ class _3dCSCG_DomainBase(FrozenOnly):
                 for rnrn in self._regions_().keys():  # go through all regions except self
                     if rnrn != rn:
                         for ii in range(self._regions_(rn).num_sides()):  # go through all 6 sides of the regions.
-                            other_corner_indices = self.___PRIVATE_found_side_corner_global_numbering___(rnrn, ii)
+                            other_corner_indices = \
+                                self.___PRIVATE_found_side_corner_global_numbering___(rnrn, ii)
                             if np.all(self_corner_indices == other_corner_indices):
                                 # noinspection PyUnresolvedReferences
                                 _rm_[rn][i].append(rnrn)
@@ -163,7 +164,8 @@ class _3dCSCG_DomainBase(FrozenOnly):
                     assert np.shape(_rm_[rn][i]) == (1,)
                 except AssertionError:
                     assert np.shape(_rm_[rn][i]) == (2,), \
-                        " <Domain3D> : region_map[{}][{}] = {} is wrong, check the domain_input.".format(
+                        " <Domain3D> : region_map[{}][{}] = {} is wrong, " \
+                        "check the domain_input.".format(
                             rn, i, _rm_[rn][i])
                     rmrni0, rmrni1 = _rm_[rn][i]
                     if rmrni0 in self._region_names_:
@@ -185,11 +187,13 @@ class _3dCSCG_DomainBase(FrozenOnly):
                 if _rm_[rn][i] in self._boundary_names_:
                     _rsodb_[rn][i] = 1
                     assert _rm_[rn][i] not in self._region_names_, \
-                        " <Domain3D> : region_map[{}][{}] = {} is wrong, check the domain_input.".format(
+                        " <Domain3D> : region_map[{}][{}] = {} is wrong, " \
+                        "check the domain_input.".format(
                             rn, i, _rm_[rn][i])
                 else:
                     assert _rm_[rn][i] in self._region_names_, \
-                        " <Domain3D> : region_map[{}][{}] = {} is wrong, check the domain_input.".format(
+                        " <Domain3D> : region_map[{}][{}] = {} is wrong, " \
+                        "check the domain_input.".format(
                             rn, i, _rm_[rn][i])
 
             # noinspection PyUnresolvedReferences
@@ -251,6 +255,7 @@ class _3dCSCG_DomainBase(FrozenOnly):
 
         """
         if corner in pool:
+            # noinspection PyUnresolvedReferences
             return True, pool.index(corner)
         for _, i in enumerate(pool):
             if np.sqrt(
@@ -259,5 +264,3 @@ class _3dCSCG_DomainBase(FrozenOnly):
                     (i[2] - corner[2]) ** 2   ) <= 1e-9:
                 return True, _
         return False, -1
-
-

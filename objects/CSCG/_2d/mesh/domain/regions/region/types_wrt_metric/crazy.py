@@ -2,13 +2,17 @@
 
 
 from objects.CSCG._2d.mesh.domain.regions.region.types_wrt_metric.base import TypeWr2Metric
+
 from objects.CSCG._2d.mesh.elements.element.types_wrt_metric.chaotic import ChaoticElement
 from objects.CSCG._2d.mesh.elements.element.types_wrt_metric.orthogonal import OrthogonalElement
+
 from typing import Union
 import numpy as np
 
 class Crazy(TypeWr2Metric):
+    """"""
     def __init__(self, region):
+        """"""
         super().__init__(region)
         self._c_ = self._region_._domain_input_.c
         bounds = self._region_._domain_input_.bounds

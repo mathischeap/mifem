@@ -32,11 +32,15 @@ class TypeWr2MetricAllocator(FrozenOnly):
         """Update this whenever we code a new Interpolator. """
         return {'chaotic': 'Chaotic',
                 'crazy': 'Crazy',
-                'transfinite': 'Transfinite',}
+                'transfinite': 'Transfinite',
+                'orthogonal': 'Orthogonal',
+                }
 
     @classmethod
     def ___typeWr2Metric_path___(cls):
         base_path = '.'.join(str(cls).split(' ')[1][1:-2].split('.')[:-2]) + '.'
         return {'chaotic': base_path + 'chaotic',
                 'crazy': base_path + 'crazy',
-                'transfinite': base_path + 'transfinite',}
+                'transfinite': base_path + 'transfinite',
+                'orthogonal': base_path + 'orthogonal',
+                }

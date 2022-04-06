@@ -18,7 +18,7 @@ class TypeWr2Metric(FrozenOnly):
 
     def __eq__(self, other):
         return self.mark == other.mark and other.___IS_2dCSCG_TypeWr2Metric___
-        # make sure we can comparing regions type metric objects.
+        # make sure we can compare regions type metric objects.
 
     @property
     def ___IS_2dCSCG_TypeWr2Metric___(self):
@@ -36,6 +36,12 @@ class TypeWr2Metric(FrozenOnly):
             f"TypeWr2Metric named: {self.__class__.__name__}"
         )
 
+
+    def ___CLASSIFY_TRACE_ELEMENT_of_spacing___(self, trace_spacing: tuple):
+        raise NotImplementedError(
+            f"Please implement ___CLASSIFY_TRACE_ELEMENT_of_spacing___ for "
+            f"TypeWr2Metric named: {self.__class__.__name__}"
+        )
 
 
 

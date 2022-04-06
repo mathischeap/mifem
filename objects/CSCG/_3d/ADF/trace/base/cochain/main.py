@@ -1,8 +1,8 @@
 
-from root.config.main import rAnk
+from root.config.main import rAnk, mAster_rank, cOmm, np
 from screws.freeze.main import FrozenOnly
 from objects.CSCG._3d.ADF.trace.base.cochain.local import ____3dCSCG_ADTF_Cochain_Local____
-
+from scipy.sparse import csc_matrix
 
 class _3dCSCG_Algebra_DUAL_Trace_Form_Cochain(FrozenOnly):
     """The cochain of algebra dual form is equal to the mass matrix dot the cochain of the prime
@@ -57,7 +57,57 @@ class _3dCSCG_Algebra_DUAL_Trace_Form_Cochain(FrozenOnly):
         :param globe:
         :return:
         """
-        raise NotImplementedError()
+        if globe.__class__.__name__ == 'DistributedVector':
+            assert globe.V.shape == (self._dt_.num.GLOBAL_dofs, 1), "globe cochain shape wrong."
+            # gather vector to master core ...
+            if globe.IS_master_dominating:
+                # no need to gather
+                VV = globe.V.T.toarray()[0]
+            else:
+                V = globe.V
+                V = cOmm.gather(V, root=mAster_rank)
+                if rAnk == mAster_rank:
+                    VV = np.empty((self._dt_.num.GLOBAL_dofs,))
+                    for v in V:
+                        indices = v.indices
+                        data = v.data
+                        VV[indices] = data
+            # distribute vector to individual cores ...
+            local_range = self._dt_.numbering.gathering.local_range
+            local_range = cOmm.gather(local_range, root=mAster_rank)
+            if rAnk == mAster_rank:
+                TO_BE_SENT = list()
+                for lr in local_range:
+                    if lr == tuple():
+                        to_be_sent = None
+                    else:
+                        # noinspection PyUnboundLocalVariable
+                        to_be_sent = csc_matrix(
+                            (VV[lr[0]:lr[1]], range(lr[0],lr[1]), [0, lr[1]-lr[0]]),
+                            shape=(self._dt_.num.GLOBAL_dofs, 1))
+                    TO_BE_SENT.append(to_be_sent)
+            else:
+                TO_BE_SENT = None
+            TO_BE_SENT = cOmm.scatter(TO_BE_SENT, root=mAster_rank)
+            # distribute to local cochain ...
+            local = dict()
+            GM = self._dt_.prime.numbering.gathering
+            for i in GM: # go through all local elements
+                idx = GM[i].full_vector
+                local[i] = TO_BE_SENT[idx].toarray().ravel()
+            self.local = local
+
+        elif globe.__class__.__name__ == 'LocallyFullVector':
+            V = globe.V # V already be 1-d array.
+            local = dict()
+            GM = self._dt_.prime.numbering.gathering
+            for i in GM:  # go through all local elements
+                idx = GM[i].full_vector
+                local[i] = V[idx]
+            self.local = local
+
+        else:
+            raise Exception(f"Can not set cochain from {globe}.")
 
     def __getitem__(self, i):
         """If `i` is an element number in this core, we should be able to return a local cochain of

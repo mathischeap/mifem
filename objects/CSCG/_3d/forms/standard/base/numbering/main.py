@@ -70,7 +70,7 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
             pass
 
     @property
-    def num_of_dofs_in_this_core(self):
+    def num_local_dofs(self):
         """"""
         if self._local_num_dofs_ is None:
             self.___PRIVATE_do_numbering___()

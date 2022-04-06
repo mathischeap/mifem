@@ -123,7 +123,64 @@ class LocalNumbering(FrozenOnly):
                    'B': (np.arange(p[0]*p[1]).reshape((p[0], p[1]), order='F'),),
                    'F': (np.arange(p[0]*p[1]).reshape((p[0], p[1]), order='F'),)}
         return TEW__LN
-    
+
+
+
+
+
+
+
+
+    @property
+    def _3dCSCG_0Tr(self):
+        """Return the trace-element-wise (NOT mesh-element-wise) local numbering of 0-Tr-form."""
+        p = self._FS_.p
+        raise NotImplementedError()
+
+    @property
+    def _3dCSCG_1Tr(self):
+        """Return the trace-element-wise (NOT mesh-element-wise) local numbering of 1-Tr-form."""
+        p = self._FS_.p
+        raise NotImplementedError()
+
+    @property
+    def _3dCSCG_2Tr(self):
+        """Return the trace-element-wise (NOT mesh-element-wise) local numbering of 2-Tr-form."""
+        p = self._FS_.p
+
+        num_NS = p[1]*p[2]
+        num_WE = p[0]*p[2]
+        num_BF = p[0]*p[1]
+        TEW__LN = {
+            'N': (np.arange(num_NS).reshape((p[1], p[2]), order='F'),),
+            'S': (np.arange(num_NS).reshape((p[1], p[2]), order='F'),),
+            'W': (np.arange(num_WE).reshape((p[0], p[2]), order='F'),),
+            'E': (np.arange(num_WE).reshape((p[0], p[2]), order='F'),),
+            'B': (np.arange(num_BF).reshape((p[0], p[1]), order='F'),),
+            'F': (np.arange(num_BF).reshape((p[0], p[1]), order='F'),)
+            }
+
+        # the gathering matrix to gather local Trace-Element-Wise to Mesh-Element-Wise
+        local_gathering_matrix = {
+            'N': np.arange(num_NS),
+            'S': np.arange(num_NS) + num_NS,
+            'W': np.arange(num_NS) + num_NS * 2,
+            'E': np.arange(num_NS) + num_NS * 2 + num_WE,
+            'B': np.arange(num_NS) + num_NS * 2 + num_WE * 2,
+            'F': np.arange(num_NS) + num_NS * 2 + num_WE * 2 + num_BF,
+        }
+
+        return TEW__LN, local_gathering_matrix
+
+
+
+
+
+
+
+
+
+
     @property
     def _3dCSCG_0Form(self):
         """Return the mesh-element-wise local numbering of 0-form."""

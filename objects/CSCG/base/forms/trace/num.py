@@ -27,3 +27,7 @@ class CSCG_trace_form_NUM(FrozenOnly):
     def basis_onside(self):
         """(Dict[str, int]) Return a dict. See docstring of ``NUM_basis_components`` method."""
         return self._tf_._NUM_basis_onside_
+
+    @property
+    def GLOBAL_dofs(self):
+        return self._tf_.numbering.gathering.GLOBAL_num_dofs

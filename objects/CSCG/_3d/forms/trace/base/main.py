@@ -10,8 +10,6 @@
 from objects.CSCG._3d.forms.base import _3dCSCG_FORM_BASE
 from objects.CSCG._3d.forms.trace.base.numbering.main import _3dCSCG_Trace_Numbering
 
-from objects.CSCG._3d.forms.trace.base.visualize.main import _3dCSCG_Trace_Visualize
-
 from objects.CSCG.base.forms.trace.main import CSCG_Trace_Form
 
 from objects.CSCG._3d.forms.trace.base.dofs.main import _3dCSCG_Trace_forms_DOFs
@@ -51,7 +49,6 @@ class _3dCSCG_Standard_Trace(CSCG_Trace_Form, _3dCSCG_FORM_BASE, ndim=3):
         self._numbering_ = _3dCSCG_Trace_Numbering(self, numbering_parameters)
         self._cochain_ = _3dCSCG_Trace_Cochain(self)
         self._error_ = _3dCSCG_Trace_Error(self)
-        self._visualize_ = _3dCSCG_Trace_Visualize(self)
         self._matrices_ = _3dCSCG_Trace_Matrices(self)
         self._coboundary_ = _3dCSCG_Trace_Coboundary(self)
         self._DO_ = _3dCSCG_Trace_DO(self)
@@ -70,10 +67,6 @@ class _3dCSCG_Standard_Trace(CSCG_Trace_Form, _3dCSCG_FORM_BASE, ndim=3):
     @property
     def error(self):
         return self._error_
-    @property
-    def visualize(self):
-        """Collections of all visualization-related sub-properties."""
-        return self._visualize_
 
     @property
     def matrices(self):

@@ -2,7 +2,7 @@
 
 
 
-from screws.generators.counter import Counter # 一个从0开始的计数器
+from screws.generators.counter import Counter # 一个计数器
 
 from screws.miscellaneous.mkdir import mkdir
 

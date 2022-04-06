@@ -1,6 +1,6 @@
 import random
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 from root.config.main import *
 from root.save import save, read
@@ -304,6 +304,6 @@ def test_ADF_NO3_coboundary():
 
 
 if __name__ == '__main__':
-    # mpiexec -n 6 python _3dCSCG\tests\unittests\ADF.py
+    # mpiexec -n 6 python objects\CSCG\_3d\__tests__\unittests\ADF.py
     # test_ADF_NO1_general_tests_standard_forms()
     test_ADF_NO2_general_tests_trace_forms()

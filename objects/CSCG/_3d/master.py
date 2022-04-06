@@ -185,6 +185,7 @@ class FormCaller(FrozenOnly):
 
             if ID in ('0-adf', '1-adf', '2-adf', '3-adf',  # algebraic dual (standard) forms
                       '0-adt', '1-adt', '2-adt',           # algebraic dual trace forms
+                      '0-adTr', '1-adTr', '2-adTr',           # algebraic dual Tr forms
                       ):
                 fp['type'] = '_3dCSCG_ADF'
                 # ---------------- make a dual from a prime ------------------------------------
@@ -209,6 +210,12 @@ class FormCaller(FrozenOnly):
                         assert pcn == '_3dCSCG_1Trace'
                     elif ID == '2-adt':
                         assert pcn == '_3dCSCG_2Trace'
+                    elif ID == '0-adTr':
+                        assert pcn == '_3dCSCG_0Tr'
+                    elif ID == '1-adTr':
+                        assert pcn == '_3dCSCG_1Tr'
+                    elif ID == '2-adTr':
+                        assert pcn == '_3dCSCG_2Tr'
                     else:
                         raise Exception(f"ID={ID} do not accept a single prime form instance as input.")
 
@@ -238,6 +245,11 @@ class FormCaller(FrozenOnly):
 
                     elif ID in ('0-adt', '1-adt', '2-adt'): # note that trace forms must be hybrid.
                         prime_class_ID = ID.split('-')[0] + '-t'
+                        prime = self(prime_class_ID, *args, **p_kwargs)
+
+
+                    elif ID in ('0-adTr', '1-adTr', '2-adTr'): # note that trace forms must be hybrid.
+                        prime_class_ID = ID.split('-')[0] + '-Tr'
                         prime = self(prime_class_ID, *args, **p_kwargs)
 
 
@@ -318,11 +330,13 @@ class ExactSolutionSelector(FrozenOnly):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 8 python _3dCSCG\master.py
+    # mpiexec -n 8 python objects\CSCG\_3d\master.py
 
-    mesh = MeshGenerator('bridge_arch_cracked')([1,3,[1,2,4,4,4,4,4,2,1]], EDM='chaotic', show_info=True)
+    # mesh = MeshGenerator('cuboid', region_layout=(3,3,3))([2,3,4], show_info=True)
     # mesh = MeshGenerator('bridge_arch_cracked')([2,2,2], EDM='SWV0', show_info=True)
     # mesh = MeshGenerator('crazy')([3, 3, 3], EDM='chaotic', show_info=True)
+    # mesh = MeshGenerator('crazy_periodic')([3, 3, 3], EDM='chaotic', show_info=True)
+    mesh = MeshGenerator('cuboid_periodic', region_layout=(1,2,2))([2,3,4], show_info=True)
 
     # es = ExactSolutionSelector(mesh)('Poisson:sincos1')
     #
@@ -334,10 +348,18 @@ if __name__ == "__main__":
     # mesh.visualize()
     # mesh.visualize.matplot.connection()
     # mesh.domain.visualize()
-    mesh.domain.regions.visualize()
+    # mesh.domain.regions.visualize()
 
     # print(mesh.domain.regions.map)
     # print(mesh.domain.boundaries.names)
 
     # print(MeshGenerator.___domain_input_statistic___())
     # print(MeshGenerator.___domain_input_random_parameters___())
+
+
+    regions = mesh.domain.regions
+    for rn in regions:
+        region = regions[rn]
+
+        # if rAnk == mAster_rank:
+        print(rn, region.IS.periodic_to_self)

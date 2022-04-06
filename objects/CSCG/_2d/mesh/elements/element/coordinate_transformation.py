@@ -1,7 +1,12 @@
 
 
+
 from screws.freeze.main import FrozenOnly
 import numpy as np
+
+
+
+
 
 class _2dCSCG_Mesh_ECT(FrozenOnly):
     def __init__(self, element):
@@ -178,6 +183,3 @@ class _2dCSCG_Mesh_ECT(FrozenOnly):
                 if i != j:
                     iG[j][i] = iG[i][j]
         return iG
-
-
-

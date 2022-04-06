@@ -34,6 +34,6 @@ class _3dCSCG_Standard_Form_Coboundary(CSCG_Standard_Form_Coboundary_BASE):
         assert self._sf_.k < 3, "volume form has no next prime space."
         k = self._sf_.k
         base_path = '.'.join(str(self.__class__).split(' ')[1][1:-2].split('.')[:-3]) + '.'
-        nextPath = base_path + f'_{k+1}_form.main'
+        nextPath = base_path + f'_{k+1}s.main'
         nextName = f'_3dCSCG_{k+1}Form'
         return getattr(import_module(nextPath), nextName)

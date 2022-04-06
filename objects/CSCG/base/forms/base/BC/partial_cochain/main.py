@@ -6,7 +6,7 @@ dofs. These two properties are named: dofs (an instance of PartialDofs) and coch
 """
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 from objects.CSCG.base.forms.base.BC.partial_cochain.partial_dofs.main import PartialDofs
 from screws.freeze.main import FrozenOnly
@@ -42,6 +42,12 @@ class PartialCochain(FrozenOnly):
     def include(self):
         return self._include_
 
+    @property
+    def interpreted_as(self):
+        return self._interpretation_
+
+
+
     def __iter__(self):
         """Go through all involved local mesh element numbers."""
         for e in self._dofs_:
@@ -59,9 +65,6 @@ class PartialCochain(FrozenOnly):
         """Return the "indicators" (not local dofs) and the "local cochains" of the involved mesh element #e."""
         return self._dofs_[e], self._cochain_[e]
 
-    @property
-    def interpreted_as(self):
-        return self._interpretation_
 
 
 

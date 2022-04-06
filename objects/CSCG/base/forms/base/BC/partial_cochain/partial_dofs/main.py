@@ -3,7 +3,7 @@ A class that represent a part of the dofs of a form.
 
 """
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 
 
@@ -40,6 +40,14 @@ class PartialDofs(FrozenOnly):
         """Methods used to include local dofs."""
         return self._include_
 
+    @property
+    def interpreted_as(self):
+        return self._interpretation_
+
+
+
+
+
     def __iter__(self):
         """Go through all involved local mesh element numbers."""
         for e in self._dofs_:
@@ -56,10 +64,6 @@ class PartialDofs(FrozenOnly):
     def __getitem__(self, e):
         """Return the indicators for the involved mesh element #e."""
         return self._dofs_[e]
-
-    @property
-    def interpreted_as(self):
-        return self._interpretation_
 
 
 

@@ -12,11 +12,11 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
     """"""
     def __init__(self, tf):
         self._tf_ = tf
+        self._local_ = None
         self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
     def ___PRIVATE_reset_cache___(self):
-        self._local_ = None
         self._local_TEW_ = None
 
     @property
@@ -34,7 +34,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
     def ___PRIVATE_local_call___(self, i):
         return csr_matrix(self.local[i]).T
 
-    def DO_gather_local_to_master(self):
+    def ___PRIVATE_gather_local_to_master___(self):
         """Do what the method name says."""
         local = cOmm.gather(self.local, root=mAster_rank)
         if rAnk == mAster_rank:
@@ -63,7 +63,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
                 RID.update(rid)
         del RN_LI_dict
 
-        LOCAL = self.DO_gather_local_to_master()
+        LOCAL = self.___PRIVATE_gather_local_to_master___()
         if rAnk == mAster_rank:
 
             RW_LOCAL = dict()
@@ -218,8 +218,9 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
                 assert np.shape(local[i]) == (numOfBasis,)
         except AssertionError:
             raise LocalCochainShapeError()
+
+        self.___PRIVATE_reset_cache___()
         self._local_ = local
-        self._local_TEW_ = None
 
     #-- DEPENDENT PROPERTIES (BRANCHES, must have the two switching methods): when set below, update local ------
     @property
@@ -253,6 +254,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
         except AssertionError:
             raise LocalCochainShapeError()
 
+        self.___PRIVATE_reset_cache___()
         self._local_TEW_ = local_TEW
         self.___local_TEW_2_local___()
 

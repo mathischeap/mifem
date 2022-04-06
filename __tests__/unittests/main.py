@@ -27,7 +27,7 @@ from __tests__.unittests.EWC.column_vector import test_LinearAlgebra_EWC_No0_Col
 from __tests__.unittests.EWC.operators import test_LinearAlgebra_EWC_No1_Operators
 
 from __tests__.unittests.gathering_matrix.find import test_GatheringMatrix_find
-
+from __tests__.unittests.linear_system.strong_BC_of_Poisson import test_applying_strong_BC_for_Poisson_problem
 t_global_start = MPI.Wtime()
 
 passed_GLOBAL_tests += test_mifem_NO1_2dCSCG_save_read()
@@ -67,7 +67,7 @@ passed_GLOBAL_tests += test_LinearAlgebra_EWC_No0_ColumnVector()
 passed_GLOBAL_tests += test_LinearAlgebra_EWC_No1_Operators()
 
 passed_GLOBAL_tests += test_GatheringMatrix_find()
-
+passed_GLOBAL_tests += test_applying_strong_BC_for_Poisson_problem()
 
 
 cOmm.barrier()

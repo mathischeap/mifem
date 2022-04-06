@@ -6,7 +6,7 @@
 
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.boundaries.boundary.visualize import _3dCSCG_Mesh_Boundary_VIS

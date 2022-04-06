@@ -97,7 +97,7 @@ def manu_conserving_solver(N, k, t, steps):
        E01M1_A = M1E10_A.T
        E01M1_A._M_ = E01M1_A.M.tolil()
        E01M1_A.M[-1,:] = 0
-       lhs11_A = GlobalMatrix((P0.GLOBAL_num_dofs, P0.GLOBAL_num_dofs))
+       lhs11_A = GlobalMatrix((P0.num.GLOBAL_dofs, P0.num.GLOBAL_dofs))
        lhs11_A.M[-1,-1] = 1
        lhs = [[ lhs00_Hf_A, M1E10_A],
               [-E01M1_A   , lhs11_A]]
@@ -110,7 +110,7 @@ def manu_conserving_solver(N, k, t, steps):
        B0 = (2 * M1 / dt - 0.5 * CP1) @ u1.cochain.EWC
        B0.gathering_matrix = u1
        B0 = B0.assembled
-       B1 = GlobalVector(spspa.csc_matrix((P0.GLOBAL_num_dofs, 1)))
+       B1 = GlobalVector(spspa.csc_matrix((P0.num.GLOBAL_dofs, 1)))
        ib = TLO.concatenate([B0, B1])
        ib = ib.___PRIVATE_gather_V_to_core___(clean_local=True)
        ib = GlobalVector(ib)
@@ -171,8 +171,8 @@ def manu_conserving_solver(N, k, t, steps):
        oB_0 = (M2 / dt - 0.5 * CP2) @ u2.cochain.EWC
        oB_0.gathering_matrix = u2
        B0 = oB_0.assembled
-       B1 = GlobalVector(spspa.csc_matrix((w1.GLOBAL_num_dofs, 1)))
-       B2 = GlobalVector(spspa.csc_matrix((P3.GLOBAL_num_dofs, 1)))
+       B1 = GlobalVector(spspa.csc_matrix((w1.num.GLOBAL_dofs, 1)))
+       B2 = GlobalVector(spspa.csc_matrix((P3.num.GLOBAL_dofs, 1)))
        ob = TLO.concatenate([B0, B1, B2])
        ob = ob.___PRIVATE_gather_V_to_core___(clean_local=True)
        ob = GlobalVector(ob)
@@ -219,12 +219,12 @@ def manu_conserving_solver(N, k, t, steps):
               oB_0_A = GlobalVector(oB_0_A)
 
               if rAnk == mAster_rank:
-                  ____ = oA._M_[0:u2.GLOBAL_num_dofs]
-                  oA._M_ = oA._M_[u2.GLOBAL_num_dofs:]
-                  ____ = ____[:, u2.GLOBAL_num_dofs:]
+                  ____ = oA._M_[0:u2.num.GLOBAL_dofs]
+                  oA._M_ = oA._M_[u2.num.GLOBAL_dofs:]
+                  ____ = ____[:, u2.num.GLOBAL_dofs:]
                   ____ = spspa.hstack((oA00_A.M, ____), format='csr')
                   oA._M_ = spspa.vstack((____, oA._M_), format='csc')
-                  ob.V[0:u2.GLOBAL_num_dofs] = oB_0_A.V
+                  ob.V[0:u2.num.GLOBAL_dofs] = oB_0_A.V
               del oB_0_A, oA00_A
 
               oR, _, _, _, mo = scipy_sparse_linalg.spsolve(oA, ob)
@@ -249,12 +249,12 @@ def manu_conserving_solver(N, k, t, steps):
               iB_0_A = GlobalVector(iB_0_A)
 
               if rAnk == mAster_rank:
-                  ____ = iA._M_[0:u1.GLOBAL_num_dofs]
-                  iA._M_ = iA._M_[u1.GLOBAL_num_dofs:]
-                  ____ = ____[:, u1.GLOBAL_num_dofs:]
+                  ____ = iA._M_[0:u1.num.GLOBAL_dofs]
+                  iA._M_ = iA._M_[u1.num.GLOBAL_dofs:]
+                  ____ = ____[:, u1.num.GLOBAL_dofs:]
                   ____ = spspa.hstack((iA00_A.M, ____), format='csr')
                   iA._M_ = spspa.vstack((____, iA._M_), format='csr')
-                  ib.V[0:u1.GLOBAL_num_dofs] = iB_0_A.V
+                  ib.V[0:u1.num.GLOBAL_dofs] = iB_0_A.V
               del iB_0_A, iA00_A
 
               iR, _, _, _, mi = scipy_sparse_linalg.spsolve(iA, ib)

@@ -26,8 +26,10 @@ def read(filename, read_individuals=None):
     read a mifem object from a file (`.mi` extension).
 
     :param filename:
-    :param read_individuals: For example, if a file contains 5 objects, if we make read_individuals=[1,1,0,1,0], then we
-        only read the first, second and fourth objects, for the third and fifth objects, we return None instead.
+    :param read_individuals: For example, if a file contains 5 objects,
+        if we make read_individuals=[1,1,0,1,0], then we
+        only read the first, second and fourth objects, for the third and fifth objects,
+        we return None instead.
 
         If read_individuals is None, we read all objects.
     :return:
@@ -35,14 +37,14 @@ def read(filename, read_individuals=None):
     OBJ = cHaining(chain, filename)
 
     if isinstance(OBJ,  list): # multiple saving objects: must be a list.
-        if isinstance(OBJ[-1], tuple): # multiple saving objects with saving info: saving info must be in a tuple.
+        if isinstance(OBJ[-1], tuple): # multiple saving objects with saving info:
+                                       # saving info must be in a tuple.
             save_info_tuple = OBJ[-1]
             OBJ = OBJ[:-1]
 
             for info in save_info_tuple:
                 assert info is None or isinstance(info, dict)
                 # saving info for every obj must be None or a dict.
-
         else:
             pass
     elif isinstance(OBJ, dict): # single saving object: must be a dict.
@@ -68,7 +70,6 @@ def read(filename, read_individuals=None):
             assert isinstance(ri, bool) or ri == 1 or ri == 0, \
                 f"read_individuals[{_}]={ri} is wrong, must be True, False, 1 or 0."
 
-
     cOmm.barrier()
     objs = tuple()
 
@@ -79,12 +80,16 @@ def read(filename, read_individuals=None):
             obj_para = obj_dict.pop('parameters')
             assert len(obj_dict) == 0, "mi file should store a dict of two keys only."
 
+            # ----------- 3d CSCG objects -----------------------------------------------------
             if obj_name == '_3dCSCG_Mesh':
-                obj = ___restore__3dCSCG_Mesh___(obj_para, ___CACHE_3dCSCG_mesh___)
+                obj = ___restore__3dCSCG_Mesh___(obj_para,
+                                                 ___CACHE_3dCSCG_mesh___)
             elif obj_name == '_3dCSCG_PolynomialSpace':
-                obj = ___restore__3dCSCG_Space___(obj_para, ___CACHE_3dCSCG_space___)
+                obj = ___restore__3dCSCG_Space___(obj_para,
+                                                  ___CACHE_3dCSCG_space___)
             elif obj_name == '_3dCSCG_ExactSolution':
-                obj = ___restore__3dCSCG_ExactSolution___(obj_para, ___CACHE_3dCSCG_mesh___)
+                obj = ___restore__3dCSCG_ExactSolution___(obj_para,
+                                                          ___CACHE_3dCSCG_mesh___)
             elif obj_name in ('_3dCSCG_0Form',
                               '_3dCSCG_1Form',
                               '_3dCSCG_2Form',
@@ -93,7 +98,9 @@ def read(filename, read_individuals=None):
                               '_3dCSCG_1Trace',
                               '_3dCSCG_0Trace',
                               '_3dCSCG_0Edge'):
-                obj = ___restore__3dCSCG_Form___(obj_para, ___CACHE_3dCSCG_mesh___, ___CACHE_3dCSCG_space___)
+                obj = ___restore__3dCSCG_Form___(obj_para,
+                                                 ___CACHE_3dCSCG_mesh___,
+                                                 ___CACHE_3dCSCG_space___)
             elif obj_name in ('_3dCSCG_S0_ADF',
                               '_3dCSCG_S1_ADF',
                               '_3dCSCG_S2_ADF',
@@ -101,9 +108,11 @@ def read(filename, read_individuals=None):
                               '_3dCSCG_T0_ADF',
                               '_3dCSCG_T1_ADF',
                               '_3dCSCG_T2_ADF'):
-                obj = ___restore__3dCSCG_Algebra_DUAL_Form___(obj_para, ___CACHE_3dCSCG_mesh___, ___CACHE_3dCSCG_space___)
+                obj = ___restore__3dCSCG_Algebra_DUAL_Form___(obj_para,
+                                                              ___CACHE_3dCSCG_mesh___,
+                                                              ___CACHE_3dCSCG_space___)
 
-
+            #----------- 2d CSCG objects -----------------------------------------------------
             elif obj_name == '_2dCSCG_Mesh':
                 obj = ___restore__2dCSCG_Mesh___(obj_para, ___CACHE_2dCSCG_mesh___)
             elif obj_name == '_2dCSCG_PolynomialSpace':
@@ -115,7 +124,10 @@ def read(filename, read_individuals=None):
                               '_2dCSCG_2Form_Inner',
                               '_2dCSCG_2Form_Outer',
                               '_2dCSCG_1Trace_Outer',):
-                obj = ___restore__2dCSCG_Form___(obj_para, ___CACHE_2dCSCG_mesh___, ___CACHE_2dCSCG_space___)
+                obj = ___restore__2dCSCG_Form___(obj_para,
+                                                 ___CACHE_2dCSCG_mesh___,
+                                                 ___CACHE_2dCSCG_space___)
+
             else:
                 raise Exception(f'Can not restore {obj_name}')
 
@@ -128,5 +140,3 @@ def read(filename, read_individuals=None):
 
     if len(objs) == 1: objs = objs[0]
     return objs
-
-

@@ -3,7 +3,9 @@
 from screws.freeze.base import FrozenOnly
 from objects.CSCG._2d.forms.standard.base.dofs.dof.main import _2dCSCG_SF_DOF
 from objects.CSCG._2d.forms.standard.base.dofs.visualize import _2dCSCG_SF_dofs_VIS
-from objects.CSCG._2d.forms.standard.base.dofs.find import _2dCSCG_SF_dofs_FIND
+from objects.CSCG._2d.forms.standard.base.dofs.do.main import _2dCSCG_SF_dofs_do
+
+
 
 
 class _2dCSCG_SF_dofs(FrozenOnly):
@@ -12,7 +14,7 @@ class _2dCSCG_SF_dofs(FrozenOnly):
         self._sf_ = sf
         self._dofs_ = dict()
         self._visualize_ = None
-        self._find_ = None
+        self._do_ = None
         self._freeze_self_()
 
 
@@ -39,10 +41,10 @@ class _2dCSCG_SF_dofs(FrozenOnly):
                 return False
 
     @property
-    def find(self):
-        if self._find_ is None:
-            self._find_ = _2dCSCG_SF_dofs_FIND(self)
-        return self._find_
+    def do(self):
+        if self._do_ is None:
+            self._do_ = _2dCSCG_SF_dofs_do(self)
+        return self._do_
 
     @property
     def visualize(self):

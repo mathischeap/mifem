@@ -1,8 +1,15 @@
 
+
+
+
 from mpi4py import MPI
 cOmm = MPI.COMM_WORLD
 sIze: int = cOmm.Get_size()
 rAnk: int = cOmm.Get_rank()
+
+
+
+
 
 def cHaining(method, *args, **kwargs):
     """Let all cores do thing in a sequence; so next core will not start unless the previous core has

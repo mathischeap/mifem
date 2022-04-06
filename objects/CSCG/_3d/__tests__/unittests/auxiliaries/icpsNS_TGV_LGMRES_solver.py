@@ -22,7 +22,6 @@ from screws.miscellaneous.timer import check_multiple_close, check_almost_in_ran
 
 
 
-# import warnings
 
 def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
     atol=1e-5, m=50, K=3, maxiter=10, show_info=True, save_uw=True):
@@ -152,7 +151,7 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
     X0 = LocallyFullVector(X0.assembled)
 
     iR = ParallelSolverDistributor("LGMRES")(iA, ib, X0, atol=atol, m=m, k=K, maxiter=maxiter)[0]
-    iR.___PRIVATE_be_distributed_to___(u1, P0)
+    iR.do.distributed_to(u1, P0)
 
     w2.cochain.local = u1.coboundary.cochain_local
     KE1_t0h = 0.5 * u1.do.compute_L2_energy_with(M=M1) / Volume
@@ -261,7 +260,7 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
         del SYS_oA, SYS_ob
 
         OUT_R[0] = oR
-        oR.___PRIVATE_be_distributed_to___(u2, w1, P3)
+        oR.do.distributed_to(u2, w1, P3)
 
         du2 = u2.coboundary()
         du2.TW.func.do.set_func_body_as(es.status.divergence_of_velocity)
@@ -283,7 +282,7 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
 
         INN_R[0] = iR
         _u1_old_cochain_ = u1.cochain.local
-        iR.___PRIVATE_be_distributed_to___(u1, P0)
+        iR.do.distributed_to(u1, P0)
 
         _u1_new_cochain_ = u1.cochain.local
 

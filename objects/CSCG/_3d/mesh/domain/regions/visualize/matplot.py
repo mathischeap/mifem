@@ -76,14 +76,14 @@ class _3dCSCG_Regions_Visualize_Matplot_(FrozenOnly):
 
 
         # ---- now we plot the connection of region centers ---------------------------
-        map = self._regions_.map
-        for rn in map:   # go through all regions
+        MAP = self._regions_.map
+        for rn in MAP:   # go through all regions
 
             region = self._regions_[rn]
 
             for i, side in enumerate('NSWEBF'):
 
-                object_at_this_side = map[rn][i]
+                object_at_this_side = MAP[rn][i]
 
                 if object_at_this_side in self._regions_: # we find a region at this side
 

@@ -4,6 +4,7 @@
 from objects.CSCG._2d.mesh.domain.regions.region.interpolations.allocator import InterpolationSearcher
 from objects.CSCG._2d.mesh.domain.regions.region.edge_geometries.allocator import EdgeGeometryDispatcher
 from objects.CSCG._2d.mesh.domain.regions.region.types_wrt_metric.allocator import TypeWr2MetricGiver
+from objects.CSCG._2d.mesh.domain.regions.region.IS import _2dCSCG_Region_IS
 
 from screws.freeze.main import FrozenOnly
 
@@ -44,7 +45,19 @@ class Region(RegionTopology, FrozenOnly):
         self._type_wrt_metric_ = self.___PRIVATE_PARSE_type_wrt_metric___()
         self._interpolation_ = InterpolationSearcher(interpolator)(self)
         self._edges_ = Edges(self)
+        self._MAP_ = None
+        self._IS_ = None
         self._freeze_self_()
+
+    @property
+    def map(self):
+        return self._MAP_
+
+    @property
+    def IS(self):
+        if self._IS_ is None:
+            self._IS_ = _2dCSCG_Region_IS(self)
+        return self._IS_
 
     @property
     def edges(self):

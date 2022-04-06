@@ -18,11 +18,3 @@ class CSCG_Form_TimeWise_DO(FrozenOnly):
     def push_all_to_instant(self, t=None):
         """Will update current_time if t is not None"""
         self._tw_.___DO_push_all_to_instant___(t=t)
-
-
-
-
-
-
-
-

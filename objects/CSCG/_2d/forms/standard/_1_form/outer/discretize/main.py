@@ -36,8 +36,13 @@ class _2dCSCG_S1Fo_Discretize(FrozenOnly):
 
 
         elif target == 'BC':
-            raise NotImplementedError(f'2dCSCG 1-form can not (target BC) '
-                                      f'discretize {self._sf_.TW.BC.body.__class__}.')
+
+            if self._sf_.BC.ftype == 'standard':
+                return self._standard_vector_(
+                    update_cochain=False, target='BC', **kwargs)
+            else:
+                raise NotImplementedError(f'2dCSCG 1-form can not (target BC) '
+                                          f'discretize {self._sf_.TW.BC.body.__class__}.')
 
 
         else:

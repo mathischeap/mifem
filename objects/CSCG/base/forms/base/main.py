@@ -33,7 +33,7 @@ class CSCG_FORM_BASE(FrozenClass):
         self._func_ = CSCG_Form_Func(self)
         self._BC_ = CSCG_Form_BC(self)
 
-    #------------------- fundamental ---------------------------------------------------------
+    #------------------- fundamental --------------------------------
     @property
     def mesh(self):
         """Return the mesh."""
@@ -58,7 +58,7 @@ class CSCG_FORM_BASE(FrozenClass):
         """Return the dimensions."""
         return self.___ndim___
 
-    # --------------- base properties -----------------------------------------------------
+    # --------------- base properties ---------------------------------
     @property
     def TW(self):
         return self._TW_
@@ -71,15 +71,12 @@ class CSCG_FORM_BASE(FrozenClass):
     def BC(self):
         return self._BC_
 
-
     # ------ must have properties ------------------------------------
     @property
     def cochain(self):
         raise NotImplementedError()
 
-    #====================================================================
-
-    # ------------ define information -----------------------------------------------------
+    # ------------ define information ----------------------------------
     @property
     def ___personal_parameters___(self):
         """

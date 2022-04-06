@@ -18,11 +18,11 @@ class _3dCSCG_Edge_Cochain(FrozenOnly):
     def __init__(self, ef):
         """"""
         self._ef_ = ef
-        self.RESET_cache()
+        self._local_ = None
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
-    def RESET_cache(self):
-        self._local_ = None
+    def ___PRIVATE_reset_cache___(self):
         self._local_EEW_ = None
 
 
@@ -121,7 +121,7 @@ class _3dCSCG_Edge_Cochain(FrozenOnly):
     @local.setter
     def local(self, local):
         numOfElements = self._ef_.mesh.elements.num
-        numOfBasis = self._ef_.NUM_basis
+        numOfBasis = self._ef_.num.basis
         try:
             assert isinstance(local, dict)
             assert len(local) == numOfElements
@@ -129,6 +129,8 @@ class _3dCSCG_Edge_Cochain(FrozenOnly):
                 assert np.shape(local[i]) == (numOfBasis,)
         except AssertionError:
             raise LocalCochainShapeError()
+
+        self.___PRIVATE_reset_cache___()
         self._local_ = local
 
     #-- DEPENDENT PROPERTIES (BRANCHES, must have the two switching methods): when set below, update local ------
@@ -153,7 +155,7 @@ class _3dCSCG_Edge_Cochain(FrozenOnly):
         :param local_EEW:
         :return:
         """
-        NUM_basis_components = self._ef_.NUM_basis_components
+        NUM_basis_components = self._ef_.num.basis_components
         try:
             assert isinstance(local_EEW, dict)
             for key in local_EEW:
@@ -163,6 +165,7 @@ class _3dCSCG_Edge_Cochain(FrozenOnly):
         except AssertionError:
             raise LocalCochainShapeError()
 
+        self.___PRIVATE_reset_cache___()
         self._local_EEW_ = local_EEW
         self.___local_EEW_2_local___()
 
@@ -180,7 +183,7 @@ class _3dCSCG_Edge_Cochain(FrozenOnly):
             for key in MAP[i]:
                 local[i].append(self._local_EEW_[key])
             local[i] = np.concatenate(local[i])
-            assert local[i].shape == (self._ef_.NUM_basis,)
+            assert local[i].shape == (self._ef_.num.basis,)
         self._local_ = local
 
 

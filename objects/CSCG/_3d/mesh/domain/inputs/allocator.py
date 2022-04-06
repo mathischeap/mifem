@@ -37,7 +37,9 @@ class DomainInputAllocator(FrozenOnly):
                   'psc': "Periodic_Square_Channel",
                   'pwc': "Parallel_Wall_Channel",
                   'LDC': "Lid_Driven_Cavity",
-                  }
+                  'cuboid': "Cuboid",
+                  'cuboid_periodic': "CuboidPeriodic",
+        }
         return _dict_
 
     @classmethod
@@ -50,4 +52,6 @@ class DomainInputAllocator(FrozenOnly):
                 'psc': base_path + "psc",
                 'pwc': base_path + "pwc",
                 'LDC': base_path + "LDC",
-                  }
+                'cuboid': base_path + "cuboid",
+                'cuboid_periodic': base_path + "cuboid_periodic",
+        }

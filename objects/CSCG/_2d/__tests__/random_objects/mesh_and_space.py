@@ -6,6 +6,10 @@ import random
 from objects.CSCG._2d.__tests__.random_objects.mesh import random_mesh_of_elements_around
 from objects.CSCG._2d.__tests__.random_objects.space import random_space_of_degrees_around
 
+
+
+
+
 def random_mesh_and_space_of_total_load_around(total_load, **kwargs):
     """
 

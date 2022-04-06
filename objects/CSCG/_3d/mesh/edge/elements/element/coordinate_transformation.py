@@ -2,7 +2,7 @@
 
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.main import FrozenOnly
 
@@ -24,7 +24,7 @@ class _3dCSCG_Edge_Element_CT(FrozenOnly):
         :param corner_edge: We compute it from this corner.
         :return:
         """
-        if self._ee_.IS_on_periodic_boundary:
+        if self._ee_.IS.on_periodic_boundary:
             assert from_element is not None, \
                 "to compute the physical position of an edge element on periodic " \
                 "boundary, we have to provide from which element you " \
@@ -50,16 +50,19 @@ class _3dCSCG_Edge_Element_CT(FrozenOnly):
             f"edge element #{self._ee_.i} is not on mesh element {i}."
 
         ___ = ['WB', 'EB', 'WF', 'EF', 'NB', 'SB', 'NF', 'SF', 'NW', 'SW', 'NE', 'SE']
-        if self._ee_._elements_.map[i].count(self._ee_.i) == 1: # this mesh element is not periodic to itself.
+        if self._ee_._elements_.map[i].count(self._ee_.i) == 1:
+            # this mesh element is not periodic to itself.
             corner_index = self._ee_._elements_.map[i].index(self._ee_.i)
             element_corner = ___[corner_index]
             if from_element is None: # if we do not provide `from_element` we must have this
                 assert element_corner == self._ee_.CHARACTERISTIC_corner_edge
 
             if corner_edge is not None:
-                assert element_corner == corner_edge, f"cannot compute it at provided corner edge: {corner_edge}"
+                assert element_corner == corner_edge, \
+                    f"cannot compute it at provided corner edge: {corner_edge}"
 
-        elif self._ee_._elements_.map[i].count(self._ee_.i) > 1: # this mesh element is periodic to itself.
+        elif self._ee_._elements_.map[i].count(self._ee_.i) > 1:
+            # this mesh element is periodic to itself.
             assert corner_edge is not None, f"edge element #{self._ee_.i} " \
                                             f"is on more than 1 corner-edges of element #{i} " \
                                             f"(periodic), provide corner_edge as well."

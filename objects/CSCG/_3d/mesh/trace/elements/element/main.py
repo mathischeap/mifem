@@ -1,7 +1,7 @@
 
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 from root.config.main import rAnk
 
@@ -10,7 +10,7 @@ from screws.freeze.main import FrozenOnly
 
 from objects.CSCG._3d.mesh.trace.elements.element.coordinate_transformation import _3dCSCG_Trace_Element_CoordinateTransformation
 from objects.CSCG._3d.mesh.trace.elements.element.visualize import _3dCSCG_TraceElement_VIS
-
+from objects.CSCG._3d.mesh.trace.elements.element.IS import _3dCSCG_TraceElement_IS
 
 
 class _3dCSCG_Trace_Element(FrozenOnly):
@@ -41,9 +41,10 @@ class _3dCSCG_Trace_Element(FrozenOnly):
         self._onpb_ = onpb
         assert self.CHARACTERISTIC_element in self._elements_._mesh_.elements, \
             "CHARACTERISTIC_element must be in the same core."
-        if self.IS_on_mesh_boundary:
+        if self._ondb_:
             assert self.NON_CHARACTERISTIC_position[0] not in '1234567890'
         self._ct_ = None
+        self._IS_ = None
         self._visualize_ = None
         self._type_wrt_metric_ = None
         self._freeze_self_()
@@ -69,6 +70,12 @@ class _3dCSCG_Trace_Element(FrozenOnly):
         if self._ct_ is None:
             self._ct_ = _3dCSCG_Trace_Element_CoordinateTransformation(self)
         return self._ct_
+
+    @property
+    def IS(self):
+        if self._IS_ is None:
+            self._IS_ = _3dCSCG_TraceElement_IS(self)
+        return self._IS_
 
     @property
     def visualize(self):
@@ -99,12 +106,12 @@ class _3dCSCG_Trace_Element(FrozenOnly):
         return self._cp_
     @property
     def CHARACTERISTIC_element(self):
-        """We mainly consider this trace element is a side of this mesh
+        """We mainly consider this trace element is a side of this local mesh
         element."""
         return int(self._cp_[:-1])
     @property
     def CHARACTERISTIC_side(self):
-        """We main consider this trace element is such a side of the
+        """We mainly consider this trace element is such a side of the
         CHARACTERISTIC_element."""
         return self._cp_[-1]
     @property
@@ -139,40 +146,20 @@ class _3dCSCG_Trace_Element(FrozenOnly):
         """This is the ith trace element."""
         return self._i_
 
-    @property
-    def IS_on_mesh_boundary(self):
-        """As this property name says."""
-        return self._ondb_
 
     @property
     def on_mesh_boundary(self):
         """Return the mesh boundary name this trace element is on. If it is not on one, return None."""
-        if self.IS_on_mesh_boundary:
+        if self._ondb_:
             return self.NON_CHARACTERISTIC_position
         else:
             return None
 
-    @property
-    def IS_on_periodic_boundary(self):
-        """As this property name says."""
-        return self._onpb_
-
-    @property
-    def IS_shared_by_cores(self):
-        """True or False, as this property name says."""
-        if self.IS_on_mesh_boundary:
-            return False
-        else:
-            if int(self._p1_[:-1]) in self._elements_._mesh_.elements and \
-                int(self._p2_[:-1]) in self._elements_._mesh_.elements:
-                return False
-            else:
-                return True
 
     @property
     def shared_with_core(self):
         """None or a int. """
-        if self.IS_shared_by_cores:
+        if self.IS.shared_by_cores:
             if int(self._p1_[:-1]) in self._elements_._mesh_.elements:
                 CORE = self._elements_._mesh_.do.find.slave_of_element(int(self._p2_[:-1]))
             elif int(self._p2_[:-1]) in self._elements_._mesh_.elements:
@@ -212,7 +199,7 @@ if __name__ == '__main__':
     # print(mesh.quality)
     # print(mesh.trace.quality)
 
-    # mesh.trace.elements.do.illustrate_trace_element(1)
+    # mesh.trace.elements.do.illustrate_element(1)
 
     # te0 = mesh.trace.elements[0]
 

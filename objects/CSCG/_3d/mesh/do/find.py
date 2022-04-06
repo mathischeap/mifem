@@ -1,8 +1,5 @@
 
 
-
-
-
 from root.config.main import sIze, np
 
 
@@ -15,8 +12,6 @@ class _3dCSCG_Mesh_DO_FIND(FrozenOnly):
         self._DO_ = DO
         self._mesh_ = DO._mesh_
         self._freeze_self_()
-
-
 
     def region_name_of_element(self, i):
         """Find the regions of ith element.
@@ -89,6 +84,7 @@ class _3dCSCG_Mesh_DO_FIND(FrozenOnly):
         midCore0 = 0
         midCore1 = sIze // 2
         midCore2 = sIze
+
         while i not in DISTRI[midCore1] and midCore1 - midCore0 > 2 and midCore2 - midCore1 > 2:
             if i > max(DISTRI[midCore1]):
                 midCore0 = midCore1
@@ -98,6 +94,7 @@ class _3dCSCG_Mesh_DO_FIND(FrozenOnly):
                 midCore1 = (midCore0 + midCore2) // 2
             else:
                 raise Exception
+
         if i in DISTRI[midCore1]:
             return midCore1
         elif i > np.max(DISTRI[midCore1]):

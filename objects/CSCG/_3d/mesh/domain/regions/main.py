@@ -9,7 +9,7 @@ A template for Region Class.
 from screws.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.domain.regions.visualize.main import _3dCSCG_Regions_Visualize
 from objects.CSCG._3d.mesh.domain.regions.topology import _3dCSCG_Regions_Topology
-
+from objects.CSCG._3d.mesh.domain.regions.region.main import Region
 
 
 
@@ -22,7 +22,7 @@ class Regions(FrozenOnly):
         self._topology_ = None
         for key in regions: assert regions[key].__class__.__name__ == 'Region'
         self._orthogonality_ = None
-        self._visualize_ = _3dCSCG_Regions_Visualize(self)
+        self._visualize_ = None
         self._freeze_self_()
 
     def __call__(self, rn=None):
@@ -60,6 +60,10 @@ class Regions(FrozenOnly):
         return v
 
     @property
+    def Region(self):
+        return Region
+
+    @property
     def sides_on_domain_boundaries(self):
         """
         Returns
@@ -77,7 +81,8 @@ class Regions(FrozenOnly):
         Returns
         -------
         self._domain_._region_internal_side_pairs_ : tuple
-            A tuple of sets of two elements. Each set represents two internal regions sides which are paired up.
+            A tuple of sets of two elements. Each set represents two internal regions sides
+            which are paired up.
 
         """
         return self._domain_._region_internal_side_pairs_
@@ -96,6 +101,8 @@ class Regions(FrozenOnly):
 
     @property
     def visualize(self):
+        if self._visualize_ is None:
+            self._visualize_ = _3dCSCG_Regions_Visualize(self)
         return self._visualize_
 
     @property

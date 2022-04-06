@@ -1,10 +1,8 @@
 """
 """
-import sys
-if './' not in sys.path: sys.path.append('/')
 
 from screws.freeze.main import FrozenOnly
-from root.config.main import *
+from root.config.main import cOmm, np
 import matplotlib.pyplot as plt
 
 from objects.CSCG._3d.mesh.elements.do.find import _3dCSCG_Mesh_Elements_DO_FIND
