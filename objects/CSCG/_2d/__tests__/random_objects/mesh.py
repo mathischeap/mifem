@@ -154,7 +154,7 @@ def random_mesh_of_elements_around(elements_num,
         if elements_num == 1:
             factor1 = 1
         else:
-            factor1 = random.randint(1,elements_num)
+            factor1 = random.randint(1, int(elements_num))
 
 
         #------ (4) EDIT :: special requests for particular meshes ---------------------------------

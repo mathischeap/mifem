@@ -4,6 +4,7 @@ from scipy.sparse import csc_matrix, bmat, lil_matrix
 from tools.linear_algebra.data_structures.global_matrix.main import GlobalVector
 
 
+# noinspection PyUnresolvedReferences
 class _3dCSCG_S1F_Private:
 
 
@@ -190,7 +191,7 @@ class _3dCSCG_S1F_Private:
         GV = lil_matrix((1, self.GLOBAL_num_dofs))
 
         for i in ELEMENTS:
-            dofs = self.numbering.___PRIVATE_DO_find_dofs_on_element_side___(i, side_name)
+            dofs = self.numbering.do.find.dofs_on_element_side(i, side_name)
             mark = self.mesh.elements[i].type_wrt_metric.mark
             spacing = self.mesh.elements[i].spacing
 

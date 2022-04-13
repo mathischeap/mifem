@@ -14,12 +14,16 @@ from objects.CSCG._3d.ADF.trace.base.cochain.main import _3dCSCG_Algebra_DUAL_Tr
 from objects.CSCG._3d.ADF.trace.base.coboundary import _3dCSCG_Algebra_DUAL_Trace_Form_Coboundary
 from objects.CSCG._3d.ADF.trace.base.IS import _3dCSCG_ADT_TF_IS
 from objects.CSCG._3d.ADF.trace.base.num import _3dCSCG_ADF_T_NUM
+from objects.CSCG._3d.ADF.trace.base.matrices import _3dCSCG_ADT_TF_Matrices
+
+
+
 
 class _3dCSCG_Algebra_DUAL_Trace_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
     """"""
-    def __init__(self, ndim, mesh, space, orientation, name):
+    def __init__(self, ndim, mesh, space, prime, orientation, name):
         """"""
-        super(_3dCSCG_Algebra_DUAL_Trace_Form, self).__init__(ndim, mesh, space)
+        super(_3dCSCG_Algebra_DUAL_Trace_Form, self).__init__(ndim, mesh, space, prime)
 
         self._orientation_ = orientation
         self.standard_properties.name = name
@@ -29,6 +33,7 @@ class _3dCSCG_Algebra_DUAL_Trace_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
         self._coboundary_ = _3dCSCG_Algebra_DUAL_Trace_Form_Coboundary(self)
         self._IS_ = None
         self._num_ = None
+        self._matrices_ = None
 
     def ___PRIVATE_reset_cache___(self):
         """"""
@@ -86,7 +91,8 @@ class _3dCSCG_Algebra_DUAL_Trace_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
         M = EWC_SparseMatrix(
             self.mesh.elements, # iterative with mesh elements
             MEW_mass          , # the data as dict
-            self.mesh.elements.___PRIVATE_elementwise_cache_metric_key___, # cache keys as mesh element types wrt metric.
+            self.mesh.elements.___PRIVATE_elementwise_cache_metric_key___,
+            # cache keys as mesh element types wrt metric.
             )
         iM = M.inv
         return M, iM
@@ -115,6 +121,12 @@ class _3dCSCG_Algebra_DUAL_Trace_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
         if self._num_ is None:
             self._num_ = _3dCSCG_ADF_T_NUM(self)
         return self._num_
+
+    @property
+    def matrices(self):
+        if self._matrices_ is None:
+            self._matrices_ = _3dCSCG_ADT_TF_Matrices(self)
+        return self._matrices_
 
 
 

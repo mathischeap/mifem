@@ -2,6 +2,7 @@
 
 from screws.freeze.main import FrozenOnly
 from objects.CSCG._3d.forms.standard._0s.main import _3dCSCG_0Form
+from objects.CSCG._3d.forms.standard._2s.main import _3dCSCG_2Form
 
 
 class ___3dCSCG_1Form_Project_To___(FrozenOnly):
@@ -12,7 +13,34 @@ class ___3dCSCG_1Form_Project_To___(FrozenOnly):
 
     def standard_2form(self):
         """Project this 1form into a 2form exactly."""
-        return self._sf_.special.___PRIVATE_projected_into_2form_exactly___()
+        space = self._sf_.space
+        mesh = self._sf_.mesh
+
+        sp = space.p
+        op = list()
+        for i in sp: op.append(i+1)
+
+        SPACE = space.__class__(op, None)
+
+        f2 = _3dCSCG_2Form(mesh, SPACE,
+                           is_hybrid=self._sf_.IS.hybrid,
+                           orientation=self._sf_.orientation,
+                           numbering_parameters=self._sf_.numbering._numbering_parameters_,
+                           name='Projected_2form_of_'+self._sf_.standard_properties.name
+                           )
+
+        W21 = self._sf_.operators.wedge(f2)
+        invM2 = f2.matrices.mass.inv
+
+        lc1 = self._sf_.cochain.local
+
+        lc2 = dict()
+        for i in lc1:
+            lc2[i] = invM2[i] @ W21[i] @ lc1[i]
+
+        f2.cochain.local = lc2
+
+        return f2
 
     def vector_of_3_standard_0forms(self):
         """project this 1form into a tuple of three 0forms. Each 0form stands for

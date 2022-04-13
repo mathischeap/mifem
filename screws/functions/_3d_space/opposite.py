@@ -16,6 +16,3 @@ class Opposite(ABC):
 
     def __call__(self):
         return self._opposite_func_
-
-
-

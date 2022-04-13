@@ -116,7 +116,6 @@ class SpaceInvoker(FrozenOnly):
             print(f"---[2dCSCG]-[SPACE]-{MyTimer.current_time()}-----")
             print(f"   <space ID>:{self._ID_}")
             print(f"   <space inputs>:{inputs}")
-            print(f"   <space ndim>:{ndim}", flush=True)
 
         cOmm.barrier()  # for safety reason
         if ndim is not None: assert ndim == 2
@@ -140,21 +139,21 @@ class FormCaller(FrozenOnly):
         cOmm.barrier()  # for safety reason
         self._mesh_ = mesh
         self._space_ = space
-        self._freeze_self_()
-
-    def __call__(self, ID, *args, **kwargs):
-        cOmm.barrier()  # for safety reason
 
         PATH = dict()
         NAME = dict()
         for A in (_2dCSCG_FormsAllocator, _2dCSCG_FieldsAllocator):
             PATH.update(A.___form_path___())
             NAME.update(A.___form_name___())
+        self._PATH_ = PATH
+        self._NAME_ = NAME
 
-        cls_path = PATH[ID]
-        cls_name = NAME[ID]
+        self._freeze_self_()
 
-        cls_body = getattr(import_module(cls_path), cls_name)
+    def __call__(self, ID, *args, **kwargs):
+        cOmm.barrier()  # for safety reason
+
+        cls_body = getattr(import_module(self._PATH_[ID]), self._NAME_[ID])
         if ID in ('scalar', 'vector'):
             FM = cls_body(self._mesh_, *args, **kwargs)
             # continuous forms has no parameters, not a FrozenClass. SO we CAN NOT save them.
@@ -212,19 +211,21 @@ class ExactSolutionSelector(FrozenOnly):
 
 
 if __name__ == "__main__":
-    # mpiexec python _2dCSCG\master.py
+    # mpiexec -n 4 python objects\CSCG\_2d\master.py
 
     # mesh = MeshGenerator('cic',)([14,14])
     # mesh = MeshGenerator('rectangle', p_UL=(-1,-1),region_layout=(3,5))([5,5], show_info=True)
-    mesh = MeshGenerator('rectangle_periodic', p_UL=(-1,-1),region_layout=(3,5))([5,5], show_info=True)
-    # mesh = MeshGenerator('cic')([3,3], show_info=True, EDM='chaotic')
+    # mesh = MeshGenerator('rectangle_periodic', p_UL=(-1,-1),region_layout=(3,5))([5,5], show_info=True)
+    mesh = MeshGenerator('crazy_periodic')([3,3], show_info=True)
+
+
 
     # print(mesh.___PRIVATE_element_division_and_numbering_quality___())
     # mesh.visualize.matplot.element_division()
     #
-    # mesh.visualize()
-    # mesh.domain.visualize()
-    # mesh.domain.regions.visualize()
+    mesh.visualize()
+    mesh.domain.visualize()
+    mesh.domain.regions.visualize()
 
     # print(rAnk, mesh._element_indices_)
 

@@ -16,8 +16,3 @@ class ScalingFunc(ABC):
     def __call__(self, func):
         self._func_ = func
         return self._scaled_func_
-
-
-
-
-

@@ -2,7 +2,7 @@
 
 
 from objects.CSCG._3d.mesh.domain.base import _3dCSCG_DomainBase
-from objects.CSCG._3d.mesh.domain.visualize.main import _3dCSCG_Domain_Visualize
+from objects.CSCG._3d.mesh.domain.visualize import _3dCSCG_Domain_Visualize
 from objects.CSCG._3d.mesh.domain.boundaries import _3dCSCG_Boundaries
 from objects.CSCG._3d.mesh.domain.IS import _3dCSCG_Domain_IS
 

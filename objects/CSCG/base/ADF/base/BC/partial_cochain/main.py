@@ -10,6 +10,7 @@ class PartialCochain(FrozenOnly):
     def __init__(self, adf):
         assert 'CSCG_form' in adf.prime.standard_properties.tags
         self._adf_ = adf
+        self._form_ = adf.prime
         self._mesh_ = adf.mesh
         self._dofs_ = PartialDofs(adf)
         self._cochain_ = dict()

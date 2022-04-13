@@ -50,7 +50,6 @@ def test_mifem_NO1_2dCSCG_save_read():
 
     save(f0, '_2dCSCG_f0i')
 
-
     F0 = read('_2dCSCG_f0i')
     for i in mesh.elements:
         np.testing.assert_array_equal(f0.cochain.local[i], F0.cochain.local[i])

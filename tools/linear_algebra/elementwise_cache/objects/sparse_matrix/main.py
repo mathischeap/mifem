@@ -5,6 +5,7 @@ from scipy import sparse as spspa
 from root.config.main import *
 from tools.linear_algebra.gathering.chain_matrix.main import Chain_Gathering_Matrix
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.customize import SpaMat_Customize
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.adjust import SpaMat_Adjust
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.matmul import ___MATMUL___
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.vecmul import ___VECMUL___
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.add import ___ADD___
@@ -75,8 +76,14 @@ class EWC_SparseMatrix(FrozenOnly):
 
         # we can accept a dictionary as a data generator, we will wrap it with a method -----------
         if isinstance(data_generator, dict):
+            assert len(data_generator) == len(self._elements_), "dict key wrong."
+            for _ in data_generator: assert _ in self._elements_, "dict key wrong."
             self.___dict_DG___ = data_generator
             data_generator = self.___PRIVATE_dict_2_method_data_generator___
+            if cache_key_generator is None:
+                cache_key_generator = 'no_cache'
+                # the data are in the dict anyway, so do not need to be cached.
+
         else:
             pass
 
@@ -181,6 +188,7 @@ class EWC_SparseMatrix(FrozenOnly):
         self._do_ = None
         self._IS_ = None
         self._visualize_ = None
+        self._adjust_ = None
         self._freeze_self_()
 
 
@@ -298,6 +306,12 @@ class EWC_SparseMatrix(FrozenOnly):
         if self._visualize_ is None:
             self._visualize_ = EWC_SparseMatrix_Vis(self)
         return self._visualize_
+
+    @property
+    def adjust(self):
+        if self._adjust_ is None:
+            self._adjust_ = SpaMat_Adjust(self)
+        return self._adjust_
 
     @property
     def do(self):

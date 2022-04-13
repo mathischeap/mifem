@@ -9,9 +9,7 @@
 """
 import sys
 
-import numpy as np
-
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 from objects.CSCG._2d.forms.standard._0_form.outer.special.main import _0Form_Outer_Special
 from objects.CSCG._2d.forms.standard._0_form.base.main import _0Form_BASE
 
@@ -53,7 +51,7 @@ class _2dCSCG_0Form_Outer(_0Form_BASE):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python _2dCSCG\forms\standard\_0_form\outer\main.py
+    # mpiexec -n 4 python objects\CSCG\_2d\forms\standard\_0_form\outer\main.py
 
     from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
@@ -69,21 +67,21 @@ if __name__ == '__main__':
     f0.TW.do.push_all_to_instant()
     f0.discretize()
     # print(f0.error.L())
-    # f0.visualize(show_boundaries=False)
+    f0.visualize(usetex=True)
 
-    xi = et = np.linspace(-1,1,50)
-
-    import time
-
-    t1 = time.time()
-
-    E0 = f0.do.compute_Ln_energy(vectorized=False)
-    t2 = time.time()
-
-    E1 = f0.do.compute_Ln_energy(vectorized=True)
-    t3 = time.time()
-
-    print(E0, t2- t1, E1, t3 - t2)
+    # xi = et = np.linspace(-1,1,50)
+    #
+    # import time
+    #
+    # t1 = time.time()
+    #
+    # E0 = f0.do.compute_Ln_energy(vectorized=False)
+    # t2 = time.time()
+    #
+    # E1 = f0.do.compute_Ln_energy(vectorized=True)
+    # t3 = time.time()
+    #
+    # print(E0, t2- t1, E1, t3 - t2)
 
 
 

@@ -16,7 +16,11 @@ class LocalNumbering(FrozenOnly):
         """ """
         assert FS.ndim == 3, " <LocalNumbering> "
         self._FS_ = FS
+        self._cache_E1_ = dict()
+        self._cache_T1_ = dict()
         self._freeze_self_()
+
+
 
 
     @property
@@ -36,6 +40,9 @@ class LocalNumbering(FrozenOnly):
              'NEF': LN,
              'SEF': LN}
         return NEW__LN
+
+
+
 
     @property
     def _3dCSCG_0Edge(self):
@@ -81,6 +88,44 @@ class LocalNumbering(FrozenOnly):
              'SE': BF}
         return EEW__LN
 
+    def ___PRIVATE_find_MESH_ELEMENT_WISE_local_dofs_of_1edge_edge___(self, edge_name):
+        """"""
+        if edge_name not in self._cache_E1_:
+
+            px, py, pz = self._FS_.p
+
+            if edge_name == 'WB':
+                DOFS = np.arange(px)
+            elif edge_name == 'EB':
+                DOFS = np.arange(px) + px
+            elif edge_name == 'WF':
+                DOFS = np.arange(px) + px * 2
+            elif edge_name == 'EF':
+                DOFS = np.arange(px) + px * 3
+            elif edge_name == 'NB':
+                DOFS = np.arange(py) + px * 4
+            elif edge_name == 'SB':
+                DOFS = np.arange(py) + px * 4 + py
+            elif edge_name == 'NF':
+                DOFS = np.arange(py) + px * 4 + py * 2
+            elif edge_name == 'SF':
+                DOFS = np.arange(py) + px * 4 + py * 3
+            elif edge_name == 'NW':
+                DOFS = np.arange(pz) + px * 4 + py * 4
+            elif edge_name == 'SW':
+                DOFS = np.arange(pz) + px * 4 + py * 4 + pz
+            elif edge_name == 'NE':
+                DOFS = np.arange(pz) + px * 4 + py * 4 + pz * 2
+            elif edge_name == 'SE':
+                DOFS = np.arange(pz) + px * 4 + py * 4 + pz * 3
+            else:
+                raise Exception()
+
+            self._cache_E1_[edge_name] = DOFS
+
+        return self._cache_E1_[edge_name]
+
+
     @property
     def _3dCSCG_0Trace(self):
         """Return the trace-element-wise (NOT mesh-element-wise) local numbering of 0-trace-form."""
@@ -125,6 +170,90 @@ class LocalNumbering(FrozenOnly):
         return TEW__LN
 
 
+
+
+
+    def ___PRIVATE_find_MESH_ELEMENT_WISE_local_dofs_of_1Trace_edge___(
+        self, trace_face, trace_edge):
+        """We try to find the local dofs of 1-trace-form on the `trace_edge` of a trace-element on
+        the  `trace_face` side of mesh-element.
+
+        Parameters
+        ----------
+        trace_face
+        trace_edge
+
+        Returns
+        -------
+
+        """
+        TFE = trace_face + trace_edge
+        if TFE not in self._cache_T1_:
+
+            TEW_LN = self._3dCSCG_1Trace
+
+            LN = TEW_LN[trace_face]
+
+            if trace_face in ('N', 'S'):
+                if trace_edge == 'W':
+                    TEW_dofs = LN[1][0,:]
+                elif trace_edge == 'E':
+                    TEW_dofs = LN[1][-1,:]
+                elif trace_edge == 'B':
+                    TEW_dofs = LN[0][:,0]
+                elif trace_edge == 'F':
+                    TEW_dofs = LN[0][:,-1]
+                else:
+                    raise Exception()
+
+            elif trace_face in ('W', 'E'):
+                if trace_edge == 'N':
+                    TEW_dofs = LN[1][0,:]
+                elif trace_edge == 'S':
+                    TEW_dofs = LN[1][-1,:]
+                elif trace_edge == 'B':
+                    TEW_dofs = LN[0][:,0]
+                elif trace_edge == 'F':
+                    TEW_dofs = LN[0][:,-1]
+                else:
+                    raise Exception()
+
+            elif trace_face in ('B', 'F'):
+                if trace_edge == 'N':
+                    TEW_dofs = LN[1][0,:]
+                elif trace_edge == 'S':
+                    TEW_dofs = LN[1][-1,:]
+                elif trace_edge == 'W':
+                    TEW_dofs = LN[0][:,0]
+                elif trace_edge == 'E':
+                    TEW_dofs = LN[0][:,-1]
+                else:
+                    raise Exception()
+
+            else:
+                raise Exception()
+
+            num_basis_onsides = self._FS_.num_basis._3dCSCG_1Trace[2]
+            num_basis_NS = num_basis_onsides['N']
+            num_basis_WE = num_basis_onsides['W']
+            num_basis_BF = num_basis_onsides['B']
+
+            if trace_face =='N':
+                self._cache_T1_[TFE] = TEW_dofs
+            elif trace_face == 'S':
+                self._cache_T1_[TFE] = TEW_dofs + num_basis_NS
+            elif trace_face == 'W':
+                self._cache_T1_[TFE] = TEW_dofs + num_basis_NS * 2
+            elif trace_face == 'E':
+                self._cache_T1_[TFE] = TEW_dofs + num_basis_NS * 2 + num_basis_WE
+            elif trace_face == 'B':
+                self._cache_T1_[TFE] = TEW_dofs + num_basis_NS * 2 + num_basis_WE * 2
+            elif trace_face == 'F':
+                self._cache_T1_[TFE] = TEW_dofs + num_basis_NS * 2 + num_basis_WE * 2 + num_basis_BF
+            else:
+                raise Exception()
+
+        return self._cache_T1_[TFE]
 
 
 

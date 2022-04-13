@@ -127,3 +127,5 @@ class _3dCSCG_Mesh_Elements_DO_FIND(FrozenOnly):
 
         """
         return self._elements_._mesh_.trace.elements.do.find.mesh_element_shared_by_elements(i, j)
+
+

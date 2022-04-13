@@ -21,5 +21,3 @@ class _3dCSCG_Trace_Cochain(CSCG_Trace_Form_Cochain_BASE):
             i0 = _D_[CS]
             TEW[i] = self.local[CE][INDICES[i0]:INDICES[i0 + 1]]
         self._local_TEW_ = TEW
-
-

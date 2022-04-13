@@ -14,7 +14,7 @@ from abc import ABC
 import numpy as np
 
 from objects.CSCG._3d.forms.edge.base.main import _3dCSCG_Edge
-
+from objects.CSCG._3d.forms.edge._0eg.discretize.main import _3dCSCG_Edge0Form_Discretize
 
 
 class _3dCSCG_0Edge(_3dCSCG_Edge, ABC):
@@ -33,6 +33,7 @@ class _3dCSCG_0Edge(_3dCSCG_Edge, ABC):
         self._k_ = 0
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_edge_0form')
         self.___PRIVATE_reset_cache___()
+        self._discretize_ = _3dCSCG_Edge0Form_Discretize(self)
         self._freeze_self_()
 
 
@@ -61,72 +62,9 @@ class _3dCSCG_0Edge(_3dCSCG_Edge, ABC):
             raise Exception(f"3dCSCG 1edge BC do not accept func {func_body.__class__}")
 
 
-
-
-    def discretize(self, update_cochain=True, target='func'):
-        """
-        Discretize the current function (a scalar field) to cochain.
-
-        It is actually a wrapper of multiple methods that discretize functions of different types (a scalar
-        field can be defined and represented in different ways in `python`, right?).
-
-        :param bool update_cochain: (`default`: ``True``) If we update cochain with the output? Sometimes we
-            may do not want to do so since we just want to use this method do some external jobs.
-        :param target:
-        :return: The cochain.
-        :rtype: Its type can be different according to the particular discretize method.
-        """
-        if target == 'func':
-            if self.TW.func.body.__class__.__name__ == '_3dCSCG_ScalarField':
-                if self.func.ftype == 'standard':
-                    return self.___PRIVATE_discretize_standard_ftype___(update_cochain=update_cochain)
-                else:
-                    raise NotImplementedError(f"3dCSCG 0-edge cannot (target func) discretize _3dCSCG_ScalarField of ftype={self.func.ftype}")
-
-            else:
-                raise NotImplementedError(f'3dCSCG 0-edge can not (target func) discretize {self.TW.func.body.__class__}.')
-
-        else:
-            raise NotImplementedError(f"3dCSCG 0-edge cannot discretize while targeting at {target}.")
-
-
-
-    def ___PRIVATE_discretize_standard_ftype___(self, update_cochain=True, target='func'):
-        """Discretize the standard _3dCSCG_ScalarField to a 0-edge-form
-
-        'locally full local EEW cochain' means the cochain is a dict whose keys are edge-element
-        numbers and values are edge-element-wise local cochains.
-
-        """
-        nodes = self.space.nodes
-
-        local_EEW = dict()
-        if target == 'func':
-            FUNC = self.func.body[0]
-        elif target == 'BC':
-            FUNC = self.BC.body[0]
-            assert update_cochain is False, \
-                f"When target is {target}, cannot update cochain!"
-        else:
-            raise NotImplementedError(
-                f"_0Form.___PRIVATE_discretize_standard_ftype___ "
-                f"does not work for target={target}.")
-        for i in self.mesh.edge.elements: # go through all local edge-elements
-            element = self.mesh.edge.elements[i] # edge-element
-            mesh_element = element.CHARACTERISTIC_element
-            corner_edge = element.CHARACTERISTIC_corner_edge
-            xyz = element.coordinate_transformation.mapping(*nodes,
-                                                            from_element=mesh_element,
-                                                            corner_edge=corner_edge)
-
-            local_EEW[i] = FUNC(*xyz)
-        # isKronecker? ...
-        if not self.space.IS_Kronecker: raise NotImplementedError()
-        # pass to cochain.local ...
-        if update_cochain: self.cochain.local_EEW = local_EEW
-        # ...
-        return 'locally full local EEW cochain', local_EEW
-
+    @property
+    def discretize(self):
+        return self._discretize_
 
 
     def reconstruct(self, xi, eta, sigma, i=None):

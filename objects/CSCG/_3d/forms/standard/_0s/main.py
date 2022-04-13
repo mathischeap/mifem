@@ -15,7 +15,7 @@ from objects.CSCG._3d.forms.standard._0s.special.main import _0Form_Special
 from objects.CSCG._3d.forms.standard._0s.discretize.main import _3dCSCG_Discretize
 from objects.CSCG._3d.forms.standard._0s.reconstruct import _3dCSCG_SF0_reconstruct
 from objects.CSCG._3d.forms.standard._0s.inheriting.private import _3dCSCG_S0F_Private
-
+from objects.CSCG._3d.forms.standard._0s.visualize.main import _3dCSCG_S0F_VISUALIZE
 
 
 class _3dCSCG_0Form(_3dCSCG_S0F_Private, _3dCSCG_Standard_Form):
@@ -43,6 +43,7 @@ class _3dCSCG_0Form(_3dCSCG_S0F_Private, _3dCSCG_Standard_Form):
         self.___PRIVATE_reset_cache___()
         self._discretize_ = _3dCSCG_Discretize(self)
         self._reconstruct_ = None
+        self._visualize_ = None
         self._freeze_self_()
 
     def ___PRIVATE_TW_FUNC_body_checker___(self, func_body):
@@ -82,6 +83,12 @@ class _3dCSCG_0Form(_3dCSCG_S0F_Private, _3dCSCG_Standard_Form):
         if self._reconstruct_ is None:
             self._reconstruct_ = _3dCSCG_SF0_reconstruct(self)
         return self._reconstruct_
+
+    @property
+    def visualize(self):
+        if self._visualize_ is None:
+            self._visualize_ = _3dCSCG_S0F_VISUALIZE(self)
+        return self._visualize_
 
 
 

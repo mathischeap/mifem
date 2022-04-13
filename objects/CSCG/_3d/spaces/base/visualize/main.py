@@ -2,8 +2,6 @@
 
 
 from screws.freeze.main import FrozenOnly
-
-
 from objects.CSCG._3d.spaces.base.visualize.matplot import _3dCSC_Space_Visualize_Matplot
 
 

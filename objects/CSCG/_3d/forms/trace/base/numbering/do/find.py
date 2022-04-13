@@ -72,10 +72,10 @@ class _3dCSCG_Trace_Numbering_DO_FIND(FrozenOnly):
         """
         if side_name in self._1TraceLocalCache_: return self._1TraceLocalCache_[side_name]
 
-        nbc = self._numbering_._tf_.num.basis_components
-        num_NS = nbc['N'][0]
-        num_WE = nbc['W'][0]
-        num_BF = nbc['B'][0]
+        nbc = self._numbering_._tf_.num.basis_onside
+        num_NS = nbc['N']
+        num_WE = nbc['W']
+        num_BF = nbc['B']
 
         if side_name == 'N':
             self._1TraceLocalCache_['N'] = [i for i in range(num_NS)]
@@ -123,3 +123,5 @@ class _3dCSCG_Trace_Numbering_DO_FIND(FrozenOnly):
             raise Exception()
 
         return self._2TraceLocalCache_[side_name]
+
+

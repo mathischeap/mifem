@@ -14,5 +14,3 @@ from tools.linear_algebra.data_structures.global_matrix.main import LocallyFullV
 
 from tools.linear_algebra.elementwise_cache.operators.bmat.main import bmat
 from tools.linear_algebra.elementwise_cache.operators.concatenate.main import concatenate
-
-

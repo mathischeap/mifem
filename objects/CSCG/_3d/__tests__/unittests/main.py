@@ -26,6 +26,9 @@ from objects.CSCG._3d.__tests__.unittests.APP import *
 from objects.CSCG._3d.__tests__.unittests.ADF import *
 from objects.CSCG._3d.__tests__.unittests.trace_forms import *
 from objects.CSCG._3d.__tests__.unittests.edge_forms import *
+from objects.CSCG._3d.__tests__.unittests.hybridization_test1 import test_hybridization_of_standard_1_form
+from objects.CSCG._3d.__tests__.unittests.trace_selective_matrices import test_trace_and_selective_matrices
+
 
 t_3dCSCG_start = MPI.Wtime()
 
@@ -93,6 +96,8 @@ passed_3dCSCG_tests += test_trace_NO3_trace_matrices()
 passed_3dCSCG_tests += test_edge_forms_No0_save_read()
 passed_3dCSCG_tests += test_edge_forms_No1_0edge_Rd_and_Rc()
 
+passed_3dCSCG_tests += test_hybridization_of_standard_1_form()
+passed_3dCSCG_tests += test_trace_and_selective_matrices()
 
 if rAnk == mAster_rank:
     print("\n<{}> _3dCSCG tests passed; cost {:.3f} seconds.\n".format(

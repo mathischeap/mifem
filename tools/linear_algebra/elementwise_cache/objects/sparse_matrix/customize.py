@@ -10,6 +10,9 @@ class SpaMat_Customize(FrozenOnly):
     """Store all method to customize the EWC sparse matrix."""
     def __init__(self, spa_mat):
         self._spa_mat_ = spa_mat
+        self._t2f_s2f_cc_ = None
+        self._t1f_s1f_cc_ = None
+        self._t0f_s0f_cc_ = None
         self.___customizations___ = dict()
         self._freeze_self_()
 
@@ -117,7 +120,7 @@ class SpaMat_Customize(FrozenOnly):
 
         rCGM = self._spa_mat_.gathering_matrices[0]
         assert rCGM is not None, "I have no row gathering_matrix!"
-        OUTPUT = rCGM.find.elements_and_local_indices_of_dof(r)
+        OUTPUT = rCGM.do.find.elements_and_local_indices_of_dof(r)
         if OUTPUT is None:
             pass
         else:
@@ -142,7 +145,10 @@ class SpaMat_Customize(FrozenOnly):
         raise NotImplementedError()
 
 
-    @accepts('self', (int, float, 'int32', 'int64'), (int, float, 'int32', 'int64'), (int, float, 'int32', 'int64'))
+    @accepts('self',
+             (int, float, 'int32', 'int64'),
+             (int, float, 'int32', 'int64'),
+             (int, float, 'int32', 'int64'))
     def set_assembled_M_ij_to(self, i, j, v):
         """Let M be the assembled matrix, we set M[i,j] = v.
 
@@ -163,8 +169,8 @@ class SpaMat_Customize(FrozenOnly):
         assert rCGM is not None, "I have no row gathering_matrix!"
         assert cCGM is not None, "I have no col gathering_matrix!"
 
-        rO = rCGM.find.elements_and_local_indices_of_dof(i)
-        cO = cCGM.find.elements_and_local_indices_of_dof(j)
+        rO = rCGM.do.find.elements_and_local_indices_of_dof(i)
+        cO = cCGM.do.find.elements_and_local_indices_of_dof(j)
 
         if rO is not None and cO is not None:
             rE, rI = rO
@@ -278,7 +284,9 @@ class SpaMat_Customize(FrozenOnly):
         raise NotImplementedError()
 
 
-    @accepts('self', (int, float, 'int32', 'int64'), ('PartialDofs', 'PartialCochain'))
+    @accepts('self',
+             (int, float, 'int32', 'int64'),
+             ('PartialDofs', 'PartialCochain'))
     def identify_global_rows_according_to_CSCG_partial_dofs(self, i, pds, interpreted_as='local_dofs'):
         """We locally make M[r,:] = 0 except M[r,r] = 1 according to a CSCG PartialDofs
         instance in block[i][:]
@@ -344,8 +352,11 @@ class SpaMat_Customize(FrozenOnly):
 
 
 
-    @accepts('self', (int, float, 'int32', 'int64'), (int, float, 'int32', 'int64'),
-             ('PartialDofs', 'PartialCochain'),('PartialDofs', 'PartialCochain'))
+    @accepts('self',
+             (int, float, 'int32', 'int64'),
+             (int, float, 'int32', 'int64'),
+             ('PartialDofs', 'PartialCochain'),
+             ('PartialDofs', 'PartialCochain'))
     def off_diagonally_identify_rows_according_to_two_CSCG_partial_dofs(
         self, i, j, row_pds, col_pds, interpreted_as='local_dofs'):
         """We will identify off-diagonal block, block[i][j], and set
@@ -416,8 +427,14 @@ class SpaMat_Customize(FrozenOnly):
                 if e not in self.___customizations___:
                     self.___customizations___[e] = list()
 
-                row_local_dofs = np.array(LDF_row[e]) + start_row
-                col_local_dofs = np.array(LDF_col[e]) + start_col
+                ROW = LDF_row[e]
+                COL = LDF_col[e]
+
+                COL = self.___PRIVATE_correcting_correspondence___(
+                    row_pds._form_, ROW, COL, col_pds._form_)
+
+                row_local_dofs = np.array(ROW) + start_row
+                col_local_dofs = np.array(COL) + start_col
 
                 self.___customizations___[e].append(
                     ('ilrsac', (row_local_dofs, col_local_dofs)))
@@ -426,3 +443,52 @@ class SpaMat_Customize(FrozenOnly):
             raise Exception(f"Cannot off-diagonally identify global rows through "
                             f"SCG_partial_dofs interpreted "
                             f"as <{interpreted_as}>.")
+
+    def ___PRIVATE_correcting_correspondence___(self, rf, R, C, cf):
+        """
+
+        Parameters
+        ----------
+        rf
+        R
+        C
+        cf
+
+        Returns
+        -------
+
+        """
+        if rf.__class__.__name__ == '_3dCSCG_1Trace' and cf.__class__.__name__ == '_3dCSCG_1Form':
+            # we have to make sure this to make the singularity handling possible
+            if self._t1f_s1f_cc_ is None:
+                s1f = list()
+                for side in 'NSWEBF':
+                    s1f.append(cf.numbering.do.find.local_dofs_on_element_side(side))
+                s1f = np.concatenate(s1f)
+
+                self._t1f_s1f_cc_ = s1f
+            else:
+                s1f = self._t1f_s1f_cc_
+
+            cC = s1f[R]
+            assert len(cC) == len(C) and set(cC) == set(C), f"must be this case."
+            return cC
+
+        elif rf.__class__.__name__ == '_3dCSCG_0Trace' and cf.__class__.__name__ == '_3dCSCG_0Form':
+            # we have to make sure this to make the singularity handling possible
+            if self._t0f_s0f_cc_ is None:
+                s0f = list()
+                for side in 'NSWEBF':
+                    s0f.append(cf.numbering.do.find.local_dofs_on_element_side(side))
+                s0f = np.concatenate(s0f)
+
+                self._t0f_s0f_cc_ = s0f
+            else:
+                s0f = self._t0f_s0f_cc_
+
+            cC = s0f[R]
+            assert len(cC) == len(C) and set(cC) == set(C), f"must be this case."
+            return cC
+
+        else:
+            return C

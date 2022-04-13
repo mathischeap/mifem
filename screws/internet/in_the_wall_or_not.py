@@ -24,4 +24,3 @@ def whether_in_the_great_fire_wall():
         except socket.error:
             IN_THE_WALL[i] = True
     return all(IN_THE_WALL)
-

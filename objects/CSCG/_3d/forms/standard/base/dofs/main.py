@@ -1,12 +1,12 @@
 
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 from screws.freeze.main import FrozenOnly
 
 from objects.CSCG._3d.forms.standard.base.dofs.visualize.main import _3dCSCG_SF_DOFs_VISUALIZE
 from objects.CSCG._3d.forms.standard.base.dofs.dof.main import _3dCSCG_Standard_forms_DOF
-
+from objects.CSCG._3d.forms.standard.base.dofs.do.main import _3dCSCG_SF_dofs_DO
 
 class _3dCSCG_Standard_forms_DOFs(FrozenOnly):
     """The class of all dofs of a standard form."""
@@ -15,6 +15,7 @@ class _3dCSCG_Standard_forms_DOFs(FrozenOnly):
         self._GM_ = sf.numbering.gathering
         self._local_range_ = self._GM_.local_range
         self._visualize_ = None
+        self._do_ = None
         self._freeze_self_()
 
     def __iter__(self):
@@ -63,6 +64,12 @@ class _3dCSCG_Standard_forms_DOFs(FrozenOnly):
         if self._visualize_ is None:
             self._visualize_ = _3dCSCG_SF_DOFs_VISUALIZE(self)
         return self._visualize_
+
+    @property
+    def do(self):
+        if self._do_ is None:
+            self._do_ = _3dCSCG_SF_dofs_DO(self)
+        return self._do_
 
     @property
     def GLOBAL_num(self):

@@ -1,7 +1,7 @@
 
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 from root.config.main import *
 from screws.freeze.main import FrozenOnly
@@ -17,29 +17,6 @@ class _3dCSCG_standard_form_Matplot(FrozenOnly):
         """ """
         assert '3dCSCG_standard_form' in sf.standard_properties.tags
         self._sf_ = sf
-
-        self._freeze_self_()
-
-    def __call__(self, **kwargs):
-        """When call it, we by default plot the whole field of the form. Tdo special plot, call the particular method."""
-        getattr(self, f"_matplot_{self._sf_.k}Form_")(**kwargs)
-
-
-    def _matplot_3Form_(self):
-        """ """
-        raise NotImplementedError()
-
-    def _matplot_2Form_(self):
-        """ """
-        raise NotImplementedError()
-
-    def _matplot_1Form_(self):
-        """ """
-        raise NotImplementedError()
-
-    def _matplot_0Form_(self):
-        """ """
-        raise NotImplementedError()
 
 
     def perpendicular_slice(self, MPS, plot_type='contourf', usetex=True, colormap='coolwarm',

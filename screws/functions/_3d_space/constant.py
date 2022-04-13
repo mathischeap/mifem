@@ -19,6 +19,3 @@ class CFG(ABC):
 
     def __call__(self):
         return self._constant_func_
-
-
-

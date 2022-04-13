@@ -1,6 +1,8 @@
 
 
 
+import sys
+if './' not in sys.path: sys.path.append('./')
 
 from objects.CSCG._3d.forms.standard._2s.special.vortex_detection import ___3dCSCG_2Form_Vortex_Detection___
 
@@ -36,3 +38,4 @@ class _2Form_Special(FrozenOnly):
         if self._vortex_detection_ is None:
             self._vortex_detection_ = ___3dCSCG_2Form_Vortex_Detection___(self._sf_)
         return self._vortex_detection_
+

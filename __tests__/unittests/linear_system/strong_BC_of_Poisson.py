@@ -143,6 +143,7 @@ def test_applying_strong_BC_for_Poisson_problem():
     for b in all_boundaries:
         if b not in u_boundaries:
             p_boundaries.append(b)
+
     u = FC('2-f', is_hybrid = True)
     p = FC('3-adf')
     f = FC('3-f', is_hybrid = True)
@@ -153,9 +154,9 @@ def test_applying_strong_BC_for_Poisson_problem():
     E23 = E32.T
     T = t.coboundary.trace_matrix
 
-    A = bmat(([  M2, E23 , -T  ],
+    A = bmat(([  M2, E23 , -T.T],
               [-E32, None, None],
-              [ T.T, None, None]))
+              [ T  , None, None]))
     A.gathering_matrices = ((u, p, t), (u, p, t))
 
     B0 = EWC_ColumnVector(mesh, u)

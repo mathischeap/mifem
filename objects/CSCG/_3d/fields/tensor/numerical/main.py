@@ -75,15 +75,14 @@ class _3dCSCG_TensorField_Numerical(FrozenOnly):
             base_path = '.'.join(str(self.__class__).split(' ')[1][1:-2].split('.')[:-4]) + '.'
 
             vector_class = getattr(import_module(base_path + 'vector.main'), '_3dCSCG_VectorField')
-            divergence_vector = vector_class(self._tf_.mesh,
-                                             (div_func_0, div_func_1, div_func_2),
-                                             ftype='standard',
-                                             valid_time=self._tf_.valid_time,
-                                             name = 'divergence-of-' + self._tf_.standard_properties.name
+            divergence_vector = vector_class(
+                 self._tf_.mesh,
+                 (div_func_0, div_func_1, div_func_2),
+                 ftype='standard',
+                 valid_time=self._tf_.valid_time,
+                 name = 'divergence-of-' + self._tf_.standard_properties.name
                                              )
             return divergence_vector
         else:
-            raise NotImplementedError(f"Numerical divergence not implemented for tensor type = {self._tf_.ftype}.")
-
-
-
+            raise NotImplementedError(
+                f"Numerical divergence not implemented for tensor type = {self._tf_.ftype}.")

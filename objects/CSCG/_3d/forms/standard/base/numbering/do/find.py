@@ -12,6 +12,9 @@ class _3dCSCG_Standard_Form_Numbering_DO_FIND_(FrozenOnly):
         self._local0SideCache_ = dict()
         self._local1SideCache_ = dict()
         self._local2SideCache_ = dict()
+
+        self._local_1_ECE_Cache_ = dict()
+
         self._freeze_self_()
 
 
@@ -37,7 +40,6 @@ class _3dCSCG_Standard_Form_Numbering_DO_FIND_(FrozenOnly):
             raise Exception('volume form has no dofs on element side.')
         else:
             raise NotImplementedError(f"not coded for {numbering._sf_.k}-form.")
-
 
     def local_dofs_on_element_side(self, side_name):
         """
@@ -118,3 +120,49 @@ class _3dCSCG_Standard_Form_Numbering_DO_FIND_(FrozenOnly):
 
 
 
+    def local_dofs_on_element_corner_edge(self, corner_edge_name):
+        """"""
+        names = ['WB', 'EB', 'WF', 'EF', 'NB', 'SB', 'NF', 'SF', 'NW', 'SW', 'NE', 'SE']
+        assert corner_edge_name in names, f"corner_edge_name={corner_edge_name} is illegal."
+        k = self._numbering_._sf_.k
+        if k == 1:
+            return self.___PRIVATE_find_S1F_local_dofs_on_element_corner_edge___(corner_edge_name)
+        else:
+            raise NotImplementedError()
+
+
+
+    def ___PRIVATE_find_S1F_local_dofs_on_element_corner_edge___(self, corner_edge_name):
+        """"""
+        if corner_edge_name not in self._local_1_ECE_Cache_:
+
+            if corner_edge_name == 'WB':
+                indices = self._numbering_.local[0][:, 0, 0]
+            elif corner_edge_name == 'EB':
+                indices = self._numbering_.local[0][:, -1, 0]
+            elif corner_edge_name == 'WF':
+                indices = self._numbering_.local[0][:, 0, -1]
+            elif corner_edge_name == 'EF':
+                indices = self._numbering_.local[0][:, -1, -1]
+            elif corner_edge_name == 'NB':
+                indices = self._numbering_.local[1][0, :, 0]
+            elif corner_edge_name == 'SB':
+                indices = self._numbering_.local[1][-1, :, 0]
+            elif corner_edge_name == 'NF':
+                indices = self._numbering_.local[1][0, :, -1]
+            elif corner_edge_name == 'SF':
+                indices = self._numbering_.local[1][-1, :, -1]
+            elif corner_edge_name == 'NW':
+                indices = self._numbering_.local[2][0, 0, :]
+            elif corner_edge_name == 'SW':
+                indices = self._numbering_.local[2][-1, 0, :]
+            elif corner_edge_name == 'NE':
+                indices = self._numbering_.local[2][0, -1, :]
+            elif corner_edge_name == 'SE':
+                indices = self._numbering_.local[2][-1, -1, :]
+            else:
+                raise Exception()
+
+            self._local_1_ECE_Cache_[corner_edge_name] = indices
+
+        return self._local_1_ECE_Cache_[corner_edge_name]

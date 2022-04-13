@@ -1,6 +1,6 @@
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 from screws.freeze.main import FrozenOnly
 
 from objects.CSCG._3d.forms.trace.base.dofs.dof.main import _3dCSCG_Trace_forms_DOF
@@ -46,7 +46,7 @@ class _3dCSCG_Trace_forms_DOFs(FrozenOnly):
         if i in range(*self._local_range_):
             ELEMENTS = list()
             INDICES = list()
-            # note that this does not make sure i in contained by the core since dofs may not fully cover the range.
+            # note that this does not make sure `i` is contained by the core since dofs may not fully cover the range.
             for e in self._GM_: # go through all local elements
                 v = self._GM_[e]
                 if i in v:
@@ -63,17 +63,35 @@ class _3dCSCG_Trace_forms_DOFs(FrozenOnly):
 
 
 
+
+
 if __name__ == '__main__':
-    # mpiexec -n 6 python _3dCSCG\form\trace\dofs\main.py
+    # mpiexec -n 6 python objects\CSCG\_3d\forms\trace\base\dofs\main.py
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
-    mesh = MeshGenerator('crazy', c=0.3)(None)
+    mesh = MeshGenerator('crazy', c=0.3)([2,2,2])
     space = SpaceInvoker('polynomials')([('Lobatto',1), ('Lobatto',1), ('Lobatto',1)])
     FC = FormCaller(mesh, space)
 
 
-    t0 = FC('0-t')
+    t0 = FC('1-t')
+
+    from root.config.main import rAnk, mAster_rank, cOmm
 
     dofs = t0.dofs
-    DI = dofs[0]
-    bf = DI.basis_function
+    for i in dofs:
+        dof = dofs[i]
+
+        tep = dof.trace_element_position
+
+        tep = cOmm.gather(tep, root=mAster_rank)
+
+        if rAnk == mAster_rank:
+            Tep = None
+            for _ in tep:
+                if _ is not None:
+                    if Tep is None:
+                        Tep = _
+                    else:
+                        assert Tep == _
+                        print(111)

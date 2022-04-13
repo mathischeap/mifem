@@ -7,7 +7,7 @@ from root.config.main import rAnk, mAster_rank, cOmm, np, MPI
 import matplotlib.pyplot as plt
 
 from screws.freeze.base import FrozenOnly
-from objects.CSCG._3d.mesh.node.elements.do.find import _3dCSCG_NodeMesh_DoFind
+from objects.CSCG._3d.mesh.node.elements.do.find.main import _3dCSCG_NodeMesh_DoFind
 
 class _3dCSCG_NodeMesh_Do(FrozenOnly):
     """"""
@@ -60,7 +60,7 @@ class _3dCSCG_NodeMesh_Do(FrozenOnly):
                     element_num = int(pos[:-3])
                     if element_num in self._elements_._mesh_.elements:
                         element = self._elements_._mesh_.elements[element_num]
-                        data = element.do.generate_element_edge_data(zoom=0.9)
+                        data = element.do.generate_element_plot_data(zoom=0.9)
                         DATA[element_num] = (data, pos[-3:])
 
                         node_LOCATION .append(

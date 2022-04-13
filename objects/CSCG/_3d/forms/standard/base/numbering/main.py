@@ -230,29 +230,6 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
         return self._DO_
 
 
-    def ___PRIVATE_DO_find_dofs_on_element_side___(self, element, side_name, GM=None):
-        """
-
-        :param element:
-        :param side_name:
-        :param GM: If GM is None, we use self.GM, otherwise, we use this given GM.
-        :return:
-        """
-        if GM is None:
-            GM = self.gathering
-        if self._sf_.k == 0:
-            return self.___PRIVATE_find_0Form_dofs_on_element_side___(element, side_name, GM)
-        if self._sf_.k == 1:
-            return self.___PRIVATE_find_1Form_dofs_on_element_side___(element, side_name, GM)
-        if self._sf_.k == 2:
-            return self.___PRIVATE_find_2Form_dofs_on_element_side___(element, side_name, GM)
-        if self._sf_.k == 3:
-            raise Exception('volume form has no dofs on element side.')
-        else:
-            raise NotImplementedError(f"not coded for {self._sf_.k}-form.")
-
-
-
 
     def ___PRIVATE_find_0Form_dofs_on_element_side___(self, element, side_name, GM):
         """

@@ -9,7 +9,7 @@ from root.config.main import *
 from screws.freeze.main import FrozenOnly
 from objects.CSCG._3d.forms.standard.base.dofs.dof.basis_function import _3dCSCG_SF_DOF_BF
 from objects.CSCG._3d.forms.standard.base.dofs.dof.visualize.main import _3dCSCG_SF_DOF_VISUALIZE
-
+from objects.CSCG._3d.forms.standard.base.dofs.dof.do.main import _3dCSCG_SF_dof_DO
 
 
 
@@ -29,6 +29,7 @@ class _3dCSCG_Standard_forms_DOF(FrozenOnly):
         self._visualize_ = None
         self._bf_ = None
         self._GLOBAL_positions_ = None
+        self._do_ = None
         self._freeze_self_()
 
 
@@ -50,7 +51,7 @@ class _3dCSCG_Standard_forms_DOF(FrozenOnly):
 
         If
             positions = []
-        Then we know this dof has is not in this core.
+        Then we know this dof is not in this core.
 
         """
         return self._local_positions_
@@ -88,6 +89,13 @@ class _3dCSCG_Standard_forms_DOF(FrozenOnly):
     @property
     def cochain(self):
         return self._sf_.cochain.dofwise[self.i]
+
+    @property
+    def do(self):
+        """The local basis function(s) of this dof."""
+        if self._do_ is None:
+            self._do_ = _3dCSCG_SF_dof_DO(self)
+        return self._do_
 
 
 

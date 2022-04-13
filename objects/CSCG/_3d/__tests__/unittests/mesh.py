@@ -3,7 +3,7 @@
 Mesh related unittests.
 """
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 from screws.quadrature import Quadrature
 from screws.exceptions import ThreeDimensionalTransfiniteInterpolationError

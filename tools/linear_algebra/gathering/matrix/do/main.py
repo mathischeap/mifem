@@ -1,6 +1,7 @@
 from screws.freeze.main import FrozenOnly
 import numpy as np
 from tools.linear_algebra.gathering.vector import Gathering_Vector
+from tools.linear_algebra.gathering.matrix.do.find import Gathering_Matrix_FIND
 
 
 class Gathering_Matrix_DO(FrozenOnly):
@@ -8,6 +9,7 @@ class Gathering_Matrix_DO(FrozenOnly):
 
     def __init__(self, GM):
         self._GM_ = GM
+        self._find_ = None
         self._freeze_self_()
 
 
@@ -44,3 +46,9 @@ class Gathering_Matrix_DO(FrozenOnly):
             gvd[i] = Gathering_Vector(i, gvd_i_gv)
 
         return SELF.__class__(gvd)
+
+    @property
+    def find(self):
+        if self._find_ is None:
+            self._find_ = Gathering_Matrix_FIND(self._GM_)
+        return self._find_

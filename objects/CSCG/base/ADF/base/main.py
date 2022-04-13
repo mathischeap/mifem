@@ -16,10 +16,11 @@ from objects.CSCG.base.ADF.base.BC.main import CSCG_ADForm_BC
 
 class CSCG_Algebra_DUAL_FORM_BASE(FrozenClass):
     """"""
-    def __init__(self, ndim, mesh, space):
+    def __init__(self, ndim, mesh, space, prime):
         """"""
         self.___define_parameters___ = None
-        self._prime_ = None
+        self._prime_ = prime
+        self.prime.___is_wrapped_in_ADF___ = True
         self._orientation_ = None
         self.standard_properties.___PRIVATE_add_tag___('CSCG_algebra_dual_form')
 

@@ -111,7 +111,7 @@ class _3dCSCG_Trace_Element(FrozenOnly):
         return int(self._cp_[:-1])
     @property
     def CHARACTERISTIC_side(self):
-        """We mainly consider this trace element is such a side of the
+        """We mainly consider this trace element is such a side of the local
         CHARACTERISTIC_element."""
         return self._cp_[-1]
     @property
@@ -158,7 +158,7 @@ class _3dCSCG_Trace_Element(FrozenOnly):
 
     @property
     def shared_with_core(self):
-        """None or a int. """
+        """None or an int. """
         if self.IS.shared_by_cores:
             if int(self._p1_[:-1]) in self._elements_._mesh_.elements:
                 CORE = self._elements_._mesh_.do.find.slave_of_element(int(self._p2_[:-1]))

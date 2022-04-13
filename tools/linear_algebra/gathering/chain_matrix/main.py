@@ -6,11 +6,10 @@ if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.main import FrozenOnly
 from root.config.main import *
-from tools.linear_algebra.gathering.chain_matrix.find import ___Chain_Gathering_Matrix_FIND___
 
 from tools.linear_algebra.gathering.vector import Gathering_Vector
 from tools.linear_algebra.gathering.matrix.main import Gathering_Matrix
-
+from tools.linear_algebra.gathering.chain_matrix.do.main import ___Chain_Gathering_Matrix_DO___
 
 class Chain_Gathering_Matrix(FrozenOnly):
     """We chain some Gathering_Matrix together, for example, chain (GM0, GM1, GM2). Then in GM1, the numbering does not
@@ -81,7 +80,7 @@ class Chain_Gathering_Matrix(FrozenOnly):
         self._dofs_distribution_ = [_.GLOBAL_num_dofs for _ in self.GMs]
         self._local_dofs_distribution_ = [_.GLOBAL_shape[1] for _ in self.GMs]
         self._local_ranges_ = None
-        self._FIND_ = ___Chain_Gathering_Matrix_FIND___(self)
+        self._do_ = None
         if len(self) > 0:
             for i in self:
                 assert sum(self.GV_LENs) == len(self[i]), "A safety check."
@@ -212,8 +211,10 @@ class Chain_Gathering_Matrix(FrozenOnly):
 
 
     @property
-    def find(self):
-        return self._FIND_
+    def do(self):
+        if self._do_ is None:
+            self._do_ = ___Chain_Gathering_Matrix_DO___(self)
+        return self._do_
 
     @property
     def GV_LENs(self):

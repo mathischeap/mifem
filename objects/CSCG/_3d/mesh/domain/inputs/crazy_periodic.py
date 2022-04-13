@@ -1,11 +1,15 @@
 
 
+
 from objects.CSCG._3d.mesh.domain.inputs.base import _3dDomainInputBase
 import numpy as np
 from screws.decorators.classproperty.main import classproperty
 
 import random
 from root.config.main import rAnk, mAster_rank, cOmm
+
+
+
 
 class CrazyPeriodic(_3dDomainInputBase):
     """A "crazy" 3d rectangular domain's input class whose inside is distorted with the "crazy" mapping.
@@ -46,7 +50,7 @@ class CrazyPeriodic(_3dDomainInputBase):
         return self._c_
 
 
-    # class properties -------------------------
+    # ----------- class properties -----------------------------------
     @classproperty
     def statistic(cls):
         return {'periodic': True,

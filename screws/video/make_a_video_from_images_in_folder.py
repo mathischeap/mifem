@@ -76,21 +76,3 @@ def make_a_video_from_images_in_folder(image_folder, video_name=None, duration=5
 
 
 
-
-
-
-
-
-
-
-
-
-if __name__ == '__main__':
-    make_a_video_from_images_in_folder(
-        'C:/Users/zhang/Desktop/shear_layer_rollup/K50N2t100_shear_layer_rollup',
-        duration=8,
-        clear_images=True)
-
-    # os.remove('1.txt', '2.txt')
-
-

@@ -73,7 +73,6 @@ def Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename
                                 saveto=image_folder + '/' + str(next(IC)),
                                 title=f't=%.3f'%t0)
 
-
     #---------- 1/2 step ----------------------------------------------------------------
 
     A = ([(2/dt) * M1 , - E12 @ M2],

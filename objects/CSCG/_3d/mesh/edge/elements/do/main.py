@@ -62,7 +62,7 @@ class _3dCSCG_Edge_Elements_DO(FrozenOnly):
                     element_num = int(pos[:-2])
                     if element_num in self._elements_._mesh_.elements:
                         element = self._elements_._mesh_.elements[element_num]
-                        data = element.do.generate_element_edge_data(zoom=zoom)
+                        data = element.do.generate_element_plot_data(zoom=zoom)
                         DATA[element_num] = (data, pos[-2:])
 
                         edge_LOCATION .append(

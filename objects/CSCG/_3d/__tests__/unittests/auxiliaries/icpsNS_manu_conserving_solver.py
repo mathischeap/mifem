@@ -124,7 +124,7 @@ def manu_conserving_solver(N, k, t, steps):
        KE1_t0h = 0.5 * u1.do.compute_L2_energy_with(M=M1)
        E2_t0h  = 0.5 * w2.do.compute_L2_energy_with(M=M2)
 
-       u1_p_f2 = u1.special.___PRIVATE_projected_into_2form_exactly___()
+       u1_p_f2 = u1.projection.to.standard_2form()
        D_u1_p_f2 = u1_p_f2.coboundary()
        D_u1_p_f2.TW.func.___DO_set_func_body_as___(es.status.divergence_of_velocity)
        D_u1_p_f2.TW.current_time = dt / 2
@@ -282,7 +282,7 @@ def manu_conserving_solver(N, k, t, steps):
               KE1_tk1h = 0.5 * u1.do.compute_L2_energy_with(M=M1)
               E2_tk1h = 0.5 * w2.do.compute_L2_energy_with(M=M2)
 
-              u1_p_f2 = u1.special.___PRIVATE_projected_into_2form_exactly___()
+              u1_p_f2 = u1.projection.to.standard_2form()
               D_u1_p_f2 = u1_p_f2.coboundary()
               D_u1_p_f2.TW.func.___DO_set_func_body_as___(es.status.divergence_of_velocity)
               D_u1_p_f2.TW.current_time = tk1 + dt / 2

@@ -13,15 +13,11 @@ from root.config.main import rAnk, mAster_rank, np, cOmm
 
 def test_LinearAlgebra_EWC_No1_Operators():
     """"""
-    if rAnk == mAster_rank:
-        print("&&& [test_LinearAlgebra_EWC_No1_Operators] ...... ", flush=True)
-
-
     #--------- 2d CSCG tests ---------------------------------------------------------------
     if rAnk == mAster_rank:
-        load = random.randint(10,1000)
-        IH = [True, False][random.randint(0,1)]
-        print(f"~~~ [test_Form_NO6_reconstruction_matrices] @ load= {load}... ", flush=True)
+        print("&&& [test_LinearAlgebra_EWC_No1_Operators] ...... ", flush=True)
+        load = random.randint(10, 999)
+        IH = [True, False][random.randint(0, 1)]
     else:
         load = None
         IH = None
@@ -64,6 +60,6 @@ def test_LinearAlgebra_EWC_No1_Operators():
     return 1
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python tests\unittests\EWC\operators.py
+    # mpiexec -n 4 python __tests__\unittests\EWC\operators.py
 
     test_LinearAlgebra_EWC_No1_Operators()

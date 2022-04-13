@@ -8,8 +8,8 @@ from objects.CSCG._3d.ADF.Tr.base.IS import _3dCSCG_ADFTr_form_IS
 
 class _3dCSCG_ADF_Tr_BASE(_3dCSCG_Algebra_DUAL_FORM_BASE):
     """"""
-    def __init__(self, ndim, mesh, space, orientation, name):
-        super(_3dCSCG_ADF_Tr_BASE, self).__init__(ndim, mesh, space)
+    def __init__(self, ndim, mesh, space, prime, orientation, name):
+        super(_3dCSCG_ADF_Tr_BASE, self).__init__(ndim, mesh, space, prime)
 
         self._orientation_ = orientation
         self.standard_properties.name = name

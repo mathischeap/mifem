@@ -1,6 +1,6 @@
 
 
-from screws.freeze.base import FrozenOnly
+
 from root.config.main import cOmm
 from itertools import combinations
 
@@ -8,7 +8,7 @@ from itertools import combinations
 
 
 
-class OBJ_SurBoundary_EdgeElement(FrozenOnly):
+class OBJ_SurBoundary_EdgeElement(object):
     """"""
     def __init__(self, mesh, i):
         """
@@ -144,10 +144,12 @@ class OBJ_SurBoundary_EdgeElement(FrozenOnly):
             if self._useful_:
                 self._sequence_ = sequence
 
-        self._freeze_self_()
 
     @property
     def sequence(self):
+        """Like the sequence of an internal edge element, but here it starts and ends with
+        a mesh boundary.
+        """
         if self._useful_:
             return self._sequence_
         else:

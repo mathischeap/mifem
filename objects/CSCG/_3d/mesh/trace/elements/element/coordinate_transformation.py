@@ -71,7 +71,9 @@ class _3dCSCG_Trace_Element_CoordinateTransformation(FrozenOnly):
         assert self._te_.i == self._te_._elements_.map[i]['NSWEBF'.index(element_side)], \
             f"trace element #{self._te_.i} is not at {element_side} of mesh element #{i}."
 
-        ep = self._te_._elements_.___generate_full_ep___(evaluation_points, element_side, parse_3_1d_eps=parse_3_1d_eps)
+        ep = self._te_._elements_.___generate_full_ep___(evaluation_points,
+                                                         element_side,
+                                                         parse_3_1d_eps=parse_3_1d_eps)
         x, y, z = self._te_._mesh_.elements[i].coordinate_transformation.mapping(*ep)
         return x, y, z
 

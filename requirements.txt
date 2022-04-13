@@ -8,3 +8,6 @@ tabulate >= 0.8.3
 tqdm >= 4.14.0
 mpi4py >= 3.0.3
 opencv-python >= 4.5.5.64
+cryptography >= 36.0.1
+sympy >= 1.9
+Sphinx >= 4.4.0

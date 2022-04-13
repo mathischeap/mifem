@@ -7,11 +7,11 @@ if './' not in sys.path: sys.path.append('./')
 from screws.freeze.main import FrozenOnly
 from root.config.main import cOmm, MPI
 
-from objects.CSCG._3d.mesh.edge.elements.do.find.helpers.objects_surrounding_boundary_edge_element import \
+from objects.CSCG._3d.mesh.edge.elements.do.find.helpers.boundary_surrounding import \
     OBJ_SurBoundary_EdgeElement
-from objects.CSCG._3d.mesh.edge.elements.do.find.helpers.objects_surrounding_internal_edge_element import \
+from objects.CSCG._3d.mesh.edge.elements.do.find.helpers.internal_surrounding import \
     OBJ_SurInternal_EdgeElement
-
+from objects.CSCG._3d.mesh.edge.elements.do.find.helpers.SOS import _3dCSCG_Edge_SOS
 
 
 class _3dCSCG_Edge_Elements_DO_FIND(FrozenOnly):
@@ -110,11 +110,41 @@ class _3dCSCG_Edge_Elements_DO_FIND(FrozenOnly):
             return OBJ_SurInternal_EdgeElement(self._mesh_, i)
 
 
+    def hybrid_singularity_overcoming_setting(self, i):
+        """We return a pair for overcoming the hybrid singularity for edge element #`i`.
+
+        Parameters
+        ----------
+        i : int
+            The number of an edge element.
+
+        Returns
+        -------
+
+        """
+        if i in self._elements_ and int(
+            self._elements_[i].positions[0][:-2]) in self._mesh_.elements:
+            return _3dCSCG_Edge_SOS(self._mesh_, i)
+        else:
+            return None
 
 
+    def elements_attached_to_node_element(self, i):
+        """Find the edge elements that are attached to a node element #`i`.
 
+        For example, for a typical internal node element, there will be 6 edge elements attached
+        to it.
 
+        Parameters
+        ----------
+        i : int
+            The node element #`i`.
 
+        Returns
+        -------
+
+        """
+        return self._mesh_.node.elements.do.find.edge_elements_attached_to_element(i)
 
 
 
@@ -126,9 +156,9 @@ if __name__ == '__main__':
     # mpiexec -n 4 python objects\CSCG\_3d\mesh\edge\elements\do\find\main.py
 
     from objects.CSCG._3d.master import MeshGenerator
-    elements = [1, 1, 1]
-    # mesh = MeshGenerator('crazy', c=0.0, bounds=([0,3], [0,3], [0,3]))(elements)
-    mesh = MeshGenerator('bridge_arch_cracked')(elements)
+    elements = [2, 2, 2]
+    mesh = MeshGenerator('crazy', c=0.0, bounds=([0,3], [0,3], [0,3]))(elements)
+    # mesh = MeshGenerator('bridge_arch_cracked')(elements)
     edges = mesh.edge.elements
 
     # edges.do.find.objects_surrounding(0)
@@ -137,4 +167,6 @@ if __name__ == '__main__':
     # print(S.sequence)
     for i in range(edges.GLOBAL_num):
         S = edges.do.find.objects_surrounding(i)
+        SOP = edges.do.find.hybrid_singularity_overcoming_setting(i)
+        # print(SOP)
         edges.do.illustrate_element(i)

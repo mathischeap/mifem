@@ -4,7 +4,7 @@ Generate random objects for testing purpose.
 
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 from objects.CSCG._3d.master import FormCaller
 from objects.CSCG._3d.__tests__.random_objects.space import random_space_of_degrees_around

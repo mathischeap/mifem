@@ -13,7 +13,6 @@ class _3dCSC_Space_Visualize_Matplot(FrozenOnly):
         self._space_ = space
         self._freeze_self_()
 
-
     def __call__(self, *args, **kwargs):
         """"""
         raise NotImplementedError()

@@ -205,6 +205,3 @@ class ___3dCSCG_1Form_Vortex_Detection___(FrozenOnly):
         """
         xyz, Q, LAMBDA_2 = self.___PRIVATE_generate_lambda_1_2_3_Q___(xi, eta, sigma)[:3]
         return xyz, Q, LAMBDA_2
-
-
-

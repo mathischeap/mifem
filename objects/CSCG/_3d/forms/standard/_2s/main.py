@@ -8,7 +8,7 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 from root.config.main import *
 from objects.CSCG._3d.forms.standard._2s.discretize.main import _3dCSCG_Discretize
@@ -17,6 +17,9 @@ from objects.CSCG._3d.forms.standard._2s.special.main import _2Form_Special
 from objects.CSCG._3d.forms.standard._2s.project.main import _2Form_Projection
 from objects.CSCG._3d.forms.standard._2s.reconstruct import _3dCSCG_SF2_reconstruct
 from objects.CSCG._3d.forms.standard._2s.inheriting.private import _3dCSCG_S2F_Private
+from objects.CSCG._3d.forms.standard._2s.visualize.main import _3dCSCG_S2F_VISUALIZE
+
+
 
 class _3dCSCG_2Form(_3dCSCG_S2F_Private, _3dCSCG_Standard_Form):
     """
@@ -44,6 +47,7 @@ class _3dCSCG_2Form(_3dCSCG_S2F_Private, _3dCSCG_Standard_Form):
         self.___PRIVATE_reset_cache___()
         self._discretize_ = _3dCSCG_Discretize(self)
         self._reconstruct_ = None
+        self._visualize_ = None
         self._freeze_self_()
 
     def ___PRIVATE_reset_cache___(self):
@@ -91,6 +95,12 @@ class _3dCSCG_2Form(_3dCSCG_S2F_Private, _3dCSCG_Standard_Form):
         if self._reconstruct_ is None:
             self._reconstruct_ = _3dCSCG_SF2_reconstruct(self)
         return self._reconstruct_
+
+    @property
+    def visualize(self):
+        if self._visualize_ is None:
+            self._visualize_ = _3dCSCG_S2F_VISUALIZE(self)
+        return self._visualize_
 
 
 

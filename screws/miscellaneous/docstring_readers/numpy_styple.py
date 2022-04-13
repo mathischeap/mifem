@@ -31,8 +31,13 @@ class NumpyStyleDocstringReader(ABC):
             _paras_ = _Para_.split(':')
             para_names = ()
             for ps in range(1, len(_paras_)):
-                para_names += (_paras_[ps - 1].split('\n')[-1],)
+                __ = _paras_[ps - 1].split('\n')[-1]
+                if __[0] == '\t':
+                    __ = __[1:]
+                para_names += (__,)
+
             self.___Parameters___ = para_names
+
         return self.___Parameters___
 
     @property
@@ -48,6 +53,11 @@ class NumpyStyleDocstringReader(ABC):
             _Res_ = _Re_.split(':')
             Re_names = ()
             for rs in range(1, len(_Res_)):
-                Re_names += (_Res_[rs - 1].split('\n')[-1],)
+                __ = _Res_[rs - 1].split('\n')[-1]
+                if __[0] == '\t':
+                    __ = __[1:]
+                Re_names += (__,)
+
             self.___Returns___ = Re_names
+
         return self.___Returns___

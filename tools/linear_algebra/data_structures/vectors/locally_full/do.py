@@ -51,9 +51,6 @@ class LocallyFullVectorDo(FrozenOnly):
                         indices += GLOBAL_dofs
             else:
                 raise Exception("I can only understand one ")
-            # for ag in args:
-            #     if ag is None:
-            #         pass
 
         else:
             raise NotImplementedError(f'distribution method: {method} not coded.')

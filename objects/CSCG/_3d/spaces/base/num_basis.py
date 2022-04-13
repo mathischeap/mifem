@@ -7,9 +7,14 @@ Created on Sat May  4 14:07:49 2019
 Aerodynamics, AE
 TU Delft
 """
+
+
 import numpy as np
 from screws.freeze.main import FrozenOnly
- 
+
+
+
+
 class NumBasis(FrozenOnly):
     """ """
     def __init__(self, FS):

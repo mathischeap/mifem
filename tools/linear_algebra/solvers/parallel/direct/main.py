@@ -37,7 +37,7 @@ class Direct(ParallelSolverBase):
                 5. (str) message
 
         """
-        message = "GMRES-" + MyTimer.current_time()
+        message = "DIRECT-" + MyTimer.current_time()
 
         # -------  Decide routine ----------------------------------------------------------------------
         if self._routine_ == 'auto':

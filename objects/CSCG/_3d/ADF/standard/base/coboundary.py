@@ -31,8 +31,8 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Coboundary(FrozenOnly):
         DFC = self._dsf_.cochain.local # dual standard form cochain
         DTC = dual_trace.cochain.local # dual trace form cochain
 
-        E_T = self.incidence_matrix
-        T_T = dual_trace.coboundary.trace_matrix
+        E_T = self.incidence_matrix.T
+        T_T = dual_trace.coboundary.trace_matrix.T
 
         base_path = '.'.join(str(self.__class__).split(' ')[1][1:-2].split('.')[:-5]) + '.'
 
@@ -108,14 +108,14 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Coboundary(FrozenOnly):
             assert self._dsf_.k in (1, 2, 3), \
                 f"dual coboundary does not work for 0-dual-standard form."
             if self._dsf_.k == 3:
-                E23 = getattr(self._dsf_.space.incidence_matrix, '_3dCSCG_2Form').T
-                E = EWC_SparseMatrix(self._dsf_.mesh.elements, E23, 'constant')
+                E32 = getattr(self._dsf_.space.incidence_matrix, '_3dCSCG_2Form')
+                E = EWC_SparseMatrix(self._dsf_.mesh.elements, E32, 'constant')
             elif self._dsf_.k == 2:
-                E12 = getattr(self._dsf_.space.incidence_matrix, '_3dCSCG_1Form').T
-                E = EWC_SparseMatrix(self._dsf_.mesh.elements, E12, 'constant')
+                E21 = getattr(self._dsf_.space.incidence_matrix, '_3dCSCG_1Form')
+                E = EWC_SparseMatrix(self._dsf_.mesh.elements, E21, 'constant')
             elif self._dsf_.k == 1:
-                E01 = getattr(self._dsf_.space.incidence_matrix, '_3dCSCG_0Form').T
-                E = EWC_SparseMatrix(self._dsf_.mesh.elements, E01, 'constant')
+                E10 = getattr(self._dsf_.space.incidence_matrix, '_3dCSCG_0Form')
+                E = EWC_SparseMatrix(self._dsf_.mesh.elements, E10, 'constant')
             else:
                 raise Exception()
 

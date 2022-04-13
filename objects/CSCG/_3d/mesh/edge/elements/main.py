@@ -417,6 +417,7 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
                 if position[0] in ___:
                     element = int(position[:-2])
                     if element not in shared_by_elements[edge]:
+                        # noinspection PyUnresolvedReferences
                         shared_by_elements[edge].append(element)
                 else:
                     assert position in bns, f"position={position} is wrong."

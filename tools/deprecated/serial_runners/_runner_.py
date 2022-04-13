@@ -336,7 +336,8 @@ class Runner(FrozenClass):
         print(':::: Index >>> {} <<< added to ResultDataFrame ::::\n'.format(index))
         ndf = pd.DataFrame([[*inputs, *outputs, ITC, TTC, ERT],], index=[index,],
                            columns=[*self._input_names_, *self._output_names_, 'ITC', 'TTC', 'ERT'])
-        self._rdf_ = self._rdf_.append(ndf)
+        self._rdf_ = pd.concat([self._rdf_, ndf])
+        # self._rdf_ = self._rdf_.append(ndf)
         self._computed_pool_ += ([*inputs],)
         
     def ___write_to___(self, m):
@@ -365,7 +366,8 @@ class Runner(FrozenClass):
         ndf = pd.DataFrame([data + Di[-3:],], index=[int(Di[0]),], 
                             columns=[*self._input_names_, *self._output_names_, 
                                      'ITC', 'TTC', 'ERT'])
-        self._rdf_ = self._rdf_.append(ndf)
+        self._rdf_ = pd.concat([self._rdf_, ndf])
+        # self._rdf_ = self._rdf_.append(ndf)
         return [data[0:len(self._input_names_)], ]
     
     def ___check_inputs_in_computed_pool___(self, inputs):

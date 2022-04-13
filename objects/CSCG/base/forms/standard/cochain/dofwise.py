@@ -22,7 +22,7 @@ class CSCG_SF_Cochain_DofWise(FrozenOnly):
         if i < 0:
             i += self._f_.num.GLOBAL_dofs
 
-        ME_LC = GM.find.elements_and_local_indices_of_dof(i)
+        ME_LC = GM.do.find.elements_and_local_indices_of_dof(i)
 
         cc = None
 

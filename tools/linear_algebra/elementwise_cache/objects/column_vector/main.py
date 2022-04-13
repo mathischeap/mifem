@@ -30,14 +30,29 @@ class EWC_ColumnVector(FrozenOnly):
     :param con_shape:
     :type con_shape: bool, tuple, list
     """
-    def __init__(self, mesh_elements, data_generator, cache_key_generator=None, con_shape=False):
+    def __init__(self, mesh_elements, data_generator=None, cache_key_generator=None, con_shape=False):
         """
 
         :param mesh_elements:
-        :param data_generator: {}
+        :param data_generator:
         :param cache_key_generator:
         :param con_shape:
         """
+        #----------- when only provide one input `mesh_elements` ------------------------------
+        if data_generator is None and cache_key_generator is None and con_shape is False:
+            if hasattr(mesh_elements, 'standard_properties') and \
+                'CSCG_form' in mesh_elements.standard_properties.tags:
+                data_generator = mesh_elements
+                mesh_elements = mesh_elements.mesh.elements
+            elif hasattr(mesh_elements, 'prime') and \
+                hasattr(mesh_elements.prime, 'standard_properties') and \
+                'CSCG_form' in mesh_elements.prime.standard_properties.tags:
+                data_generator = mesh_elements.prime
+                mesh_elements = mesh_elements.mesh.elements
+        else:
+            pass
+
+        #------------------------ check ----------------------------------------------------------
         if mesh_elements.__class__.__name__ in ('_3dCSCG_Mesh_Elements', '_2dCSCG_Mesh_Elements'):
             self._elements_ = mesh_elements
         elif mesh_elements.__class__.__name__ in ('_3dCSCG_Mesh', '_2dCSCG_Mesh'):

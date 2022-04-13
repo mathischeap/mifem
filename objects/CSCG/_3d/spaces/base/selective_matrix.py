@@ -8,11 +8,11 @@ Aerodynamics, AE
 TU Delft
 """
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 import numpy as np
 from screws.freeze.main import FrozenOnly
-from scipy.sparse import csc_matrix
+from scipy.sparse import csc_matrix, csr_matrix
 
 
 class SelectiveMatrix(FrozenOnly):
@@ -210,7 +210,7 @@ class SelectiveMatrix(FrozenOnly):
         Nf[lnt['F'][1].ravel('F'), lnf_dy[:, :, -1].ravel('F')] = +1
         # ------------------------------------------------------------------------------
         N = np.vstack((Nn, Ns, Nw, Ne, Nb, Nf))
-        return csc_matrix(N), {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne, 'B': Nb, 'F': Nf}
+        return csr_matrix(N), {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne, 'B': Nb, 'F': Nf}
 
     @property
     def _3dCSCG_2Trace(self):

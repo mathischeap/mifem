@@ -56,8 +56,13 @@ class _2dCSCG_Space(FrozenClass):
         p = ()
         nodes = ()
         for i in range(ndim):
-            # noinspection PyUnresolvedReferences
-            basises += (self.___1D_basis___(*self._inputs_[i]),)
+
+            if isinstance(self._inputs_[i], int):
+                # noinspection PyUnresolvedReferences
+                basises += (self.___1D_basis___(self._inputs_[i]), )
+            else:
+                # noinspection PyUnresolvedReferences
+                basises += (self.___1D_basis___(*self._inputs_[i]), )
             p += (basises[i].p,)
             nodes += (basises[i].nodes,)
         self._ndim_, self._basises_, self._p_, self._nodes_ = ndim, basises, p, nodes

@@ -9,7 +9,6 @@
 """
 from objects.CSCG._3d.forms.base import _3dCSCG_FORM_BASE
 from objects.CSCG._3d.forms.standard.base.numbering.main import _3dCSCG_Standard_Form_Numbering
-from objects.CSCG._3d.forms.standard.base.visualize.main import _3dCSCG_FormVisualize
 from objects.CSCG._3d.forms.standard.base.export.main import _3dCSC_Standard_Form_Export
 from root.config.main import *
 from root.save import read
@@ -58,11 +57,15 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
         self._coboundary_ = _3dCSCG_Standard_Form_Coboundary(self)
         self._matrices_ = _3dCSCG_Standard_Form_Matrices(self)
         self._operators_ = _3dCSCG_Standard_Form_Operators(self)
-        self._visualize_ = _3dCSCG_FormVisualize(self)
         self._DO_ = _3dCSCG_Standard_Form_DO(self)
 
         self._export_ = _3dCSC_Standard_Form_Export(self)
         self._dofs_ = None
+
+
+    def ___PRIVATE_reset_cache___(self):
+        self.cochain.___PRIVATE_reset_cache___()
+        self.coboundary.___PRIVATE_reset_cache___()
 
     @property
     def numbering(self):
@@ -89,10 +92,6 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
         return self._operators_
 
     @property
-    def visualize(self):
-        return self._visualize_
-
-    @property
     def do(self):
         """If it has too many do methods, we group them in to do."""
         return self._DO_
@@ -108,9 +107,8 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
         return self._dofs_
 
 
-    def ___PRIVATE_reset_cache___(self):
-        self.cochain.___PRIVATE_reset_cache___()
-        self.coboundary.___PRIVATE_reset_cache___()
+
+
 
     def ___PRIVATE_do_evaluate_basis_at_meshgrid___(self, xi, eta, sigma, compute_xietasigma=True):
         """

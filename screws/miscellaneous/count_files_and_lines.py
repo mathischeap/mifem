@@ -36,7 +36,8 @@ def count_files_and_lines(start, files=0, lines=0, header=True, begin_start=None
     for thing in os.listdir(start):
         thing = os.path.join(start, thing)
         if os.path.isfile(thing):
-            if thing.endswith('.py'): # we only look at python files.
+            if thing.endswith('.py'):
+                # we only look at python files.
                 with open(thing, 'r') as f:
                     try:
                         FILES = f.readlines()[:]
@@ -47,22 +48,23 @@ def count_files_and_lines(start, files=0, lines=0, header=True, begin_start=None
                         for entry in FILES:
                             if entry in to_skip:
                                 newlines -= 1
-                        #     elif '~' in entry or '===' in entry:
-                        #         newlines -= 1
-                        #     elif '"""' in entry or '%%' in entry:
-                        #         newlines -= 1
                             else:
                                 pass
-                        # newlines = int(newlines * 0.95) + 1  # we consider 5% of lines are docstring.
+
                         lines += newlines
                         if begin_start is not None:
                             reldir_of_thing = '.' + thing.replace(begin_start, '')
                         else:
                             reldir_of_thing = '.' + thing.replace(start, '')
+
                         if len(reldir_of_thing) > 45:
                             reldir_of_thing = reldir_of_thing[:42] + '...'
+
                         files += 1
-                        print('{:>5} |{:>8} |{:>10} | {:<20}'.format(int(files), newlines, lines, reldir_of_thing))
+                        print('{:>5} |{:>8} |{:>10} | {:<20}'.format(int(files),
+                                                                     newlines,
+                                                                     lines,
+                                                                     reldir_of_thing))
 
     for thing in os.listdir(start):
         # skip following ...
@@ -75,7 +77,11 @@ def count_files_and_lines(start, files=0, lines=0, header=True, begin_start=None
         else:
             thing = os.path.join(start, thing)
             if os.path.isdir(thing):
-                files, lines = count_files_and_lines(thing, files, lines, header=False, begin_start=start)
+                files, lines = count_files_and_lines(thing,
+                                                     files,
+                                                     lines,
+                                                     header=False,
+                                                     begin_start=start)
     return files, lines
 
 

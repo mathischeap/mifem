@@ -26,6 +26,7 @@ class _3dCSCG_Trace_Elements_Do_Find(FrozenOnly):
         return self._elements_._mesh_.elements.do.find.trace_element_between_two_elements(i, j)
 
 
+
     def edge_elements_surrounding_element(self, i):
         """We try to find the four edge-elements surrounding trace element #`i`.
 
@@ -77,6 +78,7 @@ class _3dCSCG_Trace_Elements_Do_Find(FrozenOnly):
         return edges
 
 
+
     def elements_attached_to_edge_element(self, i):
         """Find the at most 4 trace elements that are attached to the edge element #`i`.
 
@@ -89,6 +91,24 @@ class _3dCSCG_Trace_Elements_Do_Find(FrozenOnly):
 
         """
         return self._elements_._mesh_.edge.elements.do.find.trace_elements_attached_to_element(i)
+
+    def elements_attached_to_node_element(self, i):
+        """Find the trace elements that are attached to a node element #`i`.
+
+        For example, for a typical internal node element, there will be 12 trace elements attached
+        to it.
+
+        Parameters
+        ----------
+        i : int
+            The node element #`i`.
+
+        Returns
+        -------
+
+        """
+        return self._elements_._mesh_.node.elements.do.find.trace_elements_attached_to_element(i)
+
 
 
     def mesh_element_shared_by_elements(self, i, j):
@@ -140,3 +160,4 @@ class _3dCSCG_Trace_Elements_Do_Find(FrozenOnly):
                 return ei # we find one shared mesh element, return!
 
         return None # return None as we do not find a shared mesh element
+

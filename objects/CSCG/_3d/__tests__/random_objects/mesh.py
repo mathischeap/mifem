@@ -210,4 +210,3 @@ def random_mesh_of_elements_around(elements_num,
         assert mesh.elements.GLOBAL_num == np.prod(FFF) * region_num
 
     return mesh
-

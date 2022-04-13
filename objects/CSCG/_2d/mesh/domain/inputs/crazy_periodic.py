@@ -25,7 +25,10 @@ class CrazyPeriodic(DomainInputBase):
         # _____________ standard inputs ________________________________________________
         self.region_corner_coordinates = {'R:R': ((x0, y0), (x1, y0), (x0, y1), (x1, y1))}
         self.region_edge_types = {'R:R-L': ('free',)}
-        self.boundary_region_edges = {'Upper': "R:R-U", 'Down': "R:R-D", 'Left': "R:R-L", 'Right': "R:R-R"}
+        self.boundary_region_edges = {'Upper': "R:R-U",
+                                      'Down': "R:R-D",
+                                      'Left': "R:R-L",
+                                      'Right': "R:R-R"}
         self.region_interpolators = 'crazy'
 
         self.periodic_boundary_pairs = {'Upper=Down': 'regular',

@@ -156,21 +156,20 @@ class FormCaller(FrozenOnly):
         cOmm.barrier()  # for safety reason
         self._mesh_ = mesh
         self._space_ = space
-        self._freeze_self_()
-
-    def __call__(self, ID, *args, **kwargs):
-        cOmm.barrier()  # for safety reason
-
         PATH = dict()
         NAME = dict()
         for A in (_3dCSCG_ADF_Allocator, _3dCSCG_SF_Allocator, _3dCSCG_Field_Allocator):
             PATH.update(A.___forms_path___())
             NAME.update(A.___forms_name___())
+        self._PATH_ = PATH
+        self._NAME_ = NAME
+        self._freeze_self_()
 
-        cls_name = NAME[ID]
-        cls_path = PATH[ID]
+    def __call__(self, ID, *args, **kwargs):
+        cOmm.barrier()  # for safety reason
 
-        cls_body = getattr(import_module(cls_path), cls_name)
+        cls_body = getattr(import_module(self._PATH_[ID]), self._NAME_[ID])
+
         if ID in ('scalar', 'vector', 'tensor'):
 
             FM = cls_body(self._mesh_, *args, **kwargs)
@@ -185,7 +184,7 @@ class FormCaller(FrozenOnly):
 
             if ID in ('0-adf', '1-adf', '2-adf', '3-adf',  # algebraic dual (standard) forms
                       '0-adt', '1-adt', '2-adt',           # algebraic dual trace forms
-                      '0-adTr', '1-adTr', '2-adTr',           # algebraic dual Tr forms
+                      '0-adTr', '1-adTr', '2-adTr',        # algebraic dual Tr forms
                       ):
                 fp['type'] = '_3dCSCG_ADF'
                 # ---------------- make a dual from a prime ------------------------------------
@@ -269,9 +268,8 @@ class FormCaller(FrozenOnly):
 
                 FM = cls_body(prime, self._mesh_, self._space_, **KWARGS)
 
-            else: # all forms in the folder "form", like the standard forms, trace forms, edge forms, node forms and so on
+            else: # all other forms, like the standard forms, trace forms, edge forms, node forms and so on
                 assert len(args) == 0, "all these forms do not take args, only take kwargs."
-                # this is a necessary request. If we define new forms in this folder, we have to make this satisfied.
                 fp['type'] = '_3dCSCG_Form'
                 FM = cls_body(self._mesh_, self._space_, **kwargs)
 
@@ -280,9 +278,6 @@ class FormCaller(FrozenOnly):
 
         cOmm.barrier()  # for safety reason
         return FM
-
-
-
 
     @property
     def mesh(self):
@@ -334,9 +329,9 @@ if __name__ == "__main__":
 
     # mesh = MeshGenerator('cuboid', region_layout=(3,3,3))([2,3,4], show_info=True)
     # mesh = MeshGenerator('bridge_arch_cracked')([2,2,2], EDM='SWV0', show_info=True)
-    # mesh = MeshGenerator('crazy')([3, 3, 3], EDM='chaotic', show_info=True)
+    mesh = MeshGenerator('crazy')([3, 3, 3], EDM='chaotic', show_info=True)
     # mesh = MeshGenerator('crazy_periodic')([3, 3, 3], EDM='chaotic', show_info=True)
-    mesh = MeshGenerator('cuboid_periodic', region_layout=(1,2,2))([2,3,4], show_info=True)
+    # mesh = MeshGenerator('cuboid_periodic', region_layout=(1,2,2))([2,3,4], show_info=True)
 
     # es = ExactSolutionSelector(mesh)('Poisson:sincos1')
     #

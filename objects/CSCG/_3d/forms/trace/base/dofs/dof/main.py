@@ -1,11 +1,10 @@
 
-
-
 from root.config.main import *
 from screws.freeze.main import FrozenOnly
 from objects.CSCG._3d.forms.trace.base.dofs.dof.basis_function import _3dCSCG_TF_DOF_BF
 
-from objects.CSCG._3d.forms.trace.base.dofs.dof.visualize import _3dCSCG_Trace_forms_DOF_VISUALIZE
+from objects.CSCG._3d.forms.trace.base.dofs.dof.visualize.main import _3dCSCG_Trace_forms_DOF_VISUALIZE
+from objects.CSCG._3d.forms.trace.base.dofs.dof.do.main import _3dCSCG_TF_dof_DO
 
 
 class _3dCSCG_Trace_forms_DOF(FrozenOnly):
@@ -23,6 +22,7 @@ class _3dCSCG_Trace_forms_DOF(FrozenOnly):
         self._bf_ = None
         self._visualize_ = None
         self._GLOBAL_positions_ = None
+        self._do_ = None
         self._freeze_self_()
 
     @property
@@ -47,6 +47,72 @@ class _3dCSCG_Trace_forms_DOF(FrozenOnly):
 
         """
         return self._local_positions_
+
+    @property
+    def trace_element_position(self):
+        """int: this dof is on this trace element.
+
+        If this dof is not in this core, we return None. Otherwise, we return a tuple of four
+        outputs representing the location of this dof on a trace element. For example,
+
+        (12, 5, 1, (1,2))
+
+        This means this dof is on trace-element #12, and the trace-wise-local-numbering is 5,
+        and locally, it is representing the second component (must be 1-trace form then), and the
+        local component indices is (1,2).
+
+
+        """
+        positions = self.positions
+        if positions == list():
+            return None
+        else:
+            position = positions[0]
+
+            nbc = self._tf_.num.basis_onside
+            num_NS = nbc['N']
+            num_WE = nbc['W']
+            num_BF = nbc['B']
+
+            mesh_element, local_numbering = position
+
+            if 0 <= local_numbering < num_NS:
+                side = 'N'
+            else:
+                local_numbering -= num_NS
+                if 0 <= local_numbering < num_NS:
+                    side = 'S'
+                else:
+                    local_numbering -= num_NS
+                    if 0 <= local_numbering < num_WE:
+                        side = 'W'
+                    else:
+                        local_numbering -= num_WE
+                        if 0 <= local_numbering < num_WE:
+                            side = 'E'
+                        else:
+                            local_numbering -= num_WE
+                            if 0 <= local_numbering < num_BF:
+                                side = 'B'
+                            else:
+                                local_numbering -= num_BF
+                                assert 0 <= local_numbering < num_BF
+                                side = 'F'
+
+            T_MAP = self._tf_.mesh.trace.elements.map[mesh_element]
+            index = 'NSWEBF'.index(side)
+            trace_element = T_MAP[index]
+
+            LN = self._tf_.numbering.local[side]
+            for _, ln in enumerate(LN):
+                local_indices = np.argwhere(ln==local_numbering)
+                if local_indices.shape[0] == 1:
+                    break
+
+            return trace_element, local_numbering, _, tuple(local_indices[0])
+
+
+
 
     @property
     def GLOBAL_positions(self):
@@ -77,3 +143,11 @@ class _3dCSCG_Trace_forms_DOF(FrozenOnly):
         if self._visualize_ is None:
             self._visualize_ = _3dCSCG_Trace_forms_DOF_VISUALIZE(self)
         return self._visualize_
+
+
+    @property
+    def do(self):
+        if self._do_ is None:
+            self._do_ = _3dCSCG_TF_dof_DO(self)
+        return self._do_
+

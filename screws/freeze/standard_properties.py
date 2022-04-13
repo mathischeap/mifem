@@ -20,7 +20,7 @@ class StandardProperties(FrozenOnly):
     @property
     def name(self):
         """
-        ``name``, ``mark``, ``stamp`` are just three standard reserved property.
+        ``name``, ``mark``, ``stamp`` ``signature`` are just standard reserved properties.
 
         :return:
         """
@@ -34,11 +34,28 @@ class StandardProperties(FrozenOnly):
             assert isinstance(name, str), " name needs to be a string."
             self.___name___ = name
 
+    @property
+    def signature(self):
+        """
+        ``name``, ``mark``, ``stamp`` ``signature`` are just standard reserved properties.
+
+        :return:
+        """
+        return self.___signature___
+
+    @signature.setter
+    def signature(self, signature):
+        if signature is None:
+            self.___signature___ = None
+        else:
+            assert isinstance(signature, str), " signature needs to be a string."
+            self.___signature___ = signature
+
 
     @property
     def mark(self):
         """
-        ``name``, ``mark``, ``stamp`` are just three standard reserved property.
+        ``name``, ``mark``, ``stamp`` ``signature`` are just standard reserved properties.
 
         :return:
         """
@@ -52,7 +69,7 @@ class StandardProperties(FrozenOnly):
     @property
     def stamp(self):
         """
-        ``name``, ``mark``, ``stamp`` are just three standard reserved property.
+        ``name``, ``mark``, ``stamp`` ``signature`` are just standard reserved properties.
 
         :return:
         """

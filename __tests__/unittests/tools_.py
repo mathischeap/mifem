@@ -989,7 +989,7 @@ def test_TOOLS_NO9_test_Chained_Gathering_Matrix():
         n = 0
 
         for m in range(GND):
-            I = CGM.find.elements_contain_dof_numbered(m)
+            I = CGM.do.find.elements_contain_dof_numbered(m)
             if I is None:
                 exclude_list = list()
             else:
@@ -1003,7 +1003,7 @@ def test_TOOLS_NO9_test_Chained_Gathering_Matrix():
                 if j not in exclude_list:
                     assert m not in CGM[j], "m also in some elements else!"
 
-            OUTPUT = CGM.find.elements_and_local_indices_of_dof(m)
+            OUTPUT = CGM.do.find.elements_and_local_indices_of_dof(m)
             if OUTPUT is None:
                 GET_it = 0
             else:

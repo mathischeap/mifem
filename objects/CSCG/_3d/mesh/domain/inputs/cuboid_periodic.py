@@ -3,9 +3,9 @@
 from objects.CSCG._3d.mesh.domain.inputs.base import _3dDomainInputBase
 
 
-# from screws.decorators.classproperty.main import classproperty
-# import random
-# from root.config.main import rAnk, mAster_rank, cOmm
+from screws.decorators.classproperty.main import classproperty
+import random
+from root.config.main import rAnk, mAster_rank, cOmm
 
 
 
@@ -29,7 +29,7 @@ class CuboidPeriodic(_3dDomainInputBase):
             along y-direction and `c` regions along z-direction.
         """
         super().__init__(domain_name='CuboidPeriodic')
-        #---- check region_layout : must be a tuple or list of two positive integers ---------------
+        #---- check region_layout : must be a tuple or list of two positive integers ------------
         assert len(region_layout) == 3 and \
                (region_layout[0] > 0 and region_layout[0] % 1==0) and \
                (region_layout[1] > 0 and region_layout[1] % 1==0) and \
@@ -74,6 +74,7 @@ class CuboidPeriodic(_3dDomainInputBase):
         boundary_region_edges['East'] = tuple()
         boundary_region_edges['Back'] = tuple()
         boundary_region_edges['Front'] = tuple()
+
         for k in range(L2):
             for j in range(L1):
                 boundary_region_edges['North'] += (Rs[ 0][j][k] + '-N',)
@@ -100,23 +101,23 @@ class CuboidPeriodic(_3dDomainInputBase):
         self.region_sequence = region_sequence
 
 
-    # @classproperty
-    # def statistic(cls):
-    #     return {'periodic': True,
-    #             'region num':'unknown',
-    #             'mesh boundary num': 0, # the amount of mesh boundaries (instead of domain boundaries)
-    #             }
-    #
-    # @classproperty
-    # def random_parameters(cls):
-    #     if rAnk == mAster_rank:
-    #         rp = {'p_NWB': (random.uniform(-1,1), random.uniform(-1,1), random.uniform(-1,1)),
-    #               'width':random.uniform(1,3),
-    #               'length':random.uniform(1,3),
-    #               'height':random.uniform(1,3),
-    #               "region_layout": random.sample((3,2,random.randint(1,2)), 3)
-    #             }
-    #     else:
-    #         rp = None
-    #
-    #     return cOmm.bcast(rp, root=mAster_rank)
+    @classproperty
+    def statistic(cls):
+        return {'periodic': True,
+                'region num': 'unknown',
+                'mesh boundary num': 0, # the amount of mesh boundaries (instead of domain boundaries)
+                }
+
+    @classproperty
+    def random_parameters(cls):
+        if rAnk == mAster_rank:
+            rp = {'p_NWB': (random.uniform(-1,1), random.uniform(-1,1), random.uniform(-1,1)),
+                  'width':random.uniform(1,3),
+                  'length':random.uniform(1,3),
+                  'height':random.uniform(1,3),
+                  "region_layout": random.sample((1,1,2), 3)
+                }
+        else:
+            rp = None
+
+        return cOmm.bcast(rp, root=mAster_rank)

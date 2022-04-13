@@ -13,6 +13,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 import numpy as np
+from functools import lru_cache
 from objects.CSCG.base.forms.base.main import CSCG_FORM_BASE
 
 
@@ -143,9 +144,9 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
         return result_form
 
 
-
-    def ___PRIVATE_element_grid_data_generator_1___(self, i, density):
-        """We generate the data for plotting all dofs of standard forms in an element #`i`."""
+    @lru_cache(maxsize=24)
+    def ___PRIVATE_element_grid_data_generator_1___(self, i, density, zoom=1):
+        """We generate the data for plotting all dofs of standard forms in a mesh element #`i`."""
 
         mesh = self.mesh
         space = self.space
@@ -162,7 +163,7 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
         D0b, D1b, D2b = None, None, None
         for I, y in enumerate(YL):
             for J, z in enumerate(ZL):
-                d0, d1, d2 = self.___PRIVATE_generate_line_data____('x', (y,z), density)
+                d0, d1, d2 = self.___PRIVATE_generate_line_data____('x', (y,z), density, zoom=zoom)
                 if (I == 0 or I == By) and (J == 0 or J == Bz):
                     if D0b is None:
                         D0b = d0
@@ -182,6 +183,7 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
                         D1 = np.vstack((D1, d1))
                         D2 = np.vstack((D2, d2))
 
+
         X, Y, Z = mesh.elements[i].coordinate_transformation.mapping(D0b, D1b, D2b)
         DATA['xLines_x_B'] = X # x coordinate of x-grid lines on element boundary
         DATA['xLines_y_B'] = Y # y coordinate of x-grid lines on element boundary
@@ -197,7 +199,7 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
         D0b, D1b, D2b = None, None, None
         for I, z in enumerate(ZL):
             for J, x in enumerate(XL):
-                d0, d1, d2 = self.___PRIVATE_generate_line_data____('y', (z,x), density)
+                d0, d1, d2 = self.___PRIVATE_generate_line_data____('y', (z,x), density, zoom=zoom)
                 if (I == 0 or I == Bz) and (J == 0 or J == Bx):
                     if D0b is None:
                         D0b = d0
@@ -217,6 +219,7 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
                         D1 = np.vstack((D1, d1))
                         D2 = np.vstack((D2, d2))
 
+
         X, Y, Z = mesh.elements[i].coordinate_transformation.mapping(D0b, D1b, D2b)
         DATA['yLines_x_B'] = X
         DATA['yLines_y_B'] = Y
@@ -231,7 +234,7 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
         D0b, D1b, D2b = None, None, None
         for I, x in enumerate(XL):
             for J, y in enumerate(YL):
-                d0, d1, d2 = self.___PRIVATE_generate_line_data____('z', (x,y), density)
+                d0, d1, d2 = self.___PRIVATE_generate_line_data____('z', (x,y), density, zoom=zoom)
                 if (I == 0 or I == Bx) and (J == 0 or J == By):
                     if D0b is None:
                         D0b = d0
@@ -270,30 +273,29 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
 
         return DATA
 
-
     @staticmethod
-    def ___PRIVATE_generate_line_data____(direction, coordinates, density):
+    def ___PRIVATE_generate_line_data____(direction, coordinates, density, zoom=1):
         """
 
         :param direction:
         :param density:
         :return:
         """
-        ___ = np.linspace(-1,1,density)
+        ___ = np.linspace(-1,1,density) * zoom
         if direction == 'x':
             y, z = coordinates
             X = ___
-            Y = y * np.ones(density)
-            Z = z * np.ones(density)
+            Y = y * np.ones(density) * zoom
+            Z = z * np.ones(density) * zoom
         elif direction == 'y':
             z, x = coordinates
-            X = x * np.ones(density)
+            X = x * np.ones(density) * zoom
             Y = ___
-            Z = z * np.ones(density)
+            Z = z * np.ones(density) * zoom
         elif direction == 'z':
             x, y = coordinates
-            X = x * np.ones(density)
-            Y = y * np.ones(density)
+            X = x * np.ones(density) * zoom
+            Y = y * np.ones(density) * zoom
             Z = ___
         else:
             raise Exception()

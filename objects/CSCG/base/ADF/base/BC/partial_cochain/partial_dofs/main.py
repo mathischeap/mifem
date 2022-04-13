@@ -16,6 +16,7 @@ class PartialDofs(FrozenOnly):
     def __init__(self, adf):
         assert 'CSCG_form' in adf.prime.standard_properties.tags
         self._adf_ = adf
+        self._form_ = adf.prime
         self._mesh_ = adf.mesh
         self._dofs_: Dict[int, list] = dict()
         self._include_ = _ADF_PartialDofs_Include_from_(self)

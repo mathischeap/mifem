@@ -21,9 +21,9 @@ from objects.CSCG._3d.ADF.standard.base.error import _3dCSCG_ADF_SF_Error
 class _3dCSCG_Algebra_DUAL_Standard_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
     """"""
 
-    def __init__(self, ndim, mesh, space, orientation, name):
+    def __init__(self, ndim, mesh, space, prime, orientation, name):
         """"""
-        super().__init__(ndim, mesh, space)
+        super().__init__(ndim, mesh, space, prime)
         assert orientation in ('inner', 'outer'), " orientation needs to be 'inner' or 'outer'."
         self._orientation_ = orientation
         self.standard_properties.name = name

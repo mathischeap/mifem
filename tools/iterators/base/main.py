@@ -132,7 +132,7 @@ class Iterator(FrozenClass):
         solver_ret = ds.Returns
 
         assert len(solver_par) == 2 and solver_par[0] == 'tk' and solver_par[1] == 'tk1', \
-            " <iterator> : to use iterator, two parameters need to be 'tk', 'tk1'."
+            f" <iterator> : to use iterator, two parameters need to be 'tk', 'tk1'. {solver_par}"
         assert solver_ret[0] == 'exit_code', "First output must be exit_code."
         assert solver_ret[1] == 'shut_down', "Second output must be shut_down."
         assert solver_ret[2] == 'message', "Third output must be message."
@@ -369,7 +369,11 @@ class Iterator(FrozenClass):
                         try: # try once more
                             self.RDF.to_csv(self.monitor.RDF_filename, header=True)
                         except: # save it to a new file!
-                            RDF_filename = self.monitor.RDF_filename + '__completion_save__' + randomStringDigits(10)
+                            RDF_filename = self.monitor.RDF_filename[:-4] + \
+                                           '__completion_save__' + \
+                                           randomStringDigits(10) + \
+                                           '.csv'
+
                             self.RDF.to_csv(RDF_filename, header=True)
 
                 # when we save RDF, by default we save the iterator itself only for saving some info (not for resume).

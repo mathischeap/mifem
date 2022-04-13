@@ -12,6 +12,9 @@ class SpaVec_Customize(FrozenOnly):
         self._spa_vec_ = spa_vec
         self.___customizations___ = dict()
         self._customizations_to_be_applied_ = dict()
+        self._t2f_s2f_cc_ = None
+        self._t1f_s1f_cc_ = None
+        self._t0f_s0f_cc_ = None
         self._freeze_self_()
 
     def clear(self):
@@ -214,19 +217,96 @@ class SpaVec_Customize(FrozenOnly):
             GM = self._spa_vec_.gathering_matrix
             LDR_row = GM.local_dofs_ranges[i]
             start_row = LDR_row.start
-            dofs = pd.interpreted_as.local_dofs
+            LDF_row = pd.interpreted_as.local_dofs
+            LDF_col = pc.dofs.interpreted_as.local_dofs
             cochain = pc.cochain
-            assert len(dofs) == len(cochain), "pc, pd must cover same amount of mesh elements."
-            for e in dofs:
-                local_dofs = np.array(dofs[e]) + start_row
-                local_cochain = cochain[e]
+            assert len(LDF_row) == len(cochain), "pc, pd must cover same amount of mesh elements."
+            for e in LDF_row:
+
+                ROW = LDF_row[e]
+                COL = LDF_col[e]
+                LOC = cochain[e]
+
+                LOC = self.___PRIVATE_correcting_correspondence___(pd._form_, ROW, COL, LOC, pc._form_)
+
+                local_dofs = np.array(ROW) + start_row
+                local_cochain = LOC
+
                 if e not in self.___customizations___:
                     self.___customizations___[e] = list()
-                # Set Local Entries To
+                # Set Local Entries
                 self.___customizations___[e].append(('slest', (local_dofs, local_cochain)))
 
         else:
             raise NotImplementedError(f"interpreted_as={interpreted_as} not implemented.")
+
+
+    def ___PRIVATE_correcting_correspondence___(self, rf, R, C, local_cochain, cf):
+        """
+
+        Parameters
+        ----------
+        rf
+        R
+        C
+        cf
+
+        Returns
+        -------
+
+        """
+        if rf.__class__.__name__ == '_3dCSCG_1Trace' and cf.__class__.__name__ == '_3dCSCG_1Form':
+            # we have to make sure this to make the singularity handling possible
+            if self._t1f_s1f_cc_ is None:
+                s1f = list()
+                for side in 'NSWEBF':
+                    s1f.append(cf.numbering.do.find.local_dofs_on_element_side(side))
+                s1f = np.concatenate(s1f)
+
+                self._t1f_s1f_cc_ = s1f
+            else:
+                s1f = self._t1f_s1f_cc_
+
+            cC = s1f[R]
+            assert len(cC) == len(C) and set(cC) == set(C), f"must be this case."
+
+            COCHAIN = np.empty(cf.num.basis)
+            COCHAIN[C] = local_cochain
+            return COCHAIN[cC]
+
+        elif rf.__class__.__name__ == '_3dCSCG_0Trace' and cf.__class__.__name__ == '_3dCSCG_0Form':
+            # we have to make sure this to make the singularity handling possible
+            if self._t0f_s0f_cc_ is None:
+                s0f = list()
+                for side in 'NSWEBF':
+                    s0f.append(cf.numbering.do.find.local_dofs_on_element_side(side))
+                s0f = np.concatenate(s0f)
+
+                self._t0f_s0f_cc_ = s0f
+            else:
+                s0f = self._t0f_s0f_cc_
+
+            cC = s0f[R]
+            assert len(cC) == len(C) and set(cC) == set(C), f"must be this case."
+
+            COCHAIN = np.empty(cf.num.basis)
+            COCHAIN[C] = local_cochain
+            return COCHAIN[cC]
+
+        else:
+            return local_cochain
+
+
+
+
+
+
+
+
+
+
+
+
 
     def set_assembled_V_i_to(self, i, v):
         """Let V be the assembled vector (csc_matrix of shape (x,1)), we set V[i] = v.
@@ -243,7 +323,7 @@ class SpaVec_Customize(FrozenOnly):
         rCGM = self._spa_vec_.gathering_matrix
         assert rCGM is not None, "I have no gathering_matrix!"
 
-        rO = rCGM.find.elements_and_local_indices_of_dof(i)
+        rO = rCGM.do.find.elements_and_local_indices_of_dof(i)
 
         if rO is None:
             elements, indices = None, None

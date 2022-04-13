@@ -29,7 +29,7 @@ class _2dCSCG_Domain_Visualize(FrozenOnly):
         if rAnk != mAster_rank: return
         return self.matplot(**kwargs)
 
-    def matplot(self, show_region_boundary=True, usetex=True, corlormap='tab10',
+    def matplot(self, show_region_boundary=True, usetex=False, corlormap='tab10',
         density=1000, xlim=None, ylim=None, show_region_names=True, show_boundary_names=True,
         labelsize=15, ticksize=15, fontsize=12, do_plot=True, saveto=None,
         domain_boundary_linewidth=3, region_linewidth=0.8, ):

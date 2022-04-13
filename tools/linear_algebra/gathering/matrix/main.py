@@ -7,8 +7,7 @@ from tools.deprecated.assembler.main import GatheringMatrix
 import numpy as np
 from root.config.main import rAnk, mAster_rank, cOmm, MPI
 
-from tools.linear_algebra.gathering.matrix.find import Gathering_Matrix_FIND
-from tools.linear_algebra.gathering.matrix.do import Gathering_Matrix_DO
+from tools.linear_algebra.gathering.matrix.do.main import Gathering_Matrix_DO
 
 class Gathering_Matrix(GatheringMatrix):
     """A gathering matrix is a bunch of gathering vectors.
@@ -44,7 +43,6 @@ class Gathering_Matrix(GatheringMatrix):
         self._GLOBAL_shape_ = (self.GLOBAL_len, shape_1)
         self._local_range_ = None
         self._mesh_type_ = mesh_type
-        self._find_ = None
         self._do_ = None
         self._freeze_self_()
 
@@ -143,9 +141,3 @@ class Gathering_Matrix(GatheringMatrix):
         if self._do_ is None:
             self._do_ = Gathering_Matrix_DO(self)
         return self._do_
-
-    @property
-    def find(self):
-        if self._find_ is None:
-            self._find_ = Gathering_Matrix_FIND(self)
-        return self._find_

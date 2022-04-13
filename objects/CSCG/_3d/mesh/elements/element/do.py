@@ -10,7 +10,7 @@ class _3dCSCG_MeshElement_Do(FrozenOnly):
         self._freeze_self_()
 
 
-    def generate_element_edge_data(self, zoom=1, density=10):
+    def generate_element_plot_data(self, zoom=1, density=10):
         """
 
         Parameters

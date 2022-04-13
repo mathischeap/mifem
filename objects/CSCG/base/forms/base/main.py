@@ -33,6 +33,8 @@ class CSCG_FORM_BASE(FrozenClass):
         self._func_ = CSCG_Form_Func(self)
         self._BC_ = CSCG_Form_BC(self)
 
+        self.___is_wrapped_in_ADF___ = False
+
     #------------------- fundamental --------------------------------
     @property
     def mesh(self):

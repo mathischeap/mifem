@@ -14,8 +14,9 @@ from abc import ABC
 
 
 from objects.CSCG._3d.forms.edge.base.main import _3dCSCG_Edge
-
-
+from objects.CSCG._3d.forms.edge._1eg.discretize.main import _3dCSCG_Edge1Form_Discretize
+from objects.CSCG._3d.forms.edge._1eg.special import _3dCSCG_1EF_Special
+from objects.CSCG._3d.forms.edge._1eg.dofs.main import _3dCSCG_E1F_Dofs
 
 class _3dCSCG_1Edge(_3dCSCG_Edge, ABC):
     """
@@ -33,6 +34,9 @@ class _3dCSCG_1Edge(_3dCSCG_Edge, ABC):
         self._k_ = 1
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_edge_1form')
         self.___PRIVATE_reset_cache___()
+        self._discretize_ = _3dCSCG_Edge1Form_Discretize(self)
+        self._special_ = None
+        self._dofs_ = None
         self._freeze_self_()
 
 
@@ -60,50 +64,22 @@ class _3dCSCG_1Edge(_3dCSCG_Edge, ABC):
         else:
             raise Exception(f"3dCSCG 1edge BC do not accept func {func_body.__class__}")
 
-
-    def discretize(self, update_cochain=True, target='func'):
-        """
-        Discretize the current function (a scalar field) to cochain.
-
-        It is actually a wrapper of multiple methods that discretize functions of different types (a scalar
-        field can be defined and represented in different ways in `python`, right?).
-
-        :param bool update_cochain: (`default`: ``True``) If we update cochain with the output? Sometimes we
-            may do not want to do so since we just want to use this method do some external jobs.
-        :param target:
-        :return: The cochain.
-        :rtype: Its type can be different according to the particular discretize method.
-        """
-        if target == 'func':
-            if self.TW.func.body.__class__.__name__ == '_3dCSCG_ScalarField':
-                if self.func.ftype == 'standard':
-                    return self.___PRIVATE_discretize_standard_ftype___(update_cochain=update_cochain)
-                else:
-                    raise NotImplementedError(f"3dCSCG 1-edge cannot (target func) discretize _3dCSCG_ScalarField of ftype={self.func.ftype}")
-
-            else:
-                raise NotImplementedError(f'3dCSCG 1-edge can not (target func) discretize {self.TW.func.body.__class__}.')
-
-        else:
-            raise NotImplementedError(f"3dCSCG 1-edge cannot discretize while targeting at {target}.")
+    @property
+    def discretize(self):
+        return self._discretize_
 
 
+    @property
+    def special(self):
+        if self._special_ is None:
+            self._special_ = _3dCSCG_1EF_Special(self)
+        return self._special_
 
-
-    def ___PRIVATE_discretize_standard_ftype___(self, update_cochain=True, target='func'):
-        """Discretize the standard _3dCSCG_ScalarField to a 1-edge-form
-
-        'locally full local EEW cochain' means the cochain is a dict whose keys are edge-element
-        numbers and values are edge-element-wise local cochains.
-
-        """
-
-
-
-
-
-
-
+    @property
+    def dofs(self):
+        if self._dofs_ is None:
+            self._dofs_ = _3dCSCG_E1F_Dofs(self)
+        return self._dofs_
 
 
 

@@ -189,7 +189,7 @@ def test_LinearSolver_No1_BiCGSTAB():
     br[k] = 0
     if sIze > 3:
         if rAnk == sIze -1:
-            Ar = np.zeros((3,3)) # A even can be empty in some cores.
+            Ar = np.zeros((3,3)) # `A` even can be empty in some cores.
     AA = cOmm.gather(Ar, root=0)
     bb = cOmm.gather(br, root=0)
     if rAnk == 0:

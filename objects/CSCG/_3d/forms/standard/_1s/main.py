@@ -8,7 +8,7 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 
 from objects.CSCG._3d.forms.standard._1s.discretize.main import _3dCSCG_Discretize
@@ -17,6 +17,7 @@ from objects.CSCG._3d.forms.standard._1s.project.main import _1Form_Projection
 from objects.CSCG._3d.forms.standard._1s.special.main import _1Form_Special
 from objects.CSCG._3d.forms.standard._1s.reconstruct import _3dCSCG_SF1_reconstruct
 from objects.CSCG._3d.forms.standard._1s.inheriting.private import _3dCSCG_S1F_Private
+from objects.CSCG._3d.forms.standard._1s.visualize.main import _3dCSCG_S1F_VISUALIZE
 
 
 
@@ -47,6 +48,7 @@ class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form):
         self.___PRIVATE_reset_cache___()
         self._discretize_ = _3dCSCG_Discretize(self)
         self._reconstruct_ = None
+        self._visualize_ = None
         self._freeze_self_()
 
     def ___PRIVATE_reset_cache___(self):
@@ -81,6 +83,12 @@ class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form):
             self._reconstruct_ = _3dCSCG_SF1_reconstruct(self)
         return self._reconstruct_
 
+    @property
+    def visualize(self):
+        if self._visualize_ is None:
+            self._visualize_ = _3dCSCG_S1F_VISUALIZE(self)
+        return self._visualize_
+
 
 
 
@@ -103,9 +111,7 @@ if __name__ == '__main__':
     V = FC('scalar', v)
     W = FC('scalar', w)
 
-
     f1 = FC('1-f', is_hybrid=False)
-
 
     f1.TW.func.do.set_func_body_as(velocity)
     f1.TW.current_time = 0

@@ -2,10 +2,17 @@
 
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.main import FrozenOnly
-from objects.CSCG._3d.forms.standard.base.dofs.dof.visualize.matplot import _3dCSCG_SF_DOF_VISUALIZE_matplot
+from objects.CSCG._3d.forms.standard.base.dofs.dof.visualize.matplot._0sf import \
+    _3dCSCG_SF_DOF_VISUALIZE_matplot_0SF
+from objects.CSCG._3d.forms.standard.base.dofs.dof.visualize.matplot._1sf import \
+    _3dCSCG_SF_DOF_VISUALIZE_matplot_1SF
+from objects.CSCG._3d.forms.standard.base.dofs.dof.visualize.matplot._2sf import \
+    _3dCSCG_SF_DOF_VISUALIZE_matplot_2SF
+from objects.CSCG._3d.forms.standard.base.dofs.dof.visualize.matplot._3sf import \
+    _3dCSCG_SF_DOF_VISUALIZE_matplot_3SF
 
 
 
@@ -25,7 +32,18 @@ class _3dCSCG_SF_DOF_VISUALIZE(FrozenOnly):
     @property
     def matplot(self):
         if self._matplot_ is None:
-            self._matplot_ = _3dCSCG_SF_DOF_VISUALIZE_matplot(self._dof_)
+
+            if self._dof_._sf_.k == 0:
+                self._matplot_ = _3dCSCG_SF_DOF_VISUALIZE_matplot_0SF(self._dof_)
+            elif self._dof_._sf_.k == 1:
+                self._matplot_ = _3dCSCG_SF_DOF_VISUALIZE_matplot_1SF(self._dof_)
+            elif self._dof_._sf_.k == 2:
+                self._matplot_ = _3dCSCG_SF_DOF_VISUALIZE_matplot_2SF(self._dof_)
+            elif self._dof_._sf_.k == 3:
+                self._matplot_ = _3dCSCG_SF_DOF_VISUALIZE_matplot_3SF(self._dof_)
+            else:
+                raise Exception()
+
         return self._matplot_
 
 
@@ -35,14 +53,14 @@ class _3dCSCG_SF_DOF_VISUALIZE(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 6 python _3dCSCG\forms\standard\base\dofs\dof\visualize\main.py
+    # mpiexec -n 6 python objects\CSCG\_3d\forms\standard\base\dofs\dof\visualize\main.py
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
     mesh = MeshGenerator('crazy', c=0.3)([3,3,3])
-    space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3), ('Lobatto',3)])
+    space = SpaceInvoker('polynomials')([('Lobatto',1), ('Lobatto',2), ('Lobatto',1)])
     FC = FormCaller(mesh, space)
 
-    f = FC('3-f', is_hybrid=True)
+    f = FC('0-f', is_hybrid=True)
 
     # SPL = f0.numbering.sharing_physical_locations
     #

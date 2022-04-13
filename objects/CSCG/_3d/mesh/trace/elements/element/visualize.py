@@ -23,3 +23,4 @@ class _3dCSCG_TraceElement_VIS(FrozenOnly):
         """
         # we cannot use self._te_._elements_.do.illustrate_element(self._te_.i, **kwargs) because
         # that method will make use of other cores while trace elements are stored locally.
+
