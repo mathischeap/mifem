@@ -10,7 +10,7 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 import numpy as np
 from objects.CSCG._3d.fields.base import _3dCSCG_Continuous_FORM_BASE

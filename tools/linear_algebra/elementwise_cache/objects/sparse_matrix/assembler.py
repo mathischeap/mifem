@@ -52,8 +52,8 @@ class EWC_SparseMatrix_Assembler(FrozenOnly):
         assert GMs[1] is not None, "I have no gathering matrix"
         GI = GMs[0]
         GJ = GMs[1]
-        DEP = GI.GLOBAL_num_dofs
-        WID = GJ.GLOBAL_num_dofs
+        DEP = int(GI.GLOBAL_num_dofs)
+        WID = int(GJ.GLOBAL_num_dofs)
 
         # --- NO Cache: no sparsity locker, sparsity may change, so do not cache!---------
         if self._MAT_.do.___sparsity_locker___ is False:

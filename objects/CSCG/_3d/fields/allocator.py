@@ -18,5 +18,4 @@ class _3dCSCG_Field_Allocator(FrozenOnly):
         return {'scalar': base_path + "scalar.main",
                 'vector': base_path + "vector.main",
                 'tensor': base_path + "tensor.main",
-
                 }

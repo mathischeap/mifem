@@ -14,4 +14,4 @@ class ___LinearAlgebraINV___(FrozenOnly):
         self._freeze_self_()
 
     def __call__(self, item):
-        return spspalinalg.inv(self._ewc_[item])
+        return spspalinalg.inv(self._ewc_[item].tocsc())

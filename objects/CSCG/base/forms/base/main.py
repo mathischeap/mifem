@@ -97,7 +97,8 @@ class CSCG_FORM_BASE(FrozenClass):
                     [deepcopy(self.TW.func._ES_.standard_properties.parameters),
                      self.TW.func._ES_variable_name_]
         # noinspection PyUnresolvedReferences
-        RW_cochain_local = self.cochain.___PRIVATE_do_gather_to_master_and_make_them_region_wise_local_index_grouped___()
+        RW_cochain_local = self.cochain.\
+            ___PRIVATE_do_gather_to_master_and_make_them_region_wise_local_index_grouped___()
         # cochain_local will only be in master, in slaves, it is None.
         return {'TW_current_time': self.TW.current_time, # to save a object, it must have current time.
                 'TW_func_ES_parameters': ES_parameters,

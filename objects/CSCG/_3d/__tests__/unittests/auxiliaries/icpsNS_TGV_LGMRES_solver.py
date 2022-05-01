@@ -13,7 +13,7 @@ from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller, Exa
 from tools.linear_algebra.data_structures.global_matrix.main import LocallyFullVector
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_ColumnVector
 from tools.linear_algebra.elementwise_cache.operators.concatenate.main import bmat, concatenate
-from tools.linear_algebra.solvers.parallel.allocator import ParallelSolverDistributor
+from tools.linear_algebra.solvers.regular.allocator import RegularSolverDistributor
 from tools.iterators.simple import SimpleIterator
 from time import time
 from root.config.main import *
@@ -150,7 +150,7 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
     ib = ib.assembled
     X0 = LocallyFullVector(X0.assembled)
 
-    iR = ParallelSolverDistributor("LGMRES")(iA, ib, X0, atol=atol, m=m, k=K, maxiter=maxiter)[0]
+    iR = RegularSolverDistributor("LGMRES")(iA, ib, X0, atol=atol, m=m, k=K, maxiter=maxiter)[0]
     iR.do.distributed_to(u1, P0)
 
     w2.cochain.local = u1.coboundary.cochain_local
@@ -255,7 +255,7 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
         else:
             X0 = OUT_R[0]
 
-        oR,_,_,_,mo = ParallelSolverDistributor("LGMRES")(SYS_oA, SYS_ob, X0, atol=atol, m=m, k=K, maxiter=maxiter)
+        oR,_,_,_,mo = RegularSolverDistributor("LGMRES")(SYS_oA, SYS_ob, X0, atol=atol, m=m, k=K, maxiter=maxiter)
 
         del SYS_oA, SYS_ob
 
@@ -276,7 +276,7 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
         SYS_ib = ib.assembled
 
         X0 = INN_R[0]
-        iR,_,_,_,mi = ParallelSolverDistributor("LGMRES")(SYS_iA, SYS_ib, X0, atol=atol, m=m, k=K, maxiter=maxiter)
+        iR,_,_,_,mi = RegularSolverDistributor("LGMRES")(SYS_iA, SYS_ib, X0, atol=atol, m=m, k=K, maxiter=maxiter)
 
         del SYS_iA, SYS_ib
 

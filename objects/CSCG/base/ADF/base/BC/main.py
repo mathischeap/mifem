@@ -60,14 +60,13 @@ class CSCG_ADForm_BC(FrozenOnly):
         return self._partial_cochain_
 
 
-
     @property
     def partial_dofs(self):
         """We will interpret the BC as a PartialCochain instance which then can
         further be interpreted as data structures that can be used by,
         for example, EWC sparse matrices.
         """
-        if self._partial_cochain_ is None:
+        if self._partial_dofs_ is None:
             pd = PartialDofs(self._adf_)
             pd.include.boundaries(self.valid_boundaries)
             self._partial_dofs_ = pd

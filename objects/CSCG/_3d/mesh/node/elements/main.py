@@ -1,4 +1,4 @@
-
+"""['NWB', 'SWB', 'NEB', 'SEB', 'NWF', 'SWF', 'NEF', 'SEF']"""
 
 import sys
 if './' not in sys.path: sys.path.append('./')
@@ -9,9 +9,9 @@ from objects.CSCG._3d.mesh.node.elements.element.main import _3dCSCG_Node_Elemen
 from objects.CSCG._3d.mesh.node.elements.do.main import _3dCSCG_NodeMesh_Do
 
 class _3dCSCG_Node_Elements(FrozenOnly):
-    """"""
+    """['NWB', 'SWB', 'NEB', 'SEB', 'NWF', 'SWF', 'NEF', 'SEF']"""
     def __init__(self, node):
-        """"""
+        """['NWB', 'SWB', 'NEB', 'SEB', 'NWF', 'SWF', 'NEF', 'SEF']"""
         self._node_ = node
         self._mesh_ = node._mesh_
 

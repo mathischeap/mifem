@@ -6,6 +6,7 @@ A template for Region Class.
          Aerodynamics, AE
          TU Delft
 """
+
 from screws.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.domain.regions.visualize.main import _3dCSCG_Regions_Visualize
 from objects.CSCG._3d.mesh.domain.regions.topology import _3dCSCG_Regions_Topology
@@ -89,8 +90,7 @@ class Regions(FrozenOnly):
 
     @property
     def map(self):
-        """
-        Return the regions map.
+        """Return the regions map.
 
         Returns
         -------

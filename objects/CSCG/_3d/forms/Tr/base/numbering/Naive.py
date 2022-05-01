@@ -8,7 +8,7 @@
 
 """
 from screws.freeze.main import FrozenOnly
-from tools.linear_algebra.gathering.chain_matrix.main import Gathering_Matrix, Gathering_Vector
+from tools.linear_algebra.gathering.regular.chain_matrix.main import Gathering_Matrix, Gathering_Vector
 
 
 

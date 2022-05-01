@@ -37,5 +37,13 @@ class _3dCSCG_Discretize(FrozenOnly):
 
             else:
                 raise NotImplementedError(f'3dCSCG 1-form can not discretize {SELF.TW.func.body.__class__}.')
+
+        elif target == 'BC':
+            if SELF.TW.BC.body.__class__.__name__ == '_3dCSCG_VectorField':
+
+                if SELF.BC.ftype == 'standard':
+                    # always do not update cochain & and target always be "BC"
+                    return self._standard_(update_cochain=False, target='BC', **kwargs)
+        
         else:
             raise NotImplementedError(f"3dCSCG 1-form cannot discretize while targeting at {target}.")

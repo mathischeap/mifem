@@ -1,7 +1,6 @@
 
 
 
-from root.config.main import *
 from screws.freeze.main import FrozenOnly
 
 
@@ -13,32 +12,61 @@ class _3dCSCG_MeshPerpendicularSlice(FrozenOnly):
 
     It is a slice of a mesh. Such a sub-geometry should consist of slices of one or several elements.
     """
-    def __init__(self, mesh, inputs, *args, **kwargs):
+    def __init__(self, mesh, *args, **kwargs):
         """"""
         self._mesh_ = mesh
-
-        if inputs.__class__.__name__ == 'RegionPerpendicularSlice':
+        # only provide a RegionPerpendicularSlice as input: `_3dCSCG_MeshPerpendicularSlice(RPS)`
+        if len(args)== 1 and args[0].__class__.__name__ == 'RegionPerpendicularSlice':
             self._element_slices_, self._PTA_ = \
-                self.___PRIVATE_generate_element_slices_from_A_RegionPerpendicularSlice__(inputs)
+                self.___PRIVATE_generate_element_slices_from_A_RegionPerpendicularSlice__(args[0])
+        # only provide one kwarg: x, or y, or z.
+        elif len(args) == 0 and all([_ in 'xyz' for _ in list(kwargs.keys())]):
+            DPS = self._mesh_.domain.sub_geometry.make_a_perpendicular_slice_object_on(**kwargs)
+            self._element_slices_, self._PTA_ = \
+                self.___PRIVATE_generate_element_slices_from_A_DomainPerpendicularSlice__(DPS)
         else:
-            raise NotImplementedError(f"Currently, we can only generate MeshSlice instance from RegionSlice. "
-                                      f"No use {args} and {kwargs}")
+            raise NotImplementedError(f"Do not understand args={args}, kwargs={kwargs}.")
 
         self._freeze_self_()
 
 
+    def ___PRIVATE_generate_element_slices_from_A_DomainPerpendicularSlice__(self, DPS):
+        """"""
+        RPS_dict = DPS.RPS_dict
+
+        element_slices, PTA = dict(), None
+
+        for rn in RPS_dict:
+            RPS = RPS_dict[rn]
+            if RPS is None:
+                pass
+            elif rn not in self._mesh_.elements.in_regions:
+                pass
+            else:
+                ele_sli, pta = self.___PRIVATE_generate_element_slices_from_A_RegionPerpendicularSlice__(RPS)
+                element_slices.update(ele_sli)
+                if PTA is None:
+                    PTA = pta
+                else:
+                    assert PTA == pta
+
+        return element_slices, PTA
+
+
+
     def ___PRIVATE_generate_element_slices_from_A_RegionPerpendicularSlice__(self, RS):
         """
-
         :param RS: A RegionSlice instance.
         :return:
         """
         element_slices = dict()
-
         rn = RS._region_.name
+        #----  the region is not involved in this core, we can return empty element_slices here!
+        if rn not in self._mesh_.elements.in_regions:
+            return element_slices, None
 
-        assert rn in self._mesh_.domain.regions, "regions does not exist."
-        assert self._mesh_.domain.regions[rn] is RS._region_, "regions does not match."
+        assert rn in self._mesh_.domain.regions, "region does not exist."
+        assert self._mesh_.domain.regions[rn] is RS._region_, "region does not match."
 
         r, s, t = RS.r, RS.s, RS.t
         spacing = self._mesh_.elements.spacing[rn]
@@ -57,13 +85,13 @@ class _3dCSCG_MeshPerpendicularSlice(FrozenOnly):
 
         PTA_info = None
 
-        NUM = list()
         for k, abc in enumerate(_):
             if len(abc) == 1:
                 loc = abc[0][0]
                 LS = spacing[k][loc:loc+2]
                 start, end = LS
-                assert start <= PTA_position < end, f"[start, end] = [{start}, {end}], PTA_position={PTA_position} wrong."
+                assert start <= PTA_position < end, f"[start, end] = [{start}, {end}], " \
+                                                    f"PTA_position={PTA_position} wrong."
                 PTA_element_position = -1 + 2 * (PTA_position - start) / (end - start)
 
                 IND.append(range(0, len(spacing[k])))
@@ -72,8 +100,6 @@ class _3dCSCG_MeshPerpendicularSlice(FrozenOnly):
             elif len(abc) == 2:
                 A1, A2 = abc
                 IND.append(range(A1[0], A2[1]))
-
-                NUM.append(A2[1] - A1[0])
 
             else:
                 raise Exception()
@@ -98,10 +124,6 @@ class _3dCSCG_MeshPerpendicularSlice(FrozenOnly):
                 else:
                     pass
 
-        num_loc = len(involved_loc_elements)
-        ALL_num_loc = cOmm.gather(num_loc, root=mAster_rank)
-        if rAnk == mAster_rank: assert sum(ALL_num_loc) == np.prod(NUM), "NUM checking failed."
-
         position = PTA_info[1]
 
         for e in involved_loc_elements:
@@ -121,8 +143,7 @@ class _3dCSCG_MeshPerpendicularSlice(FrozenOnly):
 
     @staticmethod
     def ___PRIVATE_locate_index_in_spacing___(indices, spacing):
-        """
-        For example, given spacing = [0. ,   0.125, 0.25,  0.375, 0.5,   0.625, 0.75,  0.875, 1.],
+        """For example, given spacing = [0.,   0.125, 0.25,  0.375, 0.5,   0.625, 0.75,  0.875, 1.],
         when indices = 0, then we return ([0,0],)
 
         when indices = 0.15, we return ([1,2],)

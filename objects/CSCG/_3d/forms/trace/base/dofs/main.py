@@ -4,7 +4,7 @@ if './' not in sys.path: sys.path.append('./')
 from screws.freeze.main import FrozenOnly
 
 from objects.CSCG._3d.forms.trace.base.dofs.dof.main import _3dCSCG_Trace_forms_DOF
-
+from objects.CSCG._3d.forms.trace.base.dofs.do.main import _3dCSCG_TraceDofs_Do
 
 class _3dCSCG_Trace_forms_DOFs(FrozenOnly):
     """The class of all dofs of a trace form."""
@@ -13,6 +13,7 @@ class _3dCSCG_Trace_forms_DOFs(FrozenOnly):
         self._GM_ = tf.numbering.gathering
         self._local_range_ = self._GM_.local_range
         self._visualize_ = None
+        self._do_ = None
         self._freeze_self_()
 
 
@@ -59,7 +60,11 @@ class _3dCSCG_Trace_forms_DOFs(FrozenOnly):
             return list(), list()
 
 
-
+    @property
+    def do(self):
+        if self._do_ is None:
+            self._do_ = _3dCSCG_TraceDofs_Do(self)
+        return self._do_
 
 
 

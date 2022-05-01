@@ -1,6 +1,6 @@
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 
 from screws.freeze.base import FrozenOnly
@@ -70,6 +70,24 @@ class _3dCSCG_1Trace_Discretize(FrozenOnly):
             else:
                 raise NotImplementedError(f'3dCSCG 1-trace can not (target func) '
                                           f'discretize {SELF.TW.func.body.__class__}.')
+
+        elif target == 'BC':
+
+            if SELF.TW.BC.body.__class__.__name__ == '_3dCSCG_VectorField':
+
+                if SELF.BC.ftype == 'trace-element-wise':
+                    # we do not care this trace-element-wise vector is T_para or T_perp vector, we just discretize it to the trace.
+                    return self._trace_element_wise_vector_(
+                        update_cochain=False, target='BC', **kwargs)
+
+                else:
+                    raise Exception(f'3dCSCG 1-trace can not (target BC) discretize '
+                                    f'_3dCSCG_VectorField of ftype {SELF.func.ftype}.')
+
+            else:
+                raise NotImplementedError(f'3dCSCG 1-trace can not (target BC) '
+                                          f'discretize {SELF.TW.func.body.__class__}.')
+
 
         else:
             raise NotImplementedError(f"target={target} not implemented "

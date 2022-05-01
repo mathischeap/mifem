@@ -12,6 +12,7 @@ import numpy as np
 from screws.freeze.main import FrozenOnly
 from screws.decorators.accepts import accepts
 from screws.numerical._3d_space.Jacobian_33 import NumericalJacobian_xyz_33, NumericalPartialDerivative_xyz
+from pynverse import inversefunc
 
 
 class InterpolationBase(FrozenOnly):
@@ -27,6 +28,9 @@ class InterpolationBase(FrozenOnly):
         """
         self._region_ = region
         self._ndim_ = region.ndim
+        self._Rx00_ = None
+        self._Sy00_ = None
+        self._Tz00_ = None
         
     @property
     def ndim(self):
@@ -66,21 +70,44 @@ class InterpolationBase(FrozenOnly):
             " <Interpolation> : inputs shape dis-match."
 
         return r, s, t
-    
+
     def __call__(self, r, s, t):
         return self.mapping(r, s, t)
 
     def mapping(self, r, s, t):
         raise NotImplementedError()
 
+
+
+
     def mapping_X(self, r, s, t):
         raise NotImplementedError()
+    def ___mapping_Xr_s0t0___(self, r):
+        """x = mapping_X(r, 0 , 0)"""
+        return self.mapping_X(r, 0, 0)
+
+
+
 
     def mapping_Y(self, r, s, t):
         raise NotImplementedError()
+    def ___mapping_Ys_r0t0___(self, s):
+        """y = mapping_Y(0, s , 0)"""
+        return self.mapping_Y(0, s, 0)
+
+
+
 
     def mapping_Z(self, r, s, t):
         raise NotImplementedError()
+    def ___mapping_Zt_r0s0___(self, t):
+        """z = mapping_Z(0, 0 , t)"""
+        return self.mapping_Z(0, 0, t)
+
+
+
+
+
 
     def Jacobian_matrix(self, r, s, t):
         """ 
@@ -150,6 +177,60 @@ class InterpolationBase(FrozenOnly):
 
 
 
-# ----- particular interpolations below ------------------------------------------------------
 
 
+
+    def ___inverse_mapping_r_x_s0t0___(self, x):
+        """Return r according to the inverse function of x = mapping_X(r, 0 , 0)
+
+        Parameters
+        ----------
+        x :
+
+        Returns
+        -------
+        r :
+
+        """
+        if self._Rx00_ is None:
+            self._Rx00_ = inversefunc(self.___mapping_Xr_s0t0___)
+        return self._Rx00_(x)
+
+    def ___inverse_mapping_s_y_r0t0___(self, y):
+        """Return s according to the inverse function of y = mapping_Y(0, s , 0)
+
+        Parameters
+        ----------
+        y :
+
+        Returns
+        -------
+        s :
+
+        """
+        if self._Sy00_ is None:
+            self._Sy00_ = inversefunc(self.___mapping_Ys_r0t0___)
+        return self._Sy00_(y)
+
+    def ___inverse_mapping_t_z_r0s0___(self, z):
+        """Return t according to the inverse function of z = mapping_Z(0, 0 , t)
+
+        Parameters
+        ----------
+        z :
+
+        Returns
+        -------
+        t :
+
+        """
+        if self._Tz00_ is None:
+            self._Tz00_ = inversefunc(self.___mapping_Zt_r0s0___)
+        return self._Tz00_(z)
+
+
+
+
+
+if __name__ == '__main__':
+    pass

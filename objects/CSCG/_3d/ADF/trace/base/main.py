@@ -28,9 +28,9 @@ class _3dCSCG_Algebra_DUAL_Trace_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
         self._orientation_ = orientation
         self.standard_properties.name = name
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_standard_algebra_dual_trace')
-        self._DO_ = _3dCSCG_Algebra_DUAL_Trace_Form_DO(self)
-        self._cochain_ = _3dCSCG_Algebra_DUAL_Trace_Form_Cochain(self)
-        self._coboundary_ = _3dCSCG_Algebra_DUAL_Trace_Form_Coboundary(self)
+        self._DO_ = None
+        self._cochain_ = None
+        self._coboundary_ = None
         self._IS_ = None
         self._num_ = None
         self._matrices_ = None
@@ -39,17 +39,20 @@ class _3dCSCG_Algebra_DUAL_Trace_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
         """"""
 
     def ___PreFrozenChecker___(self):
-        """This method will be run automatically before we freeze the object. This is very important because
+        """This method will be run automatically before we freeze the object.
+
+        This is very important because
         we have to make sure that the information is consistent across the prime and the dual.
         """
         assert self.prime.k == self.k           , "Trivial check k."
         assert self.prime.mesh == self.mesh     , "Trivial check mesh."
         assert self.prime.space == self.space   , "Trivial check space."
         assert self.prime.orientation == self.orientation, "Trivial check orientation."
-        assert self.prime.IS.hybrid is self.IS.hybrid    , "prime must be hybrid form, now it is not."
+        assert self.prime.IS.hybrid is self.IS.hybrid    , "prime must be a hybrid form, now it is not."
 
     def ___PRIVATE_generate_mass_matrix___(self):
         """For algebra dual forms, this method will only be called once.
+
         The result (a mass matrix) will be cached in
         `self._mass_matrix_` because we think it is an essential property for algebra dual forms,
         and it will be used
@@ -61,7 +64,7 @@ class _3dCSCG_Algebra_DUAL_Trace_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
         # we now need to make a mesh-element-wise mass matrix
         MAP = self.mesh.trace.elements.map
         local_cache = dict()
-        MEW_mass = dict()
+        MEW_mass = dict() # mesh-element-wise
 
         for i in MAP:
             element = self.mesh.elements[i]
@@ -94,20 +97,28 @@ class _3dCSCG_Algebra_DUAL_Trace_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
             self.mesh.elements.___PRIVATE_elementwise_cache_metric_key___,
             # cache keys as mesh element types wrt metric.
             )
+
         iM = M.inv
+
         return M, iM
 
 
     @property
-    def DO(self):
+    def do(self):
+        if self._DO_ is None:
+            self._DO_ = _3dCSCG_Algebra_DUAL_Trace_Form_DO(self)
         return self._DO_
 
     @property
     def cochain(self):
+        if self._cochain_ is None:
+            self._cochain_ = _3dCSCG_Algebra_DUAL_Trace_Form_Cochain(self)
         return self._cochain_
 
     @property
     def coboundary(self):
+        if self._coboundary_ is None:
+            self._coboundary_ = _3dCSCG_Algebra_DUAL_Trace_Form_Coboundary(self)
         return self._coboundary_
 
     @property

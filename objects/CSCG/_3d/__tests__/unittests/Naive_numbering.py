@@ -8,7 +8,7 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 from objects.CSCG._3d.__tests__.random_objects.form_caller import random_FormCaller_of_total_load_around

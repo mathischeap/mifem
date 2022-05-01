@@ -12,7 +12,7 @@ if './' not in sys.path: sys.path.append('./')
 
 import numpy as np
 from screws.freeze.main import FrozenOnly
-from scipy.sparse import csc_matrix, csr_matrix
+from scipy.sparse import csr_matrix
 
 
 class SelectiveMatrix(FrozenOnly):
@@ -86,7 +86,7 @@ class SelectiveMatrix(FrozenOnly):
         mesh_element_wise_selective = np.vstack([WB, EB, WF, EF,
                                                  NB, SB, NF, SF,
                                                  NW, SW, NE, SE])
-        mesh_element_wise_selective = csc_matrix(mesh_element_wise_selective)
+        mesh_element_wise_selective = csr_matrix(mesh_element_wise_selective)
 
         return mesh_element_wise_selective, edge_wise_selective
 
@@ -145,7 +145,7 @@ class SelectiveMatrix(FrozenOnly):
         mesh_element_wise_selective = np.vstack([WB, EB, WF, EF,
                                                  NB, SB, NF, SF,
                                                  NW, SW, NE, SE])
-        mesh_element_wise_selective = csc_matrix(mesh_element_wise_selective)
+        mesh_element_wise_selective = csr_matrix(mesh_element_wise_selective)
 
         return mesh_element_wise_selective, edge_wise_selective
 
@@ -172,7 +172,7 @@ class SelectiveMatrix(FrozenOnly):
             N_[i] = N[m:m + nbt['NSWEBF'[i]], :]
             m += nbt['NSWEBF'[i]]
         Nn, Ns, Nw, Ne, Nb, Nf = N_
-        return csc_matrix(N), {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne,
+        return csr_matrix(N), {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne,
                                'B': Nb, 'F': Nf}
 
     @property
@@ -234,7 +234,7 @@ class SelectiveMatrix(FrozenOnly):
             N_[i] = N[m:m + nbt['NSWEBF'[i]], :]
             m += nbt['NSWEBF'[i]]
         Nn, Ns, Nw, Ne, Nb, Nf = N_
-        return csc_matrix(N), {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne,
+        return csr_matrix(N), {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne,
                                'B': Nb, 'F': Nf}
 
     @staticmethod
@@ -282,7 +282,7 @@ class SelectiveMatrix(FrozenOnly):
             N_[i] = N[m:m+nbt['NSWEBF'[i]], :]
             m += nbt['NSWEBF'[i]]
         Nn, Ns, Nw, Ne, Nb, Nf = N_
-        return csc_matrix(N), {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne, 'B': Nb, 'F': Nf}
+        return csr_matrix(N), {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne, 'B': Nb, 'F': Nf}
 
 
 

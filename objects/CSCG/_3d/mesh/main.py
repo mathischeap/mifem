@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Our mesh have the following structures:
+"""Our mesh have the following structures:
 
 Mesh main structure:
     Mesh -> Domain -> Regions
@@ -17,6 +16,7 @@ Extension structures:
 Components:
     Geometry
     Elements: Mesh -> Elements -> Element
+
 """
 import matplotlib.pyplot as plt
 from typing import Dict, Union
@@ -74,6 +74,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                 'chaotic': A very chaotic one. We better not save it because, when we re-build it, it will
                     randomly generate the element distribution again. So we will actually get different meshes
                     even we call same amount of cores, which sometimes is OKAY, but sometimes is not.
+
         """
         assert domain.ndim == 3, " <Mesh> "
         self._domain_ = domain
@@ -104,7 +105,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         self._node_ = _3dCSCG_Node(self)
         self._visualize_ = _3dCSCG_Mesh_Visualize(self)
         self._boundaries_ = _3dCSCG_Mesh_Boundaries(self)
-        self._sub_geometry_ = _3dCSCG_Mesh_SubGeometry(self)
+        self._sub_geometry_ = None
         self.___define_parameters___ = None
         self.___TEST_MODE___ = False
         self.do.reset_cache()
@@ -1198,6 +1199,8 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
     @property
     def sub_geometry(self):
+        if self._sub_geometry_ is None:
+            self._sub_geometry_ = _3dCSCG_Mesh_SubGeometry(self)
         return self._sub_geometry_
 
     @property

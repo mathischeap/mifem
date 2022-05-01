@@ -1183,12 +1183,10 @@ def test_Mesh_NO8_Mesh_SubGeometry_perpendicular_slice_object():
     space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 3), ('Lobatto', 2)])
     FC = FormCaller(mesh, space)
 
-
     R = mesh.domain.regions['R:R']
     RSG = R.sub_geometry
     RSG_PSO = RSG.make_a_perpendicular_slice_object_on(r=0.5)
     MSG_PSO = mesh.sub_geometry.make_a_perpendicular_slice_object_on(RSG_PSO)
-
 
     def u(t, x, y, z): return np.cos(np.pi*x) + np.sin(np.pi*y) * np.sin(np.pi*z-0.125)**2 + t/2
     def v(t, x, y, z): return np.sin(np.pi*x) + np.sin(np.pi*y) * np.sin(np.pi*z-0.125)**2 + t/2
@@ -1310,5 +1308,5 @@ def test_Mesh_NO9_edge_node_mesh():
 
 
 if __name__ == '__main__':
-    # mpiexec -n 8 python _3dCSCG\TESTS\unittest_mesh.py
-    test_Mesh_NO9_edge_node_mesh()
+    # mpiexec -n 8 python objects\CSCG\_3d\__tests__\unittests\mesh.py
+    test_Mesh_NO8_Mesh_SubGeometry_perpendicular_slice_object()

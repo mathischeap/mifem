@@ -1,8 +1,7 @@
 
 
 
-from tools.linear_algebra.gathering.chain_matrix.main import Chain_Gathering_Matrix
-from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
+from tools.linear_algebra.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
 from tools.linear_algebra.elementwise_cache.operators.bmat.sparse_matrix.helpers.DG import ___BMAT_HELPER_DataGenerator___
 from tools.linear_algebra.elementwise_cache.operators.bmat.sparse_matrix.helpers.KG import ___BMAT_HELPER_KeyGenerator___
 
@@ -16,12 +15,14 @@ def ___bmat_EWC_sparse_matrices___(blocks):
     :param blocks:
     :return:
     """
-    assert isinstance(blocks, (list, tuple)), "please put blocks in list or tuple."
+    assert blocks.__class__.__name__ in ('list', 'tuple', 'ndarray'), \
+        "please put blocks in list, tuple or array."
 
     I = len(blocks)
     J = None
     for i, bR in enumerate(blocks):
-        assert isinstance(bR, (list, tuple)), "please put blocks in list or tuple."
+        assert bR.__class__.__name__ in ('list', 'tuple', 'ndarray'), \
+            "please put blocks in list, tuple or array."
         if J is None:
             J = len(bR)
         else:
@@ -32,12 +33,17 @@ def ___bmat_EWC_sparse_matrices___(blocks):
     RGM = [[None for _ in range(J)] for _ in range(I)]
     CGM = [[None for _ in range(J)] for _ in range(I)]
 
+    CLASS = None
     for i, Bi in enumerate(blocks):
         for j, Bij in enumerate(Bi):
             if Bij is None:
                 RGM[i][j] = None
                 CGM[i][j] = None
             else:
+
+                if CLASS is None:
+                    CLASS = Bij.__class__
+
                 assert Bij.customize._customizations_ == dict(), \
                     f"customized block[{i}][{j}] cannot be used for bmat."
                 # this is because of the cache function. the customizations of block will not be renewed in cache.
@@ -55,7 +61,9 @@ def ___bmat_EWC_sparse_matrices___(blocks):
     assert elements is not None, f"blocks of only None?"
     DG = ___BMAT_HELPER_DataGenerator___(blocks)
     KG = ___BMAT_HELPER_KeyGenerator___(blocks)
-    EWC = EWC_SparseMatrix(elements, DG, KG, bmat_shape=(I, J))
+
+    assert CLASS.__name__ == 'EWC_SparseMatrix', "We must find an EWC_SparseMatrix class."
+    EWC = CLASS(elements, DG, KG, bmat_shape=(I, J))
 
     # Now we have a look at if we can get the gathering matrices for the bmat result.
     rgm = [None for _ in range(I)]

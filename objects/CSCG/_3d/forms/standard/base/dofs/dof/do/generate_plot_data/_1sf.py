@@ -1,7 +1,7 @@
 
 
-from screws.freeze.base import FrozenOnly
 import numpy as np
+from screws.freeze.base import FrozenOnly
 from root.config.main import cOmm, MPI
 
 

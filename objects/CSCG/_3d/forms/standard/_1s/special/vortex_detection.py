@@ -1,21 +1,23 @@
 
 
-
 from screws.freeze.main import FrozenOnly
 import numpy as np
 
 
 class ___3dCSCG_1Form_Vortex_Detection___(FrozenOnly):
-    """A wrapper of all vortex detection methods. So, we consider this 1 form as
-    a variable of a flow field."""
+    """A wrapper of all vortex detection methods.
+
+    So, we consider this 1 form as a variable of a flow field.
+    """
     def __init__(self, _1sf):
         self._sf_ = _1sf
         self._freeze_self_()
 
     def ___PRIVATE_generate_gradient_tensor_at___(self, xi, eta, sigma):
-        """We compute the gradient tensor of this 1form. To do so, we first project
-        this 1-form into a vector of 3 standard 0-forms which represent the three
-        components. Then we do the gradient (apply the incidence matrix E10) to each
+        """We compute the gradient tensor of this 1form.
+
+        To do so, we first project this 1-form into a vector of 3 standard 0-forms which represent
+        the three components. Then we do the gradient (apply the incidence matrix E10) to each
         standard 0-form.
 
         It returns a 3 by 3 tensor representing
@@ -24,9 +26,9 @@ class ___3dCSCG_1Form_Vortex_Detection___(FrozenOnly):
              (dw_dx, dw_dy, dw_dz)).
         Each value are 3d evaluated at *meshgrid(xi, eta, sigma, indexing='ij)
 
-        :param xi: 1d increasing array in [-1,1]
-        :param eta: 1d increasing array in [-1,1]
-        :param sigma: 1d increasing array in [-1,1]
+        :param xi: 1d increasing array in [-1,1].
+        :param eta: 1d increasing array in [-1,1].
+        :param sigma: 1d increasing array in [-1,1].
 
         """
         assert np.ndim(xi) == 1 and np.all(np.diff(xi) >0) and np.max(xi) <= 1 and np.min(xi) >= -1, \
@@ -59,9 +61,9 @@ class ___3dCSCG_1Form_Vortex_Detection___(FrozenOnly):
                     (dW_dx, dW_dy, dW_dz))
 
     def ___PRIVATE_generate_S_and_Omega___(self, xi, eta, sigma):
-        """
-        S and Omega are the symmetric and antisymmetric components of gradient
-        tensor G. So both S and Omega are 3 by 3 tensor, and
+        """ S and Omega are the symmetric and antisymmetric components of gradient tensor G.
+
+        So both S and Omega are 3 by 3 tensor, and
 
         S_{i,j} = 0.5 * (G_{i,j} + G_{j,i})
         Omega_{i,j} = 0.5 * (G_{i,j} - G_{j,i})

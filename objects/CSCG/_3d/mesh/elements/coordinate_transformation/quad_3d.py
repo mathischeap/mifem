@@ -2,7 +2,10 @@
 import numpy as np
 from screws.quadrature import Quadrature
 from screws.freeze.base import FrozenOnly
-from objects.CSCG._3d.mesh.elements.coordinate_transformation.helpers.value_cache import ElementsCTValuesCache
+from objects.CSCG._3d.mesh.elements.coordinate_transformation.helpers.value_cache import \
+    ElementsCTValuesCache
+
+
 
 class _3dCSCG_ECT_3d_QUAD(FrozenOnly):
     def __init__(self, ect):
@@ -83,5 +86,3 @@ class _3dCSCG_ECT_3d_QUAD(FrozenOnly):
         """G^-1, g^{i,j}."""
         xi, eta, sigma = self.___compute_xietasigma___(quad_degree, quad_type)
         return ElementsCTValuesCache(self._elements_, 'inverse_metric_matrix', xi, eta, sigma, intermediateData=None)
-
-

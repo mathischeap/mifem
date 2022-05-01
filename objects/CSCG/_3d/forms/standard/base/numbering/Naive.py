@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 """
-
 @author: Yi Zhang.
          Department of Aerodynamics
          Faculty of Aerospace Engineering
          TU Delft, Delft, Netherlands
 
 """
+
 from root.config.main import *
 from screws.freeze.main import FrozenOnly
-from tools.linear_algebra.gathering.chain_matrix.main import Gathering_Matrix, Gathering_Vector
+from tools.linear_algebra.gathering.regular.chain_matrix.main import \
+    Gathering_Matrix, Gathering_Vector
 
 
 
@@ -20,12 +21,8 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         self._freeze_self_()
 
 
-
-
-
     def _3dCSCG_0Form(self):
-        """
-        Do the numbering if it is a standard 0-form.
+        """Do the numbering if it is a standard 0-form.
 
         :returns: A tuple of 3 outputs:
 
@@ -46,8 +43,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
 
 
     def _3dCSCG_1Form(self):
-        """
-        Do the numbering if it is a standard 1-form.
+        """Do the numbering if it is a standard 1-form.
 
         :returns: A tuple of 3 outputs:
 
@@ -62,8 +58,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
 
 
     def _3dCSCG_2Form(self):
-        """
-        Do the numbering if it is a standard 2-form.
+        """Do the numbering if it is a standard 2-form.
 
         :returns: A tuple of 3 outputs:
 
@@ -78,8 +73,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
 
 
     def _3dCSCG_3Form(self):
-        """
-        Do the numbering if it is a standard 3-form.
+        """Do the numbering if it is a standard 3-form.
 
         :returns: A tuple of 3 outputs:
 
@@ -94,12 +88,8 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
 
 
 
-
-
-
     def _3Form_no_parameters(self):
-        """
-        Do the numbering if it is a standard 3-form.
+        """Do the numbering if it is a standard 3-form.
 
         :returns: A tuple of 3 outputs:
 
@@ -119,11 +109,8 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
 
 
 
-
-
     def _2Form_no_parameters(self):
-        """
-        Do the numbering if it is a standard 2-form:
+        """Do the numbering if it is a standard 2-form:
         :class:`_3dCSCG.form.standard._2_form._2Form`.
 
         :returns: A tuple of 3 outputs:
@@ -145,7 +132,6 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
 
         global_numbering = None
         # non-hybrid numbering ...
-
 
         mesh = self._sf_.mesh
         if mesh.domain.IS.periodic:
@@ -270,10 +256,8 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
 
 
 
-
     def _1Form_no_parameters(self):
-        """
-        Do the numbering if it is a standard 1-form:
+        """Do the numbering if it is a standard 1-form:
         :class:`_3dCSCG.form.standard._1_form._1Form`.
 
         :returns: A tuple of 3 outputs:
@@ -312,6 +296,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
             element_indices = mesh.elements.indices
             cOmm.send([element_map, element_indices], dest=mAster_rank, tag=rAnk)
             global_numbering = cOmm.recv(source=mAster_rank, tag=rAnk)
+
         else:
             p = self._sf_.p
             numOfBasisComponents = self._sf_.num.basis_components
@@ -319,6 +304,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
             currentNumber = 0
             other_side_name = 'SNEWFB' # not an error, this is other side name.
             sidePairDict = {'N':'S', 'S':'N', 'W':'E', 'E':'W', 'B':'F', 'F':'B'}
+
             for i in range(sIze):
                 if i == mAster_rank:
                     element_map = mesh.elements.map
@@ -400,6 +386,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
     @staticmethod
     def ___PRIVATE_for_1Form_pass_element_side_numbering_from_to___(
         fromElement, fromSide, toElement, toSide, numberingCache):
+        """"""
 
         data0, data1, data2 = None, None, None
 
@@ -444,10 +431,8 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
 
 
 
-
     def _0Form_no_parameters(self):
-        """
-        Do the numbering if it is a standard 0-form:
+        """Do the numbering if it is a standard 0-form:
         :class:`_3dCSCG.form.standard._0_form._0Form`.
 
         :returns: A tuple of 3 outputs:
@@ -493,6 +478,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
             currentNumber = 0
             other_side_name = 'SNEWFB' # not an error, this is other side name.
             sidePairDict = {'N':'S', 'S':'N', 'W':'E', 'E':'W', 'B':'F', 'F':'B'}
+
             for i in range(sIze):
                 if i == mAster_rank:
                     element_map = mesh.elements.map
@@ -565,7 +551,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         else: raise Exception()
 
     def _0Form_a_region_side_crack(self):
-        """Do the numbering for 0Form with one regions side crack."""
+        """Do the numbering for 0Form with one region side crack."""
         crack = self._sf_.numbering._parameters_['SingleRegionSideCrack']
         assert isinstance(crack, str), "parameter of a crack must be a string."
         gathering_matrix, numOfDofs, extraInfo = self._0Form_no_parameters()
@@ -661,12 +647,6 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
 
 
 
-
-
-
-
-
-
-
 if __name__ == '__main__':
+    #
     pass

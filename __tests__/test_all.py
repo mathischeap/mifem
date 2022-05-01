@@ -2,7 +2,7 @@
 """
 Here we put all unittests in mpi environment here.
 
-mpiexec -n 4 python __tests__/test_all.py
+mpiexec -n 4 py __tests__/test_all.py
 
 mpiexec -n 4 python __tests__/unittests/main.py
 

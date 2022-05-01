@@ -11,8 +11,11 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
         self._sf_ = sf
         self._freeze_self_()
 
+
     def reset_cache(self):
         self._sf_.___PRIVATE_reset_cache___()
+
+
 
     def evaluate_basis_at_meshgrid(self, *args, **kwargs):
         return self._sf_.___PRIVATE_do_evaluate_basis_at_meshgrid___(*args, **kwargs)
@@ -20,6 +23,9 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
     def evaluate_basis_at_quadrature(self, quad_degree, quad_type=None, compute_xietasigma=True):
         return self._sf_.space.do.evaluate_form_basis_at_quadrature(
             self._sf_.k, quad_degree, quad_type=quad_type, compute_xietasigma=compute_xietasigma)
+
+
+
 
     def resemble(self, *args, **kwargs):
         """get cochain from another form (with a different mesh.)"""
@@ -33,8 +39,14 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
         """
         raise NotImplementedError()
 
+
+
+
     def cross_product(self, *args, **kwargs):
         return self._sf_.special.cross_product(*args, **kwargs)
+
+
+
 
     def compute_L2_energy_with(self, other=None, M=None):
         """Compute (self, other)_{L2} = int_{Omega}(self dot other)
@@ -67,8 +79,7 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
         return cOmm.allreduce(LOCAL, op=MPI.SUM)
 
     def compute_Ln_energy(self, n=2, quad_degree=None, vectorized=False):
-        """So compute int_{Omega}( self ** n). When n = 2, it is equal to
-        `self.compute_L2_energy_with()`.
+        """So compute int_{Omega}( self ** n). When n = 2, it is equal to `self.compute_L2_energy_with()`.
 
         :param n:
         :param quad_degree:
@@ -159,10 +170,9 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
         Ln_norm_of_d_self = d_self.do.compute_Ln_norm(n=n, quad_degree=quad_degree)
         return Ln_norm_of_d_self
 
-
-
     def compute_Ln_diff_from(self, other, n=2, quad_degree=None):
-        """ compute: ||self - other||_{L^n} = n-root{ int_{Omega}(self - other)^n }."""
+        """Compute: ||self - other||_{L^n} = n-root{ int_{Omega}(self - other)^n }.
+        """
         sf = self._sf_
         of = other
         assert '3dCSCG_standard_form' in of.standard_properties.tags, "Other should be a _3dCSCG standard form."
@@ -209,9 +219,10 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
         return self._sf_.reconstruct(*args, **kwargs)
 
     def make_reconstruction_matrix_on_grid(self, xi, eta, sigma):
-        """Make the reconstruction matrices for all mesh elements. These matrices are stored in
-        a dict whose keys are the numbers of mesh elements and values are the local reconstruction
-        matrices.
+        """Make the reconstruction matrices for all mesh elements.
+
+        These matrices are stored in a dict whose keys are the numbers of mesh elements and values
+        are the local reconstruction matrices.
 
         Let `RM` be the reconstruction matrix (or the tuple of three matrices).
         If we want to do the local reconstruction, we do

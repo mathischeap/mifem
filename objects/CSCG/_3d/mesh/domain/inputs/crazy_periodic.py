@@ -14,7 +14,7 @@ from root.config.main import rAnk, mAster_rank, cOmm
 class CrazyPeriodic(_3dDomainInputBase):
     """A "crazy" 3d rectangular domain's input class whose inside is distorted with the "crazy" mapping.
     """
-    def __init__(self, c=0, bounds=((0, 1), (0, 1), (0, 1)), domain_name="CrazyPeriodic3D"):
+    def __init__(self, c=0, bounds=((0, 1), (0, 1), (0, 1)), domain_name="CrazyPeriodic"):
         assert np.shape(bounds)[0] == 3, " <CrazyDomain> : bounds dimension is wrong."
         for i in range(3):
             assert np.shape(bounds[i]) == (2,) and bounds[i][1] > bounds[i][0], \

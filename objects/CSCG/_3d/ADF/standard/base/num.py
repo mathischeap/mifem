@@ -18,3 +18,7 @@ class _3dCSCG_ADF_SF_NUM(FrozenOnly):
     @property
     def GLOBAL_dofs(self):
         return self._adf_.prime.num.GLOBAL_dofs
+
+    @property
+    def basis(self):
+        return self._adf_.prime.num.basis

@@ -5,7 +5,6 @@ from root.config.main import caChe_factor
 
 
 
-
 class ElementsCTValuesCache(FrozenOnly):
     def __init__(self, elements, CTT, xi, eta, sigma, intermediateData=None):
         self._elements_ = elements

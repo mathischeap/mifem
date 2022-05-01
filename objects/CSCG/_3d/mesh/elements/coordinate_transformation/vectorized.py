@@ -46,7 +46,6 @@ class _3dCSCG_MeshElement_CT_VEC(FrozenOnly):
                 Jacobian.append(J[i])
             return np.array(Jacobian)
 
-
     def inverse_Jacobian(self, xi, et, sg):
         """
 

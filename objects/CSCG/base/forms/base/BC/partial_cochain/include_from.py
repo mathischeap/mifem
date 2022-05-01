@@ -21,7 +21,8 @@ class _PartialCochain_Include_from_(FrozenOnly):
         cochain_type, cochain = f.discretize(target='BC')
 
 
-        if cochain_type == 'locally full local cochain': # cochain.local, and locally full for all dofs in mesh elements.
+        if cochain_type == 'locally full local cochain':
+            # cochain.local, and locally full for all dofs in mesh elements.
             if f.ndim == 3:
                 for i in local_dofs_indicators:
                     if i not in self._cochain_:

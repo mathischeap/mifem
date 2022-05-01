@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-The edge elements of a mesh.
-"""
+"""The edge elements of a mesh."""
 
 
 import sys

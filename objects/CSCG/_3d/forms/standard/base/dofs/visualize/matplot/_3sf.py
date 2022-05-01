@@ -11,3 +11,4 @@ class _3dCSCG_S3F_DOFs_Matplot(FrozenOnly):
 
     def __call__(self, *args, **kwargs):
         """"""
+        raise NotImplementedError()

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-"""
-"""
+""""""
+
 from objects.CSCG.base.forms.standard.IS import CSCG_standard_form_IS
 from objects.CSCG.base.forms.standard.num import CSCG_standard_form_NUM
+
 
 # noinspection PyUnresolvedReferences
 class CSCG_Standard_Form:

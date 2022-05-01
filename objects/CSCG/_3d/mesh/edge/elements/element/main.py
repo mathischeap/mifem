@@ -46,13 +46,14 @@ class _3dCSCG_Edge_Element(FrozenOnly):
         if self._direction_ is None:
             pos = self.positions[0][-2:]
             if pos in ('NB', 'SB', 'NF', 'SF'):
-                self._direction_ = 'WE'
+                self._direction_ = self._elements_.___WE___
             elif pos in ('WB', 'EB', 'WF', 'EF'):
-                self._direction_ = 'NS'
+                self._direction_ = self._elements_.___NS___
             elif pos in ('NW', 'NE', 'SW', 'SE'):
-                self._direction_ = 'BF'
+                self._direction_ = self._elements_.___BF___
             else:
                 raise Exception()
+
         return self._direction_
 
     @property

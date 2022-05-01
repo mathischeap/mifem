@@ -41,7 +41,7 @@ def gRoup_cores(member_num, group_num=None):
 
     for i, g in enumerate(GROUPS):
         assert len(g) > 0, f"group[{i}] is empty!"
-        leader = min(g) # leader of group must be the core of smallest rank.
+        leader = min(g) # leader of group must be the core of the smallest rank.
         DG[leader] = [i for i in g][1:]
         DG['leaders'].append(leader)
         if rAnk in g:

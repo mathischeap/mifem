@@ -9,7 +9,7 @@ TU Delft
 """
 import numpy as np
 from screws.freeze.main import FrozenOnly
-from scipy.sparse import csc_matrix
+from scipy.sparse import csr_matrix
 
 
 
@@ -57,7 +57,7 @@ class IncidenceMatrix(FrozenOnly):
                     E[dn[2][i,j,k], sn[0][i,j,k]]   = -1    # Back
                     E[dn[2][i,j,k], sn[0][i,j,k+1]] = +1    # Front
         
-        return csc_matrix(E)
+        return csr_matrix(E)
     
     @property
     def _3dCSCG_1Form(self):
@@ -94,7 +94,8 @@ class IncidenceMatrix(FrozenOnly):
                     E[dn[2][i,j,k], sn[0][i,j+1,k]] = -1    # East
                     E[dn[2][i,j,k], sn[1][i  ,j,k]] = -1    # North
                     E[dn[2][i,j,k], sn[1][i+1,j,k]] = +1    # South
-        return csc_matrix(E)
+
+        return csr_matrix(E)
     
     @property
     def _3dCSCG_2Form(self):
@@ -115,4 +116,4 @@ class IncidenceMatrix(FrozenOnly):
                     E[dn[0][i,j,k], sn[1][i,j+1,k]] = +1 # East
                     E[dn[0][i,j,k], sn[2][i,j,k  ]] = -1 # Back
                     E[dn[0][i,j,k], sn[2][i,j,k+1]] = +1 # Front
-        return csc_matrix(E)
+        return csr_matrix(E)

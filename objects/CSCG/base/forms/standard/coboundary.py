@@ -7,12 +7,12 @@ from screws.freeze.base import FrozenOnly
 class CSCG_Standard_Form_Coboundary_BASE(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
-        self._next_form_ = None
+        self._incidenceMatrix_ = None
         self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
     def ___PRIVATE_reset_cache___(self):
-        self._incidenceMatrix_ = None
+        pass
 
     @property
     def incidence_matrix(self):
@@ -37,18 +37,12 @@ class CSCG_Standard_Form_Coboundary_BASE(FrozenOnly):
             numbering_parameters = self._sf_.numbering._numbering_parameters_,
             name = 'd(' + self._sf_.standard_properties.name + ')'
         )
-        selfCochain = self._sf_.cochain.local
-        nextCochain = dict()
-        incidence_matrix = self.incidence_matrix
-        for i in self._sf_.mesh.elements:
-            nextCochain[i] = incidence_matrix[i] @ selfCochain[i]
-        nextFmInstance.cochain.local = nextCochain
+        nextFmInstance.cochain.local = self.cochain_local
         return nextFmInstance
 
     @property
     def cochain_local(self):
-        """
-        Return the local cochain (not the form) of its coboundary.
+        """Return the local cochain (not the form) of its coboundary.
 
         :return:
         """

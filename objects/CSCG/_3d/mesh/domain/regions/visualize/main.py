@@ -1,6 +1,4 @@
-"""
-
-"""
+""""""
 
 from screws.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.domain.regions.visualize.matplot import _3dCSCG_Regions_Visualize_Matplot_
@@ -8,7 +6,7 @@ from objects.CSCG._3d.mesh.domain.regions.visualize.matplot import _3dCSCG_Regio
 
 class _3dCSCG_Regions_Visualize(FrozenOnly):
     def __init__(self, regions):
-        """ """
+        """"""
         assert regions.__class__.__name__ == 'Regions'
         self._regions_ = regions
         self._matplot_ = _3dCSCG_Regions_Visualize_Matplot_(self)

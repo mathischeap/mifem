@@ -9,7 +9,6 @@ import numpy as np
 # noinspection PyUnresolvedReferences
 class _3dCSCG_S2F_Private:
 
-
     def ___PRIVATE_make_reconstruction_matrix_on_grid___(self, xi, et, sg):
         """Make the reconstruction matrices for all mesh elements. These matrices are stored in
         a dict whose keys are the numbers of mesh elements and values are the local reconstruction
@@ -75,9 +74,9 @@ class _3dCSCG_S2F_Private:
                         rm12 = np.einsum('ji, j -> ji', b2, _1w, optimize='greedy')
                         rm20 = np.einsum('ji, j -> ji', b0, _2u, optimize='greedy')
                         rm21 = np.einsum('ji, j -> ji', b1, _2v, optimize='greedy')
-                        RM_i_ = ( np.hstack((rm00, rm01, rm02)),
-                                  np.hstack((rm10, rm11, rm12)),
-                                  np.hstack((rm20, rm21, rm22)))
+                        RM_i_ = (np.hstack((rm00, rm01, rm02)),
+                                 np.hstack((rm10, rm11, rm12)),
+                                 np.hstack((rm20, rm21, rm22)))
 
                     CACHE[typeWr2Metric] = RM_i_
                     RM[i] = RM_i_
@@ -93,7 +92,6 @@ class _3dCSCG_S2F_Private:
                 _2v = iJi[2][0] * iJi[0][1] - iJi[2][1] * iJi[0][0]
                 _2w = iJi[0][0] * iJi[1][1] - iJi[0][1] * iJi[1][0]
 
-
                 rm00 = np.einsum('ji, j -> ji', b0, _0u, optimize='greedy')
                 rm01 = np.einsum('ji, j -> ji', b1, _0v, optimize='greedy')
                 rm02 = np.einsum('ji, j -> ji', b2, _0w, optimize='greedy')
@@ -106,9 +104,9 @@ class _3dCSCG_S2F_Private:
                 rm21 = np.einsum('ji, j -> ji', b1, _2v, optimize='greedy')
                 rm22 = np.einsum('ji, j -> ji', b2, _2w, optimize='greedy')
 
-                RM[i] = ( np.hstack((rm00, rm01, rm02)),
-                          np.hstack((rm10, rm11, rm12)),
-                          np.hstack((rm20, rm21, rm22)))
+                RM[i] = (np.hstack((rm00, rm01, rm02)),
+                         np.hstack((rm10, rm11, rm12)),
+                         np.hstack((rm20, rm21, rm22)))
 
         return RM
 
@@ -126,6 +124,7 @@ class _3dCSCG_S2F_Private:
         iJ = element.coordinate_transformation.inverse_Jacobian_matrix(*xietasigma, J=J)
         g = element.coordinate_transformation.inverse_metric_matrix(*xietasigma, iJ=iJ)
         del J, iJ
+
         if isinstance(mark, str) and mark[:4] == 'Orth':
             M00 = self.___PRIVATE_inner_H1___(quad_weights, sqrtg, g[1][1]*g[2][2], bfOther[0], bfSelf[0])
             M11 = self.___PRIVATE_inner_H1___(quad_weights, sqrtg, g[2][2]*g[0][0], bfOther[1], bfSelf[1])
@@ -136,6 +135,7 @@ class _3dCSCG_S2F_Private:
             M10 = None
             M20 = None
             M21 = None
+
         else:
             M00 = self.___PRIVATE_inner_H1___(quad_weights, sqrtg, g[1][1]*g[2][2]-g[1][2]*g[2][1], bfOther[0], bfSelf[0])
             M11 = self.___PRIVATE_inner_H1___(quad_weights, sqrtg, g[2][2]*g[0][0]-g[2][0]*g[0][2], bfOther[1], bfSelf[1])
@@ -154,6 +154,7 @@ class _3dCSCG_S2F_Private:
                 M10 = self.___PRIVATE_inner_H1___(quad_weights, sqrtg, g12_20_g10_22, bfOther[1], bfSelf[0])
                 M20 = self.___PRIVATE_inner_H1___(quad_weights, sqrtg, g10_21_g11_20, bfOther[2], bfSelf[0])
                 M21 = self.___PRIVATE_inner_H1___(quad_weights, sqrtg, g20_01_g21_00, bfOther[2], bfSelf[1])
+
         Mi = bmat([(M00, M01, M02),
                    (M10, M11, M12),
                    (M20, M21, M22)], format='csc')

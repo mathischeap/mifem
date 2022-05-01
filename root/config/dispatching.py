@@ -78,5 +78,7 @@ def dIspatching(originalTaskInputs: list, method):
                 else:
                     resultPOOL.append(method(nextTaskData))
                     cOmm.Send(np.array([rAnk], dtype='i'), dest=mAster_rank, tag=rAnk)
+
     cOmm.Barrier() # sync all cores.
+    
     return resultPOOL

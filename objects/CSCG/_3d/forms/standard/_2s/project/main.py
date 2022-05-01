@@ -19,5 +19,3 @@ class _2Form_Projection(FrozenOnly):
     @property
     def van(self):
         return self._van_
-
-

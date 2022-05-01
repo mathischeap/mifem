@@ -4,7 +4,8 @@
 from screws.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.node.elements.element.coordinate_transformation import _3dCSCG_Node_Element_CT
 from objects.CSCG._3d.mesh.node.elements.element.IS import _3dCSCG_NodeElement_IS
-
+from objects.CSCG._3d.mesh.node.elements.element.helpers.parse_boundary_position_indicator import \
+    parse_boundary_position_indicator
 
 
 class _3dCSCG_Node_Element(FrozenOnly):
@@ -29,6 +30,27 @@ class _3dCSCG_Node_Element(FrozenOnly):
     def positions(self):
         """This node element is at these positions (all)."""
         return self._positions_
+
+    @property
+    def boundary_position_indicator(self):
+        """
+
+        Returns
+        -------
+        indicator :
+            If this node-element is an internal-node-element, `indicator` = None.
+
+            Else, we will use function parse_boundary_position_indicator to parse the indicator.
+
+        """
+        if not self.IS.on_mesh_boundary:
+            return None
+
+        # ----------- this node-element is no mesh-element -------------------------
+
+        indicator = parse_boundary_position_indicator(self)
+
+        return indicator
 
     @property
     def coordinate_transformation(self):

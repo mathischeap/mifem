@@ -9,7 +9,7 @@ TU Delft
 """
 import numpy as np
 from screws.freeze.main import FrozenOnly
-from scipy.sparse import csc_matrix
+from scipy.sparse import csr_matrix
 
 class TraceMatrix(FrozenOnly):
     """ 
@@ -59,7 +59,7 @@ class TraceMatrix(FrozenOnly):
             N_[i] = N[m:m+nbt['NSWEBF'[i]], :]
             m += nbt['NSWEBF'[i]]
         Nn, Ns, Nw, Ne, Nb, Nf = N_
-        return csc_matrix(N), {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne, 'B': Nb, 'F': Nf}
+        return csr_matrix(N), {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne, 'B': Nb, 'F': Nf}
     
     @property
     def _3dCSCG_1Trace(self):
@@ -96,7 +96,7 @@ class TraceMatrix(FrozenOnly):
         Nf[lnt['F'][1].ravel('F'), lnf_dy[:, :, -1].ravel('F')] = +1
         #------------------------------------------------------------------------------
         N = np.vstack((Nn, Ns, Nw, Ne, Nb, Nf))
-        return csc_matrix(N), {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne, 'B': Nb, 'F': Nf}
+        return csr_matrix(N), {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne, 'B': Nb, 'F': Nf}
     
     @property
     def _3dCSCG_2Trace(self):
@@ -118,7 +118,7 @@ class TraceMatrix(FrozenOnly):
             N_[i] = N[m:m+nbt['NSWEBF'[i]], :]
             m += nbt['NSWEBF'[i]]
         Nn, Ns, Nw, Ne, Nb, Nf = N_
-        return csc_matrix(N), {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne, 'B': Nb, 'F': Nf}
+        return csr_matrix(N), {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne, 'B': Nb, 'F': Nf}
 
 
 
@@ -154,7 +154,7 @@ class TraceMatrix(FrozenOnly):
             N_[i] = N[m:m+nbt['NSWEBF'[i]], :]
             m += nbt['NSWEBF'[i]]
         Nn, Ns, Nw, Ne, Nb, Nf = N_
-        return csc_matrix(N), {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne, 'B': Nb, 'F': Nf}
+        return csr_matrix(N), {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne, 'B': Nb, 'F': Nf}
 
 
 

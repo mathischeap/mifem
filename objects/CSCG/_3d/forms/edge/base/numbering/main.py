@@ -54,15 +54,19 @@ class _3dCSCG_Edge_Numbering(FrozenOnly):
 
 
 
+
+    @property
+    def local(self):
+        """The local numbering in mesh element."""
+        if self._local_ is None:
+            self._local_ = getattr(self._ef_.space.local_numbering, self._ef_.__class__.__name__)
+        return self._local_
+
+
+
     def ___PRIVATE_do_numbering___(self):
         self._gathering_, self._edge_element_wise_, self._local_num_dofs_, self._extra_ = \
             getattr(self._numberer_, self._ef_.__class__.__name__)()
-
-    @property
-    def num_local_dofs(self):
-        if self._local_num_dofs_ is None:
-            self.___PRIVATE_do_numbering___()
-        return self._local_num_dofs_
 
     @property
     def gathering(self):
@@ -71,17 +75,25 @@ class _3dCSCG_Edge_Numbering(FrozenOnly):
         return self._gathering_
 
     @property
-    def extra(self):
-        if self._extra_ is None:
-            self.___PRIVATE_do_numbering___()
-        return self._extra_
-
-    @property
     def edge_element_wise(self):
         """(dict) Return a dictionary of gathering vectors."""
         if self._edge_element_wise_ is None:
             self.___PRIVATE_do_numbering___()
         return self._edge_element_wise_
+
+    @property
+    def num_local_dofs(self):
+        if self._local_num_dofs_ is None:
+            self.___PRIVATE_do_numbering___()
+        return self._local_num_dofs_
+
+    @property
+    def extra(self):
+        if self._extra_ is None:
+            self.___PRIVATE_do_numbering___()
+        return self._extra_
+
+
 
 
 

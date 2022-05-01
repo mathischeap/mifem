@@ -1,7 +1,7 @@
-"""
-In `mesh.domain`, we distinguish domain boundary and periodic boundary. So even two domain boundaries
-are periodic boundaries (physically, they are not boundaries), we still have them named and in
-mesh.domain.regions.map shown.
+"""In `mesh.domain`, we distinguish domain boundary and periodic boundary.
+
+So even two domain boundaries are periodic boundaries (physically, they are not boundaries),
+we still have them named and in `mesh.domain.regions.map` shown.
 
 However, in mesh.boundaries, the periodic boundaries are not considered.
 
@@ -32,6 +32,7 @@ from objects.CSCG._3d.mesh.boundaries.visualize import _3dCSCG_MeshBoundaries_VI
 class _3dCSCG_Mesh_Boundaries(FrozenOnly):
     """"""
     def __init__(self, mesh):
+        """"""
         assert mesh.__class__.__name__ == '_3dCSCG_Mesh'
         self._mesh_ = mesh
         self._boundaries_dict_ = dict()

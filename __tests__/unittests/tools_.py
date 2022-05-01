@@ -24,7 +24,7 @@ from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 from objects.CSCG._2d.master import MeshGenerator as MeshGenerator2D
 from objects.CSCG._2d.master import SpaceInvoker as SpaceInvoker2D
 from objects.CSCG._2d.master import FormCaller as FormCaller2D
-from tools.linear_algebra.gathering.chain_matrix.main import Chain_Gathering_Matrix
+from tools.linear_algebra.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
 from tools.linear_algebra.elementwise_cache.operators.concatenate.main import bmat, concatenate
 import tools.linear_algebra.elementwise_cache.operators.concatenate.main as mif
 from tools.linear_algebra.linear_system.main import LinearSystem
@@ -723,11 +723,6 @@ def test_TOOLS_NO7_linear_algebra_EWC_test():
         E21 = f1.matrices.incidence
         E32 = f2.matrices.incidence
 
-        s = E10.shape
-        assert s[0] == len(mesh.elements)
-        assert s[1] == f1.num.basis
-        assert s[2] == f0.num.basis
-
 
         E210 = E21 @ E10
         E321 = E32 @ E21
@@ -745,10 +740,6 @@ def test_TOOLS_NO7_linear_algebra_EWC_test():
                   [None, M1 ])
 
         BMAT = mif.bmat(blocks)
-        s = BMAT.shape
-        assert s[0] == len(mesh.elements)
-        assert s[1] == f2.num.basis + f1.num.basis
-        assert s[2] == f2.num.basis + f1.num.basis
 
         for i in BMAT:
             bi = BMAT[i]
@@ -1055,11 +1046,6 @@ def test_TOOLS_NO10_test_EWC_SparseMatrix_Customize():
         M3 = f3.matrices.mass
         E32 = f2.matrices.incidence
 
-        s = E32.shape
-        assert s[0] == len(mesh.elements)
-        assert s[1] == f3.num.basis
-        assert s[2] == f2.num.basis
-
         f2_GND = f2.num.GLOBAL_dofs
         f3_GND = f3.num.GLOBAL_dofs
         GND = f2_GND + f3_GND
@@ -1129,11 +1115,6 @@ def test_TOOLS_NO10_test_EWC_SparseMatrix_Customize():
         BMAT = [[M1, E10],[E10.T, None]]
         SYSTEM = bmat(BMAT)
         SYSTEM.gathering_matrices=([f1,f0], [f1,f0])
-
-        s = SYSTEM.shape
-        assert s[0] == len(mesh.elements)
-        assert s[1] == f1.num.basis + f0.num.basis
-        assert s[2] == f1.num.basis + f0.num.basis
 
         if rAnk == mAster_rank:
             AAA =  int(GND / 30)
@@ -1928,20 +1909,12 @@ def test_TOOLS_NO15_linear_system_apply_BC():
             [E32, None, None],
             [T2, None, None]]
     A = bmat(BMAT)
-    SHAPE = A.shape
-    assert SHAPE[0] == len(mesh.elements)
-    assert SHAPE[1] == f2.num.basis + f3.num.basis + t2.num.basis
-    assert SHAPE[2] == f2.num.basis + f3.num.basis + t2.num.basis
     A.gathering_matrices = ([f2, f3, t2], [f2, f3, t2])
 
     b0 = EWC_ColumnVector(mesh, f2.num.basis)
     b1 = EWC_ColumnVector(mesh, f3.num.basis)
     b2 = EWC_ColumnVector(mesh, t2.num.basis)
     b = concatenate([b0, b1, b2])
-    SHAPE = b.shape
-    assert SHAPE[0] == len(mesh.elements)
-    assert SHAPE[1] == f2.num.basis + f3.num.basis + t2.num.basis
-    assert SHAPE[2] == 1
     b.gathering_matrix = [f2, f3, t2]
 
     Axb = LinearSystem(A, b)

@@ -13,6 +13,10 @@ else:
     sEcretary_rank: int = 0
 
 
+
+
+
+
 def cHeck_same_in_all_cores(*args):
     """
     check if some variables are the same in all cores.

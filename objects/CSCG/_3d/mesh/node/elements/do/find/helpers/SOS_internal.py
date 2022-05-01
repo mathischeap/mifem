@@ -112,27 +112,36 @@ class _3dCSCG_InternalNodeSOS(FrozenOnly):
             ___.extend(_)
         EDGE = ___
 
-        if i in mesh.node.elements:
-            self._EDGE_ = EDGE
-            self._TRACE_ = TRACE
-            self._S_edge_ = S_edge
-            self._N_edge_ = N_edge
-            self._freeze_self_()
-        else:
-            pass
+        self._EDGE_ = EDGE
+        self._TRACE_ = TRACE
+        self._S_edge_ = S_edge
+        self._N_edge_ = N_edge
+        self._i_ = i
+        self._freeze_self_()
+
+    @property
+    def i(self):
+        """We are talking about node-element #`i`."""
+        return self._i_
 
     @property
     def trace(self):
+        """The trace elements on the N-S surface. The corner name represents the
+        trace-element-corner on the node-element."""
         return self._TRACE_
 
     @property
     def edge(self):
+        """The four edge-elements on the N-S surface. The side name represents the edge-element
+        side on the node-element."""
         return self._EDGE_
 
     @property
     def S_edge(self):
+        """The edge-element on the South side of the node-element"""
         return self._S_edge_
 
     @property
     def N_edge(self):
+        """the edge-element on the North side of the node-element."""
         return self._N_edge_

@@ -1,5 +1,7 @@
 
 
+import sys
+if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.main import FrozenOnly
 import os
@@ -27,11 +29,13 @@ class SendAdminAnHTMLEmail(FrozenOnly):
             self._freeze_self_()
             return
 
+        absolute_path = os.path.dirname(__file__)
+
         # noinspection PyBroadException
         try:
-            with open('root/___private_developer_code___.txt', 'r') as _:
+            with open(absolute_path + '/___private_developer_code___.txt', 'r') as _:
                 pass
-        except:
+        except FileNotFoundError:
             self.s = None
             self._freeze_self_()
             return
@@ -48,7 +52,7 @@ class SendAdminAnHTMLEmail(FrozenOnly):
             if in_the_wall:
                 # noinspection PyBroadException
                 try:
-                    with open('root/config/___private_developer_code___.txt', 'r') as f:
+                    with open(absolute_path + '/___private_developer_code___.txt', 'r') as f:
                         PDCs = f.readlines()
                     self._key_code_ = PDCs[0]
                     DC_abc, DC_bbb, DC_from, DC_name, DC_email1, DC_email2, DC_HS = PDCs[1:8]
@@ -138,3 +142,10 @@ class SendAdminAnHTMLEmail(FrozenOnly):
         except:
             return 0
 
+
+if __name__ == '__main__':
+    # mpiexec -n 8 python SCREWS\emails\html.py
+    if rAnk == mAster_rank:
+        message = '123test'
+        code = SendAdminAnHTMLEmail()(message)
+        print(code)

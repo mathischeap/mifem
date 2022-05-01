@@ -9,6 +9,9 @@ import matplotlib.pyplot as plt
 from screws.freeze.base import FrozenOnly
 from objects.CSCG._3d.mesh.node.elements.do.find.main import _3dCSCG_NodeMesh_DoFind
 
+
+
+
 class _3dCSCG_NodeMesh_Do(FrozenOnly):
     """"""
     def __init__(self, elements):
@@ -189,4 +192,3 @@ if __name__ == '__main__':
 
     for i in range(mesh.node.elements.GLOBAL_num):
         nodes.do.illustrate_element(i)
-

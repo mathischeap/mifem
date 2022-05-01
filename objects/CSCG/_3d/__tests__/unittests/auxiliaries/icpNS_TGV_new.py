@@ -11,7 +11,7 @@ from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller, Exa
 from tools.linear_algebra.data_structures.global_matrix.main import LocallyFullVector
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_ColumnVector
 from tools.linear_algebra.elementwise_cache.operators.concatenate.main import bmat, concatenate
-from tools.linear_algebra.solvers.parallel.GMRES.main import GMRES
+from tools.linear_algebra.solvers.regular.GMRES.main import GMRES
 from tools.iterators.simple import SimpleIterator
 from time import time
 from root.config.main import *

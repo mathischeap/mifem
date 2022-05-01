@@ -1,5 +1,4 @@
-
-
+"""['WB', 'EB', 'WF', 'EF', 'NB', 'SB', 'NF', 'SF', 'NW', 'SW', 'NE', 'SE']"""
 
 import sys
 if './' not in sys.path: sys.path.append('./')
@@ -20,21 +19,26 @@ from objects.CSCG._3d.mesh.edge.elements.do.main import _3dCSCG_Edge_Elements_DO
 
 
 class _3dCSCG_Edge_Elements(FrozenOnly):
-    """"""
+    """['WB', 'EB', 'WF', 'EF', 'NB', 'SB', 'NF', 'SF', 'NW', 'SW', 'NE', 'SE'] """
     def __init__(self, edge):
-        """"""
+        """['WB', 'EB', 'WF', 'EF', 'NB', 'SB', 'NF', 'SF', 'NW', 'SW', 'NE', 'SE'] """
         self._edge_ = edge
         self._mesh_ = edge._mesh_
         self._MAP_ = self.___PRIVATE_generating_edge_element_map___()
         self._locations_ = self.___PRIVATE_generating_edge_locations___()
+        self._local_EE_indices_sorted_ = list(self._locations_.keys())
+        self._local_EE_indices_sorted_.sort()
         self._elements_ = dict()
         self._do_ = None
         self._ct_ = _3dCSCG_Edge_Elements_CT(self)
         self.___PRIVATE_reset_cache___()
+        self.___NS___ = 'NS'
+        self.___WE___ = 'WE'
+        self.___BF___ = 'BF'
         self._freeze_self_()
 
     def ___PRIVATE_reset_cache___(self):
-        pass
+        self._type_amount_dict_ = None
 
     def ___PRIVATE_generating_edge_element_map___(self):
         """"""
@@ -51,7 +55,7 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
                         regionElementLayout = baseElementLayout[rn]
                         assert all(np.array(regionElementLayout) > 1), \
                             f" elements.layout[{rn}]={regionElementLayout} wrong," \
-                            f" needs (>1, >1, >1) to make it work for periodic domain."
+                            f" needs (>1, >1, >1) to make it work for periodic region: {rn}."
 
         if rAnk != mAster_rank:
             element_map = mesh.elements.map
@@ -144,7 +148,6 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
                     cOmm.send(toBeSentAway, dest=i, tag=i)
                 for k in element_indices: del numberingCache[k]
 
-
         MAX = list()
         for i in self._mesh_.elements:
             vector = np.concatenate([global_numbering[i][0].ravel('F'),
@@ -223,61 +226,64 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
             We can see that 32 + 33 + 42 = 107 (0, 1, 2, ..., 106).
         :rtype: dict
         """
-        if rAnk == 0:
-            POOL = dict()
-        else:
-            POOL = cOmm.recv(source=rAnk - 1, tag=rAnk)
+        if self._type_amount_dict_ is None:
 
-        type_amount_dict = dict()
-
-        INDICES = list(self._locations_.keys())
-        INDICES = sorted(INDICES)
-
-        for i in INDICES:
-            if i == 0: POOL[0] = np.array([0,0,0])
-
-            ee = self[i]
-            cs = ee.direction
-            POOL_i_p_1 = POOL[i].copy()
-            if cs == 'NS':
-                POOL_i_p_1[0] += 1
-            elif cs == 'WE':
-                POOL_i_p_1[1] += 1
-            elif cs == 'BF':
-                POOL_i_p_1[2] += 1
+            if rAnk == 0:
+                POOL = dict()
             else:
-                raise Exception()
-            if i+1 in POOL:
-                assert np.all(POOL_i_p_1 == POOL[i+1])
-            else:
-                if i == self.GLOBAL_num - 1:
-                    assert np.sum(POOL_i_p_1) == self.GLOBAL_num, "Something is wrong."
-                else:
-                    POOL[i+1] = POOL_i_p_1
+                POOL = cOmm.recv(source=rAnk - 1, tag=rAnk)
 
-            type_amount_dict[i] = POOL[i]
+            type_amount_dict = dict()
 
-        if rAnk == sIze - 1:
-            pass
-        else:
-            cOmm.send(POOL, dest=rAnk+1, tag=rAnk+1)
+            INDICES = list(self._locations_.keys())
+            INDICES = sorted(INDICES)
 
-        for i in type_amount_dict:
-            assert np.sum(type_amount_dict[i]) == i
-            if i - 1 in type_amount_dict:
-                A, B, C = type_amount_dict[i]
-                a, b, c = type_amount_dict[i-1]
-                if self[i-1].direction == 'NS':
-                    assert A == a + 1 and B == b and C == c
-                elif self[i-1].direction == 'WE':
-                    assert A == a and B == b + 1 and C == c
-                elif self[i-1].direction == 'BF':
-                    assert A == a and B == b and C == c + 1
+            for i in INDICES:
+                if i == 0: POOL[0] = np.array([0,0,0])
+
+                ee = self[i]
+                cs = ee.direction
+                POOL_i_p_1 = POOL[i].copy()
+                if cs == 'NS':
+                    POOL_i_p_1[0] += 1
+                elif cs == 'WE':
+                    POOL_i_p_1[1] += 1
+                elif cs == 'BF':
+                    POOL_i_p_1[2] += 1
                 else:
                     raise Exception()
+                if i+1 in POOL:
+                    assert np.all(POOL_i_p_1 == POOL[i+1])
+                else:
+                    if i == self.GLOBAL_num - 1:
+                        assert np.sum(POOL_i_p_1) == self.GLOBAL_num, "Something is wrong."
+                    else:
+                        POOL[i+1] = POOL_i_p_1
 
-        return type_amount_dict
+                type_amount_dict[i] = POOL[i]
 
+            if rAnk == sIze - 1:
+                pass
+            else:
+                cOmm.send(POOL, dest=rAnk+1, tag=rAnk+1)
+
+            for i in type_amount_dict:
+                assert np.sum(type_amount_dict[i]) == i
+                if i - 1 in type_amount_dict:
+                    A, B, C = type_amount_dict[i]
+                    a, b, c = type_amount_dict[i-1]
+                    if self[i-1].direction == 'NS':
+                        assert A == a + 1 and B == b and C == c
+                    elif self[i-1].direction == 'WE':
+                        assert A == a and B == b + 1 and C == c
+                    elif self[i-1].direction == 'BF':
+                        assert A == a and B == b and C == c + 1
+                    else:
+                        raise Exception()
+
+            self._type_amount_dict_ = type_amount_dict
+
+        return self._type_amount_dict_
 
     @property
     def GLOBAL_num(self):
@@ -323,7 +329,7 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
             LOC_DICT_FULL.update(LOC_DICT) # LOC_DICT_FULL has all locations on mesh elements.
             del LOC_DICT
 
-            # now we split the LOC_DICT_FULL to send to each cores.
+            # now we split the LOC_DICT_FULL to send to each core.
             EDs = self._mesh_._element_distribution_
             LOCAL_EDGES = list()
             for core in EDs:
@@ -479,7 +485,7 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
         return item in self._locations_
 
     def __iter__(self):
-        for i in self._locations_:
+        for i in self._local_EE_indices_sorted_:
             yield i
 
     def __len__(self):

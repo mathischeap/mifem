@@ -12,4 +12,3 @@ class EWC_SparseMatrix_IS(FrozenOnly):
     def assembled_matrix_locked(self):
         """If the assembled matrix locked?"""
         return self._MAT_.do.___locker___
-

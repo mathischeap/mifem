@@ -95,7 +95,9 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
                     raise Exception()
 
-                self._func_[bn] = [func_bn,] # we always put a func representing a scalar in a list or tuple of shape (1,)
+                self._func_[bn] = [func_bn,]
+                # we always put a func representing a scalar in a list or tuple of shape (1,)
+
         elif ftype == 'trace-element-wise':
             # we have received a dict whose keys are local trace elements, values are callable that returns, xyz and a vector.
             assert isinstance(func, dict), f"func for trace-element-wise vector must a dict."
@@ -104,6 +106,7 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                 # NOTE that we do not put the vector in a list or tuple, it should take (t, xi, eta, sigma) and then return xyz and the vector.
                 assert callable(func[i]), f"func[{i}] is not callable."
             self._func_ = func
+
         else:
             raise Exception(f" <ScalarField> do not accept funcType={ftype}")
 
@@ -151,7 +154,7 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
     @property
     def shape(self):
-        return (1,)
+        return 1,
 
     def reconstruct(self, *args, **kwargs):
         return self.do.reconstruct(*args, **kwargs)

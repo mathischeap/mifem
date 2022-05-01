@@ -6,7 +6,11 @@ particular structure.
 
 """
 
+import sys
+if './' not in sys.path: sys.path.append('./')
+
 from screws.freeze.main import FrozenOnly
+from objects.CSCG._3d.mesh.domain.regions.region.sub_geometry.perpendicular_slice import RegionPerpendicularSlice
 
 
 class RegionSubGeometry(FrozenOnly):
@@ -20,81 +24,61 @@ class RegionSubGeometry(FrozenOnly):
 
 
 
-    def make_a_perpendicular_slice_object_on(self, r=None, s=None, t=None):
+
+
+    def make_a_perpendicular_slice_object_on(self, x=None, y=None, z=None, r=None, s=None, t=None):
         """"""
-        return RegionPerpendicularSlice(self._region_, r=r, s=s, t=t)
+        num_None = 0
+        for _ in (x, y, z, r, s, t):
+            if _ is None:
+                num_None += 1
+        assert num_None == 5, f"please only provide one of x, y, z, r, s, t."
+
+        if any([_ is not None for _ in (x, y, z)]):
+            if x is not None:
+                assert isinstance(x, (int, float)), f"I need a float or int"
+                r = self._region_.interpolation.___inverse_mapping_r_x_s0t0___(x)
+                r = float(r)
+            if y is not None:
+                assert isinstance(y, (int, float)), f"I need a float or int"
+                s = self._region_.interpolation.___inverse_mapping_s_y_r0t0___(y)
+                s = float(s)
+            if z is not None:
+                assert isinstance(z, (int, float)), f"I need a float or int"
+                t = self._region_.interpolation.___inverse_mapping_t_z_r0s0___(z)
+                t = float(t)
+
+            for _ in (r, s, t):
+                if _ is not None:
+                    if 0 <= _ <= 1:
+                        pass
+                    else:
+                        return None # this region has no business with this slice x, y or z constant slice.
+
+            return RegionPerpendicularSlice(self._region_, r=r, s=s, t=t)
+
+        elif any([_ is not None for _ in (r, s, t)]):
+            if r is not None: assert 0<= r <= 1
+            if s is not None: assert 0<= s <= 1
+            if t is not None: assert 0<= t <= 1
+            return RegionPerpendicularSlice(self._region_, r=r, s=s, t=t)
+
+        else:
+            raise Exception()
 
 
 
 
+if __name__ == '__main__':
+    # mpiexec -n 8 python objects/CSCG/_3d/mesh/domain/regions/region/sub_geometry/main.py
+
+    from objects.CSCG._3d.master import MeshGenerator
+
+    mesh = MeshGenerator('crazy', bounds=([0,2],[0,2],[0,2]))([3, 3, 3], EDM='chaotic', show_info=True)
+
+    R = mesh.domain.regions['R:R']
 
 
+    RSG = R.sub_geometry
+    RSG.make_a_perpendicular_slice_object_on(x=2)
 
-
-
-class RegionPerpendicularSlice(FrozenOnly):
-    """A perpendicular slice object in the regions.
-
-    The local coordinate of a regions is (r, s, t) = [0,1]^3.
-
-    If r = 0.5, s=[0,1], t=[0, 1] then it means a full slice at (local coordinate) r=0.5.
-
-    """
-
-    def __init__(self, region, r=None, s=None, t=None):
-        """"""
-        self._region_ = region
-        r, s, t, perpendicular_to_axis = self.___PRIVATE_check_x_y_z___(r, s, t)
-        self._r_, self._s_, self._t_ = r, s, t
-        self._PTA_ = perpendicular_to_axis
-        self._freeze_self_()
-
-    @staticmethod
-    def ___PRIVATE_check_x_y_z___(r, s, t):
-        """"""
-        if r is None: r = [0, 1]
-        if s is None: s = [0, 1]
-        if t is None: t = [0, 1]
-
-        NUM_float, NUM_range = 0, 0
-        for i, _ in enumerate([r, s, t]):
-            if isinstance(_, (int, float)):
-                NUM_float += 1
-                assert 0 <= _ <= 1, 'rst'[i] + f'={_} is wrong.'
-                perpendicular_to_axis = i
-            elif isinstance(_, (tuple, list)):
-                NUM_range += 1
-                assert len(_) == 2, 'rst'[i] + f'={_} is wrong.'
-                S, E = _
-                assert 0 <= S <= 1, 'rst'[i] + f'={_} is wrong.'
-                assert 0 <= E <= 1, 'rst'[i] + f'={_} is wrong.'
-                assert S < E      , 'rst'[i] + f'={_} is wrong.'
-            else:
-                raise Exception('rst'[i] + f'={_} is wrong.')
-
-        assert NUM_float == 1 and NUM_range == 2, f"r, s ,t = {r}, {s}, {t} wrong."
-        # noinspection PyUnboundLocalVariable
-        perpendicular_to_axis = 'rst'[perpendicular_to_axis]
-
-        return r, s, t, perpendicular_to_axis
-
-
-    @property
-    def r(self):
-        """Or x-direction."""
-        return self._r_
-
-
-    @property
-    def s(self):
-        """Or y-direction."""
-        return self._s_
-
-    @property
-    def t(self):
-        """Or z-direction."""
-        return self._t_
-
-    @property
-    def perpendicular_to_axis(self):
-        return self._PTA_

@@ -1,11 +1,12 @@
-"""
-This is a class for the boundaries of the domain. A more useful class is the one for the boundaries
-of the mesh. See module "boundaries" for the mesh class.
+"""This is a class for the boundaries of the domain.
+
+A more useful class is the one for the boundaries of the mesh. See module "boundaries" for the mesh class.
 
 If two boundaries are periodic, in other words, they are internal, we will still have them contained
 in this domain boundaries class.
 
 In the mesh.boundaries class, the periodic boundaries will not be shown.
+
 """
 
 import sys
@@ -73,9 +74,7 @@ class _3dCSCG_Boundaries(FrozenOnly):
 
 
     def ___PRIVATE_if_is_Regular__one_region_corner_interface___(self):
-        """
-        Return True if the interface of any two connected boundaries is regular (on the corner edge
-        of a regions).
+        """Return True if the interface of any two connected boundaries is regular (on the corner edge of a regions).
 
         :return: bool
         """
@@ -122,7 +121,9 @@ class _3dCSCG_Boundaries(FrozenOnly):
                     if ToF is False: break
         else:
             ToF = None
+
         ToF = cOmm.bcast(ToF, root=mAster_rank)
+
         return ToF
 
 

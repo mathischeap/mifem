@@ -64,6 +64,17 @@ class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form):
         else:
             raise Exception(f"3dCSCG 1form FUNC do not accept func {func_body.__class__}")
 
+
+    def ___PRIVATE_TW_BC_body_checker___(self, func_body):
+        assert func_body.mesh.domain == self.mesh.domain
+        assert func_body.ndim == self.ndim == 3
+
+        if func_body.__class__.__name__ == '_3dCSCG_VectorField':
+            assert func_body.ftype in ('standard',), \
+                f"3dCSCG 1form BC do not accept func _3dCSCG_VectorField of ftype {func_body.ftype}."
+        else:
+            raise Exception(f"3dCSCG 1form BC do not accept func {func_body.__class__}")
+
     @property
     def special(self):
         return self._special_
@@ -95,7 +106,7 @@ class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python _3dCSCG\form\standard\_1_form.py
+    # mpiexec -n 4 python objects/CSCG/_3d/forms/standard/_1s/main.py
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
     mesh = MeshGenerator('crazy', c=0.0)([8,8,8])
@@ -118,5 +129,4 @@ if __name__ == '__main__':
     f1.TW.___DO_push_all_to_instant___()
     f1.discretize()
 
-    VD = f1.special.vortex_detection
-    SO = VD.Q_and_lambda2([-1, 0, 0.5, 1], [-1, 1], [-1, -0.5, 0, 0.5, 1])
+    f1.visualize(x=0.25)

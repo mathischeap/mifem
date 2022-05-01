@@ -32,7 +32,8 @@ class _3dCSCG_PeriodicDomainSetting(FrozenOnly):
             # add more types of periodicBoundaryPair here by adding more elif.
             else:
                 raise NotImplementedError(
-                    f'Not coded for {self._periodic_boundary_pairs_[pair]} periodic boundary pair.')
+                    f'Not coded for {self._periodic_boundary_pairs_[pair]} '
+                    f'periodic boundary pair.')
 
     @property
     def periodic_boundary_pairs(self):
@@ -43,5 +44,6 @@ class _3dCSCG_PeriodicDomainSetting(FrozenOnly):
         if self._periodic_region_side_pairs_ is None:
             self._periodic_region_side_pairs_ = dict()
             for pbp in self.periodic_boundary_pairs:
-                self._periodic_region_side_pairs_.update(self.periodic_boundary_pairs[pbp].region_side_pairs)
+                self._periodic_region_side_pairs_.update(
+                    self.periodic_boundary_pairs[pbp].region_side_pairs)
         return self._periodic_region_side_pairs_

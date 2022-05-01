@@ -2,10 +2,12 @@
 import types
 from screws.freeze.main import FrozenOnly
 from scipy import sparse as spspa
-from root.config.main import *
-from tools.linear_algebra.gathering.chain_matrix.main import Chain_Gathering_Matrix
+from tools.linear_algebra.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.customize import SpaMat_Customize
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.adjust import SpaMat_Adjust
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.blocks.main import EWC_SpaMat_Blocks
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.condition.main import EWC_SpaMat_Condition
+
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.matmul import ___MATMUL___
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.vecmul import ___VECMUL___
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.add import ___ADD___
@@ -29,31 +31,34 @@ class EWC_SparseMatrix(FrozenOnly):
     """
     Element-wise cached sparse matrix (2D).
 
-    :param mesh_elements:
+    :param mesh_elements: If it is given as a mesh, we will get the elements from the mesh.
     :param data_generator:
         1) `data_generator = (int, int )` and `cache_key_generator = None `
             we make locally empty sparse matrix of shape `data_generator`.
         2)  `data_generator = (int, int )` and `cache_key_generator = constant `
             we make locally empty sparse matrix of shape `data_generator`. (just like situation 1).
-        3) `data_generator = ('identity', int-a, int-b)` and `cache_key_generator = constant `
-            We will make identity local sparse matrix of shape (int-a, int-b) in all mesh elements.
-        4) `cache_key_generator = 'all_diff'`
+        3) `data_generator = ('identity', int-a)` and `cache_key_generator = constant `
+            We will make identity local sparse matrix of shape (int-a, int-a) in all mesh elements.
+    :param cache_key_generator:
+        1) `cache_key_generator = 'all_diff'`
             The local sparse matrix will be all different in all mesh elements.
-        5) `cache_key_generator = 'constant'`
+        2) `cache_key_generator = 'constant'`
             The local sparse matrix will be all same in all mesh elements.
-        6) `cache_key_generator = 'no_cache'`
+        3) `cache_key_generator = 'no_cache'`
             We will not cache the sparse matrix.
-        .) `cache_key_generator = else`:
+        else: `cache_key_generator = else`:
             we have a customized `cache_key_generator`
 
         When `data_generator = (x, y)` where `x`, `y` are positive integers, we make it empty sparse
             matrix in all elements.
-    :param cache_key_generator:
-    :param bmat_shape: If this EWC instance is made from a bmat and if yes, what is the bmat shape.
+    :param bmat_shape: If this EWC instance is made from a bmat, `bmat_shape` will no longer be
+        False, and it will become the bmat shape.
+
+        Or, for example,
+
         if bmat_shape = False: it is not from a bmat
         else bmat_shape should be of shape (2,) and is representing the block shape. For example,
             M = bmat([[A, B, C], [D, E, None]]), then bmat_shape = [2,3].
-    :type bmat_shape: list, tuple
 
     """
     def __init__(self, mesh_elements, data_generator, cache_key_generator=None, bmat_shape=False):
@@ -83,7 +88,6 @@ class EWC_SparseMatrix(FrozenOnly):
             if cache_key_generator is None:
                 cache_key_generator = 'no_cache'
                 # the data are in the dict anyway, so do not need to be cached.
-
         else:
             pass
 
@@ -147,10 +151,11 @@ class EWC_SparseMatrix(FrozenOnly):
                 self._KG_ = self.___PRIVATE_all_different_cache_key_generator___
             elif cache_key_generator == 'constant': # return the same sparse matrix for all elements.
                 # the data_generator should be the data itself
-                assert spspa.isspmatrix_csc(data_generator) or spspa.isspmatrix_csr(data_generator)
-                # must be a sparse csc or csr matrix.
-                self.___DGD___ = data_generator # save it, then we can call it.
-                self._DG_ = self.___PRIVATE_constant_cache_data_generator___
+                if spspa.isspmatrix_csc(data_generator) or spspa.isspmatrix_csr(data_generator):
+                    self.___DGD___ = data_generator # save it, then we can call it.
+                    self._DG_ = self.___PRIVATE_constant_cache_data_generator___
+                else:
+                    self._DG_ = data_generator
                 self._KG_ = self.___PRIVATE_constant_cache_key_generator___
             elif cache_key_generator == 'no_cache': # do not cache for any elements.
                 # use this when nothing is the same in elements and iterations: i.e. for the cross product
@@ -189,6 +194,8 @@ class EWC_SparseMatrix(FrozenOnly):
         self._IS_ = None
         self._visualize_ = None
         self._adjust_ = None
+        self._blocks_ = None
+        self._condition_ = None
         self._freeze_self_()
 
 
@@ -314,6 +321,12 @@ class EWC_SparseMatrix(FrozenOnly):
         return self._adjust_
 
     @property
+    def blocks(self):
+        if self._blocks_ is None:
+            self._blocks_ = EWC_SpaMat_Blocks(self)
+        return self._blocks_
+
+    @property
     def do(self):
         """The assembler"""
         if self._do_ is None:
@@ -326,6 +339,12 @@ class EWC_SparseMatrix(FrozenOnly):
         if self._assembler_ is None:
             self._assembler_ = EWC_SparseMatrix_Assembler(self)
         return self._assembler_
+
+    @property
+    def condition(self):
+        if self._condition_ is None:
+            self._condition_ = EWC_SpaMat_Condition(self)
+        return self._condition_
 
     @property
     def assembled(self):
@@ -372,6 +391,7 @@ class EWC_SparseMatrix(FrozenOnly):
                 self.___CHECK_repeat_CT___ = False # only do above check once.
 
             if ck == self.___CT___ or self.___repeat_CK___ == self.___CT___:
+
                 assert self.____CT_DG____ is None, "self.____CT_DG____ must be None so far"
                 # one more cache to make it always cached even after operators
                 self.____CT_DG____ = self._DG_(item)
@@ -404,39 +424,25 @@ class EWC_SparseMatrix(FrozenOnly):
         value refers to how many rows in the local sparse matrix. The third
         one refers to how many cols in the local sparse matrix.
 
+        Note that this is only possible when we have regular sparse matrices (same shape in all
+        mesh elements). Otherwise, we just raise Exception!
+
         :return: A tuple of 3 integers.
         """
         if self._shape_ is not None: return self._shape_
 
         if self._gathering_matrices_0_ is not None and \
             self._gathering_matrices_1_ is not None:
+
+            #------ regular gathering matrices have shape --------------
             self._shape_ = self._gathering_matrices_0_.shape + \
                            self._gathering_matrices_1_.shape[1:]
+
+            #irregular gathering matrices will raise Exception because it has no shape property
+
         else:
-            shape = None
-            for i in self:
-                Vi = self[i]
-                shape = np.shape(Vi)
-                break
-
-            shape = cOmm.gather(shape, root=mAster_rank)
-            _s_ = None
-            if rAnk == mAster_rank:
-                for s in shape:
-                    if s is None:
-                        pass
-                    else:
-                        if _s_ is None:
-                            _s_ = s
-                        else:
-                            assert _s_ == s
-                assert _s_ is not None, f"we must have found a _s_."
-            else:
-                pass
-
-            _s_ = cOmm.bcast(_s_, root=mAster_rank)
-
-            self._shape_ = (len(self),) + _s_
+            raise Exception('To access the shape of a EWC_SparseMatrix, '
+                            'set its (regular) gathering matrices first')
 
         return self._shape_
 
@@ -526,6 +532,7 @@ class EWC_SparseMatrix(FrozenOnly):
             assert self._elements_._mesh_ == other._elements_._mesh_
             DKC = ___MATMUL___(self, other)
             return EWC_SparseMatrix(self._elements_, DKC.__DG_call__, DKC.__KG_call__)
+
         elif other.__class__.__name__ == 'EWC_ColumnVector':
             DKC = ___VECMUL___(self, other)
             return EWC_ColumnVector(self._elements_, DKC.__DG_call__, DKC.__KG_call__)

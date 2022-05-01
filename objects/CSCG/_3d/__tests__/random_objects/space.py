@@ -4,6 +4,7 @@ from objects.CSCG._3d.master import SpaceInvoker
 from root.config.main import rAnk, mAster_rank, np, cOmm
 import random
 
+
 def random_space_of_degrees_around(overall_degrees):
     """
 
@@ -69,4 +70,3 @@ def random_space_of_degrees_around(overall_degrees):
     space = SpaceInvoker(space_name)(DIS)
 
     return space
-

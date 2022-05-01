@@ -122,8 +122,8 @@ class _3dCSCG_Edge_Elements_DO_FIND(FrozenOnly):
         -------
 
         """
-        if i in self._elements_ and int(
-            self._elements_[i].positions[0][:-2]) in self._mesh_.elements:
+        if i in self._elements_ and \
+            int(self._elements_[i].positions[0][:-2]) in self._mesh_.elements:
             return _3dCSCG_Edge_SOS(self._mesh_, i)
         else:
             return None

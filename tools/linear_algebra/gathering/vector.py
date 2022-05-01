@@ -57,10 +57,6 @@ class Gathering_Vector(FrozenOnly):
             else:
                 raise Exception()
 
-            assert len(set(self._full_vector_)) == len(self._full_vector_), \
-                "A gathering vector can not have repeated dofs. This usually happens when a mesh element" \
-                "is periodic to itself."
-
         return self._full_vector_
 
     def __getitem__(self, i):

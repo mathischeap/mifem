@@ -24,7 +24,7 @@ class EWC_ColumnVector_Assembler(FrozenOnly):
         """"""
         assert self._Vec_.gathering_matrix is not None, "I have no gathering matrix"
         GI = self._Vec_.gathering_matrix
-        DEP = GI.GLOBAL_num_dofs
+        DEP = int(GI.GLOBAL_num_dofs)
         ROW = list()
         DAT = list()
 

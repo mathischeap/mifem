@@ -3,7 +3,7 @@
 """
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 
 from screws.freeze.main import FrozenOnly
@@ -14,8 +14,11 @@ from objects.CSCG._3d.forms.standard.base.dofs.dof.do.main import _3dCSCG_SF_dof
 
 
 class _3dCSCG_Standard_forms_DOF(FrozenOnly):
-    """A dof of a standard form. This object is generated in all cores and if the dof has no business with
-    this core, the local positions `self.positions` with be empty list."""
+    """A dof of a standard form.
+
+    This object is generated in all cores and if the dof has no business with this core, the local
+    positions `self.positions` with be empty list.
+    """
     def __init__(self, dofs, i):
         """"""
         # we first check if dof #i is a local dof, if not, raise Error.
@@ -41,6 +44,7 @@ class _3dCSCG_Standard_forms_DOF(FrozenOnly):
     @property
     def positions(self):
         """Return a list of tuples which represent the "LOCAL" positions. For example,
+
             positions = [[(3, 4), (4, 3), (5, 2), (6, 1), (7, 0)]]
         Then we know, this dof is at GM[3][4], GM[4][3], GM[5][2], GM[6][1], GM[7][0]. And mesh elements
         3, 4, 5, 6, 7 are all in this core.
@@ -58,8 +62,11 @@ class _3dCSCG_Standard_forms_DOF(FrozenOnly):
 
     @property
     def GLOBAL_positions(self):
-        """The "GLOBAL" positions of this dof. So if it is shared by multiple cores, we return all its
-        positions. The positions are indicated in the same way as the local positions, see `positions`."""
+        """The "GLOBAL" positions of this dof.
+
+        So if it is shared by multiple cores, we return all its positions.
+        The positions are indicated in the same way as the local positions, see `positions`.
+        """
         if self._GLOBAL_positions_ is None:
             positions = self.positions
             positions = cOmm.gather(positions, root=mAster_rank)

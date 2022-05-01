@@ -60,7 +60,7 @@ class _3dCSCG_0Trace(_3dCSCG_Standard_Trace, ABC):
         assert func_body.ndim == self.ndim == 3
 
         if func_body.__class__.__name__ == '_3dCSCG_ScalarField':
-            assert func_body.ftype in ('standard',), \
+            assert func_body.ftype in ('standard', 'trace-element-wise'), \
                 f"3dCSCG 0-trace BC cannot accommodate " \
                 f"_3dCSCG_ScalarField of ftype {func_body.ftype}."
         else:

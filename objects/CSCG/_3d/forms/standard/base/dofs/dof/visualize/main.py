@@ -62,10 +62,6 @@ if __name__ == '__main__':
 
     f = FC('0-f', is_hybrid=True)
 
-    # SPL = f0.numbering.sharing_physical_locations
-    #
-    # print(SPL)
-
     dofs = f.dofs
     for i in dofs:
         DI = dofs[i]

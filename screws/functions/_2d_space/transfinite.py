@@ -84,7 +84,29 @@ class TransfiniteMapping(FrozenOnly):
         y = (1-r)*gamma4_yt + r*gamma2_yt + (1-s)*gamma1_ys + s*gamma3_ys - \
             (1-r)*((1-s)*self.gamma1_y0 + s*self.gamma3_y0) - r*((1-s)*self.gamma1_y1 + s*self.gamma3_y1)
         return x, y
-        
+
+    def x(self, r, s):
+        gamma1_xs = self.gamma[0](r)[0]
+        gamma2_xt = self.gamma[1](s)[0]
+        gamma3_xs = self.gamma[2](r)[0]
+        gamma4_xt = self.gamma[3](s)[0]
+        x = (1-r)*gamma4_xt + r*gamma2_xt + (1-s)*gamma1_xs + s*gamma3_xs - \
+            (1-r)*((1-s)*self.gamma1_x0 + s*self.gamma3_x0) - r*((1-s)*self.gamma1_x1 + s*self.gamma3_x1)
+        return x
+
+    def y(self, r, s):
+        gamma1_ys = self.gamma[0](r)[1]
+        gamma2_yt = self.gamma[1](s)[1]
+        gamma3_ys = self.gamma[2](r)[1]
+        gamma4_yt = self.gamma[3](s)[1]
+        y = (1-r)*gamma4_yt + r*gamma2_yt + (1-s)*gamma1_ys + s*gamma3_ys - \
+            (1-r)*((1-s)*self.gamma1_y0 + s*self.gamma3_y0) - r*((1-s)*self.gamma1_y1 + s*self.gamma3_y1)
+        return y
+
+
+
+
+
     def dx_dr(self, r, s):
         """ """
         gamma2_xt, gamma2_yt = self.gamma[1](s)

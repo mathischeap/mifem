@@ -196,7 +196,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
         return len(self.local)
 
 
-    # ------------- DEPENDENT PROPERTIES (MAJOR): When set local, clear BRANCHES by set branches to None ---------------------
+    #--DEPENDENT PROPERTIES (MAJOR): When set local, clear BRANCHES by set branches to None ------
     @property
     def local(self):
         """
@@ -222,7 +222,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
         self.___PRIVATE_reset_cache___()
         self._local_ = local
 
-    #-- DEPENDENT PROPERTIES (BRANCHES, must have the two switching methods): when set below, update local ------
+    #--DEPENDENT PROPERTIES (BRANCHES, must have the two switching methods): when set below, update local ------
     @property
     def local_TEW(self):
         """
@@ -278,4 +278,3 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
         return NotImplementedError()
 
     #=================================== ABOVE -> branch 1 =======================================
-

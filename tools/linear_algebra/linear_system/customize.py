@@ -65,6 +65,8 @@ class ___LinearSystem_Customize___(FrozenOnly):
                 set_entries_according_to_CSCG_partial_cochains(
                 i, pd, pc=pc, interpreted_as=interpreted_as)
 
+
+
     def identify_global_row(self, r):
         """We set the row #r to be all zero except M(r, r) = 1."""
         self._LS_.A.customize.identify_global_row(r)
@@ -80,3 +82,21 @@ class ___LinearSystem_Customize___(FrozenOnly):
         """
         self._LS_.A.customize.identify_global_row(r)
         self._LS_.b.customize.set_assembled_V_i_to(r, v)
+
+
+    def anti_UpTo_A_Constant_singularity_at_block(self, i, index=-1, value=0):
+        """We set
+            A[i][i][index, :] = 0
+            A[i][j][index, index] = 1
+            b[i][index,0] = value
+
+        Parameters
+        ----------
+        i
+        index
+        value
+
+        Returns
+        -------
+
+        """

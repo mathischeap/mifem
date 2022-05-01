@@ -42,8 +42,7 @@ class CSCG_Algebra_DUAL_FORM_BASE(FrozenClass):
 
     @property
     def ___parameters___(self):
-        """
-        ___parameters___ will be called when you call standard_properties.parameters.
+        """___parameters___ will be called when you call standard_properties.parameters.
 
         This is mandatory for FrozenClass.
 

@@ -21,9 +21,9 @@ class _3dCSCG_Domain_Visualize(FrozenOnly):
         return self.matplot(**kwargs)
 
     def tecplot(self, nodes=None):
-        """
-        Here we call the tecplot API and plot self in Tecplot 360. In Tecplot:
-        layout -> page -> frame -> dataset -> zones. And each frame can also
+        """Here we call the tecplot API and plot self in Tecplot 360.
+
+        In Tecplot: layout -> page -> frame -> dataset -> zones. And each frame can also
         have multiple plots, each time, only one plot will be activated by
         doing plot.activate().
 

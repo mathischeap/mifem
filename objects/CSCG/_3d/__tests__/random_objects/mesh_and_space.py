@@ -59,5 +59,3 @@ def random_mesh_and_space_of_total_load_around(total_load, **kwargs):
     space = random_space_of_degrees_around(P)
 
     return mesh, space
-
-

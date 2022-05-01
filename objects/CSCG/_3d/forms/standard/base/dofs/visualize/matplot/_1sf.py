@@ -64,18 +64,7 @@ class _3dCSCG_S1F_DOFs_Matplot(FrozenOnly):
 
         assert T.__class__.__name__ == 'EWC_SparseMatrix', f"T must be a trace matrix."
         assert C.__class__.__name__ == 'EWC_SparseMatrix', f"C must be a complement matrix."
-
-        T_shape = T.shape
-        C_shape = C.shape
-
-        num_T_basis = getattr(self._sf_.space.num_basis, f'_3dCSCG_1Trace')[0]
-        num_S_basis = self._sf_.num.basis
-        num_E_basis = getattr(self._sf_.space.num_basis, f'_3dCSCG_1Edge')[0]
         mesh = self._sf_.mesh
-        num_elements = len(mesh.elements)
-
-        assert T_shape == (num_elements, num_T_basis, num_S_basis), f"T shape does not match."
-        assert C_shape == (num_elements, num_T_basis, num_E_basis), f"C shape does not match."
 
         if hasattr(tf, 'prime'): tf = tf.prime
         assert tf.__class__.__name__ == '_3dCSCG_1Trace'
@@ -300,7 +289,6 @@ class _3dCSCG_S1F_DOFs_Matplot(FrozenOnly):
             plt.close()
         # ======================================================================================
 
-
     def connection_through_around_edge_dof(self,
         i, T, C, tf, ef,
         density=5, zoom=0.9, linewidth=0.75, checking_mode=False, title=None,
@@ -313,17 +301,7 @@ class _3dCSCG_S1F_DOFs_Matplot(FrozenOnly):
         assert T.__class__.__name__ == 'EWC_SparseMatrix', f"T must be a trace matrix."
         assert C.__class__.__name__ == 'EWC_SparseMatrix', f"C must be a complement matrix."
 
-        T_shape = T.shape
-        C_shape = C.shape
-
-        num_T_basis = getattr(self._sf_.space.num_basis, f'_3dCSCG_1Trace')[0]
-        num_S_basis = self._sf_.num.basis
-        num_E_basis = getattr(self._sf_.space.num_basis, f'_3dCSCG_1Edge')[0]
         mesh = self._sf_.mesh
-        num_elements = len(mesh.elements)
-
-        assert T_shape == (num_elements, num_T_basis, num_S_basis), f"T shape does not match."
-        assert C_shape == (num_elements, num_T_basis, num_E_basis), f"C shape does not match."
 
         if hasattr(tf, 'prime'): tf = tf.prime
         assert tf.__class__.__name__ == '_3dCSCG_1Trace'
@@ -409,7 +387,7 @@ class _3dCSCG_S1F_DOFs_Matplot(FrozenOnly):
                 ___.extend(_)
             sDOF_PD = ___
 
-        #-------- make the plot data of the 1-tf dofs only in master core --------------------------
+        #-------- make the plot data of the 1-tf dofs only in master core ------------------
         if rAnk == mAster_rank:
             tDOF_PD = list()
 
@@ -438,7 +416,7 @@ class _3dCSCG_S1F_DOFs_Matplot(FrozenOnly):
                                 Trace_Element_Frames,
                                 Trace_dof_xyz])
 
-        #--------- do the checking ----------------------------------------------------------------
+        #--------- do the checking ------------------------------------------------------
         if rAnk == mAster_rank:
             involved_tf_dof = list()
             involved_sf_dofs = list()
@@ -488,7 +466,8 @@ class _3dCSCG_S1F_DOFs_Matplot(FrozenOnly):
                         ___[t_dof] = list()
                     for _ in CON[t_dof]:
                         ___[t_dof].append(_)
-            CONNECT = ___
+
+            CONNECT = ___ # keys are trace dof number, values are the dofs the trace dofs connect.
 
             CT = Counter()
 
@@ -506,24 +485,37 @@ class _3dCSCG_S1F_DOFs_Matplot(FrozenOnly):
 
             A = np.zeros((len(CONNECT), len(DOF_dict)))
 
-            for i, t_dof in enumerate(CONNECT):
+            sf_dof_connecting_to_edge_dof = None
+            for I, t_dof in enumerate(CONNECT):
                 LEN = len(CONNECT[t_dof])
                 for c_dof in CONNECT[t_dof]:
                     indicator = c_dof[0] + str(int(c_dof[1]))
                     value = c_dof[2]
                     j = DOF_dict[indicator]
-                    A[i, j] = value
+                    A[I, j] = value
+
                 if LEN == 2:
-                    assert np.sum(A[i,:]) == 0, f"we must have found a +1 and a -1."
+                    assert np.sum(A[I,:]) == 0, f"we must have found a +1 and a -1."
+
+                    id0 = CONNECT[t_dof][0][0]
+                    id1 = CONNECT[t_dof][1][0]
+
+                    if id0 == 'sf' and id1 == 'ef':
+                        sf_dof_connecting_to_edge_dof = CONNECT[t_dof][0][1]
+                    elif id0 == 'ef' and id1 == 'sf':
+                        sf_dof_connecting_to_edge_dof = CONNECT[t_dof][1][1]
+                    else:
+                        pass
                 else:
                     assert LEN == 1
 
-            A = rsmat(A)
-            A = A[-1,:]
-            if np.all(A == 0):
-                warnings.warn(f"Singularity find around edge dof#{i}, "
-                              f"do not forget applying BC later on",
-                              HybridSingularityWarning)
+            if A.shape[0] > 0: # some edge dof may not be a part of the connection.
+                A = rsmat(A)
+                A = A[-1,:]
+                if np.all(A == 0):
+                    warnings.warn(f"Singularity find around edge dof#{i}, "
+                                  f"do not forget applying BC later on",
+                                  HybridSingularityWarning)
 
         #------------- make the plot ----------------------------------------------------------
         if rAnk == mAster_rank and checking_mode is False:
@@ -545,6 +537,8 @@ class _3dCSCG_S1F_DOFs_Matplot(FrozenOnly):
             ax.set_zlabel(r'$z$', fontsize=15)
 
             # ------ plot 1-sf dofs -----------------------------------------------------------
+            SF_DOF_COLOR = ''
+
             for sDOF_pd in sDOF_PD:
 
                 efd = sDOF_pd[3]
@@ -571,7 +565,17 @@ class _3dCSCG_S1F_DOFs_Matplot(FrozenOnly):
                 ax.text(x, y, z,  num, color='red', ha='center', va='center', ma='center')
 
                 xyz = sDOF_pd[4]
-                plt.plot(*xyz, linewidth=2 * linewidth)
+
+                if sf_dof_connecting_to_edge_dof is not None:
+
+                    sf_dof_number = sDOF_pd[1]
+                    if sf_dof_number == sf_dof_connecting_to_edge_dof:
+                        plt.plot(*xyz, color='k', linewidth=2 * linewidth)
+                        SF_DOF_COLOR = 'k'
+                    else:
+                        plt.plot(*xyz, linewidth=2 * linewidth)
+                else:
+                    plt.plot(*xyz, linewidth=2 * linewidth)
 
             # ------ plot 1-tf dofs -------------------------------------------------------------
             for tDOF_pd in tDOF_PD:
@@ -581,12 +585,21 @@ class _3dCSCG_S1F_DOFs_Matplot(FrozenOnly):
                         plt.plot(*lines, 'gray', linewidth = 1.25*linewidth)
 
                 Trace_dof_xyz = tDOF_pd[3]
+                Trace_dof_number = tDOF_pd[0]
                 for ___ in Trace_dof_xyz:
                     for lines in ___:
-                        plt.plot(*lines, '--', color='b', linewidth = 1.5*linewidth)
+                        if Trace_dof_number in CONNECT:
+                            plt.plot(*lines, '--', color='b', linewidth = 1.5*linewidth)
+                        else:
+                            plt.plot(*lines, '--', color='r', linewidth=1.5 * linewidth)
+
             # -- plot 1-edge form dof ----------------------------------------------------------
             for xyz in eDOF_PD:
-                plt.plot(*xyz, color='k', linewidth=2 * linewidth)
+                if SF_DOF_COLOR == 'k':
+                    plt.plot(*xyz, color='k', linewidth=2 * linewidth)
+                else: # this edge dof is not used, so skip plotting it.
+                    pass
+
             # --------- title ------------------------------------------------------------------
             if title is None:
                 plt.title(f"Connection-around-1-edge-dof#{i}.")
@@ -624,7 +637,7 @@ if __name__ == '__main__':
     T = t1.matrices.trace
     C = e1.matrices.complement
 
-    T, C = f1.special.overcoming_hybrid_singularity(T, C)
+    T, C = f1.special.___PRIVATE_overcoming_hybrid_singularity___(T, C)[:2]
 
     # f1.dofs.visualize.matplot.connection_through_around_edge_dof(55, T, C, t1, e1)
 

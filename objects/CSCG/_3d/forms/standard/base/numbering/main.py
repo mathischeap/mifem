@@ -8,17 +8,17 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 from screws.freeze.main import FrozenOnly
 from importlib import import_module
 from objects.CSCG._3d.forms.standard.base.numbering.do.main import _3dCSCG_Standard_Form_Numbering_DO_
 
 
-
-
 class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
+    """"""
     def __init__(self, sf, numbering_parameters):
+        """"""
         # ... parse number and numbering parameters ...
         if isinstance(numbering_parameters, str):
             scheme_name = numbering_parameters
@@ -114,7 +114,8 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
 
         RES = boundaries.range_of_element_sides
 
-        _ = self.gathering # this is important! Do so to avoid calling gathering in ``___PRIVATE_DO_find_dofs_on_element_side___``!
+        _ = self.gathering
+        # this is important! Do so to avoid calling gathering in ``___PRIVATE_DO_find_dofs_on_element_side___``!
 
         for bn in RES:
             ES = RES[bn]
@@ -159,7 +160,6 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
                 BD = None
             return cOmm.bcast(BD, root=mAster_rank)
 
-
     @property
     def GLOBAL_boundary_dofs_ravel(self):
         """Regardless to boundary names; collection of all boundary dofs in one set."""
@@ -168,9 +168,6 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
         for bn in GLOBAL_boundary_dofs:
             RAVEL.update(GLOBAL_boundary_dofs[bn])
         return list(RAVEL)
-
-
-
 
     @property
     def sharing_physical_locations(self):
@@ -224,12 +221,9 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
                 else:
                     return None
 
-
     @property
     def do(self):
         return self._DO_
-
-
 
     def ___PRIVATE_find_0Form_dofs_on_element_side___(self, element, side_name, GM):
         """
@@ -312,18 +306,6 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\forms\standard\base\numbering\main.py
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
@@ -337,5 +319,3 @@ if __name__ == '__main__':
     bd = f.numbering.sharing_physical_locations
 
     print(bd)
-    #
-    # print(rAnk, bd)

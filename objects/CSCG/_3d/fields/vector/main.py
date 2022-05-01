@@ -8,7 +8,7 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 from root.config.main import *
 from types import FunctionType, MethodType
@@ -20,7 +20,7 @@ from screws.functions.time_plus_3d_space.constant import CFG
 from importlib import import_module
 from objects.CSCG._3d.fields.vector.numerical.main import _3dCSCG_VectorField_Numerical
 from objects.CSCG._3d.fields.vector.do.main import _3dCSCG_VectorField_DO
-from objects.CSCG._3d.fields.vector.component.main import _3dCSCG_VectorField_Components
+from objects.CSCG._3d.fields.vector.components.main import _3dCSCG_VectorField_Components
 from objects.CSCG._3d.fields.vector.helpers.neg import ___VECTOR_NEG_HELPER_1___
 from objects.CSCG._3d.fields.vector.helpers.sub import ___VECTOR_SUB_HELPER_1___
 from objects.CSCG._3d.fields.vector.helpers.add import ___VECTOR_ADD_HELPER_1___
@@ -146,7 +146,9 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
             return self._previous_func_id_time_[2]
         else:
             if self.ftype == 'standard':
-                RETURN = partial(self.func[0], time), partial(self.func[1], time), partial(self.func[2], time)
+                RETURN = partial(self.func[0], time), \
+                         partial(self.func[1], time), \
+                         partial(self.func[2], time)
 
             elif self.ftype  == 'boundary-wise':
 
@@ -172,7 +174,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
     @property
     def shape(self):
-        return (3,)
+        return 3, # do not remove comma.
 
     def reconstruct(self, *args, **kwargs):
         return self.do.reconstruct(*args, **kwargs)
@@ -248,7 +250,10 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
             trace_element_wise_func = dict()
             for i in safe_copy.mesh.trace.elements: # the local trace element #i on mesh boundaries
                 trace_element_wise_func[i] = ___VECTOR_FLUX___(safe_copy, i)
-            scalar_class = getattr(import_module('_3dCSCG.fields.scalar.main'), '_3dCSCG_ScalarField')
+
+            base_path = '.'.join(str(self.__class__).split(' ')[1][1:-2].split('.')[:-3]) + '.'
+
+            scalar_class = getattr(import_module(base_path + 'scalar.main'), '_3dCSCG_ScalarField')
             return scalar_class(safe_copy.mesh, trace_element_wise_func,
                                        ftype='trace-element-wise',
                                        valid_time=safe_copy.valid_time,
@@ -337,7 +342,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 6 python _3dCSCG\fields\vector\main.py
+    # mpiexec -n 6 python objects/CSCG/_3d/fields/vector/main.py
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
     mesh = MeshGenerator('crazy', c=0.)([1,1,1], show_info=True)

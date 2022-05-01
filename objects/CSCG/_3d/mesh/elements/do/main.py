@@ -22,6 +22,7 @@ class _3dCSCG_Mesh_Elements_DO(FrozenOnly):
         :param int i: We illustrate mesh element #i.
         :param int density_factor: How refined the plots are? be in {1,2,3,...}
         :return:
+
         """
         if not i in self._elements_:
             cOmm.barrier()
@@ -80,6 +81,7 @@ class _3dCSCG_Mesh_Elements_DO(FrozenOnly):
         plt.title(f"mesh element: {i}")
 
         plt.show()
+        plt.close()
         cOmm.barrier()
 
     @property

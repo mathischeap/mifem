@@ -20,8 +20,7 @@ from objects.CSCG.base.spaces._1d_basis.polynomials import _1dPolynomial
 class _3dCSCG_PolynomialSpace(_3dCSCG_Space_Base):
     """"""
     def __init__(self, inputs, ndim):
-        """
-        INPUTS for all spaces must be the same as shown here.
+        """INPUTS for all spaces must be the same as shown here.
 
         If `ndim` is not None, we will repeat the inputs for `ndim` times.
 

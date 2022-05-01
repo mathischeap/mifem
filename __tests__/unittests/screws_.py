@@ -4,6 +4,7 @@ if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 
 import random, time
+import os
 
 from screws.functions._3d_space.scaling import ScalingFunc
 from screws.functions._3d_space.opposite import Opposite
@@ -75,7 +76,9 @@ def test_SCREWS_NO2_sending_an_email_to_admin(force_to_do=False):
             Y, M, D, H, = int(Y), int(M), int(D), int(H)
             Current_day = (Y - 1) * 365 * 24 + (M - 1) * 30 * 24 + D * 24 + H
 
-            with open('tests/unittest/auxiliaries/___private_developer_email_admin_1___.txt', 'r') as f:
+            absolute_path = os.path.dirname(__file__)
+
+            with open(absolute_path + '/auxiliaries/___private_developer_email_admin_1___.txt', 'r') as f:
                 plain_last_time_day = f.readline()
                 time_format = time.strptime(plain_last_time_day, '%a %b %d %H:%M:%S %Y')
                 time_str = time.strftime("%Y %m %d %H %M %S", time_format)
@@ -83,7 +86,7 @@ def test_SCREWS_NO2_sending_an_email_to_admin(force_to_do=False):
                 Y, M, D, H = int(Y), int(M), int(D), int(H)
                 plain_last_time_day = (Y - 1) * 365 * 24 + (M - 1) * 30 * 24 + D * 24 + H
 
-            with open('tests/unittest/auxiliaries/___private_developer_email_admin_2___.txt', 'r') as f:
+            with open(absolute_path + '/auxiliaries/___private_developer_email_admin_2___.txt', 'r') as f:
                 email_last_time_day = f.readline()
                 time_format = time.strptime(email_last_time_day, '%a %b %d %H:%M:%S %Y')
                 time_str = time.strftime("%Y %m %d %H %M %S", time_format)
@@ -99,7 +102,7 @@ def test_SCREWS_NO2_sending_an_email_to_admin(force_to_do=False):
                 text = 'A plain unittest message. You see this when a successful unittest just passes.'
                 code = SendAdminAnEmail()(text)
                 if code == 1:
-                    with open('tests/unittests/auxiliaries/___private_developer_email_admin_1___.txt', 'w') as f:
+                    with open(absolute_path + '/auxiliaries/___private_developer_email_admin_1___.txt', 'w') as f:
                         f.write(time.ctime())
                     if force_to_do:
                         print("   ~ Plain test email sent. (forced to do)", flush=True)
@@ -119,7 +122,7 @@ def test_SCREWS_NO2_sending_an_email_to_admin(force_to_do=False):
                 text = 'A HTML unittest message. You see this when a successful unittest just passes.'
                 code = SendAdminAnHTMLEmail()(text)
                 if code == 1:
-                    with open('tests/unittests/auxiliaries/___private_developer_email_admin_2___.txt', 'w') as f:
+                    with open(absolute_path + '/auxiliaries/___private_developer_email_admin_2___.txt', 'w') as f:
                         f.write(time.ctime())
                     if force_to_do:
                         print("   ~ HTML test email sent. (forced to do)", flush=True)
@@ -135,6 +138,7 @@ def test_SCREWS_NO2_sending_an_email_to_admin(force_to_do=False):
                 print("   ~ HTML email test skipped.", flush=True)
 
         except:
+
             pass
 
     return 1
@@ -220,6 +224,6 @@ def test_SCREWS_NO4_generalized_piecewise_function():
 
 
 if __name__ == '__main__':
-    # mpiexec python tests\unittests\screws_.py
+    # mpiexec python __tests__\unittests\screws_.py
 
-    test_SCREWS_NO4_generalized_piecewise_function()
+    test_SCREWS_NO2_sending_an_email_to_admin()

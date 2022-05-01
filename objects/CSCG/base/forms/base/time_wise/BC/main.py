@@ -48,5 +48,5 @@ class CSCG_Form_TimeWise_BC(FrozenOnly):
         return self.body.ftype
 
     @property
-    def DO(self):
+    def do(self):
         return self._DO_

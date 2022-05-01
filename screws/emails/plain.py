@@ -4,7 +4,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 from screws.freeze.main import FrozenOnly
-import socket
+import socket, os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -47,12 +47,14 @@ class SendAdminAnEmail(FrozenOnly):
            return 0
 
         # noinspection PyBroadException
+        absolute_path = os.path.dirname(__file__)
+
         try:
-            with open('root/config/___private_developer_code___.txt', 'r') as f:
+            with open(absolute_path + '/___private_developer_code___.txt', 'r') as f:
                 PDCs = f.readlines()
             key_code = PDCs[0]
             DC_abc, DC_bbb, DC_from, DC_name, DC_email1, DC_email2, DC_HS = PDCs[1:8]
-        except:
+        except FileNotFoundError:
             return 0
 
         in_the_wall = whether_in_the_great_fire_wall()
@@ -110,6 +112,9 @@ if __name__ == '__main__':
         message = '123test'
         code = SendAdminAnEmail()(message)
         print(code)
-        message = '123test'
-        code = SendAdminAnHTMLEmail()(message)
-        print(code)
+
+
+        SENDER = SendAdminAnHTMLEmail
+        # message = '123test'
+        # code = SendAdminAnHTMLEmail()(message)
+        # print(code)

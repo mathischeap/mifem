@@ -11,10 +11,10 @@ import sys
 from abc import ABC
 if './' not in sys.path: sys.path.append('./')
 
-from root.config.main import *
+from root.config.main import np
 from screws.quadrature import Quadrature
 from objects.CSCG._3d.forms.trace.base.main import _3dCSCG_Standard_Trace
-from scipy import sparse as spspa
+from scipy.sparse import csr_matrix, bmat
 from objects.CSCG._3d.forms.trace._1tr.discretize.main import _3dCSCG_1Trace_Discretize
 from objects.CSCG._3d.forms.trace._1tr.visualize import _3dCSCG_1Trace_Visualize
 
@@ -53,6 +53,17 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
         else:
             raise NotImplementedError(
                 f"1-trace form cannot accommodate {func_body}.")
+
+    def ___PRIVATE_TW_BC_body_checker___(self, func_body):
+        assert func_body.mesh.domain == self.mesh.domain
+        assert func_body.ndim == self.ndim == 3
+
+        if func_body.__class__.__name__ == '_3dCSCG_VectorField':
+            assert func_body.ftype in ('trace-element-wise', ), \
+                f"3dCSCG 1-trace BC cannot accommodate _3dCSCG_VectorField of ftype {func_body.ftype}."
+        else:
+            raise NotImplementedError(
+                f"3d CSCG 1-trace form BC cannot accommodate {func_body}.")
 
     @property
     def visualize(self):
@@ -225,8 +236,13 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
                     else:
                         M01 = np.einsum('im, jm, m -> ij', b0, b1, np.sqrt(g) * iG[1][0] * QW, optimize='greedy')
 
+                M00 = csr_matrix(M00)
+                M11 = csr_matrix(M11)
+                M01 = csr_matrix(M01)
                 M10 = M01.T
-                M = spspa.csc_matrix(np.bmat([(M00, M01), (M10, M11)]))
+
+                M = bmat([(M00, M01),
+                          (M10, M11)], format='csr')
 
                 if isinstance(mark, str): local_cache[mark] = M
 

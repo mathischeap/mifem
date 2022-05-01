@@ -2,7 +2,8 @@
 
 
 from screws.freeze.main import FrozenOnly
-from tools.linear_algebra.solvers.parallel.allocator import ParallelSolverDistributor
+from tools.linear_algebra.solvers.Schur.allocator import SchurSolverDistributor
+from tools.linear_algebra.solvers.regular.allocator import RegularSolverDistributor
 from tools.linear_algebra.linear_system.solve.helpers.routine_2b_run import RoutineToBeRun
 
 
@@ -17,7 +18,7 @@ class ___LinearSystem_Solve___(FrozenOnly):
         self._freeze_self_()
 
 
-    def __call__(self, solver_name, routine='auto', name=''):
+    def __call__(self, solver_name, **kwargs):
         """
         Assemble and solve self.
 
@@ -39,9 +40,23 @@ class ___LinearSystem_Solve___(FrozenOnly):
                 4. (str) message
 
         """
-        A = self._LS_.A.assembled
-        b = self._LS_.b.assembled
-        solver_2b_run_with_parameters = ParallelSolverDistributor(solver_name, routine=routine, name=name)
-        RTB = RoutineToBeRun(solver_2b_run_with_parameters, A, b) # wrap A, b with the solver
-        # call RTB with any other args and kwargs in fact means a call of solver(A, b, *args, **kwargs)
-        return RTB
+        RSN = RegularSolverDistributor.___solver_name___()
+        if solver_name in RSN:
+            A = self._LS_.A.assembled
+            b = self._LS_.b.assembled
+            solver_2b_run_with_parameters = RegularSolverDistributor(solver_name, **kwargs)
+            RTB = RoutineToBeRun(solver_2b_run_with_parameters, A, b) # wrap A, b with the solver
+            # call RTB with any other args and kwargs in fact means a call of solver(A, b, *args, **kwargs)
+            return RTB
+        elif solver_name == 'Schur':
+            assert 'rank' in kwargs, "we need rank"
+            assert 'blocks' in kwargs, "we need blocks"
+            rank = kwargs['rank']
+            blocks = kwargs['blocks']
+            del kwargs['rank'], kwargs['blocks']
+            solver_2b_run_with_parameters = SchurSolverDistributor(rank, blocks, **kwargs)
+            RTB = RoutineToBeRun(solver_2b_run_with_parameters, self._LS_.A, self._LS_.b)
+            return RTB
+
+        else:
+            raise Exception(f"solver_name={solver_name} not found!")

@@ -1,13 +1,8 @@
 """The class for the basis function of a dof (not dofs)."""
 
 
-
-
-
-
 from screws.freeze.main import FrozenOnly
 import numpy as np
-
 
 
 class _3dCSCG_SF_DOF_BF(FrozenOnly):
@@ -20,14 +15,13 @@ class _3dCSCG_SF_DOF_BF(FrozenOnly):
         self._freeze_self_()
 
 
-
     def reconstruct(self, xi, et, sg, ravel=False):
         """We reconstruct this single basis function in the corresponding local mesh element(s).
 
         :param xi: must be increasing 1d array in [-1,1].
         :param et: must be increasing 1d array in [-1,1].
         :param sg: must be increasing 1d array in [-1,1].
-        :param ravel: If ravel, we return flat results, otherwise, we return 3d results.
+        :param ravel: If ravelled, we return flat results, otherwise, we return 3d results.
         :return: A tuple of reconstructions corresponding to the positions.
         """
         positions = self._dof_.positions # get all local positions.
@@ -67,7 +61,6 @@ class _3dCSCG_SF_DOF_BF(FrozenOnly):
 
         return XYZ, IN_SITE_BF
 
-
     @staticmethod
     def ___PRIVATE_reconstruct_0_bf___(xi_et_sg, rbf, ME):
         """We make the in-site bf from the rbf (reference bf) for the 0-standard-form.
@@ -79,7 +72,6 @@ class _3dCSCG_SF_DOF_BF(FrozenOnly):
         """
         xyz = ME.coordinate_transformation.mapping(*xi_et_sg)
         return xyz, (rbf,) # for 0-standard-form, in-site-bf is equal to reference bf.
-
     def ___PRIVATE_reconstruct_1_bf___(self, xi_et_sg, rbf, ME):
         """We make the in-site bf from the rbf (reference bf) for the 1-standard-form.
 
@@ -89,7 +81,6 @@ class _3dCSCG_SF_DOF_BF(FrozenOnly):
         :return: The in-site bf: xyz and bfv (basis function value).
         """
         raise NotImplementedError()
-
     def ___PRIVATE_reconstruct_2_bf___(self, xi_et_sg, rbf, ME):
         """We make the in-site bf from the rbf (reference bf) for the 2-standard-form.
 
@@ -99,7 +90,6 @@ class _3dCSCG_SF_DOF_BF(FrozenOnly):
         :return: The in-site bf: xyz and bfv (basis function value).
         """
         raise NotImplementedError()
-
     def ___PRIVATE_reconstruct_3_bf___(self, xi_et_sg, rbf, ME):
         """We make the in-site bf from the rbf (reference bf) for the 3-standard-form.
 
@@ -114,8 +104,10 @@ class _3dCSCG_SF_DOF_BF(FrozenOnly):
 
 
     def visualize(self, *args, **kwargs):
-        """We use matplotlib to visualize the basis function of this dof in-site. "in-site" means we will
-        visualize it in the corresponding mesh element instead of the reference domain.
+        """We use matplotlib to visualize the basis function of this dof in-site.
+
+        "in-site" means we will visualize it in the corresponding mesh element instead of the
+        reference domain.
 
         Cause a dof instance is already local (may in multiple cores), we will call this visualizing
         method locally.
@@ -127,7 +119,6 @@ class _3dCSCG_SF_DOF_BF(FrozenOnly):
         # density = int(density**(1/3)) + 1
         # xi = eta = sigma = np.linspace(-1, 1, density)
         raise NotImplementedError()
-
     def ___PRIVATE_visualize_1form___(self, density=1000):
         """"""
         raise NotImplementedError()

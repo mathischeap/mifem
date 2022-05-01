@@ -45,14 +45,19 @@ class _3dCSCG_Standard_Trace(CSCG_Trace_Form, _3dCSCG_FORM_BASE, ndim=3):
         self._orientation_ = orientation
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_trace_form')
         self.standard_properties.name = name
-
         self._numbering_ = _3dCSCG_Trace_Numbering(self, numbering_parameters)
-        self._cochain_ = _3dCSCG_Trace_Cochain(self)
-        self._error_ = _3dCSCG_Trace_Error(self)
-        self._matrices_ = _3dCSCG_Trace_Matrices(self)
-        self._coboundary_ = _3dCSCG_Trace_Coboundary(self)
-        self._DO_ = _3dCSCG_Trace_DO(self)
+
+        self._cochain_ = None
+        self._error_ = None
+        self._matrices_ = None
+        self._coboundary_ = None
+        self._DO_ = None
         self._dofs_ = None
+
+
+    def ___PRIVATE_reset_cache___(self):
+        self.cochain.___PRIVATE_reset_cache___()
+        self.coboundary.___PRIVATE_reset_cache___()
 
     @property
     def numbering(self):
@@ -62,25 +67,35 @@ class _3dCSCG_Standard_Trace(CSCG_Trace_Form, _3dCSCG_FORM_BASE, ndim=3):
     @property
     def cochain(self):
         """Collections of all cochain-related sub-properties."""
+        if self._cochain_ is None:
+            self._cochain_ = _3dCSCG_Trace_Cochain(self)
         return self._cochain_
 
     @property
     def error(self):
+        if self._error_ is None:
+            self._error_ = _3dCSCG_Trace_Error(self)
         return self._error_
 
     @property
     def matrices(self):
         """Collections of all matrices-related sub-properties."""
+        if self._matrices_ is None:
+            self._matrices_ = _3dCSCG_Trace_Matrices(self)
         return self._matrices_
 
     @property
     def coboundary(self):
         """Collections of all coboundary-related sub-properties."""
+        if self._coboundary_ is None:
+            self._coboundary_ = _3dCSCG_Trace_Coboundary(self)
         return self._coboundary_
 
     @property
     def do(self):
         """Group all methods."""
+        if self._DO_ is None:
+            self._DO_ = _3dCSCG_Trace_DO(self)
         return self._DO_
 
     @property
@@ -89,11 +104,6 @@ class _3dCSCG_Standard_Trace(CSCG_Trace_Form, _3dCSCG_FORM_BASE, ndim=3):
         if self._dofs_ is None:
             self._dofs_ = _3dCSCG_Trace_forms_DOFs(self)
         return self._dofs_
-
-
-    def ___PRIVATE_reset_cache___(self):
-        self.cochain.___PRIVATE_reset_cache___()
-        self.coboundary.___PRIVATE_reset_cache___()
 
     def ___PRIVATE_do_resemble___(self, obj_or_filename):
         """

@@ -15,6 +15,8 @@ from objects.CSCG._3d.forms.edge.base.cochain import _3dCSCG_Edge_Cochain
 from objects.CSCG._3d.forms.edge.base.error import _3dCSCG_Edge_Error
 from objects.CSCG._3d.forms.edge.base.do import _3dCSCG_Edge_DO
 from objects.CSCG._3d.forms.edge.base.num import _3dCSCG_EdgeForm_Num
+from objects.CSCG._3d.forms.edge.base.dofs.main import _3dCSCG_Edge_forms_DOFs
+
 
 class _3dCSCG_Edge(_3dCSCG_FORM_BASE, ndim=3):
     """
@@ -37,14 +39,15 @@ class _3dCSCG_Edge(_3dCSCG_FORM_BASE, ndim=3):
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_edge_form')
         self.standard_properties.name = name
         self._numbering_ = _3dCSCG_Edge_Numbering(self, numbering_parameters)
-        self._matrices_ = _3dCSCG_Edge_Matrices(self)
-        self._cochain_ = _3dCSCG_Edge_Cochain(self)
-        self._error_ = _3dCSCG_Edge_Error(self)
-        self._DO_ = _3dCSCG_Edge_DO(self)
+
+        self._matrices_ = None
+        self._cochain_ = None
+        self._error_ = None
+        self._DO_ = None
+        self._dofs_ = None
         self._num_ = None
 
-        # self._visualize_ = _3dCSCG_Trace_Visualize(self)
-        # self._coboundary_ = _3dCSCG_Trace_Coboundary(self)
+
 
     def ___PRIVATE_reset_cache___(self):
         """"""
@@ -52,25 +55,34 @@ class _3dCSCG_Edge(_3dCSCG_FORM_BASE, ndim=3):
     def orientation(self):
         return self._orientation_
 
-
     @property
     def numbering(self):
         return self._numbering_
 
+
+
     @property
     def matrices(self):
+        if self._matrices_ is None:
+            self._matrices_ = _3dCSCG_Edge_Matrices(self)
         return self._matrices_
 
     @property
     def cochain(self):
+        if self._cochain_ is None:
+            self._cochain_ = _3dCSCG_Edge_Cochain(self)
         return self._cochain_
 
     @property
     def error(self):
+        if self._error_ is None:
+            self._error_ = _3dCSCG_Edge_Error(self)
         return self._error_
 
     @property
     def do(self):
+        if self._DO_ is None:
+            self._DO_ = _3dCSCG_Edge_DO(self)
         return self._DO_
 
     @property
@@ -78,3 +90,9 @@ class _3dCSCG_Edge(_3dCSCG_FORM_BASE, ndim=3):
         if self._num_ is None:
             self._num_ = _3dCSCG_EdgeForm_Num(self)
         return self._num_
+
+    @property
+    def dofs(self):
+        if self._dofs_ is None:
+            self._dofs_ = _3dCSCG_Edge_forms_DOFs(self)
+        return self._dofs_

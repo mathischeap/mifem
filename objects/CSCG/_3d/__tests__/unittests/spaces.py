@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
-"""
-Space related unittests.
-"""
+"""Space related unittests."""
+
 import sys
 if './' not in sys.path: sys.path.append('/')
 from root.config.main import *
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 import random
+
+
+
+
+
 
 def test_Space_NO1_basis_functions_mapping_test():
     """
@@ -98,9 +102,10 @@ def test_Space_NO1_basis_functions_mapping_test():
 
     return 1
 
+
+
+
+
 if __name__ == '__main__':
     # mpiexec -n 8 python _3dCSCG\TESTS\unittest_spaces.py
     test_Space_NO1_basis_functions_mapping_test()
-
-
-

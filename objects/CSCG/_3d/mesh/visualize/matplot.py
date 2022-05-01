@@ -24,7 +24,7 @@ class _3dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
 
     def grid(self, elements=None, density=10000, usetex=False,
         saveto = None, linewidth=0.6, aspect='equal',):
-        """ We compute the grid from mesh element, so even for periodic boundaries, the grid will be full.
+        """We compute the grid from mesh element, so even for periodic boundaries, the grid will be full.
 
         :param elements: (default: ``None``) If it is ``None``, we plot
             all elements. Otherwise, we plot elements No. ``elements``.

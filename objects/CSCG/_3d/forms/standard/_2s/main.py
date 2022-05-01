@@ -107,13 +107,12 @@ class _3dCSCG_2Form(_3dCSCG_S2F_Private, _3dCSCG_Standard_Form):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 5 python _3dCSCG\form\standard\_2_form.py
+    # mpiexec -n 5 python objects/CSCG/_3d/forms/standard/_2s/main.py
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('crazy', c=0.0)([14,14,14])
+    mesh = MeshGenerator('crazy', c=0.0)([3,3,3])
     space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3), ('Lobatto',3)])
     FC = FormCaller(mesh, space)
-
 
     def u(t,x,y,z): return np.sin(np.pi*x)*np.cos(2*np.pi*y)*np.cos(np.pi*z) + t
     def v(t,x,y,z): return np.cos(np.pi*x)*np.sin(np.pi*y)*np.cos(2*np.pi*z) + t
@@ -124,30 +123,9 @@ if __name__ == '__main__':
     V = FC('scalar', v)
     W = FC('scalar', w)
 
-
     f2 = FC('2-f', is_hybrid=False)
-
-
     f2.TW.func.do.set_func_body_as(velocity)
     f2.TW.current_time = 0
     f2.TW.___DO_push_all_to_instant___()
     f2.discretize()
-
-    SO = f2.special.vortex_detection.Q_and_lambda2([-1, 0, 0.5, 1], [-1, 1], [-1, -0.5, 0, 0.5, 1])
-
-    #
-    # f0x, f0y, f0z = f2.projection.to.vector_of_3_standard_0forms()
-    #
-    #
-    # f0x.TW.func.do.set_func_body_as(U)
-    # f0x.TW.current_time = 0
-    # f0x.TW.do.push_all_to_instant()
-    # print(f0x.error.L())
-    # f0y.TW.func.do.set_func_body_as(V)
-    # f0y.TW.current_time = 0
-    # f0y.TW.do.push_all_to_instant()
-    # print(f0y.error.L())
-    # f0z.TW.func.do.set_func_body_as(W)
-    # f0z.TW.current_time = 0
-    # f0z.TW.do.push_all_to_instant()
-    # print(f0z.error.L())
+    f2.visualize(x=0.25)

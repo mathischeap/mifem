@@ -136,4 +136,3 @@ class _3dCSCG_VectorField_matplot_Visualize(FrozenOnly):
 
         plt.show()
         return fig
-

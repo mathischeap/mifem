@@ -6,12 +6,17 @@ from screws.freeze.base import FrozenOnly
 from root.config.main import cOmm, MPI
 
 from objects.CSCG._3d.mesh.node.elements.do.find.helpers.SOS_internal import _3dCSCG_InternalNodeSOS
+from objects.CSCG._3d.mesh.node.elements.do.find.helpers.SOS_boundary.corner import _3dCSCG_CornerNodeSOS
+from objects.CSCG._3d.mesh.node.elements.do.find.helpers.SOS_boundary.corner_edge import _3dCSCG_CornerEdgeNodeSOS
+from objects.CSCG._3d.mesh.node.elements.do.find.helpers.SOS_boundary.surface_middle import _3dCSCG_SurfaceMiddleNodeSOS
+
 
 class _3dCSCG_NodeMesh_DoFind(FrozenOnly):
     """"""
     def __init__(self, elements):
         self._elements_ = elements
         self._mesh_ = elements._mesh_
+        self._SOS_cache_ = dict()
         _ = self._mesh_.edge.elements # to make sure the edge.elements.map is generated!
         self._freeze_self_()
 
@@ -35,14 +40,42 @@ class _3dCSCG_NodeMesh_DoFind(FrozenOnly):
         omb = cOmm.allreduce(omb, op=MPI.LOR)
 
         if omb:
-            sos = None
+
+            if i in self._elements_:
+                indicator = self._elements_[i].boundary_position_indicator
+            else:
+                indicator = None
+
+            indicator = cOmm.allgather(indicator)
+
+            for ind in indicator:
+                if ind is not None:
+                    indicator = ind
+                    break
+
+            #find SOS class according to the indicator (the boundary position of this node element)
+            if isinstance(indicator, str):
+
+                ind = indicator.split('|')[0]
+                if ind == 'corner':
+                    CLASS = _3dCSCG_CornerNodeSOS
+                elif ind == 'corner-edge':
+                    CLASS = _3dCSCG_CornerEdgeNodeSOS
+                elif ind == 'surface-middle':
+                    CLASS = _3dCSCG_SurfaceMiddleNodeSOS
+                else:
+                    raise NotImplementedError(f"I cannot handle indicator={indicator}.")
+            else:
+                raise NotImplementedError(f"Currently, I only understand string indicator")
+
+            #------- Make the SOS instance ----------------------------------------------
+            sos = CLASS(self._mesh_, i)
+            #==============================================================================
+
         else:
             sos = _3dCSCG_InternalNodeSOS(self._mesh_, i)
 
-        if i in self._elements_:
-            return sos
-        else:
-            return None
+        return sos
 
 
     def edge_elements_attached_to_element(self, i):
@@ -158,6 +191,13 @@ if __name__ == '__main__':
     # mesh = MeshGenerator('bridge_arch_cracked')(elements)
     nodes = mesh.node.elements
 
-    for i in range(nodes.GLOBAL_num):
-        S = nodes.do.find.hybrid_singularity_overcoming_setting(i)
-        # nodes.do.illustrate_element(i)
+    S = nodes.do.find.hybrid_singularity_overcoming_setting(0)
+
+
+    # for i in nodes:
+    #     print(i, nodes[i].boundary_position_indicator)
+
+    # for i in range(nodes.GLOBAL_num):
+    #     S = nodes.do.find.hybrid_singularity_overcoming_setting(i)
+    #     print(i, S.i, S.trace, S.edge, S.S_edge, S.N_edge, flush=True)
+    #     nodes.do.illustrate_element(i)

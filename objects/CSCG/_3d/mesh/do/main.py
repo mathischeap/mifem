@@ -1,11 +1,8 @@
 
 
-
-
 from screws.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.do.find import _3dCSCG_Mesh_DO_FIND
 import numpy as np
-
 import random
 
 
@@ -28,8 +25,7 @@ class _3dCSCG_Mesh_DO(FrozenOnly):
 
 
     def regionwsie_stack(self, *nda_s):
-        """
-        Wo should only use it in one core (first collect all data to this core).
+        """We should only use it in one core (first collect all data to this core).
 
         We use this method to stack a ndarray regions-wise. This function is very useful
         in plotting reconstruction data. Since in a regions, the elements are structure,
@@ -46,6 +42,7 @@ class _3dCSCG_Mesh_DO(FrozenOnly):
         Returns
         -------
         output : tuple
+
         """
         _SD_ = tuple()
         for nda in nda_s:
@@ -70,10 +67,12 @@ class _3dCSCG_Mesh_DO(FrozenOnly):
 
 
     def generate_random_coordinates(self):
-        """ We will generate some random coordinates with in this domain in a format of local mesh
-        element wise. They are mainly for testing purposes.
+        """We will generate some random coordinates with in this domain in a format of local mesh element wise.
+
+        They are mainly for testing purposes.
 
         :return: two 1d array representing x, y coordinates.
+
         """
         amount = random.randint(20, 200) # 3*amount points in #amount local mesh elements.
 

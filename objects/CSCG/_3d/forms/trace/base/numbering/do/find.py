@@ -33,7 +33,6 @@ class _3dCSCG_Trace_Numbering_DO_FIND(FrozenOnly):
         else:
             raise NotImplementedError(f"not coded for {numbering._tf_.k}-trace-form.")
 
-
     def ___PRIVATE_find_0Trace_local_dofs_on_element_side___(self, side_name):
         """
 
@@ -123,5 +122,4 @@ class _3dCSCG_Trace_Numbering_DO_FIND(FrozenOnly):
             raise Exception()
 
         return self._2TraceLocalCache_[side_name]
-
 

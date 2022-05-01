@@ -6,7 +6,8 @@ if './' not in sys.path: sys.path.append('/')
 from screws.freeze.base import FrozenOnly
 from objects.CSCG._3d.forms.trace._0tr.discretize.vector.standard.flux import _3dCSCG_0Trace_Discretize_StandardVector_Flux
 from objects.CSCG._3d.forms.trace._0tr.discretize.scalar.standard import _3dCSCG_0Trace_Discretize_StandardScalar
-
+from objects.CSCG._3d.forms.trace._0tr.discretize.scalar.trace_element_wise import \
+    _3dCSCG_0Trace_Discretize_TEW_Scalar
 
 class _3dCSCG_0Trace_Discretize(FrozenOnly):
     """"""
@@ -14,6 +15,7 @@ class _3dCSCG_0Trace_Discretize(FrozenOnly):
         self._tf_ = tf
         self._standard_vector_flux_ = _3dCSCG_0Trace_Discretize_StandardVector_Flux(tf)
         self._standard_scalar_ = _3dCSCG_0Trace_Discretize_StandardScalar(tf)
+        self._trace_element_wise_scalar_ = _3dCSCG_0Trace_Discretize_TEW_Scalar(tf)
         self._freeze_self_()
 
     def __call__(self, update_cochain=True, target='func'):
@@ -53,6 +55,10 @@ class _3dCSCG_0Trace_Discretize(FrozenOnly):
             if SELF.TW.BC.body.__class__.__name__ == '_3dCSCG_ScalarField':
                 if SELF.BC.ftype == 'standard':
                     return self._standard_scalar_(
+                        target = 'BC',
+                        update_cochain=False)
+                elif SELF.BC.ftype == 'trace-element-wise':
+                    return self._trace_element_wise_scalar_(
                         target = 'BC',
                         update_cochain=False)
                 else:

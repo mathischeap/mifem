@@ -11,6 +11,7 @@ from matplotlib import cm
 class _3dCSCG_MeshBoundaries_VIS(FrozenOnly):
     """"""
     def __init__(self, bds):
+        """"""
         self._boundaries_ = bds
         self._mesh_ = bds._mesh_
         self._freeze_self_()
@@ -144,6 +145,9 @@ class _3dCSCG_MeshBoundaries_VIS(FrozenOnly):
         fig.tight_layout()
         plt.show()
         plt.close(fig)
+
+
+
 
 
 if __name__ == "__main__":

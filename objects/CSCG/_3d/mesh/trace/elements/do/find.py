@@ -111,6 +111,48 @@ class _3dCSCG_Trace_Elements_Do_Find(FrozenOnly):
 
 
 
+    def node_elements_of_element(self, i):
+        """Return a list of the (four) node elements of trace element #i.
+
+        Parameters
+        ----------
+        i
+
+        Returns
+        -------
+
+        """
+
+        if i in self._elements_:
+            DICT = self._elements_._mesh_.domain.regions.Region._side_corner_local_numbering_dict_()
+
+            te = self._elements_[i]
+            CHARACTERISTIC_element = te.CHARACTERISTIC_element
+            CHARACTERISTIC_side = te.CHARACTERISTIC_side
+
+            NODE_MAP = self._elements_._mesh_.node.elements.map[CHARACTERISTIC_element]
+
+            corner_indices = DICT['NSWEBF'.index(CHARACTERISTIC_side)]
+
+            node_elements = list()
+            for ci in corner_indices:
+                node_elements.append(NODE_MAP[ci])
+        else:
+            node_elements = None
+
+        node_elements = cOmm.allgather(node_elements)
+
+        NE = None
+        for _ in node_elements:
+            if _ is not None:
+                if NE is None:
+                    NE = _
+                else:
+                    assert NE == _
+
+        return NE
+
+
     def mesh_element_shared_by_elements(self, i, j):
         """Find the mesh element shared by the two trace elements #i, #j. And if they do not share
         a mesh element, return None.

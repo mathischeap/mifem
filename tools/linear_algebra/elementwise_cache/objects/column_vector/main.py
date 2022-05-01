@@ -5,7 +5,7 @@ import types
 from screws.freeze.main import FrozenOnly
 from scipy import sparse as spspa
 from root.config.main import *
-from tools.linear_algebra.gathering.chain_matrix.main import Chain_Gathering_Matrix
+from tools.linear_algebra.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
 from tools.linear_algebra.data_structures.global_matrix.main import GlobalVector
 
 from tools.linear_algebra.elementwise_cache.objects.column_vector.helpers.add import ___CV_ADD___
@@ -14,6 +14,8 @@ from tools.linear_algebra.elementwise_cache.objects.column_vector.helpers.sub im
 
 from tools.linear_algebra.elementwise_cache.objects.column_vector.customize import SpaVec_Customize
 from tools.linear_algebra.elementwise_cache.objects.column_vector.assembler import EWC_ColumnVector_Assembler
+from tools.linear_algebra.elementwise_cache.objects.column_vector.adjust import SpaVec_Adjust
+from tools.linear_algebra.elementwise_cache.objects.column_vector.blocks.main import EWC_ColVec_Blocks
 
 class EWC_ColumnVector(FrozenOnly):
     """
@@ -22,8 +24,16 @@ class EWC_ColumnVector(FrozenOnly):
     example::
 
         - EWC_ColumnVector(mesh, 5) : generate an empty local vector of shape (5,1) for all elements.
+
         - EWC_ColumnVector(mesh, form): make an empty local vector of shape (form.num.basis, 1).
-            So, equivalent to EWC_ColumnVector(mesh, form.num.basis)
+            So, equivalent to EWC_ColumnVector(mesh, form.num.basis).
+
+            Note that this firm can be an AD-form.
+
+        - EWC_ColumnVector(form) same as EWC_ColumnVector(form.mesh, form)
+
+        - EWC_ColumnVector(mesh, dict): the data are in a dict already.
+
 
     :param mesh_elements:
     :param data_generator:
@@ -60,6 +70,7 @@ class EWC_ColumnVector(FrozenOnly):
         else:
             raise Exception()
 
+
         # --------- parse data type ---------------------------------------------------------------
         DATA_TYPE = None
 
@@ -79,6 +90,18 @@ class EWC_ColumnVector(FrozenOnly):
             data_generator = data_generator.prime.num.basis
             # equivalent to EWC_ColumnVector(mesh, ad_form.prime.num.basis)
         else: # default data type
+            pass
+
+        # we can accept a dictionary as a data generator, we will wrap it with a method -----------
+        if isinstance(data_generator, dict):
+            assert len(data_generator) == len(self._elements_), "dict key wrong."
+            for _ in data_generator: assert _ in self._elements_, "dict key wrong."
+            self.___dict_DG___ = data_generator
+            data_generator = self.___PRIVATE_dict_2_method_data_generator___
+            if cache_key_generator is None:
+                cache_key_generator = 'no_cache'
+                # the data are in the dict anyway, so do not need to be cached.
+        else:
             pass
 
         #---------- parse default cache_key_generator ---------------------------------------------
@@ -146,6 +169,8 @@ class EWC_ColumnVector(FrozenOnly):
         self._customize_ = SpaVec_Customize(self)
         self._shape_ = None
         self._assembler_ = None
+        self._adjust_ = None
+        self._blocks_ = None
         self._freeze_self_()
 
     def ___PRIVATE_reset_cache___(self):
@@ -162,6 +187,10 @@ class EWC_ColumnVector(FrozenOnly):
     def ___PRIVATE_no_cache_key_generator___(self, i):
         assert i in self.elements
         return self.___NC___
+
+    def ___PRIVATE_dict_2_method_data_generator___(self, i):
+        """When we get a dict as the data generator, we make wrap it with a method."""
+        return self.___dict_DG___[i]
 
     @property
     def gathering_matrix(self):
@@ -189,6 +218,18 @@ class EWC_ColumnVector(FrozenOnly):
 
         if self._shape_ is not None:
             assert self._gathering_matrix_.shape + (1,) == self._shape_
+
+    @property
+    def adjust(self):
+        if self._adjust_ is None:
+            self._adjust_ = SpaVec_Adjust(self)
+        return self._adjust_
+
+    @property
+    def blocks(self):
+        if self._blocks_ is None:
+            self._blocks_ = EWC_ColVec_Blocks(self)
+        return self._blocks_
 
     @property
     def assembler(self):

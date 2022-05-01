@@ -26,8 +26,8 @@ class CSCG_TrForm_Cochain_BASE(FrozenOnly):
     def EWC(self):
         """Return the cochain as an Element-Wise-Cached vector.
 
-        Notice that if we have changed the local cochain, the EWC will also change because we make the vector in real
-        time.
+        Notice that if we have changed the local cochain, the EWC will also change because
+        we make the vector in real time.
 
         """
         ewc = EWC_ColumnVector(self._Tr_.mesh.elements, self.___PRIVATE_local_call___)
@@ -48,8 +48,8 @@ class CSCG_TrForm_Cochain_BASE(FrozenOnly):
             return LOCAL
 
     def ___PRIVATE_do_gather_to_master_and_make_them_region_wise_local_index_grouped___(self):
-        """make it regions-wise-element-local-indexed, thus we can save it and when read a form, we can always have the
-        correct local cochain allocated even element numbering is different.
+        """make it regions-wise-element-local-indexed, thus we can save it and when read a form,
+        we can always have the correct local cochain allocated even element numbering is different.
         """
         assert self.local is not None, "I have no local cochain!"
 
@@ -205,7 +205,7 @@ class CSCG_TrForm_Cochain_BASE(FrozenOnly):
         return len(self.local)
 
 
-    # ------------- DEPENDENT PROPERTIES (MAJOR): When set local, clear BRANCHES by set branches to None ---------------------
+    # DEPENDENT PROPERTIES (MAJOR): When set local, clear BRANCHES by set branches to None -----
     @property
     def local(self):
         """
@@ -281,7 +281,7 @@ class CSCG_TrForm_Cochain_BASE(FrozenOnly):
 
         local = dict()
 
-        if self._Tr_.k == 2: # for 2-Tr-form, we can do below cause no dofs at the corner.
+        if self._Tr_.k == 2: # for 2-Tr-form, we can do below cause no dofs at the corner.......
             for i in MAP:
                 local[i] = list()
 

@@ -20,8 +20,12 @@ class _3dCSCG_Standard_Form_Operators(FrozenOnly):
         """
         data_generator = ___Operators_3dCSCG_sf_Inner___(self._sf_, other, quad_degree=quad_degree)
         # note that even all mesh elements are unique, we still cache the output because we may use it for multiple times.
-        return EWC_SparseMatrix(self._sf_.mesh.elements, data_generator,
-                                self._sf_.mesh.elements.___PRIVATE_elementwise_cache_metric_key___)
+
+        if self._sf_.mesh.elements.IS.homogeneous_according_to_types_wrt_metric:
+            return EWC_SparseMatrix(self._sf_.mesh.elements, data_generator, 'constant')
+        else:
+            return EWC_SparseMatrix(self._sf_.mesh.elements, data_generator,
+                                    self._sf_.mesh.elements.___PRIVATE_elementwise_cache_metric_key___)
 
     def wedge(self, other, quad_degree=None):
         """"""

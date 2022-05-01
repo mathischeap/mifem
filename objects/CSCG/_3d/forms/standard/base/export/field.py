@@ -1,16 +1,10 @@
-
-
+"""We want to export the field to some data files.
 """
-We want to export the field to some data files.
-
-"""
-
 
 from root.config.main import *
 from screws.freeze.main import FrozenOnly
 from screws.miscellaneous.timer import check_filename, check_no_splcharacter
 from scipy.io import savemat
-
 
 
 
@@ -63,7 +57,7 @@ class _3dCSC_SF_Export_Field(FrozenOnly):
 
         xyz, v = self._sf_.reconstruct(*rst, regions=regions)
 
-        # Now, we gather xyz & v from all cores into Master Core, store in XYZ & V ... -------- BELOW ----------------
+        # Now, we gather xyz & v from all cores into Master Core, store in XYZ & V --- BELOW ---
         if rAnk == mAster_rank:
             X = [None for _ in range(mesh.elements.GLOBAL_num)]
             Y = [None for _ in range(mesh.elements.GLOBAL_num)]
@@ -97,7 +91,7 @@ class _3dCSC_SF_Export_Field(FrozenOnly):
             cOmm.send([xyz, v], dest=mAster_rank, tag=0)
             del xyz, v
 
-        # Now, we reshape the XYZ and V for export in the master core. -------- BELOW -------------------------------
+        # Now, we reshape the XYZ and V for export in the master core. -------- BELOW ----------
         if rAnk == mAster_rank:
             if self._sf_.k in (1, 2):
                 # noinspection PyUnboundLocalVariable
@@ -116,7 +110,7 @@ class _3dCSC_SF_Export_Field(FrozenOnly):
                     # noinspection PyUnboundLocalVariable
                     vx = V[rn]
 
-                # we take care of the file names ------------------ BELOW ---------------------------------------------
+                # we take care of the file names ------------------ BELOW -----------------------
                 RN = rn[2:] # if regions name is R:center, we select
                 assert check_no_splcharacter(RN), f"region name={RN} wrong."
 
@@ -128,10 +122,10 @@ class _3dCSC_SF_Export_Field(FrozenOnly):
                 FILE_NAME = FILE_NAME + '.' + extension
 
 
-                # It's time to do the save or writing ------------------- BELOW --------------------------------------
+                # It's time to do the save or writing ------------------- BELOW -----------------
 
                 if extension == 'txt':
-                    # for .txt, we have to flat the data ===========
+                    # for .txt, we have to flat the data =====================
                     x = x.ravel(order='F')[:,np.newaxis]
                     y = y.ravel(order='F')[:,np.newaxis]
                     z = z.ravel(order='F')[:,np.newaxis]
@@ -152,7 +146,7 @@ class _3dCSC_SF_Export_Field(FrozenOnly):
                     np.savetxt(FILE_NAME, TO_BE_WRITTEN)
 
                 elif extension == 'mat':
-                    # for .mat, we save 3-d arrays. =========
+                    # for .mat, we save 3-d arrays. ==========================
                     m_dic = dict()
                     m_dic['x'] = x
                     m_dic['y'] = y

@@ -41,3 +41,13 @@ class EWC_SparseMatrix_Do(FrozenOnly):
         self.___sparsity_locker___ = False
         self._MAT_.assembler._cache_ = None # clear the assembler cache
 
+
+    def save_memory_by_cleaning_duplicate_values(self):
+        """If EWC[i] == EWC[j] but EWC[i] is not EWC[j], we clean EWC[j] and make EWC[j] point EWC[i].
+
+        Returns
+        -------
+
+        """
+        # TODO: to be continued.
+

@@ -5,7 +5,7 @@ from objects.CSCG._3d.mesh.domain.base import _3dCSCG_DomainBase
 from objects.CSCG._3d.mesh.domain.visualize import _3dCSCG_Domain_Visualize
 from objects.CSCG._3d.mesh.domain.boundaries import _3dCSCG_Boundaries
 from objects.CSCG._3d.mesh.domain.IS import _3dCSCG_Domain_IS
-
+from objects.CSCG._3d.mesh.domain.sub_geometry.main import _3dCSCG_DomainSubGeometry
 
 
 
@@ -25,6 +25,7 @@ class _3dCSCG_Domain(_3dCSCG_DomainBase):
         self._IS_ = _3dCSCG_Domain_IS(self)
         for rn in self.regions:
             self.regions[rn]._MAP_ = self._region_map_[rn]
+        self._sub_geometry_ = None
         self._freeze_self_()
 
     @property
@@ -98,7 +99,12 @@ class _3dCSCG_Domain(_3dCSCG_DomainBase):
         """
         return self._regions_
 
-
     @property
     def IS(self):
         return self._IS_
+
+    @property
+    def sub_geometry(self):
+        if self._sub_geometry_ is None:
+            self._sub_geometry_ = _3dCSCG_DomainSubGeometry(self)
+        return self._sub_geometry_

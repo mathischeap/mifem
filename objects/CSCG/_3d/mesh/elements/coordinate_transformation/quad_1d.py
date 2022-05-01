@@ -1,10 +1,10 @@
 
 
-from screws.quadrature import Quadrature
-
 import numpy as np
+from screws.quadrature import Quadrature
 from screws.freeze.base import FrozenOnly
-from objects.CSCG._3d.mesh.elements.coordinate_transformation.helpers.value_cache import ElementsCTValuesCache
+from objects.CSCG._3d.mesh.elements.coordinate_transformation.helpers.value_cache import \
+    ElementsCTValuesCache
 
 
 

@@ -103,7 +103,7 @@ class CSCG_Continuous_FORM_BASE(FrozenClass):
         return self._CMB_
 
 
-    # ...........CURRENT TIME which is related to valid time ..........................................
+    # ...........CURRENT TIME which is related to valid time .....................................
     @property
     def current_time(self):
         """The current time. If push to instant, we use this time."""
@@ -176,12 +176,6 @@ class CSCG_Continuous_FORM_BASE(FrozenClass):
         else:
             raise Exception(f'current_time = {ct} ({ct.__class__.__name__}) '
                             f'(valid_time={self.valid_time}) is illegal.')
-
-
-
-
-
-
 
 
 

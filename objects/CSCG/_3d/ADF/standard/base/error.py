@@ -2,6 +2,8 @@
 from screws.freeze.main import FrozenOnly
 import numpy as np
 
+
+
 class _3dCSCG_ADF_SF_Error(FrozenOnly):
     """This is one of the key properties of a algebraic dual form.
 
@@ -17,15 +19,16 @@ class _3dCSCG_ADF_SF_Error(FrozenOnly):
         return self._dsf_.prime.error.L(*args, **kwargs)
 
 
-    def dH(self, dt, dfunc, time, n=1):
+    def dH(self, dt, dfunc, time=None, n=1):
         """
 
         Parameters
         ----------
-        n : int
-            We compute the `dual{H}^n`-error.
         dt :
             The dual trace form.
+        dfunc
+        time
+        n
 
         Returns
         -------
@@ -33,6 +36,9 @@ class _3dCSCG_ADF_SF_Error(FrozenOnly):
         """
 
         dual_d_form = self._dsf_.coboundary(dt)
+
+        if time is None:
+            time = self._dsf_.prime.TW.current_time
 
         dual_d_form.prime.TW.func.body = dfunc
         dual_d_form.prime.TW.do.push_func_to_instant(time)

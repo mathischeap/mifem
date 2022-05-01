@@ -18,7 +18,6 @@ class _3dCSCG_standard_form_Matplot(FrozenOnly):
         assert '3dCSCG_standard_form' in sf.standard_properties.tags
         self._sf_ = sf
 
-
     def perpendicular_slice(self, MPS, plot_type='contourf', usetex=True, colormap='coolwarm',
         numOfSamples=100000, figsize=(6, 5),
         num_of_levels=20,
@@ -863,8 +862,6 @@ if __name__ == '__main__':
 
     es = ExactSolutionSelector(mesh)('icpsNS:sincosRD')
 
-
-
     f0 = FC('0-f', is_hybrid=False, numbering_parameters={'scheme_name': 'Naive',})
     f0.TW.func.do.set_func_body_as(es, 'pressure')
     f0.TW.current_time = 0
@@ -889,16 +886,13 @@ if __name__ == '__main__':
     f3.TW.do.push_all_to_instant()
     f3.do.discretize()
 
-
-
     region = mesh.domain.regions['R:R']
     RS = region.sub_geometry.make_a_perpendicular_slice_object_on(r=4.5 / 9)
     MS = mesh.sub_geometry.make_a_perpendicular_slice_object_on(RS)
 
     f0.visualize.matplot.perpendicular_slice(MS)
-    # f0.visualize.matplot.perpendicular_slice_sum_square_difference_with(MS, f3, saveto='')
 
+    # f0.visualize.matplot.perpendicular_slice_sum_square_difference_with(MS, f3, saveto='')
     # f1.visualize.matplot.perpendicular_slice_modules_difference_with(MS, f2, saveto='', normalized=0)
     # f1.visualize.matplot.perpendicular_slice_modules_average_with(MS, f2, saveto='')
     # f2.visualize.matplot.perpendicular_slice_sum_square_difference_with(MS, f1, saveto='')
-

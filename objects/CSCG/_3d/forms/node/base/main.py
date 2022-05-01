@@ -37,22 +37,6 @@ class _3dCSCG_Node(_3dCSCG_FORM_BASE, ndim=3):
         self.standard_properties.name = name
         self._numbering_ = _3dCSCG_Node_Numbering(self, numbering_parameters)
 
-        # self._cochain_ = _3dCSCG_Trace_Cochain(self)
-        # self._visualize_ = _3dCSCG_Trace_Visualize(self)
-        # self._matrices_ = _3dCSCG_Trace_Matrices(self)
-        # self._coboundary_ = _3dCSCG_Trace_Coboundary(self)
-        # self._DO_ = _3dCSCG_Trace_DO(self)
-
-
-
-
-
-
-
-
-
-
-
 
 
 

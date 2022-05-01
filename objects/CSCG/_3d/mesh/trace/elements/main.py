@@ -29,6 +29,9 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
         self._DO_ = None
         self._SELFCHECK_ = None
         self._ct_ = None
+        self.___NS___ = 'NS'
+        self.___WE___ = 'WE'
+        self.___BF___ = 'BF'
         self.___PRIVATE_generating_trace_elements___()
         self.___PRIVATE_reset_cache___()
         self._freeze_self_()

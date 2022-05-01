@@ -380,6 +380,9 @@ class _1dPolynomial(FrozenOnly):
         plt.close()
 
 
+
+
+
 if __name__ == "__main__":
     # p1 = _1dPolynomial('Lobatto',4)
     # p1.plot_lagrange_basis(dual=False, saveto='nodal.pdf', title=False, figsize=(6,4),tick_size=20, label_size=20)

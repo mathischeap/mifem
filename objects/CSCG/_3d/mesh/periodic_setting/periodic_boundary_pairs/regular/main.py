@@ -7,9 +7,10 @@
          TU Delft, Delft, Netherlands
 
 """
-from screws.freeze.main import FrozenOnly
 
-from objects.CSCG._3d.mesh.periodic_setting.periodic_boundary_pairs.regular.region_side_pair import _3dCSCG_Regular_PBP_RegionSidePair
+from screws.freeze.main import FrozenOnly
+from objects.CSCG._3d.mesh.periodic_setting.periodic_boundary_pairs.regular.region_side_pair import \
+    _3dCSCG_Regular_PBP_RegionSidePair
 
 
 class _3dCSCG_Regular_PBP(FrozenOnly):
@@ -25,7 +26,8 @@ class _3dCSCG_Regular_PBP(FrozenOnly):
 
     def ___CHECK_REGION_SIDE_PAIRS___(self, regionSidesOne, regionSidesTwo):
         assert len(regionSidesOne) == len(regionSidesTwo), \
-            f"different regions sides contained at two sides of regular periodic boundary pair {self._boundaryPair_}."
+            f"different regions sides contained at two sides of regular periodic boundary pair " \
+            f"{self._boundaryPair_}."
 
         self._region_side_pairs_ = dict()
         for i in range(len(regionSidesOne)):

@@ -9,7 +9,7 @@ class _3dCSCG_Discretize_Standard(FrozenOnly):
         self.___DISCRETIZE_STANDARD_CACHE___ = None
         self._freeze_self_()
 
-    def __call__(self, update_cochain=True, quad_degree=None):
+    def __call__(self, update_cochain=True, target='func', quad_degree=None):
         """The return cochain is 'locally full local cochain', which means it is mesh-element-wise
         local cochain. So:
 
@@ -17,6 +17,7 @@ class _3dCSCG_Discretize_Standard(FrozenOnly):
         the local cochains.
 
         :param update_cochain:
+        :param target:
         :param quad_degree:
         :return:
         """
@@ -56,6 +57,18 @@ class _3dCSCG_Discretize_Standard(FrozenOnly):
         local_dz = dict()
 
         JXC, JYC, JZC = dict(), dict(), dict()
+
+        if target == 'func':
+            FUNC = SELF.func
+        elif target == 'BC':
+            FUNC = SELF.BC
+            assert update_cochain is False, \
+                f"When target is {target}, cannot update cochain!"
+        else:
+            raise NotImplementedError(
+                f"_1Form.___PRIVATE_discretize_standard_ftype___ "
+                f"does not work for target={target}.")
+
         for i in SELF.mesh.elements.indices:
             element = SELF.mesh.elements[i]
             typeWr2Metric = element.type_wrt_metric.mark
@@ -68,16 +81,16 @@ class _3dCSCG_Discretize_Standard(FrozenOnly):
                 if isinstance(typeWr2Metric, str):
                     JXC[typeWr2Metric] = J
             if isinstance(typeWr2Metric, str) and typeWr2Metric[:4] == 'Orth':
-                u = SELF.func.body[0](*smctm)
+                u = FUNC.body[0](*smctm)
                 local_dx[i] = np.einsum(
                     'jk, j, k -> k', J[0][0]*u, quad_weights[0],
                     edge_size[0] * 0.5, optimize='greedy'
                 )
             else:
                 J = (J[0][0], J[1][0], J[2][0])
-                u = SELF.func.body[0](*smctm)
-                v = SELF.func.body[1](*smctm)
-                w = SELF.func.body[2](*smctm)
+                u = FUNC.body[0](*smctm)
+                v = FUNC.body[1](*smctm)
+                w = FUNC.body[2](*smctm)
                 local_dx[i] = np.einsum(
                     'jk, j, k -> k', J[0]*u + J[1]*v + J[2]*w, quad_weights[0],
                     edge_size[0] * 0.5, optimize='greedy'
@@ -91,16 +104,16 @@ class _3dCSCG_Discretize_Standard(FrozenOnly):
                 if isinstance(typeWr2Metric, str):
                     JYC[typeWr2Metric] = J
             if isinstance(typeWr2Metric, str) and typeWr2Metric[:4] == 'Orth':
-                v = SELF.func.body[1](*smctm)
+                v = FUNC.body[1](*smctm)
                 local_dy[i] = np.einsum(
                     'jk, j, k -> k', J[1][1]*v, quad_weights[1],
                     edge_size[1]*0.5, optimize='greedy'
                 )
             else:
                 J = (J[0][1], J[1][1], J[2][1])
-                u = SELF.func.body[0](*smctm)
-                v = SELF.func.body[1](*smctm)
-                w = SELF.func.body[2](*smctm)
+                u = FUNC.body[0](*smctm)
+                v = FUNC.body[1](*smctm)
+                w = FUNC.body[2](*smctm)
                 local_dy[i] = np.einsum(
                     'jk, j, k -> k', J[0]*u + J[1]*v + J[2]*w, quad_weights[1],
                     edge_size[1]*0.5, optimize='greedy'
@@ -114,16 +127,16 @@ class _3dCSCG_Discretize_Standard(FrozenOnly):
                 if isinstance(typeWr2Metric, str):
                     JZC[typeWr2Metric] = J
             if isinstance(typeWr2Metric, str) and typeWr2Metric[:4] == 'Orth':
-                w = SELF.func.body[2](*smctm)
+                w = FUNC.body[2](*smctm)
                 local_dz[i] = np.einsum(
                     'jk, j, k -> k', J[2][2]*w, quad_weights[2],
                     edge_size[2]*0.5, optimize='greedy'
                 )
             else:
                 J = (J[0][2], J[1][2], J[2][2])
-                u = SELF.func.body[0](*smctm)
-                v = SELF.func.body[1](*smctm)
-                w = SELF.func.body[2](*smctm)
+                u = FUNC.body[0](*smctm)
+                v = FUNC.body[1](*smctm)
+                w = FUNC.body[2](*smctm)
                 local_dz[i] = np.einsum(
                     'jk, j, k -> k', J[0]*u + J[1]*v + J[2]*w, quad_weights[2],
                     edge_size[2]*0.5, optimize='greedy'

@@ -8,7 +8,8 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
+
 from objects.CSCG._3d.forms.standard._3s.discretize.main import _3dCSCG_Discretize
 from objects.CSCG._3d.forms.standard.base.main import _3dCSCG_Standard_Form
 from objects.CSCG._3d.forms.standard._3s.special import _3Form_Special
@@ -82,22 +83,24 @@ class _3dCSCG_3Form(_3dCSCG_S3F_Private, _3dCSCG_Standard_Form):
 
 
 if __name__ == '__main__':
-    # mpiexec python _3dCSCG\forms\standard\_3_form\main.py
+    # mpiexec python objects/CSCG/_3d/forms/standard/_3s/main.py
 
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
-    mesh = MeshGenerator('crazy', c=0.25)([3,3,3])
-    space = SpaceInvoker('polynomials')([('Lobatto',2), ('Lobatto',2), ('Lobatto',3)])
+    mesh = MeshGenerator('crazy', c=0.0)([6,6,6])
+    space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3), ('Lobatto',3)])
     FC = FormCaller(mesh, space)
 
     es = ExactSolutionSelector(mesh)('icpsNS:sincosRD')
     f3 = FC('3-f', is_hybrid=False)
 
-    f3.TW.func.do.set_func_body_as(es, 'pressure')
+    f3.TW.func.body = es.status.pressure
     f3.TW.current_time = 0
-    f3.TW.___DO_push_all_to_instant___()
+    f3.TW.do.push_all_to_instant()
     f3.do.discretize()
 
+
+    f3.visualize(x=0.5)
     # from tools.CSCG.partial_dofs import PartialDofs
     #
     # pd = PartialDofs(f3)

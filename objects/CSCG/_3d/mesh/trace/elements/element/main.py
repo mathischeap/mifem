@@ -47,6 +47,7 @@ class _3dCSCG_Trace_Element(FrozenOnly):
         self._IS_ = None
         self._visualize_ = None
         self._type_wrt_metric_ = None
+        self._nd_ = None
         self._freeze_self_()
         # # do a check for periodic trace element ________________________
         # if self.IS_on_periodic_boundary:
@@ -86,14 +87,16 @@ class _3dCSCG_Trace_Element(FrozenOnly):
     @property
     def normal_direction(self):
         """"""
-        if self._p1_[-1] in 'NS':
-            return 'NS'
-        elif self._p1_[-1] in 'WE':
-            return 'WE'
-        elif self._p1_[-1] in 'BF':
-            return 'BF'
-        else:
-            raise Exception()
+        if self._nd_ is None:
+            if self._p1_[-1] in 'NS':
+                self._nd_ = self._elements_.___NS___
+            elif self._p1_[-1] in 'WE':
+                self._nd_ = self._elements_.___WE___
+            elif self._p1_[-1] in 'BF':
+                self._nd_ = self._elements_.___BF___
+            else:
+                raise Exception()
+        return self._nd_
 
     @property
     def NON_CHARACTERISTIC_position(self):

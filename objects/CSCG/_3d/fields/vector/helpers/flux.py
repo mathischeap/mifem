@@ -36,6 +36,7 @@ class ___VECTOR_FLUX___(object):
             w = w[i]
             n = self._te_.coordinate_transformation.unit_normal_vector(xi, et, sg, parse_3_1d_eps=True)
             w_dot_n = w[0]*n[0] + w[1]*n[1] + w[2]*n[2]
+
             return xyz, (w_dot_n,) # xyz and the norm scalar.
 
         else:

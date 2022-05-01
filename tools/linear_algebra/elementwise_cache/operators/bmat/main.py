@@ -2,7 +2,8 @@
 
 
 
-from tools.linear_algebra.elementwise_cache.operators.bmat.sparse_matrix.main import ___bmat_EWC_sparse_matrices___
+from tools.linear_algebra.elementwise_cache.operators.bmat.sparse_matrix.main import \
+    ___bmat_EWC_sparse_matrices___
 
 
 
@@ -14,10 +15,12 @@ def bmat(blocks):
     :return:
     """
     # check blocks is a list or tuple of lists or tuples and shapes match.
-    assert isinstance(blocks, (list, tuple)), "please put blocks in list or tuple."
+    assert blocks.__class__.__name__ in ('list', 'tuple', 'ndarray'), \
+        "please put blocks in list, tuple or array."
     J = None
     for i, bR in enumerate(blocks):
-        assert isinstance(bR, (list, tuple)), f" {bR.__class__.__name__}: please put blocks in list or tuple."
+        assert bR.__class__.__name__ in ('list', 'tuple', 'ndarray'), \
+            "please put blocks in list, tuple or array."
         if J is None:
             J = len(bR)
         else:

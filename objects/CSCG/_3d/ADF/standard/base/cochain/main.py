@@ -54,6 +54,9 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Cochain(FrozenOnly):
 
         :return:
         """
+
+        _ = self.local
+
         return EWC_ColumnVector(self._dsf_.mesh.elements,
                                 self.___PRIVATE_local_cochain_link___,
                                 cache_key_generator='no_cache')

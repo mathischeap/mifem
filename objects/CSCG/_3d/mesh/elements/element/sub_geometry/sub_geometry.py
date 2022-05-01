@@ -19,8 +19,7 @@ class ElementSubGeometry(FrozenOnly):
 
 
     def make_a_perpendicular_slice_object_on(self, xi=None, eta=None, sigma=None):
-        """Only one of ``xi``, ``eta`` and ``sigma`` can be a float in
-        :math:`[-1,1]`, the other two must be None.
+        """Only one of ``xi``, ``eta`` and ``sigma`` can be a float in :math:`[-1,1]`, the other two must be None.
 
         :param xi:
         :param eta:

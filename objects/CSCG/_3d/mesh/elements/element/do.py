@@ -1,5 +1,4 @@
 
-
 from screws.freeze.base import FrozenOnly
 import numpy as np
 

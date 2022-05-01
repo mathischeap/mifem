@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-INTRO
+"""INTRO
 
 @author: Yi Zhang. Created on Thu Jan 23 00:00:12 2020
          Department of Aerodynamics
@@ -9,6 +8,7 @@ INTRO
 """
 import sys
 if './' not in sys.path: sys.path.append('./')
+
 from objects.CSCG._3d.exact_solutions.main import _3dCSCG_ExactSolution
 from importlib import import_module
 from screws.freeze.main import FrozenOnly
@@ -16,15 +16,11 @@ from screws.miscellaneous.timer import MyTimer
 from objects.CSCG._3d.mesh.domain.inputs.allocator import DomainInputAllocator
 from objects.CSCG._3d.mesh.domain.main import _3dCSCG_Domain
 from objects.CSCG._3d.mesh.main import _3dCSCG_Mesh
-
 from objects.CSCG._3d.spaces.allocator import _3dCSCG_SpaceAllocator
-
 from objects.CSCG._3d.ADF.allocator import _3dCSCG_ADF_Allocator
 from objects.CSCG._3d.forms.allocator import _3dCSCG_SF_Allocator
 from objects.CSCG._3d.fields.allocator import _3dCSCG_Field_Allocator
-
 from objects.CSCG._3d.exact_solutions.status.allocator import _3dCSCG_ExactSolution_Allocator
-
 from copy import deepcopy
 from root.config.main import rAnk, mAster_rank, cOmm
 
@@ -40,10 +36,8 @@ class MeshGenerator(FrozenOnly):
         self._kwargs_ = kwargs
         self._freeze_self_()
 
-
     def __call__(self, element_layout, EDM=None, show_info=False):
         """
-
         :param element_layout:
         :param EDM: ``Element Distribution Method``. When
             EDM = 'debug', we use a naive method
@@ -273,7 +267,7 @@ class FormCaller(FrozenOnly):
                 fp['type'] = '_3dCSCG_Form'
                 FM = cls_body(self._mesh_, self._space_, **kwargs)
 
-            #===============================================================================================
+            #====================================================================================
             FM.___define_parameters___ = fp
 
         cOmm.barrier()  # for safety reason
@@ -333,28 +327,34 @@ if __name__ == "__main__":
     # mesh = MeshGenerator('crazy_periodic')([3, 3, 3], EDM='chaotic', show_info=True)
     # mesh = MeshGenerator('cuboid_periodic', region_layout=(1,2,2))([2,3,4], show_info=True)
 
-    # es = ExactSolutionSelector(mesh)('Poisson:sincos1')
-    #
+    # es = ExactSolutionSelector(mesh)('TISE:sincos1', m=1e-68, E=1)
+
+    # V = es.status.V(0,0,0,0)
     # print(es.standard_properties.name)
-    #
     # print(es.status.kinetic_energy(0))
 
+    # R = mesh.domain.regions['R:R']
+    #
+    # it = R.interpolation
+    #
+    # r = it.___inverse_mapping_r_x_s0t0___(0.5)
+    #
+    # print(r)
 
-    # mesh.visualize()
-    # mesh.visualize.matplot.connection()
-    # mesh.domain.visualize()
-    # mesh.domain.regions.visualize()
+    mesh.visualize()
+    mesh.visualize.matplot.connection()
+    mesh.domain.visualize()
+    mesh.domain.regions.visualize()
 
-    # print(mesh.domain.regions.map)
-    # print(mesh.domain.boundaries.names)
+    print(mesh.domain.regions.map)
+    print(mesh.domain.boundaries.names)
 
     # print(MeshGenerator.___domain_input_statistic___())
     # print(MeshGenerator.___domain_input_random_parameters___())
 
-
-    regions = mesh.domain.regions
-    for rn in regions:
-        region = regions[rn]
-
-        # if rAnk == mAster_rank:
-        print(rn, region.IS.periodic_to_self)
+    # regions = mesh.domain.regions
+    # for rn in regions:
+    #     region = regions[rn]
+    #
+    #     # if rAnk == mAster_rank:
+    #     print(rn, region.IS.periodic_to_self)

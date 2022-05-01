@@ -13,8 +13,8 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
         self._local_ = None
-        self.___PRIVATE_reset_cache___()
         self._dofwise_ = None
+        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
     def ___PRIVATE_reset_cache___(self):

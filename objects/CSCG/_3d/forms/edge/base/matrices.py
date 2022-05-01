@@ -5,9 +5,10 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-
 from screws.freeze.main import FrozenOnly
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
+
+
 
 
 class _3dCSCG_Edge_Matrices(FrozenOnly):
@@ -23,11 +24,13 @@ class _3dCSCG_Edge_Matrices(FrozenOnly):
     def selective(self):
         """Return the selective matrix (mesh-element -> edge element)."""
         if self._S_ is None:
+
             k = self._ef_.k
             formName = f'_3dCSCG_{int(k)}Edge'
             S = getattr(self._ef_.space.selective_matrix, formName)[0]
             self._S_ = \
                 EWC_SparseMatrix(self._ef_.mesh.elements, S, 'constant')
+
         return self._S_
 
     @property
@@ -38,8 +41,9 @@ class _3dCSCG_Edge_Matrices(FrozenOnly):
             k = self._ef_.k
             num_trace_basis = getattr(self._ef_.space.num_basis, f'_3dCSCG_{k}Trace')[0]
             num_edge_basis = self._ef_.num.basis
-            self._C_ = EWC_SparseMatrix(self._ef_.mesh.elements,
-                                        (num_trace_basis, num_edge_basis))
+            self._C_ = EWC_SparseMatrix(
+                self._ef_.mesh.elements, (num_trace_basis, num_edge_basis)
+                )
 
         return self._C_
 

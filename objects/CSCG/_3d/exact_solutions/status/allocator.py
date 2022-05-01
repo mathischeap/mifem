@@ -19,6 +19,11 @@ class _3dCSCG_ExactSolution_Allocator(FrozenOnly):
                 'icpsNS:still': 'Still',
 
                 'Poisson:sincos1': "Poisson_SinCos1",
+
+                'Stokes:sincos1': "Stokes_SinCos1",
+
+                'TISE:sincos1': "TISE_SinCos1",
+
                 }
 
     @classmethod
@@ -38,4 +43,8 @@ class _3dCSCG_ExactSolution_Allocator(FrozenOnly):
                 'icpsNS:still':  _path_icpsNS_ + 'others',
 
                 'Poisson:sincos1': base_path + "Poisson.Sin_Cos",
+
+                'Stokes:sincos1': base_path + "Stokes.sin_cos_1",
+
+                'TISE:sincos1': base_path + "time_independent_Schrodinger_equation.sin_cos_1",
                 }

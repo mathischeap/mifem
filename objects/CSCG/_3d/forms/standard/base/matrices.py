@@ -27,7 +27,7 @@ class _3dCSCG_Standard_Form_Matrices(FrozenOnly):
 
     @property
     def identity(self):
-        """Return a identity matrix of local shape equal to the mass matrix; (#local dofs, l#ocal dofs)."""
+        """Return an identity matrix of local shape equal to the mass matrix; (#local dofs, l#ocal dofs)."""
         return EWC_SparseMatrix(self._sf_.mesh, ('identity', self._sf_.num.basis))
 
     @property

@@ -27,8 +27,7 @@ from objects.CSCG._3d.forms.standard.base.do import _3dCSCG_Standard_Form_DO
 
 
 class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
-    """
-    This is the parent of all 3d standard forms.
+    """ This is the parent of all 3d standard forms.
 
     :param mesh:
     :param space:
@@ -40,6 +39,7 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
     :param str name:
     """
     def __init__(self, mesh, space, is_hybrid, orientation, numbering_parameters, name):
+        """"""
         super().__init__(mesh, space)
         super().___init___()
         self._NUM_basis_, self._NUM_basis_components_ = \
@@ -52,20 +52,19 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_standard_form')
         self._numbering_ = _3dCSCG_Standard_Form_Numbering(self, numbering_parameters)
 
-        self._cochain_ = _3dCSCG_Standard_Form_Cochain(self)
-        self._error_ = _3dCSCG_Standard_Form_Error(self)
-        self._coboundary_ = _3dCSCG_Standard_Form_Coboundary(self)
-        self._matrices_ = _3dCSCG_Standard_Form_Matrices(self)
-        self._operators_ = _3dCSCG_Standard_Form_Operators(self)
-        self._DO_ = _3dCSCG_Standard_Form_DO(self)
+        self._cochain_ = None
+        self._error_ = None
+        self._coboundary_ = None
+        self._matrices_ = None
+        self._operators_ = None
+        self._DO_ = None
 
-        self._export_ = _3dCSC_Standard_Form_Export(self)
+        self._export_ = None
         self._dofs_ = None
 
 
     def ___PRIVATE_reset_cache___(self):
-        self.cochain.___PRIVATE_reset_cache___()
-        self.coboundary.___PRIVATE_reset_cache___()
+        pass
 
     @property
     def numbering(self):
@@ -73,31 +72,45 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
 
     @property
     def cochain(self):
+        if self._cochain_ is None:
+            self._cochain_ = _3dCSCG_Standard_Form_Cochain(self)
         return self._cochain_
 
     @property
     def error(self):
+        if self._error_ is None:
+            self._error_ = _3dCSCG_Standard_Form_Error(self)
         return self._error_
 
     @property
     def coboundary(self):
+        if self._coboundary_ is None:
+            self._coboundary_ = _3dCSCG_Standard_Form_Coboundary(self)
         return self._coboundary_
 
     @property
     def matrices(self):
+        if self._matrices_ is None:
+            self._matrices_ = _3dCSCG_Standard_Form_Matrices(self)
         return self._matrices_
 
     @property
     def operators(self):
+        if self._operators_ is None:
+            self._operators_ = _3dCSCG_Standard_Form_Operators(self)
         return self._operators_
 
     @property
     def do(self):
         """If it has too many do methods, we group them in to do."""
+        if self._DO_ is None:
+            self._DO_ = _3dCSCG_Standard_Form_DO(self)
         return self._DO_
 
     @property
     def export(self):
+        if self._export_ is None:
+            self._export_ = _3dCSC_Standard_Form_Export(self)
         return self._export_
 
     @property
@@ -111,8 +124,7 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
 
 
     def ___PRIVATE_do_evaluate_basis_at_meshgrid___(self, xi, eta, sigma, compute_xietasigma=True):
-        """
-        Evaluate the basis functions on ``meshgrid(xi, eta, sigma)``.
+        """Evaluate the basis functions on ``meshgrid(xi, eta, sigma)``.
 
         :param xi: A 1d iterable object of floats between -1 and 1.
         :param eta: A 1d iterable object of floats between -1 and 1.

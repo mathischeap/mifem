@@ -2,16 +2,22 @@
 
 from root.config.main import *
 from screws.freeze.main import FrozenOnly
+from objects.CSCG._3d.ADF.allocator import _3dCSCG_ADF_Allocator
+from importlib import import_module
+
+
 
 class _3dCSCG_Standard_Form_Error(FrozenOnly):
+    """"""
+
     def __init__(self, sf):
         self._sf_ = sf
         self._freeze_self_()
 
     def L(self, n=2, quad_degree=None, upon=False, quad_density=None):
+        """The global :math:`L^2` error;
 
-        """
-        The global :math:`L^2` error; it is global, so slaves first send info to the secretary who computes the
+        It is global, so slaves first send info to the secretary who computes the
         global error and sends it back to all slaves.
 
         :param int n: (`default`:``2``) :math:`L^{n}` error.
@@ -25,7 +31,8 @@ class _3dCSCG_Standard_Form_Error(FrozenOnly):
         :rtype: float
         """
 
-        assert self._sf_.func.ftype == 'standard', f"Currently, this L^n error method only works for standard functions."
+        assert self._sf_.func.ftype == 'standard', \
+            f"Currently, this L^n error method only works for standard functions."
 
         assert self._sf_.cochain.local is not None, " I have no cochain."
         OneOrThree = 1 if self._sf_.k in (0, 3) else 3
@@ -67,7 +74,7 @@ class _3dCSCG_Standard_Form_Error(FrozenOnly):
 
         xyz, v = self._sf_.reconstruct(*quad_nodes, ravel=True)
 
-        # upon shift ... --------------------------- BELOW -------------------------------------------------------------
+        # upon shift ... --------------------------- BELOW --------------------------------------
         add_to = None
         if upon is True: # we will shift according to the first quadrature point.
             if len(xyz) > 0:
@@ -110,7 +117,7 @@ class _3dCSCG_Standard_Form_Error(FrozenOnly):
             for i in self._sf_.mesh.elements.indices:
                 for j in range(OneOrThree):
                     v[i][j] += add_to[j]
-        # +++++++++++++++++++++++++++++++++++++++++++ ABOVE ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        # +++++++++++++++++++++++++++++++++++++++++++ ABOVE +++++++++++++++++++++++++++++++++++++
 
         if n == 'infinity':
             localError = -1
@@ -179,3 +186,25 @@ class _3dCSCG_Standard_Form_Error(FrozenOnly):
         DErrorL2 = D_self.error.L(n=2, quad_degree=quad_degree)
         return (selfErrorL2 ** 2 + DErrorL2 ** 2) ** 0.5
 
+    def dH(self, dt, dfunc, time=None, n=1):
+        """"""
+
+        k = self._sf_.k
+
+        dual_class_name = _3dCSCG_ADF_Allocator.___forms_name___()[str(k) + '-adf']
+        dual_class_path = _3dCSCG_ADF_Allocator.___forms_path___()[str(k) + '-adf']
+
+        CLASS = getattr(import_module(dual_class_path), dual_class_name)
+
+        sf = self._sf_
+        mesh = sf.mesh
+        space = sf.space
+        orientation = sf.orientation
+        name = 'dual-' +  sf.standard_properties.name
+
+        if time is None:
+            time = self._sf_.TW.current_time
+
+        dual_form = CLASS(self._sf_, mesh, space, orientation=orientation, name=name)
+
+        return dual_form.error.dH(dt, dfunc, time=time, n=n)

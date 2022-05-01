@@ -11,8 +11,7 @@ class CSCG_MESH_BASE(FrozenClass):
 
 
     def ___PRIVATE_BASE_analyze_element_layout___(self, element_layout):
-        """
-        Here we return the Element_Layout (EL) for a particular regions.
+        """Here we return the Element_Layout (EL) for a particular regions.
 
         We will return EL which will be used as the element_layout of a particular regions.
 
@@ -72,8 +71,7 @@ class CSCG_MESH_BASE(FrozenClass):
 
 
     def ___PRIVATE_BASE_get_region_elements_distribution_type___(self):
-        """
-        REDT: region_elements_distribution_type
+        """REDT: region_elements_distribution_type
 
         `self._REDT_` is used to indicate how elements (amount-wise) are distributed to regions. So we do not care about
         the topology or whatever, we only care about the amount of elements in each region:
@@ -521,7 +519,7 @@ class CSCG_MESH_BASE(FrozenClass):
         if rAnk == sIze - 1 and sIze > 1:
             # noinspection PyUnboundLocalVariable
             assert stop == self._num_total_elements_
-        # ! ... end check here --------------------------------------------------------------------------------------- !
+        # ! ... end check here ----------------------------------------------------------
 
 
         ___is_occupying_all_cores___ = \

@@ -87,7 +87,7 @@ class CSCG_Form_BC(FrozenOnly):
         further be interpreted as data structures that can be used by,
         for example, EWC sparse matrices.
         """
-        if self._partial_cochain_ is None:
+        if self._partial_dofs_ is None:
             pd = PartialDofs(self._f_)
             pd.include.boundaries(self.valid_boundaries)
             self._partial_dofs_ = pd

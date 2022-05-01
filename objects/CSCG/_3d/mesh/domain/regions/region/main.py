@@ -121,9 +121,7 @@ class Region(RegionTopology, FrozenOnly):
         self._side_types_ = tuple(_side_types_)
 
     def ___PRIVATE_parse_side_types___(self):
-        """
-        Here we get the 6(3D) side geometries for further getting the regions
-        interpolation.
+        """Here we get the 6(3D) side geometries for further getting the region interpolation.
 
         Attributes
         ----------
@@ -160,4 +158,3 @@ class Region(RegionTopology, FrozenOnly):
         assert np.shape(cc) == (self.num_corners(), self.ndim), \
             " <Region> : coordinates shape={} wrong.".format(np.shape(cc))
         self._corner_coordinates_ = cc
-

@@ -6,8 +6,8 @@ from root.config.main import *
 import random
 from scipy import sparse as spspa
 from tools.linear_algebra.data_structures.global_matrix.main import GlobalVector, GlobalMatrix, LocallyFullVector
-from tools.linear_algebra.solvers.parallel.GMRES.main import GMRES
-from tools.linear_algebra.solvers.parallel.allocator import ParallelSolverDistributor
+from tools.linear_algebra.solvers.regular.GMRES.main import GMRES
+from tools.linear_algebra.solvers.regular.allocator import RegularSolverDistributor
 
 
 def ___generate_A_b_of_Manguoglu_Paper___():
@@ -109,12 +109,12 @@ def test_LinearSolver_No0_GMRES():
     b = GlobalVector(spspa.csc_matrix(br))
     X0 = LocallyFullVector(np.zeros((3,)))
 
-    x0, info, beta, ITER, message = ParallelSolverDistributor("GMRES", routine='1', name='GMRES_test_mpi_v2')(
+    x0, info, beta, ITER, message = RegularSolverDistributor("GMRES", routine='1', name='GMRES_test_mpi_v2')(
         A, b, X0, restart=3, preconditioner=('Jacobian', dict()), COD=False, plot_residuals=False)
     x0 = x0.V
     np.testing.assert_array_almost_equal(x0, np.array([-2.1810344827586, 1.8362068965517, -0.5948275862068]))
 
-    x0, info, beta, ITER, message = ParallelSolverDistributor("GMRES", routine='0', name='GMRES_test_mpi_v0')(
+    x0, info, beta, ITER, message = RegularSolverDistributor("GMRES", routine='0', name='GMRES_test_mpi_v0')(
         A, b, X0, restart=3, preconditioner=('Jacobian', dict()), COD=False, plot_residuals=False)
     x0 = x0.V
     np.testing.assert_array_almost_equal(x0, np.array([-2.1810344827586, 1.8362068965517, -0.5948275862068]))
@@ -148,20 +148,20 @@ def test_LinearSolver_No0_GMRES():
     np.testing.assert_array_almost_equal(x0, np.array([-3.23891085,  3.44129703,  1.7765975 , -2.7063454 , -0.11510028,
                                                         0.94048189,  0.36495389,  0.54018445,  1.57663592]))
 
-    x0, info, beta, ITER, message = ParallelSolverDistributor("GMRES", routine='0')(A, b, X0, restart=9, preconditioner=('Jacobian', dict()),
-                                                                       COD=False)
+    x0, info, beta, ITER, message = RegularSolverDistributor("GMRES", routine='0')(A, b, X0, restart=9, preconditioner=('Jacobian', dict()),
+                                                                                   COD=False)
     x0 = x0.V
     np.testing.assert_array_almost_equal(x0, np.array([-3.23891085,  3.44129703,  1.7765975 , -2.7063454 , -0.11510028,
                                                         0.94048189,  0.36495389,  0.54018445,  1.57663592]))
 
-    x0, info, beta, ITER, message = ParallelSolverDistributor("GMRES", routine='auto')(A, b, X0, restart=9, preconditioner=None, COD=False,
-                                                                       )
+    x0, info, beta, ITER, message = RegularSolverDistributor("GMRES", routine='auto')(A, b, X0, restart=9, preconditioner=None, COD=False,
+                                                                                      )
     x0 = x0.V
     np.testing.assert_array_almost_equal(x0, np.array([-3.23891085,  3.44129703,  1.7765975 , -2.7063454 , -0.11510028,
                                                         0.94048189,  0.36495389,  0.54018445,  1.57663592]))
 
-    x0, info, beta, ITER, message = ParallelSolverDistributor("GMRES", routine='auto')(A, b, X0, restart=9, preconditioner=None, COD=False,
-                                                                       loading_factor=0) # make sure we use parallel routine
+    x0, info, beta, ITER, message = RegularSolverDistributor("GMRES", routine='auto')(A, b, X0, restart=9, preconditioner=None, COD=False,
+                                                                                      loading_factor=0) # make sure we use parallel routine
     x0 = x0.V
     np.testing.assert_array_almost_equal(x0, np.array([-3.23891085,  3.44129703,  1.7765975 , -2.7063454 , -0.11510028,
                                                         0.94048189,  0.36495389,  0.54018445,  1.57663592]))
@@ -206,17 +206,17 @@ def test_LinearSolver_No1_BiCGSTAB():
     X0 = LocallyFullVector(np.zeros((3,)))
 
     x0, info, beta, ITER, message = \
-    ParallelSolverDistributor("BiCGSTAB")(A, b, X0, maxiter=10, preconditioner=None, COD=False)
+    RegularSolverDistributor("BiCGSTAB")(A, b, X0, maxiter=10, preconditioner=None, COD=False)
     x0 = x0.V
     np.testing.assert_array_almost_equal(x0, np.array([-2.1810344827586, 1.8362068965517, -0.5948275862068]))
 
     x0, info, beta, ITER, message = \
-    ParallelSolverDistributor("BiCGSTAB")(A, b, X0, maxiter=10, preconditioner=('Jacobian', dict()), COD=False)
+    RegularSolverDistributor("BiCGSTAB")(A, b, X0, maxiter=10, preconditioner=('Jacobian', dict()), COD=False)
     x0 = x0.V
     np.testing.assert_array_almost_equal(x0, np.array([-2.1810344827586, 1.8362068965517, -0.5948275862068]))
 
     x0, info, beta, ITER, message = \
-    ParallelSolverDistributor("BiCGSTAB")(A, b, X0, maxiter=10, preconditioner=None, COD=False)
+    RegularSolverDistributor("BiCGSTAB")(A, b, X0, maxiter=10, preconditioner=None, COD=False)
     x0 = x0.V
     np.testing.assert_array_almost_equal(x0, np.array([-2.1810344827586, 1.8362068965517, -0.5948275862068]))
 
@@ -238,21 +238,21 @@ def test_LinearSolver_No2_LooseGMRES():
     A, b = ___generate_A_b_of_Manguoglu_Paper___()
     X0 = LocallyFullVector(np.zeros((9,)))
 
-    x0, info, beta, ITer, message = ParallelSolverDistributor("LGMRES")(A, b, X0, m=6, k=2, atol=1e-9,
-                                                            maxiter=100, preconditioner=None, COD=False)
+    x0, info, beta, ITer, message = RegularSolverDistributor("LGMRES")(A, b, X0, m=6, k=2, atol=1e-9,
+                                                                       maxiter=100, preconditioner=None, COD=False)
     x0 = x0.V
     np.testing.assert_array_almost_equal(x0, np.array([-3.23891085,  3.44129703,  1.7765975 , -2.7063454 , -0.11510028,
                                                         0.94048189,  0.36495389,  0.54018445,  1.57663592]))
 
-    x0, info, beta, ITER, message = ParallelSolverDistributor("LGMRES")(A, b, X0, m=6, k=2, atol=1e-9,
-                                                            maxiter=100, preconditioner=('Jacobian', dict()),
-                                                            COD=False)
+    x0, info, beta, ITER, message = RegularSolverDistributor("LGMRES")(A, b, X0, m=6, k=2, atol=1e-9,
+                                                                       maxiter=100, preconditioner=('Jacobian', dict()),
+                                                                       COD=False)
     x0 = x0.V
     np.testing.assert_array_almost_equal(x0, np.array([-3.23891085,  3.44129703,  1.7765975 , -2.7063454 , -0.11510028,
                                                         0.94048189,  0.36495389,  0.54018445,  1.57663592]))
 
-    x0, info, beta, Iter, message = ParallelSolverDistributor("GMRES")(A, b, X0, restart=8, atol=1e-9,
-                                                            maxiter=100, preconditioner=None, COD=False)
+    x0, info, beta, Iter, message = RegularSolverDistributor("GMRES")(A, b, X0, restart=8, atol=1e-9,
+                                                                      maxiter=100, preconditioner=None, COD=False)
     assert Iter > ITer > ITER
 
 
@@ -266,7 +266,7 @@ def test_LinearSolver_No3_direct():
 
     A, b = ___generate_A_b_of_Manguoglu_Paper___()
 
-    x0, info, beta, ITer, message = ParallelSolverDistributor("direct")(A, b, COD=False)
+    x0, info, beta, ITer, message = RegularSolverDistributor("direct")(A, b, COD=False)
     x0 = x0.V
     np.testing.assert_array_almost_equal(x0, np.array([-3.23891085,  3.44129703,  1.7765975 , -2.7063454 ,
                                                        -0.11510028,
@@ -274,7 +274,7 @@ def test_LinearSolver_No3_direct():
 
     np.testing.assert_almost_equal(A.condition.condition_number, 85.3100212781)
 
-    x0, info, beta, ITer, message = ParallelSolverDistributor("direct")(A, b, COD=True)
+    x0, info, beta, ITer, message = RegularSolverDistributor("direct")(A, b, COD=True)
     x0 = x0.V
     np.testing.assert_array_almost_equal(x0, np.array([-3.23891085,  3.44129703,  1.7765975 , -2.7063454 ,
                                                        -0.11510028,
