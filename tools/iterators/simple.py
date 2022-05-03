@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Time-wise iterator.
-
+"""Time-wise iterator.
 """
 
 from root.config.main import *

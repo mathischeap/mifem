@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """['WB', 'EB', 'WF', 'EF', 'NB', 'SB', 'NF', 'SF', 'NW', 'SW', 'NE', 'SE']"""
 
 import sys

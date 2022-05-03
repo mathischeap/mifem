@@ -1,5 +1,4 @@
-
-
+# -*- coding: utf-8 -*-
 from root.config.main import *
 import random
 from objects.CSCG._3d.master import MeshGenerator
@@ -184,8 +183,6 @@ def random_mesh_of_elements_around(elements_num,
     else:
         element_layout = None
     element_layout = cOmm.bcast(element_layout, root=mAster_rank)
-
-
 
     if EDM_pool is None:
         EDM = None

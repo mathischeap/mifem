@@ -12,8 +12,7 @@ class _3dCSCG_Discretize(FrozenOnly):
         self._freeze_self_()
 
     def __call__(self, update_cochain=True, target='func'):
-        """
-        Discretize the current function (a scalar field) to cochain.
+        """Discretize the current function (a scalar field) to cochain.
 
         It is actually a wrapper of multiple methods that discretize functions of different types (a scalar
         field can be defined and represented in different ways in `python`, right?).
@@ -23,6 +22,7 @@ class _3dCSCG_Discretize(FrozenOnly):
         :param target:
         :return: The cochain.
         :rtype: Its type can be different according to the particular discretize method.
+
         """
         SELF = self._sf_
         if target == 'func':

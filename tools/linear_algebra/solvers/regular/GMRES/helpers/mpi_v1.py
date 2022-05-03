@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from root.config.main import *
 from tools.linear_algebra.data_structures.global_matrix.main import LocallyFullVector
 from screws.exceptions import LinerSystemSolverDivergenceError
@@ -8,9 +8,9 @@ from tools.linear_algebra.solvers.regular.GMRES.helpers.components.residual_plot
 
 def ___mpi_v1_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-4, preconditioner=None,
                        COD=True, name=None, plot_residuals=False):
-    """
-    In this version, we divide Vm and Hm in all cores in an optimal way. This will for sure result in more
-    communications, but will make the computation faster when restart is large.
+    """In this version, we divide Vm and Hm in all cores in an optimal way.
+
+    This will for sure result in more communications, but will make the computation faster when restart is large.
 
     :param lhs: GlobalMatrix
     :param rhs: GlobalVector
@@ -19,7 +19,7 @@ def ___mpi_v1_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
     :param maxiter:
     :param tol: relative tolerance.
     :param atol: absolute tolerance.
-    :param preconditioner: Format: (ID, kwargs (a dict) for the preconditioner)
+    :param preconditioner:
     :param COD: Clear Original Data?
     :param name: The name of this solving process.
     :param plot_residuals: bool
@@ -54,8 +54,8 @@ def ___mpi_v1_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
     if preconditioner is not None:
         applying_method = preconditioner.applying_method
 
-        if applying_method == 'left_multiply':
-            invM = preconditioner.M
+        if applying_method == 'left_multiply_invM':
+            invM = preconditioner.invM
             A = invM @ A
             f = invM @ f
         else:

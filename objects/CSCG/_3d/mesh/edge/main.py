@@ -15,24 +15,12 @@ class _3dCSCG_Edge(FrozenOnly):
         self._elements_ = None
         self._freeze_self_()
 
-
     @property
     def elements(self):
         """The edge elements. Only generate them when called first time."""
         if self._elements_ is None:
             self._elements_ = _3dCSCG_Edge_Elements(self)
         return self._elements_
-
-
-
-
-
-
-
-
-
-
-
 
 
 

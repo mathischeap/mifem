@@ -46,7 +46,7 @@ class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form):
         self._special_ = _1Form_Special(self)
         self._projection_ = _1Form_Projection(self)
         self.___PRIVATE_reset_cache___()
-        self._discretize_ = _3dCSCG_Discretize(self)
+        self._discretize_ = None
         self._reconstruct_ = None
         self._visualize_ = None
         self._freeze_self_()
@@ -86,6 +86,8 @@ class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form):
 
     @property
     def discretize(self):
+        if self._discretize_ is None:
+            self._discretize_ = _3dCSCG_Discretize(self)
         return self._discretize_
 
     @property
@@ -109,7 +111,7 @@ if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/_3d/forms/standard/_1s/main.py
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
-    mesh = MeshGenerator('crazy', c=0.0)([8,8,8])
+    mesh = MeshGenerator('cuboid', region_layout=[3,3,3])([3,3,3])
     space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3), ('Lobatto',3)])
     FC = FormCaller(mesh, space)
 
@@ -129,4 +131,4 @@ if __name__ == '__main__':
     f1.TW.___DO_push_all_to_instant___()
     f1.discretize()
 
-    f1.visualize(x=0.25)
+    f1.visualize(x=0.2)

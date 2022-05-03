@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from screws.freeze.main import FrozenOnly
 
 from tools.linear_algebra.gathering.regular.chain_matrix.do.find import ___Chain_Gathering_Matrix_FIND___

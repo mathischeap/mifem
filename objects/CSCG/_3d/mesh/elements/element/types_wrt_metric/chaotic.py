@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 
 from objects.CSCG._3d.mesh.elements.element.types_wrt_metric.base import ElementTypeWr2MetricBase

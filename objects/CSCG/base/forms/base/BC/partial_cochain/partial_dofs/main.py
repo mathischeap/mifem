@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 A class that represent a part of the dofs of a form.
 

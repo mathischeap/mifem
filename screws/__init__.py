@@ -1,5 +1,4 @@
-
-
+# -*- coding: utf-8 -*-
 
 
 from screws.generators.counter import Counter # 一个计数器

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-To test the library, do
+"""To test the library, do
 
 mpiexec -n 4 python __tests__/test_all.py
 

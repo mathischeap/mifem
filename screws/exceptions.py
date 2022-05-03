@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 """
 In this script, we DO NOT use the structure of naming files and folders of the mifem library.
 

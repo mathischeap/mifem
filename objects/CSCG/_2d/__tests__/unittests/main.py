@@ -1,8 +1,7 @@
-"""
 # -*- coding: utf-8 -*-
-
->> mpiexec python objects/CSCG/_2d/__tests__/unittests/main.py
->> mpiexec -n 4 python objects/CSCG/_2d/__tests__/unittests/main.py
+"""
+mpiexec python objects/CSCG/_2d/__tests__/unittests/main.py
+mpiexec -n 4 python objects/CSCG/_2d/__tests__/unittests/main.py
 
 """
 

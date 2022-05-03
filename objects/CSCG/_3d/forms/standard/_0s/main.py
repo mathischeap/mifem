@@ -41,7 +41,7 @@ class _3dCSCG_0Form(_3dCSCG_S0F_Private, _3dCSCG_Standard_Form):
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_standard_0form')
         self._special_ = _0Form_Special(self)
         self.___PRIVATE_reset_cache___()
-        self._discretize_ = _3dCSCG_Discretize(self)
+        self._discretize_ = None
         self._reconstruct_ = None
         self._visualize_ = None
         self._freeze_self_()
@@ -76,6 +76,8 @@ class _3dCSCG_0Form(_3dCSCG_S0F_Private, _3dCSCG_Standard_Form):
 
     @property
     def discretize(self):
+        if self._discretize_ is None:
+            self._discretize_ = _3dCSCG_Discretize(self)
         return self._discretize_
 
     @property
@@ -101,18 +103,22 @@ class _3dCSCG_0Form(_3dCSCG_S0F_Private, _3dCSCG_Standard_Form):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 6 python _3dCSCG\forms\standard\_0_form\main.py
+    # mpiexec -n 6 python objects/CSCG/_3d/forms/standard/_0s/main.py
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
-    mesh = MeshGenerator('crazy', c=0.0)([5,5,5])
+    mesh = MeshGenerator('cuboid', region_layout=[3,3,3])([3,3,3])
     space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3), ('Lobatto',3)])
     FC = FormCaller(mesh, space)
 
     # es = ExactSolutionSelector(mesh)('icpsNS:sincosRD')
 
     def p(t, x, y, z):
-        return - 6 * np.pi * np.sin(2*np.pi*x) * np.sin(2*np.pi*y) * np.sin(2*np.pi*z) + 0 * t
+        return np.sin(2*np.pi*x) * np.sin(np.pi*y) * np.cos(2*np.pi*z) + t
 
+
+    for i in mesh.elements:
+        region = mesh.do.find.region_name_of_element(i)
+        assert region in mesh.elements.in_regions
 
     scalar = FC('scalar', p)
 
@@ -121,14 +127,19 @@ if __name__ == '__main__':
     f0.TW.current_time = 0
     f0.TW.do.push_all_to_instant()
     f0.do.discretize()
-    print(f0.error.L())
 
-    df0 = FC('0-adf')
-    df0.prime.TW.func.do.set_func_body_as(scalar)
-    df0.prime.TW.current_time = 0
-    df0.prime.TW.do.push_all_to_instant()
-    df0.prime.do.discretize()
-    print(df0.prime.error.L())
+
+    # print(mesh.boundaries.range_of_element_sides)
+    f0.visualize(x=0.9)
+
+    # print(f0.error.L())
+    #
+    # df0 = FC('0-adf')
+    # df0.prime.TW.func.do.set_func_body_as(scalar)
+    # df0.prime.TW.current_time = 0
+    # df0.prime.TW.do.push_all_to_instant()
+    # df0.prime.do.discretize()
+    # print(df0.prime.error.L())
 
     # print(f0.___parameters___)
 

@@ -24,9 +24,8 @@ class _3dCSCG_Standard_Tr(_3dCSCG_FORM_BASE, ndim=3):
     :param str name:
     """
     def __init__(self, mesh, space, orientation, numbering_parameters, name):
+        """"""
         super().__init__(mesh, space)
-
-
         self._NUM_basis_, self._NUM_basis_components_, self._NUM_basis_onside_ = \
             getattr(self.space.num_basis, self.__class__.__name__)
         assert orientation in ('inner', 'outer'), " orientation needs to be 'inner' or 'outer'."

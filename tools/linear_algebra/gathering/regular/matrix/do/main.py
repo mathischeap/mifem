@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from screws.freeze.main import FrozenOnly
 import numpy as np
 from tools.linear_algebra.gathering.vector import Gathering_Vector

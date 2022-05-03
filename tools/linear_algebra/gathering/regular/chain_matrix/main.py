@@ -2,7 +2,7 @@
 """"""
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.main import FrozenOnly
 from root.config.main import *
@@ -12,7 +12,9 @@ from tools.linear_algebra.gathering.regular.matrix.main import Gathering_Matrix
 from tools.linear_algebra.gathering.regular.chain_matrix.do.main import ___Chain_Gathering_Matrix_DO___
 
 class Chain_Gathering_Matrix(FrozenOnly):
-    """We chain some Gathering_Matrix together, for example, chain (GM0, GM1, GM2). Then in GM1, the numbering does not
+    """We chain some Gathering_Matrix together, for example, chain (GM0, GM1, GM2).
+
+    Then in GM1, the numbering does not
     start with 0 anymore, it starts with ``GM0.GLOBAL_num_dofs``. As for GM2, its numbering now starts with
     ``GM0.GLOBAL_num_dofs + GM1.GLOBAL_num_dofs``.
 

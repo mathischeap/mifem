@@ -1,18 +1,9 @@
 
 from screws.exceptions import FrozenError
-
 from abc import ABC
 
 
 class FrozenOnly(ABC):
-    @property
-    def ___isfrozen___(self):
-        """"""
-        try:
-            return self.___ISFROZEN___
-        except AttributeError:
-            object.__setattr__(self, '___ISFROZEN___', False)
-            return self.___ISFROZEN___
 
     def __setattr__(self, key, value):
         """"""
@@ -36,3 +27,12 @@ class FrozenOnly(ABC):
     def _frozen_(self):
         """Return the status of the form, frozen (True) or melt (False)?"""
         return self.___isfrozen___
+
+    @property
+    def ___isfrozen___(self):
+        """"""
+        try:
+            return self.___ISFROZEN___
+        except AttributeError:
+            object.__setattr__(self, '___ISFROZEN___', False)
+            return self.___ISFROZEN___

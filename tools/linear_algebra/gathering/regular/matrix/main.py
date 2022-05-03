@@ -1,5 +1,4 @@
-
-
+# -*- coding: utf-8 -*-
 
 
 from tools.deprecated.assembler.main import GatheringMatrix

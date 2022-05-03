@@ -166,6 +166,7 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
     @property
     def visualize(self):
         return self._visualize_
+
     @property
     def numerical(self):
         """The numerical property: A wrapper of all numerical methods, properties."""
@@ -181,10 +182,10 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
             x0 = ___SCALAR_NEG_HELPER_1___(w0)
 
             neg_vector = _3dCSCG_ScalarField(self.mesh,
-                                             x0,
-                                             ftype='standard',
-                                             valid_time=self.valid_time,
-                                             name = '-' + self.standard_properties.name
+                 x0,
+                 ftype='standard',
+                 valid_time=self.valid_time,
+                 name = '-' + self.standard_properties.name
                                             )
             return neg_vector
 
@@ -203,10 +204,10 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                 x0 = ___SCALAR_SUB_HELPER_1___(w0, u0)
 
                 sub_vector = _3dCSCG_ScalarField(self.mesh,
-                                                 x0,
-                                                 ftype='standard',
-                                                 valid_time=self.valid_time,
-                                                 name = self.standard_properties.name + '-' + other.standard_properties.name
+                     x0,
+                     ftype='standard',
+                     valid_time=self.valid_time,
+                     name = self.standard_properties.name + '-' + other.standard_properties.name
                                                 )
                 return sub_vector
 
@@ -227,10 +228,10 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                 x0 = ___SCALAR_ADD_HELPER_1___(w0, u0)
 
                 add_vector = _3dCSCG_ScalarField(self.mesh,
-                                                 x0,
-                                                 ftype='standard',
-                                                 valid_time=self.valid_time,
-                                                 name = self.standard_properties.name + '+' + other.standard_properties.name
+                     x0,
+                     ftype='standard',
+                     valid_time=self.valid_time,
+                     name = self.standard_properties.name + '+' + other.standard_properties.name
                                                 )
                 return add_vector
 

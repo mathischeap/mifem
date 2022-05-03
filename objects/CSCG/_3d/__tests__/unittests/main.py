@@ -28,6 +28,7 @@ from objects.CSCG._3d.__tests__.unittests.trace_forms import *
 from objects.CSCG._3d.__tests__.unittests.edge_forms import *
 from objects.CSCG._3d.__tests__.unittests.hybrid.edge0 import test_hybridization_of_standard_0_form
 from objects.CSCG._3d.__tests__.unittests.hybrid.edge1 import test_hybridization_of_standard_1_form
+from objects.CSCG._3d.__tests__.unittests.hybrid.trace2 import test_hybridization_trace2
 from objects.CSCG._3d.__tests__.unittests.trace_selective_matrices import test_trace_and_selective_matrices
 from objects.CSCG._3d.__tests__.unittests.standard_forms.save_and_read import test_standard_forms_save_and_read
 from objects.CSCG._3d.__tests__.unittests.Stokes_flow.MSEM_trivial_BC import test_Stokes_MSEM_trivial_BC
@@ -104,6 +105,7 @@ passed_3dCSCG_tests += test_edge_forms_No1_0edge_Rd_and_Rc()
 
 passed_3dCSCG_tests += test_hybridization_of_standard_0_form()
 passed_3dCSCG_tests += test_hybridization_of_standard_1_form()
+passed_3dCSCG_tests += test_hybridization_trace2()
 passed_3dCSCG_tests += test_trace_and_selective_matrices()
 passed_3dCSCG_tests += test_standard_forms_save_and_read()
 

@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 import sys
 if './' not in sys.path: sys.path.append('./')
 
@@ -110,12 +110,12 @@ def test_LinearSolver_No0_GMRES():
     X0 = LocallyFullVector(np.zeros((3,)))
 
     x0, info, beta, ITER, message = RegularSolverDistributor("GMRES", routine='1', name='GMRES_test_mpi_v2')(
-        A, b, X0, restart=3, preconditioner=('Jacobian', dict()), COD=False, plot_residuals=False)
+        A, b, X0, restart=3, preconditioner=('Jacobi', dict()), COD=False, plot_residuals=False)
     x0 = x0.V
     np.testing.assert_array_almost_equal(x0, np.array([-2.1810344827586, 1.8362068965517, -0.5948275862068]))
 
     x0, info, beta, ITER, message = RegularSolverDistributor("GMRES", routine='0', name='GMRES_test_mpi_v0')(
-        A, b, X0, restart=3, preconditioner=('Jacobian', dict()), COD=False, plot_residuals=False)
+        A, b, X0, restart=3, preconditioner=('Jacobi', dict()), COD=False, plot_residuals=False)
     x0 = x0.V
     np.testing.assert_array_almost_equal(x0, np.array([-2.1810344827586, 1.8362068965517, -0.5948275862068]))
     assert ITER == 1
@@ -148,7 +148,8 @@ def test_LinearSolver_No0_GMRES():
     np.testing.assert_array_almost_equal(x0, np.array([-3.23891085,  3.44129703,  1.7765975 , -2.7063454 , -0.11510028,
                                                         0.94048189,  0.36495389,  0.54018445,  1.57663592]))
 
-    x0, info, beta, ITER, message = RegularSolverDistributor("GMRES", routine='0')(A, b, X0, restart=9, preconditioner=('Jacobian', dict()),
+    x0, info, beta, ITER, message = RegularSolverDistributor("GMRES", routine='0')(A, b, X0, restart=9,
+                                                                                   preconditioner=('Jacobi', dict()),
                                                                                    COD=False)
     x0 = x0.V
     np.testing.assert_array_almost_equal(x0, np.array([-3.23891085,  3.44129703,  1.7765975 , -2.7063454 , -0.11510028,
@@ -211,7 +212,7 @@ def test_LinearSolver_No1_BiCGSTAB():
     np.testing.assert_array_almost_equal(x0, np.array([-2.1810344827586, 1.8362068965517, -0.5948275862068]))
 
     x0, info, beta, ITER, message = \
-    RegularSolverDistributor("BiCGSTAB")(A, b, X0, maxiter=10, preconditioner=('Jacobian', dict()), COD=False)
+    RegularSolverDistributor("BiCGSTAB")(A, b, X0, maxiter=10, preconditioner=('Jacobi', dict()), COD=False)
     x0 = x0.V
     np.testing.assert_array_almost_equal(x0, np.array([-2.1810344827586, 1.8362068965517, -0.5948275862068]))
 
@@ -245,7 +246,7 @@ def test_LinearSolver_No2_LooseGMRES():
                                                         0.94048189,  0.36495389,  0.54018445,  1.57663592]))
 
     x0, info, beta, ITER, message = RegularSolverDistributor("LGMRES")(A, b, X0, m=6, k=2, atol=1e-9,
-                                                                       maxiter=100, preconditioner=('Jacobian', dict()),
+                                                                       maxiter=100, preconditioner=('Jacobi', dict()),
                                                                        COD=False)
     x0 = x0.V
     np.testing.assert_array_almost_equal(x0, np.array([-3.23891085,  3.44129703,  1.7765975 , -2.7063454 , -0.11510028,

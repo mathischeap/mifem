@@ -1,5 +1,5 @@
-"""
-See paper:
+# -*- coding: utf-8 -*-
+"""See paper:
 
 [Saad and Schultz, GMRES: A GENERALIZED MINIMAL RESIDUAL ALGORITHM FOR SOLVING NON-SYMMETRIC LINEAR SYSTEMS,
 SIAM J. ScI. STAT. COMPUT., 1986]

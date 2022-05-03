@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from objects.CSCG.base.forms.trace.IS import CSCG_trace_form_IS
 from objects.CSCG.base.forms.trace.num import CSCG_trace_form_NUM
 

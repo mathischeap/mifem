@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from root.config.main import rAnk, mAster_rank, cOmm, np
 from screws.freeze.main import FrozenOnly
 from objects.CSCG._3d.ADF.trace.base.cochain.local import ____3dCSCG_ADTF_Cochain_Local____

@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 """
 Sub-geometries of an element. Like we can pick a point, a slice or a volume from an element.
 

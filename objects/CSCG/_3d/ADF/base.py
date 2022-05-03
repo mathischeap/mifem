@@ -1,7 +1,5 @@
-
-
+# -*- coding: utf-8 -*-
 """"""
-
 from objects.CSCG.base.ADF.base.main import CSCG_Algebra_DUAL_FORM_BASE
 
 

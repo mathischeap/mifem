@@ -1,5 +1,5 @@
-"""
-Generate random objects for testing purpose.
+# -*- coding: utf-8 -*-
+"""Generate random objects for testing purpose.
 """
 
 

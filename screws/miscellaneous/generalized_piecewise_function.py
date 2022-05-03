@@ -12,8 +12,7 @@ import numpy as np
 from collections.abc import Callable
 
 def genpiecewise(xi, condlist, funclist, fillvalue=0, args=(), **kw):
-    """
-    Evaluate a piecewise-defined function.
+    """Evaluate a piecewise-defined function.
 
     Given a set of conditions and corresponding functions, evaluate each
     function on the input data wherever its condition is true.
@@ -99,6 +98,7 @@ def genpiecewise(xi, condlist, funclist, fillvalue=0, args=(), **kw):
             3.20879946,  1.57079633, -1.96808762, -0.18184395,  0.        ])
 
     """
+    # noinspection PyTypeChecker
     nc, nf = len(condlist), len(funclist)
     if nc not in [nf - 1, nf]:
         raise ValueError("function list and condition list" +

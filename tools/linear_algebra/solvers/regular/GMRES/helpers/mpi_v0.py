@@ -1,6 +1,4 @@
-
-
-
+# -*- coding: utf-8 -*-
 from root.config.main import *
 from tools.linear_algebra.data_structures.global_matrix.main import LocallyFullVector
 from screws.exceptions import LinerSystemSolverDivergenceError
@@ -47,8 +45,8 @@ def ___mpi_v0_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
 
         applying_method = preconditioner.applying_method
 
-        if applying_method == 'left_multiply':
-            invM = preconditioner.M
+        if applying_method == 'left_multiply_invM':
+            invM = preconditioner.invM
             A = invM @ A
             f = invM @ f
         else:

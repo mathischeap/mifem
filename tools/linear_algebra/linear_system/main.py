@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 We make a class to represent a linear system.
 

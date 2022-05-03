@@ -1,5 +1,4 @@
-
-
+# -*- coding: utf-8 -*-
 from screws.exceptions import LocalCochainShapeError
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_ColumnVector
 from scipy.sparse import lil_matrix, csr_matrix, csc_matrix

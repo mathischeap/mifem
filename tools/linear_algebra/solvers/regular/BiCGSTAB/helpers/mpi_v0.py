@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from root.config.main import *
 from tools.linear_algebra.data_structures.global_matrix.main import LocallyFullVector
@@ -44,8 +44,8 @@ def ___mpi_v0_BiCGSTAB___(lhs, rhs, X0, maxiter=3, tol=1e-3, atol=1e-4, precondi
     if preconditioner is not None:
         applying_method = preconditioner.applying_method
 
-        if applying_method == 'left_multiply':
-            invM = preconditioner.M
+        if applying_method == 'left_multiply_invM':
+            invM = preconditioner.invM
             A = invM @ A
             f = invM @ f
         else:

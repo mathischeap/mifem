@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from root.config.main import np, rAnk, mAster_rank, cOmm, saFe_mode
 from tools.linear_algebra.data_structures.global_matrix.main import DistributedVector
 from scipy import sparse as spspa

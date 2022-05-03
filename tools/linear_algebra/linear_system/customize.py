@@ -1,5 +1,4 @@
-
-
+# -*- coding: utf-8 -*-
 from screws.freeze.main import FrozenOnly
 
 class ___LinearSystem_Customize___(FrozenOnly):

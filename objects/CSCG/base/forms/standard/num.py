@@ -1,6 +1,4 @@
-
-
-
+# -*- coding: utf-8 -*-
 from screws.freeze.base import FrozenOnly
 
 

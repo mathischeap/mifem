@@ -1,8 +1,9 @@
-
-
+# -*- coding: utf-8 -*-
 from screws.freeze.base import FrozenOnly
 import numpy as np
 from root.config.main import cOmm
+
+
 
 class _3dCSCG_1EF_Special(FrozenOnly):
     """"""

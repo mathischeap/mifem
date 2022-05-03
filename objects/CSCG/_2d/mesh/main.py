@@ -1,6 +1,4 @@
-
-
-
+# -*- coding: utf-8 -*-
 from root.config.main import *
 from objects.CSCG.base.mesh.base import CSCG_MESH_BASE
 from screws.decorators.accepts import accepts, memoize5
@@ -15,6 +13,8 @@ from objects.CSCG._2d.mesh.deprecated.coordinate_transformation import Coordinat
 from objects.CSCG._2d.mesh.do.main import _2dCSCG_Mesh_DO
 
 
+
+
 class _2dCSCG_Mesh(CSCG_MESH_BASE):
     """The 3dCSCG mesh."""
     def __init__(self, domain, element_layout=None, EDM=None):
@@ -25,7 +25,6 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
         self._DO_ = _2dCSCG_Mesh_DO(self)
         self.___PRIVATE_parse_element_layout___(element_layout)
 
-
         self.___PRIVATE_BASE_get_region_elements_distribution_type___()
         self.___PRIVATE_BASE_decide_EDM___(EDM)
         self.___PRIVATE_BASE_parse_element_distribution_method___()
@@ -35,11 +34,9 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
         self.___PRIVATE_generate_element_global_numbering___()
         self.___PRIVATE_optimize_element_distribution___()
 
-
         self.___PRIVATE_generate_element_map___()
         self.___PRIVATE_modify_elements_map_wr2_periodic_setting___()
         self.___PRIVATE_generate_boundary_element_edges___()
-
 
         self.___DEPRECATED_ct___ = CoordinateTransformation(self) # only for test purpose
         self._elements_ = _2dCSCG_Mesh_Elements(self)
@@ -48,6 +45,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
         self._boundaries_ = _2dCSCG_Mesh_Boundaries(self)
         self.___define_parameters___ = None
         self.___TEST_MODE___ = False
+
         self.do.reset_cache()
         self._freeze_self_()
 

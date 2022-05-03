@@ -1,4 +1,5 @@
-""" """
+# -*- coding: utf-8 -*-
+""""""
 
 import sys
 if './' not in sys.path: sys.path.append('./')
@@ -34,6 +35,7 @@ class _3dCSCG_Algebra_DUAL_Trace_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
         self._IS_ = None
         self._num_ = None
         self._matrices_ = None
+
 
     def ___PRIVATE_reset_cache___(self):
         """"""

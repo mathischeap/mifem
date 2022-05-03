@@ -1,5 +1,4 @@
-
-
+# -*- coding: utf-8 -*-
 """
 Sub-geometries of a mesh. Like we can pick a point, a slice or a volume from a mesh. Such a sub-geometry should
 consist of sub-geometries of one or several elements.

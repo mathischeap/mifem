@@ -34,10 +34,19 @@ def ___TEST_SOLVER___(tk, tk1):
     else:
         ot1 = None
     ot1 = cOmm.bcast(ot1, root=mAster_rank)
-    message = ['Inner solver: [gmres] A shape=(92000, 92000), Solver: GMRES, routine: MPI1, restart=150, convergence info=100, residual=1e-06, number of iterations=100, time cost=390.98 seconds.',
-               "Outer solver: [icpsNS-OS1] Total system shape (226400, 226400), Reduced system shape (103200, 103200) @sparsity~=99.86% with ~ 14967722 non-zeros. Solver costs 458.77s among which 418.69s is for solving the reduced system. [gmres0] on the reduced system: restart=150, convergence info=100, residual=1e-06, number of iterations=100"]
-    return 1, 0, message, ot1
 
+    message = ['Inner solver: [gmres] A shape=(92000, 92000), Solver: GMRES, routine: MPI1, '
+               'restart=150, convergence info=100, residual=1e-06, number of '
+               'iterations=100, time cost=390.98 seconds.',
+
+               "Outer solver: [icpsNS-OS1] Total system shape (226400, 226400), "
+               "Reduced system shape (103200, 103200) @sparsity~=99.86% with ~ 14967722 "
+               "non-zeros. Solver costs 458.77s among which 418.69s is for solving the "
+               "reduced system. [gmres0] on the reduced system: restart=150, convergence "
+               "info=100, residual=1e-06, number of iterations=100"
+               ]
+
+    return 1, 0, message, ot1
 
 SI = SimpleIterator(t0=0, dt=0.1, max_steps=100000,
                     monitor_factor=1,

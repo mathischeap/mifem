@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 import matplotlib.pyplot as plt
 from screws.freeze.main import FrozenOnly
 from screws.quadrature import Quadrature
@@ -17,12 +17,12 @@ class _1dPolynomial(FrozenOnly):
     :type p: int, None
     """
     def __init__(self, category, p=None):
-        """
-        I accept inputs like:
-            (1) _1dPolynomial(3) # we will use Lobatto nodes!
+        """I accept inputs like:
+            (1) _1dPolynomial(3) # we will be default use Lobatto nodes!
             (2) _1dPolynomial('Lobatto-3')  # use Lobatto nodes of degree 3.
-            (3) _1dPolynomial('Lobatto", 3) # use Lobatto nodes of degree 3.
+            (3) _1dPolynomial('Lobatto', 3) # use Lobatto nodes of degree 3.
             (4) _1dPolynomial([-1,-0.5, 0.5, 1]) # customize nodes, category will be 'free'.
+
         """
         if isinstance(category, (int, float)):
             # default: if only provide an int for category, we use it as degree for a set of Lobatto nodes.

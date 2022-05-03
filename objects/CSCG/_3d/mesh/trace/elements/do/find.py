@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from screws.freeze.main import FrozenOnly
 
 from root.config.main import cOmm

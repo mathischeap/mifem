@@ -1,6 +1,4 @@
-
-
-
+# -*- coding: utf-8 -*-
 import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config.main import rAnk, mAster_rank, cOmm, np
@@ -129,14 +127,19 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
                     for _, tei in enumerate(tes):
                         _side_ = 'NSWEBF'[_]
                         te = SELF._elements_[tei]
-                        X, Y, Z = te.coordinate_transformation.mapping(r, s, from_element=element, side=_side_)
+                        X, Y, Z = te.coordinate_transformation.mapping(
+                            r, s, from_element=element, side=_side_)
 
                         if tei == i and _side_ == side:
-                            x, y, z = te.coordinate_transformation.mapping(uv_r, uv_s, from_element=element, side=_side_)
-                            uvx, uvy, uvz = te.coordinate_transformation.___PRIVATE_outward_unit_normal_vector___(uv_r, uv_s, from_element=element, side=_side_)
+                            x, y, z = te.coordinate_transformation.mapping(
+                                uv_r, uv_s, from_element=element, side=_side_)
+                            uvx, uvy, uvz = te.coordinate_transformation.\
+                                ___PRIVATE_outward_unit_normal_vector___(
+                                uv_r, uv_s, from_element=element, side=_side_)
                             DATA2[str(tei)+_side_] = [(X, Y, Z), (x, y, z), (uvx, uvy, uvz)]
                         else:
-                            x, y, z = te.coordinate_transformation.mapping(cr, cs, from_element=element, side=_side_)
+                            x, y, z = te.coordinate_transformation.mapping(
+                                cr, cs, from_element=element, side=_side_)
                             DATA2[str(tei)+_side_] = [(X, Y, Z), (x, y, z), _side_]
 
             else:
@@ -156,13 +159,18 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
                     _side_ = 'NSWEBF'[_]
 
                     te = SELF._elements_[tei]
-                    X, Y, Z = te.coordinate_transformation.mapping(r, s, from_element=element, side=_side_)
+                    X, Y, Z = te.coordinate_transformation.mapping(
+                        r, s, from_element=element, side=_side_)
                     if tei == i:
-                        x, y, z = te.coordinate_transformation.mapping(uv_r, uv_s, from_element=element, side=_side_)
-                        uvx, uvy, uvz = te.coordinate_transformation.___PRIVATE_outward_unit_normal_vector___(uv_r, uv_s, from_element=element, side=_side_)
+                        x, y, z = te.coordinate_transformation.mapping(
+                            uv_r, uv_s, from_element=element, side=_side_)
+                        uvx, uvy, uvz = te.coordinate_transformation.\
+                            ___PRIVATE_outward_unit_normal_vector___(
+                            uv_r, uv_s, from_element=element, side=_side_)
                         DATA2[str(tei)+_side_] = [(X, Y, Z), (x, y, z), (uvx, uvy, uvz)]
                     else:
-                        x, y, z = te.coordinate_transformation.mapping(cr, cs, from_element=element, side=_side_)
+                        x, y, z = te.coordinate_transformation.mapping(
+                            cr, cs, from_element=element, side=_side_)
                         DATA2[str(tei)+_side_] = [(X, Y, Z), (x, y, z),  _side_   ]
 
                 DATA2['rank'] = rAnk
@@ -194,20 +202,26 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
                 X, Y, Z = te.coordinate_transformation.mapping(r, s, from_element=element, side=_side_)
                 if tei == i and _side_ == side:
                     ax.plot_surface(X, Y, Z) # plot the trace element
-                    x, y, z = te.coordinate_transformation.mapping(uv_r, uv_s, from_element=element, side=_side_)
-                    uvx, uvy, uvz = te.coordinate_transformation.___PRIVATE_outward_unit_normal_vector___(uv_r, uv_s, from_element=element, side=_side_)
+                    x, y, z = te.coordinate_transformation.mapping(
+                        uv_r, uv_s, from_element=element, side=_side_)
+                    uvx, uvy, uvz = te.coordinate_transformation.\
+                        ___PRIVATE_outward_unit_normal_vector___(
+                        uv_r, uv_s, from_element=element, side=_side_)
 
                     x_range = np.max(X) - np.min(X)
                     y_range = np.max(Y) - np.min(Y)
                     z_range = np.max(Z) - np.min(Z)
                     mean_range = (x_range + y_range + z_range) / 6
 
-                    ax.quiver(x, y, z, uvx*mean_range, uvy*mean_range, uvz*mean_range, color='r', linewidth=0.5)
-                    ax.text(x[-1] + 0.5*uvx[-1]*mean_range, y[-1] + 0.5*uvy[-1]*mean_range, z[-1] + 0.5*uvz[-1]*mean_range,
+                    ax.quiver(x, y, z, uvx*mean_range, uvy*mean_range, uvz*mean_range,
+                              color='r', linewidth=0.5)
+                    ax.text(x[-1] + 0.5*uvx[-1]*mean_range, y[-1] +
+                            0.5*uvy[-1]*mean_range, z[-1] + 0.5*uvz[-1]*mean_range,
                             side, color='green', ha='center', va='center', ma='center')
                 else:
                     ax.plot_surface(X, Y, Z, color=(0.7,0.7,0.7,0.5))
-                    x, y, z = te.coordinate_transformation.mapping(cr, cs, from_element=element, side=_side_)
+                    x, y, z = te.coordinate_transformation.mapping(
+                        cr, cs, from_element=element, side=_side_)
                     ax.text(x[0], y[0], z[0], 'NSWEBF'[_],
                             color='k', ha='center', va='center', ma='center')
 
@@ -246,8 +260,10 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
                         y_range = np.max(Y) - np.min(Y)
                         z_range = np.max(Z) - np.min(Z)
                         mean_range = (x_range + y_range + z_range) / 6
-                        ax.quiver(*xyz, uvx*mean_range, uvy*mean_range, uvz*mean_range, color='r', linewidth=0.5)
-                        ax.text(x[-1] + 0.5*uvx[-1]*mean_range, y[-1] + 0.5*uvy[-1]*mean_range, z[-1] + 0.5*uvz[-1]*mean_range,
+                        ax.quiver(*xyz, uvx*mean_range, uvy*mean_range, uvz*mean_range,
+                                  color='r', linewidth=0.5)
+                        ax.text(x[-1] + 0.5*uvx[-1]*mean_range, y[-1] +
+                                0.5*uvy[-1]*mean_range, z[-1] + 0.5*uvz[-1]*mean_range,
                                 side, color='green', ha='center', va='center', ma='center')
                     else:
                         XYZ, xyz, _s_ = DATA2[str(tei)+_side_]
@@ -296,7 +312,8 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
             e = te.CHARACTERISTIC_element
             side = te.CHARACTERISTIC_side
 
-            uv = te.coordinate_transformation.___PRIVATE_outward_unit_normal_vector___(r, s, from_element=e, side=side)
+            uv = te.coordinate_transformation.___PRIVATE_outward_unit_normal_vector___(
+                r, s, from_element=e, side=side)
             vx, vy, vz = uv
             V = [[vx[_], vy[_], vz[_]] for _ in range(LEN)]
             comb = combinations(V, 2)
@@ -309,7 +326,8 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
             me = SELF._mesh_.elements[e]
             me_ct = me.coordinate_transformation.mapping(xi, et, sg)
             te_ct = te.coordinate_transformation.mapping(rc, sc, from_element=e, side=side)
-            te_uv = te.coordinate_transformation.___PRIVATE_outward_unit_normal_vector___(rc, sc, from_element=e, side=side)
+            te_uv = te.coordinate_transformation.___PRIVATE_outward_unit_normal_vector___(
+                rc, sc, from_element=e, side=side)
             v_inner = (me_ct[0]-te_ct[0], me_ct[1]-te_ct[1], me_ct[2]-te_ct[2])
             v_outer = te_uv
             angle = angle_between_two_vectors(v_inner, v_outer)

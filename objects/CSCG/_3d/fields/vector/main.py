@@ -274,10 +274,10 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
             x2 = ___VECTOR_NEG_HELPER_1___(w2)
 
             neg_vector = _3dCSCG_VectorField(self.mesh,
-                                             [x0, x1, x2],
-                                             ftype='standard',
-                                             valid_time=self.valid_time,
-                                             name = '-' + self.standard_properties.name
+                 [x0, x1, x2],
+                 ftype='standard',
+                 valid_time=self.valid_time,
+                 name = '-' + self.standard_properties.name
                                             )
             return neg_vector
 
@@ -298,10 +298,10 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                 x2 = ___VECTOR_SUB_HELPER_1___(w2, u2)
 
                 sub_vector = _3dCSCG_VectorField(self.mesh,
-                                                 [x0, x1, x2],
-                                                 ftype='standard',
-                                                 valid_time=self.valid_time,
-                                                 name = self.standard_properties.name + '-' + other.standard_properties.name
+                     [x0, x1, x2],
+                     ftype='standard',
+                     valid_time=self.valid_time,
+                     name = self.standard_properties.name + '-' + other.standard_properties.name
                                                 )
                 return sub_vector
 
@@ -324,10 +324,10 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                 x2 = ___VECTOR_ADD_HELPER_1___(w2, u2)
 
                 add_vector = _3dCSCG_VectorField(self.mesh,
-                                                 [x0, x1, x2],
-                                                 ftype='standard',
-                                                 valid_time=self.valid_time,
-                                                 name = self.standard_properties.name + '+' + other.standard_properties.name
+                     [x0, x1, x2],
+                     ftype='standard',
+                     valid_time=self.valid_time,
+                     name = self.standard_properties.name + '+' + other.standard_properties.name
                                                 )
                 return add_vector
 

@@ -1,29 +1,29 @@
-
+# -*- coding: utf-8 -*-
 
 
 from screws.freeze.main import FrozenOnly
 
 
-
-
 class _3dCSCG_MeshPerpendicularSlice(FrozenOnly):
-    """
-    A particular slice-sub-geometry.
+    """A particular slice-sub-geometry.
 
     It is a slice of a mesh. Such a sub-geometry should consist of slices of one or several elements.
     """
     def __init__(self, mesh, *args, **kwargs):
         """"""
         self._mesh_ = mesh
+
         # only provide a RegionPerpendicularSlice as input: `_3dCSCG_MeshPerpendicularSlice(RPS)`
         if len(args)== 1 and args[0].__class__.__name__ == 'RegionPerpendicularSlice':
             self._element_slices_, self._PTA_ = \
                 self.___PRIVATE_generate_element_slices_from_A_RegionPerpendicularSlice__(args[0])
+
         # only provide one kwarg: x, or y, or z.
         elif len(args) == 0 and all([_ in 'xyz' for _ in list(kwargs.keys())]):
             DPS = self._mesh_.domain.sub_geometry.make_a_perpendicular_slice_object_on(**kwargs)
             self._element_slices_, self._PTA_ = \
                 self.___PRIVATE_generate_element_slices_from_A_DomainPerpendicularSlice__(DPS)
+
         else:
             raise NotImplementedError(f"Do not understand args={args}, kwargs={kwargs}.")
 
@@ -36,19 +36,28 @@ class _3dCSCG_MeshPerpendicularSlice(FrozenOnly):
 
         element_slices, PTA = dict(), None
 
+
         for rn in RPS_dict:
+
+
             RPS = RPS_dict[rn]
+
             if RPS is None:
                 pass
             elif rn not in self._mesh_.elements.in_regions:
                 pass
             else:
+
                 ele_sli, pta = self.___PRIVATE_generate_element_slices_from_A_RegionPerpendicularSlice__(RPS)
                 element_slices.update(ele_sli)
-                if PTA is None:
-                    PTA = pta
+
+                if pta is not None:
+                    if PTA is None:
+                        PTA = pta
+                    else:
+                        assert PTA == pta
                 else:
-                    assert PTA == pta
+                    pass
 
         return element_slices, PTA
 
@@ -69,6 +78,7 @@ class _3dCSCG_MeshPerpendicularSlice(FrozenOnly):
         assert self._mesh_.domain.regions[rn] is RS._region_, "region does not match."
 
         r, s, t = RS.r, RS.s, RS.t
+
         spacing = self._mesh_.elements.spacing[rn]
 
         A = self.___PRIVATE_locate_index_in_spacing___(r, spacing[0])
@@ -89,10 +99,18 @@ class _3dCSCG_MeshPerpendicularSlice(FrozenOnly):
             if len(abc) == 1:
                 loc = abc[0][0]
                 LS = spacing[k][loc:loc+2]
-                start, end = LS
-                assert start <= PTA_position < end, f"[start, end] = [{start}, {end}], " \
-                                                    f"PTA_position={PTA_position} wrong."
-                PTA_element_position = -1 + 2 * (PTA_position - start) / (end - start)
+
+                if len(LS) == 2:
+                    start, end = LS
+                    assert start <= PTA_position < end, f"[start, end] = [{start}, {end}], " \
+                                                        f"PTA_position={PTA_position} wrong."
+                    PTA_element_position = -1 + 2 * (PTA_position - start) / (end - start)
+                elif len(LS) == 1: # we found the last node LS = [1,]
+                    assert LS == [1,]
+                    PTA_element_position = 1
+                    loc -= 1
+                else:
+                    raise Exception()
 
                 IND.append(range(0, len(spacing[k])))
                 PTA_info = (loc, PTA_element_position)

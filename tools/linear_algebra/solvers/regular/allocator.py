@@ -1,9 +1,6 @@
+# -*- coding: utf-8 -*-
+"""A collection of all parallel solvers.
 """
-A collection of all parallel solvers.
-"""
-
-
-
 import sys
 if './' not in sys.path: sys.path.append('./')
 

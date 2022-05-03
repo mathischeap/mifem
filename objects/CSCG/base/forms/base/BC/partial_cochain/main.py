@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 A class that represent a part of the cochains of a form. Therefore, it
 will have two major properties representing: (i) the dofs (numbering), (ii) the cochain of these

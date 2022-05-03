@@ -1,5 +1,4 @@
-
-
+# -*- coding: utf-8 -*-
 from root.config.main import rAnk, mAster_rank, cOmm
 import random
 from objects.CSCG._3d.__tests__.random_objects.mesh import random_mesh_of_elements_around

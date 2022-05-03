@@ -5,16 +5,17 @@ from screws.freeze.main import FrozenOnly
 
 
 class ElementTypeWr2MetricBase(FrozenOnly):
-    """
-    A base for all element types w.r.t. metric. For each type of regions, we can classify its elements
-    into different types. These types are all coded here.
+    """A base for all element types w.r.t. metric.
+
+    For each type of regions, we can classify its elements into different types. These types are all coded here.
     """
     @property
     def mark(self):
-        """
-        A mark is key that identifies the element metric. If the marks of two elements are the same, then
-        they have the same metric, otherwise, their metric are different. A mark normally is a string. But for
-        chaotic element, it is an int: the id of the object.
+        """A mark is key that identifies the element metric.
+
+        If the marks of two elements are the same, then they have the same metric, otherwise,
+        their metric are different. A mark normally is a string. But for chaotic element,
+        it is an int: the id of the object.
 
         :return:
         """

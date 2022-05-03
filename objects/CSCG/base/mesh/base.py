@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import random
 
 from root.config.main import *
@@ -542,7 +543,10 @@ class CSCG_MESH_BASE(FrozenClass):
             rn = self.do.find.region_name_of_element(i)
             if rn not in ___USEFUL_regions_and_boundaries___:
                 ___USEFUL_regions_and_boundaries___.append(rn)
+
+            if rn not in _elements_in_regions_:
                 _elements_in_regions_.append(rn)
+
             for side_rn in region_map[rn]:
                 if side_rn not in ___USEFUL_regions_and_boundaries___:
                     ___USEFUL_regions_and_boundaries___.append(side_rn)

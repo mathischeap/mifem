@@ -47,8 +47,6 @@ class _3dCSCG_S3F_Private:
                 RM[i] = basis_det_iJ.T
         return RM
 
-
-
     def ___PRIVATE_operator_inner___(self, _, i, xietasigma, quad_weights, bfSelf, bfOther):
         """Note that here we only return a local matrix."""
         element = self.mesh.elements[i]

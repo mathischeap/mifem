@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 A collection of all parallel solvers.
 """

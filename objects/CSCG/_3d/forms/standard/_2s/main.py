@@ -45,7 +45,7 @@ class _3dCSCG_2Form(_3dCSCG_S2F_Private, _3dCSCG_Standard_Form):
         self._special_ = _2Form_Special(self)
         self._projection_ = _2Form_Projection(self)
         self.___PRIVATE_reset_cache___()
-        self._discretize_ = _3dCSCG_Discretize(self)
+        self._discretize_ = None
         self._reconstruct_ = None
         self._visualize_ = None
         self._freeze_self_()
@@ -85,6 +85,8 @@ class _3dCSCG_2Form(_3dCSCG_S2F_Private, _3dCSCG_Standard_Form):
 
     @property
     def discretize(self):
+        if self._discretize_ is None:
+            self._discretize_ = _3dCSCG_Discretize(self)
         return self._discretize_
 
 

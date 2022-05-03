@@ -27,17 +27,18 @@ from screws.exceptions import ElementsLayoutError, ElementSidePairError
 from screws.miscellaneous.timer import break_list_into_parts
 from objects.CSCG._3d.mesh.elements.main import _3dCSCG_Mesh_Elements
 from objects.CSCG._3d.mesh.periodic_setting.main import _3dCSCG_PeriodicDomainSetting
-from objects.CSCG._3d.mesh.deprecated.coordinate_transformation.transformer import CoordinateTransformation as ___DCT___
+from objects.CSCG._3d.mesh.deprecated.coordinate_transformation.transformer import \
+    CoordinateTransformation as ___DCT___
 from objects.CSCG._3d.mesh.visualize.main import _3dCSCG_Mesh_Visualize
 from objects.CSCG._3d.mesh.boundaries.main import _3dCSCG_Mesh_Boundaries
 from objects.CSCG._3d.mesh.sub_geometry.main import _3dCSCG_Mesh_SubGeometry
 from objects.CSCG._3d.mesh.do.main import _3dCSCG_Mesh_DO
 
-
-
 from objects.CSCG._3d.mesh.node.main import _3dCSCG_Node
 from objects.CSCG._3d.mesh.edge.main import _3dCSCG_Edge
 from objects.CSCG._3d.mesh.trace.main import _3dCSCG_Trace
+
+
 
 
 class _3dCSCG_Mesh(CSCG_MESH_BASE):
@@ -134,7 +135,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
             self._element_spacing_[rn], self._num_elements_in_region_[rn] = \
                 self.___PRIVATE_parse_element_layout_each_region___(EL[rn])
         self._num_total_elements_ = 0
-        self._num_elements_accumulation_ = dict()
+        self._num_elements_accumulation_: Dict = dict()
         for rn in rns:
             self._num_total_elements_ += self._num_elements_in_region_[rn]
             self._num_elements_accumulation_[self._num_total_elements_] = rn
@@ -1105,14 +1106,13 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                 # regular pair; conforming pair; N|S, W|E, B|F and no twist!
                 sideOne = pairTypeINFO[0]
                 sideTwo = pairTypeINFO[2]
-                return 'regular|regular', [elementOne,
-                                           elementTwo], sideOne + sideTwo, None  # None for future extension.
+                return 'regular|regular', \
+                       [elementOne, elementTwo], sideOne + sideTwo, None  # None for future extension.
                 # for all kinds of pair, return has follow this same rule!
             else:
                 raise ElementSidePairError(f"Pair: {pairTypeINFO} is not understandable.")
         else:
             raise Exception('elementSidePair format wrong!')
-
 
     @memoize5 # must use memoize
     def ___PRIVATE_do_find_region_name_and_local_indices_of_element___(self, i):

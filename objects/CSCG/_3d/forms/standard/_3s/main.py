@@ -40,7 +40,7 @@ class _3dCSCG_3Form(_3dCSCG_S3F_Private, _3dCSCG_Standard_Form):
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_standard_3form')
         self._special_ = _3Form_Special(self)
         self.___PRIVATE_reset_cache___()
-        self._discretize_ = _3dCSCG_Discretize(self)
+        self._discretize_ = None
         self._reconstruct_ = None
         self._visualize_ = None
         self._freeze_self_()
@@ -64,6 +64,8 @@ class _3dCSCG_3Form(_3dCSCG_S3F_Private, _3dCSCG_Standard_Form):
 
     @property
     def discretize(self):
+        if self._discretize_ is None:
+            self._discretize_ = _3dCSCG_Discretize(self)
         return self._discretize_
 
     @property
@@ -83,24 +85,30 @@ class _3dCSCG_3Form(_3dCSCG_S3F_Private, _3dCSCG_Standard_Form):
 
 
 if __name__ == '__main__':
-    # mpiexec python objects/CSCG/_3d/forms/standard/_3s/main.py
+    # mpiexec -n 4 python objects/CSCG/_3d/forms/standard/_3s/main.py
 
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
-    mesh = MeshGenerator('crazy', c=0.0)([6,6,6])
+    mesh = MeshGenerator('cuboid')([3,3,3])
     space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3), ('Lobatto',3)])
     FC = FormCaller(mesh, space)
 
-    es = ExactSolutionSelector(mesh)('icpsNS:sincosRD')
+    # es = ExactSolutionSelector(mesh)('icpsNS:sincosRD')
     f3 = FC('3-f', is_hybrid=False)
 
-    f3.TW.func.body = es.status.pressure
+    import numpy as np
+    def func(t, x, y, z): return np.sin(np.pi * x) * np.cos(2 * np.pi * y) * np.cos(2*np.pi * z) + t
+
+
+    scalar = FC('scalar', func)
+
+    f3.TW.func.body = scalar
     f3.TW.current_time = 0
     f3.TW.do.push_all_to_instant()
     f3.do.discretize()
 
 
-    f3.visualize(x=0.5)
+    f3.visualize(x=1)
     # from tools.CSCG.partial_dofs import PartialDofs
     #
     # pd = PartialDofs(f3)

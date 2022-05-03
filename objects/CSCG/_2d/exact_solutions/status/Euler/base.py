@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 
 The 2d Euler flows (incompressible, constant density, inviscid Navier-Stokes flows).

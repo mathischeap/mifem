@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from numpy import sin, pi
 from objects.CSCG._2d.exact_solutions.status.scalar_Laplace.base import scalar_Laplace_Base
 

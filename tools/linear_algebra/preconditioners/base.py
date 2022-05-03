@@ -1,5 +1,4 @@
-
-
+# -*- coding: utf-8 -*-
 """
 A main body of all preconditioners.
 
@@ -16,16 +15,12 @@ class Preconditioner(FrozenOnly):
         self._A_ = A
 
     @property
-    def M(self):
-        """The matrix that approximate the inverse of A (Ax = b). So we need to do M dot A, M dot b."""
-        raise NotImplementedError()
-
-    @property
     def applying_method(self):
         """An indicator that explains how to apply this preconditioner."""
         AM = self.___applying_method___
 
-        assert AM in ('left_multiply',)
+        assert AM in ('left_multiply_invM', # invM @ A x = invM @ b. So self must have `invM` property
+                      )
 
         return AM
 

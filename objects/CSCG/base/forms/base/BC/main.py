@@ -1,10 +1,7 @@
-
-
+# -*- coding: utf-8 -*-
 from objects.CSCG.base.forms.base.BC.partial_cochain.main import PartialCochain
 from objects.CSCG.base.forms.base.BC.partial_cochain.partial_dofs.main import PartialDofs
 from screws.freeze.base import FrozenOnly
-
-
 
 
 class CSCG_Form_BC(FrozenOnly):

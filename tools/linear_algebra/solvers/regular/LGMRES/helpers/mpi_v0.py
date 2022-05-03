@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 
 
@@ -62,8 +62,8 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-3, atol=1e
     if preconditioner is not None:
         applying_method = preconditioner.applying_method
 
-        if applying_method == 'left_multiply':
-            invM = preconditioner.M
+        if applying_method == 'left_multiply_invM':
+            invM = preconditioner.invM
             A = invM @ A
             f = invM @ f
         else:

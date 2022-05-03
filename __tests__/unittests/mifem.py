@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Here we do tests for the mifem module."""
 
 import sys

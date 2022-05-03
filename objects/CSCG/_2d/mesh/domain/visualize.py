@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-INTRO
+"""INTRO
 
 @author: Yi Zhang. Created on Wed May 22 16:27:46 2019
          Department of Aerodynamics

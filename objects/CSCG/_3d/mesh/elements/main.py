@@ -25,6 +25,8 @@ class _3dCSCG_Mesh_Elements(FrozenOnly):
             self._elements_[i] = _3dCSCG_Mesh_Element(self, i)
         self.___PRIVATE_parse_elements_type_wrt_metric___()
         self.___PRIVATE_reset_cache___()
+        self._Statistic_ = None
+        self._involved_mesh_boundaries_ = None
         self._freeze_self_()
 
     def ___PRIVATE_reset_cache___(self):
@@ -56,24 +58,52 @@ class _3dCSCG_Mesh_Elements(FrozenOnly):
         """The statistic of local mesh elements.
 
         :return: a dict of the statistic.
+            Keys:
+                - 'total num of local mesh elements':
+                - 'amount of types wrt metric':
+                - 'similarity according to types wrt metric': [0,1]; if there is no local mesh elements,
+                    it is 'nan'
+                - 'num_local_orthogonal_elements':
+                - 'amount of internal mesh elements': amount of mesh elements none of whose 6 sides
+                    is on the mesh boundary. So, it is possible that it has edge on the mesh
+                    boundary. For example, consider an L-shape domain, the corner mesh-element
+                    will have an edge on the corner of L-shape domain. Thus, thus this edge
+                    (edge-element in fact) is on the mesh boundary.
+                - 'amount of boundary mesh elements': amount of mesh elements who at least have one
+                    side (trace-element) being on the mesh-boundary.
         """
-        MEM = self._multi_elements_metric_
-        Statistic = dict()
-        Statistic['total num of local mesh elements'] = self.num
-        A = self.num
-        for type_name in MEM:
-            A -= MEM[type_name] - 1
-        Statistic['amount of types wrt metric'] = A
-        if self.num == 0:
-            similarity = 'nan'
-        elif self.num == 1:
-            similarity = 1
-        else:
-            similarity = (self.num - A) / (self.num - 1)
-        Statistic['similarity according to types wrt metric'] = similarity  # in [0, 1]
-        Statistic['num_local_orthogonal_elements'] = self._num_local_orthogonal_elements_
+        if self._Statistic_ is None:
 
-        return Statistic
+            MEM = self._multi_elements_metric_
+            Statistic = dict()
+            Statistic['total num of local mesh elements'] = self.num
+            A = self.num
+            for type_name in MEM:
+                A -= MEM[type_name] - 1
+            Statistic['amount of types wrt metric'] = A
+            if self.num == 0:
+                similarity = 'nan'
+            elif self.num == 1:
+                similarity = 1
+            else:
+                similarity = (self.num - A) / (self.num - 1)
+            Statistic['similarity according to types wrt metric'] = similarity  # in [0, 1] or 'nan'
+            Statistic['num_local_orthogonal_elements'] = self._num_local_orthogonal_elements_
+
+            AoIME = 0
+            AoBME = 0
+            for i in self:
+                element = self[i]
+                if element.IS.internal:
+                    AoIME += 1
+                else:
+                    AoBME += 1
+            # note that internal mesh element could have edges on the mesh boundary.
+            Statistic['amount of internal mesh elements'] = AoIME
+            Statistic['amount of boundary mesh elements'] = AoBME
+
+            self._Statistic_ = Statistic
+        return self._Statistic_
 
     @property
     def IS(self):
@@ -90,6 +120,21 @@ class _3dCSCG_Mesh_Elements(FrozenOnly):
     def in_regions(self):
         """The elements in this core are in these regions."""
         return self._mesh_._elements_in_regions_
+
+    @property
+    def involved_mesh_boundaries(self):
+        """{List[str]}: Return a list of mesh boundary names on which local mesh-elements has side.
+        """
+        if self._involved_mesh_boundaries_ is None:
+            RoES = mesh.boundaries.range_of_element_sides
+            _involved_mesh_boundaries_ = list()
+            for bn in RoES:
+                if len(RoES[bn]) > 0:
+                    _involved_mesh_boundaries_.append(bn)
+                else:
+                    pass
+            self._involved_mesh_boundaries_ = _involved_mesh_boundaries_
+        return self._involved_mesh_boundaries_
 
     @property
     def indices(self):

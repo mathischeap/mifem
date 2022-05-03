@@ -15,8 +15,8 @@ class CSCG_Continuous_FORM_BASE(FrozenClass):
         self._ftype_ = None
         self._current_time_ = None
         self._visualize_ = None
-        self.standard_properties.___PRIVATE_add_tag___('CSCG_field')
         self._CMB_ = None
+        self.standard_properties.___PRIVATE_add_tag___('CSCG_field')
         self.___PRIVATE_set_vt_to___(valid_time)
 
         assert ftype in ("standard", "boundary-wise", "trace-element-wise"), \

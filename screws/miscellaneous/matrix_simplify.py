@@ -7,7 +7,7 @@ def rsmat(arbmat):
     row_number, column_number = arbmat.shape
     if row_number == 1:
         if arbmat[0, 0] != 0:
-            return (arbmat / arbmat[0, 0])
+            return arbmat / arbmat[0, 0]
         else:
             return arbmat
     else:

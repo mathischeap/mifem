@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 """
 Loose GMRES.
 
@@ -68,20 +68,19 @@ class LGMRES(ParallelSolverBase):
             pass
         assert x0.__class__.__name__ == "LocallyFullVector", \
                          f"x0 needs to be a 'LocallyFullVector'. Now I get {x0.__class__}."
-        #--------------------------------------------------------------------
 
+        #--------------------------------------------------------------------
         assert maxiter >= 1 and maxiter % 1 == 0, f"maxiter={maxiter} must be >= 1."
         assert m >= 3 and m % 1 == 0, f"restart={m} must be >= 3."
         assert k >= 0 and k % 1 == 0, f"restart={k} must be >= 0."
-        if k == 0:
-            if rAnk == mAster_rank:
-                print(">>> WARNING: if k = 0, LGMRES is equivalent to GMRES and is slower than GMRES. "
-                      "So please use GMRES.")
+        if k == 0 and rAnk == mAster_rank:
+            print(">>> WARNING: if k = 0, LGMRES is equivalent to GMRES and is slower than GMRES. "
+                  "So please use GMRES.")
         else:
             pass
         assert tol > 0 and atol > 0, f"tol={tol} and atol={atol} wrong, they must be > 0."
 
-        # -------  Decide preconditioner ---------------------------------------------------------------
+        # -------  Decide preconditioner -----------------------------------------------------------
         if preconditioner is None: preconditioner = (None, dict())
 
         preconditioner_ID, preconditioner_kwargs = preconditioner
@@ -90,26 +89,25 @@ class LGMRES(ParallelSolverBase):
         else:
             preconditioner = None
 
-        # -------  Decide routine ----------------------------------------------------------------------
+        # -------  Decide routine ------------------------------------------------------------------
         if self._routine_ == 'auto':
-            ROUTINE = ___mpi_v0_LGMRES___ # in the future, we may want to make a function to decide which one is the best
-                                          # for particular matrices.
+            ROUTINE = ___mpi_v0_LGMRES___
+            # in the future, we can make a function to decide which one is the best for particular matrices.
         else:
             if self._routine_ == '0':
                 ROUTINE = ___mpi_v0_LGMRES___
             else:
                 raise Exception(f"routine={self._routine_} is wrong.")
 
-
         # ---------- Do the computation ----------------------------------------------------------------
         results, info, beta, ITER, solver_message = \
         ROUTINE(A, b, x0,
-                       m=m, k=k, maxiter=maxiter, tol=tol, atol=atol,
-                       preconditioner=preconditioner,
-                       COD=COD,
-                       name=self._name_,
-                       plot_residuals=plot_residuals
-                    )
+                m=m, k=k, maxiter=maxiter, tol=tol, atol=atol,
+                preconditioner=preconditioner,
+                COD=COD,
+                name=self._name_,
+                plot_residuals=plot_residuals
+        )
 
         _ = kwargs # trivial; just leave freedom for future updates for kwargs.
 

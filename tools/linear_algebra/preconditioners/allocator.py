@@ -1,9 +1,5 @@
-"""
-
-"""
-
-
-
+# -*- coding: utf-8 -*-
+""""""
 from screws.freeze.main import FrozenOnly
 from importlib import import_module
 
@@ -33,10 +29,11 @@ class PreconditionerAllocator(FrozenOnly):
         domain_input), we add a nickname for it here.
 
         """
-        return {'Jacobian': "JacobianPreconditioner",}
+        return {'Jacobi': "JacobiPreconditioner",}
 
     @classmethod
     def ___preconditioners_path___(cls):
         """ """
         base_path = '.'.join(str(cls).split(' ')[1][1:-2].split('.')[:-2]) + '.'
-        return {'Jacobian': base_path + 'Jacobian',}
+
+        return {'Jacobi': base_path + 'Jacobi',}
