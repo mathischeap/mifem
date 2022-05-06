@@ -14,8 +14,8 @@ class Rank2(SchurSolverBase):
     | M B | | g |
     | C D | | h |
 
-    And the blocks must be an integer, lets say, blocks=i, The M-block is the left-upper [:i, :i]
-    entries of the `bmat`ed `EWC_SparseMatrix` matrix.
+    And the blocks must be an integer. Let's say, blocks=i. Then the M-block is the left-upper [:i, :i]
+    blocks of the `bmat`-ed `EWC_SparseMatrix` matrix.
 
     """
     def __init__(self, rank, blocks, routine, name):
@@ -54,13 +54,27 @@ class Rank2(SchurSolverBase):
         A_SHAPE = A.blocks.shape
         assert blocks < A_SHAPE[0], f"blocks={blocks} wrong, must be < {A_SHAPE[0]}."
 
+        M = A.blocks[:blocks, :blocks]
+        B = A.blocks[:blocks, blocks:]
+        C = A.blocks[blocks:, :blocks]
+        D = A.blocks[blocks:, blocks:]
+
+        g = b.blocks[:blocks]
+        h = b.blocks[blocks:]
+
         if routine == 'auto':
             ROUTINE = ___scipy_sparse_linalg_direct___
         else:
             raise NotImplementedError()
 
         # ---------- Do the computation ----------------------------------------------------------------
-        results, info, beta, ITER, solver_message = ROUTINE(A, b, blocks)
+        if ROUTINE == ___scipy_sparse_linalg_direct___:
+            GM0, GM1 = A.gathering_matrices
+            GM_row = GM0.GMs[blocks:]
+            GM_col = GM1.GMs[blocks:]
+            results, info, beta, ITER, solver_message = ROUTINE(M, B, C, D, g, h, GM_row, GM_col)
+        else:
+            raise Exception()
 
         _ = kwargs # trivial; just leave freedom for future updates for kwargs.
 

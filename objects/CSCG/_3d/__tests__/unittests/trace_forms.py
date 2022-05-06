@@ -1,11 +1,11 @@
-
+# -*- coding: utf-8 -*-
 import sys
 if './' not in sys.path: sys.path.append('/')
 
 from root.config.main import *
 import random
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
-from objects.CSCG._3d.__tests__.random_objects.form_caller import random_FormCaller_of_total_load_around
+from objects.CSCG._3d.__tests__.Random.form_caller import random_FormCaller_of_total_load_around
 # from scipy.sparse import csc_matrix
 # from TOOLS.linear_algebra.data_structures import LocallyFullVector
 
@@ -51,7 +51,10 @@ def test_trace_NO0_trace_0_form_Rd_and_Rc():
 
     #----------------- use crazy mesh ----------------------------------------
     FC = random_FormCaller_of_total_load_around(load, exclude_periodic=True)
-    def pressure(t, x, y, z): return np.cos(1.5*np.pi*x) * np.sin(2*np.pi*y) * np.sin(np.pi*z-0.125)**2 * (1.25 - np.sin(t/2))
+    def pressure(t, x, y, z):
+        return np.cos(1.5*np.pi*x) * \
+               np.sin(2*np.pi*y) * \
+               np.sin(np.pi*z-0.125)**2 * (1.25 - np.sin(t/2))
     P = FC('scalar', pressure)
     f0 = FC('0-f', is_hybrid=True)
     t0 = FC('0-t')

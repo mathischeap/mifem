@@ -1,12 +1,9 @@
-
-
-
+# -*- coding: utf-8 -*-
 import cv2
 import os
 from root.config.main import rAnk, mAster_rank
 from screws.miscellaneous.timer import MyTimer
 from screws.miscellaneous.random_string.digits import randomStringDigits
-
 
 
 

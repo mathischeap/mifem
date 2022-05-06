@@ -36,9 +36,8 @@ class FrozenClass(FrozenOnly):
 
 
     def ___PRIVATE_save___(self, filename, do_save=False):
-        """Better be called from `mifem.save` when save a object."""
+        """Better be called from `mifem.save` when save an object."""
         _2bs_ = dict()
-        # _2bs_['obj'] = str(self).split()[0][1:]
         _2bs_['obj'] = self.__class__.__name__
         _2bs_['parameters'] = self.standard_properties.parameters
         if rAnk == mAster_rank:

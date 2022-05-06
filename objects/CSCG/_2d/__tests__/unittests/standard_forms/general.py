@@ -2,7 +2,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
-from objects.CSCG._2d.__tests__.random_objects.form_caller import random_FormCaller_of_total_load_around
+from objects.CSCG._2d.__tests__.Random.form_caller import random_FormCaller_of_total_load_around
 from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller
 from scipy.sparse import linalg as spspalinalg
 import random

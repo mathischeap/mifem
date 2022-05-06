@@ -1,7 +1,4 @@
-
-
-
-
+# -*- coding: utf-8 -*-
 import socket
 from root.config.main import rAnk, mAster_rank
 

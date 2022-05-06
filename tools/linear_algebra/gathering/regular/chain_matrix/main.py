@@ -111,9 +111,9 @@ class Chain_Gathering_Matrix(FrozenOnly):
         return len(self), sum(self.local_dofs_distribution)
 
     def __getitem__(self, item):
-        """Return the chained gathering vector for the mesh element numbered by `item`.
+        """Return the chained gathering vector for the mesh element numbered by `i`.
 
-        :param item: #item mesh element.
+        :param item: #i mesh element.
         :return: A 1d numpy.array. But we do not save it, it is made whenever we call this method.
         """
         if self.___NUM___ == 1:

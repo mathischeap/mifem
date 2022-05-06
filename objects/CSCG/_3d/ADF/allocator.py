@@ -15,10 +15,6 @@ class _3dCSCG_ADF_Allocator(FrozenOnly):
                 '0-adt': "_3dCSCG_T0_ADF",
                 '1-adt': "_3dCSCG_T1_ADF",
                 '2-adt': "_3dCSCG_T2_ADF",
-
-                '0-adTr': "_3dCSCG_0Tr_ADF",
-                '1-adTr': "_3dCSCG_1Tr_ADF",
-                '2-adTr': "_3dCSCG_2Tr_ADF",
                 }
 
     @classmethod
@@ -33,8 +29,4 @@ class _3dCSCG_ADF_Allocator(FrozenOnly):
                 '0-adt': base_path + "trace._0tr.main",
                 '1-adt': base_path + "trace._1tr.main",
                 '2-adt': base_path + "trace._2tr.main",
-
-                '0-adTr': base_path + "Tr._0Tr.main",
-                '1-adTr': base_path + "Tr._1Tr.main",
-                '2-adTr': base_path + "Tr._2Tr.main",
                 }

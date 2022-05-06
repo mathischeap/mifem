@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 import sys
 if './' not in sys.path: sys.path.append('./')
 
@@ -371,6 +371,7 @@ if __name__ == '__main__':
 
     T, D, C, b, eGM = f1.special.hybrid_pairing(t1, e1)
 
+    reports = T.do.clean()
 
     # T = t1.matrices.trace
     # C = e1.matrices.complement

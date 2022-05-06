@@ -2,7 +2,7 @@
 
 import sys
 if './' not in sys.path: sys.path.append('./')
-from objects.CSCG._2d.__tests__.random_objects.form_caller import random_FormCaller_of_total_load_around as _2d_RANDOM_FC_
+from objects.CSCG._2d.__tests__.Random.form_caller import random_FormCaller_of_total_load_around as _2d_RANDOM_FC_
 import random
 
 from numpy import sin, cos, exp, pi

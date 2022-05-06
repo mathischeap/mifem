@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 """
 Every dual form is built on a prime form. So, the most important property of a dual form is
 "prime" which returns the
@@ -61,7 +61,6 @@ class CSCG_Algebra_DUAL_FORM_BASE(FrozenClass):
         using `mifem.save(...)`).
         """
         _2bs_ = dict()
-        # _2bs_['obj'] = str(self).split()[0][1:]
         _2bs_['obj'] = self.__class__.__name__
         _2bs_['parameters'] = self.prime.standard_properties.parameters # this is the key
         if rAnk == mAster_rank:

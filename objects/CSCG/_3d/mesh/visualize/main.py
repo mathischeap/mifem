@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 import sys
 if './' not in sys.path: sys.path.append('./')
 
@@ -17,7 +17,7 @@ class _3dCSCG_Mesh_Visualize(FrozenOnly):
         assert mesh.__class__.__name__ == '_3dCSCG_Mesh', " <MeshVisualize> "
         assert mesh.ndim == 3, " <MeshVisualize> "
         self._mesh_ = mesh
-        self._matplot_ = _3dCSCG_Mesh_Visualize_Matplot(mesh)
+        self._matplot_ = None
         self._freeze_self_()
 
     def __call__(self, **kwargs):
@@ -25,6 +25,8 @@ class _3dCSCG_Mesh_Visualize(FrozenOnly):
 
     @property
     def matplot(self):
+        if self._matplot_ is None:
+            self._matplot_ = _3dCSCG_Mesh_Visualize_Matplot(self._mesh_)
         return self._matplot_
 
 

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """['NWB', 'SWB', 'NEB', 'SEB', 'NWF', 'SWF', 'NEF', 'SEF']"""
 
 import sys
@@ -39,8 +40,6 @@ class _3dCSCG_Node_Elements(FrozenOnly):
                         assert all(np.array(regionElementLayout) > 1), \
                             f" elements.layout[{rn}]={regionElementLayout} wrong," \
                             f" needs (>1, >1, >1) to make it work for periodic domain."
-
-
 
         if rAnk != mAster_rank:
             element_map = mesh.elements.map
@@ -95,9 +94,6 @@ class _3dCSCG_Node_Elements(FrozenOnly):
                 else:
                     cOmm.send(toBeSentAway, dest=i, tag=i)
                 for k in element_indices: del numberingCache[k]
-
-
-
 
         MAX = list()
         for i in self._mesh_.elements:

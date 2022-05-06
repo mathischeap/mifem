@@ -36,7 +36,7 @@ class _3dCSCG_Mesh_Boundaries(FrozenOnly):
         assert mesh.__class__.__name__ == '_3dCSCG_Mesh'
         self._mesh_ = mesh
         self._boundaries_dict_ = dict()
-        self._visualize_ = _3dCSCG_MeshBoundaries_VIS(self)
+        self._visualize_ = None
         self.___PRIVATE_reset_cache___()
         self._range_of_region_sides_ = None
         self._freeze_self_()
@@ -108,6 +108,8 @@ class _3dCSCG_Mesh_Boundaries(FrozenOnly):
 
     @property
     def visualize(self):
+        if self._visualize_ is None:
+            self._visualize_ = _3dCSCG_MeshBoundaries_VIS(self)
         return self._visualize_
 
     @property

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-In this script, we DO NOT use the structure of naming files and folders of the mifem library.
+"""In this script, we DO NOT use the structure of naming files and folders of the mifem library.
 
 """
 
@@ -46,6 +45,4 @@ class ThreeDimensionalTransfiniteInterpolationError(Exception):
 
 
 class EmailSendingError(Exception):
-    """Raise when we try to access standard property ``statistic`` but
-    ``___statistic___`` is not defined.
-    """
+    """"""

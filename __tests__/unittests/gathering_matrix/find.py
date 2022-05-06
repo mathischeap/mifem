@@ -9,8 +9,8 @@ if './' not in sys.path: sys.path.append('./')
 from numpy import sin, cos, exp, pi
 from root.config.main import *
 import random
-from objects.CSCG._3d.__tests__.random_objects.form_caller import random_FormCaller_of_total_load_around as _3d_Caller_
-from objects.CSCG._2d.__tests__.random_objects.form_caller import random_FormCaller_of_total_load_around as _2d_Caller_
+from objects.CSCG._3d.__tests__.Random.form_caller import random_FormCaller_of_total_load_around as _3d_Caller_
+from objects.CSCG._2d.__tests__.Random.form_caller import random_FormCaller_of_total_load_around as _2d_Caller_
 
 
 

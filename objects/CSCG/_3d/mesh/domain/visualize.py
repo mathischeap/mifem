@@ -1,6 +1,5 @@
-"""
-
-"""
+# -*- coding: utf-8 -*-
+""""""
 from root.config.main import *
 import tecplot as tp
 from tecplot.constant import PlotType

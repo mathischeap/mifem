@@ -30,7 +30,7 @@ from tools.linear_algebra.linear_system.main import LinearSystem
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_ColumnVector
 from tools.run.reader import ParallelMatrix3dInputRunner, RunnerDataReader
 from objects.CSCG.base.forms.base.BC.partial_cochain.partial_dofs.main import PartialDofs
-from objects.CSCG._3d.__tests__.random_objects.form_caller import random_mesh_and_space_of_total_load_around
+from objects.CSCG._3d.__tests__.Random.form_caller import random_mesh_and_space_of_total_load_around
 
 def ___TEST_SOLVER___(tk, tk1):
     """

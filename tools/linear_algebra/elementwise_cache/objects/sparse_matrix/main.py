@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 import types
 from screws.freeze.main import FrozenOnly
 from scipy import sparse as spspa
@@ -81,15 +81,18 @@ class EWC_SparseMatrix(FrozenOnly):
 
         # we can accept a dictionary as a data generator, we will wrap it with a method -----------
         if isinstance(data_generator, dict):
+            self.___fully_pre_data_DICT___ = True # the data are already created!
+
             assert len(data_generator) == len(self._elements_), "dict key wrong."
             for _ in data_generator: assert _ in self._elements_, "dict key wrong."
             self.___dict_DG___ = data_generator
             data_generator = self.___PRIVATE_dict_2_method_data_generator___
+
             if cache_key_generator is None:
                 cache_key_generator = 'no_cache'
                 # the data are in the dict anyway, so do not need to be cached.
         else:
-            pass
+            self.___fully_pre_data_DICT___ = False # the data are not created yet.
 
         #---------------parse data type ------------------------------------------------------------
         DATA_TYPE = None
@@ -370,7 +373,7 @@ class EWC_SparseMatrix(FrozenOnly):
         for i in self._elements_:
             yield i
 
-    def __getitem__(self, item):
+    def ___getitem_pre_customizing___(self, item):
         """"""
         assert item in self, "Out of range!"
         if self.___IS_NC___:
@@ -397,12 +400,12 @@ class EWC_SparseMatrix(FrozenOnly):
                 self.____CT_DG____ = self._DG_(item)
                 RETURN = self.____CT_DG____ # then we do not call the data generator
                 self.___IS_CT___ = True
-                # once reach here, we no longer do self._KG_(item) for further items because we know it is CT
+                # once reach here, we no longer do self._KG_(i) for further items because we know it is CT
             elif self.___NC___ in ck:
                 # once it is or one component of it is not cached, we compute it every single time.
                 RETURN = self._DG_(item)
                 self.___IS_NC___ = True
-                # once reach here, we no longer do self._KG_(item) for further items because we know it is NC
+                # once reach here, we no longer do self._KG_(i) for further items because we know it is NC
             else:
                 if ck in self._cache_:
                     RETURN = self._cache_[ck]
@@ -410,11 +413,13 @@ class EWC_SparseMatrix(FrozenOnly):
                     RETURN = self._DG_(item)
                     self._cache_[ck] = RETURN
 
+        return RETURN
+
+    def __getitem__(self, item):
+        """"""
+        RETURN = self.___getitem_pre_customizing___(item)
         # customization is after the cache, so we can do whatever customization afterwards.
         RETURN = self.customize.___PRIVATE_do_execute_customization___(RETURN, item)
-
-        # here we do not check the shape of RETURN because we could use this method to compute shape, so if we do, we may end up in dead loop.
-
         return RETURN
 
     @property

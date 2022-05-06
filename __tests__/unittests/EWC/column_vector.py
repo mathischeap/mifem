@@ -10,7 +10,7 @@ from objects.CSCG._3d.master import SpaceInvoker, FormCaller
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_ColumnVector
 from tools.linear_algebra.elementwise_cache.operators.concatenate.main import concatenate
 from scipy import sparse as spspa
-from objects.CSCG._3d.__tests__.random_objects.mesh import random_mesh_of_elements_around as _3d_RANDOM_MESH_
+from objects.CSCG._3d.__tests__.Random.mesh import random_mesh_of_elements_around as _3d_RANDOM_MESH_
 
 
 def test_LinearAlgebra_EWC_No0_ColumnVector():

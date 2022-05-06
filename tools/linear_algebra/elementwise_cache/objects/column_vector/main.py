@@ -256,11 +256,11 @@ class EWC_ColumnVector(FrozenOnly):
             yield i
 
     def __getitem__(self, item):
-        # ck = self._KG_(item)
+        # ck = self._KG_(i)
         # if ck == self.___CT___:
         #     pass
         # if self.___NC___ in ck:
-        #     RETURN = self._DG_(item)
+        #     RETURN = self._DG_(i)
         # else:
         #     # Current, we only no_cache vector (we do not really have situation that needs cache a vector.)
         #     raise NotImplementedError()
@@ -290,12 +290,12 @@ class EWC_ColumnVector(FrozenOnly):
                 self.____CT_DG____ = self._DG_(item)
                 RETURN = self.____CT_DG____ # then we do not call the data generator
                 self.___IS_CT___ = True
-                # once reach here, we no longer do self._KG_(item) for further items because we know it is CT
+                # once reach here, we no longer do self._KG_(i) for further items because we know it is CT
             elif self.___NC___ in ck:
                 # once it is or one component of it is not cached, we compute it every single time.
                 RETURN = self._DG_(item)
                 self.___IS_NC___ = True
-                # once reach here, we no longer do self._KG_(item) for further items because we know it is NC
+                # once reach here, we no longer do self._KG_(i) for further items because we know it is NC
             else:
                 if ck in self._cache_:
                     RETURN = self._cache_[ck]

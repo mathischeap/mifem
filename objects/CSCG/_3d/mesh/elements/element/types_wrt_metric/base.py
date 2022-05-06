@@ -30,3 +30,9 @@ class ElementTypeWr2MetricBase(FrozenOnly):
     @property
     def ___IS_3dCSCG_ElementTypeWr2Metric___(self):
         return True
+
+    def ___CLASSIFY_3nCSCG_RF2_CELL_of_origin_and_delta___(self, origin_and_delta):
+        raise NotImplementedError(
+            f"Please implement ___CLASSIFY_3nCSCG_RF2_CELL_of_origin_and_delta___ for "
+            f"TypeWr2Metric named: {self.__class__.__name__}"
+        )

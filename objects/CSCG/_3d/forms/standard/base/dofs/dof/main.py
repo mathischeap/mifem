@@ -49,7 +49,7 @@ class _3dCSCG_Standard_forms_DOF(FrozenOnly):
         Then we know, this dof is at GM[3][4], GM[4][3], GM[5][2], GM[6][1], GM[7][0]. And mesh elements
         3, 4, 5, 6, 7 are all in this core.
 
-        For each item of this list, for example, (5,2) means this dof is at mesh element #5, and the local
+        For each i of this list, for example, (5,2) means this dof is at mesh element #5, and the local
         numbering of this dof is 2, so the third local numbering. We then can identify where it is
         according to the degree of the space and the type (k) of the form.
 

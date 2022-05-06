@@ -11,7 +11,7 @@ class Chaotic(TypeWr2Metric):
 
     If a regions is classified as a chaotic regions, then all the elements in this regions will also be chaotic.
     Therefore, we say that all elements are different. As a result, when we compute, for example, the Jacobian
-    of elements, we have to do it for all elements. So, we should better aviod this.
+    of elements, we have to do it for all elements. So, we should better avoid this.
     """
     def __init__(self, region):
         super().__init__(region)

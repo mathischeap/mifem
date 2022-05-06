@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Here we test the programs.
+"""Here we test the programs.
 
 @author: Yi Zhang.
          Department of Aerodynamics
@@ -8,7 +7,6 @@ Here we test the programs.
          TU Delft, Delft, Netherlands
 
 """
-
 import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
@@ -16,13 +14,11 @@ from root.config.main import *
 from objects.CSCG._3d.__tests__.unittests.auxiliaries.icpsNS_manu_conserving_solver import manu_conserving_solver
 from objects.CSCG._3d.__tests__.unittests.auxiliaries.icpsNS_TGV_no_hybrid import NoHy_TGV
 from objects.CSCG._3d.__tests__.unittests.auxiliaries.icpNS_TGV_new import NoHy_TGV_NEW
+from objects.CSCG._3d.__tests__.unittests.auxiliaries.icpsNS_TGV_LGMRES_solver import NoHy_TGV_NEW_LGMRES
+
 import os
 import random
 import warnings
-from objects.CSCG._3d.__tests__.unittests.auxiliaries.icpsNS_TGV_LGMRES_solver import NoHy_TGV_NEW_LGMRES
-
-
-
 
 
 def test_APP_NO1_icpsNS_no_hybrid_manu_conserving():

@@ -1,5 +1,4 @@
-
-
+# -*- coding: utf-8 -*-
 import sys
 if './' not in sys.path: sys.path.append('./')
 
@@ -276,7 +275,7 @@ class _3dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         else:
             plt.show()
         plt.close('all')
-        #===============================================================================================
+        #=======================================================================
         return fig
 
 

@@ -1,5 +1,4 @@
-
-
+# -*- coding: utf-8 -*-
 """
 all unittests for 3d CSCG edge forms.
 """
@@ -9,7 +8,7 @@ if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 from root.save import save, read
 import random, os
-from objects.CSCG._3d.__tests__.random_objects.form_caller import random_FormCaller_of_total_load_around
+from objects.CSCG._3d.__tests__.Random.form_caller import random_FormCaller_of_total_load_around
 from objects.CSCG._3d.master import ExactSolutionSelector, FormCaller, MeshGenerator, SpaceInvoker
 
 
@@ -23,7 +22,6 @@ def test_edge_forms_No0_save_read():
                               np.sin(2.111*np.pi*y) * \
                               np.sin(1.34*np.pi*z) \
                               + 0.55 * t
-
     #-------- below code makes the test file: `___unittest_edge_save_read_000___.mi`
     # mesh = MeshGenerator('crazy', c=0.0)([6, 5, 7], EDM='chaotic')
     # space = SpaceInvoker('polynomials')([('Lobatto', 2), ('Lobatto', 3), ('Lobatto', 1)])

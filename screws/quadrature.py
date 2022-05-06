@@ -7,7 +7,6 @@ Aerodynamics, AE
 TU Delft
 
 """
-
 import numpy as np
 from functools import partial
 from scipy.special import legendre, roots_legendre

@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 """
 For testing fields
 
@@ -10,7 +10,7 @@ if './' not in sys.path: sys.path.append('/')
 from root.config.main import *
 from screws.miscellaneous.timer import MyTimer
 import random
-from objects.CSCG._3d.__tests__.random_objects.form_caller import random_FormCaller_of_total_load_around
+from objects.CSCG._3d.__tests__.Random.form_caller import random_FormCaller_of_total_load_around
 
 
 

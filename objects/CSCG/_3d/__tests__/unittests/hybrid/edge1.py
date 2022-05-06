@@ -4,7 +4,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config.main import rAnk, mAster_rank, cOmm
 import random
-from objects.CSCG._3d.__tests__.random_objects.form_caller import random_FormCaller_of_total_load_around
+from objects.CSCG._3d.__tests__.Random.form_caller import random_FormCaller_of_total_load_around
 from screws.miscellaneous.mios import mkdir, remove, rmdir
 from screws.miscellaneous.random_string.digits import randomStringDigits
 from tools.linear_algebra.elementwise_cache.operators.bmat.main import bmat

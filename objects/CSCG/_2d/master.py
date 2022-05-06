@@ -33,6 +33,45 @@ class MeshGenerator(FrozenOnly):
         self._kwargs_ = kwargs
         self._freeze_self_()
 
+
+    def __call__(self, element_layout, EDM=None, show_info=False):
+        if show_info and rAnk == mAster_rank:
+            print(f"---[2dCSCG]-[MESH]-{MyTimer.current_time()}-----")
+            print(f"   <domain ID>: {self._ID_}")
+            str_dp = str(self._kwargs_)
+            if len(str_dp) > 40: str_dp = str_dp[:40] + '...'
+            print( "   <domain_parameters>: {}".format(str_dp))
+            print(f"   <EDM>: {EDM}", flush=True)
+
+        cOmm.barrier()  # for safety reason
+        mesh = _2dCSCG_Mesh(self._domain_, element_layout, EDM=EDM)
+        mp = dict()
+        mp['type'] = '_2dCSCG_Mesh'
+        mp['ID'] = self._ID_
+        mp['domain_parameters'] = deepcopy(self._kwargs_)
+        mp['element_layout'] = element_layout
+        mp['EDM'] = EDM
+        mesh.___define_parameters___ = mp
+        dp = dict()
+        dp['ID'] = self._ID_
+        for key in self._kwargs_:
+            dp[key] = self._kwargs_[key]
+        mesh.domain.___define_parameters___ = dp
+
+        if show_info and rAnk == mAster_rank:
+            str_element_layout = str(element_layout)
+            if len(str_element_layout) < 40:
+                print( "   <element_layout input>: {}".format(str_element_layout))
+            else:
+                print( "   <element_layout input>: {}...".format(str_element_layout[:40]))
+            for rn in mesh.elements.layout:
+                print(f"   <element_layout>: {rn} {mesh.elements.layout[rn]}")
+            print(f"   <total elements>: {mesh.elements.GLOBAL_num}", flush=True)
+
+        cOmm.barrier()  # for safety reason
+
+        return mesh
+
     @classmethod
     def ___coded_meshes___(cls):
         return DomainInputFinder.___defined_DI___()
@@ -56,45 +95,6 @@ class MeshGenerator(FrozenOnly):
             diClass = getattr(import_module(cls_path), cls_name)
             random_parameters[diID] = diClass.random_parameters
         return random_parameters
-
-
-    def __call__(self, element_layout, EDM=None, show_info=False):
-        if show_info and rAnk == mAster_rank:
-            print(f"---[2dCSCG]-[MESH]-{MyTimer.current_time()}-----")
-            print(f"   <domain ID>: {self._ID_}")
-            str_dp = str(self._kwargs_)
-            if len(str_dp) > 40: str_dp = str_dp[:40] + '...'
-            print( "   <domain_parameters>: {}".format(str_dp))
-            print(f"   <EDM>: {EDM}", flush=True)
-
-        cOmm.barrier()  # for safety reason
-        mesh = _2dCSCG_Mesh(self._domain_, element_layout, EDM=EDM)
-        mp = dict()
-        mp['type'] = '_2dCSCG_Mesh'
-        mp['ID'] = self._ID_
-        mp['domain_parameters'] = self._kwargs_
-        mp['element_layout'] = element_layout
-        mp['EDM'] = EDM
-        mesh.___define_parameters___ = mp
-        dp = dict()
-        dp['ID'] = self._ID_
-        for key in self._kwargs_:
-            dp[key] = self._kwargs_[key]
-        mesh.domain.___define_parameters___ = dp
-
-        if show_info and rAnk == mAster_rank:
-            str_element_layout = str(element_layout)
-            if len(str_element_layout) < 40:
-                print( "   <element_layout input>: {}".format(str_element_layout))
-            else:
-                print( "   <element_layout input>: {}...".format(str_element_layout[:40]))
-            for rn in mesh.elements.layout:
-                print(f"   <element_layout>: {rn} {mesh.elements.layout[rn]}")
-            print(f"   <total elements>: {mesh.elements.GLOBAL_num}", flush=True)
-
-        cOmm.barrier()  # for safety reason
-
-        return mesh
 
 
 

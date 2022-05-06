@@ -11,7 +11,7 @@ from objects.CSCG._3d.mesh.domain.inputs.allocator import DomainInputAllocator
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 import random
 import os
-from objects.CSCG._3d.__tests__.random_objects.form_caller import random_mesh_of_elements_around
+from objects.CSCG._3d.__tests__.Random.form_caller import random_mesh_of_elements_around
 
 
 def test_Mesh_NO0_element_division_and_numbering_quality():

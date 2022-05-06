@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-
 @author: Yi Zhang.
          Department of Aerodynamics
          Faculty of Aerospace Engineering
@@ -11,7 +10,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
-from objects.CSCG._3d.__tests__.random_objects.form_caller import random_FormCaller_of_total_load_around
+from objects.CSCG._3d.__tests__.Random.form_caller import random_FormCaller_of_total_load_around
 import random
 
 

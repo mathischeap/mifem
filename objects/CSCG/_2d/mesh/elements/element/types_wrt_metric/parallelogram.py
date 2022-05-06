@@ -1,10 +1,8 @@
-
-
-
+# -*- coding: utf-8 -*-
 
 import numpy as np
 from objects.CSCG._2d.mesh.elements.element.types_wrt_metric.base import ElementTypeWr2MetricBase
-
+from objects.nCSCG.rf2._2d.mesh.cell.types_wrt_metric.parallelogram import _2nCSCG_ParallelogramCell
 
 from screws.decorators.accepts import accepts
 
@@ -21,8 +19,18 @@ class ParallelogramElement(ElementTypeWr2MetricBase):
     """
     @accepts('self', (float, int), (float, int), (float, int), (float, int))
     def __init__(self, angleL, L, L_angle_U, U):
+        self._data_ = angleL, L, L_angle_U, U
         assert 0 < L_angle_U < np.pi, f"L.U angle = {L_angle_U} wrong!"
         assert 0 <= angleL < 2 * np.pi, f" angle L={angleL} must be < 2pi."
         self._mark_ = 'Parallelogram.' + 'aL{}_L{}_{}_U{}'.format(
             '%.5f' % angleL, '%.5f' % L, '%.5f' % L_angle_U, '%.5f' % U)
         self._freeze_self_()
+
+
+    def ___CLASSIFY_2nCSCG_RF2_CELL_of_origin_and_delta___(self, origin_and_delta):
+        """"""
+        angleL, L, L_angle_U, U = self._data_
+        delta = origin_and_delta[1]
+        L *= delta / 2
+        U *= delta / 2
+        return _2nCSCG_ParallelogramCell(angleL, L, L_angle_U, U)

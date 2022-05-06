@@ -1,5 +1,4 @@
-
-
+# -*- coding: utf-8 -*-
 from screws.freeze.base import FrozenOnly
 
 
@@ -42,12 +41,42 @@ class EWC_SparseMatrix_Do(FrozenOnly):
         self._MAT_.assembler._cache_ = None # clear the assembler cache
 
 
-    def save_memory_by_cleaning_duplicate_values(self):
-        """If EWC[i] == EWC[j] but EWC[i] is not EWC[j], we clean EWC[j] and make EWC[j] point EWC[i].
+    def clean(self, jobs=None):
+        """We do some cleaning jobs with this method.
 
-        Returns
-        -------
+        Job-1: memory saving
+            If EWC[i] == EWC[j] but EWC[i] is not EWC[j], we clean EWC[j] and make EWC[j] point EWC[i].
+
+            This will only play a role when the spa_mat.___fully_pre_data___ is True, which means
+            the data have been created already when we initialize the spa_mat.
+
+            Note that this job maybe very time-consuming, but the influence is tiny. So thinking
+            twice before do it.
+
+        Parameters
+        ----------
+        jobs : {int, None}, optional
+            {default: None} Which jobs we are going to do?
 
         """
-        # TODO: to be continued.
+        if jobs is None: # we do all jobs
+            jobs = [1,]
 
+        spa_mat = self._MAT_
+        jobs = set(jobs)
+        reports = dict()
+
+        for job in jobs: # Job-1
+            #------------- memory saving by delete repeating data ----------------------------------
+            if job == 1:
+                if spa_mat.___fully_pre_data_DICT___:
+                    #TODO: to be continued...
+                    reports[1] = ''
+                else:
+                    # we should have optimized this with the data_generator and key_generator!
+                    reports[1] = 'direct pass; not applicable.'
+            else:
+                raise NotImplementedError(f"Cannot do job={job}.")
+
+        assert len(reports) == len(jobs), f"Some jobs have no reports!"
+        return reports

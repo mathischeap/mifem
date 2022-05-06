@@ -54,7 +54,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
             Now for example,
                 element_layout = {'R:R1': EL1,
-                                  ......
+                                  ......,
                                   }
 
                 If `EL1` is None, we will make it become EL1 = (1,1,1).
@@ -101,11 +101,11 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
         self.___DEPRECATED_ct___ = ___DCT___(self) # only for test purpose
         self._elements_ = _3dCSCG_Mesh_Elements(self)
-        self._trace_ = _3dCSCG_Trace(self)
-        self._edge_ = _3dCSCG_Edge(self)
-        self._node_ = _3dCSCG_Node(self)
-        self._visualize_ = _3dCSCG_Mesh_Visualize(self)
-        self._boundaries_ = _3dCSCG_Mesh_Boundaries(self)
+        self._trace_ = None
+        self._edge_ = None
+        self._node_ = None
+        self._visualize_ = None
+        self._boundaries_ = None
         self._sub_geometry_ = None
         self.___define_parameters___ = None
         self.___TEST_MODE___ = False
@@ -1177,24 +1177,34 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
     @property
     def trace(self):
         """The trace (face) mesh"""
+        if self._trace_ is None:
+            self._trace_ = _3dCSCG_Trace(self)
         return self._trace_
 
     @property
     def edge(self):
         """The edge mesh!"""
+        if self._edge_ is None:
+            self._edge_ = _3dCSCG_Edge(self)
         return self._edge_
 
     @property
     def node(self):
         """The node mesh!"""
+        if self._node_ is None:
+            self._node_ = _3dCSCG_Node(self)
         return self._node_
 
     @property
     def visualize(self):
+        if self._visualize_ is None:
+            self._visualize_ = _3dCSCG_Mesh_Visualize(self)
         return self._visualize_
 
     @property
     def boundaries(self):
+        if self._boundaries_ is None:
+            self._boundaries_ = _3dCSCG_Mesh_Boundaries(self)
         return self._boundaries_
 
     @property

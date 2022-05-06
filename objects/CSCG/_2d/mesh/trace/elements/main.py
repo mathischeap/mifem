@@ -214,7 +214,7 @@ class _2dCSCG_Trace_Elements(FrozenOnly):
         xy = cOmm.gather(xy, root=mAster_rank)
         if rAnk == mAster_rank:
             assert xy.count(None) == sIze - 1
-            return next(item for item in xy if item is not None) # find the first item which is not None.
+            return next(item for item in xy if item is not None) # find the first i which is not None.
 
     @staticmethod
     def ___generate_full_ep___(ep1d, element_edge):

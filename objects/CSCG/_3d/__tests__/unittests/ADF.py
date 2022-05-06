@@ -7,7 +7,7 @@ from root.save import save, read
 import os
 
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
-from objects.CSCG._3d.__tests__.random_objects.form_caller import random_mesh_and_space_of_total_load_around
+from objects.CSCG._3d.__tests__.Random.form_caller import random_mesh_and_space_of_total_load_around
 
 
 def test_ADF_NO1_general_tests_standard_forms():

@@ -151,7 +151,7 @@ class Region(RegionTopology, FrozenOnly):
         cc : tuple
             For 3D:
             np.shape(cc) must be (8, 3), and cc[i] corresponds to NWB, SWB,
-            NEB, SEB, NWF, SWF, NEF, SEF corners, and each item is a tuple
+            NEB, SEB, NWF, SWF, NEF, SEF corners, and each i is a tuple
             itself represents (x, y, z) coordinates.
 
         """

@@ -4,7 +4,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 import random
-from objects.CSCG._2d.__tests__.random_objects.form_caller import random_FormCaller_of_total_load_around
+from objects.CSCG._2d.__tests__.Random.form_caller import random_FormCaller_of_total_load_around
 
 def test_Fields_NO1_vector():
     """"""

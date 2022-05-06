@@ -1,6 +1,4 @@
-
-
-
+# -*- coding: utf-8 -*-
 from screws.decorators.accepts import accepts
 from screws.freeze.base import FrozenOnly
 
@@ -8,7 +6,7 @@ from screws.freeze.base import FrozenOnly
 
 class SpaMat_Adjust(FrozenOnly):
     """Unlike `Customize`, `Adjust` will make the changes in real time and make a new
-    EWC_SparseMatrix immediately.
+    EWC_SparseMatrix afterwards.
     """
     def __init__(self, spa_mat):
         """"""

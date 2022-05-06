@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """This is a class for the boundaries of the domain.
 
 A more useful class is the one for the boundaries of the mesh. See module "boundaries" for the mesh class.

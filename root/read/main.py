@@ -12,6 +12,10 @@ from root.read.helpers._3dCSCG.space import ___restore__3dCSCG_Space___
 from root.read.helpers._3dCSCG.ADF import ___restore__3dCSCG_Algebra_DUAL_Form___
 from root.read.helpers._3dCSCG.exact_solution import ___restore__3dCSCG_ExactSolution___
 
+
+from root.read.helpers._2nCSCG_RF2.mesh import ___restore__2nCSCG_RF2_Mesh___
+from root.read.helpers._3nCSCG_RF2.mesh import ___restore__3nCSCG_RF2_Mesh___
+
 from root.read.helpers.chain import chain
 
 ___CACHE_2dCSCG_mesh___ = list() # we only cache the last (ONE) mesh
@@ -112,6 +116,9 @@ def read(filename, read_individuals=None):
                                                               ___CACHE_3dCSCG_mesh___,
                                                               ___CACHE_3dCSCG_space___)
 
+            elif obj_name == '_3nCSCG_RF2_Mesh':
+                obj = ___restore__3nCSCG_RF2_Mesh___(obj_para, ___CACHE_3dCSCG_mesh___)
+
             #----------- 2d CSCG objects -----------------------------------------------------
             elif obj_name == '_2dCSCG_Mesh':
                 obj = ___restore__2dCSCG_Mesh___(obj_para, ___CACHE_2dCSCG_mesh___)
@@ -127,6 +134,9 @@ def read(filename, read_individuals=None):
                 obj = ___restore__2dCSCG_Form___(obj_para,
                                                  ___CACHE_2dCSCG_mesh___,
                                                  ___CACHE_2dCSCG_space___)
+
+            elif obj_name == '_2nCSCG_RF2_Mesh':
+                obj = ___restore__2nCSCG_RF2_Mesh___(obj_para, ___CACHE_2dCSCG_mesh___)
 
             else:
                 raise Exception(f'Can not restore {obj_name}')

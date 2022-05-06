@@ -16,10 +16,6 @@ class _3dCSCG_SF_Allocator(FrozenOnly):
                 '1-t': "_3dCSCG_1Trace",
                 '2-t': "_3dCSCG_2Trace",
 
-                '0-Tr': "_3dCSCG_0Tr",
-                '1-Tr': "_3dCSCG_1Tr",
-                '2-Tr': "_3dCSCG_2Tr",
-
                 '0-e': "_3dCSCG_0Edge",
                 '1-e': "_3dCSCG_1Edge",
 
@@ -38,10 +34,6 @@ class _3dCSCG_SF_Allocator(FrozenOnly):
                 '0-t': base_path + "trace._0tr.main",
                 '1-t': base_path + "trace._1tr.main",
                 '2-t': base_path + "trace._2tr.main",
-
-                '0-Tr': base_path + "Tr._0Tr.main",
-                '1-Tr': base_path + "Tr._1Tr.main",
-                '2-Tr': base_path + "Tr._2Tr.main",
 
                 '0-e': base_path + "edge._0eg.main",
                 '1-e': base_path + "edge._1eg.main",

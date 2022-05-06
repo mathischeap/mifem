@@ -13,8 +13,8 @@ from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller, Exa
 from root.save import save
 import random
 from screws.exceptions import ThreeDimensionalTransfiniteInterpolationError
-from objects.CSCG._3d.__tests__.random_objects.form_caller import random_mesh_and_space_of_total_load_around
-from objects.CSCG._3d.__tests__.random_objects.form_caller import random_FormCaller_of_total_load_around
+from objects.CSCG._3d.__tests__.Random.form_caller import random_mesh_and_space_of_total_load_around
+from objects.CSCG._3d.__tests__.Random.form_caller import random_FormCaller_of_total_load_around
 
 from tools.linear_algebra.linear_system.main import LinearSystem
 from tools.linear_algebra.elementwise_cache.operators.bmat.main import bmat

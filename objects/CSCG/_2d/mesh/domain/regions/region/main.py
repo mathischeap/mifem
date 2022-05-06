@@ -91,7 +91,7 @@ class Region(RegionTopology, FrozenOnly):
         cc : tuple
             For 2D:
             np.shape(cc) must be (4, 2), and cc[i] corresponds to UL, DL, UR,
-            DR corners, and each item is a tuple itself represents (x, y)
+            DR corners, and each i is a tuple itself represents (x, y)
             coordinates.
 
         """
