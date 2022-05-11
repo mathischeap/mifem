@@ -33,6 +33,7 @@ class _2nCSCG_MeshVisualize(FrozenOnly):
 
 
 
+
 if __name__ == "__main__":
     # mpiexec -n 8 python objects/nCSCG/rf2/_2d/mesh/visualize/main.py
     pass

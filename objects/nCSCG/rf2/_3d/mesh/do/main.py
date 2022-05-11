@@ -6,16 +6,16 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('../')
+if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
+from objects.nCSCG.rf2.base.mesh.do.main import nCSCG_MeshDoBase
 from objects.nCSCG.rf2._3d.mesh.do.find import _3nCSCG_MeshDoFind
 
-class _3nCSCG_MeshDo(FrozenOnly):
+class _3nCSCG_MeshDo(nCSCG_MeshDoBase):
     """"""
     def __init__(self, mesh):
         """"""
-        self._mesh_ = mesh
+        super(_3nCSCG_MeshDo, self).__init__(mesh)
         self._find_ = None
         self._freeze_self_()
 
@@ -36,9 +36,27 @@ class _3nCSCG_MeshDo(FrozenOnly):
             for ind in indices:
                 self._mesh_(ind).do.refine()
 
+    def dilute(self, indices):
+        """We will dilute the cell(s) indicated by (group of) `indices`."""
+        if isinstance(indices, int):
+            self._mesh_(indices).do.dilute()
+        elif isinstance(indices, tuple) and isinstance(indices[0], int):
+            # we get the indices of one cell
+            self._mesh_(indices).do.dilute()
+        else:
+            for ind in indices:
+                self._mesh_(ind).do.dilute()
+
+    def update(self):
+        """We update the mesh and clear all relevant cached data and properties."""
+        self._mesh_.facets.do._Pr_update()
+        for ind in self._mesh_:
+            cell = self._mesh_(ind)
+            cell._frame_ = None
+        self.lock() # lock self after update!
 
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python objects/nCSCG/rf2/_3d/mesh/do/main.py
     pass

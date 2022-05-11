@@ -12,11 +12,27 @@ def ___restore__2nCSCG_RF2_Mesh___(parameters, mesh_cache):
 
     mesh = _2nCSCG_RF2_Mesh(cscg)
 
-    refinements = parameters['refinements']
+    refinements = parameters.pop('refinements')
 
+    cscg.___PRIVATE_generate_element_global_numbering___()
+
+    EGN = cscg._element_global_numbering_
+
+    mesh.do.unlock()
     for ref in refinements:
-        lv0 = ref[0]
-        if lv0 in cscg.elements:
-            _ = mesh(ref, dynamic=True)
+        region, indices =  ref.split('|')
+        if region in cscg.elements.in_regions:
+            ij = indices.split(', ')
+            i, j = [int(_) for _ in ij]
+            element = EGN[region][i, j]
+            if element in cscg.elements:
+                for ind in refinements[ref]:
+                    IND = (element,) + ind
+                    mesh(IND, dynamic=True)
+        else:
+            pass
+
+    mesh.do.update()
+    cscg.___element_global_numbering___ = None
 
     return mesh

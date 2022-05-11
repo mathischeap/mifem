@@ -70,6 +70,7 @@ def Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename
     w.TW.do.push_all_to_instant()
     w.discretize()
     w.visualize.matplot.contour(levels=image_levels,
+                                show_boundaries=False,
                                 saveto=image_folder + '/' + str(next(IC)),
                                 title=f't=%.3f'%t0)
 
@@ -130,6 +131,7 @@ def Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename
     LS_w.A.do.lock_assembled_matrix()
 
     w.visualize.matplot.contour(levels=image_levels,
+                                show_boundaries =False,
                                 saveto=image_folder + '/' + str(next(IC)),
                                 title=f't=%.3f'%(dt/2))
 
@@ -165,6 +167,7 @@ def Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename
         message.append(R[4])
         # -------- w @ tk1+half --------------------------------
         w.visualize.matplot.contour(levels=image_levels,
+                                    show_boundaries=False,
                                     saveto=image_folder + '/' + str(next(IC)),
                                     title=f't=%.3f'%(tk1+dt/2))
         EN_tk1_half  = 0.5 * w.do.compute_L2_energy_with(M=M0)

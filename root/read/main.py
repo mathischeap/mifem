@@ -26,8 +26,7 @@ ___CACHE_3dCSCG_space___ = list() # we only cache the last (ONE) space
 
 
 def read(filename, read_individuals=None):
-    """
-    read a mifem object from a file (`.mi` extension).
+    """read a mifem object from a file (`.mi` extension).
 
     :param filename:
     :param read_individuals: For example, if a file contains 5 objects,

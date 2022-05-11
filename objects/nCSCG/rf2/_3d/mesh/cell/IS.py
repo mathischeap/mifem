@@ -18,8 +18,8 @@ class _3nCSCG_CellIS(FrozenOnly):
         self._freeze_self_()
 
     @property
-    def refined(self):
-        return False if self._cell_.sub_cells is None else True
+    def root(self):
+        return self._cell_.___isroot___
 
 
 if __name__ == '__main__':

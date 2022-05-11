@@ -1,15 +1,15 @@
-
+# -*- coding: utf-8 -*-
 """Here, we store some most fundamental functions for mifem.
 
 In this script, we DO NOT use the structure of naming files and folders of the mifem library.
 
 """
-
-
 from screws.miscellaneous.timer import check_filename_mi
 from root.config.main import mAster_rank, rAnk, cOmm
 import pickle
 from root.read.main import read
+
+
 
 def save(obj, filename):
     """
@@ -43,6 +43,10 @@ def save(obj, filename):
             output.close()
     else:
         obj.___PRIVATE_save___(filename, do_save=True)
+
+
+
+
 
 
 

@@ -76,6 +76,9 @@ class _2nCSCG_CellCT(FrozenOnly):
         -------
 
         """
+        if self._cell_.level == 0:
+            return self._me_ct_.mapping(xi, et)
+
         o, d = self.origin_and_delta
         xi = o[0] + (xi + 1) * d / 2
         et = o[1] + (et + 1) * d / 2

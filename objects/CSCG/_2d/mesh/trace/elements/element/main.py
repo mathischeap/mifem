@@ -38,7 +38,7 @@ class _2dCSCG_Trace_Element(FrozenOnly):
             "CHARACTERISTIC_element must be int the same core."
         if self._ondb_:
             assert self.NON_CHARACTERISTIC_position[0] not in '1234567890'
-        self._ct_ = _2dCSCG_Trace_Element_CoordinateTransformation(self)
+        self._ct_ = None
         self._IS_ = None
         self._freeze_self_()
 
@@ -48,6 +48,8 @@ class _2dCSCG_Trace_Element(FrozenOnly):
 
     @property
     def coordinate_transformation(self):
+        if self._ct_ is None:
+            self._ct_ = _2dCSCG_Trace_Element_CoordinateTransformation(self)
         return self._ct_
 
     @property

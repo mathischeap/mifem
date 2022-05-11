@@ -8,9 +8,10 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 from objects.nCSCG.rf2.base.mesh.cell.main import nCSCG_RF2_MeshCell
-from objects.nCSCG.rf2._3d.mesh.cell.do import _3nCSCG_CellDo
+from objects.nCSCG.rf2._3d.mesh.cell.do.main import _3nCSCG_CellDo
 from objects.nCSCG.rf2._3d.mesh.cell.IS import _3nCSCG_CellIS
 from objects.nCSCG.rf2._3d.mesh.cell.coordinate_transformation import _3nCSCG_CellCT
+from objects.nCSCG.rf2._3d.mesh.cell.frame.main import _3nCSCG_CellFrame
 
 
 class _3nCSCG_RF2_MeshCell(nCSCG_RF2_MeshCell):
@@ -21,6 +22,7 @@ class _3nCSCG_RF2_MeshCell(nCSCG_RF2_MeshCell):
         self._do_ = None
         self._IS_ = None
         self._CT_ = None
+        self._frame_ = None
         self._type_wrt_metric_ = None
         self._freeze_self_()
 
@@ -45,7 +47,7 @@ class _3nCSCG_RF2_MeshCell(nCSCG_RF2_MeshCell):
 
     def __iter__(self):
         """"""
-        if self.sub_cells is None: # I am the smallest cell.
+        if self.___isroot___: # I am the smallest cell.
             yield self.indices
         else: # I have sub-cells, go through all sub-cells.
             for i in range(8):
@@ -72,6 +74,16 @@ class _3nCSCG_RF2_MeshCell(nCSCG_RF2_MeshCell):
         return self._CT_
 
     @property
+    def frame(self):
+        """The frame contains the information of the facets surrounding a root cell."""
+        if self.___isroot___:
+            if self._frame_ is None:
+                self._frame_ = _3nCSCG_CellFrame(self)
+            return self._frame_
+        else:
+            raise Exception(f"Can only access frame of root cell.")
+
+    @property
     def type_wrt_metric(self):
         """"""
         if self._type_wrt_metric_ is None:
@@ -80,7 +92,6 @@ class _3nCSCG_RF2_MeshCell(nCSCG_RF2_MeshCell):
                 ELE_TYPE.___CLASSIFY_3nCSCG_RF2_CELL_of_origin_and_delta___(
                     self.coordinate_transformation.origin_and_delta)
         return self._type_wrt_metric_
-
 
 
 

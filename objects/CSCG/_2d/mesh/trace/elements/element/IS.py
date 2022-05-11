@@ -7,6 +7,7 @@ class _2dCSCG_TraceElement_IS(FrozenOnly):
     def __init__(self, element):
         """"""
         self._element_ = element
+        self._shared_by_cores_ = None
         self._freeze_self_()
 
 
@@ -22,11 +23,13 @@ class _2dCSCG_TraceElement_IS(FrozenOnly):
     @property
     def shared_by_cores(self):
         """"""
-        if self.on_mesh_boundary:
-            return False
-        else:
-            if int(self._element_._p1_[:-1]) in self._element_._elements_._mesh_.elements and \
-                int(self._element_._p2_[:-1]) in self._element_._elements_._mesh_.elements:
-                return False
+        if self._shared_by_cores_ is None:
+            if self.on_mesh_boundary:
+                self._shared_by_cores_ = False
             else:
-                return True
+                if int(self._element_._p1_[:-1]) in self._element_._elements_._mesh_.elements and \
+                    int(self._element_._p2_[:-1]) in self._element_._elements_._mesh_.elements:
+                    self._shared_by_cores_ = False
+                else:
+                    self._shared_by_cores_ = True
+        return self._shared_by_cores_

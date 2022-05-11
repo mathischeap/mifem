@@ -19,6 +19,16 @@ class nCSCG_RF2_MeshCell(FrozenOnly):
         self._level_ = level
         self._indices_ = indices
         self.___sub_cells___ = None
+        self.___isroot___ = True # when it is initialized, it is a root cell of course.
+        self._r = None
+
+
+    def __repr__(self):
+        if self._r is None:
+            self._r = 'c' + str(self.indices[0])
+            for i in self.indices[1:]:
+                self._r += '-'+str(i)
+        return self._r
 
     @property
     def mesh(self):

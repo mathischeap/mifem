@@ -68,7 +68,7 @@ class MeshGenerator(FrozenOnly):
                 print(f"   <cscg element_layout>: {rn} {cscg.elements.layout[rn]}")
             print(f"   <total cscg base elements>: {cscg.elements.GLOBAL_num}", flush=True)
 
-        #------- use the 2d cscg base mesh to make the 2d ncscg rf2 mesh
+        #------- use the 2d cscg base mesh to make the 2d nCSCG RF2 mesh ---
 
         mesh = _2nCSCG_RF2_Mesh(cscg)
 
@@ -97,6 +97,20 @@ class MeshGenerator(FrozenOnly):
             diClass = getattr(import_module(cls_path), cls_name)
             random_parameters[diID] = diClass.random_parameters
         return random_parameters
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == "__main__":

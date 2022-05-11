@@ -7,10 +7,12 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from objects.nCSCG.rf2.base.mesh.base import nCSCG_RF2_MeshBase
+from objects.nCSCG.rf2.base.mesh.main import nCSCG_RF2_MeshBase
 from objects.nCSCG.rf2._3d.mesh.base_cells import _3nCSCG_RF2_BaseMeshCells
 from objects.nCSCG.rf2._3d.mesh.do.main import _3nCSCG_MeshDo
 from objects.nCSCG.rf2._3d.mesh.visualize.main import _3nCSCG_MeshVisualize
+from objects.nCSCG.rf2._3d.mesh.facets.main import _3nCSCG_MeshFacets
+from objects.nCSCG.rf2._3d.mesh.IS import _3nCSCG_Mesh_RF2_IS
 
 
 class _3nCSCG_RF2_Mesh(nCSCG_RF2_MeshBase):
@@ -18,6 +20,11 @@ class _3nCSCG_RF2_Mesh(nCSCG_RF2_MeshBase):
     def __init__(self, cscg):
         """"""
         super(_3nCSCG_RF2_Mesh, self).__init__(cscg)
+        self._do_ = None
+        self._visualize_ = None
+        self._facets_ = None
+        self._IS_ = None
+        self._freeze_self_()
         self.___base_mesh_cells___ = _3nCSCG_RF2_BaseMeshCells(self)
 
     @property
@@ -32,7 +39,17 @@ class _3nCSCG_RF2_Mesh(nCSCG_RF2_MeshBase):
             self._visualize_ = _3nCSCG_MeshVisualize(self)
         return self._visualize_
 
+    @property
+    def facets(self):
+        if self._facets_ is None:
+            self._facets_ = _3nCSCG_MeshFacets(self)
+        return self._facets_
 
+    @property
+    def IS(self):
+        if self._IS_ is None:
+            self._IS_ = _3nCSCG_Mesh_RF2_IS(self)
+        return self._IS_
 
 
 

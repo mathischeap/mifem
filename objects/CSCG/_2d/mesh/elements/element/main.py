@@ -51,5 +51,3 @@ class _2dCSCG_Mesh_Element(FrozenOnly):
     @property
     def coordinate_transformation(self):
         return self._ct_
-
-

@@ -28,6 +28,7 @@ class _3nCSCG_MeshVisualizeMatplot(FrozenOnly):
         CPD = dict()
         for ind in self._mesh_:
             cell = self._mesh_(ind)
+            assert cell.___isroot___
             CPD[str(ind)] = cell.coordinate_transformation.___PRIVATE_plot_data___()
 
         CPD = cOmm.gather(CPD, root=mAster_rank)

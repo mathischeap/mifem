@@ -23,22 +23,35 @@ class _2nCSCG_MeshVisualizeMatplot(FrozenOnly):
         self._mesh_ = mesh
         self._freeze_self_()
 
-    def __call__(self,
-        saveto=None, usetex=True, labelsize=12, ticksize=12):
+    def __call__(self, show_indices=False,
+        saveto=None, usetex=False, labelsize=12, ticksize=12):
         """"""
         CPD = dict()
+        indices_dict = dict()
         for ci in self._mesh_: # ao through all local cell indices.
             cell = self._mesh_(ci)
+            assert cell.___isroot___
             CPD[str(ci)] = cell.coordinate_transformation.___PRIVATE_plot_data___()
 
+            if show_indices:
+                indices = cell.indices
+                center_coo = cell.coordinate_transformation.mapping(0, 0)
+                indices_dict[str(ci)] = [indices, center_coo]
+
         CPD = cOmm.gather(CPD, root=mAster_rank)
+        indices_dict = cOmm.gather(indices_dict, root=mAster_rank)
 
         if rAnk != mAster_rank: return
 
         ___ = dict()
-        for cpd in CPD:
-            ___.update(cpd)
+        for _ in CPD:
+            ___.update(_)
         CPD = ___
+
+        ___ = dict()
+        for _ in indices_dict:
+            ___.update(_)
+        indices_dict = ___
 
         if saveto is not None: matplotlib.use('Agg')
         plt.rc('text', usetex=usetex)
@@ -56,6 +69,9 @@ class _2nCSCG_MeshVisualizeMatplot(FrozenOnly):
             lines = CPD[ind]
             for xyz in lines:
                 plt.plot(*xyz, color='k', linewidth=0.5)
+            if show_indices:
+                text, coo = indices_dict[ind]
+                plt.text(*coo, text, ha='center', va='center')
 
         #---------------------- save to --------------------------------------------------------
         if saveto is None:
@@ -74,6 +90,7 @@ if __name__ == "__main__":
     from objects.nCSCG.rf2._2d.master import MeshGenerator
 
     mesh = MeshGenerator('crazy', c=0.)([5, 5], EDM='chaotic', show_info=False)
+    mesh.do.unlock()
 
     i = 4
     if i in mesh.cscg.elements:

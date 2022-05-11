@@ -46,3 +46,6 @@ class ThreeDimensionalTransfiniteInterpolationError(Exception):
 
 class EmailSendingError(Exception):
     """"""
+
+class _2nCSCG_RF2_SegmentComparisonError(Exception):
+    """"""

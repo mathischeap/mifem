@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from screws.freeze.main import FrozenOnly
-
 from objects.CSCG._2d.mesh.trace.visualize import _2dCSCG_Trace_Visualize
 from objects.CSCG._2d.mesh.trace.elements.main import _2dCSCG_Trace_Elements
-
-
 
 
 
@@ -27,4 +24,3 @@ class _2dCSCG_Trace(FrozenOnly):
     @property
     def visualize(self):
         return self._visualize_
-

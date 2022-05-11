@@ -8,6 +8,8 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config.main import rAnk, mAster_rank, cOmm
 from screws.freeze.main import FrozenClass
+from objects.nCSCG.rf2.base.mesh.historic.main import nCSCG_Historic
+
 
 
 class nCSCG_RF2_MeshBase(FrozenClass):
@@ -24,13 +26,24 @@ class nCSCG_RF2_MeshBase(FrozenClass):
         assert cscg.__class__.__name__ in ('_3dCSCG_Mesh', '_2dCSCG_Mesh'), f"I need a CSCG mesh."
         self._cscg_ = cscg
         self.___base_mesh_cells___ = None
-        self._do_ = None
-        self._visualize_ = None
-        self._freeze_self_()
+        self._historic_ = None
+        self._locker_ = True
 
     def __call__(self, indices, dynamic=False):
-        """"""
-        if isinstance(indices, int):
+        """
+
+        Parameters
+        ----------
+        indices
+        dynamic : bool, optional
+            If it is True, we will refine it when the cell is not refined yet. Otherwise, we will
+            raise exception.
+
+        Returns
+        -------
+
+        """
+        if not isinstance(indices, tuple):
             indices = (indices,)
         else:
             pass
@@ -45,7 +58,6 @@ class nCSCG_RF2_MeshBase(FrozenClass):
                     raise Exception(f"cell[{indices[:_]}] has no level: >{_}< sub-cells.")
             else:
                 pass
-
             cell = cells[i]
             cells = cell.sub_cells
 
@@ -72,24 +84,32 @@ class nCSCG_RF2_MeshBase(FrozenClass):
         parameters['type'] = self.__class__.__name__
         parameters['cscg'] = cscg_parameters
 
-        refinements = list()
+        #Note that the history of the refinement will be lost!
+        refinements = dict()
         for ind in self:
             if len(ind) > 1: # this level-0-cell is refined.
-                refinements.append(ind)
+                mesh_element = ind[0]
+                region_indices = self.cscg.do.find.region_name_and_local_indices_of_element(mesh_element)
+                region, indices = region_indices
+                key = region + '|' + str(indices)[1:-1]
+                if key not in refinements:
+                    refinements[key] = list()
+                refinements[key].append(ind[1:])
+            else:
+                pass
 
         refinements = cOmm.gather(refinements, root=mAster_rank)
         if rAnk == mAster_rank:
-            _R_ = list()
+            _R_ = dict()
             for _r in refinements:
-                _R_.extend(_r)
+                _R_.update(_r)
             refinements = _R_
-
         parameters['refinements'] = refinements # All info in master, None in slaves.
 
         return parameters
 
     def __eq__(self, other):
-        """"""
+        """Regardless of the history of a mesh, we only compare they current conditions."""
         return self.standard_properties.parameters == other.standard_properties.parameters
 
     @property
@@ -107,8 +127,44 @@ class nCSCG_RF2_MeshBase(FrozenClass):
 
 
 
+    @property
+    def base_cells(self):
+        """The base cells, namely, the level-0-cells, namely, the cscg mesh elements.
+
+        These cells cannot be deleted.
+        """
+        return self.___base_mesh_cells___
+
+
+
+    @property
+    def historic(self):
+        if self._historic_ is None:
+            self._historic_ = nCSCG_Historic(self)
+        return self._historic_
+
+
+
+
+
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/nCSCG/rf2/base/mesh/base.py
-    pass
+    # mpiexec -n 4 python objects/nCSCG/rf2/base/mesh/main.py
+    from  objects.nCSCG.rf2._2d.__tests__.Random.mesh import random_mesh_of_elements_around as rm2
+    # # from  objects.nCSCG.rf2._3d.__tests__.Random.mesh import random_mesh_of_elements_around as rm3
+    # #
+    mesh2 = rm2(100)
+    # # mesh3 = rm3(200)
+    # #
+    mesh2.visualize()
+    # # print(mesh2.standard_properties.parameters)
+    # #
+    # from root.save import save
+    # #
+    # save(mesh2, '___test_mesh2_sr__')
+
+    # from root.read.main import read
+    # #
+    # mesh = read('___test_mesh2_sr__')
+    # mesh.visualize()
