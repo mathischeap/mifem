@@ -5,8 +5,8 @@ INTRO
 @author: Yi Zhang. Created on Tue May 21 18:07:50 2019
          Department of Aerodynamics
          Faculty of Aerospace Engineering
-         TU Delft
-         Delft, Netherlands
+         TU Delft,
+         Delft, the Netherlands
 
 """
 import numpy as np

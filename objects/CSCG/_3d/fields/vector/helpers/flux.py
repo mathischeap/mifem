@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 class ___VECTOR_FLUX___(object):
     """Here we will wrap the reconstruction of standard vector such that it works like a function. Then we

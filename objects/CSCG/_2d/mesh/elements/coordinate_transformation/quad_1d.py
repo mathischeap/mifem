@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from screws.quadrature import Quadrature
 from screws.freeze.main import FrozenOnly

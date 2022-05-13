@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from screws.freeze.main import FrozenOnly
 from objects.CSCG._2d.mesh.elements.coordinate_transformation.helpers.value_cache import ElementsCTValuesCache

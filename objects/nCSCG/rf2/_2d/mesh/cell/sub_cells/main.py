@@ -18,7 +18,6 @@ class _2nCSCG_SubCells(FrozenOnly):
         self._individual_sub_cells_ = dict()
         self._freeze_self_()
 
-
     def __getitem__(self, i):
         """"""
         if i in self._individual_sub_cells_:
@@ -37,5 +36,5 @@ class _2nCSCG_SubCells(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/mesh/cell/sub_cells/main.py
     pass

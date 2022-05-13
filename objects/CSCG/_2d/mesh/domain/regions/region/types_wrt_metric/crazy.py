@@ -1,6 +1,4 @@
-
-
-
+# -*- coding: utf-8 -*-
 from objects.CSCG._2d.mesh.domain.regions.region.types_wrt_metric.base import TypeWr2Metric
 
 from objects.CSCG._2d.mesh.elements.element.types_wrt_metric.chaotic import ChaoticElement

@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 import numpy as np
 from objects.CSCG._3d.mesh.domain.regions.region.types_wrt_metric.base import TypeWr2MetricBase

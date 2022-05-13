@@ -1,7 +1,4 @@
-
-
-
-
+# -*- coding: utf-8 -*-
 import numpy as np
 from objects.CSCG._2d.mesh.domain.regions.region.interpolations.base import InterpolationBase
 

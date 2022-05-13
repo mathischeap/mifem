@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 class ___VECTOR_NEG_HELPER_1___(object):
     def __init__(self, v):

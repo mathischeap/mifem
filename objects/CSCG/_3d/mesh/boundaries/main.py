@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """In `mesh.domain`, we distinguish domain boundary and periodic boundary.
 
 So even two domain boundaries are periodic boundaries (physically, they are not boundaries),

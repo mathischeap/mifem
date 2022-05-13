@@ -104,11 +104,13 @@ class _2dCSCG_Space(FrozenClass):
         output : str
 
         """
-        _category_ = []
-        for n in range(self.ndim):
-            _category_.append(self.basises[n].category)
-        _category_ = '|'.join(_category_)
-        return self.__class__.__name__ + '-' + _category_
+        if self._category_ is None:
+            _category_ = []
+            for n in range(self.ndim):
+                _category_.append(self.basises[n].category)
+            _category_ = '|'.join(_category_)
+            self._category_ = self.__class__.__name__ + '-' + _category_
+        return self._category_
 
     @property
     def Kronecker(self):

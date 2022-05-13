@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from root.config.main import sIze, np
 from screws.freeze.main import FrozenOnly

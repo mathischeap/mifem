@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from screws.freeze.main import FrozenOnly
 from objects.CSCG._2d.mesh.elements.do.find import _2dCSCG_Mesh_Elements_DO_FIND

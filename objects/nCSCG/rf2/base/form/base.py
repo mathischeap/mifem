@@ -2,28 +2,23 @@
 """
 @author: Yi Zhang
 @contact: zhangyi_aero@hotmail.com
-@time: 
+@time: 2022/05/12 6:44 PM
 """
 import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from objects.nCSCG.rf2.base.space.base import nCSCG_SpaceBase
+from screws.freeze.base import FrozenOnly
 
 
-class _2nCSCG_SpaceBase(nCSCG_SpaceBase):
+class nCSCG_FormBase(FrozenOnly):
     """"""
 
     def __init__(self):
         """"""
-        super(_2nCSCG_SpaceBase, self).__init__()
-        self._ndim_ = 2
+        self._freeze_self_()
 
 
-
-
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     # mpiexec -n 4 python 
     pass

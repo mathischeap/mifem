@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 
 from screws.functions._2d_space.angle import angle

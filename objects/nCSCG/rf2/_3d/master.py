@@ -35,7 +35,7 @@ class MeshGenerator(FrozenOnly):
         self._kwargs_ = kwargs
         self._freeze_self_()
 
-    def __call__(self, base_element_layout, EDM=None, show_info=False):
+    def __call__(self, base_element_layout, dN, space_type='polynomials', EDM=None, show_info=False, **space_kwargs):
         """Call to make the mesh instance.
 
         :param base_element_layout:
@@ -82,7 +82,7 @@ class MeshGenerator(FrozenOnly):
             print(f"   <total base cscg elements>: {cscg.elements.GLOBAL_num}", flush=True)
 
         #----------- use the cscg base mesh to make a _3nCSCG_RF2_Mesh -----------------------------
-        mesh = _3nCSCG_RF2_Mesh(cscg)
+        mesh = _3nCSCG_RF2_Mesh(cscg, dN, space_type='polynomials', **space_kwargs)
 
         return mesh
 
@@ -123,4 +123,4 @@ class MeshGenerator(FrozenOnly):
 
 if __name__ == "__main__":
     # mpiexec -n 8 python objects/nCSCG/rf2/_3d/master.py
-    mesh = MeshGenerator('crazy')([3, 3, 3], EDM=None, show_info=True)
+    mesh = MeshGenerator('crazy')([3, 3, 3], 2, EDM=None, show_info=True)

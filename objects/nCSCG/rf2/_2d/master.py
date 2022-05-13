@@ -32,7 +32,7 @@ class MeshGenerator(FrozenOnly):
         self._kwargs_ = kwargs
         self._freeze_self_()
 
-    def __call__(self, base_element_layout, EDM=None, show_info=False):
+    def __call__(self, base_element_layout, dN, space_type='polynomials', EDM=None, show_info=False, **space_kwargs):
         """"""
         if show_info and rAnk == mAster_rank:
             print(f"---[2dCSCG]-[MESH]-{MyTimer.current_time()}-----")
@@ -70,7 +70,7 @@ class MeshGenerator(FrozenOnly):
 
         #------- use the 2d cscg base mesh to make the 2d nCSCG RF2 mesh ---
 
-        mesh = _2nCSCG_RF2_Mesh(cscg)
+        mesh = _2nCSCG_RF2_Mesh(cscg, dN, space_type='polynomials', **space_kwargs)
 
         return mesh
 
@@ -105,14 +105,6 @@ class MeshGenerator(FrozenOnly):
 
 
 
-
-
-
-
-
-
-
-
 if __name__ == "__main__":
     # mpiexec -n 8 python objects/nCSCG/rf2/_2d/master.py
-    mesh = MeshGenerator('rectangle')([3,3], show_info=True)
+    mesh = MeshGenerator('rectangle')([3,3], 2, show_info=True)

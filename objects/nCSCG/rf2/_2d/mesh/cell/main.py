@@ -12,7 +12,7 @@ from objects.nCSCG.rf2._2d.mesh.cell.do.main import _2nCSCG_CellDo
 from objects.nCSCG.rf2._2d.mesh.cell.IS import _2nCSCG_CellIS
 from objects.nCSCG.rf2._2d.mesh.cell.coordinate_transformation import _2nCSCG_CellCT
 from objects.nCSCG.rf2._2d.mesh.cell.frame.main import _2nCSCG_CellFrame
-
+from objects.nCSCG.rf2._2d.mesh.cell.space.main import _2nCSCG_MeshCellSpace
 
 
 
@@ -26,6 +26,7 @@ class _2nCSCG_RF2_MeshCell(nCSCG_RF2_MeshCell):
         self._CT_ = None
         self._frame_ = None
         self._type_wrt_metric_ = None
+        self._space_ = None
         self._freeze_self_()
 
     def __call__(self, indices):
@@ -86,8 +87,18 @@ class _2nCSCG_RF2_MeshCell(nCSCG_RF2_MeshCell):
             raise Exception(f"Can only access frame of root cell.")
 
     @property
+    def space(self):
+        """The space used to this root cell."""
+        if self.___isroot___:
+            if self._space_ is None:
+                self._space_ = _2nCSCG_MeshCellSpace(self)
+            return self._space_
+        else:
+            raise Exception(f"Can only access space of root cell.")
+
+    @property
     def type_wrt_metric(self):
-        """"""
+        """type w.r.t. metric."""
         if self._type_wrt_metric_ is None:
             ELE_TYPE = self.mesh.cscg.elements[self.indices[0]].type_wrt_metric
             self._type_wrt_metric_ = \
@@ -97,11 +108,16 @@ class _2nCSCG_RF2_MeshCell(nCSCG_RF2_MeshCell):
 
 
 
+
+
+
+
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/nCSCG/rf2/_2d/mesh/cell/main.py
     from objects.nCSCG.rf2._2d.master import MeshGenerator
 
-    mesh = MeshGenerator('crazy')([2, 3], EDM='chaotic', show_info=True)
+    mesh = MeshGenerator('crazy')([2, 3], 2, EDM='chaotic', show_info=True)
+    mesh.do.unlock()
 
     if 0 in mesh.cscg.elements:
         c0 = mesh(0)

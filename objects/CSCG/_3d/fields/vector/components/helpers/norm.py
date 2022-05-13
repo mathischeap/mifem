@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 class ___VECTOR_NORM_COMPONENT___(object):
     """Here we wrap the reconstruction of standard vector such that it works like a function. Then we

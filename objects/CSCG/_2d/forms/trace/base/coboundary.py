@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 
 from objects.CSCG.base.forms.trace.coboundary import CSCG_Trace_Form_Coboundary_BASE

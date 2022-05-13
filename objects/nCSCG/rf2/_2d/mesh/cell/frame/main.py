@@ -26,6 +26,19 @@ class _2nCSCG_CellFrame(FrozenOnly):
         self._R = None
         self._freeze_self_()
 
+    def __repr__(self):
+        """"""
+        return self._cell_.__repr__() + ':Frame'
+
+    def __iter__(self):
+        """"""
+        for edge in 'UDLR':
+            yield edge
+
+    def __getitem__(self, item):
+        assert item in 'UDLR', f"item={item} is wrong."
+        return getattr(self, item)
+
     def ___Pr_make_Segments___(self):
         """"""
         cell = self._cell_
@@ -177,27 +190,22 @@ class _2nCSCG_CellFrame(FrozenOnly):
 
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/nCSCG/rf2/_2d/mesh/cell/frame/main.py
-    from objects.nCSCG.rf2._2d.__tests__.Random.mesh import random_mesh_of_elements_around as rm2
-    mesh = rm2(100, refinement_intensity=0.5)
+    # from objects.nCSCG.rf2._2d.__tests__.Random.mesh import random_mesh_of_elements_around as rm2
+    # mesh = rm2(100, refinement_intensity=0.5)
 
-    # from objects.nCSCG.rf2._2d.master import MeshGenerator
-    # mesh = MeshGenerator('crazy')([2, 3], EDM='chaotic', show_info=True)
-    # mesh.do.unlock()
+    from objects.nCSCG.rf2._2d.master import MeshGenerator
+    mesh = MeshGenerator('crazy')([2, 3], EDM='chaotic', show_info=True)
+    mesh.do.unlock()
     #
-    # if 0 in mesh.cscg.elements:
-    #     c0 = mesh(0)
-    #     c0.do.refine()
-    #     c00 = c0(0)
-    #     c00.do.refine()
-    #     C = c0(2)
-    #
-    # mesh.do.update()
-    #
-    # if 0 in mesh.cscg.elements:
-    #     D = C.frame.D
-    #     for segment in D:
-    #         print(segment.where)
+    if 0 in mesh.cscg.elements:
+        c0 = mesh(0)
+        c0.do.refine()
+        c00 = c0(0)
+        c00.do.refine()
+        C = c0(2)
 
+    mesh.do.update()
     for ind in mesh:
         F = mesh(ind).frame
-        D= F.D
+        for i in F:
+            print(F[i])

@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from screws.freeze.main import FrozenOnly
 from objects.CSCG._2d.mesh.domain.regions.main import Regions
 from objects.CSCG._2d.mesh.domain.regions.region.main import Region

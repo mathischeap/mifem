@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 
 from objects.CSCG._2d.spaces.base.main import _2dCSCG_Space
@@ -15,7 +15,15 @@ class _2dCSCG_PolynomialSpace(_2dCSCG_Space):
     def __init__(self, inputs, ndim):
         self.___1D_basis___ = _1dPolynomial
         self._quadrature_cache_ = [-1, None, None, None, None]
+        self._r = None
         super().__init__(inputs, ndim)
+
+    def __repr__(self):
+        """"""
+        if self._r is None:
+            self._r = self.category + '=' + str(self.p)
+        return self._r
+
 
     def ___PRIVATE_do_evaluate_quadrature___(self, quad_degree, quad_type=None):
         """
@@ -39,7 +47,6 @@ class _2dCSCG_PolynomialSpace(_2dCSCG_Space):
                                        quad_nodes, quad_weights, quad_weights_ravel]
 
         return self._quadrature_cache_[2:]
-
 
 
 

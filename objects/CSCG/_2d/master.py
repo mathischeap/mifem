@@ -114,8 +114,8 @@ class SpaceInvoker(FrozenOnly):
     def __call__(self, inputs, ndim=None, show_info=False):
         if show_info and rAnk == mAster_rank:
             print(f"---[2dCSCG]-[SPACE]-{MyTimer.current_time()}-----")
-            print(f"   <space ID>:{self._ID_}")
-            print(f"   <space inputs>:{inputs}")
+            print(f"   <space ID>: {self._ID_}")
+            print(f"   <space inputs>: {inputs}")
 
         cOmm.barrier()  # for safety reason
         if ndim is not None: assert ndim == 2

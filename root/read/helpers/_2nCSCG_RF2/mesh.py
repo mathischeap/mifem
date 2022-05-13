@@ -10,7 +10,10 @@ def ___restore__2nCSCG_RF2_Mesh___(parameters, mesh_cache):
     cscg_parameters = parameters.pop('cscg')
     cscg = ___restore__2dCSCG_Mesh___(cscg_parameters, mesh_cache)
 
-    mesh = _2nCSCG_RF2_Mesh(cscg)
+    space_parameters = parameters.pop('space')
+
+    dN, space_type, space_kwargs = space_parameters
+    mesh = _2nCSCG_RF2_Mesh(cscg, dN, space_type=space_type, **space_kwargs)
 
     refinements = parameters.pop('refinements')
 

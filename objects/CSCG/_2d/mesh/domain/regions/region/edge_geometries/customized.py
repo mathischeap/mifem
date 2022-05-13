@@ -1,5 +1,4 @@
-
-
+# -*- coding: utf-8 -*-
 from objects.CSCG._2d.mesh.domain.regions.region.edge_geometries.base import EdgeGeometryBase
 
 class Customized(EdgeGeometryBase):

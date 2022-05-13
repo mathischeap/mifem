@@ -8,6 +8,7 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
+from root.config.main import rAnk, mAster_rank, cOmm
 import random
 from objects.CSCG._3d.__tests__.Random.mesh import random_mesh_of_elements_around as cscg_random_mesh3
 from objects.nCSCG.rf2._3d.mesh.main import _3nCSCG_RF2_Mesh
@@ -39,6 +40,13 @@ def random_mesh_of_elements_around(elements_num,
     -------
 
     """
+    if rAnk == mAster_rank:
+        dN = random.randint(1,3)
+    else:
+        dN = None
+    dN = cOmm.bcast(dN, root=mAster_rank)
+    elements_num = int(elements_num / dN) + 10
+
     cscg = cscg_random_mesh3(elements_num,
            exclude_periodic=exclude_periodic,
            domain_boundary_distribution_regularities=domain_boundary_distribution_regularities,
@@ -46,7 +54,7 @@ def random_mesh_of_elements_around(elements_num,
            mesh_pool=mesh_pool,
            EDM_pool = EDM_pool)
 
-    mesh = _3nCSCG_RF2_Mesh(cscg)
+    mesh = _3nCSCG_RF2_Mesh(cscg, dN)
 
     #------ Now we randomly generate some refinements -----------------------------------------
     num_elements = cscg.elements.num # local num of mesh-elements (level-0-cells)

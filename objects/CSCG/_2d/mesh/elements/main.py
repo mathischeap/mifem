@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 from screws.freeze.main import FrozenOnly
 
 from objects.CSCG._2d.mesh.elements.coordinate_transformation.main import _2dCSCG_Mesh_Elements_CT
@@ -10,6 +9,9 @@ from objects.CSCG._2d.mesh.elements.element.main import _2dCSCG_Mesh_Element
 from objects.CSCG._2d.mesh.elements.IS import _2dCSCG_MeshElements_IS
 from objects.CSCG._2d.mesh.elements.visualize import _2dCSCG_MeshElements_VIS
 from objects.CSCG._2d.mesh.elements.do.main import _2dCSCG_Mesh_Elements_do
+
+
+
 
 class _2dCSCG_Mesh_Elements(FrozenOnly):
     """"""
@@ -149,13 +151,11 @@ class _2dCSCG_Mesh_Elements(FrozenOnly):
         judge = mesh_judge and indices_judge
         return cOmm.allreduce(judge, op=MPI.LAND)
 
-
     def ___PRIVATE_elementwise_cache_metric_key___(self, i):
         """This is an import method, for example, it can be used as a key generator for EWC objects."""
         mark = self[i].type_wrt_metric.mark
         if not isinstance(mark, str): mark = str(mark)
         return mark
-
 
     @property
     def do(self):

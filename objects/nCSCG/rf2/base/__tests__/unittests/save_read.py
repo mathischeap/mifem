@@ -27,6 +27,7 @@ def test_nCSCG_RF2_save_read():
     save(mesh2, '_2nCSCG_RF2_mesh.mi')
     MESH2 = read('_2nCSCG_RF2_mesh.mi')
     assert mesh2 == MESH2
+    remove('_2nCSCG_RF2_mesh.mi')
 
     load = randint(50, 150)
     miprint(f"     [test_nCSCG_RF2_save_read] 3d @ load={load}... ", flush=True)
@@ -34,8 +35,6 @@ def test_nCSCG_RF2_save_read():
     save(mesh3, '_3nCSCG_RF2_mesh.mi')
     MESH3 = read('_3nCSCG_RF2_mesh.mi')
     assert mesh3 == MESH3
-
-    remove('_2nCSCG_RF2_mesh.mi')
     remove('_3nCSCG_RF2_mesh.mi')
 
     return 1

@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 class ___VECTOR_T_PARA_COMPONENT___(object): # Trace parallel
     """Here we wrap the reconstruction of standard vector such that it works like a function. Then we

@@ -13,11 +13,12 @@ from objects.nCSCG.rf2._3d.mesh.do.main import _3nCSCG_MeshDo
 from objects.nCSCG.rf2._3d.mesh.visualize.main import _3nCSCG_MeshVisualize
 from objects.nCSCG.rf2._3d.mesh.facets.main import _3nCSCG_MeshFacets
 from objects.nCSCG.rf2._3d.mesh.IS import _3nCSCG_Mesh_RF2_IS
+from objects.nCSCG.rf2._3d.mesh.space.allocator import _3nCSCG_SpaceAllocator
 
 
 class _3nCSCG_RF2_Mesh(nCSCG_RF2_MeshBase):
     """"""
-    def __init__(self, cscg):
+    def __init__(self, cscg, dN, space_type='polynomials', **space_kwargs):
         """"""
         super(_3nCSCG_RF2_Mesh, self).__init__(cscg)
         self._do_ = None
@@ -26,6 +27,8 @@ class _3nCSCG_RF2_Mesh(nCSCG_RF2_MeshBase):
         self._IS_ = None
         self._freeze_self_()
         self.___base_mesh_cells___ = _3nCSCG_RF2_BaseMeshCells(self)
+        self._space_ = _3nCSCG_SpaceAllocator(space_type)(dN, **space_kwargs)
+        self._space_._mesh_ = self
 
     @property
     def do(self):
@@ -57,8 +60,6 @@ if __name__ == '__main__':
     # mpiexec -n 4 python objects/nCSCG/rf2/_3d/mesh/main.py
     from objects.nCSCG.rf2._3d.master import MeshGenerator
 
-    mesh = MeshGenerator('crazy')([3, 3, 3], EDM='chaotic', show_info=True)
+    mesh = MeshGenerator('crazy')([3, 3, 3], 2, EDM='chaotic', show_info=True)
 
-    if 0 in mesh.cscg.elements:
-        c0 = mesh[0]
-        print(c0, c0.indices)
+    print(mesh.space.mesh is mesh, mesh.space._PRM)

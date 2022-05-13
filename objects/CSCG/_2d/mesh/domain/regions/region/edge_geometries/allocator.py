@@ -6,7 +6,7 @@ INTRO
          Department of Aerodynamics
          Faculty of Aerospace Engineering
          TU Delft,
-         Delft, Netherlands
+         Delft, the Netherlands
 
 """
 from screws.freeze.main import FrozenOnly

@@ -28,6 +28,10 @@ class FrameSegments(FrozenOnly):
         self._segments_ = segments
         self._freeze_self_()
 
+    def __repr__(self):
+        """"""
+        return self._cell_.__repr__() + ':Frame-' + self._edge_
+
     @property
     def edge(self):
         return self._edge_

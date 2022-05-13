@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 import matplotlib.pyplot as plt
 from matplotlib import cm
@@ -19,12 +19,12 @@ class _2dCSCG_Trace_Visualize(FrozenOnly):
         return self.matplot(**kwargs)
 
     def matplot(self, region_boundary=True, density=10000, usetex=False,
-        show_element_numbering=True, element_numbering_fontsize=12,
-        saveto=None, corlormap='tab10', fontsize=12,
-        xlim=None, ylim=None, labelsize=15, ticksize=15,
-        show_boundary_names=True,
-        domain_boundary_linewidth=3, region_boundary_linewidth=1, element_linwidth=0.4,
-        element_color='red'):
+                show_element_numbering=True, element_numbering_fontsize=12,
+                saveto=None, corlormap='tab10', fontsize=12,
+                xlim=None, ylim=None, labelsize=15, ticksize=15,
+                show_boundary_names=True,
+                domain_boundary_linewidth=3, region_boundary_linewidth=1, element_linewidth=0.4,
+                element_color='red'):
         """
 
         :param region_boundary:
@@ -42,7 +42,7 @@ class _2dCSCG_Trace_Visualize(FrozenOnly):
         :param show_boundary_names:
         :param domain_boundary_linewidth:
         :param region_boundary_linewidth:
-        :param element_linwidth:
+        :param element_linewidth:
         :param element_color:
         :return:
         """
@@ -170,7 +170,7 @@ class _2dCSCG_Trace_Visualize(FrozenOnly):
             if ylim is not None: plt.ylim(ylim)
 
             for i in ted:
-                ax.plot(*ted[i], color=element_color, linewidth=element_linwidth)
+                ax.plot(*ted[i], color=element_color, linewidth=element_linewidth)
                 ax.text(*tec[i], "${}$".format(i),
                          color = 'k', fontsize=element_numbering_fontsize, ha='center', va='center')
                 if i in tec_p:

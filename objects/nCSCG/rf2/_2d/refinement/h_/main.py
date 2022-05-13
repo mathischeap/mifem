@@ -11,7 +11,7 @@ if './' not in sys.path: sys.path.append('./')
 from screws.freeze.base import FrozenOnly
 
 
-class _2nCSCG_RF2_Refinement(FrozenOnly):
+class _2nCSCG_RF2_h_Refinement(FrozenOnly):
     """"""
 
     def __init__(self, mesh):
@@ -27,5 +27,5 @@ class _2nCSCG_RF2_Refinement(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/refinement/main.py
+    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/refinement/h_/main.py
     pass

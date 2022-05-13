@@ -1,5 +1,4 @@
-
-
+# -*- coding: utf-8 -*-
 from screws.freeze.main import FrozenOnly
 import numpy as np
 from objects.CSCG._2d.mesh.elements.element.coordinate_transformation import _2dCSCG_Mesh_ECT

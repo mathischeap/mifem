@@ -15,10 +15,14 @@ from objects.nCSCG.rf2._2d.mesh.Lv0_trace.main import _2nCSCG_MeshLv0Trace
 from objects.nCSCG.rf2._2d.mesh.segments.main import _2nCSCG_Segments
 from objects.nCSCG.rf2._2d.mesh.boundaries.main import _2nCSCG_RF2_MeshBoundaries
 from objects.nCSCG.rf2._2d.mesh.IS import _2nCSCG_Mesh_RF2_IS
+from objects.nCSCG.rf2._2d.mesh.space.allocator import _2nCSCG_SpaceAllocator
+
+
+
 
 class _2nCSCG_RF2_Mesh(nCSCG_RF2_MeshBase):
     """"""
-    def __init__(self, cscg):
+    def __init__(self, cscg, dN, space_type='polynomials', **space_kwargs):
         """"""
         super(_2nCSCG_RF2_Mesh, self).__init__(cscg)
         self._do_ = None
@@ -29,6 +33,8 @@ class _2nCSCG_RF2_Mesh(nCSCG_RF2_MeshBase):
         self._IS_ = None
         self._freeze_self_()
         self.___base_mesh_cells___ = _2nCSCG_RF2_BaseMeshCells(self)
+        self._space_ = _2nCSCG_SpaceAllocator(space_type)(dN, **space_kwargs)
+        self._space_._mesh_ = self
 
     @property
     def do(self):
@@ -73,6 +79,8 @@ class _2nCSCG_RF2_Mesh(nCSCG_RF2_MeshBase):
 
 
 
+
+
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/nCSCG/rf2/_2d/mesh/main.py
     # from objects.nCSCG.rf2._2d.__tests__.Random.mesh import random_mesh_of_elements_around as rm2
@@ -80,13 +88,13 @@ if __name__ == '__main__':
 
     from objects.nCSCG.rf2._2d.master import MeshGenerator
 
-    mesh = MeshGenerator('rectangle', region_layout=[2,2])([3, 3], EDM=None, show_info=True)
-
-    mesh.do.unlock()
-
-    if 6 in mesh.cscg.elements:
-        c0 = mesh(6)
-        c0.do.refine()
-
-    mesh.do.lock()
-    mesh.visualize()
+    mesh = MeshGenerator('rectangle', region_layout=[2,2])([3, 3], 2, EDM=None, show_info=True)
+    print(mesh.space.mesh)
+    # mesh.do.unlock()
+    #
+    # if 6 in mesh.cscg.elements:
+    #     c0 = mesh(6)
+    #     c0.do.refine()
+    #
+    # mesh.do.lock()
+    # mesh.visualize()

@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 class ___VECTOR_T_PERP_COMPONENT___(object): # Trace Perpendicular
     """Here we wrap the reconstruction of standard vector such that it works like a function. Then we

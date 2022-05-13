@@ -21,13 +21,23 @@ class _2nCSCG_MeshDigest(FrozenOnly):
 
     def __call__(self, refinement):
         """We make changes to the mesh according to this refinement object."""
-        assert refinement.__class__.__name__ == '_2nCSCG_RF2_Refinement'
-        assert refinement.mesh is self._mesh_, f"refinement must possesses me as its mesh."
+        if refinement.__class__.__name__ == '_2nCSCG_RF2_h_Refinement':
+            assert refinement.mesh is self._mesh_, f"refinement must possesses me as its mesh."
 
-        #TODO: to be continued.
+            #TODO: to be continued.
 
-        self._mesh_.do.update() # update and lock self after digestion!
-        raise NotImplementedError()
+            self._mesh_.do.update() # update and lock self after digestion!
+            raise NotImplementedError()
+
+        elif refinement.__class__.__name__ == '_2nCSCG_RF2_p_Refinement':
+            assert refinement.mesh is self._mesh_, f"refinement must possesses me as its mesh."
+
+            raise NotImplementedError()
+
+        else:
+            raise Exception(f"refinement={refinement} is wrong.")
+
+
 
 
 

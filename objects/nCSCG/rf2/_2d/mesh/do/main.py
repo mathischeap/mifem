@@ -69,6 +69,10 @@ class _2nCSCG_MeshDo(nCSCG_MeshDoBase):
 
 
 
+
+
+
+
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/nCSCG/rf2/_2d/mesh/do/main.py
     from objects.nCSCG.rf2._2d.master import MeshGenerator

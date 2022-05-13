@@ -45,6 +45,5 @@ if __name__ == "__main__":
     mesh = read('test_mesh.mi')
 
     trace = mesh.Lv0trace
-    trace.do.update()
     # print(trace.elements.segments)
     trace.visualize()

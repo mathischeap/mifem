@@ -26,6 +26,7 @@ class nCSCG_RF2_MeshBase(FrozenClass):
         assert cscg.__class__.__name__ in ('_3dCSCG_Mesh', '_2dCSCG_Mesh'), f"I need a CSCG mesh."
         self._cscg_ = cscg
         self.___base_mesh_cells___ = None
+        self._space_ = None # will be set when we set the mesh of the space
         self._historic_ = None
         self._locker_ = True
 
@@ -71,6 +72,9 @@ class nCSCG_RF2_MeshBase(FrozenClass):
             for j in cell:
                 yield j
 
+    def __contains__(self, item):
+        raise Exception(f"__contains__ of nCSCG mesh is disabled.")
+
     @property
     def ___parameters___(self):
         """
@@ -83,6 +87,7 @@ class nCSCG_RF2_MeshBase(FrozenClass):
         parameters = dict()
         parameters['type'] = self.__class__.__name__
         parameters['cscg'] = cscg_parameters
+        parameters['space'] = self.space._PRM
 
         #Note that the history of the refinement will be lost!
         refinements = dict()
@@ -125,8 +130,6 @@ class nCSCG_RF2_MeshBase(FrozenClass):
         """"""
         return self._cscg_.domain
 
-
-
     @property
     def base_cells(self):
         """The base cells, namely, the level-0-cells, namely, the cscg mesh elements.
@@ -135,16 +138,16 @@ class nCSCG_RF2_MeshBase(FrozenClass):
         """
         return self.___base_mesh_cells___
 
-
-
     @property
     def historic(self):
+        """"""
         if self._historic_ is None:
             self._historic_ = nCSCG_Historic(self)
         return self._historic_
 
-
-
+    @property
+    def space(self):
+        return self._space_
 
 
 
