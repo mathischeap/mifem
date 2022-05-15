@@ -16,11 +16,11 @@ class nCSCG_MeshDoBase(FrozenOnly):
         self._mesh_ = mesh
 
     def lock(self):
-        """Can not refine or dulite the mesh!"""
+        """Can not refine or dilute the mesh!"""
         self._mesh_._locker_ = True
 
     def unlock(self):
-        """Can refine or dulite the mesh!"""
+        """Can refine or dilute the mesh!"""
         self._mesh_._locker_ = False
 
 

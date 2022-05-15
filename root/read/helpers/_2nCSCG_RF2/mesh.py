@@ -35,7 +35,7 @@ def ___restore__2nCSCG_RF2_Mesh___(parameters, mesh_cache):
         else:
             pass
 
-    mesh.do.update()
+    mesh.do.update() # update the mesh.
     cscg.___element_global_numbering___ = None
 
     return mesh

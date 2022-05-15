@@ -94,8 +94,10 @@ if __name__ == '__main__':
     # mpiexec -n 4 python objects/nCSCG/rf2/_2d/mesh/cell/coordinate_transformation.py
     from objects.nCSCG.rf2._2d.master import MeshGenerator
 
-    mesh = MeshGenerator('crazy')([3, 3], EDM=None)
+    mesh = MeshGenerator('crazy')([3, 3], 2, EDM=None)
     i = 8
+    mesh.do.unlock()
+
     if i in mesh.cscg.elements:
 
         cell = mesh((i, 2, 2), dynamic=True)
@@ -107,4 +109,5 @@ if __name__ == '__main__':
         xi, eta = np.meshgrid(xi, eta, indexing='ij')
 
         xy = ct.mapping(xi, eta)
-        print(xy)
+
+    mesh.visualize()

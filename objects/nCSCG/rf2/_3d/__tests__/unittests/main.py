@@ -10,6 +10,9 @@ if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.base import FrozenOnly
 
+
+
+
 if __name__ == "__main__":
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python objects/nCSCG/rf2/_3d/__tests__/unittests/main.py
     pass

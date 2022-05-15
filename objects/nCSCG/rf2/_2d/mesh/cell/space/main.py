@@ -9,6 +9,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.base import FrozenOnly
+from objects.nCSCG.rf2._2d.mesh.cell.space.do import _2nCSCG_MRF2_CellSpaceDo
 
 
 class _2nCSCG_MeshCellSpace(FrozenOnly):
@@ -16,12 +17,13 @@ class _2nCSCG_MeshCellSpace(FrozenOnly):
     def __init__(self, cell):
         """"""
         self._cell_ = cell
-        self._N_ = cell.mesh.space.dN
+        self._N_ = cell.mesh.space.dN # start with the default N.
+        self._do_ = None
         self._freeze_self_()
 
     def __repr__(self):
         """"""
-        return f"{self._cell_.indices}-{self.N}-{self.body.__repr__()}"
+        return f"{self._cell_.indices}-{self.N}:{self.body.__repr__()}"
 
     @property
     def N(self):
@@ -40,6 +42,14 @@ class _2nCSCG_MeshCellSpace(FrozenOnly):
     def body(self):
         """"""
         return self._cell_.mesh.space[self.N]
+
+    @property
+    def do(self):
+        """"""
+        if self._do_ is None:
+            self._do_ = _2nCSCG_MRF2_CellSpaceDo(self)
+        return self._do_
+
 
 
 

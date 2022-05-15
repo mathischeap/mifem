@@ -194,7 +194,7 @@ if __name__ == "__main__":
     # mesh = rm2(100, refinement_intensity=0.5)
 
     from objects.nCSCG.rf2._2d.master import MeshGenerator
-    mesh = MeshGenerator('crazy')([2, 3], EDM='chaotic', show_info=True)
+    mesh = MeshGenerator('crazy')([2, 3], 2, EDM='chaotic', show_info=True)
     mesh.do.unlock()
     #
     if 0 in mesh.cscg.elements:

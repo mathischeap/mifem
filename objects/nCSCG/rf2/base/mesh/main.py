@@ -29,6 +29,12 @@ class nCSCG_RF2_MeshBase(FrozenClass):
         self._space_ = None # will be set when we set the mesh of the space
         self._historic_ = None
         self._locker_ = True
+        self._signature_ = None # will be updated when updating mesh
+
+    @property
+    def signature(self):
+        """will be updated when updating mesh"""
+        return self._signature_
 
     def __call__(self, indices, dynamic=False):
         """

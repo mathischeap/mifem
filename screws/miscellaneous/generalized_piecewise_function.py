@@ -139,16 +139,16 @@ if __name__ == '__main__':
 
     doctest.testmod()
 
+    def Yp0(p, q): return 0
 
-    def Yp1(p, q): return -np.pi * 5 * 0.3 * np.cos(np.pi * 5 * p) * (
-                1 - (-5 * p + 2.5) / 2.5) - 0.3 * np.sin(np.pi * 5 * p) * 2 + q
+    def Yp1(p, q): return 1
 
 
-    def Yp2(p, q): return -np.pi * 5 * 0.3 * np.cos(np.pi * 5 * p) * (
-                1 - (5 * p - 2.5) / 2.5) + 0.3 * np.sin(np.pi * 5 * p) * 2 + 10*q
+    def Yp2(p, q): return 2
 
 
     p = np.linspace(0, 1, 10)
     q = np.linspace(0, 1, 10)
-    Yp = genpiecewise([p, q], [p < 0.5, p >= 0.5], [Yp1, Yp2])
+    Yp = genpiecewise([p, q], [p < 0.2, np.logical_and(p >= 0.2, p < 0.5), p >= 0.5], [Yp0, Yp1, Yp2])
+
     print(Yp)

@@ -45,7 +45,7 @@ class _2nCSCG_MeshDoFind(FrozenOnly):
             if I1 in self._cache_:
                 pass
             else:
-                delta = 2 * 0.5 ** (len(indices) - 1)
+                delta = 2 * 0.5 ** (len(I1))
                 o = self.origin_and_delta(indices[:-1])[0]
                 i, j = self.local_indices_of_sub_cell(indices[-1])
                 origin = o[0] + i * delta, o[1] + j * delta

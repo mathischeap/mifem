@@ -19,10 +19,7 @@ class RegionSubGeometry(FrozenOnly):
     def __init__(self, region):
         """"""
         self._region_ = region
-
         self._freeze_self_()
-
-
 
 
 

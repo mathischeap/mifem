@@ -89,7 +89,7 @@ if __name__ == "__main__":
     # mpiexec -n 8 python objects/nCSCG/rf2/_2d/mesh/visualize/matplot.py
     from objects.nCSCG.rf2._2d.master import MeshGenerator
 
-    mesh = MeshGenerator('crazy', c=0.)([5, 5], EDM='chaotic', show_info=False)
+    mesh = MeshGenerator('crazy', c=0.)([5, 5], 2, EDM='chaotic', show_info=False)
     mesh.do.unlock()
 
     i = 4

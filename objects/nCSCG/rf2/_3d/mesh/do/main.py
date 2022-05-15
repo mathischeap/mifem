@@ -10,6 +10,9 @@ if './' not in sys.path: sys.path.append('./')
 
 from objects.nCSCG.rf2.base.mesh.do.main import nCSCG_MeshDoBase
 from objects.nCSCG.rf2._3d.mesh.do.find import _3nCSCG_MeshDoFind
+from time import time
+from random import random
+
 
 class _3nCSCG_MeshDo(nCSCG_MeshDoBase):
     """"""
@@ -53,6 +56,7 @@ class _3nCSCG_MeshDo(nCSCG_MeshDoBase):
         for ind in self._mesh_:
             cell = self._mesh_(ind)
             cell._frame_ = None
+        self._mesh_._signature_ = time() + random()
         self.lock() # lock self after update!
 
 

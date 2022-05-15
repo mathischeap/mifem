@@ -2,7 +2,7 @@
 """
 @author: Yi Zhang
 @contact: zhangyi_aero@hotmail.com
-@time: 2022/05/10 6:39 PM
+@time: 12:27 AM
 """
 import sys
 
@@ -11,7 +11,7 @@ if './' not in sys.path: sys.path.append('./')
 from screws.freeze.base import FrozenOnly
 
 
-class _2nCSCG_Mesh_RF2_IS(FrozenOnly):
+class _2nCSCG_RF2_h_Refinement(FrozenOnly):
     """"""
 
     def __init__(self, mesh):
@@ -20,10 +20,14 @@ class _2nCSCG_Mesh_RF2_IS(FrozenOnly):
         self._freeze_self_()
 
     @property
-    def locked(self):
-        return self._mesh_._locker_
+    def mesh(self):
+        return self._mesh_
 
 
-if __name__ == "__main__":
-    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/mesh/IS.py
+
+
+
+
+if __name__ == '__main__':
+    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/refinement/h_/main.py
     pass

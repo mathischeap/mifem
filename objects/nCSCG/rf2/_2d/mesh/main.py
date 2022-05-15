@@ -15,9 +15,10 @@ from objects.nCSCG.rf2._2d.mesh.Lv0_trace.main import _2nCSCG_MeshLv0Trace
 from objects.nCSCG.rf2._2d.mesh.segments.main import _2nCSCG_Segments
 from objects.nCSCG.rf2._2d.mesh.boundaries.main import _2nCSCG_RF2_MeshBoundaries
 from objects.nCSCG.rf2._2d.mesh.IS import _2nCSCG_Mesh_RF2_IS
+from objects.nCSCG.rf2._2d.mesh.refinement.main import _2nCSCG_Refinement
 from objects.nCSCG.rf2._2d.mesh.space.allocator import _2nCSCG_SpaceAllocator
-
-
+from objects.nCSCG.rf2._2d.mesh.coordinates.main import _2nCSCG_MeshRF2_Coordinates
+from objects.nCSCG.rf2._2d.mesh.ids.main import _2nCSCG_MeshRF2_IndicesDataStorage
 
 
 class _2nCSCG_RF2_Mesh(nCSCG_RF2_MeshBase):
@@ -31,6 +32,9 @@ class _2nCSCG_RF2_Mesh(nCSCG_RF2_MeshBase):
         self._segments_ = None
         self._boundaries_ = None
         self._IS_ = None
+        self._refinement_ = None
+        self._coordinates_ = None
+        self._indices_data_storage_ = None
         self._freeze_self_()
         self.___base_mesh_cells___ = _2nCSCG_RF2_BaseMeshCells(self)
         self._space_ = _2nCSCG_SpaceAllocator(space_type)(dN, **space_kwargs)
@@ -72,6 +76,24 @@ class _2nCSCG_RF2_Mesh(nCSCG_RF2_MeshBase):
         if self._IS_ is None:
             self._IS_ = _2nCSCG_Mesh_RF2_IS(self)
         return self._IS_
+
+    @property
+    def refinement(self):
+        if self._refinement_ is None:
+            self._refinement_ = _2nCSCG_Refinement(self)
+        return self._refinement_
+
+    @property
+    def coordinates(self):
+        if self._coordinates_ is None:
+            self._coordinates_ = _2nCSCG_MeshRF2_Coordinates(self)
+        return self._coordinates_
+
+    @property
+    def ids(self):
+        if self._indices_data_storage_ is None:
+            self._indices_data_storage_ = _2nCSCG_MeshRF2_IndicesDataStorage(self)
+        return self._indices_data_storage_
 
 
 

@@ -25,9 +25,9 @@ class nCSCG_RF2_MeshCell(FrozenOnly):
 
     def __repr__(self):
         if self._r is None:
-            self._r = 'c' + str(self.indices[0])
+            self._r = str(self.indices[0])+' '
             for i in self.indices[1:]:
-                self._r += '-'+str(i)
+                self._r += str(i)
         return self._r
 
     @property

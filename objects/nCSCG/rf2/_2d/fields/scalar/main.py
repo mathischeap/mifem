@@ -1,50 +1,39 @@
 # -*- coding: utf-8 -*-
 """
-
-@author: Yi Zhang.
-         Department of Aerodynamics
-         Faculty of Aerospace Engineering
-         TU Delft, Delft, Netherlands
-
+@author: Yi Zhang
+@contact: zhangyi_aero@hotmail.com
+@time: 2022/05/13 3:51 PM
 """
-
 import sys
-if './' not in sys.path: sys.path.append('/')
 
-from types import FunctionType, MethodType
-from objects.CSCG._2d.fields.base import _2dCSCG_Continuous_FORM_BASE
+if './' not in sys.path: sys.path.append('./')
+
 from functools import partial
-import numpy as np
+from types import FunctionType, MethodType
 from screws.functions.time_plus_2d_space._0_ import _0t_
-from objects.CSCG._2d.fields.scalar.do.main import _2dCSCG_ScalarField_DO
-from objects.CSCG._2d.fields.scalar.numerical.main import _2dCSCG_ScalarField_Numerical
-from objects.CSCG._2d.fields.scalar.visualize.main import _2dCSCG_ScalarField_Visualize
+
+from objects.nCSCG.rf2._2d.fields.base import _2nCSCG_FieldBase
+from objects.nCSCG.rf2._2d.fields.scalar.reconstruct import _2nCSCG_RF2_ScalarReconstruct
+from objects.nCSCG.rf2._2d.fields.scalar.visualize import _2nCSCG_RF2_ScalarVisualize
 
 
 
 
 
-
-class _2dCSCG_ScalarField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
-    """The continuous scalar field."""
+class _2nCSCG_RF2_ScalarField(_2nCSCG_FieldBase):
+    """"""
     def __init__(self, mesh, func, ftype='standard', valid_time=None, name='scalar-field'):
-        super().__init__(mesh, ftype, valid_time)
-        self.standard_properties.___PRIVATE_add_tag___('2dCSCG_scalar_field')
-        self.standard_properties.name = name
-        self.___PRIVATE_set_func___(func, ftype=ftype)
+        super().__init__(mesh, ftype, valid_time, name)
+        self.standard_properties.___PRIVATE_add_tag___('2dCSCG_RF2_Scalar')
+        self.___Pr_set_func___(func, ftype=ftype)
         self._previous_func_id_time_ = (None, None, None)
-        self._DO_ = _2dCSCG_ScalarField_DO(self)
-        self._numerical_ = _2dCSCG_ScalarField_Numerical(self)
-        self._visualize_ = _2dCSCG_ScalarField_Visualize(self)
+        self._reconstruct_ = None
+        self._visualize_ = None
         self._freeze_self_()
 
-
-    def ___PRIVATE_set_func___(self, func, ftype='standard'):
-        """
-        Use this method to set up the function body and function type.
-
-        Whenever define a new funcType, edit the currentFunc for the new type.
-        """
+    #---------- built-in ---------------------------------------------------------------
+    def ___Pr_set_func___(self, func, ftype='standard'):
+        """"""
         if ftype == 'standard':
             if isinstance(func, FunctionType):
                 # noinspection PyUnresolvedReferences
@@ -59,11 +48,13 @@ class _2dCSCG_ScalarField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
             else:
                 raise Exception(f"func={func} is a {func.__class__}, cannot be understood.")
             self._func_ = [func,]
+
         else:
             raise Exception(f" <ScalarField> do not accept funcType={ftype}")
+
         self._ftype_ = ftype
 
-    def ___DO_evaluate_func_at_time___(self, time=None):
+    def ___Pr_evaluate_func___(self, time=None):
         """
         Evaluate the function at a particular time; reduce the number of variables from 4 to 3.
 
@@ -80,10 +71,12 @@ class _2dCSCG_ScalarField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
         if self._previous_func_id_time_[0:2] == (id(self.func), time):
             return self._previous_func_id_time_[2]
         else:
+
             if self.ftype == 'standard':
                 RETURN = [partial(self.func[0], time),]
             else:
                 raise Exception(f"Cannot do it for funcType={self.ftype}")
+
             self._previous_func_id_time_ = (id(self.func), time, RETURN)
             return RETURN
 
@@ -91,35 +84,37 @@ class _2dCSCG_ScalarField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
     def shape(self):
         return 1,
 
-    def reconstruct(self, *args, **kwargs):
-        return self.do.reconstruct(*args, **kwargs)
-
+    #-------------- personal --------------------------------------------------------------------
     @property
-    def do(self):
-        return self._DO_
-
-    @property
-    def numerical(self):
-        return self._numerical_
+    def reconstruct(self):
+        if self._reconstruct_ is None:
+            self._reconstruct_ = _2nCSCG_RF2_ScalarReconstruct(self)
+        return self._reconstruct_
 
     @property
     def visualize(self):
+        if self._visualize_ is None:
+            self._visualize_ = _2nCSCG_RF2_ScalarVisualize(self)
         return self._visualize_
 
 
 
 
-if __name__ == '__main__':
-    # mpiexec -n 6 python _2dCSCG\field\scalar.py
-    from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('crazy', c=0.)([2,2], show_info=True)
-    space = SpaceInvoker('polynomials')([('Lobatto',1), ('Lobatto',1)], show_info=True)
-    FC = FormCaller(mesh, space)
 
-    def p(t, x, y): return t + np.cos(np.pi*x) * np.cos(2*np.pi*y)
-    SS = FC('scalar', p)
-    SS.current_time = 100
 
-    SS.visualize()
 
+
+
+
+if __name__ == "__main__":
+    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/fields/scalar/main.py
+    from objects.nCSCG.rf2._2d.__tests__.Random.mesh import random_mesh_of_elements_around as rm2
+
+    mesh = rm2(100)
+
+    def p(t, x, y, z): return x + y + z + t
+
+    s = _2nCSCG_RF2_ScalarField(mesh, p)
+
+    print(s.standard_properties.tags)
