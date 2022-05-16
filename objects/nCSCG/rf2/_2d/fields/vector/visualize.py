@@ -2,7 +2,7 @@
 """
 @author: Yi Zhang
 @contact: zhangyi_aero@hotmail.com
-@time: 2022/05/13 7:52 PM
+@time: 2022/05/15 7:46 PM
 """
 import sys
 
@@ -11,7 +11,9 @@ if './' not in sys.path: sys.path.append('./')
 from screws.freeze.base import FrozenOnly
 
 
-class _2nCSCG_RF2_ScalarVisualize(FrozenOnly):
+
+
+class _2nCSCG_RF2_VectorVisualize(FrozenOnly):
     """"""
 
     def __init__(self, cf):
@@ -34,8 +36,27 @@ class _2nCSCG_RF2_ScalarVisualize(FrozenOnly):
             raise NotImplementedError(f"{ftype}.")
 
 
-    def ___Pr_matplot_standard___(self, density=20, plot_type='contourf', **kwargs):
-        """"""
+    def ___Pr_matplot_standard___(self, density=None, plot_type='contourf', **kwargs):
+        """
+
+        Parameters
+        ----------
+        density
+        kwargs
+
+        Returns
+        -------
+
+        """
+        if density is None:
+            if plot_type in ('contourf', 'contour'):
+                density = 20
+            elif plot_type == 'quiver':
+                density = 5
+            else:
+                density=15
+        else:
+            pass
         mesh = self._cf_.mesh
         coo = mesh.coordinates.homogeneous(density, ndim=2)
         xy, v = self._cf_.reconstruct(coo, ravel=False)
@@ -48,16 +69,17 @@ class _2nCSCG_RF2_ScalarVisualize(FrozenOnly):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/fields/scalar/visualize.py
+    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/fields/vector/visualize.py
     from objects.nCSCG.rf2._2d.__tests__.Random.mesh import random_mesh_of_elements_around as rm2
-    from objects.nCSCG.rf2._2d.fields.scalar.main import _2nCSCG_RF2_ScalarField
+    from objects.nCSCG.rf2._2d.fields.vector.main import _2nCSCG_RF2_VectorField
 
     mesh = rm2(100)
 
     import numpy as np
-    def p(t, x, y): return np.sin(np.pi*x) * np.sin(np.pi*y) + t
+    def p(t, x, y): return 2 * np.sin(np.pi*x) * np.cos(np.pi*y) + t
+    def q(t, x, y): return 2 * np.cos(np.pi*x) * np.sin(np.pi*y) + t
 
-    s = _2nCSCG_RF2_ScalarField(mesh, p)
-    s.current_time = 0
+    v = _2nCSCG_RF2_VectorField(mesh, (p,q))
+    v.current_time = 0
 
-    s.visualize()
+    v.visualize(plot_type='quiver')

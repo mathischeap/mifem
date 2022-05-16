@@ -8,12 +8,22 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
+from objects.nCSCG.rf2.base.form.base.main import nCSCG_RF2_FormBase
 
 
+class _2nCSCG_RF2_FormBase(nCSCG_RF2_FormBase):
+    """"""
+    def __init__(self, mesh):
+        super(_2nCSCG_RF2_FormBase, self).__init__(mesh)
 
 
+    #-------- must have methods ------------------------------------------------
+    def ___Pr_check_func___(self):
+        raise NotImplementedError()
 
+    @property
+    def cochain(self):
+        raise NotImplementedError()
 
 
 

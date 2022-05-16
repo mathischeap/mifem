@@ -61,43 +61,45 @@ class _2nCSCG_RF2_Mesh(nCSCG_RF2_MeshBase):
 
     @property
     def segments(self):
+        """"""
         if self._segments_ is None:
             self._segments_ = _2nCSCG_Segments(self)
         return self._segments_
 
     @property
     def boundaries(self):
+        """"""
         if self._boundaries_ is None:
             self._boundaries_ = _2nCSCG_RF2_MeshBoundaries(self)
         return self._boundaries_
 
     @property
     def IS(self):
+        """"""
         if self._IS_ is None:
             self._IS_ = _2nCSCG_Mesh_RF2_IS(self)
         return self._IS_
 
     @property
     def refinement(self):
+        """"""
         if self._refinement_ is None:
             self._refinement_ = _2nCSCG_Refinement(self)
         return self._refinement_
 
     @property
     def coordinates(self):
+        """"""
         if self._coordinates_ is None:
             self._coordinates_ = _2nCSCG_MeshRF2_Coordinates(self)
         return self._coordinates_
 
     @property
     def ids(self):
+        """"""
         if self._indices_data_storage_ is None:
             self._indices_data_storage_ = _2nCSCG_MeshRF2_IndicesDataStorage(self)
         return self._indices_data_storage_
-
-
-
-
 
 
 
@@ -107,7 +109,6 @@ if __name__ == '__main__':
     # mpiexec -n 4 python objects/nCSCG/rf2/_2d/mesh/main.py
     # from objects.nCSCG.rf2._2d.__tests__.Random.mesh import random_mesh_of_elements_around as rm2
     # mesh = rm2(100, refinement_intensity=0.5)
-
     from objects.nCSCG.rf2._2d.master import MeshGenerator
 
     mesh = MeshGenerator('rectangle', region_layout=[2,2])([3, 3], 2, EDM=None, show_info=True)

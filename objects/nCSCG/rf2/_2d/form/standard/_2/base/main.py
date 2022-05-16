@@ -2,21 +2,23 @@
 """
 @author: Yi Zhang
 @contact: zhangyi_aero@hotmail.com
-@time: 
+@time: 11:21 PM
 """
 import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from objects.nCSCG.rf2._2d.form.base import _2nCSCG_RF2_FormBase
+from objects.nCSCG.rf2._2d.form.standard.base.main import _2nCSCG_RF2_StandardFormBase
 
 
-
-class _2nCSCG_RF2_StandardFormBase(_2nCSCG_RF2_FormBase):
+class _2nCSCG_RF2_Standard2FormBase(_2nCSCG_RF2_StandardFormBase):
     """"""
+
     def __init__(self, mesh):
         """"""
-        super(_2nCSCG_RF2_StandardFormBase, self).__init__(mesh)
+        super(_2nCSCG_RF2_Standard2FormBase, self).__init__(mesh)
+        self._freeze_self_()
+
 
     #-------- must have methods ------------------------------------------------
     def ___Pr_check_func___(self):
@@ -28,10 +30,6 @@ class _2nCSCG_RF2_StandardFormBase(_2nCSCG_RF2_FormBase):
 
 
 
-
-
-
-
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/form/standard/base/main.py
+    # mpiexec -n 4 python 
     pass

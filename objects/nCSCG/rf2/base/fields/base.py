@@ -17,7 +17,7 @@ class nCSCG_FieldBase(FrozenClass):
     def __init__(self, mesh, ftype='standard', valid_time=None, name='scalar-field'):
         """"""
         self._func_ = None
-        self._ftype_ = None
+        self._ftype_ = None # not a typo, ftype will be set in ___PRIVATE_set_vt_to___
         self._mesh_ = mesh
         assert ftype in ("standard",), f"ftype={ftype} wrong." # allowed ftype.
         self.___PRIVATE_set_vt_to___(valid_time)
@@ -43,6 +43,10 @@ class nCSCG_FieldBase(FrozenClass):
     def ndim(self):
         return self.mesh.ndim
 
+    @property
+    def ___parameters___(self):
+        """Use to restore a continuous field. Will be useful for exact solutions."""
+        return None
 
     #----------- VALID TIME -----------------------------------------------------------------
     @property

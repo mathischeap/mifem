@@ -96,6 +96,7 @@ class _2dCSCG_Mesh_DO(FrozenOnly):
                         _sd_[Rn][i * I:(i + 1) * I, j * J:(j + 1) * J] = \
                             nda[ALL_element_global_numbering_[Rn][i, j]]
             _SD_ += (_sd_,)
+
         _SD_ = _SD_[0] if len(ndas) == 1 else _SD_
         return _SD_
 

@@ -93,12 +93,12 @@ class Homogeneous(_2nCSCG_MRF2_CooDistributionBase):
                     y_nodes = y_nodes[y_nodes <= ey]
 
                 if len(x_nodes) == 0:
-                    x_nodes = np.array([0,])
+                    x_nodes = np.array([])
                 else:
                     x_nodes = 2 * (x_nodes - ox) / delta - 1
 
                 if len(y_nodes) == 0:
-                    y_nodes = np.array([0,])
+                    y_nodes = np.array([])
                 else:
                     y_nodes = 2 * (y_nodes - oy) / delta - 1
 
