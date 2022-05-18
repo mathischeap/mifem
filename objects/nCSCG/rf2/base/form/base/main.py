@@ -15,12 +15,17 @@ from objects.nCSCG.rf2.base.form.base.TW.main import nCSCG_RF2_FormTW
 class nCSCG_RF2_FormBase(FrozenClass):
     """"""
 
-    def __init__(self, mesh):
+    def __init__(self, mesh, name):
         """"""
+        assert mesh.__class__.__name__ == '_2nCSCG_RF2_Mesh', f'mesh wrong.'
+        mesh.___ecosystem___ += (self,)
         self._mesh_ = mesh
+
         self._k_ = None
         self.___is_wrapped_in_ADF___ = False # change this when we wrap it into an ADF
         self.___define_parameters___ = None
+        self.standard_properties.___PRIVATE_add_tag___('_nCSCG_RF2_form')
+        self.standard_properties.name = name
 
         self._TW_ = None
         self._func_ = None
@@ -28,6 +33,10 @@ class nCSCG_RF2_FormBase(FrozenClass):
     @property
     def mesh(self):
         return self._mesh_
+
+    @property
+    def signature(self):
+        return self.mesh.signature
 
     @property
     def k(self):
@@ -46,7 +55,7 @@ class nCSCG_RF2_FormBase(FrozenClass):
         return self._TW_
 
     #-------- must have methods ------------------------------------------------
-    def ___Pr_check_func___(self):
+    def ___Pr_check_func___(self, func):
         raise NotImplementedError()
 
     @property

@@ -88,7 +88,7 @@ class _3nCSCG_MeshVisualizeMatplot(FrozenOnly):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 8 python objects/nCSCG/rf2/_3d/mesh/visualize/matplot.py
+    # mpiexec -n 8 python objects/nCSCG/rfT2/_3d/mesh/visualize/matplot.py
     from objects.nCSCG.rf2._3d.master import MeshGenerator
 
     mesh = MeshGenerator('crazy')([3, 3, 3], EDM=None)

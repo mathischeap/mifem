@@ -3,8 +3,8 @@ import sentry_sdk
 from root.config.main import seNtry_on
 if seNtry_on: sentry_sdk.init("https://79fb951c3ea7457c8c3f47c3dfb026ce@sentry.io/1458280")
 
-from screws.exceptions import StatisticError
-from screws.exceptions import ParametersError
+# from screws.exceptions import StatisticError
+# from screws.exceptions import ParametersError
 from screws.freeze.base import FrozenOnly
 
 
@@ -88,14 +88,14 @@ class StandardProperties(FrozenOnly):
         So, we can recover an object singly from its parameters.
         """
 
-        try:
-            if not hasattr(self.___obj___, '___parameters___'):
-                raise ParametersError
-        except ParametersError as PE:
-            if seNtry_on:
-                sentry_sdk.capture_exception(PE)
-            raise ParametersError(
-                " <Parameters> : %r has no ___parameters___ property" % self.___obj___)
+        # try:
+        #     if not hasattr(self.___obj___, '___parameters___'):
+        #         raise ParametersError
+        # except ParametersError as PE:
+        #     if seNtry_on:
+        #         sentry_sdk.capture_exception(PE)
+        #     raise ParametersError(
+        #         " <Parameters> : %r has no ___parameters___ property" % self.___obj___)
         return self.___obj___.___parameters___
 
     @property
@@ -107,14 +107,14 @@ class StandardProperties(FrozenOnly):
 
         :return:
         """
-        try:
-            if not hasattr(self.___obj___, '___statistic___'):
-                raise StatisticError
-        except StatisticError as SE:
-            if seNtry_on:
-                sentry_sdk.capture_exception(SE)
-            raise StatisticError(
-                " <Statistic> : %r has no ___statistic___ property" % self.___obj___)
+        # try:
+        #     if not hasattr(self.___obj___, '___statistic___'):
+        #         raise StatisticError
+        # except StatisticError as SE:
+        #     if seNtry_on:
+        #         sentry_sdk.capture_exception(SE)
+        #     raise StatisticError(
+        #         " <Statistic> : %r has no ___statistic___ property" % self.___obj___)
         return self.___obj___.___statistic___
 
     @property

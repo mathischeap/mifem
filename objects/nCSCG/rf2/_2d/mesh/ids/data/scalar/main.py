@@ -52,5 +52,5 @@ class _2nCSCG_MRF2_IDS_Scalar(_2nCSCG_MRF2_IDS_DataBase):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/mesh/its/data_tree.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/_2d/mesh/its/data_tree.py
     pass

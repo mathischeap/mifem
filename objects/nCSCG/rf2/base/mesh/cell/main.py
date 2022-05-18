@@ -51,5 +51,5 @@ class nCSCG_RF2_MeshCell(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/nCSCG/rf2/base/mesh/cell/main.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/base/mesh/cell/main.py
     pass

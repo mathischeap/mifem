@@ -10,7 +10,6 @@ if './' not in sys.path: sys.path.append('./')
 
 from objects.nCSCG.rf2.base.mesh.do.main import nCSCG_MeshDoBase
 from objects.nCSCG.rf2._2d.mesh.do.find import _2nCSCG_MeshDoFind
-from objects.nCSCG.rf2._2d.mesh.do.digest.main import _2nCSCG_MeshDigest
 from time import time
 from random import random
 
@@ -31,6 +30,8 @@ class _2nCSCG_MeshDo(nCSCG_MeshDoBase):
         for ind in self._mesh_:
             self._mesh_(ind)._frame_ = None
         self._mesh_._signature_ = time() + random()
+        for obj in self._mesh_.___ecosystem___:
+            obj.do.update()
         self.lock() # lock self after updating!
 
     @property
@@ -61,12 +62,12 @@ class _2nCSCG_MeshDo(nCSCG_MeshDoBase):
             for ind in indices:
                 self._mesh_(ind).do.dilute()
 
-    @property
-    def digest(self):
+    @staticmethod
+    def digest(refinement):
         """We digest a refinement object to refine the mesh accordingly."""
-        if self._digest_ is None:
-            self._digest_ = _2nCSCG_MeshDigest(self._mesh_)
-        return self._digest_
+        refinement.___Pr_apply___() # all checks will be done in the particular refinement.
+
+
 
 
 
@@ -75,7 +76,7 @@ class _2nCSCG_MeshDo(nCSCG_MeshDoBase):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/mesh/do/main.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/_2d/mesh/do/main.py
     from objects.nCSCG.rf2._2d.master import MeshGenerator
 
     mesh = MeshGenerator('crazy')([3, 3], 2, EDM='chaotic', show_info=True)

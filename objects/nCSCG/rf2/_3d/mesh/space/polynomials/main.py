@@ -67,6 +67,6 @@ class _3nCSCG_PolynomialSpace(_3nCSCG_SpaceBase):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/nCSCG/rf2/_3d/mesh/space/polynomials/main.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/_3d/mesh/space/polynomials/main.py
     from objects.nCSCG.rf2._3d.__tests__.Random.mesh import random_mesh_of_elements_around as rm3
     mesh = rm3(100, refinement_intensity=0.5)

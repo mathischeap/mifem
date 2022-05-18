@@ -24,5 +24,5 @@ class _2nCSCG_ChaoticCell(_2nCSCG_CellTypeWr2Metric_Base):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/mesh/cell/types_wrt_metric/chaotic.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/_2d/mesh/cell/types_wrt_metric/chaotic.py
     pass

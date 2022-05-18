@@ -152,5 +152,5 @@ class _2nCSCG_Segment(FrozenOnly):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/mesh/segments/segment/main.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/_2d/mesh/segments/segment/main.py
     pass

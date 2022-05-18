@@ -113,7 +113,7 @@ class _2nCSCG_RF2_MeshCell(nCSCG_RF2_MeshCell):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/mesh/cell/main.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/_2d/mesh/cell/main.py
     from objects.nCSCG.rf2._2d.master import MeshGenerator
 
     mesh = MeshGenerator('crazy')([2, 3], 2, EDM='chaotic', show_info=True)

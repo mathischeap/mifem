@@ -13,12 +13,13 @@ from objects.nCSCG.rf2.base.form.base.main import nCSCG_RF2_FormBase
 
 class _2nCSCG_RF2_FormBase(nCSCG_RF2_FormBase):
     """"""
-    def __init__(self, mesh):
-        super(_2nCSCG_RF2_FormBase, self).__init__(mesh)
+    def __init__(self, mesh, name):
+        super(_2nCSCG_RF2_FormBase, self).__init__(mesh, name)
+        self.standard_properties.___PRIVATE_add_tag___('_2nCSCG_RF2_form')
 
 
     #-------- must have methods ------------------------------------------------
-    def ___Pr_check_func___(self):
+    def ___Pr_check_func___(self, func):
         raise NotImplementedError()
 
     @property

@@ -29,5 +29,5 @@ class _2nCSCG_RF2_h_Refinement(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/refinement/h_/main.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/_2d/refinement/h_/main.py
     pass

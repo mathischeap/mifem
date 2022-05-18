@@ -17,16 +17,13 @@ class _2nCSCG_RF2_Standard1FormBase(_2nCSCG_RF2_StandardFormBase):
     def __init__(self, mesh):
         """"""
         super(_2nCSCG_RF2_Standard1FormBase, self).__init__(mesh)
-        self._freeze_self_()
+        self.standard_properties.___PRIVATE_add_tag___('_2nCSCG_RF2_standard_1_form')
 
 
     #-------- must have methods ------------------------------------------------
-    def ___Pr_check_func___(self):
+    def ___Pr_check_func___(self, func):
         raise NotImplementedError()
 
-    @property
-    def cochain(self):
-        raise NotImplementedError()
 
 
 

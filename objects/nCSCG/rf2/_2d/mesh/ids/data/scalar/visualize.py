@@ -90,8 +90,7 @@ class _2nCSCG_MeshIDS_Scalar_Visualize(FrozenOnly):
 
         """
         assert xy.__class__.__name__ == '_2nCSCG_MRF2_IDS_Vector' and \
-               xy.signature == self._scalar_.signature and \
-               xy.signature == self._scalar_.mesh.signature, \
+               xy.signature == self._scalar_.signature, \
             f"coordinates, value and mesh do not match."
 
         scalar = self._scalar_

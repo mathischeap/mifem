@@ -28,5 +28,3 @@ class OrthogonalElement(ElementTypeWr2MetricBase):
         Lx *= delta / 2
         Ly *= delta / 2
         return  _2nCSCG_OrthogonalCell(Lx, Ly)
-
-

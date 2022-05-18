@@ -50,7 +50,17 @@ class _2nCSCG_MeshCellSpace(FrozenOnly):
             self._do_ = _2nCSCG_MRF2_CellSpaceDo(self)
         return self._do_
 
+    @property
+    def nodes(self):
+        return self.body.nodes
 
+    @property
+    def GoN(self):
+        return self._cell_.mesh.space.GoN[self.N]
+
+    @property
+    def GoN_ravel(self):
+        return self._cell_.mesh.space.GoN_ravel[self.N]
 
 
 
@@ -61,7 +71,7 @@ class _2nCSCG_MeshCellSpace(FrozenOnly):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/mesh/cell/space/main.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/_2d/mesh/cell/space/main.py
     from objects.nCSCG.rf2._2d.__tests__.Random.mesh import random_mesh_of_elements_around as rm2
     mesh = rm2(100, refinement_intensity=0.5)
 

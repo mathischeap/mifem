@@ -62,5 +62,5 @@ class _3nCSCG_MeshDo(nCSCG_MeshDoBase):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/nCSCG/rf2/_3d/mesh/do/main.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/_3d/mesh/do/main.py
     pass

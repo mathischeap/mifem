@@ -22,5 +22,5 @@ class nCSCG_Historic(FrozenOnly):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python objects/nCSCG/rf2/base/mesh/historic/main.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/base/mesh/historic/main.py
     pass

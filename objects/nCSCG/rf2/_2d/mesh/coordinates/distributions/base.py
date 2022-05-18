@@ -17,7 +17,17 @@ class _2nCSCG_MRF2_CooDistributionBase(FrozenOnly):
     def __init__(self, mesh):
         """"""
         self._mesh_ = mesh
+        self._signature_ = mesh.signature
         self._distribution_ = None
+        self._ndim_ = None
+
+    @property
+    def ndim(self):
+        return self._ndim_
+
+    @property
+    def signature(self):
+        return self._signature_
 
     @property
     def distribution(self):

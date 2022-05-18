@@ -60,6 +60,9 @@ class _2nCSCG_MRF2_IDS_DataBase(FrozenOnly):
     def _isfull_(self):
         return self._full_
 
+    def __getitem__(self, item):
+        return self._data_[item]
+
 
 if __name__ == "__main__":
     # mpiexec -n 4 python 

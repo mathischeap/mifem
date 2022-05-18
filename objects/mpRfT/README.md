@@ -1,0 +1,1 @@
+Mimetic Polynomials on non-conforming Structured Curvilinear Grid of refining factor equal to 2.

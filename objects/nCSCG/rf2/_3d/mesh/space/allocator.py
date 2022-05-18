@@ -43,5 +43,5 @@ class _3nCSCG_SpaceAllocator(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/space/allocator.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/_2d/space/allocator.py
     pass

@@ -49,8 +49,7 @@ class _2nCSCG_MeshIDS_Vector_Visualize(FrozenOnly):
     def matplot(self, xy, plot_type='contourf',  **kwargs):
         """"""
         assert xy.__class__.__name__ == '_2nCSCG_MRF2_IDS_Vector' and \
-               xy.signature == self._vector_.signature and \
-               xy.signature == self._vector_.mesh.signature, \
+               xy.signature == self._vector_.signature, \
             f"coordinates, value and mesh do not match."
 
         if plot_type == 'quiver':

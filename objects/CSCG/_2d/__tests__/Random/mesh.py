@@ -154,7 +154,7 @@ def random_mesh_of_elements_around(elements_num,
         if elements_num == 1:
             factor1 = 1
         else:
-            factor1 = random.randint(1, int(elements_num))
+            factor1 = random.randint(int(0.666 * elements_num), int(elements_num))
 
 
         #------ (4) EDIT :: special requests for particular meshes ---------------------------------
@@ -177,7 +177,7 @@ def random_mesh_of_elements_around(elements_num,
 
         if a > 0.5: # 50% chance to use non-uniform element_layout
             for f in FFF:
-                element_layout.append([random.randint((f+1), 6*(f+1)) for _ in range(f)])
+                element_layout.append([random.randint((f+1), 2*(f+1)) for _ in range(f)])
         else:  # uniform element_layout
             element_layout = FFF
 

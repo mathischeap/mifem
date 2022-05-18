@@ -10,6 +10,7 @@ if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.base import FrozenOnly
 from objects.nCSCG.rf2._2d.mesh.coordinates.distributions.homogeneous import Homogeneous
+from objects.nCSCG.rf2._2d.mesh.coordinates.distributions.Gauss import Gauss
 
 
 
@@ -25,6 +26,10 @@ class _2nCSCG_MeshRF2_Coordinates(FrozenOnly):
     @property
     def homogeneous(self):
         return Homogeneous(self._mesh_)
+
+    @property
+    def Gauss(self):
+        return Gauss(self._mesh_)
 
 
 

@@ -51,7 +51,7 @@ class BaseCellInternalSegments(FrozenOnly):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/mesh/base_cells/internal_segments/main.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/_2d/mesh/base_cells/internal_segments/main.py
     from objects.nCSCG.rf2._2d.__tests__.Random.mesh import random_mesh_of_elements_around as rm2
     mesh = rm2(100, refinement_intensity=0.5)
 

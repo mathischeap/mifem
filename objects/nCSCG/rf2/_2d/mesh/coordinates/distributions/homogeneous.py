@@ -6,7 +6,7 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('../')
+if './' not in sys.path: sys.path.append('./')
 import numpy as np
 
 from objects.nCSCG.rf2._2d.mesh.coordinates.distributions.base import _2nCSCG_MRF2_CooDistributionBase
@@ -19,8 +19,6 @@ class Homogeneous(_2nCSCG_MRF2_CooDistributionBase):
         """"""
         super(Homogeneous, self).__init__(mesh)
         self._distribution_ = 'homogeneous'
-        self._f_ = None
-        self._ndim_ = None
         self._1d_nodes = None
         self._2d_nodes = None
         self._coo_ = dict()
@@ -40,8 +38,8 @@ class Homogeneous(_2nCSCG_MRF2_CooDistributionBase):
         -------
 
         """
+        assert self.signature == self._mesh_.signature, f"signature dis-match"
         assert f > 0 and f % 1 == 0, f"f={f} is wrong."
-        self._f_ = f
         assert ndim in (1, 2), f"ndim={ndim} is wrong, must be in (1, 2)."
         self._ndim_ = ndim
 
@@ -62,12 +60,20 @@ class Homogeneous(_2nCSCG_MRF2_CooDistributionBase):
         -------
 
         """
-        level = len(indices) - 1
-        if level == 0:
-            if self._ndim_ == 1:
-                return self._1d_nodes, self._1d_nodes
+
+        level = len(indices)
+        if level == 1:
+
+            if 0 in self._coo_:
+                pass
             else:
-                return self._2d_nodes
+                if self._ndim_ == 1:
+                    self._coo_[0] = self._1d_nodes, self._1d_nodes
+                else:
+                    self._coo_[0] = self._2d_nodes
+
+            return self._coo_[0]
+
         else:
             ind = indices[1:]
             if ind in self._coo_:

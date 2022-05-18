@@ -57,7 +57,7 @@ class _3nCSCG_RF2_Mesh(nCSCG_RF2_MeshBase):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/nCSCG/rf2/_3d/mesh/main.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/_3d/mesh/main.py
     from objects.nCSCG.rf2._3d.master import MeshGenerator
 
     mesh = MeshGenerator('crazy')([3, 3, 3], 2, EDM='chaotic', show_info=True)

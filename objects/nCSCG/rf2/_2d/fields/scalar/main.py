@@ -101,7 +101,7 @@ class _2nCSCG_RF2_ScalarField(_2nCSCG_FieldBase):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/fields/scalar/main.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/_2d/fields/scalar/main.py
     from objects.nCSCG.rf2._2d.__tests__.Random.mesh import random_mesh_of_elements_around as rm2
 
     mesh = rm2(100)
@@ -110,5 +110,8 @@ if __name__ == "__main__":
 
     s = _2nCSCG_RF2_ScalarField(mesh, p)
     s.current_time = 0
+
+    mesh.do.unlock()
+    mesh.do.lock()
 
     s.visualize()

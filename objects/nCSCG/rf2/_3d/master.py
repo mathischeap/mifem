@@ -122,5 +122,5 @@ class MeshGenerator(FrozenOnly):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 8 python objects/nCSCG/rf2/_3d/master.py
+    # mpiexec -n 8 python objects/nCSCG/rfT2/_3d/master.py
     mesh = MeshGenerator('crazy')([3, 3, 3], 2, EDM=None, show_info=True)

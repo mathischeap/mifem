@@ -25,5 +25,5 @@ class _3nCSCG_SpaceBase(nCSCG_SpaceBase):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/space/base.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/_2d/space/base.py
     pass

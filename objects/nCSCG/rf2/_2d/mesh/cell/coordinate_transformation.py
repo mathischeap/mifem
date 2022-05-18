@@ -54,10 +54,10 @@ class _2nCSCG_CellCT(FrozenOnly):
         S = np.linspace(-1 * zoom, 1 * zoom, density)
 
         data = np.array([
-        np.array(self.mapping(S, M)),
-        np.array(self.mapping(S, O)),
-        np.array(self.mapping(O, S)),
-        np.array(self.mapping(M, S)),
+        np.array(self.mapping(M, S)), # U
+        np.array(self.mapping(O, S)), # D
+        np.array(self.mapping(S, M)), # L
+        np.array(self.mapping(S, O)), # R
         ])
 
         return data
@@ -84,6 +84,28 @@ class _2nCSCG_CellCT(FrozenOnly):
         et = o[1] + (et + 1) * d / 2
         return self._me_ct_.mapping(xi, et)
 
+    def Jacobian(self, xi, et):
+        """
+
+        Parameters
+        ----------
+        xi :
+            Any dimension, in [-1,1]. xi, et same shape.
+        et :
+            Any dimension, in [-1,1]. xi, et same shape.
+
+        Returns
+        -------
+
+        """
+        if self._cell_.level == 0:
+            return self._me_ct_.Jacobian(xi, et)
+
+        o, d = self.origin_and_delta
+        xi = o[0] + (xi + 1) * d / 2
+        et = o[1] + (et + 1) * d / 2
+        return self._me_ct_.Jacobian(xi, et)
+
 
 
 
@@ -91,7 +113,7 @@ class _2nCSCG_CellCT(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/mesh/cell/coordinate_transformation.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/_2d/mesh/cell/coordinate_transformation.py
     from objects.nCSCG.rf2._2d.master import MeshGenerator
 
     mesh = MeshGenerator('crazy')([3, 3], 2, EDM=None)

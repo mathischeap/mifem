@@ -106,8 +106,8 @@ class _2nCSCG_RF2_Mesh(nCSCG_RF2_MeshBase):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/mesh/main.py
-    # from objects.nCSCG.rf2._2d.__tests__.Random.mesh import random_mesh_of_elements_around as rm2
+    # mpiexec -n 4 python objects/nCSCG/rfT2/_2d/mesh/main.py
+    # from objects.nCSCG.rfT2._2d.__tests__.Random.mesh import random_mesh_of_elements_around as rm2
     # mesh = rm2(100, refinement_intensity=0.5)
     from objects.nCSCG.rf2._2d.master import MeshGenerator
 

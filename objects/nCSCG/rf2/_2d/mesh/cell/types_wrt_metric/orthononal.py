@@ -17,10 +17,14 @@ class _2nCSCG_OrthogonalCell(_2nCSCG_CellTypeWr2Metric_Base):
     transformation is linear, 3) its edges are parallel with axes.
     """
     def __init__(self, Lx, Ly):
+
+        Lx = '%.4f' % Lx
+        Ly = '%.4f' % Ly
+
         if Lx == Ly:
-            self._mark_ = 'Orth.{}'.format('%.4f' % Lx)
+            self._mark_ = 'Orth.{}'.format(Lx)
         else:
-            self._mark_ = 'Orth.x{}y{}'.format('%.4f' % Lx, '%.4f' % Ly)
+            self._mark_ = 'Orth.x{}y{}'.format(Lx, Ly)
         self._freeze_self_()
 
 

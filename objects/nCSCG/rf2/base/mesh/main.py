@@ -28,12 +28,14 @@ class nCSCG_RF2_MeshBase(FrozenClass):
         self.___base_mesh_cells___ = None
         self._space_ = None # will be set when we set the mesh of the space
         self._historic_ = None
-        self._locker_ = True
+        self._locker_ = False # when initializing, it is unlocked.
         self._signature_ = None # will be updated when updating mesh
+        self.___ecosystem___  = tuple() # these objects are built upon this mesh.
 
     @property
     def signature(self):
-        """will be updated when updating mesh"""
+        """will be updated when updating mesh; may be different in different cores."""
+        assert self._locker_, f"Can only access signature when the mesh is locked."
         return self._signature_
 
     def __call__(self, indices, dynamic=False):
@@ -159,9 +161,9 @@ class nCSCG_RF2_MeshBase(FrozenClass):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/nCSCG/rf2/base/mesh/main.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/base/mesh/main.py
     from  objects.nCSCG.rf2._2d.__tests__.Random.mesh import random_mesh_of_elements_around as rm2
-    # # from  objects.nCSCG.rf2._3d.__tests__.Random.mesh import random_mesh_of_elements_around as rm3
+    # # from  objects.nCSCG.rfT2._3d.__tests__.Random.mesh import random_mesh_of_elements_around as rm3
     # #
     mesh2 = rm2(100)
     # # mesh3 = rm3(200)

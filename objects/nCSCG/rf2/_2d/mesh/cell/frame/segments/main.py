@@ -48,5 +48,5 @@ class FrameSegments(FrozenOnly):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/mesh/cell/frame/segments/main.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/_2d/mesh/cell/frame/segments/main.py
     pass

@@ -174,7 +174,7 @@ class _2dCSCG_MeshLv0TraceElementsDo(FrozenOnly):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/mesh/Lv0_trace/elements/do.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/_2d/mesh/Lv0_trace/elements/do.py
     from objects.nCSCG.rf2._2d.__tests__.Random.mesh import random_mesh_of_elements_around as rm2
     mesh = rm2(1000, refinement_intensity=0.8)
 

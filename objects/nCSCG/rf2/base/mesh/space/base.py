@@ -13,14 +13,14 @@ from screws.freeze.base import FrozenOnly
 
 class nCSCG_SpaceBase(FrozenOnly):
     """"""
-    def __init__(self, N):
+    def __init__(self, dN):
         """"""
-        assert isinstance(N, int) and N > 0, f"N={N} wrong, must be a positive integer."
+        assert isinstance(dN, int) and dN > 0, f"dN={dN} wrong, must be a positive integer."
         self._PRM = None # parameters; for restoring the space.
         self.___pool___ = dict() # the pool of all useful function spaces. keys are their degrees.
         self.___space_class___ = None # the cscg space class. All spaces will be of this type.
 
-        self._dN_ = N # default N
+        self._dN_ = dN # default N
         self._ndim_ = None
         self._mesh_ = None
 
@@ -66,7 +66,6 @@ class nCSCG_SpaceBase(FrozenOnly):
 
 
 
-
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/nCSCG/rf2/base/space/main.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/base/space/main.py
     pass

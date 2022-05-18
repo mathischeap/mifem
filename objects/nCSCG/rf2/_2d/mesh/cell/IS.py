@@ -116,5 +116,5 @@ class _2nCSCG_CellIS(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/mesh/cell/IS.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/_2d/mesh/cell/IS.py
     pass

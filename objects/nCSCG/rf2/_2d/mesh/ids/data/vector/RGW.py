@@ -60,8 +60,6 @@ class _2nCSCG_MeshIDS_Vector_ReGionW(FrozenOnly):
         else:
             self._RGW_ = None
 
-        #
-
     def __getitem__(self, rn):
         assert rAnk == mAster_rank, f"please access RGW only through master core."
         return self._RGW_[rn]

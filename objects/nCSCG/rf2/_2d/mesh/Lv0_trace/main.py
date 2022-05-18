@@ -39,7 +39,7 @@ class _2nCSCG_MeshLv0Trace(FrozenOnly):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/mesh/Lv0_trace/main.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/_2d/mesh/Lv0_trace/main.py
 
     from root.read.main import read
     mesh = read('test_mesh.mi')

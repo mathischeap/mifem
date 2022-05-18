@@ -63,7 +63,6 @@ def random_mesh_of_elements_around(elements_num,
         num_elements = int(num_elements * refinement_intensity)
         refinement_level_num[l] = num_elements
 
-    mesh.do.unlock()
     refine_pool = cscg.elements.indices
     for l in refinement_level_num:
         if refinement_level_num[l] == 0: break # no need to do further refinement.
@@ -79,13 +78,13 @@ def random_mesh_of_elements_around(elements_num,
                 sub_cell = cell.sub_cells[j]
                 refine_pool.append(sub_cell.indices)
 
-    mesh.do.update()
+    mesh.do.update() # this will lock the mesh.
     return mesh
 
 
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/__tests__/Random/mesh.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/_2d/__tests__/Random/mesh.py
     mesh = random_mesh_of_elements_around(300)
     mesh.visualize()

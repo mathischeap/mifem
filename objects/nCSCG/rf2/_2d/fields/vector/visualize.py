@@ -69,7 +69,7 @@ class _2nCSCG_RF2_VectorVisualize(FrozenOnly):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python objects/nCSCG/rf2/_2d/fields/vector/visualize.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/_2d/fields/vector/visualize.py
     from objects.nCSCG.rf2._2d.__tests__.Random.mesh import random_mesh_of_elements_around as rm2
     from objects.nCSCG.rf2._2d.fields.vector.main import _2nCSCG_RF2_VectorField
 

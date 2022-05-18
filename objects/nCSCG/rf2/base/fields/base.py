@@ -21,8 +21,7 @@ class nCSCG_FieldBase(FrozenClass):
         self._mesh_ = mesh
         assert ftype in ("standard",), f"ftype={ftype} wrong." # allowed ftype.
         self.___PRIVATE_set_vt_to___(valid_time)
-        self.standard_properties.___PRIVATE_add_tag___('nCSCG_RF2_Field')
-        self.standard_properties.name = name
+        self._name_ = name
         self._current_time_ = None
 
     @property
@@ -46,7 +45,7 @@ class nCSCG_FieldBase(FrozenClass):
     @property
     def ___parameters___(self):
         """Use to restore a continuous field. Will be useful for exact solutions."""
-        return None
+        raise NotImplementedError()
 
     #----------- VALID TIME -----------------------------------------------------------------
     @property
@@ -132,5 +131,5 @@ class nCSCG_FieldBase(FrozenClass):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python objects/nCSCG/rf2/base/fields/base.py
+    # mpiexec -n 4 python objects/nCSCG/rfT2/base/fields/base.py
     pass

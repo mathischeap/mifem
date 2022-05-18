@@ -73,7 +73,7 @@ class MeshGenerator(FrozenOnly):
 
         #------- use the 2d cscg base mesh to make the 2d nCSCG RF2 mesh -----------------------
         mesh = _2nCSCG_RF2_Mesh(cscg, dN, space_type='polynomials', **space_kwargs)
-
+        mesh.do.update() # update, lock.
         return mesh
 
     @classmethod
@@ -108,5 +108,5 @@ class MeshGenerator(FrozenOnly):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 8 python objects/nCSCG/rf2/_2d/master.py
+    # mpiexec -n 8 python objects/nCSCG/rfT2/_2d/master.py
     mesh = MeshGenerator('rectangle')([3,3], 2, show_info=True)
