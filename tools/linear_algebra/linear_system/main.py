@@ -46,13 +46,6 @@ class LinearSystem(FrozenClass):
         self._A_ = A
         self._b_ = b
 
-        # noinspection PyUnresolvedReferences
-        self._local_distribution_ = [ self._GMr_.local_dofs_distribution,
-                                      self._GMc_.local_dofs_distribution ]
-
-        assert A.bmat_shape[0] == len(self._local_distribution_[0]), "bmat_shape dis-match GMr shape."
-        assert A.bmat_shape[1] == len(self._local_distribution_[1]), "bmat_shape dis-match GMc shape."
-
         self._customize_ = ___LinearSystem_Customize___(self)
         self._condition_ = ___LinearSystem_Condition___(self)
         self._solve_ = ___LinearSystem_Solve___(self)
@@ -100,24 +93,9 @@ class LinearSystem(FrozenClass):
         return self._GMc_
 
     @property
-    def local_distribution(self):
-        """The local num of dofs of the variables compositing A.
-        For example, if A = ([E, F], [C, D]), and
-        self.local_distribution = [[29, 6], [29, 6]],
-        then, locally, E is of shape (29, 29), F is of shape (19, 6) and so on for C and D.
-
-        """
-        return self._local_distribution_
-
-    @property
     def block_shape(self):
         """Return (m,n). The A is m by n block-wise."""
         return self._A_.bmat_shape
-
-    @property
-    def local_shape(self):
-        """Return (a, b): A[i] locally in each mesh element is a sparse matrix of shape = (a, b)."""
-        return self._A_.shape[1:]
 
     @property
     def GLOBAL_shape(self):

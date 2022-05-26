@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """The assembler for the EWC sparse matrix."""
 import numpy as np
 from scipy.sparse import csr_matrix

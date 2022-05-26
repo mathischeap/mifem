@@ -10,6 +10,9 @@ from objects.mpRfT.base.mesh.cell import mpRfT_Mesh_Cell_Base
 from objects.mpRfT._2d.mesh.cell.coordinate_transformation import mpRfT2_Mesh_Cell_CT
 from objects.mpRfT._2d.mesh.cell.do import mpRfT2_Mesh_Cell_Do
 from objects.mpRfT._2d.mesh.cell.IS import mpRfT2_Mesh_Cell_IS
+from objects.mpRfT._2d.mesh.cell.frame.main import mpFfT2_CellFrame
+
+
 
 
 class mpRfT2_Mesh_Cell(mpRfT_Mesh_Cell_Base):
@@ -22,6 +25,11 @@ class mpRfT2_Mesh_Cell(mpRfT_Mesh_Cell_Base):
         self._IS_ = None
         self._type_wrt_metric_ = None
         self._N_ = None # CANNOT set to be dN of the mesh.
+        self._space_ = None
+        self._frame_ = None
+        self.___indices_metric_N_key___ = None
+        self.___metric_N_key___ = None
+        self.___N_key___ = None
         self._freeze_self_()
 
     def __getitem__(self, indices):
@@ -48,7 +56,7 @@ class mpRfT2_Mesh_Cell(mpRfT_Mesh_Cell_Base):
         if self.___isroot___: # I am a root cell.
             yield self.indices
         else: # I have sub-cells, go through all sub-root-cells.
-            for i in range(4):
+            for i in range(4): # 8 for 3d
                 sub_cell = self.sub_cells[i]
                 for j in sub_cell:
                     yield j
@@ -77,19 +85,59 @@ class mpRfT2_Mesh_Cell(mpRfT_Mesh_Cell_Base):
         if self._type_wrt_metric_ is None:
             ELE_TYPE = self.mesh.cscg.elements[self.indices[0]].type_wrt_metric
             self._type_wrt_metric_ = \
-                ELE_TYPE.___CLASSIFY_2nCSCG_RF2_CELL_of_origin_and_delta___(
+                ELE_TYPE.___CLASSIFY_mpRfT2_CELL_of_origin_and_delta___(
                     self.coordinate_transformation.origin_and_delta)
         return self._type_wrt_metric_
+
+    @property
+    def __Pr_indices_metric_N_key___(self):
+        if self.___indices_metric_N_key___ is None:
+            if isinstance(self.type_wrt_metric.mark, int):
+                self.___indices_metric_N_key___ = str(self.type_wrt_metric.mark)
+            else:
+                if '-' in self.__repr__():
+                    self.___indices_metric_N_key___ = self.type_wrt_metric.mark + str(self.N) + self.__repr__().split('-')[1]
+                else:
+                    self.___indices_metric_N_key___ = self.type_wrt_metric.mark + str(self.N)
+
+        return self.___indices_metric_N_key___
+
+    @property
+    def ___Pr_metric_N_key___(self):
+        if self.___metric_N_key___ is None:
+            if isinstance(self.type_wrt_metric.mark, int):
+                self.___metric_N_key___ = str(self.type_wrt_metric.mark)
+            else:
+                self.___metric_N_key___ = self.type_wrt_metric.mark + str(self.N)
+        return self.___metric_N_key___
+
+    @property
+    def ___Pr_N_key___(self):
+        if self.___N_key___ is None:
+            self.___N_key___ = str(self.N)
+        return self.___N_key___
 
     @property
     def N(self):
         """"""
         return self._N_
 
+    @property
+    def space(self):
+        if self._space_ is None:
+            self._space_ = self.mesh.space[self.N]
+        return self._space_
+
+    @property
+    def frame(self):
+        if self._frame_ is None:
+            self._frame_ = mpFfT2_CellFrame(self)
+        return self._frame_
+
 
 
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/nCSCG/rfT2/_2d/mesh/cell/main.py
+    # mpiexec -n 4 python objects/mpRfT/_2d/mesh/cell/main.py
     pass

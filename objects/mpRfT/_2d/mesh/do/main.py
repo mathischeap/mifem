@@ -26,7 +26,10 @@ class mpRfT2_Mesh_Do(FrozenOnly):
             self._find_ = mpRfT2_Mesh_Do_Find(self._mesh_)
         return self._find_
 
-
+    def evolve(self):
+        """Applying all the refinements to the cscg mesh to make a new mpRfT2 mesh."""
+        rfd = self._mesh_.refinements.future.rfd
+        return self._mesh_.__class__(self._mesh_.cscg, self._mesh_.dN, rfd)
 
 
 
@@ -36,14 +39,5 @@ class mpRfT2_Mesh_Do(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/nCSCG/rfT2/_2d/mesh/do/main.py
-    from objects.nCSCG.rf2._2d.master import MeshGenerator
-
-    mesh = MeshGenerator('crazy')([3, 3], 2, EDM='chaotic', show_info=True)
-    mesh.do.unlock()
-
-    if 0 in mesh.cscg.elements:
-        c0 = mesh(0)
-        c0.do.refine()
-
-    mesh.do.update()
+    # mpiexec -n 4 python objects/mpRfT/_2d/mesh/do/main.py
+    pass

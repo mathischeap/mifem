@@ -96,9 +96,6 @@ class _2dCSCG_Mesh_ECT(FrozenOnly):
 
 
 
-
-
-
     def Jacobian(self, *evaluationPoints, J=None):
         """Determinant of the Jacobian matrix."""
         if J is None:
@@ -115,8 +112,6 @@ class _2dCSCG_Mesh_ECT(FrozenOnly):
         if detJ is None:
             detJ = self.Jacobian(*evaluationPoints)
         return detJ ** 2
-
-
 
     def inverse_Jacobian_matrix(self, *evaluationPoints, J=None):
         """The inverse Jacobian matrix. """
@@ -137,8 +132,6 @@ class _2dCSCG_Mesh_ECT(FrozenOnly):
         if iJ is None:
             iJ = self.inverse_Jacobian_matrix(*evaluationPoints)
         return iJ[0][0]*iJ[1][1] - iJ[0][1]*iJ[1][0]
-
-
 
     def metric_matrix(self, *evaluationPoints, J=None):
         """

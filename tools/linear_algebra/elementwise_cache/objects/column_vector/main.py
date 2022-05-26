@@ -1,10 +1,9 @@
-
+# -*- coding: utf-8 -*-
 
 
 import types
 from screws.freeze.main import FrozenOnly
 from scipy import sparse as spspa
-from root.config.main import *
 from tools.linear_algebra.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
 from tools.linear_algebra.data_structures.global_matrix.main import GlobalVector
 
@@ -167,7 +166,6 @@ class EWC_ColumnVector(FrozenOnly):
         self.___repeat_CK___ = ''
         self._con_shape_ = con_shape
         self._customize_ = SpaVec_Customize(self)
-        self._shape_ = None
         self._assembler_ = None
         self._adjust_ = None
         self._blocks_ = None
@@ -215,9 +213,6 @@ class EWC_ColumnVector(FrozenOnly):
 
             gathering_matrix = Chain_Gathering_Matrix(cgm0)
         self._gathering_matrix_ = gathering_matrix
-
-        if self._shape_ is not None:
-            assert self._gathering_matrix_.shape + (1,) == self._shape_
 
     @property
     def adjust(self):
@@ -320,48 +315,6 @@ class EWC_ColumnVector(FrozenOnly):
         return self._con_shape_
 
     @property
-    def shape(self):
-        """The local shape : == (len(self),) + np.shape(self[i]). So the
-        first value refer to how many local mesh elements. The second
-        value refers to how many entries in the local vector. The third
-        one must be 1.
-
-        :return: A tuple of 3 integers. The third integer must be 1
-        """
-        if self._shape_ is not None: return self._shape_
-
-        if self.gathering_matrix is not None:
-            self._shape_ = self.gathering_matrix.shape + (1,)
-        else:
-            shape = None
-            for i in self:
-                Vi = self[i]
-                shape = np.shape(Vi)
-                break
-
-            shape = cOmm.gather(shape, root=mAster_rank)
-            _s_ = None
-            if rAnk == mAster_rank:
-                for s in shape:
-                    if s is None:
-                        pass
-                    else:
-                        if _s_ is None:
-                            _s_ = s
-                        else:
-                            assert _s_ == s
-                assert _s_ is not None, f"we must have found a _s_."
-                assert _s_[1] == 1, f"EWC vector must of shape (.,1)."
-            else:
-                pass
-
-            _s_ = cOmm.bcast(_s_, root=mAster_rank)
-
-            self._shape_ = (len(self),) + _s_
-
-        return self._shape_
-
-    @property
     def customizations(self):
         """All the customizations that have been added to me."""
         return self.customize._customizations_
@@ -376,7 +329,6 @@ class EWC_ColumnVector(FrozenOnly):
     def __sub__(self, other):
         """self - other"""
         assert other.__class__.__name__ == 'EWC_ColumnVector'
-        assert self._elements_._mesh_ == other._elements_._mesh_
         DKC = ___CV_SUB___(self, other)
         # noinspection PyTypeChecker
         return EWC_ColumnVector(self._elements_, DKC, DKC.__KG_call__)
@@ -384,7 +336,6 @@ class EWC_ColumnVector(FrozenOnly):
     def __add__(self, other):
         """self + other"""
         assert other.__class__.__name__ == 'EWC_ColumnVector'
-        assert self._elements_._mesh_ == other._elements_._mesh_
         DKC = ___CV_ADD___(self, other)
         # noinspection PyTypeChecker
         return EWC_ColumnVector(self._elements_, DKC, DKC.__KG_call__)

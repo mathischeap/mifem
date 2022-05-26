@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from screws.decorators.accepts import accepts
 from screws.freeze.main import FrozenOnly
 

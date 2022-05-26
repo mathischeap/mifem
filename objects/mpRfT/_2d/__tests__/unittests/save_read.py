@@ -20,7 +20,7 @@ from root.save import save
 def test_mpRfT2_save_read():
     """"""
     #-------- mesh -----------------------------------------------------------------------
-    load = randint(10, 100)
+    load = randint(10, 500)
     miprint(f"-sr- [test_mpRfT2_save_read] 2d @ load={load}... ", flush=True)
     mesh2 = rm(load)
     save(mesh2, 'mpRfT2_mesh.mi')

@@ -2,7 +2,7 @@
 
 import numpy as np
 from objects.CSCG._2d.mesh.elements.element.types_wrt_metric.base import ElementTypeWr2MetricBase
-from objects.nCSCG.rf2._2d.mesh.cell.types_wrt_metric.parallelogram import _2nCSCG_ParallelogramCell
+from objects.mpRfT._2d.mesh.cell.types_wrt_metric.parallelogram import mpRfT2_ParallelogramCell
 
 from screws.decorators.accepts import accepts
 
@@ -27,10 +27,10 @@ class ParallelogramElement(ElementTypeWr2MetricBase):
         self._freeze_self_()
 
 
-    def ___CLASSIFY_2nCSCG_RF2_CELL_of_origin_and_delta___(self, origin_and_delta):
+    def ___CLASSIFY_mpRfT2_CELL_of_origin_and_delta___(self, origin_and_delta):
         """"""
         angleL, L, L_angle_U, U = self._data_
         delta = origin_and_delta[1]
         L *= delta / 2
         U *= delta / 2
-        return _2nCSCG_ParallelogramCell(angleL, L, L_angle_U, U)
+        return mpRfT2_ParallelogramCell(angleL, L, L_angle_U, U)

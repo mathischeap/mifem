@@ -11,8 +11,12 @@ from functools import partial
 from types import FunctionType, MethodType
 from screws.functions.time_plus_2d_space._0_ import _0t_
 
+from objects.mpRfT._2d.cf.base import mpRfT2_ContinuousField
+from objects.mpRfT._2d.cf.scalar.reconstruct import mpRfT2_ScalarReconstruct
+from objects.mpRfT._2d.cf.scalar.visualize import mpRfT2_ScalarVisualize
 
-from  objects.mpRfT._2d.cf.base import mpRfT2_ContinuousField
+
+
 
 
 class mpRfT2_Scalar(mpRfT2_ContinuousField):
@@ -79,20 +83,35 @@ class mpRfT2_Scalar(mpRfT2_ContinuousField):
     def ___parameters___(self):
         return None
 
+    #------------------------------- personal -------------------------------------------
+    @property
+    def reconstruct(self):
+        if self._reconstruct_ is None:
+            self._reconstruct_ = mpRfT2_ScalarReconstruct(self)
+        return self._reconstruct_
+
+    @property
+    def visualize(self):
+        if self._visualize_ is None:
+            self._visualize_ = mpRfT2_ScalarVisualize(self)
+        return self._visualize_
+
+
+
+
 
 
 
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/mpRfT/_2d/cf/scalar/main.py
     from __init__ import rfT2
+    import numpy as np
 
-    mesh = rfT2.rm(100)
+    mesh = rfT2.rm(50)
 
-    def p(t, x, y): return x + y + t
+    def p(t, x, y): return np.sin(2*np.pi*x) * np.cos(2 * np.pi*y)  + t
 
     s = mpRfT2_Scalar(mesh, p)
     s.current_time = 0
 
-    coo = mesh.coordinates.homogeneous(10, ndim=2)
-
-    # xy, v = s.reconstruct(coo)
+    s.visualize()

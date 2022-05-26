@@ -23,7 +23,7 @@ def make_a_video_from_images_in_folder(image_folder, video_name=None, duration=5
     if rAnk != mAster_rank: return
 
 
-    image_file_extensions = ('png', 'jpg', 'jpeg')
+    image_file_extensions = ('png', 'jpg', 'jpeg', 'pdf')
     all_files = os.listdir(image_folder)
 
     if video_name is None:

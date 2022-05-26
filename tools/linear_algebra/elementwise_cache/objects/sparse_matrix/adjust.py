@@ -82,7 +82,6 @@ class SpaMat_Adjust(FrozenOnly):
 
         return SPA_MAT
 
-
     @accepts('self', ('PartialDofs', 'PartialCochain'))
     def clear_rows_according_to_CSCG_partial_dofs(
         self, pds, interpreted_as='local_dofs'):

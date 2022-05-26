@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from screws.freeze.main import FrozenOnly
 from screws.decorators.accepts import accepts
@@ -101,6 +101,8 @@ class SpaMat_Customize(FrozenOnly):
         return RETURN
 
 
+
+
     @accepts('self', (int, float, 'int32', 'int64'))
     def clear_global_row(self, r):
         """Make the #r row of the global matrix (assemble self to get the global matrix) to be all zero.
@@ -143,6 +145,7 @@ class SpaMat_Customize(FrozenOnly):
         assert not self._spa_mat_.do.___locker___, f"the assembled matrix is locked!"
         assert not self._spa_mat_.do.___sparsity_locker___, f"the sparsity is locked!"
         raise NotImplementedError()
+
 
 
     @accepts('self',
@@ -256,6 +259,8 @@ class SpaMat_Customize(FrozenOnly):
                     self.___customizations___[e].append(('salv', ([i, j], 0)))
 
 
+
+
     @accepts('self', (int, float, 'int32', 'int64'))
     def identify_global_row(self, r):
         """Let M be the assembled matrix. We want to make M[r,:] = 0 except M[r,r] = 1.
@@ -282,6 +287,10 @@ class SpaMat_Customize(FrozenOnly):
         assert not self._spa_mat_.do.___sparsity_locker___, f"the sparsity is locked!"
 
         raise NotImplementedError()
+
+
+
+
 
 
     @accepts('self',
@@ -330,7 +339,7 @@ class SpaMat_Customize(FrozenOnly):
         if interpreted_as == 'local_dofs':
 
             GM = self._spa_mat_.gathering_matrices[0]
-            LDR = GM.local_dofs_ranges[i]
+            LDR = GM.___Pr_regular__local_dofs_ranges___[i]
             start = LDR.start
 
             LDF = pds.interpreted_as.local_dofs
@@ -411,15 +420,15 @@ class SpaMat_Customize(FrozenOnly):
         if interpreted_as == 'local_dofs':
 
             GM = self._spa_mat_.gathering_matrices
-            LDR_row = GM[0].local_dofs_ranges[i]
-            LDR_col = GM[1].local_dofs_ranges[j]
+            LDR_row = GM[0].___Pr_regular__local_dofs_ranges___[i]
+            LDR_col = GM[1].___Pr_regular__local_dofs_ranges___[j]
             start_row = LDR_row.start
             start_col = LDR_col.start
 
             LDF_row = row_pds.interpreted_as.local_dofs
             LDF_col = col_pds.interpreted_as.local_dofs
 
-            # print(GM[0].local_dofs_ranges, start_row, start_col)
+            # print(GM[0].___Pr_regular__local_dofs_ranges___, start_row, start_col)
 
             for e in LDF_row: # go through all locally involved mesh element numbers
                 assert e in self._spa_mat_ and e in LDF_col
@@ -430,8 +439,8 @@ class SpaMat_Customize(FrozenOnly):
                 ROW = LDF_row[e]
                 COL = LDF_col[e]
 
-                COL = self.___PRIVATE_correcting_correspondence___(
-                    row_pds._form_, ROW, COL, col_pds._form_)
+                # COL = self.___PRIVATE_correcting_correspondence___(
+                #     row_pds._form_, ROW, COL, col_pds._form_)
 
                 row_local_dofs = np.array(ROW) + start_row
                 col_local_dofs = np.array(COL) + start_col
@@ -444,51 +453,51 @@ class SpaMat_Customize(FrozenOnly):
                             f"SCG_partial_dofs interpreted "
                             f"as <{interpreted_as}>.")
 
-    def ___PRIVATE_correcting_correspondence___(self, rf, R, C, cf):
-        """
-
-        Parameters
-        ----------
-        rf
-        R
-        C
-        cf
-
-        Returns
-        -------
-
-        """
-        if rf.__class__.__name__ == '_3dCSCG_1Trace' and cf.__class__.__name__ == '_3dCSCG_1Form':
-            # we have to make sure this to make the singularity handling possible
-            if self._t1f_s1f_cc_ is None:
-                s1f = list()
-                for side in 'NSWEBF':
-                    s1f.append(cf.numbering.do.find.local_dofs_on_element_side(side))
-                s1f = np.concatenate(s1f)
-
-                self._t1f_s1f_cc_ = s1f
-            else:
-                s1f = self._t1f_s1f_cc_
-
-            cC = s1f[R]
-            assert len(cC) == len(C) and set(cC) == set(C), f"must be this case."
-            return cC
-
-        elif rf.__class__.__name__ == '_3dCSCG_0Trace' and cf.__class__.__name__ == '_3dCSCG_0Form':
-            # we have to make sure this to make the singularity handling possible
-            if self._t0f_s0f_cc_ is None:
-                s0f = list()
-                for side in 'NSWEBF':
-                    s0f.append(cf.numbering.do.find.local_dofs_on_element_side(side))
-                s0f = np.concatenate(s0f)
-
-                self._t0f_s0f_cc_ = s0f
-            else:
-                s0f = self._t0f_s0f_cc_
-
-            cC = s0f[R]
-            assert len(cC) == len(C) and set(cC) == set(C), f"must be this case."
-            return cC
-
-        else:
-            return C
+    # def ___PRIVATE_correcting_correspondence___(self, rf, R, C, cf):
+    #     """
+    #
+    #     Parameters
+    #     ----------
+    #     rf
+    #     R
+    #     C
+    #     cf
+    #
+    #     Returns
+    #     -------
+    #
+    #     """
+    #     if rf.__class__.__name__ == '_3dCSCG_1Trace' and cf.__class__.__name__ == '_3dCSCG_1Form':
+    #         # we have to make sure this to make the singularity handling possible
+    #         if self._t1f_s1f_cc_ is None:
+    #             s1f = list()
+    #             for side in 'NSWEBF':
+    #                 s1f.append(cf.numbering.do.find.local_dofs_on_element_side(side))
+    #             s1f = np.concatenate(s1f)
+    #
+    #             self._t1f_s1f_cc_ = s1f
+    #         else:
+    #             s1f = self._t1f_s1f_cc_
+    #
+    #         cC = s1f[R]
+    #         assert len(cC) == len(C) and set(cC) == set(C), f"must be this case."
+    #         return cC
+    #
+    #     elif rf.__class__.__name__ == '_3dCSCG_0Trace' and cf.__class__.__name__ == '_3dCSCG_0Form':
+    #         # we have to make sure this to make the singularity handling possible
+    #         if self._t0f_s0f_cc_ is None:
+    #             s0f = list()
+    #             for side in 'NSWEBF':
+    #                 s0f.append(cf.numbering.do.find.local_dofs_on_element_side(side))
+    #             s0f = np.concatenate(s0f)
+    #
+    #             self._t0f_s0f_cc_ = s0f
+    #         else:
+    #             s0f = self._t0f_s0f_cc_
+    #
+    #         cC = s0f[R]
+    #         assert len(cC) == len(C) and set(cC) == set(C), f"must be this case."
+    #         return cC
+    #
+    #     else:
+    #         return C

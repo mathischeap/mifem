@@ -29,5 +29,5 @@ class mpRfT2_Mesh_Cell_Do(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python objects/mpRfT/_2d/mesh/cell/do.py
     pass

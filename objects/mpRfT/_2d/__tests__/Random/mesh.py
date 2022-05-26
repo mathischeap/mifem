@@ -14,6 +14,7 @@ from objects.CSCG._2d.__tests__.Random.mesh import random_mesh_of_elements_aroun
 from objects.mpRfT._2d.mesh.main import mpRfT2_Mesh
 
 def rm(elements_num,
+       N_range = (1,3),
        refinement_intensity=0.5,
        refinement_levels=3,
        exclude_periodic=False,
@@ -28,6 +29,7 @@ def rm(elements_num,
     ----------
     elements_num : int
         The mesh will be of around this many level-0-cells (cscg mesh elements).
+    N_range :
     refinement_intensity : float, optional
     refinement_levels : int, optional
     exclude_periodic : bool, optional
@@ -41,7 +43,7 @@ def rm(elements_num,
 
     """
     if rAnk == mAster_rank:
-        dN = random.randint(1,3)
+        dN = random.randint(*N_range)
     else:
         dN = None
     dN = cOmm.bcast(dN, root=mAster_rank)
@@ -55,8 +57,7 @@ def rm(elements_num,
            EDM_pool = EDM_pool)
 
     #------ Now we randomly generate some refinements -----------------------------------------
-    cells_dict = dict()
-
+    rfd = dict()
 
     num_elements = cscg.elements.num # local num of mesh-elements (level-0-cells)
     num = int(num_elements * refinement_intensity)
@@ -72,7 +73,7 @@ def rm(elements_num,
         _2b_h_refined = list()
         for c in _2b_refined:
             if c in _2b_p_refined:
-                cells_dict[c] = random.randint(1,4)
+                rfd[c] = random.randint(*N_range)
             else:
                 _2b_h_refined.append(c)
 
@@ -88,15 +89,19 @@ def rm(elements_num,
         num = int(len(_2b_refined) * refinement_intensity)
 
     for c in _2b_refined:
-        cells_dict[c] = random.randint(1, 4)
+        rfd[c] = random.randint(*N_range)
 
-    mesh = mpRfT2_Mesh(cscg, dN, cells_dict)
+    mesh = mpRfT2_Mesh(cscg, dN, rfd)
 
     for i in mesh:
         cell = mesh[i]
         assert cell.N is not None # checking all root cells are made through cells_dict
 
     return mesh
+
+
+
+
 
 
 if __name__ == "__main__":

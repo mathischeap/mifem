@@ -3,6 +3,7 @@ import types
 from screws.freeze.main import FrozenOnly
 from scipy import sparse as spspa
 from tools.linear_algebra.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
+from tools.linear_algebra.gathering.irregular.ir_chain_matrix.main import iR_Chain_Gathering_Matrix
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.customize import SpaMat_Customize
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.adjust import SpaMat_Adjust
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.blocks.main import EWC_SpaMat_Blocks
@@ -76,8 +77,10 @@ class EWC_SparseMatrix(FrozenOnly):
             self._elements_ = mesh_elements
         elif mesh_elements.__class__.__name__ in ('_3dCSCG_Mesh', '_2dCSCG_Mesh'):
             self._elements_ = mesh_elements.elements
+        elif isinstance(mesh_elements, dict):
+            self._elements_ = mesh_elements
         else:
-            raise Exception()
+            raise Exception(f"{mesh_elements}")
 
         # we can accept a dictionary as a data generator, we will wrap it with a method -----------
         if isinstance(data_generator, dict):
@@ -191,7 +194,6 @@ class EWC_SparseMatrix(FrozenOnly):
         self.___repeat_CK___ = ''
         self._customize_ = SpaMat_Customize(self)
         self._bmat_shape_ = bmat_shape
-        self._shape_ = None
         self._assembler_ = None
         self._do_ = None
         self._IS_ = None
@@ -258,51 +260,59 @@ class EWC_SparseMatrix(FrozenOnly):
             3. gathering_matrices = ([u2, P3], [u2, P3]) # we will make two Chain_Gathering_Matrix from them.
         :return:
         """
-        CGM0, CGM1 = gathering_matrices
-        if CGM0.__class__.__name__ == 'Chain_Gathering_Matrix':
-            pass
-        else:
-            if not isinstance(CGM0, (list, tuple)):
-                CGM0 = [CGM0,]
-            cgm0 = list()
-            for _ in CGM0:
-                if _.__class__.__name__ == 'Gathering_Matrix':
-                    cgm0.append(_)
+
+        GMS = list()
+        for gm in gathering_matrices:
+            if not isinstance(gm, (tuple, list)):
+                name = gm.__class__.__name__
+
+                if name in ('iR_Chain_Gathering_Matrix', 'Chain_Gathering_Matrix'):
+                    GMS.append(gm)
+                elif name in ('iR_Gathering_Matrix', 'Gathering_Matrix'):
+                    GMS.append([gm,])
+                elif hasattr(gm, '___IS_ADF___') and gm.___IS_ADF___:
+                    GMS.append([gm.prime.numbering.gathering,])
                 else:
-                    if hasattr(_, '___IS_ADF___') and _.___IS_ADF___:
-                        cgm0.append(_.prime.numbering.gathering)
+                    GMS.append([gm.numbering.gathering,])
+            else:
+                GM = list()
+
+                for _i in gm:
+                    name = _i.__class__.__name__
+                    if name in ('iR_Gathering_Matrix', 'Gathering_Matrix'):
+                        GM.append(_i)
+                    elif hasattr(_i, '___IS_ADF___') and _i.___IS_ADF___:
+                        GM.append(_i.prime.numbering.gathering)
                     else:
-                        cgm0.append(_.numbering.gathering)
+                        GM.append(_i.numbering.gathering)
+
+                GMS.append(GM)
 
 
-            CGM0 = Chain_Gathering_Matrix(cgm0)
+        FINAL_GMS = list()
+        for gms in GMS:
 
-        if CGM1.__class__.__name__ == 'Chain_Gathering_Matrix':
-            pass
-        else:
-            if not isinstance(CGM1, (list, tuple)):
-                CGM1 = [CGM1,]
-            cgm1 = list()
-            for _ in CGM1:
-                if _.__class__.__name__ == 'Gathering_Matrix':
-                    cgm1.append(_)
+            if gms.__class__.__name__  == 'iR_Chain_Gathering_Matrix':
+                FINAL_GMS.append(gms)
+
+            elif gms.__class__.__name__ == 'Chain_Gathering_Matrix':
+                FINAL_GMS.append(gms)
+
+            elif isinstance(gms, list):
+                if all([_.__class__.__name__ == 'iR_Gathering_Matrix' for _ in gms]):
+                    FINAL_GMS.append(iR_Chain_Gathering_Matrix(gms))
+
+                elif all([_.__class__.__name__ == 'Gathering_Matrix' for _ in gms]):
+                    FINAL_GMS.append(Chain_Gathering_Matrix(gms))
+
                 else:
-                    if hasattr(_, '___IS_ADF___') and _.___IS_ADF___:
-                        cgm1.append(_.prime.numbering.gathering)
-                    else:
-                        cgm1.append(_.numbering.gathering)
+                    raise Exception()
+            else:
+                raise Exception()
 
-            CGM1 = Chain_Gathering_Matrix(cgm1)
+        self._gathering_matrices_0_, self._gathering_matrices_1_ = FINAL_GMS
 
-        assert CGM0.__class__.__name__ == 'Chain_Gathering_Matrix', "I need Chain_Gathering_Matrix!"
-        assert CGM1.__class__.__name__ == 'Chain_Gathering_Matrix', "I need Chain_Gathering_Matrix!"
 
-        self._gathering_matrices_0_ = CGM0
-        self._gathering_matrices_1_ = CGM1
-
-        if self._shape_ is not None:
-            assert self._gathering_matrices_0_.shape + \
-                   self._gathering_matrices_1_.shape[1:] == self._shape_
 
     @property
     def IS(self):
@@ -358,10 +368,6 @@ class EWC_SparseMatrix(FrozenOnly):
         :rtype GlobalMatrix:
         """
         return self.assembler()
-
-    @property
-    def GLOBAL_len(self):
-        return self.elements.GLOBAL_num
 
     def __len__(self):
         return len(self._elements_)
@@ -423,36 +429,6 @@ class EWC_SparseMatrix(FrozenOnly):
         return RETURN
 
     @property
-    def shape(self):
-        """The local shape : == (len(self),) + np.shape(self[i]). So the
-        first value refer to how many local mesh elements. The second
-        value refers to how many rows in the local sparse matrix. The third
-        one refers to how many cols in the local sparse matrix.
-
-        Note that this is only possible when we have regular sparse matrices (same shape in all
-        mesh elements). Otherwise, we just raise Exception!
-
-        :return: A tuple of 3 integers.
-        """
-        if self._shape_ is not None: return self._shape_
-
-        if self._gathering_matrices_0_ is not None and \
-            self._gathering_matrices_1_ is not None:
-
-            #------ regular gathering matrices have shape --------------
-            self._shape_ = self._gathering_matrices_0_.shape + \
-                           self._gathering_matrices_1_.shape[1:]
-
-            #irregular gathering matrices will raise Exception because it has no shape property
-
-        else:
-            raise Exception('To access the shape of a EWC_SparseMatrix, '
-                            'set its (regular) gathering matrices first')
-
-        return self._shape_
-
-
-    @property
     def customizations(self):
         """All the customizations that have been added to me."""
         return self.customize._customizations_
@@ -484,7 +460,7 @@ class EWC_SparseMatrix(FrozenOnly):
 
     def __rmul__(self, other):
         """
-        multiply other (int or float) with self, e.g. 7 * a.
+        multiply other (int or float) with self, e.g. 7 * other.
 
 
         :param other:
@@ -512,7 +488,6 @@ class EWC_SparseMatrix(FrozenOnly):
     def __sub__(self, other):
         """self - EWC_SparseMatrix"""
         assert other.__class__.__name__ == 'EWC_SparseMatrix'
-        assert self._elements_._mesh_ == other._elements_._mesh_
         DKC = ___SUB___(self, other)
         return EWC_SparseMatrix(self._elements_, DKC.__DG_call__, DKC.__KG_call__)
 
@@ -527,14 +502,12 @@ class EWC_SparseMatrix(FrozenOnly):
     def __add__(self, other):
         """self + EWC_SparseMatrix"""
         assert other.__class__.__name__ == 'EWC_SparseMatrix'
-        assert self._elements_._mesh_ == other._elements_._mesh_
         DKC = ___ADD___(self, other)
         return EWC_SparseMatrix(self._elements_, DKC.__DG_call__, DKC.__KG_call__)
 
     def __matmul__ (self, other):
         """"""
         if other.__class__.__name__ == 'EWC_SparseMatrix':
-            assert self._elements_._mesh_ == other._elements_._mesh_
             DKC = ___MATMUL___(self, other)
             return EWC_SparseMatrix(self._elements_, DKC.__DG_call__, DKC.__KG_call__)
 

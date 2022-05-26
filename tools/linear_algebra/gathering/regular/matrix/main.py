@@ -47,6 +47,10 @@ class Gathering_Matrix(GatheringMatrix):
         self._do_ = None
         self._freeze_self_()
 
+    @property
+    def ___Pr_IS_regular___(self):
+        return True
+
     def __getitem__(self, i):
         """Return the GV for mesh element #`i`."""
         return self._gvd_[i]

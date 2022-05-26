@@ -19,6 +19,8 @@ from objects.CSCG._2d.mesh.main import _2dCSCG_Mesh
 
 from objects.mpRfT._2d.mesh.main import mpRfT2_Mesh
 
+from objects.mpRfT._2d.forms.allocator import mpRfT2_FormsAllocator
+from objects.mpRfT._2d.cf.allocator import mpRfT2_FieldsAllocator
 
 
 class MeshGenerator(FrozenOnly):
@@ -103,6 +105,45 @@ class MeshGenerator(FrozenOnly):
 
 
 
+class FormCaller(FrozenOnly):
+    """"""
+    def  __init__(self, mesh):
+        self._mesh_ = mesh
+        PATH = dict()
+        NAME = dict()
+        for A in (mpRfT2_FormsAllocator, mpRfT2_FieldsAllocator):
+            PATH.update(A.___form_path___())
+            NAME.update(A.___form_name___())
+        self._PATH_ = PATH
+        self._NAME_ = NAME
+
+        self._freeze_self_()
+
+    def __call__(self, ID, *args, **kwargs):
+        path = self._PATH_[ID]
+        name = self._NAME_[ID]
+        CLASS = getattr(import_module(path), name)
+        return CLASS(self._mesh_, *args, **kwargs)
+
+
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/mpRfT/_2d/master.py
-    pass
+
+    mesh = MeshGenerator('rectangle')([3, 3], 2, show_info=True)
+    fc = FormCaller(mesh)
+
+    f = fc('0-f-i')
+
+    def p(t, x, y): return x + y + t
+    def q(t, x, y): return x + y - t
+
+    s = fc('scalar', p)
+    v = fc('vector', (p, q))
+
+    f1i = fc('1-f-i')
+    f1o = fc('1-f-o')
+
+    f2i = fc('2-f-i')
+    f2o = fc('2-f-o')
+
+    print(f2i, f2o)

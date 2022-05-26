@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 
 from screws.decorators.accepts import accepts
@@ -160,7 +160,7 @@ class SpaVec_Customize(FrozenOnly):
 
         if interpreted_as == 'local_dofs':
             GM = self._spa_vec_.gathering_matrix
-            LDR_row = GM.local_dofs_ranges[i]
+            LDR_row = GM.___Pr_regular__local_dofs_ranges___[i]
             start_row = LDR_row.start
             dofs = pd.interpreted_as.local_dofs
 
@@ -215,19 +215,19 @@ class SpaVec_Customize(FrozenOnly):
 
         if interpreted_as == 'local_dofs':
             GM = self._spa_vec_.gathering_matrix
-            LDR_row = GM.local_dofs_ranges[i]
+            LDR_row = GM.___Pr_regular__local_dofs_ranges___[i]
             start_row = LDR_row.start
             LDF_row = pd.interpreted_as.local_dofs
-            LDF_col = pc.dofs.interpreted_as.local_dofs
+            # LDF_col = pc.dofs.interpreted_as.local_dofs
             cochain = pc.cochain
             assert len(LDF_row) == len(cochain), "pc, pd must cover same amount of mesh elements."
             for e in LDF_row:
 
                 ROW = LDF_row[e]
-                COL = LDF_col[e]
+                # COL = LDF_col[e]
                 LOC = cochain[e]
 
-                LOC = self.___PRIVATE_correcting_correspondence___(pd._form_, ROW, COL, LOC, pc._form_)
+                # LOC = self.___PRIVATE_correcting_correspondence___(pd._form_, ROW, COL, LOC, pc._form_)
 
                 local_dofs = np.array(ROW) + start_row
                 local_cochain = LOC
@@ -241,60 +241,60 @@ class SpaVec_Customize(FrozenOnly):
             raise NotImplementedError(f"interpreted_as={interpreted_as} not implemented.")
 
 
-    def ___PRIVATE_correcting_correspondence___(self, rf, R, C, local_cochain, cf):
-        """
-
-        Parameters
-        ----------
-        rf
-        R
-        C
-        cf
-
-        Returns
-        -------
-
-        """
-        if rf.__class__.__name__ == '_3dCSCG_1Trace' and cf.__class__.__name__ == '_3dCSCG_1Form':
-            # we have to make sure this to make the singularity handling possible
-            if self._t1f_s1f_cc_ is None:
-                s1f = list()
-                for side in 'NSWEBF':
-                    s1f.append(cf.numbering.do.find.local_dofs_on_element_side(side))
-                s1f = np.concatenate(s1f)
-
-                self._t1f_s1f_cc_ = s1f
-            else:
-                s1f = self._t1f_s1f_cc_
-
-            cC = s1f[R]
-            assert len(cC) == len(C) and set(cC) == set(C), f"must be this case."
-
-            COCHAIN = np.empty(cf.num.basis)
-            COCHAIN[C] = local_cochain
-            return COCHAIN[cC]
-
-        elif rf.__class__.__name__ == '_3dCSCG_0Trace' and cf.__class__.__name__ == '_3dCSCG_0Form':
-            # we have to make sure this to make the singularity handling possible
-            if self._t0f_s0f_cc_ is None:
-                s0f = list()
-                for side in 'NSWEBF':
-                    s0f.append(cf.numbering.do.find.local_dofs_on_element_side(side))
-                s0f = np.concatenate(s0f)
-
-                self._t0f_s0f_cc_ = s0f
-            else:
-                s0f = self._t0f_s0f_cc_
-
-            cC = s0f[R]
-            assert len(cC) == len(C) and set(cC) == set(C), f"must be this case."
-
-            COCHAIN = np.empty(cf.num.basis)
-            COCHAIN[C] = local_cochain
-            return COCHAIN[cC]
-
-        else:
-            return local_cochain
+    # def ___PRIVATE_correcting_correspondence___(self, rf, R, C, local_cochain, cf):
+    #     """
+    #
+    #     Parameters
+    #     ----------
+    #     rf
+    #     R
+    #     C
+    #     cf
+    #
+    #     Returns
+    #     -------
+    #
+    #     """
+    #     if rf.__class__.__name__ == '_3dCSCG_1Trace' and cf.__class__.__name__ == '_3dCSCG_1Form':
+    #         # we have to make sure this to make the singularity handling possible
+    #         if self._t1f_s1f_cc_ is None:
+    #             s1f = list()
+    #             for side in 'NSWEBF':
+    #                 s1f.append(cf.numbering.do.find.local_dofs_on_element_side(side))
+    #             s1f = np.concatenate(s1f)
+    #
+    #             self._t1f_s1f_cc_ = s1f
+    #         else:
+    #             s1f = self._t1f_s1f_cc_
+    #
+    #         cC = s1f[R]
+    #         assert len(cC) == len(C) and set(cC) == set(C), f"must be this case."
+    #
+    #         COCHAIN = np.empty(cf.num.basis)
+    #         COCHAIN[C] = local_cochain
+    #         return COCHAIN[cC]
+    #
+    #     elif rf.__class__.__name__ == '_3dCSCG_0Trace' and cf.__class__.__name__ == '_3dCSCG_0Form':
+    #         # we have to make sure this to make the singularity handling possible
+    #         if self._t0f_s0f_cc_ is None:
+    #             s0f = list()
+    #             for side in 'NSWEBF':
+    #                 s0f.append(cf.numbering.do.find.local_dofs_on_element_side(side))
+    #             s0f = np.concatenate(s0f)
+    #
+    #             self._t0f_s0f_cc_ = s0f
+    #         else:
+    #             s0f = self._t0f_s0f_cc_
+    #
+    #         cC = s0f[R]
+    #         assert len(cC) == len(C) and set(cC) == set(C), f"must be this case."
+    #
+    #         COCHAIN = np.empty(cf.num.basis)
+    #         COCHAIN[C] = local_cochain
+    #         return COCHAIN[cC]
+    #
+    #     else:
+    #         return local_cochain
 
 
 

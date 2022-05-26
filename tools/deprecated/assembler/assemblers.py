@@ -37,8 +37,7 @@ class _3dCSCG_EWC(AssemblerBase):
         assert self._assembler_._G_j_.__class__.__name__ == 'Gathering_Matrix'
 
     def ___PRIVATE_check_M___(self, M):
-        assert self._assembler_._Gi__.GLOBAL_len == M.GLOBAL_len, "GLOBAL length do not match."
-        assert self._assembler_._G_j_.GLOBAL_len == M.GLOBAL_len, "GLOBAL length do not match."
+        pass
 
     def DO_assembling_van_advanced_v0(self, M):
         """"""

@@ -11,65 +11,77 @@ if './' not in sys.path: sys.path.append('./')
 from objects.mpRfT.base.mesh.main import mpRfT_MeshBase
 from objects.mpRfT._2d.mesh.basic_cells.main import mpRfT2_Mesh_BasicCells
 from objects.mpRfT._2d.mesh.do.main import mpRfT2_Mesh_Do
+from objects.mpRfT._2d.mesh.rcWds.main import mpRfT2_Mesh_RootCellWiseDataStructure
+from objects.mpRfT._2d.mesh.refinements.main import mpRfT2_Mesh_Refinements
 from objects.mpRfT._2d.mesh.visualize import mpRfT2_Mesh_Visualize
+from objects.mpRfT._2d.mesh.coo_map.main import mpRfT2_Mesh_CooMap
+from objects.mpRfT._2d.mesh.space.main import mpRfT2_Mesh_Space
+from objects.mpRfT._2d.mesh.segments.main import mpRfT2_Mesh_Segments
+from objects.mpRfT._2d.mesh.all_root_cells import mpRfT2_Mesh_AllRootCells
+from objects.mpRfT._2d.mesh.rcMetricComputing.main import mpRfT2_Mesh_rcMC
+
+
 
 class mpRfT2_Mesh(mpRfT_MeshBase):
     """"""
 
-    def __init__(self, cscg, dN, cells_dict):
-        """"""
-        super(mpRfT2_Mesh, self).__init__(cscg, dN, cells_dict)
+    def __init__(self, cscg, dN, rfd):
+        """
+
+        Parameters
+        ----------
+        cscg
+        dN
+        rfd : dict
+            Refinements dict.
+
+        """
+        super(mpRfT2_Mesh, self).__init__(cscg, dN, rfd)
         self._do_ = mpRfT2_Mesh_Do(self)
+        self._rcWds_ = None
+        self._refinements_ = None
         self._visualize_ = None
+        self._coo_map_ = None
+        self._space_ = None
+        self._segments_ = None
+        self._ARC_ = None
+        self._rcMC_ = mpRfT2_Mesh_rcMC(self)
         self._freeze_self_()
 
-    def ___Pr_initialize_cells___(self, dN, cells_dict):
+    def ___Pr_make_basic_cells___(self, dN, rfd, _):
         """
 
         Parameters
         ----------
         dN
-        cells_dict : dict
+        rfd : dict
             {__repr__ : N, ...} : keys repr of a root-cell, N the space degree of the root-cell.
 
             Therefore, all sub-cells must be set `N`.
+        _
 
         Returns
         -------
 
         """
-        self.___basic_cells___ = mpRfT2_Mesh_BasicCells(self)
-
-        for i in self.basic_cells: self[i]._N_ = dN
-
-        if cells_dict is None: cells_dict = list()
-
-        for rp in cells_dict:
-
-            if '-' not in rp: # customize a basic-root-cell.
-                i = int(rp)
-                assert i in self.basic_cells, f"cell={rp} not a valid basic cell."
-                self.basic_cells[i]._N_ = cells_dict[rp]
-
-            else: # customize a sub-root-cell. N must be given.
-                i, indices = rp.split('-')
-                indices = tuple([int(i),] + [int(_) for _ in indices])
-
-                cells = self.basic_cells
-                for _, i in enumerate(indices):
-                    if cells is None:
-                        cell.do.___Pr_h_refine___()
-                        cells = cell.sub_cells
-                    else:
-                        pass
-                    cell = cells[i]
-                    cells = cell.sub_cells
-
-                cell._N_ = cells_dict[rp]
+        basic_cells = mpRfT2_Mesh_BasicCells(self) # change this for 3-d mpRfT3_Mesh
+        return super(mpRfT2_Mesh, self).___Pr_make_basic_cells___(dN, rfd, basic_cells)
 
     @property
     def do(self):
         return self._do_
+
+    @property
+    def rcWds(self):
+        if self._rcWds_ is None:
+            self._rcWds_ = mpRfT2_Mesh_RootCellWiseDataStructure(self)
+        return self._rcWds_
+
+    @property
+    def refinements(self):
+        if self._refinements_ is None:
+            self._refinements_ = mpRfT2_Mesh_Refinements(self)
+        return self._refinements_
 
     @property
     def visualize(self):
@@ -77,16 +89,46 @@ class mpRfT2_Mesh(mpRfT_MeshBase):
             self._visualize_ = mpRfT2_Mesh_Visualize(self)
         return self._visualize_
 
+    @property
+    def coo_map(self):
+        if self._coo_map_ is None:
+            self._coo_map_ = mpRfT2_Mesh_CooMap(self)
+        return self._coo_map_
+
+    @property
+    def space(self):
+        if self._space_ is None:
+            self._space_ = mpRfT2_Mesh_Space(self)
+        return self._space_
+
+    @property
+    def segments(self):
+        if self._segments_ is None:
+            self._segments_ = mpRfT2_Mesh_Segments(self)
+        return self._segments_
+
+    @property
+    def arc(self):
+        if self._ARC_ is None:
+            self._ARC_ = mpRfT2_Mesh_AllRootCells(self)
+        return self._ARC_
+
+    @property
+    def rcMC(self):
+        return self._rcMC_
+
+
 
 
 
 
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/mpRfT/_2d/mesh/main.py
+
     # from objects.mpRfT._2d.master import MeshGenerator
     # mesh = MeshGenerator('rectangle')([3,3], 2, show_info=True)
 
     from __init__ import rfT2
-    mesh = rfT2.rm(100)
-    #
-    mesh.visualize(color_space=True)
+    mesh = rfT2.rm(10, refinement_intensity=0.5)
+    # for rp in mesh.arc:
+    #     mesh.visualize(rp=rp)

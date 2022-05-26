@@ -94,6 +94,9 @@ class Chain_Gathering_Matrix(FrozenOnly):
 
         self._freeze_self_()
 
+    @property
+    def ___Pr_IS_regular___(self):
+        return True
 
     @property
     def NUM_GMs(self):
@@ -104,11 +107,6 @@ class Chain_Gathering_Matrix(FrozenOnly):
     def GLOBAL_num_dofs(self):
         """How many dofs in total in all cores."""
         return self._GLOBAL_num_dofs_
-
-    @property
-    def shape(self):
-        """Return (local number of elements, local number of dofs)."""
-        return len(self), sum(self.local_dofs_distribution)
 
     def __getitem__(self, item):
         """Return the chained gathering vector for the mesh element numbered by `i`.
@@ -166,6 +164,7 @@ class Chain_Gathering_Matrix(FrozenOnly):
 
     @property
     def local_ranges(self):
+        """The local dofs are in this range."""
         if self._local_ranges_ is None:
 
             if len(self) == 0:
@@ -191,19 +190,9 @@ class Chain_Gathering_Matrix(FrozenOnly):
          by solving the assembled EWC_SparseMatrix."""
         return self._dofs_distribution_
 
-
     @property
-    def local_dofs_distribution(self):
-        """Let local_dofs_distribution = [20, 12, 8], we then know
-        GMs[0] has 20 local dofs, of shape (., 20), and
-        GMs[1] has 12 local dofs, of shape (., 12) and so on.
-        """
-        return self._local_dofs_distribution_
-
-
-    @property
-    def local_dofs_ranges(self):
-        """if self.local_dofs_distribution = [20, 12, 8], then self.local_dofs_ranges = [range(0,20), range(20, 32), range(32,40)]"""
+    def ___Pr_regular__local_dofs_ranges___(self):
+        """if self.local_dofs_distribution = [20, 12, 8], then self.___Pr_regular__local_dofs_ranges___ = [range(0,20), range(20, 32), range(32,40)]"""
         SUM = 0
         ranges = list()
         for i in self._local_dofs_distribution_:

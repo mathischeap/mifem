@@ -85,14 +85,13 @@ class mpRfT2_ScalarReconstruct(FrozenOnly):
         else:
             full = False
 
-        assert xi_eta.___Pr_is_2nCSCG_RF2_mesh_coo___, f"I need a coo distribution object."
+        assert xi_eta.___Pr_is_mpRfT2_mesh_coo_map___, f"I need a mpRfT2 coo_map object."
 
         xy = dict()
         value = dict()
 
         for i in INDICES:
-            cell = mesh(i)
-            # print(xi_eta[i])
+            cell = mesh[i]
             xy_i = cell.coordinate_transformation.mapping(*xi_eta[i])
             v_i = func(*xy_i)
 
@@ -103,8 +102,8 @@ class mpRfT2_ScalarReconstruct(FrozenOnly):
                 xy[cell.__repr__()] = xy_i
                 value[cell.__repr__()] = [v_i,]
 
-        xy = self._cf_.mesh.ids('vector', xy, 2, xi_eta.distribution, full)
-        value = self._cf_.mesh.ids('scalar', value, 2, xi_eta.distribution, full)
+        xy    = mesh.rcWds.vector(   xy, 2, xi_eta.distribution, full)
+        value = mesh.rcWds.scalar(value, 2, xi_eta.distribution, full)
 
         return xy, value
 

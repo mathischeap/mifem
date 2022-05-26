@@ -12,6 +12,7 @@ from screws.freeze.base import FrozenOnly
 
 class mpRfT2_Mesh_Cell_SubCells(FrozenOnly):
     """"""
+
     def __init__(self, cell):
         """"""
         self._cell_ = cell

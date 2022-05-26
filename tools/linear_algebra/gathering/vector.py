@@ -96,7 +96,6 @@ class Gathering_Vector(FrozenOnly):
     def ___PRIVATE_find_min_label___(self):
         return np.min(self.full_vector)
 
-
     def index(self, i):
         """find the index of dof #i. This is like the index function of a list. For example,
             >>> A = [1,2,5,3,4],

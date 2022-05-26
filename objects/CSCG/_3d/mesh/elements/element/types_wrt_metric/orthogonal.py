@@ -4,7 +4,6 @@
 from screws.decorators.accepts import accepts
 from objects.CSCG._3d.mesh.elements.element.types_wrt_metric.base import ElementTypeWr2MetricBase
 
-from objects.nCSCG.rf2._3d.mesh.cell.types_wrt_metric.orthononal import _3nCSCG_OrthogonalCell
 
 class OrthogonalElement(ElementTypeWr2MetricBase):
     """
@@ -31,11 +30,11 @@ class OrthogonalElement(ElementTypeWr2MetricBase):
 
 
 
-    def ___CLASSIFY_3nCSCG_RF2_CELL_of_origin_and_delta___(self, origin_and_delta):
-        """"""
-        delta = origin_and_delta[1]
-        Lx, Ly, Lz = self._LxLyLz_
-        Lx *= delta / 2
-        Ly *= delta / 2
-        Lz *= delta / 2
-        return  _3nCSCG_OrthogonalCell(Lx, Ly, Lz)
+    # def ___CLASSIFY_3nCSCG_RF2_CELL_of_origin_and_delta___(self, origin_and_delta):
+    #     """"""
+    #     delta = origin_and_delta[1]
+    #     Lx, Ly, Lz = self._LxLyLz_
+    #     Lx *= delta / 2
+    #     Ly *= delta / 2
+    #     Lz *= delta / 2
+    #     return  _3nCSCG_OrthogonalCell(Lx, Ly, Lz)

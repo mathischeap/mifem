@@ -25,8 +25,31 @@ class mpRfT2_Mesh_Visualize(FrozenOnly):
     def __call__(self, *args, **kwargs):
         return self.matplot(*args, **kwargs)
 
-    def matplot(self, density=None, color_space=True, show_indices=False, show_boundaries=True,
-        saveto=None, usetex=False, labelsize=12, ticksize=12):
+    def matplot(self, rp=None, **kwargs):
+        """
+
+        Parameters
+        ----------
+        rp :
+            If rp is
+                - None, plot the whole mesh
+                - str: plot root-cell whose __repr__ is `rp`.
+        kwargs
+
+        Returns
+        -------
+
+        """
+        if rp is None:
+            self.___Pr_matplot_the_whole_mesh___(**kwargs)
+        elif isinstance(rp, (int, str)):
+            self.___Pr_matplot_single_root_cell__(rp, **kwargs)
+
+        else:
+            raise NotImplementedError(f"rp={rp}")
+
+    def ___Pr_matplot_the_whole_mesh___(self, density=None, color_space=True, show_indices=False, show_boundaries=True,
+                saveto=None, usetex=False, labelsize=12, ticksize=12):
         """
 
         Parameters
@@ -177,7 +200,7 @@ class mpRfT2_Mesh_Visualize(FrozenOnly):
                                     '$<$' + bn + '$>$',
                                     c=boundary_name_color_dict[bn], ha='center', va='center')
 
-        #---------------------- save to --------------------------------------------------------
+        #---------------------- save to ----------------------------------------------
         if saveto is None:
             plt.show()
         else:
@@ -185,10 +208,102 @@ class mpRfT2_Mesh_Visualize(FrozenOnly):
         plt.close()
 
 
+    def ___Pr_matplot_single_root_cell__(self, rp, density=None,
+                usetex=False, labelsize=12, ticksize=12):
+        """
+
+        Parameters
+        ----------
+        rp
+        density
+        usetex
+        labelsize
+        ticksize
+
+        Returns
+        -------
+
+        """
+        xi = np.linspace(-1, 1, 10)
+
+        CPD = dict()
+        self_rp = None
+        segments_xy = None
+        for ci in self._mesh_:  # ao through all local cell indices.
+            cell = self._mesh_[ci]
+            assert cell.___isroot___
+            CPD[repr(cell)] = cell.coordinate_transformation.___PRIVATE_plot_data___(density=density)
+
+            if cell.__repr__() == rp:
+                self_rp = cell.__repr__()
+                frame = cell.frame
+                segments_xy = list()
+                for edge in frame:
+                    segments = frame[edge]
+                    for seg in segments:
+                        xy = seg.coordinate_transformation.mapping(xi)
+                        segments_xy.append(xy)
+
+        CPD = cOmm.gather(CPD, root=mAster_rank)
+        self_rp = cOmm.gather(self_rp, root=mAster_rank)
+        segments_xy = cOmm.gather(segments_xy, root=mAster_rank)
+
+        if rAnk != mAster_rank: return
+
+        ___ = dict()
+        for _ in CPD:
+            ___.update(_)
+        CPD = ___
+
+        for core, _ in enumerate(self_rp):
+            if _ is not None:
+                self_rp = _
+                break
+
+
+        for _ in segments_xy:
+            if _ is not None:
+                segments_xy = _
+                break
+
+        plt.rc('text', usetex=usetex)
+        fig, ax = plt.subplots()
+        ax.set_aspect('equal')
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        ax.spines['left'].set_visible(True)
+        ax.spines['bottom'].set_visible(True)
+        plt.xlabel(r"$x$", fontsize=labelsize)
+        plt.ylabel(r"$y$", fontsize=labelsize)
+        plt.tick_params(axis='both', which='both', labelsize=ticksize)
+
+        for ind in CPD:
+            lines = CPD[ind]
+
+            if ind == self_rp:
+                self_lines = lines
+            else:
+                for xy in lines:
+                    plt.plot(*xy, color='lightgray', linewidth=0.5)
+
+        for xy in self_lines:
+            plt.plot(*xy, color='k', linewidth=0.5)
+
+        for xy in segments_xy:
+            x, y= xy
+            plt.plot(x, y, linewidth=0.75)
+            ax.scatter(x[0], y[0], s=2, color='k')
+            ax.scatter(x[-1], y[-1], s=2, marker='s', color='k')
+
+        # ---------------------- save to ----------------------------------------------
+        plt.title('root-cell: <' + str(self_rp) + f'> in core:{core}')
+        plt.show()
+        plt.close()
+
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/mpRfT/_2d/mesh/visualize.py
-    from __init__ import rf2
+    from __init__ import rfT2
 
-    mesh = rf2.rm(100)
+    mesh = rfT2.rm(100)
 
     mesh.visualize()

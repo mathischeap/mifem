@@ -2074,8 +2074,8 @@ def test_TOOLS_NO15_linear_system_apply_BC():
 
 
 if __name__ == '__main__':
-    # mpiexec -n 5 python tests\unittests\tools_.py
+    # mpiexec -n 5 python __tests__/unittests/tools_.py
 
-    test_TOOLS_NO15_linear_system_apply_BC()
+    test_TOOLS_NO12_EWC_assembling_test()
 
 

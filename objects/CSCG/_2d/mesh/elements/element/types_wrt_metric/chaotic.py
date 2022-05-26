@@ -2,7 +2,7 @@
 
 from objects.CSCG._2d.mesh.elements.element.types_wrt_metric.base import ElementTypeWr2MetricBase
 
-from objects.nCSCG.rf2._2d.mesh.cell.types_wrt_metric.chaotic import _2nCSCG_ChaoticCell
+from objects.mpRfT._2d.mesh.cell.types_wrt_metric.chaotic import mpRfT2_ChaoticCell
 
 
 
@@ -19,6 +19,6 @@ class ChaoticElement(ElementTypeWr2MetricBase):
         self._freeze_self_()
 
 
-    def ___CLASSIFY_2nCSCG_RF2_CELL_of_origin_and_delta___(self, origin_and_delta):
+    def ___CLASSIFY_mpRfT2_CELL_of_origin_and_delta___(self, origin_and_delta):
         """"""
-        return _2nCSCG_ChaoticCell()
+        return mpRfT2_ChaoticCell()

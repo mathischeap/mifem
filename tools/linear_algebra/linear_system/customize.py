@@ -22,48 +22,54 @@ class ___LinearSystem_Customize___(FrozenOnly):
              'CSCG_form' in pd.standard_properties.tags:
             pd = pd.BC.partial_cochain
 
-        # check 1: ---------------------------------
-        if i == j:
-            assert pc is None, f"when i == j is None, we must have pc is None."
+        #------ for cscg meshes -------------------------------------------------------------------
+        if hasattr(pd, '_mesh_') and pd._mesh_.__class__.__name__ in ('_3dCSCG_Mesh', '_2dCSCG_Mesh'):
 
-        # check 2: ---------------------------------
-        if pc is None:
-            assert i == j, \
-                f"when do not provide pc, we must set diagonal block, " \
-                f"so i == j, now i={i}, j={j}."
-            assert pd.__class__.__name__ == 'PartialCochain', \
-                "I need a PartialCochain when pc is None."
-            pc = pd
-        elif hasattr(pc, 'standard_properties') and \
-             'CSCG_form' in pc.standard_properties.tags:
-            pc = pc.BC.partial_cochain
+            # check 1: ---------------------------------
+            if i == j:
+                assert pc is None, f"when i == j is None, we must have pc is None."
+
+            # check 2: ---------------------------------
+            if pc is None:
+                assert i == j, \
+                    f"when do not provide pc, we must set diagonal block, " \
+                    f"so i == j, now i={i}, j={j}."
+                assert pd.__class__.__name__ == 'PartialCochain', \
+                    "I need a PartialCochain when pc is None."
+                pc = pd
+            elif hasattr(pc, 'standard_properties') and \
+                 'CSCG_form' in pc.standard_properties.tags:
+                pc = pc.BC.partial_cochain
+            else:
+                pass
+
+            # check 3: ---------------------------------
+            assert pc.__class__.__name__ == 'PartialCochain', f"pc must be a PartialCochain."
+
+            #======== customize ==============================================
+            I, J = self._LS_.block_shape
+            assert i % 1 == 0, f"i={i}({i.__class__.__name__}) cannot be an index!"
+            assert j % 1 == 0, f"j={j}({j.__class__.__name__}) cannot be an index!"
+            assert 0 <= i < I and 0 <= j < J, f"(i,j)= ({i},{j}) is out of range!"
+
+            if i == j:
+                self._LS_.A.customize.\
+                    identify_global_rows_according_to_CSCG_partial_dofs(
+                    i, pd, interpreted_as=interpreted_as)
+                self._LS_.b.customize.\
+                    set_entries_according_to_CSCG_partial_cochains(
+                    i, pd, interpreted_as=interpreted_as)
+            else:
+                self._LS_.A.customize.\
+                    off_diagonally_identify_rows_according_to_two_CSCG_partial_dofs(
+                    i, j, pd, pc, interpreted_as=interpreted_as)
+                self._LS_.b.customize.\
+                    set_entries_according_to_CSCG_partial_cochains(
+                    i, pd, pc=pc, interpreted_as=interpreted_as)
+
+        #--------- other meshes --------------------------------------------------------------------
         else:
-            pass
-
-        # check 3: ---------------------------------
-        assert pc.__class__.__name__ == 'PartialCochain', f"pc must be a PartialCochain."
-
-        #======== customize ==============================================
-        I, J = self._LS_.block_shape
-        assert i % 1 == 0, f"i={i}({i.__class__.__name__}) cannot be an index!"
-        assert j % 1 == 0, f"j={j}({j.__class__.__name__}) cannot be an index!"
-        assert 0 <= i < I and 0 <= j < J, f"(i,j)= ({i},{j}) is out of range!"
-
-        if i == j:
-            self._LS_.A.customize.\
-                identify_global_rows_according_to_CSCG_partial_dofs(
-                i, pd, interpreted_as=interpreted_as)
-            self._LS_.b.customize.\
-                set_entries_according_to_CSCG_partial_cochains(
-                i, pd, interpreted_as=interpreted_as)
-        else:
-            self._LS_.A.customize.\
-                off_diagonally_identify_rows_according_to_two_CSCG_partial_dofs(
-                i, j, pd, pc, interpreted_as=interpreted_as)
-            self._LS_.b.customize.\
-                set_entries_according_to_CSCG_partial_cochains(
-                i, pd, pc=pc, interpreted_as=interpreted_as)
-
+            raise NotImplementedError(f"{pd}")
 
 
     def identify_global_row(self, r):
@@ -82,20 +88,3 @@ class ___LinearSystem_Customize___(FrozenOnly):
         self._LS_.A.customize.identify_global_row(r)
         self._LS_.b.customize.set_assembled_V_i_to(r, v)
 
-
-    def anti_UpTo_A_Constant_singularity_at_block(self, i, index=-1, value=0):
-        """We set
-            A[i][i][index, :] = 0
-            A[i][j][index, index] = 1
-            b[i][index,0] = value
-
-        Parameters
-        ----------
-        i
-        index
-        value
-
-        Returns
-        -------
-
-        """
