@@ -56,8 +56,7 @@ if __name__ == "__main__":
     f = mpRfT2_Si0F(mesh)
     f.TW.func = s
     s.current_time = 0
-    f.discretize()
-    # f.visualize()
+    f.discretization()
+    f.visualize()
     # mesh.visualize()
 
-    f.coboundary()

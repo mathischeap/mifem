@@ -18,6 +18,7 @@ class mpRfT2_Mesh_BasicCells_TraceElement(FrozenOnly):
         """"""
         self._elements_ = elements
         self._te_ = mesh.cscg.trace.elements[i] # the corresponding trace-element in the cscg mesh.
+        self._mesh_ = self._elements_._mesh_
         self._freeze_self_()
 
     @property
@@ -28,6 +29,8 @@ class mpRfT2_Mesh_BasicCells_TraceElement(FrozenOnly):
     def segments(self):
         """The segments on this lv0-trace-element."""
         return self._elements_.segments[self.i]
+
+
 
 
 if __name__ == "__main__":

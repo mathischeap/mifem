@@ -33,11 +33,15 @@ class mpRfT2_S1F_Numbering(FrozenOnly):
         self._numberer_ = getattr(import_module(path), scheme_name)(f)
         self._numbering_parameters_ = {'scheme_name': scheme_name}
         self._numbering_parameters_.update(parameters)
-        self.___Pr_reset_cache___()
+        self._gathering_ = None
+        self._num_local_dofs_ = None
         self._freeze_self_()
 
-    def ___Pr_reset_cache___(self):
-        """"""
+    @property
+    def gathering(self):
+        if self._gathering_ is None:
+            self._gathering_, self._num_local_dofs_ = self._numberer_(self._numbering_parameters_)
+        return self._gathering_
 
 
 

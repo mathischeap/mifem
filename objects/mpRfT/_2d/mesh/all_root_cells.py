@@ -37,6 +37,7 @@ class mpRfT2_Mesh_AllRootCells(FrozenOnly):
 
 
 
+
 if __name__ == '__main__':
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python objects/mpRfT/_2d/mesh/all_root_cells.py
     pass

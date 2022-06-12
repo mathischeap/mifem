@@ -29,7 +29,6 @@ class CSCG_Form_TimeWise_BC(FrozenOnly):
         """
         self.body = scalar_vector  # has to pass the checker.
 
-
     @property
     def body(self):
         """The function body."""

@@ -56,7 +56,7 @@ class mpRfT2_Mesh_rcWds_Vector(FrozenOnly):
         return self._data_[rp]
 
     @property
-    def visualize(self):
+    def visualization(self):
         if self._visualize_ is None:
             self._visualize_ = mpRfT2_Mesh_rcWds_Vector_Visualize(self)
         return self._visualize_

@@ -288,7 +288,6 @@ class EWC_SparseMatrix(FrozenOnly):
 
                 GMS.append(GM)
 
-
         FINAL_GMS = list()
         for gms in GMS:
 

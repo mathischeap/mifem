@@ -40,6 +40,7 @@ class SimpleIterator(Iterator):
     def ___PRIVATE_parse_time_max_steps_max_time___(self, t0, dt, max_steps, max_time):
         """ t0: must given! dt > max_steps > max_time."""
         self._t0_ = t0
+
         if dt is not None:
             assert dt > 0, " <Simple> : dt={} wrong, should > 0.".format(dt)
             self.dt = dt

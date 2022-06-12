@@ -61,7 +61,7 @@ class mpRfT2_Mesh_rcWds_Scalar(FrozenOnly):
             yield rp
 
     @property
-    def visualize(self):
+    def visualization(self):
         if self._visualize_ is None:
             self._visualize_ = mpRfT2_Mesh_rcWds_Scalar_Visualize(self)
         return self._visualize_

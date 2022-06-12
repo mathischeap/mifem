@@ -59,7 +59,7 @@ class mpRfT2_S0F(mpRfT2_StandardFormBase):
         return self._matrices_
 
     @property
-    def visualize(self):
+    def visualization(self):
         return self._visualize_
 
     @property
@@ -74,5 +74,5 @@ if __name__ == "__main__":
 
     mesh = rfT2.rm(100)
 
-    mesh.visualize()
+    mesh.visualization()
 

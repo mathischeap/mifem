@@ -12,6 +12,9 @@ from screws.freeze.base import FrozenOnly
 import numpy as np
 
 
+
+
+
 class mpRfT2_Segment_CT(FrozenOnly):
     """"""
 
@@ -19,7 +22,6 @@ class mpRfT2_Segment_CT(FrozenOnly):
         """"""
         self._sg_ = sg
         self._freeze_self_()
-
 
     def mapping(self, xi):
         """from [-1,1] to this local segment."""
@@ -34,14 +36,12 @@ class mpRfT2_Segment_CT(FrozenOnly):
             raise NotImplementedError(
                 f"segment mapping not implemented for sg.where={sg.where.__class__.__name__}")
 
-
     def ___Pr_M_trace___(self, xi):
         """"""
         sg = self._sg_
         o, d = sg.origin_and_delta
         xi = o + (xi + 1) * d / 2
         return sg.where._te_.coordinate_transformation.mapping(xi)
-
 
     def ___Pr_M_cell___(self, xi):
         """"""
@@ -60,6 +60,9 @@ class mpRfT2_Segment_CT(FrozenOnly):
 
 
 
+
+
+
 if __name__ == "__main__":
-    # mpiexec -n 4 python
+    # mpiexec -n 4 python objects/mpRfT/_2d/mesh/segments/segment/ct.py
     pass

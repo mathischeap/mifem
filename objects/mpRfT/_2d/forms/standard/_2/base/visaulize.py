@@ -27,8 +27,8 @@ class mpRfT2_S2F_Visualize(FrozenOnly):
         """"""
         mesh = self._f_.mesh
         coo_map = mesh.coo_map.uniform(density, ndim=1)
-        xy, v = self._f_.reconstruct(coo_map, ravel=False)
-        v.visualize(xy, plot_type=plot_type, **kwargs)
+        xy, v = self._f_.reconstruction(coo_map, ravel=False)
+        v.visualization(xy, plot_type=plot_type, **kwargs)
 
 
 if __name__ == "__main__":

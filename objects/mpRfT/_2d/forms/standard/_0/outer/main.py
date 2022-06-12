@@ -42,7 +42,7 @@ if __name__ == "__main__":
     # mpiexec -n 4 python objects/mpRfT/_2d/forms/standard/_0/outer/main.py
     from __init__ import rfT2
 
-    mesh = rfT2.rm(500, N_range=(3,3), refinement_intensity=0.2)
+    mesh = rfT2.rm(500, N_range=(2,3), refinement_intensity=0.2)
 
     f = mpRfT2_So0F(mesh)
 
@@ -63,3 +63,5 @@ if __name__ == "__main__":
     df = f.coboundary()
 
     df.visualize()
+
+    print(f.num.local_dofs)

@@ -17,6 +17,10 @@ from objects.mpRfT._2d.cf.base import mpRfT2_ContinuousField
 from objects.mpRfT._2d.cf.vector.reconstruct import mpRfT2_VectorReconstruct
 from objects.mpRfT._2d.cf.vector.visualize import mpRfT2_VectorVisualize
 
+
+
+
+
 class mpRfT2_Vector(mpRfT2_ContinuousField):
     """"""
 
@@ -54,7 +58,6 @@ class mpRfT2_Vector(mpRfT2_ContinuousField):
         self._ftype_ = ftype
 
 
-
     def ___Pr_evaluate_func___(self):
         """
         Evaluate the function at a particular time; reduce the number of variables from 4 to 3.
@@ -74,7 +77,6 @@ class mpRfT2_Vector(mpRfT2_ContinuousField):
             self._previous_func_id_time_ = (id(self.func), time, RETURN)
             return RETURN
 
-
     @property
     def shape(self):
         return 2,
@@ -85,16 +87,19 @@ class mpRfT2_Vector(mpRfT2_ContinuousField):
 
     #-------------- personal --------------------------------------------------------------------
     @property
-    def reconstruct(self):
+    def reconstruction(self):
         if self._reconstruct_ is None:
             self._reconstruct_ = mpRfT2_VectorReconstruct(self)
         return self._reconstruct_
 
     @property
-    def visualize(self):
+    def visualization(self):
         if self._visualize_ is None:
             self._visualize_ = mpRfT2_VectorVisualize(self)
         return self._visualize_
+
+
+
 
 
 
@@ -111,4 +116,4 @@ if __name__ == "__main__":
     v = mpRfT2_Vector(mesh, (p,q))
     v.current_time = 0
 
-    v.visualize()
+    v.visualization()

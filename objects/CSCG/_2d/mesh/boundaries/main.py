@@ -1,4 +1,4 @@
-"""In mesh.domain, we distinguish domain boundary and periodic boundary.
+"""In `mesh.domain`, we distinguish domain boundary and periodic boundary.
 
 So even two domain boundaries are periodic boundaries (physically, they are not boundaries),
 we still have them named and in `mesh.domain.regions.map` shown.
@@ -9,7 +9,7 @@ differences to element boundary.
 Therefore, for a periodic domain, mesh.boundaries will have no valid boundary.
 
 This is very important. The reason we have this is because of the logic we used to code the mesh. We first
-generate the mesh.elements.map through regions.map, then we adjust the elements.map through studying the
+generate the mesh.elements.map through `regions.map`, then we adjust the elements.map through studying the
 periodic setting. This I know is not very good. But the thing is when I first code it, I did not consider
 periodic boundaries. So ...
 
@@ -53,13 +53,16 @@ class _2dCSCG_Mesh_Boundaries(FrozenOnly):
             assert i in t_elements.map, "A trivial check."
             for j in range(4):
                 target = elements.map[i][j]
+
                 if isinstance(target, str):
+
                     if target in bns:
                         if target not in names: names.append(target)
                         if target not in Res: Res[target] = list()
                         if target not in Rte: Rte[target] = list()
                         Res[target].append(str(i)+side_names[j])
                         Rte[target].append(t_elements.map[i][j])
+
                     else:
                         raise Exception("In structured mesh, str entry in elements.map "
                                         "should only be boundary name")
@@ -86,7 +89,8 @@ class _2dCSCG_Mesh_Boundaries(FrozenOnly):
 
     @property
     def names(self):
-        """All boundary names (all global boundaries) we have in this mesh, periodic boundaries are excluded.
+        """All boundary names (all global boundaries) we have in this mesh, periodic boundaries
+        are excluded.
 
         Therefore, even there are some boundaries having no business with the elements in this core,
         we still include their names here.
@@ -112,7 +116,6 @@ class _2dCSCG_Mesh_Boundaries(FrozenOnly):
     @property
     def visualize(self):
         return self._visualize_
-
 
     def __getitem__(self, bn):
         if bn not in self._boundaries_dict_:

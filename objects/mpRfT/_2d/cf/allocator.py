@@ -8,8 +8,6 @@ from screws.freeze.base import FrozenOnly
 class mpRfT2_FieldsAllocator(FrozenOnly):
     """"""
 
-
-
     @classmethod
     def ___form_name___(cls):
         return {'scalar': "mpRfT2_Scalar",

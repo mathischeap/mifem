@@ -35,7 +35,9 @@ class mpRfT2_Mesh_FutureRefinements_hAdapt(FrozenOnly):
 
 
 if __name__ == "__main__":
+
     # mpiexec -n 4 python objects/mpRfT/_2d/mesh/refinements/future/h_adapt/main.py
+
     from __init__ import rfT2
     from objects.mpRfT._2d.forms.standard._0.inner.main import mpRfT2_Si0F
     from objects.mpRfT._2d.cf.scalar.main import mpRfT2_Scalar
@@ -57,11 +59,10 @@ if __name__ == "__main__":
         f = mpRfT2_Si0F(mesh)
         f.TW.func = s
         s.current_time = 0
-        f.discretize()
-        f.visualize(saveto=image_folder + '/' + str(next(IC)), dpi=150, usetex=True,
+        f.discretization()
+        f.visualization(saveto=image_folder + '/' + str(next(IC)), dpi=150, usetex=True,
                     levels=np.linspace(0,1,11), show_boundaries=False, show_mesh=True)
         mesh.refinements.future.h_adapt_to(f, levels=(0.5, 0.75))
         mesh = mesh.do.evolve()
 
     make_a_video_from_images_in_folder(image_folder, duration=8, clear_images=True)
-

@@ -20,8 +20,10 @@ class mpRfT2_Mesh_Space_Basis(FrozenOnly):
             self._getitem_ = self.___Pr_getitem_uniform___
         elif coo_map.distribution == 'Gauss':
             self._getitem_ = self.___Pr_getitem_Gauss___
+        elif coo_map.distribution == 'Lobatto':
+            self._getitem_ = self.___Pr_getitem_Lobatto___
         else:
-            raise NotImplementedError(f"{coo_map.__class__.__name__}")
+            raise NotImplementedError(f"{self.__class__.__name__} cannot handle {coo_map.__class__.__name__}")
         self._cm_ = coo_map
         self._cache_ = dict()
 
@@ -34,14 +36,29 @@ class mpRfT2_Mesh_Space_Basis(FrozenOnly):
     def ___Pr_getitem_Gauss___(self, rp):
         raise NotImplementedError()
 
+    def ___Pr_getitem_Lobatto___(self, rp):
+        raise NotImplementedError()
+
     @property
     def ___Pr_rcMC_key___(self):
         """"""
-        return self._cm_.___Pr_rcMC_key___
+        raise NotImplementedError()
 
     def ___Pr_rcMC_nodes___(self, rp):
         """"""
-        return self[rp][0]
+        raise NotImplementedError()
+
+    @property
+    def ___Pr_sgMC_key___(self):
+        """"""
+        raise NotImplementedError()
+
+    def ___Pr_sgMC_nodes___(self, rp):
+        """"""
+        raise NotImplementedError()
+
+
+
 
 
 

@@ -10,26 +10,45 @@ if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.base import FrozenOnly
 from objects.mpRfT._2d.mesh.segments.segment.ct import mpRfT2_Segment_CT
+from objects.mpRfT._2d.mesh.segments.segment.IS import mpRfT2_Segment_IS
+
+
+
 
 
 class mpRfT2_Segment(FrozenOnly):
     """"""
-
     def __init__(self, where, x_signature, y_signature):
         """"""
         if where.__class__.__name__ == 'mpRfT2_Mesh_Cell':
             assert where.level == 0, \
-                f"I can only be built based on a basic-cell (cscg mesh element) or a basic-cell-trace-element."
+                f"I can only be built based on a basic-cell (cscg mesh element) or " \
+                f"a basic-cell-trace-element."
         else:
             assert where.__class__.__name__ == 'mpRfT2_Mesh_BasicCells_TraceElement' , \
-                f"I can only be built based on a basic-cell (cscg mesh element) or a basic-cell-trace-element."
+                f"I can only be built based on a basic-cell (cscg mesh element) or " \
+                f"a basic-cell-trace-element."
+
         self._where_ = where
         self._xSignature_ = x_signature
         self._ySignature_ = y_signature
         self.___repr___ = None
         self._ct_ = None
+        self._IS_ = None
         self._od = None
+        self._direction_: str = '' # 'UD' or 'LR'
+        self._neighbors_: list = list() # the two neighbors, could be two root-cells or
+                                        # one root-cell plus a mesh boundary name.
+        self._neighbors_N_: list = list()
+        self._N_ = None
+        self._type_wrt_metric_ = None
+        self._character_ = None
         self._freeze_self_()
+
+    @property
+    def N(self):
+        """"""
+        return self._N_
 
     @property
     def xSignature(self):
@@ -55,21 +74,39 @@ class mpRfT2_Segment(FrozenOnly):
                 _s += 'c' + str(self.where.indices[0])
                 if isinstance(self.xSignature, str):
                     _s += ':y' + str(self.ySignature) + ':x' + self.xSignature
+                    self._direction_ = 'UD'
+
                 else:
                     _s += ':x' + str(self.xSignature) + ':y' + self.ySignature
+                    self._direction_ = 'LR'
 
             elif self.where.__class__.__name__ == 'mpRfT2_Mesh_BasicCells_TraceElement':
                 _s += 't' + str(self.where.i)
                 if isinstance(self.xSignature, str):
                     _s += '-x' + self.xSignature
+                    self._direction_ = 'UD'
+
                 else:
                     _s += '-y' + self.ySignature
+                    self._direction_ = 'LR'
 
             else:
                 raise Exception()
 
             self.___repr___ = _s
         return self.___repr___
+
+    @property
+    def character(self):
+        if self._character_ is None:
+            rp = self.__repr__()
+            if rp[3] == 'c':
+                self._character_ = rp.split(':')[-1]
+            elif rp[3] == 't':
+                self._character_ = rp.split('-')[-1]
+            else:
+                raise Exception()
+        return self._character_
 
     def __contains__(self, osg):
         """"""
@@ -102,6 +139,12 @@ class mpRfT2_Segment(FrozenOnly):
                 return False
             else:
                 raise Exception()
+
+    @property
+    def IS(self):
+        if self._IS_ is None:
+            self._IS_ = mpRfT2_Segment_IS(self)
+        return self._IS_
 
     @property
     def coordinate_transformation(self):
@@ -150,8 +193,40 @@ class mpRfT2_Segment(FrozenOnly):
 
         return self._od
 
+    @property
+    def direction(self):
+        if self._direction_ == '':
+            _r  = self.__repr__()
+        return self._direction_
+
+    @property
+    def neighbors(self):
+        return self._neighbors_
+
+    @property
+    def neighbors_N(self):
+        return self._neighbors_N_
+
+    @property
+    def type_wrt_metric(self):
+        if self._type_wrt_metric_ is None:
+            element = self.neighbors[0].cscg_element
+            self._type_wrt_metric_ = element.type_wrt_metric.___CLASSIFY_mpRfT2_segment___(self)
+        return self._type_wrt_metric_
+
+    
+    
+
+
 
 
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/mpRfT/_2d/mesh/segments/segment/main.py
-    pass
+
+    # from objects.mpRfT._2d.master import MeshGenerator
+    # mesh = MeshGenerator('rectangle')([3,3], 2, show_info=True)
+    from __init__ import rfT2
+    mesh = rfT2.rm(10, refinement_intensity=0.5)
+
+    for sg in mesh.segments:
+        print(sg.type_wrt_metric.mark)

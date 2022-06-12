@@ -12,6 +12,9 @@ from objects.mpRfT._2d.forms.standard._1.base.main import mpRfT2_S1F
 from objects.mpRfT._2d.forms.standard._1.outer.discretize.main import mpRfT2_So1F_Discretize
 from objects.mpRfT._2d.forms.standard._1.outer.reconstruct import mpRfT2_So1F_Reconstruct
 from objects.mpRfT._2d.forms.standard._1.outer.migrate import mpRfT2_So1F_Migrate
+from objects.mpRfT._2d.forms.standard._1.outer.boundary_integrate import mpRfT2_So1F_BI
+
+
 
 
 class mpRfT2_So1F(mpRfT2_S1F):
@@ -35,7 +38,15 @@ class mpRfT2_So1F(mpRfT2_S1F):
         self._discretize_ = mpRfT2_So1F_Discretize(self)
         self._reconstruct_ = mpRfT2_So1F_Reconstruct(self)
         self._migrate_ = mpRfT2_So1F_Migrate(self)
+        self._BI_ = mpRfT2_So1F_BI(self)
         self._freeze_self_()
+
+
+    @property
+    def boundary_integrate(self):
+        """"""
+        return self._BI_
+
 
 
 
@@ -50,19 +61,25 @@ if __name__ == "__main__":
     fc = rfT2.rf(100, N_range=(3,3))
 
     f = fc('1-f-o')
+    t = fc('nst')
 
     import numpy as np
     def p(t, x, y): return np.sin(np.pi*x) * np.cos(np.pi*y) + t
     def q(t, x, y): return np.cos(np.pi*x) * np.sin(np.pi*y) + t
+
+    def h(t, x, y): return np.sin(np.pi*x) * np.sin(np.pi*y) + t
+
+    s = fc('scalar', h)
     v = fc('vector', (p, q))
 
     f.TW.func = v
     v.current_time = 0
+    # f.discretize()
 
-    f.discretize()
+    t.TW.func = s
+    s.current_time = 0
+    # t.discretize()
 
-    f.visualize()
+    # f.boundary_integrate(t)
 
-    df = f.coboundary()
-
-    df.visualize(show_mesh=True)
+    print(f.num.local_dofs)

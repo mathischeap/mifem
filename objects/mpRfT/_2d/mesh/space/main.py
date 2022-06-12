@@ -6,9 +6,11 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('../')
+if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.base import FrozenOnly
+from screws.quadrature import Quadrature
+
 from objects.CSCG._2d.spaces.polynomials import _2dCSCG_PolynomialSpace
 from objects.mpRfT._2d.mesh.space.do import mpRfT2_Mesh_Space_do
 
@@ -21,6 +23,8 @@ class mpRfT2_Mesh_Space(FrozenOnly):
         self._mesh_ = mesh
         self._pool_ = dict()
         self._do_ = mpRfT2_Mesh_Space_do(self)
+        self._GN_ = dict()
+        self._LN_ = dict()
         self._freeze_self_()
 
     def __getitem__(self, N):
@@ -34,6 +38,19 @@ class mpRfT2_Mesh_Space(FrozenOnly):
     def do(self):
         return self._do_
 
+
+    def Gauss(self, N):
+        """"""
+        if N not in self._GN_:
+            self._GN_[N] =  Quadrature(N, category='Gauss').quad
+        return self._GN_[N]
+
+
+    def Lobatto(self, N):
+        """"""
+        if N not in self._LN_:
+            self._LN_[N] =  Quadrature(N, category='Lobatto').quad
+        return self._LN_[N]
 
 
 

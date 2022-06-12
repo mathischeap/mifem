@@ -29,9 +29,6 @@ class hAdapt_S0F(FrozenOnly):
         else:
             raise NotImplementedError(f"a_adapt_to s0f approach = {approach} is not implemented.")
 
-
-
-
     def ___A1___(self, levels):
         """"""
         #------- check levels -------------------------------------------------------------
@@ -49,7 +46,7 @@ class hAdapt_S0F(FrozenOnly):
         mesh = f.mesh
         num_levels = len(levels)
         coo = mesh.coo_map.uniform(2**num_levels * 5, ndim=1)
-        V = f.reconstruct(coo, value_only=True)
+        V = f.reconstruction(coo, value_only=True)
         V = V.bcW # basic-cell-wise data struction.
         MIN = list()
         MAX = list()
@@ -101,6 +98,7 @@ class hAdapt_S0F(FrozenOnly):
                     output = self.___Pr_divide_cell___(vs, levels[1:], rdf[j])
                     rdf[j] = output
                 return rdf
+
     @staticmethod
     def ___Pr_divide_V_into_4_parts___(V):
         """"""
@@ -129,8 +127,8 @@ if __name__ == "__main__":
     f = mpRfT2_Si0F(mesh)
     f.TW.func = s
     s.current_time = 0
-    f.discretize()
-    # f.visualize(show_mesh=True)
+    f.discretization()
+    # f.visualization(show_mesh=True)
     mesh.refinements.future.h_adapt_to(f, levels=(0.5, 0.75))
     mesh = mesh.do.evolve()
     mesh.visualize()

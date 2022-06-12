@@ -21,6 +21,7 @@ class mpRfT_Mesh_Cell_Base(FrozenOnly):
         self.___sub_cells___ = None
         self.___isroot___ = True # when it is initialized, it is a root cell of course.
         self._r = None
+        self._cscg_element_ = None
 
     def __repr__(self):
         if self._r is None:
@@ -48,11 +49,15 @@ class mpRfT_Mesh_Cell_Base(FrozenOnly):
     def sub_cells(self):
         return self.___sub_cells___
 
-
+    @property
+    def cscg_element(self):
+        if self._cscg_element_ is None:
+            self._cscg_element_  = self.mesh.cscg.elements[self.indices[0]]
+        return self._cscg_element_
 
 
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python objects/mpRfT/base/mesh/cell.py
     pass

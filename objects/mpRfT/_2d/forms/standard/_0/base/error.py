@@ -34,7 +34,7 @@ class mpRfT2_S0F_Error(FrozenOnly):
         """
         mesh = self._f_.mesh
         coo = mesh.coo_map.Gauss(degree_plus)
-        xy, v = self._f_.reconstruct(coo, ravel=False)
+        xy, v = self._f_.reconstruction(coo, ravel=False)
 
         F = self._f_.TW.func.___Pr_evaluate_func___()
 
@@ -63,11 +63,11 @@ class mpRfT2_S0F_Error(FrozenOnly):
         """"""
         mesh = self._f_.mesh
         coo = mesh.coo_map.uniform(density, ndim=1)
-        xy, v = self._f_.reconstruct(coo, ravel=False)
+        xy, v = self._f_.reconstruction(coo, ravel=False)
 
         f = self._f_.TW.func
         coo = mesh.coo_map.uniform(density, ndim=2)
-        __, V = f.reconstruct(coo)
+        __, V = f.reconstruction(coo)
         d = (v - V).magnitude
         if visualize:
             d.visualize(xy, plot_type='contourf', **kwargs)

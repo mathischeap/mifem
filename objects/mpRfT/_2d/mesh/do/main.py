@@ -22,6 +22,7 @@ class mpRfT2_Mesh_Do(FrozenOnly):
 
     @property
     def find(self):
+        """"""
         if self._find_ is None:
             self._find_ = mpRfT2_Mesh_Do_Find(self._mesh_)
         return self._find_
@@ -30,10 +31,6 @@ class mpRfT2_Mesh_Do(FrozenOnly):
         """Applying all the refinements to the cscg mesh to make a new mpRfT2 mesh."""
         rfd = self._mesh_.refinements.future.rfd
         return self._mesh_.__class__(self._mesh_.cscg, self._mesh_.dN, rfd)
-
-
-
-
 
 
 

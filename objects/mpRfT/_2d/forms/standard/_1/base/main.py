@@ -48,9 +48,8 @@ class mpRfT2_S1F(mpRfT2_StandardFormBase):
         else:
             raise Exception(f"mpRfT2_S1F FUNC do not accept func {func.__class__}")
 
-
     @property
-    def visualize(self):
+    def visualization(self):
         """"""
         return self._visualize_
 
@@ -69,5 +68,5 @@ class mpRfT2_S1F(mpRfT2_StandardFormBase):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python objects/mpRfT/_2d/forms/standard/_1/base/main.py
     pass

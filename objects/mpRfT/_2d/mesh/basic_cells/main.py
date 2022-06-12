@@ -49,7 +49,6 @@ class mpRfT2_Mesh_BasicCells(FrozenOnly):
             self._internal_segments_ = mpRfT2_Mesh_BasicCells_InternalSegments(self._mesh_)
         return self._internal_segments_
 
-
     @property
     def trace_segments(self):
         return self.trace_elements.segments

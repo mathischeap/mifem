@@ -59,18 +59,18 @@ class Gathering_Vector(FrozenOnly):
 
         return self._full_vector_
 
-    def __getitem__(self, i):
+    def __getitem__(self, index):
         """Get the ith dof numbering."""
-        return self.full_vector[i]
+        return self.full_vector[index]
 
-    def __contains__(self, i):
+    def __contains__(self, dof):
         """If #i dof is contained by this GV."""
-        return i in self._gv_
+        return dof in self._gv_
 
     def __iter__(self):
         """Go through all local dofs."""
-        for j in self._gv_:
-            yield j
+        for dof in self._gv_:
+            yield dof
 
     def __len__(self):
         """How many local dofs?"""
@@ -90,18 +90,23 @@ class Gathering_Vector(FrozenOnly):
             else:
                 return np.all(self.full_vector == other.full_vector)
 
+    def __repr__(self):
+        return str(self.i) + \
+               f"({self.___PRIVATE_find_max_label___()}, " \
+                f"{self.___PRIVATE_find_min_label___()})"
+
     def ___PRIVATE_find_max_label___(self):
         return np.max(self.full_vector)
 
     def ___PRIVATE_find_min_label___(self):
         return np.min(self.full_vector)
 
-    def index(self, i):
+    def index(self, dof):
         """find the index of dof #i. This is like the index function of a list. For example,
             >>> A = [1,2,5,3,4],
             >>> A.index(5)
             2
         """
-        WHERE =  np.where(self.full_vector == i)[0]
+        WHERE =  np.where(self.full_vector == dof)[0]
         assert len(WHERE) == 1, f"We must only find one dof is numbered i."
         return WHERE[0]

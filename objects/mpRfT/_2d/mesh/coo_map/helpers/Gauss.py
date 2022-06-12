@@ -36,6 +36,14 @@ class mpRfT2_Mesh_GaussCooMap(mpRfT2_CooMapBase):
     def ___Pr_rcMC_nodes___(self, rp):
         return self[rp][0][1]
 
+    @property
+    def ___Pr_sgMC_key___(self):
+        """A key implying the value for metric involved computing in each root-cell."""
+        raise NotImplementedError()
+
+    def ___Pr_sgMC_nodes___(self, rp):
+        raise NotImplementedError()
+
     def __call__(self, degree_plus):
         """
 
@@ -64,24 +72,43 @@ class mpRfT2_Mesh_GaussCooMap(mpRfT2_CooMapBase):
         -------
 
         """
-        assert isinstance(rp, str)
-        cell = self._mesh_[rp]
-        N = cell.N
+        #------------ root-cell -----------------------------------------------------------------
+        if isinstance(rp, str):
+            cell = self._mesh_[rp]
+            N = cell.N
 
-        if N in self._coo_:
-            pass
+            if N in self._coo_:
+                pass
+            else:
+                _1dNodes, _1dWeights = Quadrature(N + self._dp_, category='Gauss').quad
+                _2dNodes = np.meshgrid(_1dNodes, _1dNodes, indexing='ij')
+                # noinspection PyUnresolvedReferences
+                _2dNodes_ravel = [_.ravel('F') for _ in _2dNodes]
+                _2dWeights = np.tensordot(_1dWeights, _1dWeights, axes=0)
+                _2dWeights_ravel = _2dWeights.ravel('F')
+
+                self._coo_[N] = [_1dNodes  , _2dNodes  , _2dNodes_ravel], \
+                                [_1dWeights, _2dWeights, _2dWeights_ravel]
+
+            return self._coo_[N]
+
+        #------------ segment -----------------------------------------------------------------
+        elif rp.__class__.__name__ == 'mpRfT2_Segment':
+
+            N = rp.N
+
+            if N in self._coo_:
+                pass
+            else:
+                _1dNodes, _1dWeights = Quadrature(N + self._dp_, category='Gauss').quad
+                self._coo_[N] = _1dNodes, _1dWeights
+
+            return self._coo_[N]
+
+        #------------ else -----------------------------------------------------------------
         else:
-            _1dNodes, _1dWeights = Quadrature(N + self._dp_, category='Gauss').quad
-            _2dNodes = np.meshgrid(_1dNodes, _1dNodes, indexing='ij')
-            # noinspection PyUnresolvedReferences
-            _2dNodes_ravel = [_.ravel('F') for _ in _2dNodes]
-            _2dWeights = np.tensordot(_1dWeights, _1dWeights, axes=0)
-            _2dWeights_ravel = _2dWeights.ravel('F')
-
-            self._coo_[N] = [_1dNodes  , _2dNodes  , _2dNodes_ravel], \
-                            [_1dWeights, _2dWeights, _2dWeights_ravel]
-
-        return self._coo_[N]
+            raise NotImplementedError(f'Not implemented Gauss coo_map for {rp}')
+        #===================================================================================
 
 
 

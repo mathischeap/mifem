@@ -34,3 +34,9 @@ class ElementTypeWr2MetricBase(FrozenOnly):
             f"Please implement ___CLASSIFY_mpRfT2_CELL_of_origin_and_delta___ for "
             f"TypeWr2Metric named: {self.__class__.__name__}"
         )
+
+    def ___CLASSIFY_mpRfT2_segment___(self, seg):
+        raise NotImplementedError(
+            f"Please implement ___CLASSIFY_mpRfT2_segment___ for "
+            f"TypeWr2Metric named: {self.__class__.__name__}"
+        )

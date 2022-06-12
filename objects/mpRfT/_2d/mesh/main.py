@@ -19,13 +19,15 @@ from objects.mpRfT._2d.mesh.space.main import mpRfT2_Mesh_Space
 from objects.mpRfT._2d.mesh.segments.main import mpRfT2_Mesh_Segments
 from objects.mpRfT._2d.mesh.all_root_cells import mpRfT2_Mesh_AllRootCells
 from objects.mpRfT._2d.mesh.rcMetricComputing.main import mpRfT2_Mesh_rcMC
+from objects.mpRfT._2d.mesh.sgMetricComputing.main import mpRfT2_Mesh_sgMC
+from objects.mpRfT._2d.mesh.boundaries.main import mpRfT2_Mesh_Boundaries
 
 
 
 class mpRfT2_Mesh(mpRfT_MeshBase):
     """"""
 
-    def __init__(self, cscg, dN, rfd):
+    def __init__(self, cscg, dN, rfd, SNM=1):
         """
 
         Parameters
@@ -34,6 +36,8 @@ class mpRfT2_Mesh(mpRfT_MeshBase):
         dN
         rfd : dict
             Refinements dict.
+        SNM :
+            Segment degree (N) Method.
 
         """
         super(mpRfT2_Mesh, self).__init__(cscg, dN, rfd)
@@ -43,10 +47,15 @@ class mpRfT2_Mesh(mpRfT_MeshBase):
         self._visualize_ = None
         self._coo_map_ = None
         self._space_ = None
-        self._segments_ = None
         self._ARC_ = None
         self._rcMC_ = mpRfT2_Mesh_rcMC(self)
+        self._sgMC_ = mpRfT2_Mesh_sgMC(self)
+        self._segments_ = mpRfT2_Mesh_Segments(self)
+        self._segments_.___Pr_find_N_for_all_segments___(SNM)
+        self._boundaries_ = mpRfT2_Mesh_Boundaries(self)
         self._freeze_self_()
+
+
 
     def ___Pr_make_basic_cells___(self, dN, rfd, _):
         """
@@ -84,39 +93,51 @@ class mpRfT2_Mesh(mpRfT_MeshBase):
         return self._refinements_
 
     @property
-    def visualize(self):
+    def visualization(self):
         if self._visualize_ is None:
             self._visualize_ = mpRfT2_Mesh_Visualize(self)
         return self._visualize_
 
     @property
     def coo_map(self):
+        """"""
         if self._coo_map_ is None:
             self._coo_map_ = mpRfT2_Mesh_CooMap(self)
         return self._coo_map_
 
     @property
     def space(self):
+        """"""
         if self._space_ is None:
             self._space_ = mpRfT2_Mesh_Space(self)
         return self._space_
 
     @property
     def segments(self):
-        if self._segments_ is None:
-            self._segments_ = mpRfT2_Mesh_Segments(self)
+        """"""
         return self._segments_
 
     @property
     def arc(self):
+        """"""
         if self._ARC_ is None:
             self._ARC_ = mpRfT2_Mesh_AllRootCells(self)
         return self._ARC_
 
     @property
     def rcMC(self):
+        """"""
         return self._rcMC_
 
+    @property
+    def sgMC(self):
+        """"""
+        return self._sgMC_
+
+    @property
+    def boundaries(self):
+        """"""
+        return self._boundaries_
 
 
 
@@ -132,3 +153,5 @@ if __name__ == "__main__":
     mesh = rfT2.rm(10, refinement_intensity=0.5)
     # for rp in mesh.arc:
     #     mesh.visualize(rp=rp)
+
+    mesh.visualization()

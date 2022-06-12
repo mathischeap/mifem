@@ -11,6 +11,7 @@ if './' not in sys.path: sys.path.append('./')
 from objects.mpRfT._2d.forms.base import mpRfT2_FormBase
 from objects.mpRfT._2d.forms.standard.base.IS import mpRfT2_SF_IS
 from objects.mpRfT._2d.forms.standard.base.cochain import mpRfT2_SF_Cochain
+from objects.mpRfT._2d.forms.standard.base.N import mpRfT2_SF_N
 
 
 class mpRfT2_StandardFormBase(mpRfT2_FormBase):
@@ -36,6 +37,7 @@ class mpRfT2_StandardFormBase(mpRfT2_FormBase):
 
         self._IS_ = mpRfT2_SF_IS(self)
         self._cochain_ = mpRfT2_SF_Cochain(self)
+        self._N_ = mpRfT2_SF_N(self)
         self._numbering_ = None
         self._num_ = None
         self._error_ = None
@@ -63,6 +65,10 @@ class mpRfT2_StandardFormBase(mpRfT2_FormBase):
         return self._cochain_
 
     @property
+    def N(self):
+        return self._N_
+
+    @property
     def numbering(self):
         """"""
         return self._numbering_
@@ -77,15 +83,15 @@ class mpRfT2_StandardFormBase(mpRfT2_FormBase):
         return self._error_
 
     @property
-    def discretize(self):
+    def discretization(self):
         return self._discretize_
 
     @property
-    def reconstruct(self):
+    def reconstruction(self):
         return self._reconstruct_
 
     @property
-    def migrate(self):
+    def migration(self):
         return self._migrate_
 
 

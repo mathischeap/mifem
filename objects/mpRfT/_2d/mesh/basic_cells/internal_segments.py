@@ -60,16 +60,16 @@ class mpRfT2_Mesh_BasicCells_InternalSegments(FrozenOnly):
 
         UDLR = list()
 
-        if not cell.IS.attached_to_Lv0cell_U_boundary:
+        if not cell.IS.attached_to_basic_cell_U_boundary:
             UDLR.append(mpRfT2_Segment(where, ox, ySignature))
 
-        if not cell.IS.attached_to_Lv0cell_D_boundary:
+        if not cell.IS.attached_to_basic_cell_D_boundary:
             UDLR.append(mpRfT2_Segment(where, ex, ySignature))
 
-        if not cell.IS.attached_to_Lv0cell_L_boundary:
+        if not cell.IS.attached_to_basic_cell_L_boundary:
             UDLR.append(mpRfT2_Segment(where, xSignature, oy))
 
-        if not cell.IS.attached_to_Lv0cell_R_boundary:
+        if not cell.IS.attached_to_basic_cell_R_boundary:
             UDLR.append(mpRfT2_Segment(where, xSignature, ey))
 
         return UDLR

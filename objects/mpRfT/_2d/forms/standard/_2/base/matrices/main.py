@@ -6,7 +6,7 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('../')
+if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.base import FrozenOnly
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
@@ -23,10 +23,11 @@ class mpRfT2_S2F_Matrices(FrozenOnly):
 
     @property
     def mass(self):
-        return EWC_SparseMatrix(self._f_.mesh.rcfc,
-                                MassMatrixGenerator(self._f_),
-                                cache_key_generator=self._f_.mesh.___Pr_metric_N_key___
-                                )
+        return EWC_SparseMatrix(
+                    self._f_.mesh.rcfc,
+                    MassMatrixGenerator(self._f_),
+                    cache_key_generator=self._f_.mesh.___Pr_metric_N_key___
+                )
 
 
 

@@ -37,7 +37,7 @@ if __name__ == "__main__":
     # mpiexec -n 4 python objects/mpRfT/_2d/forms/standard/_2/outer/main.py
     from __init__ import rfT2
 
-    mesh = rfT2.rm(500, N_range=(2,3))
+    mesh = rfT2.rm(500, N_range=(3,3))
 
     f = mpRfT2_So2F(mesh)
 
@@ -52,14 +52,15 @@ if __name__ == "__main__":
 
     M = f.matrices.mass
 
-    for i in M:
-        # print(i)
-        M[i]
 
-    # f.discretize()
-    #
-    # # R = f.reconstruct()
-    #
-    # # f.visualize(show_mesh=True)
-    # # #
-    # print(f.error.L())
+    # print(f.num.local_dofs)
+    # for i in M:
+    #     # print(i)
+    #     print(M[i])
+
+    f.discretization()
+
+
+    f.visualization(show_mesh=True)
+    # #
+    print(f.error.L())

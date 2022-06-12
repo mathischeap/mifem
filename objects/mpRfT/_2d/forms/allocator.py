@@ -26,9 +26,8 @@ class mpRfT2_FormsAllocator(FrozenOnly):
                 '2-f-i': "mpRfT2_Si2F",
                 '2-f-o': "mpRfT2_So2F",
 
-                '0-t': "mpRfT2_T0F",
-                '1-t': "mpRfT2_T1F",
-
+                'nst': "mpRfT2_NSgF",
+                'est': "mpRfT2_ESgF",
                 }
 
     @classmethod
@@ -43,8 +42,8 @@ class mpRfT2_FormsAllocator(FrozenOnly):
                 '2-f-i': base_path + "standard._2.inner.main",
                 '2-f-o': base_path + "standard._2.outer.main",
 
-                '0-t': base_path + "trace._0.main",
-                '1-t': base_path + "trace._1.main",
+                'nst': base_path + "segment.node.main",
+                'est': base_path + "segment.edge.main",
                 }
 
 

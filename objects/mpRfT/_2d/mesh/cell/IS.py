@@ -30,7 +30,7 @@ class mpRfT2_Mesh_Cell_IS(FrozenOnly):
 
 
     @property
-    def attached_to_Lv0cell_boundary(self):
+    def attached_to_basic_cell_boundary(self):
         """If this cell is attached to the cscg-element(level-0-cell)-boundary (lv0-trace-element)."""
         if self._atb_ is None:
             indices = self._cell_.indices
@@ -89,27 +89,27 @@ class mpRfT2_Mesh_Cell_IS(FrozenOnly):
         return self._atb_
 
     @property
-    def attached_to_Lv0cell_U_boundary(self):
+    def attached_to_basic_cell_U_boundary(self):
         if self._U is None:
-            _ = self.attached_to_Lv0cell_boundary
+            _ = self.attached_to_basic_cell_boundary
         return self._U
 
     @property
-    def attached_to_Lv0cell_D_boundary(self):
+    def attached_to_basic_cell_D_boundary(self):
         if self._D is None:
-            _ = self.attached_to_Lv0cell_boundary
+            _ = self.attached_to_basic_cell_boundary
         return self._D
 
     @property
-    def attached_to_Lv0cell_L_boundary(self):
+    def attached_to_basic_cell_L_boundary(self):
         if self._L is None:
-            _ = self.attached_to_Lv0cell_boundary
+            _ = self.attached_to_basic_cell_boundary
         return self._L
 
     @property
-    def attached_to_Lv0cell_R_boundary(self):
+    def attached_to_basic_cell_R_boundary(self):
         if self._R is None:
-            _ = self.attached_to_Lv0cell_boundary
+            _ = self.attached_to_basic_cell_boundary
         return self._R
 
 

@@ -33,10 +33,10 @@ class mpRfT2_CellTypeWr2Metric_Base(FrozenOnly):
     def __eq__(self, other):
         """We ask that the marks to be the same."""
         # The later judge is to make sure we are not comparing it to something else having a mark property
-        return self.mark == other.mark and other.___IS_2nCSCG_CellTypeWr2Metric___
+        return self.mark == other.mark and other.___IS_mpRfT2_CellTypeWr2Metric___
 
     @property
-    def ___IS_2nCSCG_CellTypeWr2Metric___(self):
+    def ___IS_mpRfT2_CellTypeWr2Metric___(self):
         return True
 
 

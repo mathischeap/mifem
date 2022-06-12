@@ -57,7 +57,6 @@ class mpRfT2_S1F_Matrices(FrozenOnly):
 
 
 
-
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/mpRfT/_2d/forms/standard/_1/base/matrices/main.py
     from __init__ import rfT2

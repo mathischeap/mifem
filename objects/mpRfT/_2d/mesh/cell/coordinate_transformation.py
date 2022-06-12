@@ -112,7 +112,6 @@ class mpRfT2_Mesh_Cell_CT(FrozenOnly):
             iJ = self.inverse_Jacobian_matrix(xi, et)
         return iJ[0][0]*iJ[1][1] - iJ[0][1]*iJ[1][0]
 
-
     def Jacobian_matrix(self, xi, et):
         """
 
@@ -140,7 +139,6 @@ class mpRfT2_Mesh_Cell_CT(FrozenOnly):
         return ([J00 * d / 2, J01 * d / 2],
                 [J10 * d / 2, J11 * d / 2])
 
-
     def inverse_Jacobian_matrix(self, xi, et, J=None):
         """The inverse Jacobian matrix. """
         if J is None:
@@ -154,8 +152,6 @@ class mpRfT2_Mesh_Cell_CT(FrozenOnly):
         iJ11 = + reciprocalJacobian * J[0][0]
         return [[iJ00, iJ01],
                 [iJ10, iJ11]]
-
-
 
     def inverse_metric_matrix(self, *evaluationPoints, iJ=None):
         """

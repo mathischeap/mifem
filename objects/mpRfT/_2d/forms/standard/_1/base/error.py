@@ -35,7 +35,7 @@ class mpRfT2_S1F_Error(FrozenOnly):
         """
         mesh = self._f_.mesh
         coo = mesh.coo_map.Gauss(degree_plus)
-        xy, v = self._f_.reconstruct(coo, ravel=False)
+        xy, v = self._f_.reconstruction(coo, ravel=False)
 
         F = self._f_.TW.func.___Pr_evaluate_func___()
 

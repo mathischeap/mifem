@@ -57,7 +57,7 @@ class mpRfT2_S2F(mpRfT2_StandardFormBase):
 
 
     @property
-    def visualize(self):
+    def visualization(self):
         return self._visualize_
 
     @property

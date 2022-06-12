@@ -34,9 +34,9 @@ class mpFfT2_CellFrame(FrozenOnly):
         for edge in 'UDLR':
             yield edge
 
-    def __getitem__(self, item):
-        assert item in 'UDLR', f"item={item} is wrong."
-        return getattr(self, item)
+    def __getitem__(self, edge):
+        assert edge in 'UDLR', f"edge={edge} is wrong."
+        return getattr(self, edge)
 
     def ___Pr_make_Segments___(self):
         """"""
@@ -68,7 +68,7 @@ class mpFfT2_CellFrame(FrozenOnly):
             else:
                 raise Exception()
 
-        atb = cell.IS.attached_to_Lv0cell_boundary
+        atb = cell.IS.attached_to_basic_cell_boundary
 
         USG = dict()
         DSG = dict()
@@ -82,10 +82,10 @@ class mpFfT2_CellFrame(FrozenOnly):
         Ri_signature = SG_ci + 'y' + str(ey) + ':x' + xSignature
 
         if atb:
-            atUb = cell.IS.attached_to_Lv0cell_U_boundary
-            atDb = cell.IS.attached_to_Lv0cell_D_boundary
-            atLb = cell.IS.attached_to_Lv0cell_L_boundary
-            atRb = cell.IS.attached_to_Lv0cell_R_boundary
+            atUb = cell.IS.attached_to_basic_cell_U_boundary
+            atDb = cell.IS.attached_to_basic_cell_D_boundary
+            atLb = cell.IS.attached_to_basic_cell_L_boundary
+            atRb = cell.IS.attached_to_basic_cell_R_boundary
 
             Tmap = cell.mesh.basic_cells.trace_elements.map[i]
             bt0, bt1, bt2, bt3 = ['t'+str(_) for _ in Tmap]

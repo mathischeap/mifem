@@ -20,10 +20,12 @@ class mpRfT2_Mesh_BasicCells_TraceElements(FrozenOnly):
 
     def __init__(self, mesh):
         """"""
+        cOmm.barrier() #  because it will need global communications.
+                       # Just make sure all cores reach this place.
         self._mesh_ = mesh
         self._elements_ = dict()
-        self._segments_ = None
         self._visualize_ = None
+        self.___Pr_parse_trace_elements_segments___()
         self._freeze_self_()
 
     @property
@@ -49,8 +51,6 @@ class mpRfT2_Mesh_BasicCells_TraceElements(FrozenOnly):
 
     @property
     def segments(self):
-        if self._segments_ is None:
-            self.___Pr_parse_trace_elements_segments___()
         return self._segments_
 
     @staticmethod
@@ -103,26 +103,26 @@ class mpRfT2_Mesh_BasicCells_TraceElements(FrozenOnly):
             for j in cell:
                 sub_cell = mesh[j]
 
-                if sub_cell.IS.attached_to_Lv0cell_boundary:
-                    if sub_cell.IS.attached_to_Lv0cell_U_boundary:
+                if sub_cell.IS.attached_to_basic_cell_boundary:
+                    if sub_cell.IS.attached_to_basic_cell_U_boundary:
                         te = self[M[0]]
                         xSignature = None
                         ySignature = self.___Pr_segment_finder___(sub_cell, 'U')
                         _segments[te.i] += ([xSignature, ySignature],)
 
-                    if sub_cell.IS.attached_to_Lv0cell_D_boundary:
+                    if sub_cell.IS.attached_to_basic_cell_D_boundary:
                         te = self[M[1]]
                         xSignature = None
                         ySignature = self.___Pr_segment_finder___(sub_cell, 'D')
                         _segments[te.i] += ([xSignature, ySignature],)
 
-                    if sub_cell.IS.attached_to_Lv0cell_L_boundary:
+                    if sub_cell.IS.attached_to_basic_cell_L_boundary:
                         te = self[M[2]]
                         xSignature = self.___Pr_segment_finder___(sub_cell, 'L')
                         ySignature = None
                         _segments[te.i] += ([xSignature, ySignature],)
 
-                    if sub_cell.IS.attached_to_Lv0cell_R_boundary:
+                    if sub_cell.IS.attached_to_basic_cell_R_boundary:
                         te = self[M[3]]
                         xSignature = self.___Pr_segment_finder___(sub_cell, 'R')
                         ySignature = None
@@ -135,10 +135,12 @@ class mpRfT2_Mesh_BasicCells_TraceElements(FrozenOnly):
                 # noinspection PyTypeChecker,PyUnresolvedReferences
                 Segments[Mi].append(_segments[Mi])
 
+
+
         ATAd = [dict() if _ != rAnk else None for _ in range(sIze)]
 
         for i in Segments: #go through all local trace-elements (level-0-trace-elements)
-            if len(Segments[i]) == 1: # this trace-element data may should be communicated.
+            if len(Segments[i]) == 1: # these trace-element data may should be communicated.
                 te = self[i]._te_
                 if te.IS.shared_by_cores: # not on the mesh-boundary, then communicate it.
                     sc = te.shared_with_core

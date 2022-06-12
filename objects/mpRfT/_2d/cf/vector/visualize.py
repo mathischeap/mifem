@@ -59,8 +59,8 @@ class mpRfT2_VectorVisualize(FrozenOnly):
             pass
         mesh = self._cf_.mesh
         coo = mesh.coo_map.uniform(density, ndim=2)
-        xy, v = self._cf_.reconstruct(coo, ravel=False)
-        v.visualize(xy, plot_type=plot_type, **kwargs)
+        xy, v = self._cf_.reconstruction(coo, ravel=False)
+        v.visualization(xy, plot_type=plot_type, **kwargs)
 
 
 

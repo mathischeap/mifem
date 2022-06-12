@@ -29,6 +29,12 @@ class mpRfT2_S0F_Num(FrozenOnly):
         """0-form has 1 components."""
         return 1
 
+    @property
+    def local_dofs(self):
+        if self._f_.numbering._num_local_dofs_ is None:
+            _ = self._f_.numbering.gathering
+        return self._f_.numbering._num_local_dofs_
+
 
 
 class ___mpRfT2_S0F_Num_Basis___(FrozenOnly):

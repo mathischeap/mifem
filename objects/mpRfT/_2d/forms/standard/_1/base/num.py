@@ -30,6 +30,11 @@ class mpRfT2_S1F_Num(FrozenOnly):
         """1-form has two components."""
         return 2
 
+    @property
+    def local_dofs(self):
+        if self._f_.numbering._num_local_dofs_ is None:
+            _ = self._f_.numbering.gathering
+        return self._f_.numbering._num_local_dofs_
 
 
 

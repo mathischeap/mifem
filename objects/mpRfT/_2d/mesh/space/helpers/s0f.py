@@ -18,6 +18,24 @@ class mpRfT2_Mesh_Space_S0F_Basis(mpRfT2_Mesh_Space_Basis):
         super(mpRfT2_Mesh_Space_S0F_Basis, self).__init__(mesh, coo_map)
         self._freeze_self_()
 
+    @property
+    def ___Pr_rcMC_key___(self):
+        """"""
+        return self._cm_.___Pr_rcMC_key___
+
+    def ___Pr_rcMC_nodes___(self, rp):
+        """"""
+        return self[rp][0]
+
+    @property
+    def ___Pr_sgMC_key___(self):
+        """Cannot be used for sgMC"""
+        raise Exception("Cannot be used for sgMC")
+
+    def ___Pr_sgMC_nodes___(self, rp):
+        """Cannot be used for rcMC"""
+        raise Exception("Cannot be used for sgMC")
+
     def __getitem__(self, rp):
         """Get the basis functions for the root-cell mesh(indices)"""
         assert isinstance(rp, str)
@@ -102,6 +120,8 @@ class mpRfT2_Mesh_Space_S0F_Basis(mpRfT2_Mesh_Space_Basis):
 
         return self._cache_[N]
 
+    def ___Pr_getitem_Lobatto___(self, rp):
+        return self.___Pr_getitem_Gauss___(rp)
 
 
 

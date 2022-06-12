@@ -22,7 +22,6 @@ class mpRfT2_CooMapBase(FrozenOnly):
     def distribution(self):
         raise NotImplementedError()
 
-
     @property
     def ___Pr_rcMC_key___(self):
         """A key implying the value for metric involved computing in each root-cell."""
@@ -31,6 +30,17 @@ class mpRfT2_CooMapBase(FrozenOnly):
     def ___Pr_rcMC_nodes___(self, rp):
         raise NotImplementedError()
 
+    @property
+    def ___Pr_sgMC_key___(self):
+        """A key implying the value for metric involved computing in each root-cell."""
+        raise NotImplementedError()
+
+    def ___Pr_sgMC_nodes___(self, rp):
+        raise NotImplementedError()
+
+
+
+
 if __name__ == '__main__':
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python objects/mpRfT/_2d/mesh/coo_map/helpers/base.py
     pass

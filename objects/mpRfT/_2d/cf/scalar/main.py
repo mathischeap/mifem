@@ -85,13 +85,13 @@ class mpRfT2_Scalar(mpRfT2_ContinuousField):
 
     #------------------------------- personal -------------------------------------------
     @property
-    def reconstruct(self):
+    def reconstruction(self):
         if self._reconstruct_ is None:
             self._reconstruct_ = mpRfT2_ScalarReconstruct(self)
         return self._reconstruct_
 
     @property
-    def visualize(self):
+    def visualization(self):
         if self._visualize_ is None:
             self._visualize_ = mpRfT2_ScalarVisualize(self)
         return self._visualize_
@@ -114,4 +114,4 @@ if __name__ == "__main__":
     s = mpRfT2_Scalar(mesh, p)
     s.current_time = 0
 
-    s.visualize()
+    s.visualization()

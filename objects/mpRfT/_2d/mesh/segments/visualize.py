@@ -28,6 +28,8 @@ class mpRfT2_Mesh_Segments_Visualize(FrozenOnly):
     def __call__(self, *args, **kwargs):
         return self.matplot(*args, **kwargs)
 
+
+
     def matplot(self, density=5, show_segments=False,
         saveto=None, usetex=False
         ):
@@ -75,6 +77,8 @@ class mpRfT2_Mesh_Segments_Visualize(FrozenOnly):
             plt.show()
         else:
             plt.savefig(saveto, bbox_inches='tight')
+
+        #=======================================================================================
         plt.close()
 
 
@@ -86,6 +90,7 @@ if __name__ == "__main__":
     # mpiexec -n 4 python objects/nCSCG/rfT2/_2d/mesh/segments/visualize.py
     # from objects.nCSCG.rfT2._2d.__tests__.Random.mesh import random_mesh_of_elements_around as rm2
     # mesh = rm2(100, refinement_intensity=0.5)
+
     from root.read.main import read
     mesh = read('test_mesh.mi')
 

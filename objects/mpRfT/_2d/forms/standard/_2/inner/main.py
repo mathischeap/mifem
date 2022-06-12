@@ -50,10 +50,10 @@ if __name__ == "__main__":
     f.TW.func = s
     s.current_time = 0
 
-    f.discretize()
+    f.discretization()
 
     # R = f.reconstruct()
 
-    f.visualize(show_mesh=True)
+    f.visualization(show_mesh=True)
     # #
     print(f.error.L())

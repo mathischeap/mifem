@@ -21,7 +21,7 @@ class mpRfT2_Mesh_Cell_Do(FrozenOnly):
         self._freeze_self_()
 
     def ___Pr_h_refine___(self):
-        """Active the subgrid of this cell."""
+        """Active the subgrid of this cell. Should only be called during initialization of the mesh."""
         assert self._cell_.___sub_cells___ is None, f"sub-cells of cell {self._cell_.indices} are already on."
         self._cell_.___sub_cells___ = mpRfT2_Mesh_Cell_SubCells(self._cell_)
         self._cell_.___isroot___ = False

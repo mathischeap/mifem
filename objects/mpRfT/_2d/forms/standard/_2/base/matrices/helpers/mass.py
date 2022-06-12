@@ -12,6 +12,10 @@ from screws.freeze.base import FrozenOnly
 from numpy import einsum, reciprocal
 from scipy.sparse import csr_matrix
 
+
+
+
+
 class MassMatrixGenerator(FrozenOnly):
     """"""
     def __init__(self, f):
@@ -30,6 +34,11 @@ class MassMatrixGenerator(FrozenOnly):
         Mi = einsum('im, jm, m -> ij', basis, basis, reciprocal(detJ)*weights, optimize='greedy')
         Mi = csr_matrix(Mi)
         return Mi
+
+
+
+
+
 
 if __name__ == "__main__":
     # mpiexec -n 4 python 

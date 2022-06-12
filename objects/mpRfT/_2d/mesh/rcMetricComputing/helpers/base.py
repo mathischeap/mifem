@@ -31,10 +31,14 @@ class mpRfT2_Mesh_rcMC_Base(FrozenOnly):
         self._coo_ = coo
         self._key_ = coo.___Pr_rcMC_key___
         self._nodes_ = coo.___Pr_rcMC_nodes___
-
         return self
+
+    def __getitem__(self, rp):
+        raise NotImplementedError()
+
+
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python objects/mpRfT/_2d/mesh/rcMetricComputing/helpers/base.py
     pass

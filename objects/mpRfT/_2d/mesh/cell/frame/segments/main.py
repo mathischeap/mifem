@@ -25,7 +25,12 @@ class mpRfT2_CellSegments(FrozenOnly):
         """
         self._cell_ = cell
         self._edge_ = edge_name
-        self._segments_ = segments
+        keys = list(segments.keys())
+        keys.sort()
+        d = dict()
+        for key in keys:
+            d[key] = segments[key]
+        self._segments_ = d
         self._freeze_self_()
 
     def __repr__(self):

@@ -48,7 +48,7 @@ class mpRfT2_VectorReconstruct(FrozenOnly):
 
         #---- parse i -----------------------------------------------------------
         if i is None:
-            INDICES = self._cf_.mesh
+            INDICES = self._cf_.mesh.rcfc
         else:
             raise NotImplementedError(f"i={i} is not implemented.")
 
@@ -77,7 +77,7 @@ class mpRfT2_VectorReconstruct(FrozenOnly):
         func = self._cf_.___Pr_evaluate_func___()
         mesh = self._cf_.mesh
 
-        if INDICES is mesh:
+        if INDICES is mesh.rcfc:
             full = True
         else:
             full = False

@@ -90,9 +90,6 @@ class mpRfT_MeshBase(FrozenClass):
     def rcfc(self):
         return self.___rcfc___
 
-
-
-
     def __Pr_indices_metric_N_key___(self, rp):
         """"""
         return self[rp].__Pr_indices_metric_N_key___
@@ -102,7 +99,6 @@ class mpRfT_MeshBase(FrozenClass):
 
     def ___Pr_N_key___(self, rp):
         return self[rp].___Pr_N_key___
-
 
 
     @property

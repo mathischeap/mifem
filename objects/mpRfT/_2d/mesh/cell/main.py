@@ -4,8 +4,10 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/05/04 9:58 PM
 """
+
 import sys
 if './' not in sys.path: sys.path.append('./')
+
 from objects.mpRfT.base.mesh.cell import mpRfT_Mesh_Cell_Base
 from objects.mpRfT._2d.mesh.cell.coordinate_transformation import mpRfT2_Mesh_Cell_CT
 from objects.mpRfT._2d.mesh.cell.do import mpRfT2_Mesh_Cell_Do
@@ -19,14 +21,14 @@ class mpRfT2_Mesh_Cell(mpRfT_Mesh_Cell_Base):
     """"""
     def __init__(self, mesh, level, indices):
         super(mpRfT2_Mesh_Cell, self).__init__(mesh, level, indices)
-        self.___sub_cells___ = None
+        self.___sub_cells___ = None # when initialized, it is a root cell.
         self._ct_ = None
         self._do_ = None
         self._IS_ = None
         self._type_wrt_metric_ = None
         self._N_ = None # CANNOT set to be dN of the mesh.
         self._space_ = None
-        self._frame_ = None
+        self._frame_ = None # CANNOT initialize it here because we will only do it for root-cells.
         self.___indices_metric_N_key___ = None
         self.___metric_N_key___ = None
         self.___N_key___ = None
@@ -91,12 +93,14 @@ class mpRfT2_Mesh_Cell(mpRfT_Mesh_Cell_Base):
 
     @property
     def __Pr_indices_metric_N_key___(self):
+        """{str} : If chaotic, the str is numeric."""
         if self.___indices_metric_N_key___ is None:
             if isinstance(self.type_wrt_metric.mark, int):
                 self.___indices_metric_N_key___ = str(self.type_wrt_metric.mark)
             else:
                 if '-' in self.__repr__():
-                    self.___indices_metric_N_key___ = self.type_wrt_metric.mark + str(self.N) + self.__repr__().split('-')[1]
+                    self.___indices_metric_N_key___ = self.type_wrt_metric.mark + str(self.N) + \
+                                                      self.__repr__().split('-')[1]
                 else:
                     self.___indices_metric_N_key___ = self.type_wrt_metric.mark + str(self.N)
 
@@ -104,6 +108,7 @@ class mpRfT2_Mesh_Cell(mpRfT_Mesh_Cell_Base):
 
     @property
     def ___Pr_metric_N_key___(self):
+        """{str} : If chaotic, the str is numeric."""
         if self.___metric_N_key___ is None:
             if isinstance(self.type_wrt_metric.mark, int):
                 self.___metric_N_key___ = str(self.type_wrt_metric.mark)
@@ -113,6 +118,7 @@ class mpRfT2_Mesh_Cell(mpRfT_Mesh_Cell_Base):
 
     @property
     def ___Pr_N_key___(self):
+        """{str} : If chaotic, the str is numeric."""
         if self.___N_key___ is None:
             self.___N_key___ = str(self.N)
         return self.___N_key___

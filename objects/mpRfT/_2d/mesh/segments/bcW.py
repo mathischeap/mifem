@@ -19,27 +19,7 @@ class mpRfT2_Mesh_Segments_bcW(FrozenOnly):
         self._mesh_ = segments._mesh_
         self._segments_ = segments
         self._DICT_ = dict()
-        self._freeze_self_()
-
-    def __iter__(self):
         for i in self._mesh_.basic_cells:
-            yield i
-
-    def __getitem__(self, i):
-        """Return a dict, keys are __repr__ of basic-cell-wise segments, values are the segments.
-
-        Parameters
-        ----------
-        i : int
-            The number of a the basic cell; cscg mesh element.
-
-        Returns
-        -------
-
-        """
-        if i in self._DICT_:
-            pass
-        else:
             Di = dict()
             internal_segments = self._mesh_.basic_cells.internal_segments[i]
             for its in internal_segments:
@@ -54,7 +34,24 @@ class mpRfT2_Mesh_Segments_bcW(FrozenOnly):
                     Di[_r] = ts
 
             self._DICT_[i] = Di
+        self._freeze_self_()
 
+    def __iter__(self):
+        for i in self._mesh_.basic_cells:
+            yield i
+
+    def __getitem__(self, i):
+        """Return a dict, keys are __repr__ of basic-cell-wise segments, values are the segments.
+
+        Parameters
+        ----------
+        i : int
+            The number of the basic cell; cscg mesh element.
+
+        Returns
+        -------
+
+        """
         return self._DICT_[i]
 
 if __name__ == '__main__':
