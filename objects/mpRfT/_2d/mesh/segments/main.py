@@ -28,6 +28,9 @@ class mpRfT2_Mesh_Segments(FrozenOnly):
         self._bcW_ = mpRfT2_Mesh_Segments_bcW(self)
         self._num_ = mpRfT2_Mesh_Segments_Num(self)
         self._visualize_ = None
+        self._segments_ = dict()
+        for seg in self:
+            self._segments_[seg.__repr__()] = seg
         self._freeze_self_()
 
     def __iter__(self):
@@ -48,6 +51,10 @@ class mpRfT2_Mesh_Segments(FrozenOnly):
             segments = self._mesh_.basic_cells.internal_segments[i]
             for seg in segments:
                 yield seg
+
+    def __getitem__(self, sg_rp):
+        """Return a local segment according to its repr."""
+        return self._segments_[sg_rp]
 
     @property
     def bcW(self):

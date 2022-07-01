@@ -95,10 +95,12 @@ class TraceMatrix(FrozenOnly):
         PU = np.zeros((self._FS_.num_basis._2dCSCG_1Form_Outer[0], self._FS_.num_basis._2dCSCG_1Trace_Outer[0]), dtype=int)
         sln = self.___generate_gathering_hybrid_element___(self._FS_.num_basis._2dCSCG_1Trace_Outer[2])
         oln_NS, oln_WE = self._FS_.local_numbering._2dCSCG_1Form_Outer
-        PU[oln_NS[0, :].ravel('F'), sln['U']] = +1  # Upper
+        PU[oln_NS[ 0, :].ravel('F'), sln['U']] = +1  # Upper
         PU[oln_NS[-1, :].ravel('F'), sln['D']] = -1  # Down
-        PU[oln_WE[:, 0].ravel('F'), sln['L']] = -1  # Left
+        PU[oln_WE[:,  0].ravel('F'), sln['L']] = -1  # Left
         PU[oln_WE[:, -1].ravel('F'), sln['R']] = +1  # Right
+
+
         T = PU.T
         nbt = self._FS_.num_basis._2dCSCG_1Trace_Outer[2]
         T_ = [None, None, None, None]
@@ -106,8 +108,9 @@ class TraceMatrix(FrozenOnly):
         for i in range(4):
             T_[i] = T[m:m + nbt['UDLR'[i]], :]
             m += nbt['UDLR'[i]]
-        Tn, Ts, Tw, Te = T_
-        return csc_matrix(T), {'U': Tn, 'D': Ts, 'L': Tw, 'R': Te}
+
+        TU, TD, TL, TR = T_
+        return csc_matrix(T), {'U': TU, 'D': TD, 'L': TL, 'R': TR}
 
 
 

@@ -31,6 +31,7 @@ class mpRfT2_Mesh_BasicCells(FrozenOnly):
 
     def __iter__(self):
         """go through all local 0-level cells (cscg mesh elements.)"""
+
         for i in self._mesh_.cscg.elements:
             yield i
 

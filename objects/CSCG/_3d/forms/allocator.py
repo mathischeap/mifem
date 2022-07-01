@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from screws.freeze.base import FrozenOnly
 
 
@@ -19,7 +21,6 @@ class _3dCSCG_SF_Allocator(FrozenOnly):
                 '0-e': "_3dCSCG_0Edge",
                 '1-e': "_3dCSCG_1Edge",
 
-                '0-n': "_3dCSCG_0Node",
         }
 
     @classmethod
@@ -38,5 +39,4 @@ class _3dCSCG_SF_Allocator(FrozenOnly):
                 '0-e': base_path + "edge._0eg.main",
                 '1-e': base_path + "edge._1eg.main",
 
-                '0-n': base_path + "node._0nd.main",
         }

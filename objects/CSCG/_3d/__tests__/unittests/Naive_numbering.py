@@ -15,9 +15,6 @@ import random
 
 
 
-
-
-
 def test_Naive_Numbering_NO1_0form():
     """"""
     if rAnk == mAster_rank:
@@ -220,6 +217,9 @@ def test_Naive_Numbering_NO4_2trace():
     assert num_of_dofs_in_this_core == len(LOCAL_NUMBERING), "must be the case!"
 
     return 1
+
+
+
 
 
 

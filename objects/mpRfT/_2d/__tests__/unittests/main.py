@@ -20,9 +20,11 @@ if rAnk == mAster_rank: print(f"\n [nCSCG_RF2] tests start...\n")
 
 
 from objects.mpRfT._2d.__tests__.unittests.save_read import test_mpRfT2_save_read
+from objects.mpRfT._2d.__tests__.unittests.numbering import test_mpRfT2_ir_numbering
 
 
 passed_mpRfT2_tests += test_mpRfT2_save_read()
+passed_mpRfT2_tests += test_mpRfT2_ir_numbering()
 
 
 if rAnk == mAster_rank:

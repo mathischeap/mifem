@@ -115,7 +115,6 @@ class mpRfT2_So1F_BI(FrozenOnly):
 
             BI[crp] = csr_matrix(np.hstack(Mrc))
 
-
         return EWC_SparseMatrix(self._f_.mesh.rcfc,
                                 BI,
                                 cache_key_generator='no_cache'
@@ -160,5 +159,3 @@ if __name__ == "__main__":
     MB = M @ B
 
     print(MB)
-
-

@@ -12,6 +12,8 @@ from screws.freeze.base import FrozenOnly
 from numpy import einsum
 from scipy.sparse import csr_matrix, bmat
 
+
+
 class OuterMassMatrixGenerator(FrozenOnly):
     """"""
     def __init__(self, f):
@@ -48,6 +50,9 @@ class OuterMassMatrixGenerator(FrozenOnly):
         M = einsum('m, im, jm -> ij', quad_weights*sqrtg_g, bfO, bfS, optimize='greedy')
         return csr_matrix(M)
 
+
+
+
 if __name__ == "__main__":
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python objects/mpRfT/_2d/forms/standard/_1/base/matrices/helpers/outer_mass.py
     pass

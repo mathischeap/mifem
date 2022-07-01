@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from objects.CSCG._3d.forms.standard._0s.main import _3dCSCG_0Form
 
 from screws.freeze.main import FrozenOnly

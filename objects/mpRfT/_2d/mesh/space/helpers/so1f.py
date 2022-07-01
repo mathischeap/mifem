@@ -134,7 +134,78 @@ class mpRfT2_Mesh_Space_So1F_Basis(mpRfT2_Mesh_Space_Basis):
     def ___Pr_getitem_Lobatto___(self, rp):
         return self.___Pr_getitem_Gauss___(rp)
 
+    def ___Pr_getitem_PSI___(self, rp):
+        """"""
+        cell = self._mesh_[rp]
+        space = cell.space
+        COO = self._cm_[rp]
+        PSI = dict()
+        for edge in COO:
+            XI_ETA = COO[edge]
+            PSI[edge] = list()
+            for xi_eta_w in XI_ETA:
+                xi, et = xi_eta_w[:2]
 
+                lb_xi = space.basises[0].node_basis(x=xi)
+                ed_et = space.basises[1].edge_basis(x=et)
+                if any([lb_xi.shape[1] == 0, ed_et.shape[1] == 0]):
+                    bf_edge_det = np.zeros([lb_xi.shape[0] * ed_et.shape[0], 0])
+                else:
+                    bf_edge_det = np.kron(ed_et, lb_xi)
+
+                ed_xi = space.basises[0].edge_basis(x=xi)
+                lb_et = space.basises[1].node_basis(x=et)
+                if any([ed_xi.shape[1] == 0, lb_et.shape[1] == 0]):
+                    bf_edge_dxi = np.zeros([ed_xi.shape[0] * lb_et.shape[0], 0])
+                else:
+                    bf_edge_dxi = np.kron(lb_et, ed_xi)
+
+                _basis_ = (bf_edge_det, bf_edge_dxi)
+
+                _2d_shape = (len(xi), len(et))
+                xi, et = np.meshgrid(xi, et, indexing='ij')
+                xi = xi.ravel('F')
+                et = et.ravel('F')
+
+                PSI[edge].append([(xi, et), _basis_, _2d_shape])
+        return PSI
+
+    def ___Pr_getitem_SegInt___(self, rp):
+        """"""
+        cell = self._mesh_[rp]
+        space = cell.space
+        COO = self._cm_[rp]
+        PSI = dict()
+        for edge in COO:
+            XI_ETA = COO[edge]
+            PSI[edge] = list()
+            for xi_eta_w in XI_ETA:
+                xi, et = xi_eta_w[:2]
+
+                lb_xi = space.basises[0].node_basis(x=xi)
+                ed_et = space.basises[1].edge_basis(x=et)
+                if any([lb_xi.shape[1] == 0, ed_et.shape[1] == 0]):
+                    bf_edge_det = np.zeros([lb_xi.shape[0] * ed_et.shape[0], 0])
+                else:
+                    bf_edge_det = np.kron(ed_et, lb_xi)
+
+                ed_xi = space.basises[0].edge_basis(x=xi)
+                lb_et = space.basises[1].node_basis(x=et)
+                if any([ed_xi.shape[1] == 0, lb_et.shape[1] == 0]):
+                    bf_edge_dxi = np.zeros([ed_xi.shape[0] * lb_et.shape[0], 0])
+                else:
+                    bf_edge_dxi = np.kron(lb_et, ed_xi)
+
+                _basis_ = (bf_edge_det, bf_edge_dxi)
+
+                _2d_shape = (len(xi), len(et))
+                xi, et = np.meshgrid(xi, et, indexing='ij')
+                xi = xi.ravel('F')
+                et = et.ravel('F')
+
+                PSI[edge].append([(xi, et), _basis_, _2d_shape])
+
+        return PSI
 
 if __name__ == "__main__":
     # mpiexec -n 4 python 

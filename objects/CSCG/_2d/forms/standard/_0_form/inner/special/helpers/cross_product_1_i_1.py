@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from objects.CSCG._2d.forms.standard._0_form.outer.special.helpers.cross_product_1_i_1 import \
     ___2dCSCG_0_o_Form_CrossProduct_0_X_1__ip_1___
 

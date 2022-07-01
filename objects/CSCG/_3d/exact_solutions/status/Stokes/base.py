@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 The 3d stokes flow.
 

@@ -48,8 +48,11 @@ class mpRfT2_Mesh_Visualize(FrozenOnly):
         else:
             raise NotImplementedError(f"rp={rp}")
 
-    def ___Pr_matplot_the_whole_mesh___(self, density=None, color_space=True, show_indices=False, show_boundaries=True,
-                saveto=None, usetex=False, labelsize=12, ticksize=12):
+    def ___Pr_matplot_the_whole_mesh___(self,
+        density=None, color_space=True, show_indices=False, show_boundaries=True,
+        saveto=None, usetex=False, labelsize=12, ticksize=12
+
+        ):
         """
 
         Parameters

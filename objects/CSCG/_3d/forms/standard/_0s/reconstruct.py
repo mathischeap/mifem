@@ -19,6 +19,7 @@ class _3dCSCG_SF0_reconstruct(FrozenOnly):
         :param sigma:
         :param ravel:
         :param i:
+            In which elements we do the reconstruction?
         :param regions: Higher priority than input i.
         :param vectorized:
         :param value_only:

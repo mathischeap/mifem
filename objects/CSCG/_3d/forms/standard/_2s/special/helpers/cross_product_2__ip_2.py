@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 import numpy as np
 from scipy import sparse as spspa
 from screws.freeze.base import FrozenOnly

@@ -105,12 +105,12 @@ class GMRES(ParallelSolverBase):
         # ---------- Do the computation ------------------------------------------------------------
         results, info, beta, ITER, solver_message = \
         ROUTINE(A, b, x0,
-                       restart=restart, maxiter=maxiter, tol=tol, atol=atol,
-                       preconditioner=preconditioner,
-                       COD=COD,
-                       name=self._name_,
-                       plot_residuals=plot_residuals
-                       )
+                restart=restart, maxiter=maxiter, tol=tol, atol=atol,
+                preconditioner=preconditioner,
+                COD=COD,
+                name=self._name_,
+                plot_residuals=plot_residuals
+                )
 
         _ = kwargs # trivial; just leave freedom for future updates for kwargs.
 

@@ -33,17 +33,17 @@ class mpRfT2_S0F(mpRfT2_StandardFormBase):
         self._numbering_ = mpRfT2_S0F_Numbering(self, numbering_parameters)
         self._num_ = mpRfT2_S0F_Num(self)
         self._error_ = mpRfT2_S0F_Error(self)
-
         self._reconstruct_ = mpRfT2_S0F_Reconstruct(self)
         self._discretize_ = mpRfT2_S0F_Discretize(self)
         self._migrate_ = mpRfT2_S0F_Migrate(self)
-
         self._visualize_ = mpRfT2_S0F_Visualize(self)
+
+
         self._matrices_ = mpRfT2_S0F_Matrices(self)
         self._coboundary_ = mpRfT2_S0F_Coboundary(self)
 
 
-    def ___Pr_check_func___(self, func):
+    def ___Pr_check_analytic_expression___(self, func):
         """"""
         assert func.mesh is self.mesh
 
@@ -53,14 +53,18 @@ class mpRfT2_S0F(mpRfT2_StandardFormBase):
         else:
             raise Exception(f"mpRfT2_S0F FUNC do not accept func {func.__class__}")
 
+    def ___Pr_check_BC_analytic_expression___(self, ae):
+        assert ae.mesh is self.mesh
+
+        if ae.__class__.__name__ == 'mpRfT2_Scalar':
+            assert ae.ftype in ('standard',), \
+                f"mpRfT2_S0F BC do not accept func mpRfT2_Scalar of ftype {ae.ftype}."
+        else:
+            raise Exception(f"mpRfT2_S0F BC do not accept func {ae.__class__}")
 
     @property
     def matrices(self):
         return self._matrices_
-
-    @property
-    def visualization(self):
-        return self._visualize_
 
     @property
     def coboundary(self):

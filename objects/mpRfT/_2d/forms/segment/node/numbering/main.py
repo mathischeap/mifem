@@ -13,6 +13,8 @@ from screws.freeze.base import FrozenOnly
 from importlib import import_module
 from tools.linear_algebra.gathering.vector import Gathering_Vector
 from tools.linear_algebra.gathering.irregular.ir_matrix.main import iR_Gathering_Matrix
+from objects.mpRfT._2d.forms.segment.node.numbering.do.main import mpRfT2_NSgF_Numbering_DO
+from objects.mpRfT._2d.forms.segment.node.numbering.local import mpRfT2_NSgF_Numbering_Local
 
 
 class mpRfT2_NSgF_Numbering(FrozenOnly):
@@ -34,12 +36,18 @@ class mpRfT2_NSgF_Numbering(FrozenOnly):
         base_path = '.'.join(str(self.__class__).split(' ')[1][1:-2].split('.')[:-2]) + '.'
         path = base_path + scheme_name
         self._numberer_ = getattr(import_module(path), scheme_name)(t)
-        self._numbering_parameters_ = {'scheme_name': scheme_name}
+        self._numbering_parameters_ = {'scheme_name': scheme_name,}
         self._numbering_parameters_.update(parameters)
         self._gathering_ = None
         self._sgW_GM_ = None
         self._num_local_dofs_ = None
+        self._do_ = mpRfT2_NSgF_Numbering_DO(self)
+        self._local_ = mpRfT2_NSgF_Numbering_Local(self)
         self._freeze_self_()
+
+    @property
+    def local(self):
+        return self._local_
 
     @property
     def gathering(self):
@@ -63,7 +71,7 @@ class mpRfT2_NSgF_Numbering(FrozenOnly):
                 vector = np.concatenate(vector)
                 GVs[rp] = Gathering_Vector(rp, vector)
 
-            self._gathering_ = iR_Gathering_Matrix(GVs)
+            self._gathering_ = iR_Gathering_Matrix(GVs, mesh_type='mpRfT2')
 
         return self._gathering_
 
@@ -74,6 +82,13 @@ class mpRfT2_NSgF_Numbering(FrozenOnly):
                 self._numberer_(self._numbering_parameters_)
         return self._sgW_GM_
 
+    @property
+    def GLOBAL_dofs(self):
+        return self.gathering.GLOBAL_num_dofs
+
+    @property
+    def do(self):
+        return self._do_
 
 
 

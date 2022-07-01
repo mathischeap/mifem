@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from root.config.main import *
 from scipy import sparse as spspa
 from objects.CSCG._2d.forms.standard.base.main import _2dCSCG_Standard_Form

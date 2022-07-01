@@ -100,7 +100,7 @@ class _3dCSCG_SF3_Reconstruct(FrozenOnly):
                 raise NotImplementedError()
 
             if value_only:
-                return (v,)
+                return v,
             else:
                 raise Exception()
 

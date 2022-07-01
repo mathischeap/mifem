@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from objects.CSCG._3d.forms.standard._0s.visualize.matplot import _3dCSCG_S0F_VISUALIZE_Matplot
 from objects.CSCG._3d.forms.standard.base.visualize.main import _3dCSCG_FormVisualize

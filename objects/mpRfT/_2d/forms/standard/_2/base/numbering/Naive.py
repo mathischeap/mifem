@@ -64,7 +64,7 @@ class Naive(FrozenOnly):
                     NUM_local_dofs += num_basis
 
         # noinspection PyUnboundLocalVariable
-        rcWGM = iR_Gathering_Matrix(GVs)
+        rcWGM = iR_Gathering_Matrix(GVs, mesh_type='mpRfT2')
         # noinspection PyUnboundLocalVariable
         return rcWGM, NUM_local_dofs
 

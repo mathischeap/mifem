@@ -45,8 +45,8 @@ class mpRfT2_SegmentFormBase(mpRfT2_FormBase):
         self._migrate_ = None
         self._visualize_ = None
 
-    #-------- must have methods --------------------------------------------------
-    def ___Pr_check_func___(self, func):
+    #-------- must have methods --------------------------------------------------------------
+    def ___Pr_check_analytic_expression___(self, func):
         """"""
         assert func.mesh is self.mesh
 
@@ -56,7 +56,18 @@ class mpRfT2_SegmentFormBase(mpRfT2_FormBase):
         else:
             raise Exception(f"mpRfT2-trace-form FUNC do not accept func {func.__class__}")
 
-    #-----------------------------------------------------------------------------
+
+    def ___Pr_check_BC_analytic_expression___(self, ae):
+        assert ae.mesh is self.mesh
+
+        if ae.__class__.__name__ == 'mpRfT2_Scalar':
+            assert ae.ftype in ('standard',), \
+                f"mpRfT2-trace-form BC do not accept func mpRfT2_Scalar of ftype {ae.ftype}."
+        else:
+            raise Exception(f"mpRfT2-trace-form BC do not accept func {ae.__class__}")
+
+
+    #-------------------------------------------------------------------------------------------
     @property
     def ndp(self):
         return self._ndp_
@@ -96,7 +107,7 @@ class mpRfT2_SegmentFormBase(mpRfT2_FormBase):
     def IS(self):
         return self._IS_
 
-    #--------------------------------------------------------------------------------
+    #-----------------------------------------------------------------------------------------
     @property
     def numbering(self):
         return self._numbering_
@@ -105,7 +116,7 @@ class mpRfT2_SegmentFormBase(mpRfT2_FormBase):
     def num(self):
         return self._num_
 
-    #-------------------------------------------------------------------------------
+    #-----------------------------------------------------------------------------------------
     @property
     def discretization(self):
         return self._discretize_
@@ -127,8 +138,6 @@ class mpRfT2_SegmentFormBase(mpRfT2_FormBase):
 
 
 
-
-
 if __name__ == "__main__":
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python objects/mpRfT/_2d/forms/segment/base/main.py
     pass

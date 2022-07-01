@@ -10,6 +10,7 @@ if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.base import FrozenOnly
 from objects.mpRfT._2d.mesh.cell.frame.segments.main import mpRfT2_CellSegments
+from objects.mpRfT._2d.mesh.cell.frame.interfaces.main import mpFfT2_CellFrame_Interfaces
 
 
 
@@ -18,11 +19,13 @@ class mpFfT2_CellFrame(FrozenOnly):
     """"""
     def __init__(self, cell):
         """"""
+        assert cell.IS.root, "Only root cell has frame."
         self._cell_ = cell
         self._U = None
         self._D = None
         self._L = None
         self._R = None
+        self._interfaces_ = mpFfT2_CellFrame_Interfaces(self)
         self._freeze_self_()
 
     def __repr__(self):
@@ -182,8 +185,10 @@ class mpFfT2_CellFrame(FrozenOnly):
             self.___Pr_make_Segments___()
         return  self._R
 
-
-
+    @property
+    def interfaces(self):
+        """The four interfaces surrounding this (root-)cell."""
+        return self._interfaces_
 
 
 

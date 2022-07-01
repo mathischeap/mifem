@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import numpy as np
 
 from tools.linear_algebra.solvers.regular.direct.main import Direct

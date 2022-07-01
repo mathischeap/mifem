@@ -10,6 +10,7 @@
 from screws.freeze.main import FrozenOnly
 from importlib import import_module
 from objects.CSCG._2d.forms.trace.base.numbering.visualize import _2dCSCG_Trace_Numbering_Visualize
+from objects.CSCG._2d.forms.trace.base.numbering.do.main import _2dCSCG_Trace_Numbering_DO
 
 
 
@@ -38,6 +39,7 @@ class _2dCSCG_Trace_Numbering(FrozenOnly):
         self._numbering_parameters_ = {'scheme_name': self._scheme_name_}
         self._numbering_parameters_.update(self._parameters_)
         self._visualize_ = _2dCSCG_Trace_Numbering_Visualize(tf)
+        self._DO_ = _2dCSCG_Trace_Numbering_DO(self)
         self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
@@ -92,3 +94,7 @@ class _2dCSCG_Trace_Numbering(FrozenOnly):
     @property
     def visualize(self):
         return self._visualize_
+
+    @property
+    def do(self):
+        return self._DO_

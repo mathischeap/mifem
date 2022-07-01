@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """We test our library with a 3d Stokes flow in a fully periodic domain.
 
 """

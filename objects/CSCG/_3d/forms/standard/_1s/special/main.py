@@ -23,7 +23,9 @@ from root.config.main import cOmm, MPI
 
 
 class _1Form_Special(FrozenOnly):
+    """"""
     def __init__(self, _1sf):
+        """"""
         self._sf_ = _1sf
         self._vortex_detection_ = None
         self._freeze_self_()

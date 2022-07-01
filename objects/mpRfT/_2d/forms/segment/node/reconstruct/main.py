@@ -55,7 +55,7 @@ class mpRfT2_NSgF_Reconstruct(FrozenOnly):
             for seg in segments:
                 rp = seg.__repr__()
                 nodes, basis = Basis[seg]
-                v_i = np.einsum('ij, i -> j', basis[0], t.cochain.local[rp], optimize='greedy')
+                v_i = np.einsum('ij, i -> j', basis[0], t.cochain.trace[rp], optimize='greedy')
                 value[rp] = [v_i, ]
 
             value = mesh.segments.Wds(value)
@@ -70,7 +70,7 @@ class mpRfT2_NSgF_Reconstruct(FrozenOnly):
                 rp = seg.__repr__()
                 nodes, basis = Basis[seg]
                 xy_i = seg.coordinate_transformation.mapping(nodes)
-                v_i = np.einsum('ij, i -> j', basis[0], t.cochain.local[rp], optimize='greedy')
+                v_i = np.einsum('ij, i -> j', basis[0], t.cochain.trace[rp], optimize='greedy')
                 xy[rp] = xy_i
                 value[rp] = v_i
 
@@ -101,10 +101,10 @@ if __name__ == '__main__':
 
     t0.TW.func = s
     s.current_time = 0
-    t0.discretize()
+    t0.discretization()
 
     coo = mesh.coo_map.Lobatto(2)
 
-    xy, v = t0.reconstruct(coo)
+    xy, v = t0.reconstruction(coo)
 
-    v.visualize(xy)
+    v.visualization(xy)

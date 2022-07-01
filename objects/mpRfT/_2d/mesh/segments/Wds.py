@@ -14,7 +14,7 @@ from root.config.main import rAnk, mAster_rank, cOmm
 
 
 class mpRfT2_Mesh_SegmentWiseDataStructure(FrozenOnly):
-    """"""
+    """segment-Wise Data Structure."""
 
     def __init__(self, segments):
         """"""

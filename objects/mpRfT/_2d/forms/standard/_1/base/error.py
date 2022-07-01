@@ -37,7 +37,7 @@ class mpRfT2_S1F_Error(FrozenOnly):
         coo = mesh.coo_map.Gauss(degree_plus)
         xy, v = self._f_.reconstruction(coo, ravel=False)
 
-        F = self._f_.TW.func.___Pr_evaluate_func___()
+        F = self._f_.analytic_expression.___Pr_evaluate_func___()
 
         detJ = mesh.rcMC.Jacobian(coo)
 

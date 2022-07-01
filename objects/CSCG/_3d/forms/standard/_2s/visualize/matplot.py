@@ -133,7 +133,7 @@ class _3dCSCG_S2F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
             XYZ[e] = _xyz_
             VAL[e] = _val_
 
-        # gather all information to the mAster core ----------- BELOW ---------------------------------------------
+        # gather all information to the mAster core ----------- BELOW ------------------------------
         XYZ = cOmm.gather(XYZ, root=mAster_rank)
         VAL = cOmm.gather(VAL, root=mAster_rank)
         if rAnk == mAster_rank:
@@ -184,7 +184,7 @@ class _3dCSCG_S2F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
                     levels.append(np.linspace(MIN[i], MAX[i], num_of_levels))
 
 
-        # Now, we can do the plot ------------- BELOW -----------------------------------------------------------
+        # Now, we can do the plot ------------- BELOW ----------------------------------------------
 
         if rAnk == mAster_rank:
 

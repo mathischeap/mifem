@@ -12,6 +12,8 @@ from screws.freeze.base import FrozenOnly
 from objects.mpRfT._2d.mesh.coo_map.helpers.uniform import mpRfT2_Mesh_UniformCooMap
 from objects.mpRfT._2d.mesh.coo_map.helpers.Gauss import mpRfT2_Mesh_GaussCooMap
 from objects.mpRfT._2d.mesh.coo_map.helpers.Lobatto import mpRfT2_Mesh_LobattoCooMap
+from objects.mpRfT._2d.mesh.coo_map.helpers.partial_segment_integral import mpRfT2_Mesh_PartialSegmentIntegral
+from objects.mpRfT._2d.mesh.coo_map.helpers.segment_integral import mpRfT2_Mesh_SegmentIntegral
 
 
 
@@ -36,7 +38,13 @@ class mpRfT2_Mesh_CooMap(FrozenOnly):
     def Lobatto(self):
         return mpRfT2_Mesh_LobattoCooMap(self._mesh_)
 
+    @property
+    def partial_segment_integral(self):
+        return mpRfT2_Mesh_PartialSegmentIntegral(self._mesh_)
 
+    @property
+    def segment_integral(self):
+        return mpRfT2_Mesh_SegmentIntegral(self._mesh_)
 
 
 

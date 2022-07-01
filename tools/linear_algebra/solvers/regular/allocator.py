@@ -44,7 +44,6 @@ class RegularSolverDistributor(FrozenOnly):
             f"results must be of length 5, and results[0] must be a LocallyFullVector!"
         return Results
 
-
     @classmethod
     def ___solver_name___(cls):
         """"""
@@ -53,7 +52,6 @@ class RegularSolverDistributor(FrozenOnly):
                 'BiCGSTAB': 'BiCGSTAB',
                 'direct'  : 'Direct'
         }
-
 
     @classmethod
     def ___solver_path___(cls):

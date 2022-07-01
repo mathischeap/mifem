@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from screws.freeze.main import FrozenOnly
-from screws.decorators.accepts import accepts
 from scipy import sparse as spspa
 from root.config.main import *
 
@@ -103,7 +102,6 @@ class SpaMat_Customize(FrozenOnly):
 
 
 
-    @accepts('self', (int, float, 'int32', 'int64'))
     def clear_global_row(self, r):
         """Make the #r row of the global matrix (assemble self to get the global matrix) to be all zero.
         To achieve this, we only adjust the local output of the call function.
@@ -148,10 +146,6 @@ class SpaMat_Customize(FrozenOnly):
 
 
 
-    @accepts('self',
-             (int, float, 'int32', 'int64'),
-             (int, float, 'int32', 'int64'),
-             (int, float, 'int32', 'int64'))
     def set_assembled_M_ij_to(self, i, j, v):
         """Let M be the assembled matrix, we set M[i,j] = v.
 
@@ -261,7 +255,6 @@ class SpaMat_Customize(FrozenOnly):
 
 
 
-    @accepts('self', (int, float, 'int32', 'int64'))
     def identify_global_row(self, r):
         """Let M be the assembled matrix. We want to make M[r,:] = 0 except M[r,r] = 1.
 
@@ -276,7 +269,6 @@ class SpaMat_Customize(FrozenOnly):
         self.clear_global_row(r)
         self.set_assembled_M_ij_to(r, r, 1)
 
-
     def identify_global_rows(self, rs):
         """
 
@@ -288,14 +280,65 @@ class SpaMat_Customize(FrozenOnly):
 
         raise NotImplementedError()
 
+    def identify_global_rows_according_to_mpRfT_partial_dofs(self, i, pds):
+        """We locally make M[r,:] = 0 except M[r,r] = 1 according to a mpRfT PartialDofs
+        instance in block[i][:]
+
+        This will ask the local and global matrix to be square: But we
+        do not check it.
+
+        IMPORTANT: as this is done only locally, after assembly, M[r,r] may be greater than 1.
+            for example, for a corner point, M[r,r] can be 8 if it is internal. This, for example,
+            will not introduce problem for imposing bc if in the right-hand-side vector, we
+            also give a 8 times greater value.
+
+        :param pds: we will get dofs form this.
+        :param i: We locally make block[i][:][dofs, :] = 0 except block[i][i][dofs, dofs] = 1
+
+        :return:
+        """
+        assert not self._spa_mat_.do.___locker___, f"the assembled matrix is locked!"
+        assert not self._spa_mat_.do.___sparsity_locker___, f"the sparsity is locked!"
+
+        if pds.__class__.__name__ == 'PartialCochain': pds = pds._pd_
+
+        assert self._spa_mat_.elements is pds._mesh_.rcfc, \
+            "PartialDofs elements != EWC elements."
+
+        bsp = self._spa_mat_.bmat_shape
+
+        assert bsp is not False and np.shape(bsp) == (2,), \
+            "we can only use this to bmat EWC matrices to keep the block safe. " \
+            "if you want to apply it to a single EWC matrix, first wrap it in a list, then send it to bmat"
+
+        assert i % 1 == 0, f"i={i}({i.__class__.__name__}) cannot be an index!"
+        if isinstance(i, float): i = int(i)
+        assert 0 <= i < bsp[0], f"i={i} is beyond the shape of this " \
+                                f"EWC spare matrix of block shape ({bsp[0]},.)."
+
+        assert self._spa_mat_._gathering_matrices_0_ is not None, \
+            f"We at least need row gathering matrix!"
+
+
+        GM = self._spa_mat_.gathering_matrices[0]
+        LDF = pds.compile.local
+
+        for rc_rp in LDF: # go through all locally involved root_cells
+            assert rc_rp in self._spa_mat_
+
+            if rc_rp not in self.___customizations___:
+                self.___customizations___[rc_rp] = list()
+
+            start = sum(GM.___Pr_LENs___(rc_rp)[:i])
+
+            local_dofs = np.array(LDF[rc_rp]) + start
+
+            self.___customizations___[rc_rp].append(('ilrs', local_dofs))
 
 
 
 
 
-    @accepts('self',
-             (int, float, 'int32', 'int64'),
-             ('PartialDofs', 'PartialCochain'))
     def identify_global_rows_according_to_CSCG_partial_dofs(self, i, pds, interpreted_as='local_dofs'):
         """We locally make M[r,:] = 0 except M[r,r] = 1 according to a CSCG PartialDofs
         instance in block[i][:]
@@ -360,12 +403,6 @@ class SpaMat_Customize(FrozenOnly):
                             f"as <{interpreted_as}>.")
 
 
-
-    @accepts('self',
-             (int, float, 'int32', 'int64'),
-             (int, float, 'int32', 'int64'),
-             ('PartialDofs', 'PartialCochain'),
-             ('PartialDofs', 'PartialCochain'))
     def off_diagonally_identify_rows_according_to_two_CSCG_partial_dofs(
         self, i, j, row_pds, col_pds, interpreted_as='local_dofs'):
         """We will identify off-diagonal block, block[i][j], and set

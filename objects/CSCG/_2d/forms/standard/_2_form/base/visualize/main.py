@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from screws.freeze.base import FrozenOnly
 from objects.CSCG._2d.forms.standard._2_form.base.visualize.matplot import _2dCSCG_S2F_VIS_Matplot
 

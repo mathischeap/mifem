@@ -38,18 +38,21 @@ class mpRfT2_StandardFormBase(mpRfT2_FormBase):
         self._IS_ = mpRfT2_SF_IS(self)
         self._cochain_ = mpRfT2_SF_Cochain(self)
         self._N_ = mpRfT2_SF_N(self)
+
         self._numbering_ = None
         self._num_ = None
         self._error_ = None
-
         self._discretize_ = None
         self._reconstruct_ = None
-
         self._migrate_ = None
+        self._visualize_ = None
 
 
 
-    def ___Pr_check_func___(self, func):
+    def ___Pr_check_analytic_expression___(self, func):
+        raise NotImplementedError()
+
+    def ___Pr_check_BC_analytic_expression___(self, ae):
         raise NotImplementedError()
 
     @property
@@ -67,6 +70,8 @@ class mpRfT2_StandardFormBase(mpRfT2_FormBase):
     @property
     def N(self):
         return self._N_
+
+
 
     @property
     def numbering(self):
@@ -94,7 +99,9 @@ class mpRfT2_StandardFormBase(mpRfT2_FormBase):
     def migration(self):
         return self._migrate_
 
-
+    @property
+    def visualization(self):
+        return self._visualize_
 
 
 if __name__ == "__main__":

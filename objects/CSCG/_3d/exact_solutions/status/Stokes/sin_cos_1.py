@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from numpy import sin, pi, cos
 from objects.CSCG._3d.exact_solutions.status.Stokes.base import Stokes_Base
 

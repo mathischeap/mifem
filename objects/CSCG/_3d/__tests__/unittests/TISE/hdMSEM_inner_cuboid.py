@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Here we use the hdMSEM to solve the inner-orientated version of the time independent Schrödinger
 equation. We do this to test the hybridization of 0-forms.

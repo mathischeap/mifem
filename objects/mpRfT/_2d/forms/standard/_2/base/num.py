@@ -35,6 +35,10 @@ class mpRfT2_S2F_Num(FrozenOnly):
             _ = self._f_.numbering.gathering
         return self._f_.numbering._num_local_dofs_
 
+    @property
+    def GLOBAL_dofs(self):
+        return self._f_.numbering.gathering.GLOBAL_num_dofs
+
 
 class ___mpRfT2_S2F_Num_Basis___(FrozenOnly):
     """"""

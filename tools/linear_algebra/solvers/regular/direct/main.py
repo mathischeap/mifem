@@ -4,7 +4,6 @@ from screws.miscellaneous.timer import MyTimer
 from tools.linear_algebra.solvers.regular.direct.helpers.scipy_sparse_linalg_v0 import ___scipy_sparse_linalg_v0___
 
 
-
 class Direct(ParallelSolverBase):
     """"""
     def __init__(self, routine='auto', name=None):

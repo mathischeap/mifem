@@ -11,7 +11,7 @@ if './' not in sys.path: sys.path.append('./')
 from screws.freeze.base import FrozenOnly
 from tools.linear_algebra.gathering.vector import Gathering_Vector
 from tools.linear_algebra.gathering.irregular.ir_matrix.main import iR_Gathering_Matrix
-from root.config.main import sIze, rAnk, cOmm, np
+from root.config.main import sIze, rAnk, cOmm
 
 
 
@@ -27,7 +27,7 @@ class Naive(FrozenOnly):
     def __call__(self, parameters):
         """"""
         scheme_name = parameters['scheme_name']
-        assert scheme_name == 'Naive', f"parameters wrong"
+        assert scheme_name == 'Naive', f"parameters wrong."
 
         #--- no other parameters, we use the default numbering scheme ----------
         if len(parameters) == 1:
@@ -38,35 +38,42 @@ class Naive(FrozenOnly):
         return rcWGM
 
     def ___Pr_no_para_routine___(self):
-        """"""
+        """A stupid routine."""
         mesh = self._t_.mesh
-        for rank in range(sIze):
-            if rank == rAnk:
-                if rAnk == 0:
-                    current = 0
+        NUMb = self._t_.num.basis
+
+        if rAnk == 0:
+            numbered = dict()
+            START = 0
+            for seg in mesh.segments:
+                # go through all local segments in rAnk #0
+                num_basis = NUMb[seg]
+                numbered[seg.__repr__()] = range(START, START + num_basis)
+                START += num_basis
+
+        else:
+            numbered, START = cOmm.recv(source=rAnk-1, tag=rAnk)
+            for seg in mesh.segments:
+                rp = seg.__repr__()
+                if rp in numbered:
+                    pass
                 else:
-                    current = cOmm.recv(source=rAnk-1, tag=rAnk)
+                    num_basis = NUMb[seg]
+                    numbered[rp] = range(START, START + num_basis)
+                    START += num_basis
 
-                MY_START = current
+        if rAnk != sIze - 1:
+            cOmm.send([numbered, START], dest=rAnk+1, tag=rAnk+1)
 
-                for seg in mesh.segments:
-                    num_basis = self._t_.num.basis[seg]
-                    current += num_basis
-
-                if rAnk < sIze-1:
-                    cOmm.send(current, dest=rAnk+1, tag=rAnk+1)
-
-                GVs = dict()
-                NUM_local_dofs = 0
-                for seg in mesh.segments:
-                    num_basis = self._t_.num.basis[seg]
-                    rp = seg.__repr__()
-                    GVs[rp] = Gathering_Vector(rp, np.arange(MY_START, MY_START + num_basis))
-                    MY_START += num_basis
-                    NUM_local_dofs += num_basis
+        GVs = dict()
+        NUM_local_dofs = 0
+        for seg in mesh.segments:
+            rp = seg.__repr__()
+            GVs[rp] = Gathering_Vector(rp, numbered[rp])
+            NUM_local_dofs += NUMb[seg]
 
         # noinspection PyUnboundLocalVariable
-        rcWGM = iR_Gathering_Matrix(GVs)
+        rcWGM = iR_Gathering_Matrix(GVs, mesh_type='mpRfT2')
         # noinspection PyUnboundLocalVariable
         return rcWGM, NUM_local_dofs
 

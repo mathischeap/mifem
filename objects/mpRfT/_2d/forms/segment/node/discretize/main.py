@@ -24,13 +24,11 @@ class mpRfT2_NSgF_Discretize(FrozenOnly):
         self._Pr_standard_scalar = mpRfT2_NSgF_Discretize_Standard_Scalar(t)
         self._freeze_self_()
 
-    def __call__(self, update_cochain=True, target='func'):
+    def __call__(self, target='analytic_expression'):
         """
 
         Parameters
         ----------
-        update_cochain : bool
-            If we send the output to `cochain.local`.
         target : str
 
         Returns
@@ -38,29 +36,47 @@ class mpRfT2_NSgF_Discretize(FrozenOnly):
 
         """
 
-        if target == 'func':
+        if target == 'analytic_expression':
 
-            if self._t_.TW.func.__class__.__name__ == 'mpRfT2_Scalar':
+            if self._t_.analytic_expression.__class__.__name__ == 'mpRfT2_Scalar':
 
-                if self._t_.TW.func.ftype == 'standard':
-                    LCC =  self._Pr_standard_scalar(target)
+                if self._t_.analytic_expression.ftype == 'standard':
+                    sgw_LCC =  self._Pr_standard_scalar(target)
 
                 else:
-                    raise NotImplementedError(f"mpRfT2_NSgF cannot (target func) "
+                    raise NotImplementedError(f"mpRfT2_NSgF cannot (target analytic_expression) "
                                               f"discretize mpRfT2_Scalar of ftype="
-                                              f"{self._t_.TW.func.ftype}")
+                                              f"{self._t_.analytic_expression.ftype}")
 
             else:
-                raise NotImplementedError(f'mpRfT2_NSgF can not (target func) '
-                                          f'discretize {self._t_.TW.func.__class__}.')
+                raise NotImplementedError(f'mpRfT2_NSgF can not (target analytic_expression) '
+                                          f'discretize {self._t_.analytic_expression.__class__}.')
+
+        elif target == 'boundary_condition':
+
+            BC = self._t_.BC
+
+            if BC.analytic_expression.__class__.__name__ == 'mpRfT2_Scalar':
+
+                if BC.analytic_expression.ftype == 'standard':
+                    sgw_LCC =  self._Pr_standard_scalar(target)
+
+                else:
+                    raise NotImplementedError(f"mpRfT2_NSgF cannot (target BC) "
+                                              f"discretize mpRfT2_Scalar of ftype="
+                                              f"{BC.analytic_expression.ftype}")
+
+            else:
+                raise NotImplementedError(f'mpRfT2_NSgF can not (target BC) '
+                                          f'discretize {BC.analytic_expression.__class__}.')
+
 
         else:
             raise NotImplementedError(f"mpRfT2_NSgF cannot discretize "
                                       f"while targeting at {target}.")
 
-        if update_cochain: self._t_.cochain.local = LCC
+        self._t_.cochain.trace = sgw_LCC
 
-        return LCC
 
 
 

@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
-
-
 from root.config.main import *
 from tools.linear_algebra.data_structures.global_matrix.main import LocallyFullVector
 from screws.exceptions import LinerSystemSolverDivergenceError

@@ -36,7 +36,7 @@ class mpRfT2_S0F_Error(FrozenOnly):
         coo = mesh.coo_map.Gauss(degree_plus)
         xy, v = self._f_.reconstruction(coo, ravel=False)
 
-        F = self._f_.TW.func.___Pr_evaluate_func___()
+        F = self._f_.analytic_expression.___Pr_evaluate_func___()
 
         detJ = mesh.rcMC.Jacobian(coo)
 
@@ -91,10 +91,10 @@ if __name__ == '__main__':
     def p(t, x, y): return np.sin(np.pi * x) * np.cos(np.pi * y) + t
     s = mpRfT2_Scalar(mesh, p)
 
-    f.TW.func = s
+    f.analytic_expression = s
     s.current_time = 0
 
-    f.discretize()
+    f.discretization()
 
     print(f.error.L())
-    f.visualize(show_mesh=True)
+    f.visualization(show_mesh=True)

@@ -15,6 +15,7 @@ from objects.mpRfT._2d.forms.segment.node.reconstruct.main import mpRfT2_NSgF_Re
 from objects.mpRfT._2d.forms.segment.node.migration import mpRfT2_NSgF_Migration
 from objects.mpRfT._2d.forms.segment.node.visualize import mpRfT2_NSgF_Visualize
 from objects.mpRfT._2d.forms.segment.node.num import mpRfT2_NSgF_Num
+from objects.mpRfT._2d.forms.segment.node.dofs.main import mpRfT2_NSgF_Dofs
 
 
 
@@ -46,9 +47,12 @@ class mpRfT2_NSgF(mpRfT2_SegmentFormBase):
         self._migrate_ = mpRfT2_NSgF_Migration(self)
         self._visualize_ = mpRfT2_NSgF_Visualize(self)
 
+        self._dofs_ = mpRfT2_NSgF_Dofs(self)
         self._freeze_self_()
 
-
+    @property
+    def dofs(self):
+        return self._dofs_
 
 
 
@@ -57,7 +61,7 @@ if __name__ == "__main__":
 
     from __init__ import rfT2
 
-    fc = rfT2.rf(100, N_range=(2,2))
+    fc = rfT2.rf(10, N_range=(2,3))
 
     t0 = fc('nst', ndp=0, ntype='Gauss')
 
@@ -69,9 +73,16 @@ if __name__ == "__main__":
     def p(t, x, y): return np.sin(np.pi*x) * np.sin(np.pi*y) + t
     s = mpRfT2_Scalar(mesh, p)
 
-    t0.TW.func = s
+    t0.analytic_expression = s
     s.current_time = 0
     t0.discretization()
+
+    # LC = t0.cochain.local
+    #
+    # for rc_rp in mesh.rcfc:
+    #     print(LC[rc_rp])
+
     t0.visualization()
 
     # print(t0.num.local_dofs)
+    # t0.dofs.visualization()

@@ -20,7 +20,10 @@ class mpRfT2_FormBase(mpRfT_FormBase):
 
 
     #-------- must have methods ------------------------------------------------
-    def ___Pr_check_func___(self, func):
+    def ___Pr_check_analytic_expression___(self, func):
+        raise NotImplementedError()
+
+    def ___Pr_check_BC_analytic_expression___(self, ae):
         raise NotImplementedError()
 
     @property

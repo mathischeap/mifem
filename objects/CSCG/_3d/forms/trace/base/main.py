@@ -21,9 +21,6 @@ from objects.CSCG._3d.forms.trace.base.do import _3dCSCG_Trace_DO
 
 
 
-
-
-
 class _3dCSCG_Standard_Trace(CSCG_Trace_Form, _3dCSCG_FORM_BASE, ndim=3):
     """This is the parent of all 3d standard trace forms.
 

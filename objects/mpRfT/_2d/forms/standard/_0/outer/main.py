@@ -40,12 +40,12 @@ class mpRfT2_So0F(mpRfT2_S0F):
 
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/mpRfT/_2d/forms/standard/_0/outer/main.py
+
     from __init__ import rfT2
 
     mesh = rfT2.rm(500, N_range=(2,3), refinement_intensity=0.2)
 
     f = mpRfT2_So0F(mesh)
-
 
     from objects.mpRfT._2d.cf.scalar.main import mpRfT2_Scalar
     import numpy as np
@@ -55,13 +55,13 @@ if __name__ == "__main__":
     f.TW.func = s
     s.current_time = 0
 
-    f.discretize()
+    f.discretization()
     # R = f.reconstruct()
-    f.visualize()
+    f.visualization()
     # print(f.error.L())
 
     df = f.coboundary()
 
-    df.visualize()
+    df.visualization()
 
-    print(f.num.local_dofs)
+    # print(f.num.local_dofs)

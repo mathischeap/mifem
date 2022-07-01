@@ -32,5 +32,5 @@ class MassMatrixGenerator(FrozenOnly):
         return Mi
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python objects/mpRfT/_2d/forms/standard/_0/base/matrices/helpers/mass.py
     pass

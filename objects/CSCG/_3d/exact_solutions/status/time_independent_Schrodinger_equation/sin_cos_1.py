@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from numpy import sin, pi
 from objects.CSCG._3d.exact_solutions.status.time_independent_Schrodinger_equation.base import \
     TimeIndependentSchrodingerEquationBase

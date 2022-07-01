@@ -37,5 +37,5 @@ class mpRfT2_SgF_N(FrozenOnly):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python objects/mpRfT/_2d/forms/segment/base/N.py
     pass

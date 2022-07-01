@@ -35,8 +35,10 @@ class mpRfT2_NSgF_Discretize_Standard_Scalar(FrozenOnly):
         """
         mesh = self._t_.mesh
 
-        if target == 'func':
-            F = self._t_.TW.func
+        if target == 'analytic_expression':
+            F = self._t_.analytic_expression
+        elif target == 'boundary_condition':
+            F = self._t_.BC.analytic_expression
         else:
             raise NotImplementedError()
 

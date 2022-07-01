@@ -5,6 +5,7 @@ import types
 from screws.freeze.main import FrozenOnly
 from scipy import sparse as spspa
 from tools.linear_algebra.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
+from tools.linear_algebra.gathering.irregular.ir_chain_matrix.main import iR_Chain_Gathering_Matrix
 from tools.linear_algebra.data_structures.global_matrix.main import GlobalVector
 
 from tools.linear_algebra.elementwise_cache.objects.column_vector.helpers.add import ___CV_ADD___
@@ -49,6 +50,8 @@ class EWC_ColumnVector(FrozenOnly):
         """
         #----------- when only provide one input `mesh_elements` ------------------------------
         if data_generator is None and cache_key_generator is None and con_shape is False:
+
+            #------- we have a cscg form -------------------------------------------------
             if hasattr(mesh_elements, 'standard_properties') and \
                 'CSCG_form' in mesh_elements.standard_properties.tags:
                 data_generator = mesh_elements
@@ -58,6 +61,15 @@ class EWC_ColumnVector(FrozenOnly):
                 'CSCG_form' in mesh_elements.prime.standard_properties.tags:
                 data_generator = mesh_elements.prime
                 mesh_elements = mesh_elements.mesh.elements
+
+            #----------- we have a mpRfT form as the only input -------------------------------------
+            elif hasattr(mesh_elements, 'standard_properties') and \
+                'mpRfT_form' in mesh_elements.standard_properties.tags:
+                self._mpRfT_num_basis_ = mesh_elements.num.basis
+                data_generator = self.___Pr_mpRfT_empty_DG___
+                mesh_elements = mesh_elements.mesh
+
+
         else:
             pass
 
@@ -66,8 +78,12 @@ class EWC_ColumnVector(FrozenOnly):
             self._elements_ = mesh_elements
         elif mesh_elements.__class__.__name__ in ('_3dCSCG_Mesh', '_2dCSCG_Mesh'):
             self._elements_ = mesh_elements.elements
+        elif mesh_elements.__class__.__name__ in ('mpRfT2_Mesh', 'mpRfT3_Mesh'):
+            self._elements_ = mesh_elements.rcfc
+        elif isinstance(mesh_elements, dict):
+            self._elements_ = mesh_elements
         else:
-            raise Exception()
+            raise Exception(f"mesh_elements={mesh_elements} not understandable!")
 
 
         # --------- parse data type ---------------------------------------------------------------
@@ -162,6 +178,7 @@ class EWC_ColumnVector(FrozenOnly):
         self.___IS_NC___ = False
         self.___IS_CT___ = False
         self.____CT_DG____ = None
+        self.___mpRfT_empty_cache___ = dict()
         self.___CHECK_repeat_CT___ = True
         self.___repeat_CK___ = ''
         self._con_shape_ = con_shape
@@ -173,6 +190,19 @@ class EWC_ColumnVector(FrozenOnly):
 
     def ___PRIVATE_reset_cache___(self):
         self._cache_ = dict()
+
+
+    def ___Pr_mpRfT_empty_DG___(self, rc_rp):
+        """"""
+        num_basis = self._mpRfT_num_basis_[rc_rp]
+
+        if num_basis in self.___mpRfT_empty_cache___:
+            return self.___mpRfT_empty_cache___[num_basis]
+        else:
+            EP = spspa.csc_matrix((num_basis, 1))
+            self.___mpRfT_empty_cache___[num_basis] = EP
+            return EP
+
 
     def ___PRIVATE_empty_data_generator___(self, i):
         assert i in self.elements
@@ -196,14 +226,16 @@ class EWC_ColumnVector(FrozenOnly):
 
     @gathering_matrix.setter
     def gathering_matrix(self, gathering_matrix):
-        if gathering_matrix.__class__.__name__ == 'Chain_Gathering_Matrix':
+        """"""
+        if gathering_matrix.__class__.__name__ in ('Chain_Gathering_Matrix', 'iR_Chain_Gathering_Matrix'):
             pass
         else:
             if not isinstance(gathering_matrix, (list, tuple)):
                 gathering_matrix = [gathering_matrix,]
+
             cgm0 = list()
             for _ in gathering_matrix:
-                if _.__class__.__name__ == 'Gathering_Matrix':
+                if _.__class__.__name__ in ('Gathering_Matrix', 'iR_Gathering_Matrix,'):
                     cgm0.append(_)
                 else:
                     if hasattr(_, '___IS_ADF___') and _.___IS_ADF___:
@@ -211,7 +243,10 @@ class EWC_ColumnVector(FrozenOnly):
                     else:
                         cgm0.append(_.numbering.gathering)
 
-            gathering_matrix = Chain_Gathering_Matrix(cgm0)
+            if any([_.__class__.__name__ == 'iR_Gathering_Matrix' for _ in cgm0]):
+                gathering_matrix = iR_Chain_Gathering_Matrix(cgm0)
+            else:
+                gathering_matrix = Chain_Gathering_Matrix(cgm0)
         self._gathering_matrix_ = gathering_matrix
 
     @property

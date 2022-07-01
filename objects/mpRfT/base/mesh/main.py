@@ -49,6 +49,22 @@ class mpRfT_MeshBase(FrozenClass):
 
         if rfd is None: rfd = dict()
 
+        RFD = dict()
+        for rp in rfd:
+            if isinstance(rp, int):
+                if rp in basic_cells:
+                    RFD[rp] = rfd[rp]
+            elif '-' not in rp:
+                i = int(rp)
+                if i in basic_cells:
+                    RFD[rp] = rfd[rp]
+            else:
+                i = rp.split('-')[0]
+                if int(i) in basic_cells:
+                    RFD[rp] = rfd[rp]
+
+        rfd = RFD
+
         for rp in rfd:
             if isinstance(rp, int):
                 assert rp in basic_cells, f"cell={rp} not a valid basic cell."
@@ -128,7 +144,7 @@ class mpRfT_MeshBase(FrozenClass):
             return self.___rcfc___[indices]
 
         if isinstance(indices, int):
-            indices = (indices,)
+            return self.basic_cells[indices]
         else:
             assert isinstance(indices, tuple), f"put indices of cell in a tuple."
 
@@ -222,7 +238,15 @@ class mpRfT_MeshBase(FrozenClass):
 
     def __eq__(self, other):
         """Regardless of the history of a mesh, we only compare they current conditions."""
-        return self.standard_properties.parameters == other.standard_properties.parameters
+        if other.__class__.__name__ != self.__class__.__name__:
+            return False
+        elif self is other:
+            return True
+        else:
+            if other.cscg != self.cscg:
+                return False
+            else:
+                return self.standard_properties.parameters == other.standard_properties.parameters
 
 
     @property

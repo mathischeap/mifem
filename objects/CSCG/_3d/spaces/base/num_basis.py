@@ -24,20 +24,6 @@ class NumBasis(FrozenOnly):
         self._freeze_self_()
 
 
-    @property
-    def _3dCSCG_0Node(self):
-        """ """
-        _basis_ = 8
-        _basis_components_ = {'NWB': (1,),
-                              'SWB': (1,),
-                              'NEB': (1,),
-                              'SEB': (1,),
-                              'NWF': (1,),
-                              'SWF': (1,),
-                              'NEF': (1,),
-                              'SEF': (1,)}
-        return _basis_, _basis_components_
-
 
 
 
@@ -130,61 +116,6 @@ class NumBasis(FrozenOnly):
 
 
 
-
-
-
-    @property
-    def _3dCSCG_0Tr(self):
-        p = self._FS_.p
-        _basis_ = (p[0] + 1) * (p[1] + 1) * (p[2] + 1) - (p[0]-1) * (p[1]-1) * (p[2]-1)
-
-        _basis_components_ = {'N': ((p[1]+1)*(p[2]+1),), 'S': ((p[1]+1)*(p[2]+1),),
-                              'W': ((p[0]+1)*(p[2]+1),), 'E': ((p[0]+1)*(p[2]+1),),
-                              'B': ((p[0]+1)*(p[1]+1),), 'F': ((p[0]+1)*(p[1]+1),)}
-
-        _basis_onsides_ = {'N': (p[1]+1)*(p[2]+1), 'S': (p[1]+1)*(p[2]+1),
-                           'W': (p[0]+1)*(p[2]+1), 'E': (p[0]+1)*(p[2]+1),
-                           'B': (p[0]+1)*(p[1]+1), 'F': (p[0]+1)*(p[1]+1)}
-        return _basis_, _basis_components_, _basis_onsides_
-
-    @property
-    def _3dCSCG_1Tr(self):
-        """ """
-        p = self._FS_.p
-        _basis_ = p[0] * (p[1] + 1) * (p[2] + 1) - p[0] * (p[1] - 1) * (p[2] - 1) + \
-                  (p[0] + 1) * p[1] * (p[2] + 1) - (p[0] - 1) * p[1] * (p[2] - 1) + \
-                  (p[0] + 1) * (p[1] + 1) * p[2] - (p[0] - 1) * (p[1] - 1) * p[2]
-
-        _basis_components_ = {'N': (p[1]*(p[2]+1), (p[1]+1)*p[2]),
-                              'S': (p[1]*(p[2]+1), (p[1]+1)*p[2]),
-                              'W': (p[0]*(p[2]+1), (p[0]+1)*p[2]),
-                              'E': (p[0]*(p[2]+1), (p[0]+1)*p[2]),
-                              'B': (p[0]*(p[1]+1), (p[0]+1)*p[1]),
-                              'F': (p[0]*(p[1]+1), (p[0]+1)*p[1])}
-
-        _basis_onsides_ = {'N': p[1]*(p[2]+1) + (p[1]+1)*p[2],
-                           'S': p[1]*(p[2]+1) + (p[1]+1)*p[2],
-                           'W': p[0]*(p[2]+1) + (p[0]+1)*p[2],
-                           'E': p[0]*(p[2]+1) + (p[0]+1)*p[2],
-                           'B': p[0]*(p[1]+1) + (p[0]+1)*p[1],
-                           'F': p[0]*(p[1]+1) + (p[0]+1)*p[1]}
-
-        return _basis_, _basis_components_, _basis_onsides_
-
-    @property
-    def _3dCSCG_2Tr(self):
-        p = self._FS_.p
-
-        _basis_ = 2 * (p[1]*p[2] + p[0]*p[2] + p[0]*p[1])
-
-        _basis_components_ = {'N': (p[1]*p[2],), 'S': (p[1]*p[2],),
-                              'W': (p[0]*p[2],), 'E': (p[0]*p[2],),
-                              'B': (p[0]*p[1],), 'F': (p[0]*p[1],)}
-        _basis_onsides_ = {'N': p[1]*p[2], 'S': p[1]*p[2],
-                           'W': p[0]*p[2], 'E': p[0]*p[2],
-                           'B': p[0]*p[1], 'F': p[0]*p[1]}
-
-        return _basis_, _basis_components_, _basis_onsides_
 
 
 

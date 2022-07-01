@@ -178,7 +178,6 @@ class FormCaller(FrozenOnly):
 
             if ID in ('0-adf', '1-adf', '2-adf', '3-adf',  # algebraic dual (standard) forms
                       '0-adt', '1-adt', '2-adt',           # algebraic dual trace forms
-                      '0-adTr', '1-adTr', '2-adTr',        # algebraic dual Tr forms
                       ):
                 fp['type'] = '_3dCSCG_ADF'
                 # ---------------- make a dual from a prime ------------------------------------
@@ -203,12 +202,6 @@ class FormCaller(FrozenOnly):
                         assert pcn == '_3dCSCG_1Trace'
                     elif ID == '2-adt':
                         assert pcn == '_3dCSCG_2Trace'
-                    elif ID == '0-adTr':
-                        assert pcn == '_3dCSCG_0Tr'
-                    elif ID == '1-adTr':
-                        assert pcn == '_3dCSCG_1Tr'
-                    elif ID == '2-adTr':
-                        assert pcn == '_3dCSCG_2Tr'
                     else:
                         raise Exception(f"ID={ID} do not accept a single prime form instance as input.")
 
@@ -238,11 +231,6 @@ class FormCaller(FrozenOnly):
 
                     elif ID in ('0-adt', '1-adt', '2-adt'): # note that trace forms must be hybrid.
                         prime_class_ID = ID.split('-')[0] + '-t'
-                        prime = self(prime_class_ID, *args, **p_kwargs)
-
-
-                    elif ID in ('0-adTr', '1-adTr', '2-adTr'): # note that trace forms must be hybrid.
-                        prime_class_ID = ID.split('-')[0] + '-Tr'
                         prime = self(prime_class_ID, *args, **p_kwargs)
 
 

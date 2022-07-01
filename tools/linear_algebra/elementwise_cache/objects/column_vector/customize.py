@@ -54,7 +54,7 @@ class SpaVec_Customize(FrozenOnly):
                 key, factors = cus
 
 
-                # clear a local row of the EWC-sparse-matrix ----------------- BELOW ---------
+                # clear a local row of the EWC-sparse-matrix ----------------- BELOW ---------------
                 if key == 'cletr':  # Clear Local EnTRy #factors
                     # `factors` will be an int
                     if factors.__class__.__name__ in ("int", "int32", "int64"):
@@ -94,10 +94,10 @@ class SpaVec_Customize(FrozenOnly):
                             ind = indices.index(i)
                             values[ind] = v
 
-                # Not Implemented ---------------- BELOW --------
+                # Not Implemented ---------------- BELOW ----------------------------
                 else:
                     raise NotImplementedError(f"Can not handle customization key={key}.")
-                # ================================ ABOVE =======
+                # ================================ ABOVE ============================
 
         self.___customizations___ = dict() # we have to clear ___customizations___ to avoid multiple renewing.
 

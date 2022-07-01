@@ -9,10 +9,11 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.base import FrozenOnly
-from screws.quadrature import Quadrature
 
 from objects.CSCG._2d.spaces.polynomials import _2dCSCG_PolynomialSpace
 from objects.mpRfT._2d.mesh.space.do import mpRfT2_Mesh_Space_do
+from objects.mpRfT._2d.mesh.space.Gauss import mpRfT2_Mesh_Space_Gauss
+from objects.mpRfT._2d.mesh.space.Lobatto import mpRfT2_Mesh_Space_Lobatto
 
 
 class mpRfT2_Mesh_Space(FrozenOnly):
@@ -23,8 +24,8 @@ class mpRfT2_Mesh_Space(FrozenOnly):
         self._mesh_ = mesh
         self._pool_ = dict()
         self._do_ = mpRfT2_Mesh_Space_do(self)
-        self._GN_ = dict()
-        self._LN_ = dict()
+        self._Gauss_ = mpRfT2_Mesh_Space_Gauss(self)
+        self._Lobatto_ = mpRfT2_Mesh_Space_Lobatto(self)
         self._freeze_self_()
 
     def __getitem__(self, N):
@@ -38,22 +39,19 @@ class mpRfT2_Mesh_Space(FrozenOnly):
     def do(self):
         return self._do_
 
+    @property
+    def Gauss(self):
+        """Gauss quadrature nodes and weights"""
+        return self._Gauss_
 
-    def Gauss(self, N):
-        """"""
-        if N not in self._GN_:
-            self._GN_[N] =  Quadrature(N, category='Gauss').quad
-        return self._GN_[N]
+    @property
+    def Lobatto(self):
+        """Lobatto quadrature nodes and weights"""
+        return self._Lobatto_
 
-
-    def Lobatto(self, N):
-        """"""
-        if N not in self._LN_:
-            self._LN_[N] =  Quadrature(N, category='Lobatto').quad
-        return self._LN_[N]
 
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python objects/mpRfT/_2d/mesh/space/main.py
     pass

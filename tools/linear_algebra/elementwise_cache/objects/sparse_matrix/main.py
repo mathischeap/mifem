@@ -208,8 +208,6 @@ class EWC_SparseMatrix(FrozenOnly):
         self._cache_ = dict()
         self.assembler.___PRIVATE_reset_cache___()
 
-
-
     def ___PRIVATE_all_different_cache_key_generator___(self, i):
         """cache key will be different for all elements since we use their id."""
         return str(id(self._elements_[i]))

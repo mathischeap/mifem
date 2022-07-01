@@ -24,6 +24,13 @@ def randint(a, b):
 
 
 
+def sample(population, k):
+    if rAnk == mAster_rank:
+        r = random.sample(population, k)
+    else:
+        r = None
+    return cOmm.bcast(r, root=mAster_rank)
+
 
 
 

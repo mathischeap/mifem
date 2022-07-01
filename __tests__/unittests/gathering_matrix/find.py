@@ -1,6 +1,5 @@
+# -*- coding: utf-8 -*-
 """Here we test the find function of Gathering matrix."""
-
-
 
 import sys
 if './' not in sys.path: sys.path.append('./')

@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from importlib import import_module
 from objects.CSCG.base.forms.standard.coboundary import CSCG_Standard_Form_Coboundary_BASE

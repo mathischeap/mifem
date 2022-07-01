@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from scipy.sparse import csc_matrix
 import numpy as np

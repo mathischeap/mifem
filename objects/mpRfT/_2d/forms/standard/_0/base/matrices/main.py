@@ -20,7 +20,6 @@ class mpRfT2_S0F_Matrices(FrozenOnly):
         self._f_ = f
         self._freeze_self_()
 
-
     @property
     def incidence(self):
         return EWC_SparseMatrix(self._f_.mesh.rcfc,
@@ -37,7 +36,6 @@ class mpRfT2_S0F_Matrices(FrozenOnly):
             im = cell.space.incidence_matrix._2dCSCG_0Form_Outer
         return im
 
-
     @property
     def mass(self):
         return EWC_SparseMatrix(self._f_.mesh.rcfc,
@@ -49,7 +47,7 @@ class mpRfT2_S0F_Matrices(FrozenOnly):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python objects/mpRfT/_2d/forms/standard/_0/base/matrices.py
+    # mpiexec -n 4 python objects/mpRfT/_2d/forms/standard/_0/base/matrices/main.py
     from __init__ import rfT2
 
     fc = rfT2.rf(100)
@@ -57,4 +55,3 @@ if __name__ == "__main__":
     f0 = fc('0-f-o')
 
     E = f0.matrices.incidence
-

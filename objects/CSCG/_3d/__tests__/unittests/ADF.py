@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import random
 import sys
 if './' not in sys.path: sys.path.append('./')

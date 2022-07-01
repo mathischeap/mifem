@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 from tools.linear_algebra.data_structures.global_matrix.main import GlobalMatrix, GlobalVector

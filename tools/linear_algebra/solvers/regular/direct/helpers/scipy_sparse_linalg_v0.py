@@ -23,7 +23,6 @@ def ___scipy_sparse_linalg_v0___(A, b, COD=None):
                     * >0 : convergence to tolerance not achieved, number of iterations
                     * -1 : divergence
 
-
                 3. (0) beta -- The residual.
                 4. (0) ITER -- The number of outer iterations.
                 5. (str) message

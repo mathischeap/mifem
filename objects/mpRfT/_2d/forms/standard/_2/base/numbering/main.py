@@ -43,6 +43,11 @@ class mpRfT2_S2F_Numbering(FrozenOnly):
             self._gathering_, self._num_local_dofs_ = self._numberer_(self._numbering_parameters_)
         return self._gathering_
 
+    @property
+    def GLOBAL_dofs(self):
+        return self.gathering.GLOBAL_num_dofs
+
+
 
 
 

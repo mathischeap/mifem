@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 import numpy as np
 from objects.CSCG._2d.forms.standard.base.main import _2dCSCG_Standard_Form
 from screws.quadrature import Quadrature

@@ -1,5 +1,4 @@
-
-
+# -*- coding: utf-8 -*-
 import sys
 if './' not in sys.path: sys.path.append('./')
 
@@ -117,7 +116,6 @@ def test_EWC_adjust():
                 Di = DD[_]
                 assert Di.nnz == 1
                 assert Di[0,_] == 1
-
 
     return 1
 

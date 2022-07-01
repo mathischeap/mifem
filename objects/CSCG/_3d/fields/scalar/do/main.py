@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from screws.freeze.main import FrozenOnly
 from objects.CSCG._3d.fields.scalar.do.reconstruct.main import _3dCSCG_Scalar_Do_Reconstruct

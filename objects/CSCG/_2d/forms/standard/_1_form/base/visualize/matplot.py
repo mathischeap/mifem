@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from screws.freeze.base import FrozenOnly
 from root.config.main import np, sEcretary_rank, cOmm, rAnk
 import matplotlib

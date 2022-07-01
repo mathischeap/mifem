@@ -124,42 +124,6 @@ class TraceMatrix(FrozenOnly):
 
 
 
-    @property
-    def _3dCSCG_0Tr(self):
-        """ """
-        raise NotImplementedError()
-
-    @property
-    def _3dCSCG_1Tr(self):
-        """ """
-        raise NotImplementedError()
-
-    @property
-    def _3dCSCG_2Tr(self):
-        """ """
-        PU = np.zeros((self._FS_.num_basis._3dCSCG_2Form[0], self._FS_.num_basis._3dCSCG_2Tr[0]), dtype=int)
-        sln = self.___generate_gathering_hybrid_element___(self._FS_.num_basis._3dCSCG_2Tr[2])
-        oln_NS, oln_WE, oln_BF = self._FS_.local_numbering._3dCSCG_2Form
-        PU[oln_NS[ 0, :, :].ravel('F'), sln['N']] = -1 # North
-        PU[oln_NS[-1, :, :].ravel('F'), sln['S']] = +1 # South
-        PU[oln_WE[ :, 0, :].ravel('F'), sln['W']] = -1 # West
-        PU[oln_WE[ :,-1, :].ravel('F'), sln['E']] = +1 # East
-        PU[oln_BF[ :, :, 0].ravel('F'), sln['B']] = -1 # Back
-        PU[oln_BF[ :, :,-1].ravel('F'), sln['F']] = +1 # Front
-        N = PU.T
-        nbt = self._FS_.num_basis._3dCSCG_2Trace[2]
-        N_ = [None, None, None, None, None, None]
-        m=0
-        for i in range(6):
-            N_[i] = N[m:m+nbt['NSWEBF'[i]], :]
-            m += nbt['NSWEBF'[i]]
-        Nn, Ns, Nw, Ne, Nb, Nf = N_
-        return csr_matrix(N), {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne, 'B': Nb, 'F': Nf}
-
-
-
-
-
 
 
 

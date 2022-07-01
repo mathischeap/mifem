@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from numpy import sin, pi
 from objects.CSCG._3d.fields.vector.main import _3dCSCG_VectorField

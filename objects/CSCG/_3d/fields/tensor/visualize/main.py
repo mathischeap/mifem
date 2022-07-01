@@ -1,14 +1,10 @@
-
+# -*- coding: utf-8 -*-
 import sys
 if './' not in sys.path: sys.path.append('/')
-
 
 from screws.freeze.main import FrozenOnly
 from root.config.main import *
 from objects.CSCG._3d.fields.tensor.visualize.matplot import _3dCSCG_TensorField_matplot_Visualize
-
-
-
 
 
 
@@ -28,10 +24,6 @@ class _3dCSCG_TensorField_Visualize(FrozenOnly):
     @property
     def matplot(self):
         return self._matplot_
-
-
-
-
 
 
 

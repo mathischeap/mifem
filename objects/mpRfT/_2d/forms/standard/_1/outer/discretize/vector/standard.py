@@ -80,8 +80,10 @@ class mpRfT2_So1F_Discretize_Standard_Vector(FrozenOnly):
 
         """
         # --- target --------------------------------------------------------
-        if target == 'func':
-            FUNC = self._f_.TW.func
+        if target == 'analytic_expression':
+            FUNC = self._f_.analytic_expression
+        elif target == 'boundary_condition':
+            FUNC = self._f_.BC.analytic_expression
         else:
             raise NotImplementedError(f"I cannot deal with target = {target}.")
 

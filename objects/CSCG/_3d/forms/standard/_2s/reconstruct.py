@@ -73,16 +73,21 @@ class _3dCSCG_SF2_reconstruct(FrozenOnly):
                 for i in INDICES:
                     element = mesh.elements[i]
                     xyz[i] = element.coordinate_transformation.mapping(*xietasigma)
+
                     u = np.einsum('ij, i -> j', basis[0], f.cochain.___PRIVATE_local_on_axis___('x', i), optimize='greedy')
                     v = np.einsum('ij, i -> j', basis[1], f.cochain.___PRIVATE_local_on_axis___('y', i), optimize='greedy')
                     w = np.einsum('ij, i -> j', basis[2], f.cochain.___PRIVATE_local_on_axis___('z', i), optimize='greedy')
+
                     value[i] = [None, None, None]
                     typeWr2Metric = element.type_wrt_metric.mark
 
                     if typeWr2Metric in JC:
                         _0u, _0v, _0w, _1u, _1v, _1w, _2u, _2v, _2w = JC[typeWr2Metric]
+
                     else:
+
                         iJi = iJ[i]
+
                         if isinstance(typeWr2Metric, str) and typeWr2Metric[:4] == 'Orth':
                             _0u = iJi[1][1] * iJi[2][2]
                             _0v = None

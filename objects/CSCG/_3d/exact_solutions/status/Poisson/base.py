@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """The 3d Poisson problem, k = 1.
 
 The Poisson equation: (k=1)
@@ -39,8 +40,8 @@ class Poisson_Base(Base):
         self._NPDf_px_ = None
         self._NPDf_py_ = None
         self._NPDf_pz_ = None
-        self._freeze_self_()
 
+        self._freeze_self_()
 
 
     # to be overridden (must) ...

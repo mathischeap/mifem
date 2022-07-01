@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from screws.miscellaneous.timer import MyTimer
 
 from tools.linear_algebra.solvers.Schur.base import SchurSolverBase

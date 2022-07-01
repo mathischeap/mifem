@@ -93,7 +93,7 @@ class iR_Gathering_Matrix(FrozenOnly):
     @property
     def GLOBAL_shape(self):
         """Return (global number of elements, local number of dofs)."""
-        return Exception(f"irregular GM has no GLOBAL shape.")
+        raise Exception(f"irregular GM has no GLOBAL shape.")
 
 
     @property

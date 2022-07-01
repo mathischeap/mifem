@@ -174,6 +174,31 @@ class mpRfT2_Mesh_Cell_CT(FrozenOnly):
         return iG
 
 
+    def unit_outward_norm_vector(self):
+        """
+
+        Parameters
+        ----------
+
+
+        Returns
+        -------
+
+        """
+        mark = self._cell_.type_wrt_metric.mark
+        if isinstance(mark, str) and mark[:4] == 'Orth':
+            u_onv = {
+                'U': (-1, 0),
+                'D': (1, 0),
+                'L': (0, -1),
+                'R': (0, 1)
+            }
+        else:
+            raise NotImplementedError()
+
+        return u_onv
+
+
 
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/mpRfT/_2d/mesh/cell/coordinate_transformation.py

@@ -9,7 +9,9 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.main import FrozenClass
-from objects.mpRfT.base.forms.base.TW import mpRfT_FormTW
+from objects.mpRfT.base.forms.base.boundary_condition import mpRfT_Form_BoundaryCondition
+
+
 
 
 class mpRfT_FormBase(FrozenClass):
@@ -23,7 +25,8 @@ class mpRfT_FormBase(FrozenClass):
         self.standard_properties.___PRIVATE_add_tag___('mpRfT_form')
         self.standard_properties.name = name
 
-        self._TW_ = None
+        self._analytic_expression_ = None
+        self._BC_ = None
 
     @property
     def mesh(self):
@@ -38,15 +41,26 @@ class mpRfT_FormBase(FrozenClass):
         """Return the dimensions."""
         return self.mesh.ndim
 
-    #---------- must have properties -------------------------------------------
     @property
-    def TW(self):
-        if self._TW_ is None:
-             self._TW_ = mpRfT_FormTW(self)
-        return self._TW_
+    def analytic_expression(self):
+        return self._analytic_expression_
+
+    @analytic_expression.setter
+    def analytic_expression(self, analytic_expression):
+        self.___Pr_check_analytic_expression___(analytic_expression)
+        self._analytic_expression_ = analytic_expression
+
+    @property
+    def BC(self):
+        if self._BC_ is None:
+             self._BC_ = mpRfT_Form_BoundaryCondition(self)
+        return self._BC_
 
     #-------- must have methods ------------------------------------------------
-    def ___Pr_check_func___(self, func):
+    def ___Pr_check_analytic_expression___(self, func):
+        raise NotImplementedError()
+
+    def ___Pr_check_BC_analytic_expression___(self, ae):
         raise NotImplementedError()
 
     @property
@@ -62,15 +76,15 @@ class mpRfT_FormBase(FrozenClass):
 
         IMPORTANT:
         """
-        if self.TW.func is None:
-            func_parameters = None
+        if self.analytic_expression is None:
+            AE_parameters = None
         else:
-            func_parameters = self.TW.func.___parameters___
+            AE_parameters = self.analytic_expression.___parameters___
 
         RGW_cochain_local = self.cochain.___Pr_RGW_cochain___()
         # RGW_cochain_local will only be in master, in slaves, it is None.
-        return {'TW_current_time': self.TW.current_time, # to save an object, it must have `current_time`.
-                'TW_func_parameters': func_parameters,
+        return {'AE_current_time': self.analytic_expression.current_time, # to save an object, it must have `current_time`.
+                'AE_parameters': AE_parameters,
                 'region_wise_cochain_local': RGW_cochain_local}
 
     @property
@@ -84,6 +98,9 @@ class mpRfT_FormBase(FrozenClass):
         parameters.update(self.___define_parameters___)
         parameters.update(self.___personal_parameters___)
         return parameters
+
+
+
 
 
 

@@ -47,7 +47,7 @@ if __name__ == "__main__":
     def p(t, x, y): return np.sin(np.pi * x) * np.cos(np.pi * y) + t
     s = mpRfT2_Scalar(mesh, p)
 
-    f.TW.func = s
+    f.analytic_expression = s
     s.current_time = 0
 
     f.discretization()

@@ -23,7 +23,9 @@ class ___LinearSystem_Customize___(FrozenOnly):
             pd = pd.BC.partial_cochain
 
         #------ for cscg meshes -------------------------------------------------------------------
-        if hasattr(pd, '_mesh_') and pd._mesh_.__class__.__name__ in ('_3dCSCG_Mesh', '_2dCSCG_Mesh'):
+        if hasattr(pd, '_mesh_') and \
+                pd._mesh_.__class__.__name__ in ('_3dCSCG_Mesh', '_2dCSCG_Mesh',
+                                                 'mpRfT2_Mesh', 'mpRfT3_Mesh'):
 
             # check 1: ---------------------------------
             if i == j:
@@ -40,6 +42,9 @@ class ___LinearSystem_Customize___(FrozenOnly):
             elif hasattr(pc, 'standard_properties') and \
                  'CSCG_form' in pc.standard_properties.tags:
                 pc = pc.BC.partial_cochain
+            elif hasattr(pc, 'standard_properties') and \
+                 'mpRfT_form' in pc.standard_properties.tags:
+                pc = pc.BC.partial_cochain
             else:
                 pass
 
@@ -52,20 +57,40 @@ class ___LinearSystem_Customize___(FrozenOnly):
             assert j % 1 == 0, f"j={j}({j.__class__.__name__}) cannot be an index!"
             assert 0 <= i < I and 0 <= j < J, f"(i,j)= ({i},{j}) is out of range!"
 
-            if i == j:
-                self._LS_.A.customize.\
-                    identify_global_rows_according_to_CSCG_partial_dofs(
-                    i, pd, interpreted_as=interpreted_as)
-                self._LS_.b.customize.\
-                    set_entries_according_to_CSCG_partial_cochains(
-                    i, pd, interpreted_as=interpreted_as)
+            if pd._mesh_.__class__.__name__ in ('_3dCSCG_Mesh', '_2dCSCG_Mesh'):
+                if i == j:
+                    self._LS_.A.customize.\
+                        identify_global_rows_according_to_CSCG_partial_dofs(
+                        i, pd, interpreted_as=interpreted_as)
+                    self._LS_.b.customize.\
+                        set_entries_according_to_CSCG_partial_cochains(
+                        i, pd, interpreted_as=interpreted_as)
+                else:
+                    self._LS_.A.customize.\
+                        off_diagonally_identify_rows_according_to_two_CSCG_partial_dofs(
+                        i, j, pd, pc, interpreted_as=interpreted_as)
+                    self._LS_.b.customize.\
+                        set_entries_according_to_CSCG_partial_cochains(
+                        i, pd, pc=pc, interpreted_as=interpreted_as)
+
+            elif pd._mesh_.__class__.__name__ in ('mpRfT2_Mesh', 'mpRfT3_Mesh'):
+                if i == j:
+                    self._LS_.A.customize.\
+                        identify_global_rows_according_to_mpRfT_partial_dofs(
+                        i, pd)
+            #         self._LS_.b.customize.\
+            #             set_entries_according_to_mpRfT_partial_cochains(
+            #             i, pd, interpreted_as=interpreted_as)
+            #     else:
+            #         self._LS_.A.customize.\
+            #             off_diagonally_identify_rows_according_to_two_mpRfT_partial_dofs(
+            #             i, j, pd, pc, interpreted_as=interpreted_as)
+            #         self._LS_.b.customize.\
+            #             set_entries_according_to_mpRfT_partial_cochains(
+            #             i, pd, pc=pc, interpreted_as=interpreted_as)
+            #
             else:
-                self._LS_.A.customize.\
-                    off_diagonally_identify_rows_according_to_two_CSCG_partial_dofs(
-                    i, j, pd, pc, interpreted_as=interpreted_as)
-                self._LS_.b.customize.\
-                    set_entries_according_to_CSCG_partial_cochains(
-                    i, pd, pc=pc, interpreted_as=interpreted_as)
+                raise Exception()
 
         #--------- other meshes --------------------------------------------------------------------
         else:

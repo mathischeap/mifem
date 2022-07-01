@@ -176,8 +176,8 @@ if __name__ == '__main__':
 
     # mesh = MeshGenerator('crazy', c=0.3)([50,45])
     # mesh = MeshGenerator('chp1',)([2,2])
-    mesh = MeshGenerator('crazy', c=0.0, bounds=([0,1],[0,1]))([1,1])
-    space = SpaceInvoker('polynomials')([('Lobatto',2), ('Lobatto',2)])
+    mesh = MeshGenerator('crazy', c=0.0, bounds=([0,1],[0,1]))([10,10])
+    space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3)])
     FC = FormCaller(mesh, space)
 
     ES = ExactSolutionSelector(mesh)('sL:sincos1')
@@ -196,9 +196,11 @@ if __name__ == '__main__':
     u.discretize()
 
     MF = u.matrices.mass
-    MF.gathering_matrices = (u, u)
-    MF = MF.assembled
-    MF.visualize.spy()
+    if 0 in MF:
+        print(MF[0])
+    # MF.gathering_matrices = (u, u)
+    # MF = MF.assembled
+    # MF.visualize.spy()
 
 
     #

@@ -136,6 +136,7 @@ class mpRfT2_Mesh_Cell(mpRfT_Mesh_Cell_Base):
 
     @property
     def frame(self):
+        assert self.IS.root, f"Can only access the frame of a root-cell."
         if self._frame_ is None:
             self._frame_ = mpFfT2_CellFrame(self)
         return self._frame_

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 The time independent Schrödinger equation.
 

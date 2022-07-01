@@ -49,8 +49,9 @@ class LocallyFullVectorDo(FrozenOnly):
                         form.cochain.globe = self._v_.__class__(
                             V[indices : indices + GLOBAL_dofs])
                         indices += GLOBAL_dofs
+
             else:
-                raise Exception("I can only understand one ")
+                raise Exception("I can only understand zero or one None")
 
         else:
             raise NotImplementedError(f'distribution method: {method} not coded.')

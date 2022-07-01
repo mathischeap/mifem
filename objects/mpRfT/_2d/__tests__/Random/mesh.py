@@ -107,5 +107,5 @@ def rm(elements_num,
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/mpRfT/_2d/__tests__/Random/mesh.py
     mesh = rm(50)
-    mesh.visualize()
+    mesh.visualization()
 

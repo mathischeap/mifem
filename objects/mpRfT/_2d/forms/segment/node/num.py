@@ -34,15 +34,33 @@ class mpRfT2_NSgF_Num(FrozenOnly):
             _ = self._t_.numbering.sgW_gathering
         return self._t_.numbering._num_local_dofs_
 
+    @property
+    def GLOBAL_dofs(self):
+        return self._t_.numbering.gathering.GLOBAL_num_dofs
+
 
 class ___Pr_Basis___(FrozenOnly):
     """"""
     def __init__(self, t):
         self._t_ = t
+        self._mesh_ = self._t_.mesh
         self._freeze_self_()
 
-    def __getitem__(self, seg):
+    def __getitem__(self, seg_or_rc_rp):
         """"""
-        assert seg.__class__.__name__ == 'mpRfT2_Segment', f"I need a mpRfT2_Segment"
-        N = self._t_.N[seg]
-        return N + 1
+        if seg_or_rc_rp.__class__.__name__ == 'mpRfT2_Segment':
+            N = self._t_.N[seg_or_rc_rp]
+            return N + 1
+        elif isinstance(seg_or_rc_rp, str):
+            cell = self._mesh_[seg_or_rc_rp]
+            frame = cell.frame
+            N = 0
+            for edge in frame:
+                segments = frame[edge]
+                for seg in segments:
+                    N += self._t_.N[seg] + 1
+            return N
+
+
+
+

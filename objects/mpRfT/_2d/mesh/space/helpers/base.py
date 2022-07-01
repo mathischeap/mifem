@@ -22,6 +22,11 @@ class mpRfT2_Mesh_Space_Basis(FrozenOnly):
             self._getitem_ = self.___Pr_getitem_Gauss___
         elif coo_map.distribution == 'Lobatto':
             self._getitem_ = self.___Pr_getitem_Lobatto___
+        elif coo_map.distribution == 'PSI':
+            self._getitem_ = self.___Pr_getitem_PSI___
+        elif coo_map.distribution == 'SegInt':
+            self._getitem_ = self.___Pr_getitem_SegInt___
+
         else:
             raise NotImplementedError(f"{self.__class__.__name__} cannot handle {coo_map.__class__.__name__}")
         self._cm_ = coo_map
@@ -37,6 +42,12 @@ class mpRfT2_Mesh_Space_Basis(FrozenOnly):
         raise NotImplementedError()
 
     def ___Pr_getitem_Lobatto___(self, rp):
+        raise NotImplementedError()
+
+    def ___Pr_getitem_PSI___(self, rp):
+        raise NotImplementedError()
+
+    def ___Pr_getitem_SegInt___(self, rp):
         raise NotImplementedError()
 
     @property

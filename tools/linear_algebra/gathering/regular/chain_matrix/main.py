@@ -31,11 +31,10 @@ class Chain_Gathering_Matrix(FrozenOnly):
         if GMs.__class__.__name__ in ('Gathering_Matrix', 'Chain_Gathering_Matrix,'):
             GMs = [GMs,]
 
-        mesh_types = list()
-
         assert isinstance(GMs, (list, tuple)) and len(GMs) >= 1, \
             "we need a list or tuple of at least one gathering matrices."
 
+        mesh_types = list()
         NEW_GMs = list()
         for i, gm in enumerate(GMs):
 
@@ -143,13 +142,13 @@ class Chain_Gathering_Matrix(FrozenOnly):
             elif other.___NUM___ != self.___NUM___:
                 RETURN = False
             else:
-                _ = list()
+                RETURN = True
                 for i, gm in enumerate(self._GMs_):
                     tf = gm == other._GMs_[i]
-                    _.append(tf)
                     if not tf:
+                        RETURN = False
                         break
-                RETURN = all(_)
+
 
         RETURN = cOmm.allreduce(RETURN, op=MPI.LAND)
         return RETURN

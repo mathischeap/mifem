@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 """
 For standard forms only.
 

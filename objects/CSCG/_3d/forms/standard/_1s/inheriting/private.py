@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from screws.quadrature import Quadrature
 import numpy as np
 from scipy.sparse import csc_matrix, bmat, lil_matrix

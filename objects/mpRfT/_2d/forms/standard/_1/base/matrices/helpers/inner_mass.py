@@ -12,6 +12,9 @@ from screws.freeze.base import FrozenOnly
 from numpy import einsum
 from scipy.sparse import csr_matrix, bmat
 
+
+
+
 class InnerMassMatrixGenerator(FrozenOnly):
     """"""
     def __init__(self, f):
@@ -49,6 +52,8 @@ class InnerMassMatrixGenerator(FrozenOnly):
         return csr_matrix(M)
 
 
+
+
 if __name__ == "__main__":
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python objects/mpRfT/_2d/forms/standard/_1/base/matrices/helpers/inner_mass.py
     pass

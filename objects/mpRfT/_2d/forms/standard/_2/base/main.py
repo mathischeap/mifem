@@ -36,16 +36,15 @@ class mpRfT2_S2F(mpRfT2_StandardFormBase):
         self._numbering_ = mpRfT2_S2F_Numbering(self, numbering_parameters)
         self._num_ = mpRfT2_S2F_Num(self)
         self._error_ = mpRfT2_S2F_Error(self)
-
         self._discretize_ = mpRfT2_S2F_Discretize(self)
         self._reconstruct_ = mpRfT2_S2F_Reconstruct(self)
         self._migrate_ = mpRfT2_S2F_Migrate(self)
-
         self._visualize_ = mpRfT2_S2F_Visualize(self)
+
         self._matrices_ = mpRfT2_S2F_Matrices(self)
 
 
-    def ___Pr_check_func___(self, func):
+    def ___Pr_check_analytic_expression___(self, func):
         """"""
         assert func.mesh is self.mesh
 
@@ -54,11 +53,6 @@ class mpRfT2_S2F(mpRfT2_StandardFormBase):
                 f"mpRfT2_S2F FUNC do not accept func mpRfT2_Scalar of ftype {func.ftype}."
         else:
             raise Exception(f"mpRfT2_S2F FUNC do not accept func {func.__class__}")
-
-
-    @property
-    def visualization(self):
-        return self._visualize_
 
     @property
     def matrices(self):
@@ -70,5 +64,5 @@ class mpRfT2_S2F(mpRfT2_StandardFormBase):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python objects/mpRfT/_2d/forms/standard/_2/base/main.py
     pass

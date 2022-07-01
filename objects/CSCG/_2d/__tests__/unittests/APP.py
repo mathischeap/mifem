@@ -13,6 +13,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 from objects.CSCG._2d.__tests__.unittests.auxiliaries.scalar_Laplace_essential_BC import scalar_Laplace_solver
+from objects.CSCG._2d.__tests__.unittests.auxiliaries.Poisson_essential_BC import PoissonSolver1
 from objects.CSCG._2d.__tests__.unittests.auxiliaries.scalar_Laplace_essential_BC_iterative_solver import \
     scalar_Laplace_solver_iterative_solver
 
@@ -76,13 +77,22 @@ def test_APP_NO3_Euler_ShearLayerRollup_Direct_test():
 
 
 
+def test_APP_NO4_Poisson_hMSEM_test_1():
+    """"""
+    if rAnk == mAster_rank:
+        print(">>> [test_APP_NO4_Poisson_hMSEM_test_1] ...... ", flush=True)
 
+    p_error_L2, u_error_L2 = PoissonSolver1(0.125, 8, 7, 3, 4)
 
+    assert p_error_L2 < 0.0008
+    assert u_error_L2 < 0.002
+
+    return 1
 
 
 
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/_2d/__tests__/unittests/APP.py
-    test_APP_NO3_Euler_ShearLayerRollup_Direct_test()
+    test_APP_NO4_Poisson_hMSEM_test_1()
     # test_APP_NO2_scalar_Laplace_essential_BC_iterative_solver()
 

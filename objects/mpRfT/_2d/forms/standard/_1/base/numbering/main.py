@@ -10,6 +10,8 @@ if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.base import FrozenOnly
 from importlib import import_module
+from objects.mpRfT._2d.forms.standard._1.base.numbering.do.main import mpRfT2_S1F_Numbering_DO
+from objects.mpRfT._2d.forms.standard._1.base.numbering.local import mpRfT2_S1F_Numbering_Local
 
 
 class mpRfT2_S1F_Numbering(FrozenOnly):
@@ -35,7 +37,13 @@ class mpRfT2_S1F_Numbering(FrozenOnly):
         self._numbering_parameters_.update(parameters)
         self._gathering_ = None
         self._num_local_dofs_ = None
+        self._do_ = mpRfT2_S1F_Numbering_DO(self)
+        self._local_ = mpRfT2_S1F_Numbering_Local(self)
         self._freeze_self_()
+
+    @property
+    def local(self):
+        return self._local_
 
     @property
     def gathering(self):
@@ -43,8 +51,13 @@ class mpRfT2_S1F_Numbering(FrozenOnly):
             self._gathering_, self._num_local_dofs_ = self._numberer_(self._numbering_parameters_)
         return self._gathering_
 
+    @property
+    def GLOBAL_dofs(self):
+        return self.gathering.GLOBAL_num_dofs
 
-
+    @property
+    def do(self):
+        return self._do_
 
 
 

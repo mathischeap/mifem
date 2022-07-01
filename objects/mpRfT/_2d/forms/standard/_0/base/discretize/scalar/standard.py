@@ -32,8 +32,8 @@ class mpRfT2_S0F_Discretize_Standard_Scalar(FrozenOnly):
         """
         mesh = self._f_.mesh
 
-        if target == 'func':
-            F = self._f_.TW.func
+        if target == 'analytic_expression':
+            F = self._f_.analytic_expression
         else:
             raise NotImplementedError()
 

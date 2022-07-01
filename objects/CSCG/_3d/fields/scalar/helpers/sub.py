@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 class ___SCALAR_SUB_HELPER_1___(object):
     def __init__(self, w, u):
         self._w_ = w

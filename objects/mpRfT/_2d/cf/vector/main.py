@@ -85,7 +85,7 @@ class mpRfT2_Vector(mpRfT2_ContinuousField):
     def ___parameters___(self):
         return None
 
-    #-------------- personal --------------------------------------------------------------------
+    #-------------- personal -----------------------------------------------------------
     @property
     def reconstruction(self):
         if self._reconstruct_ is None:

@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 
 def ___gmres_stop_criterion___(tol, atol, ITER, maxiter, BETA):
@@ -59,7 +59,6 @@ def ___gmres_stop_criterion___(tol, atol, ITER, maxiter, BETA):
 
         stop_iteration = True
 
-
         if judge_1: # reach atol
             info = 0
             JUDGE = 1
@@ -70,28 +69,23 @@ def ___gmres_stop_criterion___(tol, atol, ITER, maxiter, BETA):
             JUDGE = 2
             JUDGE_explanation = 'reach maxiter'
 
-
         elif judge_3: # diverging
             info = -1
             JUDGE = 3
             JUDGE_explanation = 'diverging'
-
 
         elif judge_4: # reach tol
             info = 0
             JUDGE = 4
             JUDGE_explanation = 'reach relative tol'
 
-
         elif judge_5: # very slow converging; the progress is lower than the tol
             info = ITER
             JUDGE = 5
             JUDGE_explanation = 'very slow converging'
 
-
         else:
             raise Exception()
-
 
     else: # do not stop iterations.
         stop_iteration = False

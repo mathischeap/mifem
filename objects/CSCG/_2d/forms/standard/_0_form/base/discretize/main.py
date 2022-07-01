@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from screws.freeze.base import FrozenOnly
 from objects.CSCG._2d.forms.standard._0_form.base.discretize.scalar.standard import _2dCSCG_S0F_Discretize_StandardScalar
 

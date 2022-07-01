@@ -10,23 +10,26 @@ if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.base import FrozenOnly
 
-
 class mpRfT2_Mesh_Segments_bcW(FrozenOnly):
-    """"""
+    """Basic-Cell-Wise segments."""
 
     def __init__(self, segments):
         """"""
         self._mesh_ = segments._mesh_
         self._segments_ = segments
         self._DICT_ = dict()
+        TMAP = self._mesh_.basic_cells.trace_elements.map
+
         for i in self._mesh_.basic_cells:
+
             Di = dict()
             internal_segments = self._mesh_.basic_cells.internal_segments[i]
             for its in internal_segments:
                 _r = its.__repr__()
                 Di[_r] = its
 
-            Tmap = self._mesh_.basic_cells.trace_elements.map[i]
+            Tmap = TMAP[i]
+
             for t in Tmap:
                 t_segments = self._mesh_.basic_cells.trace_segments[t]
                 for ts in t_segments:
@@ -34,6 +37,7 @@ class mpRfT2_Mesh_Segments_bcW(FrozenOnly):
                     Di[_r] = ts
 
             self._DICT_[i] = Di
+
         self._freeze_self_()
 
     def __iter__(self):
@@ -41,7 +45,8 @@ class mpRfT2_Mesh_Segments_bcW(FrozenOnly):
             yield i
 
     def __getitem__(self, i):
-        """Return a dict, keys are __repr__ of basic-cell-wise segments, values are the segments.
+        """Return a dict, keys are __repr__ of basic-cell-wise segments, values are the segments in
+        the corresponding basic-cells also stored in a dictionary.
 
         Parameters
         ----------

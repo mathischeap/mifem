@@ -12,6 +12,8 @@ from screws.freeze.base import FrozenOnly
 from objects.mpRfT._2d.mesh.segments.segment.ct import mpRfT2_Segment_CT
 from objects.mpRfT._2d.mesh.segments.segment.IS import mpRfT2_Segment_IS
 
+import numpy as np
+
 
 
 
@@ -43,6 +45,7 @@ class mpRfT2_Segment(FrozenOnly):
         self._N_ = None
         self._type_wrt_metric_ = None
         self._character_ = None
+        self._length_ = None
         self._freeze_self_()
 
     @property
@@ -94,10 +97,19 @@ class mpRfT2_Segment(FrozenOnly):
                 raise Exception()
 
             self.___repr___ = _s
+
         return self.___repr___
 
     @property
     def character(self):
+        """The str representing the local position of a segment.
+
+        For example,
+            x : A UD-direction segment locally spans [-1,1]
+            y1 : A LR-direction segment locally spans [0, 1]
+            y01 : A LR-direction segment locally spans [-0.5, 0]
+
+        """
         if self._character_ is None:
             rp = self.__repr__()
             if rp[3] == 'c':
@@ -109,15 +121,15 @@ class mpRfT2_Segment(FrozenOnly):
         return self._character_
 
     def __contains__(self, osg):
-        """"""
+        """in"""
         return True if self.__repr__() in osg.__repr__() else False
 
     def __eq__(self, other):
-        """"""
+        """=="""
         return True if self.__repr__() == other.__repr__() else False
 
     def __gt__(self, other):
-        """"""
+        """>"""
         if self == other:
             return False
         else:
@@ -129,7 +141,7 @@ class mpRfT2_Segment(FrozenOnly):
                 return Exception()
 
     def __lt__(self, other):
-        """"""
+        """<"""
         if self == other:
             return False
         else:
@@ -195,16 +207,30 @@ class mpRfT2_Segment(FrozenOnly):
 
     @property
     def direction(self):
+        """'UP' or 'LR'.
+        """
         if self._direction_ == '':
             _r  = self.__repr__()
         return self._direction_
 
     @property
     def neighbors(self):
+        """The two basic cells attached to this segment. If a neighbor is not local, or it is the
+        mesh boundary, we use str to represent it. Otherwise, we use the segment instance.
+
+        The first entry is always the local segment.
+        """
         return self._neighbors_
 
     @property
     def neighbors_N(self):
+        """The N of the two neighbors. If the second neighbor is the mesh boundary, we return a
+        list of length 1 representing the N of the first neighbor (must be local).
+
+        Returns
+        -------
+
+        """
         return self._neighbors_N_
 
     @property
@@ -214,7 +240,20 @@ class mpRfT2_Segment(FrozenOnly):
             self._type_wrt_metric_ = element.type_wrt_metric.___CLASSIFY_mpRfT2_segment___(self)
         return self._type_wrt_metric_
 
-    
+    @property
+    def length(self):
+        """"""
+        if self._length_ is None:
+
+            if self.IS.straight:
+                x, y = self.coordinate_transformation.mapping(np.array([-1, 1]))
+                x0, x1 = x
+                y0, y1 = y
+                self._length_ = ((x1-x0)**2 + (y1-y0)**2)**0.5
+            else:
+                raise NotImplementedError()
+
+        return self._length_
     
 
 
@@ -223,10 +262,12 @@ class mpRfT2_Segment(FrozenOnly):
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/mpRfT/_2d/mesh/segments/segment/main.py
 
-    # from objects.mpRfT._2d.master import MeshGenerator
-    # mesh = MeshGenerator('rectangle')([3,3], 2, show_info=True)
-    from __init__ import rfT2
-    mesh = rfT2.rm(10, refinement_intensity=0.5)
+    from objects.mpRfT._2d.master import MeshGenerator
+    mesh = MeshGenerator('rectangle')([3,3], 2, show_info=True)
+    # from __init__ import rfT2
+    # mesh = rfT2.rm(10, refinement_intensity=0.5)
 
     for sg in mesh.segments:
-        print(sg.type_wrt_metric.mark)
+        # print(sg.type_wrt_metric.mark, sg.origin_and_delta)
+
+        print(sg.length)

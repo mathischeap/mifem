@@ -18,9 +18,10 @@ from objects.mpRfT._2d.mesh.coo_map.main import mpRfT2_Mesh_CooMap
 from objects.mpRfT._2d.mesh.space.main import mpRfT2_Mesh_Space
 from objects.mpRfT._2d.mesh.segments.main import mpRfT2_Mesh_Segments
 from objects.mpRfT._2d.mesh.all_root_cells import mpRfT2_Mesh_AllRootCells
-from objects.mpRfT._2d.mesh.rcMetricComputing.main import mpRfT2_Mesh_rcMC
-from objects.mpRfT._2d.mesh.sgMetricComputing.main import mpRfT2_Mesh_sgMC
+from objects.mpRfT._2d.mesh.MetricComputing_rc.main import mpRfT2_Mesh_rcMC
+from objects.mpRfT._2d.mesh.MetricComputing_sg.main import mpRfT2_Mesh_sgMC
 from objects.mpRfT._2d.mesh.boundaries.main import mpRfT2_Mesh_Boundaries
+from objects.mpRfT._2d.mesh.interfaces.main import mpRfT2_Mesh_Interfaces
 
 
 
@@ -41,6 +42,7 @@ class mpRfT2_Mesh(mpRfT_MeshBase):
 
         """
         super(mpRfT2_Mesh, self).__init__(cscg, dN, rfd)
+
         self._do_ = mpRfT2_Mesh_Do(self)
         self._rcWds_ = None
         self._refinements_ = None
@@ -53,6 +55,7 @@ class mpRfT2_Mesh(mpRfT_MeshBase):
         self._segments_ = mpRfT2_Mesh_Segments(self)
         self._segments_.___Pr_find_N_for_all_segments___(SNM)
         self._boundaries_ = mpRfT2_Mesh_Boundaries(self)
+        self._interfaces_ = mpRfT2_Mesh_Interfaces(self)
         self._freeze_self_()
 
 
@@ -139,6 +142,10 @@ class mpRfT2_Mesh(mpRfT_MeshBase):
         """"""
         return self._boundaries_
 
+    @property
+    def interfaces(self):
+        """All the interfaces between cells."""
+        return self._interfaces_
 
 
 
@@ -150,7 +157,7 @@ if __name__ == "__main__":
     # mesh = MeshGenerator('rectangle')([3,3], 2, show_info=True)
 
     from __init__ import rfT2
-    mesh = rfT2.rm(10, refinement_intensity=0.5)
+    mesh = rfT2.rm(50, refinement_intensity=0.5)
     # for rp in mesh.arc:
     #     mesh.visualize(rp=rp)
 

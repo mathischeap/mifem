@@ -22,6 +22,8 @@ from objects.mpRfT._2d.mesh.main import mpRfT2_Mesh
 from objects.mpRfT._2d.forms.allocator import mpRfT2_FormsAllocator
 from objects.mpRfT._2d.cf.allocator import mpRfT2_FieldsAllocator
 
+from objects.mpRfT._2d.exact_solutions.status.allocator import mpRfT2_ExactSolutionAllocator
+from objects.mpRfT._2d.exact_solutions.main import ExactSolution
 
 
 
@@ -38,7 +40,7 @@ class MeshGenerator(FrozenOnly):
 
     def __call__(self,
         base_element_layout, dN,
-        EDM=None, show_info=False, cells=None
+        EDM=None, show_info=False, rfd=None
         ):
         """"""
         if show_info and rAnk == mAster_rank:
@@ -76,7 +78,7 @@ class MeshGenerator(FrozenOnly):
             print(f"   <total cscg base elements>: {cscg.elements.GLOBAL_num}", flush=True)
 
         #------- use the 2d cscg base mesh to make the 2d nCSCG RF2 mesh -----------------------
-        mesh = mpRfT2_Mesh(cscg, dN, cells)
+        mesh = mpRfT2_Mesh(cscg, dN, rfd)
 
         return mesh
 
@@ -131,10 +133,41 @@ class FormCaller(FrozenOnly):
 
 
 
+class ExactSolutionSelector(FrozenOnly):
+    """We select an exact solution object with this class."""
+    def __init__(self, mesh):
+        self._mesh_ = mesh
+        self._freeze_self_()
+
+    def __call__(self, ID, show_info=False, **kwargs):
+        if show_info and rAnk == mAster_rank:
+            print(f"---[mpRfT2]-[Exact Solution]-{MyTimer.current_time()}-----")
+            print(f"   <ES ID>: {ID}")
+            print(f"   <ES kwargs>: {kwargs}", flush=True)
+
+        assert ID in mpRfT2_ExactSolutionAllocator.___exact_solution_name___(), \
+            f"Exact solution ID={ID} not found."
+        className = mpRfT2_ExactSolutionAllocator.___exact_solution_name___()[ID]
+        classPath = mpRfT2_ExactSolutionAllocator.___exact_solution_path___()[ID]
+
+        ES =  ExactSolution(self._mesh_)
+        status = getattr(import_module(classPath), className)(ES, **kwargs)
+        ES.___PRIVATE_set_status___(status)
+        esp = dict()
+        esp['type'] = '_2dCSCG_ExactSolution'
+        esp['ID'] = ID
+        esp['mesh_parameters'] = deepcopy(self._mesh_.standard_properties.parameters)
+        esp['kwargs'] = kwargs
+        ES.___define_parameters___ = esp
+
+        return ES
+
+
+
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/mpRfT/_2d/master.py
 
-    mesh = MeshGenerator('rectangle')([3, 3], 2, show_info=True)
+    mesh = MeshGenerator('rectangle')([3, 3], 2, show_info=False)
     fc = FormCaller(mesh)
 
     f = fc('0-f-i')
@@ -151,4 +184,10 @@ if __name__ == '__main__':
     f2i = fc('2-f-i')
     f2o = fc('2-f-o')
 
-    print(f2i, f2o)
+    ES = ExactSolutionSelector(mesh)
+
+    es = ES('Poisson:sincos1')
+
+    print(es.status.kinetic_energy(0))
+
+    es.status.kinetic_energy_distribution.visualization()
