@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 
 from screws.freeze.main import FrozenOnly
@@ -33,6 +33,8 @@ class LocallyFullVector(FrozenOnly):
 
                 v = np.concatenate([f.V for f in globe_cochains])
                 self._V_ = v
+            else:
+                raise NotImplementedError(f"Cannot accept a list {V}.")
 
         elif str(V.__class__.__name__) in ("GlobalVector", "DistributedVector"):
             v = V.V
@@ -56,7 +58,11 @@ class LocallyFullVector(FrozenOnly):
         assert self._V_.__class__.__name__ == 'ndarray' and np.ndim(self._V_) == 1, \
             "V must be a 1-d array."
         self._do_ = None
+        self._vector_norm_ = None
         self._freeze_self_()
+
+    def __repr__(self):
+        return f"LocallyFullVector{self.shape}:{id(self)}"
 
     @property
     def V(self):
@@ -74,3 +80,36 @@ class LocallyFullVector(FrozenOnly):
         if self._do_ is None:
             self._do_ = LocallyFullVectorDo(self)
         return self._do_
+
+    @property
+    def vector_norm(self):
+        """"""
+        if self._vector_norm_ is None:
+            self._vector_norm_ = np.sum(self._V_ ** 2) ** 0.5
+        return self._vector_norm_
+
+    def __sub__(self, other):
+        """
+        LocallyFullVector - LocallyFullVector.
+
+        :param other:
+        :return:
+        """
+        assert other.__class__.__name__ == 'LocallyFullVector', \
+            f'Can not do LocallyFullVector - {other.__class__.__name__}'
+        assert self.shape == other.shape, f"self shape {self.shape} != other.shape {other.shape}"
+        LFV = LocallyFullVector(self.V - other.V)
+        return LFV
+
+    def __add__(self, other):
+        """
+        LocallyFullVector + LocallyFullVector.
+
+        :param other:
+        :return:
+        """
+        assert other.__class__.__name__ == 'LocallyFullVector', \
+            f'Can not do LocallyFullVector + {other.__class__.__name__}'
+        assert self.shape == other.shape, f"self shape {self.shape} != other.shape {other.shape}"
+        LFV = LocallyFullVector(self.V + other.V)
+        return LFV

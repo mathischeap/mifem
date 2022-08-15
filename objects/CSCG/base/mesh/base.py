@@ -11,6 +11,10 @@ class CSCG_MESH_BASE(FrozenClass):
     """"""
 
 
+    def __repr__(self):
+        """"""
+        return f"{self.ndim}dCSCG-mesh:{self.domain.domain_input.domain_name}={self.elements.GLOBAL_num}-elements"
+
     def ___PRIVATE_BASE_analyze_element_layout___(self, element_layout):
         """Here we return the Element_Layout (EL) for a particular regions.
 

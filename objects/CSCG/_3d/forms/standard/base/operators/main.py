@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from screws.freeze.main import FrozenOnly
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
 from objects.CSCG._3d.forms.standard.base.operators.helpers.inner import ___Operators_3dCSCG_sf_Inner___

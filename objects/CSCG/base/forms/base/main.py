@@ -82,7 +82,8 @@ class CSCG_FORM_BASE(FrozenClass):
     @property
     def ___personal_parameters___(self):
         """
-        Personal parameters are parameters that are additional to define_parameters. The full parameters
+        Personal parameters are parameters that are additional to define_parameters.
+        The full parameters
         are combination of both personal and define parameters.
 
         IMPORTANT:

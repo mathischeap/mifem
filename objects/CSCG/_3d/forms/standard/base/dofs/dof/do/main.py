@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from screws.freeze.base import FrozenOnly
 from objects.CSCG._3d.forms.standard.base.dofs.dof.do.generate_plot_data._0sf import GPD_0SF
 from objects.CSCG._3d.forms.standard.base.dofs.dof.do.generate_plot_data._1sf import GPD_1SF

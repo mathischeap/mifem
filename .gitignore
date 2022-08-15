@@ -54,6 +54,7 @@ coverage.xml
 __contents__/
 __residuals__/
 .idea/
+__APP__/
 
 # Translations
 *.mo

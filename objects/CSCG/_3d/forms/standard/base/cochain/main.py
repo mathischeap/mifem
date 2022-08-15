@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from objects.CSCG.base.forms.standard.cochain.main import CSCG_Standard_Form_Cochain_BASE
 from objects.CSCG._3d.forms.standard.base.cochain.partial import _3dCSCG_Standard_Form_Cochain_Partial
 

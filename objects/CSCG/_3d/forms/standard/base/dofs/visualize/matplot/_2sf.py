@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from screws.freeze.main import FrozenOnly
 
 class _3dCSCG_S2F_DOFs_Matplot(FrozenOnly):

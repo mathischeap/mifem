@@ -183,7 +183,6 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
                         D1 = np.vstack((D1, d1))
                         D2 = np.vstack((D2, d2))
 
-
         X, Y, Z = mesh.elements[i].coordinate_transformation.mapping(D0b, D1b, D2b)
         DATA['xLines_x_B'] = X # x coordinate of x-grid lines on element boundary
         DATA['xLines_y_B'] = Y # y coordinate of x-grid lines on element boundary
@@ -218,7 +217,6 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
                         D0 = np.vstack((D0, d0))
                         D1 = np.vstack((D1, d1))
                         D2 = np.vstack((D2, d2))
-
 
         X, Y, Z = mesh.elements[i].coordinate_transformation.mapping(D0b, D1b, D2b)
         DATA['yLines_x_B'] = X

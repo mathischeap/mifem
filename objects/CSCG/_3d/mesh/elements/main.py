@@ -171,16 +171,20 @@ class _3dCSCG_Mesh_Elements(FrozenOnly):
         return self._ct_
 
     def __getitem__(self, i):
+        """return the local element #i"""
         return self._elements_[i]
 
     def __contains__(self, i):
+        """If element #i is a local element?"""
         return i in self.indices
 
     def __iter__(self):
+        """Go through all local elements"""
         for i in self.indices:
             yield i
 
     def __len__(self):
+        """How many local elements?"""
         return len(self.indices)
 
     def __eq__(self, other):

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """The class for the basis function of a dof (not dofs)."""
 
 

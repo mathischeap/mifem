@@ -47,4 +47,3 @@ class _3dCSCG_Vector_Do_CP(FrozenOnly):
                                           f"cannot do cross product.")
         else:
             raise NotImplementedError(f"a _3dCSCG_VectorField can not cross product a {vector}.")
-

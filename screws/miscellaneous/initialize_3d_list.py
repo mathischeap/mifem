@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 def initialize_3d_list(a, b, c):
     """

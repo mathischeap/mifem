@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*_
 
 
 from screws.freeze.main import FrozenOnly
@@ -33,7 +33,6 @@ class ___LinearSystem_Solve___(FrozenOnly):
                     * 0 : successful exit
                     * >0 : convergence to tolerance not achieved, number of iterations
                     * -1 : divergence
-
 
                 2. (float) beta -- The residual.
                 3. (int) ITER -- The number of outer iterations.

@@ -19,7 +19,7 @@ class RegularSolverDistributor(FrozenOnly):
         solver_path = self.___solver_path___()[solver_ID]
         self._solver_ = getattr(import_module(solver_path), solver_name)(routine, name)
 
-    def __call__(self, A, b,  *args, **kwargs):
+    def __call__(self, A, b, *args, **kwargs):
         """
         :return: Return a tuple of 5 outputs:
 

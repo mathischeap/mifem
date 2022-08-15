@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 import sentry_sdk
 from root.config.main import seNtry_on
 if seNtry_on: sentry_sdk.init("https://79fb951c3ea7457c8c3f47c3dfb026ce@sentry.io/1458280")

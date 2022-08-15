@@ -32,6 +32,8 @@ from __tests__.unittests.linear_system.strong_BC_of_Poisson import \
     test_applying_strong_BC_for_Poisson_problem
 from __tests__.unittests.linear_system.strong_BC_of_Poisson_non_trivial_BC import \
     test_applying_strong_BC_for_Poisson_problem_NT
+from __tests__.unittests.MultiDimMatrix.cross_product_MDM_test import test_MDM_sf_CrossProduct
+from __tests__.unittests.nonlinear_solver.regular_Newton_Raphson import test_Regular_Newton_Raphson
 
 
 t_global_start = MPI.Wtime()
@@ -77,7 +79,8 @@ passed_GLOBAL_tests += test_GatheringMatrix_find()
 passed_GLOBAL_tests += test_applying_strong_BC_for_Poisson_problem()
 passed_GLOBAL_tests += test_applying_strong_BC_for_Poisson_problem_NT()
 
-
+passed_GLOBAL_tests += test_MDM_sf_CrossProduct()
+passed_GLOBAL_tests += test_Regular_Newton_Raphson()
 
 cOmm.barrier()
 if rAnk == mAster_rank:

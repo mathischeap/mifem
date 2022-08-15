@@ -52,6 +52,10 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
         self._components_ = None
         self._freeze_self_()
 
+    def __repr__(self):
+        """"""
+        return f"3dCSCG_vector_field=<{self.standard_properties.name}>@{id(self)}"
+
     def ___PRIVATE_set_func___(self, func, ftype='standard'):
         """
         Use this method to set up the function body and function type.

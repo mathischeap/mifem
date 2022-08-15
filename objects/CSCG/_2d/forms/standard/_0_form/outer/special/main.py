@@ -5,7 +5,8 @@ from screws.freeze.base import FrozenOnly
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
 from objects.CSCG._2d.forms.standard._0_form.outer.special.helpers.cross_product_1_i_1 import \
     ___2dCSCG_0_o_Form_CrossProduct_0_X_1__ip_1___
-
+from objects.CSCG._2d.forms.standard._0_form.outer.special.helpers.cross_product_1_i_1_2M0 import \
+    ___2dCSCG_0_o_Form_CrossProduct_0_X_1__ip_1_2M0___
 
 
 class _0Form_Outer_Special(FrozenOnly):
@@ -18,7 +19,6 @@ class _0Form_Outer_Special(FrozenOnly):
         """
         We do ``(w0 X u1, e1)`` where w0 is self._sf_, u1, e1 are all outer-oriented 1-forms.
 
-
         :param u1:
         :param e1:
         :param quad_degree:
@@ -30,6 +30,15 @@ class _0Form_Outer_Special(FrozenOnly):
         if output == '2-M-1':
             SCP_generator = ___2dCSCG_0_o_Form_CrossProduct_0_X_1__ip_1___(
                 self._sf_, u1, e1, quad_degree=quad_degree)
+        elif output == '2-M-0':
+            SCP_generator = ___2dCSCG_0_o_Form_CrossProduct_0_X_1__ip_1_2M0___(
+                self._sf_, u1, e1, quad_degree=quad_degree)
+        elif output == 'MDM':
+            SCP_generator = ___2dCSCG_0_o_Form_CrossProduct_0_X_1__ip_1___(
+                self._sf_, u1, e1, quad_degree=quad_degree)
+            return SCP_generator.MDM
+
         else:
             raise NotImplementedError(f"not implemented for output={output}.")
+
         return EWC_SparseMatrix(self._sf_.mesh.elements, SCP_generator, 'no_cache')

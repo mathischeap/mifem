@@ -39,6 +39,10 @@ class _2dCSCG_VectorField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
         self._visualize_ = _2dCSCG_VectorField_Visualize(self)
         self._freeze_self_()
 
+    def __repr__(self):
+        """"""
+        return f"2dCSCG_vector_field=<{self.standard_properties.name}>@{id(self)}"
+
     def ___PRIVATE_set_func___(self, func, ftype='standard'):
         """Use this method to set up the function body and function type.
 

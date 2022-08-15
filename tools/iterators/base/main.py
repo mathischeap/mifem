@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 import os
 import pandas as pd
 from tqdm import tqdm
@@ -6,10 +6,9 @@ from time import time, sleep
 from screws.freeze.main import FrozenClass
 from screws.miscellaneous.timer import NumpyStyleDocstringReader
 from screws.miscellaneous.timer import MyTimer, randomStringDigits
-import inspect
-import pickle
+import inspect, pickle, psutil
 
-from root.config.main import *
+from root.config.main import cOmm, rAnk, mAster_rank, ASSEMBLE_COST
 
 from tools.iterators.base.monitor.main import IteratorMonitor
 
@@ -63,6 +62,8 @@ class Iterator(FrozenClass):
         name = cOmm.bcast(name, root=mAster_rank)
         self.standard_properties.name = name
         self._save_to_mitr_ = save_to_mitr
+        self.___cpu_load___ = None
+        self.___assembling_cost___ = None
         self._freeze_self_()
 
     @property
@@ -316,10 +317,23 @@ class Iterator(FrozenClass):
             _pass = cOmm.bcast(_pass, root=mAster_rank)
             # Do or pass ...
             dt = self.dt # must do this since dt will be updated in next()
+
+            if rAnk == mAster_rank:
+                psutil.cpu_percent(None)
+                self.___assembling_cost___ = 0
+
             if _pass:
                 outputs = [1, 0, 'existing solution']
             else:
                 outputs = next(self)
+
+            if rAnk == mAster_rank:
+                self.___cpu_load___ = psutil.cpu_percent(None)
+                if len(ASSEMBLE_COST['recent']) > 0:
+                    self.___assembling_cost___ = sum(ASSEMBLE_COST['recent'])
+                    ASSEMBLE_COST['accumulated'] += self.___assembling_cost___
+                    ASSEMBLE_COST['recent'] = list()
+
             # updates other self properties
             self.running_step += 1
             self.computed_steps += 1

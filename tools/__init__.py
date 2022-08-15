@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 
 from tools.iterators.simple import SimpleIterator

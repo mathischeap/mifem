@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Here we store some customize generators.
 

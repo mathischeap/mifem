@@ -5,8 +5,6 @@ Every dual form is built on a prime form. So, the most important property of a d
 prime of it.
 
 """
-
-
 from screws.freeze.main import FrozenClass
 from root.config.main import *
 import pickle
@@ -124,14 +122,16 @@ class CSCG_Algebra_DUAL_FORM_BASE(FrozenClass):
     def mass_matrix(self):
         """For algebra dual forms, we cache the mass matrix. While it is not cached for prime forms."""
         if self._mass_matrix_ is None:
-            self._mass_matrix_, self._inverse_mass_matrix_ = self.___PRIVATE_generate_mass_matrix___()
+            self._mass_matrix_, self._inverse_mass_matrix_ = \
+                self.___PRIVATE_generate_mass_matrix___()
         return self._mass_matrix_
 
     @property
     def inverse_mass_matrix(self):
         """For algebra dual forms, we cache the mass matrix. While it is not cached for prime forms."""
         if self._inverse_mass_matrix_ is None:
-            self._mass_matrix_, self._inverse_mass_matrix_ = self.___PRIVATE_generate_mass_matrix___()
+            self._mass_matrix_, self._inverse_mass_matrix_ = \
+                self.___PRIVATE_generate_mass_matrix___()
         return self._inverse_mass_matrix_
 
     def ___PRIVATE_generate_mass_matrix___(self):

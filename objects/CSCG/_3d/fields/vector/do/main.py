@@ -3,9 +3,11 @@
 from screws.freeze.main import FrozenOnly
 
 
-
 from objects.CSCG._3d.fields.vector.do.reconstruct.main import _3dCSCG_Vector_Do_Reconstruct
 from objects.CSCG._3d.fields.vector.do.cross_product.main import _3dCSCG_Vector_Do_CP
+from objects.CSCG._3d.fields.vector.do.inner_product.main import _3dCSCG_Vector_Do_IP
+
+from screws.quadrature import Quadrature
 
 
 class _3dCSCG_VectorField_DO(FrozenOnly):
@@ -13,6 +15,7 @@ class _3dCSCG_VectorField_DO(FrozenOnly):
         self._vf_ = vf
         self._reconstruct_ = _3dCSCG_Vector_Do_Reconstruct(vf)
         self._cp_ = _3dCSCG_Vector_Do_CP(vf)
+        self._ip_ = _3dCSCG_Vector_Do_IP(vf)
         self._freeze_self_()
 
     def evaluate_func_at_time(self, time=None):
@@ -28,3 +31,27 @@ class _3dCSCG_VectorField_DO(FrozenOnly):
     @property
     def cross_product(self):
         return self._cp_
+
+    @property
+    def inner_product(self):
+        return self._ip_
+
+    def compute_Ln_norm(self, n=1, quad_degree=None):
+        """We compute Ln norm of self.
+
+        int(self)**(n) over the mesh.
+        """
+        if quad_degree is None:
+            quad_degree = (7, 7, 7)
+
+        vf = self._vf_
+
+        if vf.ftype == 'standard':
+            quad_nodes, quad_weights = Quadrature(quad_degree).quad_ndim
+
+            print(quad_nodes.shape)
+
+
+        else:
+            raise NotImplementedError(f"")
+

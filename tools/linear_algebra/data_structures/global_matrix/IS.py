@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from root.config.main import rAnk, mAster_rank, cOmm, MPI
 from screws.freeze.main import FrozenOnly
 

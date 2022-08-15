@@ -69,7 +69,7 @@ class _2dCSCG_S2F_Reconstruct(FrozenOnly):
                 raise NotImplementedError()
 
             if value_only:
-                return (v,)
+                return v,
             else:
                 raise Exception()
 

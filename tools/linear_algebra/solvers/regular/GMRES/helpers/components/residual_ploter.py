@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
 import os
 import matplotlib.pyplot as plt
 from screws.miscellaneous.timer import MyTimer

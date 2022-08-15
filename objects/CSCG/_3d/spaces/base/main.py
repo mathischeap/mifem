@@ -42,7 +42,9 @@ class _3dCSCG_Space_Base(FrozenClass):
         self._DO_ = _3dCSCG_space_do(self)
         self._freeze_self_()
 
-
+    def __repr__(self):
+        """"""
+        return f"3dCSCG-space={self.category}={self.p}"
 
     @property
     def ___parameters___(self):

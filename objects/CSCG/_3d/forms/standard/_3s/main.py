@@ -87,7 +87,7 @@ class _3dCSCG_3Form(_3dCSCG_S3F_Private, _3dCSCG_Standard_Form):
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/_3d/forms/standard/_3s/main.py
 
-    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
+    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
     mesh = MeshGenerator('cuboid')([3,3,3])
     space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3), ('Lobatto',3)])

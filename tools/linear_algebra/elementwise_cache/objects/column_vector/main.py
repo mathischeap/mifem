@@ -11,6 +11,8 @@ from tools.linear_algebra.data_structures.global_matrix.main import GlobalVector
 from tools.linear_algebra.elementwise_cache.objects.column_vector.helpers.add import ___CV_ADD___
 from tools.linear_algebra.elementwise_cache.objects.column_vector.helpers.neg import ___CV_NEG___
 from tools.linear_algebra.elementwise_cache.objects.column_vector.helpers.sub import ___CV_SUB___
+from tools.linear_algebra.elementwise_cache.objects.column_vector.helpers.___PRIVATE_sum___ import ColVec_PRIVATE_sum
+from tools.linear_algebra.elementwise_cache.objects.column_vector.helpers.mul import ColVec_MUL
 
 from tools.linear_algebra.elementwise_cache.objects.column_vector.customize import SpaVec_Customize
 from tools.linear_algebra.elementwise_cache.objects.column_vector.assembler import EWC_ColumnVector_Assembler
@@ -68,7 +70,6 @@ class EWC_ColumnVector(FrozenOnly):
                 self._mpRfT_num_basis_ = mesh_elements.num.basis
                 data_generator = self.___Pr_mpRfT_empty_DG___
                 mesh_elements = mesh_elements.mesh
-
 
         else:
             pass
@@ -187,6 +188,10 @@ class EWC_ColumnVector(FrozenOnly):
         self._adjust_ = None
         self._blocks_ = None
         self._freeze_self_()
+
+
+    def __repr__(self):
+        return f'EWC_ColVec:{id(self)}'
 
     def ___PRIVATE_reset_cache___(self):
         self._cache_ = dict()
@@ -380,6 +385,35 @@ class EWC_ColumnVector(FrozenOnly):
         data_generator = ___CV_NEG___(self)
         # noinspection PyTypeChecker
         RETURN = EWC_ColumnVector(self._elements_, data_generator, self._KG_)
+        if self.gathering_matrix is not None:
+            RETURN.gathering_matrix = self.gathering_matrix
+        return RETURN
+
+    def __mul__(self, other):
+        """"""
+        DG = ColVec_MUL(self, other)
+        # noinspection PyTypeChecker
+        RETURN = EWC_ColumnVector(self._elements_, DG, self._KG_)
+        if self.gathering_matrix is not None:
+            RETURN.gathering_matrix = self.gathering_matrix
+        return RETURN
+
+    def __rmul__(self, other):
+        """"""
+        DG = ColVec_MUL(self, other)
+        # noinspection PyTypeChecker
+        RETURN = EWC_ColumnVector(self._elements_, DG, self._KG_)
+        if self.gathering_matrix is not None:
+            RETURN.gathering_matrix = self.gathering_matrix
+        return RETURN
+
+
+    def ___PRIVATE_sum___(self, others):
+        """self + all others."""
+        vec = [self,] + others
+        data_generator = ColVec_PRIVATE_sum(vec)
+        # noinspection PyTypeChecker
+        RETURN = EWC_ColumnVector(self._elements_, data_generator, data_generator.__KG_call__)
         if self.gathering_matrix is not None:
             RETURN.gathering_matrix = self.gathering_matrix
         return RETURN

@@ -27,7 +27,7 @@ class _3dCSCG_Edge_DO(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 6 python _3dCSCG\forms\edge\base\do.py
+    # mpiexec -n 6 python _3dCSCG\forms\edge\base\main.py
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
     mesh = MeshGenerator('crazy', c=0.25)([5,6,7])

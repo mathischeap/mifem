@@ -3,6 +3,7 @@
 import numpy as np
 from scipy.sparse import csc_matrix
 from screws.freeze.main import FrozenOnly
+from tools.linear_algebra.elementwise_cache.objects.multi_dim_matrix.main import MultiDimMatrix
 
 
 class ___3dCSCG_1Form_CrossProduct_2__ip_2___(FrozenOnly):
@@ -100,9 +101,17 @@ class ___3dCSCG_1Form_CrossProduct_2__ip_2___(FrozenOnly):
 
         self._CP_IP_3dM_ = CP_IP_3dM
         self._w1_ = w1
+        self._u2_ = u2
+        self._e2_ = e2
         self._freeze_self_()
 
     def __call__(self, i):
-        """return 2d matrix of output = '1-M-2' type for mesh-element #i."""
+        """return 2d matrix of output = '2-M-1' type for mesh-element #i."""
         M = np.einsum('ijk, i -> kj', self._CP_IP_3dM_[i], self._w1_.cochain.local[i], optimize='greedy')
         return csc_matrix(M)
+
+
+    @property
+    def MDM(self):
+        """Return a multi-dimension matrix representing this triple-operator."""
+        return MultiDimMatrix(self._w1_.mesh.elements, self._CP_IP_3dM_, [self._w1_, self._u2_, self._e2_], 'no_cache')

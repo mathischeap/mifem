@@ -170,6 +170,13 @@ class FormCaller(FrozenOnly):
         cOmm.barrier()  # for safety reason
         return FM
 
+    @property
+    def mesh(self):
+        return self._mesh_
+
+    @property
+    def space(self):
+        return self._space_
 
 
 
@@ -226,6 +233,7 @@ if __name__ == "__main__":
     mesh.visualize()
     mesh.domain.visualize()
     mesh.domain.regions.visualize()
+    mesh.trace.visualize(usetex=True)
 
     # print(rAnk, mesh._element_indices_)
 

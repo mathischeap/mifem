@@ -11,6 +11,7 @@ from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EW
 from tools.linear_algebra.elementwise_cache.objects.column_vector.main import EWC_ColumnVector
 
 from objects.CSCG._3d.forms.standard._2s.special.helpers.cross_product_2__ip_2 import ___3dCSCG_2Form_CrossProduct_2__ip_2___
+from objects.CSCG._3d.forms.standard._2s.special.helpers.cross_product_2__ip_1 import ___3dCSCG_2Form_CrossProduct_2__ip_1___
 
 
 
@@ -21,7 +22,7 @@ class _2Form_Special(FrozenOnly):
         self._vortex_detection_ = None
         self._freeze_self_()
 
-    def cross_product_2f__ip_2f(self, u, e, quad_degree=None):
+    def cross_product_2f__ip_2f(self, u, e, quad_degree=None, output='2-M-1'):
         """
         (self X 2form, 2form)
 
@@ -29,9 +30,36 @@ class _2Form_Special(FrozenOnly):
 
         We do ``(self X other, e)`` where ``self`` and ``other`` both are n-form, n be either 1 or 2.
 
+        output:
+            '2-M-1': Means we return a local matrix refers to local dofs of e (rows, index-0) and u (cols, index-1)
+
         :return:
         """
-        SCP_generator = ___3dCSCG_2Form_CrossProduct_2__ip_2___(self._sf_, u, e, quad_degree=quad_degree)
+        if output == '2-M-1':
+            SCP_generator = ___3dCSCG_2Form_CrossProduct_2__ip_2___(self._sf_, u, e, quad_degree=quad_degree)
+        else:
+            raise NotImplementedError(f"output={output} is not implemented.")
+
+        return EWC_SparseMatrix(self._sf_.mesh.elements, SCP_generator, 'no_cache')
+
+    def cross_product_2f__ip_1f(self, u, e, quad_degree=None, output='2-M-1'):
+        """
+        (self X 2form, 1form)
+
+        (self X u    , e    )
+
+        We do ``(self X other, e)`` where ``self`` and ``other`` both are 2-form.
+
+        output:
+            '2-M-1': Means we return a local matrix refers to local dofs of e (rows, index-0) and u (cols, index-1)
+
+        :return:
+        """
+        if output == '2-M-1':
+            SCP_generator = ___3dCSCG_2Form_CrossProduct_2__ip_1___(self._sf_, u, e, quad_degree=quad_degree)
+        else:
+            raise NotImplementedError(f"output={output} is not implemented.")
+
         return EWC_SparseMatrix(self._sf_.mesh.elements, SCP_generator, 'no_cache')
 
     @property
@@ -39,7 +67,6 @@ class _2Form_Special(FrozenOnly):
         if self._vortex_detection_ is None:
             self._vortex_detection_ = ___3dCSCG_2Form_Vortex_Detection___(self._sf_)
         return self._vortex_detection_
-
 
     def hybrid_pairing(self, adt2, time=0):
         """"""

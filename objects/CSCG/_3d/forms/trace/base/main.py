@@ -51,6 +51,8 @@ class _3dCSCG_Standard_Trace(CSCG_Trace_Form, _3dCSCG_FORM_BASE, ndim=3):
         self._DO_ = None
         self._dofs_ = None
 
+    def __repr__(self):
+        return f"3dCSCG>{self.k}TF>{self.standard_properties.name}:{id(self)}"
 
     def ___PRIVATE_reset_cache___(self):
         self.cochain.___PRIVATE_reset_cache___()

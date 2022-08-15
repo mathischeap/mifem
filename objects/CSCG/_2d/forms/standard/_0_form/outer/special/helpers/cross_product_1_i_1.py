@@ -4,6 +4,7 @@ from screws.freeze.base import FrozenOnly
 import numpy as np
 from scipy.sparse import csc_matrix
 
+from tools.linear_algebra.elementwise_cache.objects.multi_dim_matrix.main import MultiDimMatrix
 
 
 class ___2dCSCG_0_o_Form_CrossProduct_0_X_1__ip_1___(FrozenOnly):
@@ -28,8 +29,8 @@ class ___2dCSCG_0_o_Form_CrossProduct_0_X_1__ip_1___(FrozenOnly):
 
             CP[i]
 
-        it will give a matrix for mesh-element #i, and the columns represent the local
-        dofs of e1 and the rows represent the local dofs of u1.
+        it will give a matrix for mesh-element #i, and the rows represent the local
+        dofs of e1 and the cols represent the local dofs of u1.
 
         :param w0: will be the 0-form itself. We call this function form it.
         :param u1:
@@ -86,9 +87,18 @@ class ___2dCSCG_0_o_Form_CrossProduct_0_X_1__ip_1___(FrozenOnly):
 
         self._CP_IP_3dM_ = CP_IP_3dM
         self._w0_ = w0
+        self._u1_ = u1
+        self._e1_ = e1
         self._freeze_self_()
 
     def __call__(self, i):
         """return 2d matrix of output = '1-M-2' type for mesh-element #i."""
         M = np.einsum('ijk, i -> kj', self._CP_IP_3dM_[i], self._w0_.cochain.local[i], optimize='greedy')
         return csc_matrix(M)
+
+
+    @property
+    def MDM(self):
+        """Return a multi-dimension matrix representing this triple-operator."""
+        return MultiDimMatrix(self._w0_.mesh.elements, self._CP_IP_3dM_,
+                              [self._w0_, self._u1_, self._e1_], 'no_cache')

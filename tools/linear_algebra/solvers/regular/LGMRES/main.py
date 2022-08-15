@@ -53,7 +53,6 @@ class LGMRES(ParallelSolverBase):
                     * >0 : convergence to tolerance not achieved, number of iterations
                     * -1 : divergence
 
-
                 3. (float) beta -- The residual.
                 4. (int) ITER -- The number of outer iterations.
                 5. (str) message
@@ -64,6 +63,16 @@ class LGMRES(ParallelSolverBase):
         # ---- parse x0 ------------------------------------------------
         if x0 == 0: # we make it an empty LocallyFullVector
             x0 = LocallyFullVector(len(b))
+
+        elif hasattr(x0, 'standard_properties') and \
+            'CSCG_form' in x0.standard_properties.tags:
+            x0 = LocallyFullVector((x0,))
+
+        elif isinstance(x0, (list, tuple)) and all(
+                [hasattr(_, 'standard_properties') and 'CSCG_form' in _.standard_properties.tags for _ in x0]
+            ):
+            x0 = LocallyFullVector(x0)
+
         else:
             pass
         assert x0.__class__.__name__ == "LocallyFullVector", \

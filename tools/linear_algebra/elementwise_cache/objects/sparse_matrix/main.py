@@ -18,6 +18,7 @@ from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.transp
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.inv import ___LinearAlgebraINV___
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.neg import ___NEG___
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.mul import ___MUL___
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.helpers.Psum import SpaMat_PRIVATE_sum
 
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.assembler import EWC_SparseMatrix_Assembler
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.do import EWC_SparseMatrix_Do
@@ -203,6 +204,8 @@ class EWC_SparseMatrix(FrozenOnly):
         self._condition_ = None
         self._freeze_self_()
 
+    def __repr__(self):
+        return f'EWC_SpaMat:{id(self)}'
 
     def ___PRIVATE_reset_cache___(self):
         self._cache_ = dict()
@@ -252,7 +255,8 @@ class EWC_SparseMatrix(FrozenOnly):
     def gathering_matrices(self, gathering_matrices):
         """Two Chain_Gathering_Matrix. If not, we make them to be Chain_Gathering_Matrix.
 
-        :param gathering_matrices: it can be like:
+        :param gathering_matrices:
+            it can be like:
             1. gathering_matrices = (CGM1, CGM2) # CGM1, CGM2 be Chain_Gathering_Matrix.
             2. gathering_matrices = (u2, P3) # we will make two Chain_Gathering_Matrix from them.
             3. gathering_matrices = ([u2, P3], [u2, P3]) # we will make two Chain_Gathering_Matrix from them.
@@ -457,7 +461,7 @@ class EWC_SparseMatrix(FrozenOnly):
 
     def __rmul__(self, other):
         """
-        multiply other (int or float) with self, e.g. 7 * other.
+        multiply other (int or float) with self, e.g. 7 * self.
 
 
         :param other:
@@ -498,7 +502,7 @@ class EWC_SparseMatrix(FrozenOnly):
 
     def __add__(self, other):
         """self + EWC_SparseMatrix"""
-        assert other.__class__.__name__ == 'EWC_SparseMatrix'
+        assert other.__class__.__name__ == 'EWC_SparseMatrix', f"other is a {other.__class__.__name__}"
         DKC = ___ADD___(self, other)
         return EWC_SparseMatrix(self._elements_, DKC.__DG_call__, DKC.__KG_call__)
 
@@ -535,3 +539,12 @@ class EWC_SparseMatrix(FrozenOnly):
         """inv of self."""
         data_generator = ___LinearAlgebraINV___(self)
         return EWC_SparseMatrix(self._elements_, data_generator, self._KG_)
+
+    def ___PRIVATE_sum___(self, others):
+        """self + all others."""
+        Mat = [self,] + others
+        data_generator = SpaMat_PRIVATE_sum(Mat)
+        # noinspection PyTypeChecker
+        RETURN = EWC_SparseMatrix(self._elements_, data_generator, data_generator.__KG_call__)
+
+        return RETURN

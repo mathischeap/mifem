@@ -4,6 +4,7 @@ from scipy.sparse import csc_matrix
 
 from screws.freeze.base import FrozenOnly
 from tools.linear_algebra.data_structures.global_matrix.main import GlobalVector
+from root.config.main import ASSEMBLE_COST, cOmm, MPI, rAnk, mAster_rank
 
 
 
@@ -16,10 +17,20 @@ class EWC_ColumnVector_Assembler(FrozenOnly):
 
     def __call__(self, routine=None, **kwargs):
         """Do the assembling."""
+
+        cOmm.barrier()
+        twS = MPI.Wtime()
         if routine is None:
-            return self.___default_routine___()
+            V = self.___default_routine___()
         else:
             raise Exception(f"Assembling routine = {routine} is wrong!")
+        cOmm.barrier()
+        twE = MPI.Wtime()
+
+        if rAnk == mAster_rank:
+            ASSEMBLE_COST['recent'].append(twE-twS)
+
+        return V
 
     def ___default_routine___(self):
         """"""

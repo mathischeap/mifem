@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """We want to export the field to some data files.
 """
 

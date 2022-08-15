@@ -60,7 +60,7 @@ class _2dCSCG_Trace_Visualize(FrozenOnly):
             tei = self._trace_.elements[i]
             TED[i] = tei.coordinate_transformation.mapping(o)
             TEC[i] = tei.coordinate_transformation.mapping(c)
-            if tei.IS_on_periodic_boundary:
+            if tei.IS.on_periodic_boundary:
                 TEC_P[i] = tei.NON_CHARACTERISTIC_position
 
         TED = cOmm.gather(TED, root=mAster_rank)

@@ -23,8 +23,6 @@ class _3dCSCG_S0_ADF(_3dCSCG_Algebra_DUAL_Standard_Form):
         self.___PRIVATE_reset_cache___()
         self._freeze_self_()
 
-
-
     def ___PRIVATE_reset_cache___(self):
         """"""
         super().___PRIVATE_reset_cache___()

@@ -10,8 +10,6 @@ mpiexec -n 4 python objects/CSCG/_2d/__tests__/unittests/main.py
 
 mpiexec -n 4 python objects/CSCG/_3d/__tests__/unittests/main.py
 
-mpiexec -n 4 python objects/mpRfT/_2d/__tests__/unittests/main.py
-
 """
 
 import sys
@@ -39,14 +37,13 @@ from objects.CSCG._2d.__tests__.unittests.main import passed_2dCSCG_tests # comm
 from objects.CSCG._3d.__tests__.unittests.main import passed_3dCSCG_tests # comment to skip these tests.
 
 
-from objects.mpRfT._2d.__tests__.unittests.main import passed_mpRfT2_tests
+# from objects.mpRfT._2d.__tests__.unittests.main import passed_mpRfT2_tests
 
 
 
 total_Tests = passed_2dCSCG_tests + \
               passed_3dCSCG_tests + \
-              passed_GLOBAL_tests + \
-              passed_mpRfT2_tests
+              passed_GLOBAL_tests
 
 if rAnk == mAster_rank:
     print("\n<{}> total tests passed; cost {:.3f} seconds.\n".format(

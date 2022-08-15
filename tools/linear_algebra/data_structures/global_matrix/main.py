@@ -65,6 +65,9 @@ class GlobalMatrix(FrozenOnly):
         self._IS_ = ___GM_IS___(self)
         self._freeze_self_()
 
+    def __repr__(self):
+        return f"GlobalMatrix{self.shape}:{id(self)}"
+
     @property
     def M(self):
         return self._M_

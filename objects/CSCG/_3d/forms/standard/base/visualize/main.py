@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from screws.freeze.main import FrozenOnly
 from objects.CSCG._3d.forms.standard.base.visualize.tecplot_ import _3dCSCG_standard_form_Tecplot

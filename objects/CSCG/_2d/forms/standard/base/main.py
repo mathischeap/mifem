@@ -19,6 +19,7 @@ from objects.CSCG._2d.forms.standard.base.operators.main import _2dCSCG_Standard
 from objects.CSCG._2d.forms.standard.base.dofs.main import _2dCSCG_SF_dofs
 
 from objects.CSCG.base.forms.standard.main import CSCG_Standard_Form
+from copy import deepcopy
 
 
 class _2dCSCG_Standard_Form(CSCG_Standard_Form, _2dCSCG_FORM_BASE, ndim=2):
@@ -44,6 +45,7 @@ class _2dCSCG_Standard_Form(CSCG_Standard_Form, _2dCSCG_FORM_BASE, ndim=2):
         self._orientation_ = orientation
         self.standard_properties.name = name
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_form')
+        self.___ARGS___ = (is_hybrid, deepcopy(numbering_parameters), name)
 
         self._numbering_ = _2dCSCG_Standard_Form_Numbering(self, numbering_parameters)
         self._cochain_ = _2dCSCG_Standard_Form_Cochain(self)
@@ -54,6 +56,18 @@ class _2dCSCG_Standard_Form(CSCG_Standard_Form, _2dCSCG_FORM_BASE, ndim=2):
         self._DO_ = _2dCSCG_Standard_Form_DO(self)
         self._dofs_ = None
 
+
+    @property
+    def shadow(self):
+        is_hybrid, numbering_parameters, name = self.___ARGS___
+        # noinspection PyArgumentList
+        return self.__class__(self.mesh, self.space,
+                              is_hybrid=is_hybrid,
+                              numbering_parameters=numbering_parameters,
+                              name = 'shadow-of-' + name)
+
+    def __repr__(self):
+        return f"2dCSCG>{self.orientation}-{self.k}SF>{self.standard_properties.name}:{id(self)}"
 
     @property
     def numbering(self):

@@ -1,13 +1,9 @@
-
+# -*- coding: utf-8 -*-
 
 from importlib import import_module
 
 from objects.CSCG.base.forms.standard.coboundary import CSCG_Standard_Form_Coboundary_BASE
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
-
-
-
-
 
 
 class _3dCSCG_Standard_Form_Coboundary(CSCG_Standard_Form_Coboundary_BASE):

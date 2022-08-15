@@ -2,6 +2,7 @@
 
 
 from tools.linear_algebra.linear_system.main import LinearSystem
+from tools.linear_algebra.nonlinear_system.main import NonLinearSystem
 
 
 

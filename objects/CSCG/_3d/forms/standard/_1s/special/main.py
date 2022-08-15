@@ -17,6 +17,8 @@ from objects.CSCG._3d.forms.standard._1s.special.helpers.cross_product_1__ip_1 i
     ___3dCSCG_1Form_CrossProduct_1__ip_1___
 from objects.CSCG._3d.forms.standard._1s.special.helpers.cross_product_2__ip_2 import \
     ___3dCSCG_1Form_CrossProduct_2__ip_2___
+from objects.CSCG._3d.forms.standard._1s.special.helpers.curl1_cross_product_1__ip_2 import \
+    ___3dCSCG_curl1_CrossProduct_1__ip_2___
 from root.config.main import cOmm, MPI
 
 
@@ -36,7 +38,7 @@ class _1Form_Special(FrozenOnly):
         another 1-form.
 
         output:
-            '2-M-1': Means we return a local matrix refers to local dofs of e(column) and u (row)
+            '2-M-1': Means we return a local matrix refers to local dofs of e(rows, index-0) and u (cols, index-1)
 
         :return:
         """
@@ -53,16 +55,43 @@ class _1Form_Special(FrozenOnly):
         another 2-form.
 
         output:
-            '2-M-1': Means we return a local matrix refers to local dofs of e (column) and u (row)
+            '2-M-1': local matrix refers to local dofs of e (rows, index-0) and u (cols, index-1)
 
         :return:
         """
         if output == '2-M-1':
             SCP_generator = ___3dCSCG_1Form_CrossProduct_2__ip_2___(self._sf_, u, e, quad_degree=quad_degree)
+        elif output == 'MDM':
+            SCP_generator = ___3dCSCG_1Form_CrossProduct_2__ip_2___(self._sf_, u, e, quad_degree=quad_degree)
+            return SCP_generator.MDM
         else:
             raise NotImplementedError(f"output={output} is not implemented.")
 
         return EWC_SparseMatrix(self._sf_.mesh.elements, SCP_generator, 'no_cache')
+
+
+    def curl_self_cross_product_self__ip_2f(self, e, quad_degree=None, output='e'):
+        """Compute < curl(self) X self, 2-form >.
+
+        Parameters
+        ----------
+        e :
+            The 2-form.
+        quad_degree :
+            The quadrature degree.
+        output: str
+            'e' : local vector refers to local dofs of e.
+
+        Returns
+        -------
+
+        """
+        if output == 'e':
+            SCP_generator = ___3dCSCG_curl1_CrossProduct_1__ip_2___(self._sf_, e, quad_degree=quad_degree)
+        else:
+            raise NotImplementedError(f"output={output} is not implemented.")
+
+        return EWC_ColumnVector(self._sf_.mesh.elements, SCP_generator, 'no_cache')
 
     @property
     def vortex_detection(self):
@@ -96,7 +125,7 @@ class _1Form_Special(FrozenOnly):
         C.gathering_matrices = (adt1, e1)
         b.gathering_matrix = adt1
 
-        #----- get boundaries and do a check --------------------------------------
+        #----- get boundaries and do a check -------------------------------------------------------
         Dirichlet_boundaries = adt1.BC.valid_boundaries
         Neumann_boundaries = sf.BC.valid_boundaries
 
@@ -114,7 +143,7 @@ class _1Form_Special(FrozenOnly):
         T = T.adjust.identify_rows_according_to_two_CSCG_partial_dofs(row_pd, col_pc)
         b = b.adjust.set_entries_according_to_CSCG_partial_cochains(row_pd, col_pc)
 
-        #-------- set Dirichlet boundary condition -------------------------------
+        #-------- set Dirichlet boundary condition -------------------------------------------------
         adt1.BC.valid_boundaries = Dirichlet_boundaries
         adt_pc = adt1.BC.partial_cochain
         D = D.adjust.identify_rows_according_to_CSCG_partial_dofs(adt_pc)
@@ -125,7 +154,7 @@ class _1Form_Special(FrozenOnly):
         T, C, SKIPPED_edge_elements = self.___PRIVATE_overcoming_hybrid_singularity___(
             T, C, Dirichlet_boundaries=Dirichlet_boundaries)
 
-        #------------- make a special Gathering matrix for the 1-edge-form ------------------------
+        #------------- make a special Gathering matrix for the 1-edge-form -------------------------
         eGM = self.___PRIVATE_1ef_hybrid_GM___(SKIPPED_edge_elements)
 
         return T, D, C, b, eGM
@@ -138,7 +167,7 @@ class _1Form_Special(FrozenOnly):
 
         D_p_D = {'NS':px, 'WE':py, 'BF':pz} # Direction-p-Dict
 
-        #------- take care SKIPPED_edge_elements -----------------------------------------------
+        #------- take care SKIPPED_edge_elements ---------------------------------------------------
         SKD = dict()
         for e in SKIPPED_edge_elements:
             if e in mesh.edge.elements:
@@ -150,7 +179,7 @@ class _1Form_Special(FrozenOnly):
         SKD = dict()
         for _ in ___: SKD.update(_)
 
-        #---------------------------------------------------------------------------------------
+        #-------------------------------------------------------------------------------------------
         _EEW_GV_ = dict()
 
         TA_NB = mesh.edge.elements.___PRIVATE_find_type_and_amount_numbered_before___()
@@ -288,17 +317,20 @@ class _1Form_Special(FrozenOnly):
                     for si, _ in enumerate(T_MAP):
                         if _ == trace_element:
                             break
+                    # noinspection PyUnboundLocalVariable
                     trace_face = 'NSWEBF'[si]
                     tf_local_dofs = self._sf_.space.local_numbering.\
                         ___PRIVATE_find_MESH_ELEMENT_WISE_local_dofs_of_1Trace_edge___(
                         trace_face, trace_edge
                     )
 
+                    # noinspection PyUnboundLocalVariable
                     positions = edge_element.positions
                     for pos in positions:
                         if int(pos[:-2]) == mesh_element:
                             edge_name = pos[-2:]
                             break
+                    # noinspection PyUnboundLocalVariable
                     ef_local_dofs = self._sf_.space.local_numbering.\
                         ___PRIVATE_find_MESH_ELEMENT_WISE_local_dofs_of_1edge_edge___(
                         edge_name

@@ -19,10 +19,11 @@ class _3dCSCG_Edge_Cochain(FrozenOnly):
         """"""
         self._ef_ = ef
         self._local_ = None
-        self.___PRIVATE_reset_cache___()
+        self._local_EEW_ = None
         self._freeze_self_()
 
     def ___PRIVATE_reset_cache___(self):
+        """Do not reset _local_."""
         self._local_EEW_ = None
 
 

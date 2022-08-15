@@ -48,9 +48,12 @@ class _3dCSCG_Edge(_3dCSCG_FORM_BASE, ndim=3):
         self._num_ = None
 
 
+    def __repr__(self):
+        return f"3dCSCG>{self.k}EdgeForm>{self.standard_properties.name}:{id(self)}"
 
     def ___PRIVATE_reset_cache___(self):
         """"""
+
     @property
     def orientation(self):
         return self._orientation_

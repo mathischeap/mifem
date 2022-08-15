@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from screws.freeze.main import FrozenOnly
 from scipy import sparse as spspa
@@ -82,6 +82,9 @@ class DistributedVector(FrozenOnly):
         self._IS_ = None
         self._freeze_self_()
 
+    def __repr__(self):
+        return f"DistributedVector{self.shape}:{id(self)}"
+
     @property
     def V(self):
         return self._V_
@@ -163,6 +166,3 @@ class DistributedVector(FrozenOnly):
                         data = Vi.data
                         V[indices] = data
             return V
-
-
-

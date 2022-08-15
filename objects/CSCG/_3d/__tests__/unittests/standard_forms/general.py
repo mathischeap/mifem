@@ -5,16 +5,21 @@ For standard forms only.
 """
 
 import sys
+
 if './' not in sys.path: sys.path.append('./')
 import os
-from root.config.main import *
-from scipy.sparse import linalg as spspalinalg
-from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
-from root.save import save
 import random
+
+from root.save import save
+from root.config.main import *
+
+from scipy.sparse import linalg as spspalinalg
+
+from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 from screws.exceptions import ThreeDimensionalTransfiniteInterpolationError
 from objects.CSCG._3d.__tests__.Random.form_caller import random_mesh_and_space_of_total_load_around
 from objects.CSCG._3d.__tests__.Random.form_caller import random_FormCaller_of_total_load_around
+from objects.CSCG._3d.__tests__.Random.field import random_vector
 
 from tools.linear_algebra.linear_system.main import LinearSystem
 from tools.linear_algebra.elementwise_cache.operators.bmat.main import bmat
@@ -257,7 +262,6 @@ def test_Form_NO1a_discretization_and_reconstruction():
         if rAnk == mAster_rank:
             print("    skip LDC mesh ...... ", flush=True)
         pass
-
 
     mesh = MeshGenerator('crazy_periodic', c=0.1)([3, 4, 5], EDM='chaotic')
     space = SpaceInvoker('polynomials')([('Lobatto', 5), ('Lobatto', 4), ('Lobatto', 3)])
@@ -748,7 +752,7 @@ def test_Form_NO4_cross_product_1():
     if rAnk == mAster_rank:
         print("*** [test_Form_NO4_cross_product_1] ...... ", flush=True)
 
-    mesh = MeshGenerator('crazy', c=0.1)([3, 3, 4], EDM='debug')
+    mesh = MeshGenerator('crazy', c=0.0)([3, 3, 4], EDM='debug')
     space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 3), ('Lobatto', 2)])
     fmCa = FormCaller(mesh, space)
 
@@ -837,13 +841,13 @@ def test_Form_NO4_cross_product_1():
 
 def test_Form_NO5_cross_product_2():
     """
-    Unittests for the special method ``cross_product`` of the standard 1-form.
+    Unittests for the special method ``cross_product`` of the standard 2-form.
     """
     if rAnk == mAster_rank:
         print("*** [test_Form_NO5_cross_product_2] ...... ", flush=True)
 
-    mesh = MeshGenerator('crazy', c=0.0, bounds=([0,1],[0,1],[0,1]))([2,3,1], EDM='debug')
-    space = SpaceInvoker('polynomials')([('Lobatto', 5), ('Lobatto', 4), ('Lobatto', 6)])
+    mesh = MeshGenerator('crazy', c=0.0, bounds=([0,1],[0,1],[0,1]))([4,3,5], EDM='debug')
+    space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 4), ('Lobatto', 2)])
     fmCa = FormCaller(mesh, space)
 
     def w0(t, x, y, z): return -np.pi * np.sin(x) * np.cos(y) * np.cos(z) + t
@@ -892,7 +896,7 @@ def test_Form_NO5_cross_product_2():
 
     x.TW.func.body = vx
     x.TW.___DO_push_all_to_instant___(0)
-    assert x.error.L() < 0.00085
+    assert x.error.L() < 0.015
 
     return 1
 
@@ -961,6 +965,115 @@ def test_Form_NOx_cross_product_3():
     x.TW.func.body = vx
     x.TW.do.push_all_to_instant(0)
     assert x.error.L() < 0.0055
+
+    return 1
+
+
+def test_Form_NOx1_cross_product_4():
+    """Unittests for the special method ``curl_self_cross_product_self__ip_2f`` of the standard 1-form.
+    """
+    if rAnk == mAster_rank:
+        print("*** [test_Form_NOx1_cross_product_4] ...... ", flush=True)
+
+    mesh = MeshGenerator('cuboid', region_layout=[2,2,2])([5,5,5])
+    space = SpaceInvoker('polynomials')([2,2,2])
+    FC = FormCaller(mesh, space)
+
+    def u0(t, x, y, z): return np.sin(0.87*np.pi*x) * np.sin(2*y) * np.cos(0.55*np.pi*z) + t
+    def u1(t, x, y, z): return np.cos(2.68*x) * np.sin(0.75*np.pi*y) * np.sin(0.82*np.pi*z) + t
+    def u2(t, x, y, z): return np.sin(0.854*np.pi*x) * np.cos(0.56*np.pi*y) * np.sin(1.987*z) + t
+
+    u = FC('vector', func=(u0, u1, u2))
+    w = u.numerical.curl
+    wXu = w.do.cross_product(u)
+
+    U = FC('1-f')
+    E = FC('2-f')
+    U.TW.func.body = u
+    U.TW.do.push_all_to_instant(0)
+    U.discretize()
+
+    CPV = U.special.curl_self_cross_product_self__ip_2f(E)
+    M = E.matrices.mass
+
+    if mesh.elements.num > 0:
+        i = mesh.elements.indices[0]
+        invM = spspalinalg.inv(M[i].tocsc())
+    else:
+        invM = None
+
+    Ecl = dict()
+    E21 = U.matrices.incidence
+
+    for i in mesh.elements:
+        v = CPV[i].toarray()[:,0]
+        Ecl[i] = invM @ v
+
+        result = np.sum((E21[i] @ U.cochain.local[i]) * v)
+        np.testing.assert_almost_equal(result, 0)
+
+    E.cochain.local = Ecl
+    E.TW.func.body = wXu
+    E.TW.do.push_all_to_instant(0)
+    assert E.error.L() < 0.01
+
+    return 1
+
+
+def test_Form_NOx2_F_dot_G_times_H():
+    """"""
+    if rAnk == mAster_rank:
+        print("*** [test_Form_NOx2_F_dot_G_times_H] ...... ", flush=True)
+
+    mesh = MeshGenerator('cuboid', region_layout=[2,2,2])([5,5,5])
+    space = SpaceInvoker('polynomials')([2,2,2])
+    FC = FormCaller(mesh, space)
+    uV = random_vector(mesh)
+    BV = random_vector(mesh)
+    jV = random_vector(mesh)
+    u = FC('2-f')
+    j = FC('1-f')
+    B = FC('2-f')
+
+    uXB = uV.do.cross_product(BV)
+    uXB_dot_j = uXB.do.inner_product(jV)
+
+    jXB = jV.do.cross_product(BV)
+    jXB_dot_u = jXB.do.inner_product(uV)
+
+    uXB_dot_j.current_time = 0
+    jXB_dot_u.current_time = 0
+
+    xi = np.random.rand(3,3,3)
+    et = np.random.rand(3,3,3)
+    sg = np.random.rand(3,3,3)
+
+    N0 = uXB_dot_j.do.compute_Ln_norm(n=1)
+    N1 = jXB_dot_u.do.compute_Ln_norm(n=1)
+    np.testing.assert_almost_equal(N0 + N1, 0)
+
+    _, Val0 = uXB_dot_j.do.reconstruct(xi, et, sg)
+    _, Val1 = jXB_dot_u.do.reconstruct(xi, et, sg)
+    for i in Val0:
+        np.testing.assert_array_almost_equal(Val0[i][0] + Val1[i][0], 0)
+
+    u.TW.func.body = uV
+    u.TW.do.push_all_to_instant(0)
+    u.discretize()
+    B.TW.func.body = BV
+    B.TW.do.push_all_to_instant(0)
+    B.discretize()
+    j.TW.func.body = jV
+    j.TW.do.push_all_to_instant(0)
+    j.discretize()
+
+    CM0 = u.special.cross_product_2f__ip_1f(B, j)
+    CM1 = j.special.cross_product_2f__ip_2f(B, u)
+
+    for i in CM0:
+        val0 = np.einsum('ij, i, j ->', CM0[i].toarray(), j.cochain.local[i], B.cochain.local[i], optimize='optimal')
+        val1 = np.einsum('ij, i, j ->', CM1[i].toarray(), u.cochain.local[i], B.cochain.local[i], optimize='optimal')
+        np.testing.assert_almost_equal(val0 + val1, 0)
 
     return 1
 
@@ -1180,22 +1293,6 @@ def test_Form_No7_with_other_element_numbering_AUTO():
     return 1
 
 
-def test_Form_No8_edge_forms():
-    if rAnk == mAster_rank:
-        print("EEE [test_Form_No8_edge_forms] ...... ", flush=True)
-
-    return 1
-
-
-def test_Form_No9_node_forms():
-    if rAnk == mAster_rank:
-        print("NNN [test_Form_No9_node_forms] ...... ", flush=True)
-
-    return 1
-
-
-
-
 def test_Form_No10_standard_form_dofs():
     if rAnk == mAster_rank:
         print("DOF [test_Form_No10_standard_form_dofs] ...... ", flush=True)
@@ -1310,8 +1407,6 @@ def test_Form_No11_reconstruction_matrices():
     return 1
 
 
-
-
 def test_Form_NO12_weak_curl():
     """"""
     if rAnk == mAster_rank:
@@ -1395,7 +1490,6 @@ def test_Form_NO12_weak_curl():
 
     assert w1.error.L() < 0.06, f"0 tangent velocity boundary condition test fails."
 
-
     return 1
 
 
@@ -1403,5 +1497,9 @@ def test_Form_NO12_weak_curl():
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects\CSCG\_3d\__tests__\unittests\standard_forms\general.py
-    test_Form_NO1b_trace_form_Rd_and_Rc()
+    # mpiexec -n 4 python objects/CSCG/_3d/__tests__/unittests/standard_forms/general.py
+    # test_Form_NO4_cross_product_1()
+    # test_Form_NO5_cross_product_2()
+    # test_Form_NOx_cross_product_3()
+    # test_Form_NOx1_cross_product_4()
+    test_Form_NOx2_F_dot_G_times_H()

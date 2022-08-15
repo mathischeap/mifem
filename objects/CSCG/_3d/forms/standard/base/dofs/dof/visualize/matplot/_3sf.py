@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from root.config.main import *
 import matplotlib.pyplot as plt
 from screws.freeze.main import FrozenOnly

@@ -41,6 +41,11 @@ class _2dCSCG_Space(FrozenClass):
         self._GoN_ravel_ = None
         self._freeze_self_()
 
+
+    def __repr__(self):
+        """"""
+        return f"2dCSCG-space={self.category}={self.p}"
+
     @property
     def ___parameters___(self):
         """ It is mandatory for saving."""

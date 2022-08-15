@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 If we use bmat to form EWC_SparseMatrix. We can get some blocks of the EWC_SparseMatrix.
 

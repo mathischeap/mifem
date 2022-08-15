@@ -38,6 +38,9 @@ class _2dCSCG_ScalarField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
         self._visualize_ = _2dCSCG_ScalarField_Visualize(self)
         self._freeze_self_()
 
+    def __repr__(self):
+        """"""
+        return f"2dCSCG_scalar_field=<{self.standard_properties.name}>@{id(self)}"
 
     def ___PRIVATE_set_func___(self, func, ftype='standard'):
         """

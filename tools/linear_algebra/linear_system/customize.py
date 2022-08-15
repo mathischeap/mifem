@@ -24,14 +24,13 @@ class ___LinearSystem_Customize___(FrozenOnly):
 
         #------ for cscg meshes -------------------------------------------------------------------
         if hasattr(pd, '_mesh_') and \
-                pd._mesh_.__class__.__name__ in ('_3dCSCG_Mesh', '_2dCSCG_Mesh',
-                                                 'mpRfT2_Mesh', 'mpRfT3_Mesh'):
+            pd._mesh_.__class__.__name__ in ('_3dCSCG_Mesh', '_2dCSCG_Mesh'):
 
-            # check 1: ---------------------------------
+            # check 1 ____________________________________________________________________
             if i == j:
                 assert pc is None, f"when i == j is None, we must have pc is None."
 
-            # check 2: ---------------------------------
+            # check 2 ____________________________________________________________________
             if pc is None:
                 assert i == j, \
                     f"when do not provide pc, we must set diagonal block, " \
@@ -48,10 +47,10 @@ class ___LinearSystem_Customize___(FrozenOnly):
             else:
                 pass
 
-            # check 3: ---------------------------------
+            # check 3 _______________________________________________________________________
             assert pc.__class__.__name__ == 'PartialCochain', f"pc must be a PartialCochain."
 
-            #======== customize ==============================================
+            #======== customize =============================================================
             I, J = self._LS_.block_shape
             assert i % 1 == 0, f"i={i}({i.__class__.__name__}) cannot be an index!"
             assert j % 1 == 0, f"j={j}({j.__class__.__name__}) cannot be an index!"
@@ -72,25 +71,8 @@ class ___LinearSystem_Customize___(FrozenOnly):
                     self._LS_.b.customize.\
                         set_entries_according_to_CSCG_partial_cochains(
                         i, pd, pc=pc, interpreted_as=interpreted_as)
-
-            elif pd._mesh_.__class__.__name__ in ('mpRfT2_Mesh', 'mpRfT3_Mesh'):
-                if i == j:
-                    self._LS_.A.customize.\
-                        identify_global_rows_according_to_mpRfT_partial_dofs(
-                        i, pd)
-            #         self._LS_.b.customize.\
-            #             set_entries_according_to_mpRfT_partial_cochains(
-            #             i, pd, interpreted_as=interpreted_as)
-            #     else:
-            #         self._LS_.A.customize.\
-            #             off_diagonally_identify_rows_according_to_two_mpRfT_partial_dofs(
-            #             i, j, pd, pc, interpreted_as=interpreted_as)
-            #         self._LS_.b.customize.\
-            #             set_entries_according_to_mpRfT_partial_cochains(
-            #             i, pd, pc=pc, interpreted_as=interpreted_as)
-            #
             else:
-                raise Exception()
+                raise NotImplementedError(f"Not implemented")
 
         #--------- other meshes --------------------------------------------------------------------
         else:

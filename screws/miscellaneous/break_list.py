@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 
 def break_list_into_parts(LIST, parts):

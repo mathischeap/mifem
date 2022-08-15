@@ -54,6 +54,8 @@ class _2dCSCG_Standard_Trace(CSCG_Trace_Form, _2dCSCG_FORM_BASE, ndim=2):
         self._coboundary_ = _2dCSCG_TraceCoboundary(self)
         self._DO_ = _2dCSCG_Trace_DO(self)
 
+    def __repr__(self):
+        return f"2dCSCG>{self.k}TF>{self.standard_properties.name}:{id(self)}"
 
     @property
     def numbering(self):

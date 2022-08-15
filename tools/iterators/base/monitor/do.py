@@ -1,10 +1,9 @@
-
+# -*- coding: utf-8 -*-
 import numpy as np
 from screws.freeze.main import FrozenOnly
 import codecs
 from screws.emails.plain import SendAdminAnHTMLEmail, whether_internet_connected, SendAdminAnEmail
-import matplotlib
-
+import matplotlib, psutil, platform
 
 import matplotlib.pyplot as plt
 from matplotlib import cm
@@ -21,6 +20,17 @@ class IteratorMonitorDo(FrozenOnly):
         """"""
         self._monitor_ = monitor
         self._do_first_auto_save_ = True
+        memory = psutil.virtual_memory()
+        self._mem_total_ = str(round(memory.total / 1024 / 1024/ 1024, 2))
+        self._cpu_count_ = psutil.cpu_count(logical=False)
+        self._logical_cpu_count_ = psutil.cpu_count()
+        self._platform_ = platform.platform()
+        self._system_ = platform.system()
+        self._processor_ = platform.processor()
+        self._architecture_ = platform.architecture()
+        self._python_version_ = platform.python_version()
+        # self._uname_ = platform.uname()
+
         self._freeze_self_()
 
 
@@ -182,7 +192,6 @@ class IteratorMonitorDo(FrozenOnly):
 
 
 
-
     def generate_graph_report(self):
         """"""
         monitor = self._monitor_
@@ -217,13 +226,16 @@ class IteratorMonitorDo(FrozenOnly):
             matplotlib.use('Agg') # make sure we use the right backend.
 
             plt.rc('text', usetex=False)
-            num_subplots = RDF.shape[1] + 3 # We plot 2 extra: 't iteration' and 't accumulation' + solver message
-            colors = cm.get_cmap('cool_r', num_subplots - 5)
+            num_subplots = RDF.shape[1] + 4
+                # We plot 3 extra: 't iteration', 't accumulation', solver message, and machine load
+            colors = cm.get_cmap('cool_r', num_subplots - 6)
             r_num_subplots = int(np.ceil(num_subplots/2))
             x_len, y_len = 18, 4.5*r_num_subplots
             fig = plt.figure(figsize=(x_len, y_len))
             plot_keys = list(RDF.columns)
-            plot_keys = plot_keys[:2] + ['t iteration', 't accumulation', 'solver message',] + plot_keys[2:]
+            plot_keys = plot_keys[:2] + \
+                        ['t iteration', 't accumulation', 'solver message', 'machine load'] + \
+                        plot_keys[2:]
 
             # subplots ...
             for i, di in enumerate(plot_keys):
@@ -234,7 +246,30 @@ class IteratorMonitorDo(FrozenOnly):
                 n = i % 2
                 # noinspection PyUnboundLocalVariable
                 ax = plt.subplot2grid((r_num_subplots, 2),(m, n))
-                if di == 'solver message':
+                if di == 'machine load':
+                    mem_percent = psutil.virtual_memory().percent
+                    cpu_load = self._monitor_._iterator_.___cpu_load___
+                    face_color = "whitesmoke"
+                    plt.axis([0, 10, 0, 10])
+                    ax.axes.get_xaxis().set_visible(False)
+                    ax.axes.get_yaxis().set_visible(False)
+                    plt.text(0.1, 9.5, 'MACHINE LOAD:',
+                             color= 'deepskyblue', fontsize=18, style='normal',
+                             ha='left', va='top', wrap=True)
+
+                    TEXT = f"MEM: {mem_percent}% of {self._mem_total_}G used.\n" \
+                           f" CPU: {cpu_load}% of {self._cpu_count_} (physical) = " \
+                                f"{self._logical_cpu_count_} (logical) processors used.\n\n" \
+                           f"SYSTEM: {self._system_}\n" \
+                           f"{self._platform_}\n" \
+                           f"{self._architecture_}\n" \
+                           f"{self._processor_}\n\n" \
+                           f"PYTHON version: {self._python_version_}"
+
+                    plt.text(0.1, 8, TEXT, color= 'navy', fontsize=13,
+                             ha='left', va='top', wrap=True)
+
+                elif di == 'solver message':
                     face_color = "whitesmoke"
                     plt.axis([0, 10, 0, 10])
                     ax.axes.get_xaxis().set_visible(False)
@@ -260,11 +295,19 @@ class IteratorMonitorDo(FrozenOnly):
                                         new_line = 0
                         message += '\n\n'
 
+                    AC = self._monitor_._iterator_.___assembling_cost___
+                    if AC > 0:
+                        ratio = round(AC * 100 / monitor._last_run_cost_, 2)
+                        AC = round(AC, 2)
+                        ITC = round(monitor._last_run_cost_, 2)
+                        message += f'Assembling cost: {AC} ({ratio}% of total iteration cost: {ITC})\n\n'
+
                     if monitor._iterator_.shut_down:
                         message += '>>> SHUT-DOWN <<<'
 
                     plt.text(0.1, 8.5, message, color= 'black', fontsize=12,
                              ha='left', va='top', wrap=True)
+
                 elif di == 't':
                     face_color = 'honeydew'
                     plt.axis([0, 10, 0, 10])
@@ -367,7 +410,6 @@ class IteratorMonitorDo(FrozenOnly):
                         average = monitor._average_each_run_cost_
                         average_last_10 = None
 
-
                     if unit == 's':
                         pass
                     elif unit == 'm':
@@ -389,7 +431,6 @@ class IteratorMonitorDo(FrozenOnly):
                                  color='blue', linewidth=1.2)
                         plt.plot([indices[-10],indices[-1]], [average_last_10, average_last_10],
                                  color='blue', linewidth=1.2, label='V10')
-
 
                     if len(indices) <= 5: ax.set_xticks(indices)
                     plt.legend(fontsize=16, loc='best', frameon=False)
@@ -448,6 +489,8 @@ class IteratorMonitorDo(FrozenOnly):
                 if i < 4: # 0,1,2,3 for regular plots, no ITERATING
                     pass
                 elif di == 'solver message': # no ITERATING for solver message subplot
+                    pass
+                elif di == 'machine load': # no ITERATING for machine load subplot
                     pass
                 elif not judge1: # if not the last iteration, texture it.
                     the_text = 'ITERATING'

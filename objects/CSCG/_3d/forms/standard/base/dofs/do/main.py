@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from screws.freeze.base import FrozenOnly
 from objects.CSCG._3d.forms.standard.base.dofs.do.find import _3dCSCG_SF_dofs_FIND
 

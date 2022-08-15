@@ -5,7 +5,7 @@ from scipy.sparse import csr_matrix
 from numpy import diff
 from screws.freeze.base import FrozenOnly
 from tools.linear_algebra.data_structures.global_matrix.main import GlobalMatrix
-
+from root.config.main import ASSEMBLE_COST, cOmm, MPI, rAnk, mAster_rank
 
 
 class EWC_SparseMatrix_Assembler(FrozenOnly):
@@ -26,6 +26,9 @@ class EWC_SparseMatrix_Assembler(FrozenOnly):
         if self.___AMC___ is not None:
             return self.___AMC___
 
+        cOmm.barrier()
+        twS = MPI.Wtime()
+
         if routine is None:
             A = self.___default_routine___()
         else:
@@ -37,6 +40,12 @@ class EWC_SparseMatrix_Assembler(FrozenOnly):
             self.___AMC___ = A
         else:
             pass
+
+        cOmm.barrier()
+        twE = MPI.Wtime()
+
+        if rAnk == mAster_rank:
+            ASSEMBLE_COST['recent'].append(twE-twS)
 
         return A
 
@@ -84,7 +93,7 @@ class EWC_SparseMatrix_Assembler(FrozenOnly):
                     raise Exception("I can not handle %r."%Mi)
                 DAT.extend(data)
 
-                if len(DAT) > 1e7: # every 5 million data, we make it into sparse matrix.
+                if len(DAT) > 1e7: # every 10 million data, we make it into sparse matrix.
                     _ = csr_matrix((DAT, (ROW, COL)), shape=(DEP, WID)) # we make it into sparse
                     del ROW, COL, DAT
                     A += _

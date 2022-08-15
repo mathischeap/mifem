@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 
 from screws.freeze.main import FrozenOnly
@@ -72,6 +72,9 @@ class GlobalVector(FrozenOnly):
         self._do_ = None
         self._IS_ = None
         self._freeze_self_()
+
+    def __repr__(self):
+        return f"GlobalVector:{id(self)}"
 
     @property
     def V(self):

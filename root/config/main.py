@@ -9,8 +9,6 @@ In this script, we DO NOT use the structure of naming files and folders of the m
 # Version
 
 vErsion = '3.0.1'
-
-
 # following value can be customized ...
 
 caChe_factor = 2
@@ -33,6 +31,14 @@ sIze: int = cOmm.Get_size()
 
 mAster_rank: int = 0 # you can, but you do not need to change this!
 """(int) the master core is under rank?"""
+
+
+if rAnk == mAster_rank:
+    ASSEMBLE_COST = {'accumulated': 0, # we have used this much time (seconds) on assembling.
+                     'recent': list(), # we additionally have spent this much time on assembling.
+                     }
+else:
+    ASSEMBLE_COST = None
 
 
 assert sIze > 0, "I must have at least one core, right?"

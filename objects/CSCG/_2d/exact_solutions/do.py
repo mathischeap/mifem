@@ -58,7 +58,7 @@ class ExactSolution_do(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python _2dCSCG\APP\exact_solution\do.py
+    # mpiexec -n 4 python _2dCSCG\APP\exact_solution\main.py
     from objects.CSCG._2d.master import MeshGenerator, ExactSolutionSelector
     mesh = MeshGenerator('crazy_periodic', bounds=[[0, 2*np.pi], [0, 2*np.pi]])([5, 5])
     es = ExactSolutionSelector(mesh)("Euler:shear_layer_rollup", show_info=True)

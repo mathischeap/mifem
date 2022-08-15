@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from screws.exceptions import FrozenError
 from abc import ABC
 

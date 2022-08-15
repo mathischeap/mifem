@@ -11,10 +11,8 @@ from root.config.main import rAnk, mAster_rank
 
 def miprint(p, flush=True):
 
-    _ = str(p)
-
     if rAnk == mAster_rank:
-        print(_, flush=flush)
+        print(p, flush=flush)
 
 
 if __name__ == "__main__":

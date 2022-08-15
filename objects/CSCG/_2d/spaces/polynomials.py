@@ -18,12 +18,6 @@ class _2dCSCG_PolynomialSpace(_2dCSCG_Space):
         self._r = None
         super().__init__(inputs, ndim)
 
-    def __repr__(self):
-        """"""
-        if self._r is None:
-            self._r = self.category + '=' + str(self.p)
-        return self._r
-
 
     def ___PRIVATE_do_evaluate_quadrature___(self, quad_degree, quad_type=None):
         """

@@ -49,9 +49,6 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
         self.do.reset_cache()
         self._freeze_self_()
 
-
-
-
     @accepts('self', (tuple, list, int, dict, 'NoneType'))
     def ___PRIVATE_parse_element_layout___(self, element_layout):
         """We parse the element_layout.

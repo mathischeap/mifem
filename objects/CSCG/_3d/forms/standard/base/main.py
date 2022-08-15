@@ -13,6 +13,7 @@ from objects.CSCG._3d.forms.standard.base.export.main import _3dCSC_Standard_For
 from root.config.main import *
 from root.save import read
 from scipy.interpolate import NearestNDInterpolator
+from copy import deepcopy
 
 from objects.CSCG.base.forms.standard.main import CSCG_Standard_Form
 
@@ -50,8 +51,9 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
         self._orientation_ = orientation
         self.standard_properties.name = name
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_standard_form')
-        self._numbering_ = _3dCSCG_Standard_Form_Numbering(self, numbering_parameters)
+        self.___ARGS___ = (is_hybrid, orientation, deepcopy(numbering_parameters), name)
 
+        self._numbering_ = _3dCSCG_Standard_Form_Numbering(self, numbering_parameters)
         self._cochain_ = None
         self._error_ = None
         self._coboundary_ = None
@@ -62,6 +64,18 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
         self._export_ = None
         self._dofs_ = None
 
+
+    @property
+    def shadow(self):
+        is_hybrid, orientation, numbering_parameters, name = self.___ARGS___
+        return self.__class__(self.mesh, self.space,
+                              is_hybrid=is_hybrid,
+                              orientation=orientation,
+                              numbering_parameters=numbering_parameters,
+                              name = 'shadow-of-' + name)
+
+    def __repr__(self):
+        return f"3dCSCG>{self.k}SF>{self.standard_properties.name}:{id(self)}"
 
     def ___PRIVATE_reset_cache___(self):
         pass

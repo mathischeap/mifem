@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 
 def ___split_A___(indptr, splitting_factor, PS):

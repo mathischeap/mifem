@@ -352,7 +352,7 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects\CSCG\_3d\mesh\trace\elements\do.py
+    # mpiexec -n 4 python objects\CSCG\_3d\mesh\trace\elements\main.py
     from objects.CSCG._3d.master import MeshGenerator
     elements = [3, 4, 2]
     mesh = MeshGenerator('crazy_periodic', c=0.3, bounds=([0,1], [0,1], [0,1]))(elements)
