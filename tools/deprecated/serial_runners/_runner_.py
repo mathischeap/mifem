@@ -331,9 +331,10 @@ class Runner(FrozenClass):
             f.write(''+'---------------' + '-'*3*25 + '-'*25*len(self._output_names_) + 
                     '|-'+'-'*15 + '-'*15 + '-'*13 + '\n')
             
-    def ___update_rdf___(self, index, inputs, outputs, ITC, TTC, ERT):
+    def ___update_rdf___(self, index, inputs, outputs, ITC, TTC, ERT, show_progress=True):
         """ Update `self._rdf_` after each iteration."""
-        print(':::: Index >>> {} <<< added to ResultDataFrame ::::\n'.format(index))
+        if show_progress:
+            print(':::: Index >>> {} <<< added to ResultDataFrame ::::\n'.format(index))
         ndf = pd.DataFrame([[*inputs, *outputs, ITC, TTC, ERT],], index=[index,],
                            columns=[*self._input_names_, *self._output_names_, 'ITC', 'TTC', 'ERT'])
         self._rdf_ = pd.concat([self._rdf_, ndf])

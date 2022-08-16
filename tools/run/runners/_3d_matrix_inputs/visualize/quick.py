@@ -11,3 +11,6 @@ class ___SPM3IRV_quick___(FrozenOnly):
     @staticmethod
     def scatter(*args, **kwargs):
         return None
+
+    def __call__(self, *args, **kwargs):
+        return None

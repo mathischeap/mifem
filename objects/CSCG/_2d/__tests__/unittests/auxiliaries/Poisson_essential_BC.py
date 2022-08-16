@@ -85,4 +85,5 @@ def PoissonSolver1(c, Kx, Ky, Nx, Ny):
 
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/CSCG/_2d/__tests__/unittests/auxiliaries/Poisson_essential_BC.py
-    PoissonSolver1(0, 5, 5, 3, 3)
+    R = PoissonSolver1(0, 5, 5, 3, 3)
+    print(R)

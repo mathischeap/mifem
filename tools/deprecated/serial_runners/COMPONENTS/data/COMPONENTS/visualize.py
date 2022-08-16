@@ -35,6 +35,10 @@ class DFWVisualize(FrozenOnly):
         self._quick_ = DFWQuickVisualization(self)
         self._freeze_self_()
 
+    def __call__(self, *args, **kwargs):
+        # noinspection PyUnresolvedReferences
+        return self.___plot___(*args, **kwargs)
+
     @property
     def quick(self):
         """ Access to the quick visualization methods."""
@@ -43,7 +47,7 @@ class DFWVisualize(FrozenOnly):
     @property
     def _data_(self):
         """ The data."""
-        assert self._dfw_() is not None, " <RunnerPloter> : no `ResultDataFrame` to access."
+        assert self._dfw_() is not None, " <RunnerPlotter> : no `ResultDataFrame` to access."
         return self._dfw_()
 
     def plot(self, *args, **kwargs):
@@ -84,13 +88,26 @@ class DFWQuickVisualization(FrozenOnly):
     def _data_(self):
         return self._dfwv_._data_
 
-    def scatter(self, x, y=None):
-        """
-        Scatter plot. `x` and `y` are column names. If `y` is None, then we ploy `x`
-        against index. Otherwise, we plot `y` against `x`.
+    def __call__(self, *args, **kwargs):
+        return self.scatter(*args, **kwargs)
+
+    def scatter(self, x, y=None, saveto=''):
+        """Scatter plot. `x` and `y` are column names.
+
+            If `y` is None: We plot `x` against index.
+            Otherwise     : we plot `y` against `x`.
 
         when `x` or `y` is one of 'ITC', 'TTC' and 'ERT', we have to convert them into
         seconds first of course.
+
+        Parameters
+        ----------
+        x
+        y
+        saveto
+
+        Returns
+        -------
 
         """
         plt.figure()
@@ -119,7 +136,14 @@ class DFWQuickVisualization(FrozenOnly):
             plt.xlabel(x)
             plt.ylabel(y)
         plt.title(self._dfwv_._dfw_.__class__.__name__)
-        plt.show()
+
+        plt.tight_layout()
+        if saveto is not None and saveto != '':
+            plt.savefig(saveto, bbox_inches='tight')
+        else:
+            plt.show()
+
+        plt.close()
 
 
 

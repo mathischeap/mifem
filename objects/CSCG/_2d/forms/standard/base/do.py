@@ -110,7 +110,6 @@ class _2dCSCG_Standard_Form_DO(FrozenOnly):
 
             total_energy = 0
             if f.k in (0, 2): # scalar form
-                # print(f.k, 'form@', rAnk, flush=True)
                 for i in f.mesh.elements:
                     v = reconstruction[i][0]**n
                     Ei = np.sum(v * quad_weights_1d * detJ[i])
@@ -157,7 +156,7 @@ class _2dCSCG_Standard_Form_DO(FrozenOnly):
         return cOmm.allreduce(LOCAL, op=MPI.SUM)
 
     def compute_Ln_norm(self, n=2, quad_degree=None):
-        """Compute  ||self ||_{L^n} = ( int_{Omega}(self^n) )^(1/n) , which is  the n-root of Ln-energy.
+        """Compute  ||self ||_{L^n} = ( int_{Omega}(self^n) )^(1/n) , which is the n-root of Ln-energy.
 
         :param n: {default n=2} ||self ||_{L^2}
         :param quad_degree:

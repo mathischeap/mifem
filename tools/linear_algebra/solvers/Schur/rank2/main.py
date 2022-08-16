@@ -33,7 +33,7 @@ class Rank2(SchurSolverBase):
         :param kwargs: possible other kwargs for particular routine.
         :returns: Return a tuple of 5 outputs:
 
-                1. (LocallyFullVector) results -- The result vector.
+                1. (dict) results -- The result vector.
                 2. (0) info -- The info which provides convergence information:
 
                     * 0 : successful exit
@@ -52,15 +52,27 @@ class Rank2(SchurSolverBase):
         routine = self._routine_
 
         A_SHAPE = A.blocks.shape
+
+        assert A_SHAPE[0] == A_SHAPE[1], f"block shape must be square."
         assert blocks < A_SHAPE[0], f"blocks={blocks} wrong, must be < {A_SHAPE[0]}."
 
-        M = A.blocks[:blocks, :blocks]
-        B = A.blocks[:blocks, blocks:]
-        C = A.blocks[blocks:, :blocks]
-        D = A.blocks[blocks:, blocks:]
+        AS = A_SHAPE[0]
+        if AS - blocks  == 1:
+            M = A.blocks[:blocks, :blocks]
+            B = A.blocks[:blocks, blocks:]
+            C = A.blocks[blocks:, :blocks]
+            D = A.blocks[blocks, blocks]
 
-        g = b.blocks[:blocks]
-        h = b.blocks[blocks:]
+            g = b.blocks[:blocks]
+            h = b.blocks[blocks]
+        else:
+            M = A.blocks[:blocks, :blocks]
+            B = A.blocks[:blocks, blocks:]
+            C = A.blocks[blocks:, :blocks]
+            D = A.blocks[blocks:, blocks:]
+
+            g = b.blocks[:blocks]
+            h = b.blocks[blocks:]
 
         if routine == 'auto':
             ROUTINE = ___scipy_sparse_linalg_direct___

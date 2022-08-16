@@ -12,6 +12,9 @@ class ___SlaveParallelMatrix3dInputRunnerVisualize___(FrozenOnly):
         self._quick_ = ___SPM3IRV_quick___()
         self._freeze_self_()
 
+    def __call__(self, *args, **kwargs):
+        return None
+
     @property
     def quick(self):
         """ Access to the quick visualization methods."""

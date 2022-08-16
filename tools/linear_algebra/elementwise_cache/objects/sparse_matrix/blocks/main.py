@@ -21,7 +21,8 @@ class EWC_SpaMat_Blocks(FrozenOnly):
         self._shape_ = spa_mat.bmat_shape
         self.___BLOCKS___ = np.array(spa_mat._DG_.blocks, dtype=object)
 
-        #-- replace all None blocks by zero-blocks.
+
+        #-- replace all None blocks by zero-blocks --------------------------------------------
         SHAPE = self.___BLOCKS___.shape
         I, J = SHAPE
         for i in range(I):
@@ -41,5 +42,9 @@ class EWC_SpaMat_Blocks(FrozenOnly):
 
     def __getitem__(self, item):
         B = self.___BLOCKS___[item]
-        B = bmat(B)
-        return B
+
+        if B.__class__.__name__ == 'EWC_SparseMatrix':
+            return B
+        else:
+            B = bmat(B)
+            return B

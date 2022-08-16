@@ -69,7 +69,7 @@ class nLS_NonlinearTerms(FrozenOnly):
 
     def ___PRIVATE_evaluate___(self, unknown_variables):
         """"""
-        assert len(unknown_variables) == self._nLS_.shape[0]
+        assert len(unknown_variables) == self._nLS_.shape[1]
 
         pairs = list()
         for i, uv in enumerate(self._nLS_.unknown_variables):

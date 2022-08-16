@@ -13,9 +13,10 @@ def mkdir(folder_name):
         else:
             os.mkdir(folder_name)
 
-def remove(file_name):
+def remove(*file_names):
     if rAnk == mAster_rank:
-        os.remove(file_name)
+        for file_name in file_names:
+            os.remove(file_name)
 
 
 def rmdir(folder_name):

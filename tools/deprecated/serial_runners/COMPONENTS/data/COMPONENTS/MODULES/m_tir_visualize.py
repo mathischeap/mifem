@@ -10,6 +10,7 @@ TU Delft
 import numpy as np
 #import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib
 from matplotlib import cm
 from typing import List
 
@@ -30,7 +31,7 @@ class M_TIR_Visualize:
         tick_size=20, label_size=20, legend_size=20, title_size=20, title_pad=12,
         figsize=(7.5,5), usetex=False, saveto=None):
         """ 
-        IMPORTANT: this ploter only works for input's criterion is 'standard'.
+        IMPORTANT: this plotter only works for input's criterion is 'standard'.
         
         Here we wrap `plot`, `semilogx`, `semilogy`, `loglog`.
         
@@ -48,8 +49,10 @@ class M_TIR_Visualize:
         res2plot :
             y-axis. We plot `res2plot` against `line_var`. 
         prime : str, optional
-            If `prime` == 'line_var', we use `data_sequence_line_var`. If `prime` = 
-            'input2', we will use `data_sequence__input2`.
+            To decide the sequence of the lines in the plot.
+
+            If `prime` == 'line_var': we use `data_sequence_line_var`.
+            If `prime` == 'input2'  : we will use `data_sequence__input2`.
         hcp :
             `h-convergence parameter`. We will use `x_data` = `hcp`/`x_data`. This is
             usually used for h-convergence plot, so we call it `hcp`.
@@ -137,6 +140,7 @@ class M_TIR_Visualize:
         #___ preparing orders _________________________________________________________
         orders : List[float] = [0.0 for _ in range(len(labels))]
         #___ pre-parameterize the plot_________________________________________________
+        if saveto is not None: matplotlib.use('Agg')
         plt.rc('text', usetex=usetex)
         if usetex: plt.rcParams['text.latex.preamble']= r"\usepackage{amsmath}"
         plt.figure(figsize=figsize)

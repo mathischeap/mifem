@@ -14,6 +14,8 @@ Aerodynamics, AE
 TU Delft
 """
 import types
+from tqdm import tqdm
+from screws.miscellaneous.timer import MyTimer
 from time import localtime, strftime, time, sleep
 from screws.miscellaneous.timer import initialize_3d_list
 from tools.deprecated.serial_runners._runner_ import Runner
@@ -24,7 +26,7 @@ from root.config.main import *
 class TimeIteration:
     """ We use this contextmanager to time an iteration. """
 
-    def __init__(self, m, num_iterations, total_cost_list):
+    def __init__(self, m, num_iterations, total_cost_list, print_time):
         """
         Parameters
         ----------
@@ -37,9 +39,11 @@ class TimeIteration:
         """
         self.m = m
         self.num_iterations = num_iterations
+        self.print_time = print_time
         if total_cost_list == list():
             self.already_cost = 0
         else:
+            # noinspection PyUnresolvedReferences
             self.already_cost = total_cost_list[-1]
 
             # noinspection PyUnresolvedReferences
@@ -56,9 +60,10 @@ class TimeIteration:
     def __enter__(self):
         """ do something before executing the context."""
         self.t1 = time()
-        print("\n\n______________________________________________________________________")
-        print(">>> Do {}th of {} computations......".format(self.m + 1, self.num_iterations))
-        print("    start at [" + strftime("%Y-%m-%d %H:%M:%S", localtime()) + ']')
+        if self.print_time:
+            print("\n______________________________________________________________________")
+            print(">>> Do {}th of {} computations......".format(self.m + 1, self.num_iterations))
+            print("    start at [" + strftime("%Y-%m-%d %H:%M:%S", localtime()) + ']')
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -67,13 +72,15 @@ class TimeIteration:
         # mth iteration costs?_________________________________________________
         t = self.t2 - self.t1
         if t < 10:
-            print("\n   ~> {}th of {} computations costs: [{:.2f} seconds]".format(
-                self.m + 1, self.num_iterations, t))
+            if self.print_time:
+                print("   ~> {}th of {} computations costs: [{:.2f} seconds]".format(
+                    self.m + 1, self.num_iterations, t))
         else:
             minutes, seconds = divmod(t, 60)
             hours, minutes = divmod(minutes, 60)
-            print("\n   ~> {}th of {} computations costs: [%02d:%02d:%02d (hh:mm:ss)]".format(
-                self.m + 1, self.num_iterations) % (hours, minutes, seconds))
+            if self.print_time:
+                print("   ~> {}th of {} computations costs: [%02d:%02d:%02d (hh:mm:ss)]".format(
+                    self.m + 1, self.num_iterations) % (hours, minutes, seconds))
         self.mth_iteration_cost = t
         minutes, seconds = divmod(self.mth_iteration_cost, 60)
         hours, minutes = divmod(minutes, 60)
@@ -83,8 +90,9 @@ class TimeIteration:
         # m iterations cost?___________________________________________________
         minutes, seconds = divmod(t + self.already_cost, 60)
         hours, minutes = divmod(minutes, 60)
-        print("   ~> {} of {} computations cost: [%02d:%02d:%02d (hh:mm:ss)]".format(
-            self.m + 1, self.num_iterations) % (hours, minutes, seconds))
+        if self.print_time:
+            print("   ~> {} of {} computations cost: [%02d:%02d:%02d (hh:mm:ss)]".format(
+                self.m + 1, self.num_iterations) % (hours, minutes, seconds))
         if hours > 99:
             hours, minutes, seconds = 99, 59, 59
         self.total_cost = '[%02d:%02d:%02d]' % (hours, minutes, seconds)
@@ -92,8 +100,9 @@ class TimeIteration:
         minutes, seconds = divmod((t + self.already_cost) * (self.num_iterations / (self.m + 1)) -
                                   (t + self.already_cost), 60)
         hours, minutes = divmod(minutes, 60)
-        print("   ~> Estimated remaining time: [%02d:%02d:%02d (hh:mm:ss)]\n"
-              % (hours, minutes, seconds))
+        if self.print_time:
+            print("   ~> Estimated remaining time: [%02d:%02d:%02d (hh:mm:ss)]\n"
+                  % (hours, minutes, seconds))
         if hours > 99:
             hours, minutes, seconds = 99, 59, 59
         self.ERT = '[%02d:%02d:%02d]' % (hours, minutes, seconds)
@@ -231,7 +240,7 @@ class Matrix3dInputRunner(Runner):
 
 
 
-    def iterate(self, i0, i1, i2, criterion='standard', writeto=None, saveto=True, **kwargs):
+    def iterate(self, i0, i1, i2, criterion='standard', writeto=None, saveto=True, show_progress=True, **kwargs):
         """ 
         Parameters
         ----------
@@ -254,6 +263,7 @@ class Matrix3dInputRunner(Runner):
                 We save self to `writeto.m3ir`.
             else:
                 We do no save.
+        show_progress : bool
 
         kwargs :
             To be passed to the solver.
@@ -262,7 +272,7 @@ class Matrix3dInputRunner(Runner):
         self.___parse_and_check_iterate_inputs___(i0, i1, i2, criterion=criterion)
         self.___kwargs___ = kwargs
         self.___prepare_write_file___(writeto)
-        print("\n\n------------------------ > M3IR computations < -------------------------------------", flush=True)
+        print("------------------------ > M3IR computations < -------------------------------------", flush=True)
         I, J, K = self._input_shape_
 
         if sIze > 1:
@@ -272,10 +282,20 @@ class Matrix3dInputRunner(Runner):
                     cOmm.send([I, J, K], dest=sc, tag=sc+1)   # position mark 1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             cOmm.barrier()
 
+        if not show_progress:
+            pbar = tqdm(total=I * J * K,
+                        desc=MyTimer.current_time() + ' <' + self.__class__.__name__ + '>')
+
         n = 0
         for k in range(K): # we let the axis2 go at the last.
             for i in range(I): # we let the axis0 go secondly.
                 for j in range(J): # we let the axis1 go firstly.
+
+                    if not show_progress:
+                        pbar.update(1)
+                    else:
+                        pass
+
                     #_______ there is not input for computing _________________________
                     if self._I0Seq_[i][j][k] is None:
 
@@ -290,12 +310,15 @@ class Matrix3dInputRunner(Runner):
                     elif self._computed_pool_ != () and \
                         self.___check_inputs_in_computed_pool___(
                             [self._I0Seq_[i][j][k], self._I1Seq_[i][j][k], self._I2Seq_[i][j][k]]):
-                        print(f'\n -----> REPEATED {n+1}/{self.num_iterations} computation of '
-                              f'inputs:\n\t{[self._I0Seq_[i][j][k], self._I1Seq_[i][j][k], self._I2Seq_[i][j][k]]}')
+                        if show_progress:
+                            print(f'\n -----> REPEATED {n+1}/{self.num_iterations} computation of '
+                                  f'inputs:\n\t{[self._I0Seq_[i][j][k], self._I1Seq_[i][j][k], self._I2Seq_[i][j][k]]}')
 
-                        print('\t__________________________________________________________________________\n', flush=True)
+                            print('\t__________________________________________________________________________\n', flush=True)
+                        else:
+                            pass
                         n += 1
-                        sleep(0.05)
+                        sleep(0.0125)
                         if sIze > 1:
                             for sc in range(sIze): # do not use bcast for safety
                                 if sc != mAster_rank:
@@ -319,14 +342,14 @@ class Matrix3dInputRunner(Runner):
                             cOmm.barrier()
 
 
-
-                        with TimeIteration(n, self.num_iterations, TTC) as TIcontextmanager:
-                            print('\t> input[0]: {} = {}'  .format(self.input_names[0], 
-                                                                          self._I0Seq_[i][j][k]))
-                            print('\t> input[1]: {} = {}'  .format(self.input_names[1], 
-                                                                          self._I1Seq_[i][j][k]))
-                            print('\t> input[2]: {} = {}\n'.format(self.input_names[2], 
-                                                                          self._I2Seq_[i][j][k]), flush=True)
+                        with TimeIteration(n, self.num_iterations, TTC, show_progress) as TIcontextmanager:
+                            if show_progress:
+                                print('\t> input[0]: {} = {}'  .format(self.input_names[0],
+                                                                              self._I0Seq_[i][j][k]))
+                                print('\t> input[1]: {} = {}'  .format(self.input_names[1],
+                                                                              self._I1Seq_[i][j][k]))
+                                print('\t> input[2]: {} = {}\n'.format(self.input_names[2],
+                                                                              self._I2Seq_[i][j][k]), flush=True)
 
 
                             if sIze == 1:
@@ -347,21 +370,26 @@ class Matrix3dInputRunner(Runner):
                                 outputs = self._solver_(INPUTS[0], INPUTS[1], INPUTS[2], **INPUTS[3])
 
 
+
+
                         self.___update_rdf___(m, (self._I0Seq_[i][j][k], 
                                                   self._I1Seq_[i][j][k], 
                                                   self._I2Seq_[i][j][k])
                                              ,outputs
                                              ,TIcontextmanager.mth_iteration_cost_HMS
                                              ,TIcontextmanager.total_cost
-                                             ,TIcontextmanager.ERT)
+                                             ,TIcontextmanager.ERT,
+                                              show_progress=show_progress)
                         self.___write_to___(m)
                         n += 1
                     #------------------------------------------------------------------
+        if not show_progress:
+            pbar.close()
         self._results_ = self._rdf_
-        print('\n\n>->->->->->->->->->->-> Computations Done >>>>> Post-processing ...\n', flush=True)
+        print('>->->->->->->->->->->-> Computations Done >>>>> Post-processing ...', flush=True)
         self.___deal_with_saveto___(writeto, saveto)
-        self.___send_an_completion_reminder_email_to_me___(writeto, saveto)
-        print("\n______________________ > M3IR Iterations Done < __________________________________\n\n", flush=True)
+        # self.___send_an_completion_reminder_email_to_me___(writeto, saveto)
+        print("______________________ > M3IR Iterations Done < __________________________________", flush=True)
         
     @property
     def tabular(self):

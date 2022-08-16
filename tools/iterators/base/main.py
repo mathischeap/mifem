@@ -11,6 +11,7 @@ import inspect, pickle, psutil
 from root.config.main import cOmm, rAnk, mAster_rank, ASSEMBLE_COST
 
 from tools.iterators.base.monitor.main import IteratorMonitor
+from tools.iterators.base.visualize.main import IteratorVisualize
 
 class Iterator(FrozenClass):
     """A parent of all iterators.
@@ -59,6 +60,9 @@ class Iterator(FrozenClass):
         else:
             self._monitor_ = None
             name = None
+
+        self._visualize_ = IteratorVisualize(self)
+
         name = cOmm.bcast(name, root=mAster_rank)
         self.standard_properties.name = name
         self._save_to_mitr_ = save_to_mitr
@@ -118,6 +122,10 @@ class Iterator(FrozenClass):
     def monitor(self):
         """The monitor of this iterator."""
         return self._monitor_
+
+    @property
+    def visualize(self):
+        return self._visualize_
 
     def __call__(self, solver, initial):
         """

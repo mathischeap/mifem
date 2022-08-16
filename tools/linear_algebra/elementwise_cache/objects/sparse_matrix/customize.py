@@ -6,7 +6,13 @@ from root.config.main import *
 
 
 class SpaMat_Customize(FrozenOnly):
-    """Store all method to customize the EWC sparse matrix."""
+    """Store all method to customize the EWC sparse matrix.
+
+    Notice that all customization will only affect at the level of this SpaMat, its blocks will
+    not be affected. So if we make other SpaMat with its blocks, those blocks will remain
+    not-customized.
+
+    """
     def __init__(self, spa_mat):
         self._spa_mat_ = spa_mat
         self._t2f_s2f_cc_ = None

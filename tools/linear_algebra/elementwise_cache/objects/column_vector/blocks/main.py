@@ -24,4 +24,7 @@ class EWC_ColVec_Blocks(FrozenOnly):
 
     def __getitem__(self, item):
         B = self.___BLOCKS___[item]
-        return concatenate(B)
+        if B.__class__.__name__ == 'EWC_ColumnVector':
+            return B
+        else:
+            return concatenate(B)

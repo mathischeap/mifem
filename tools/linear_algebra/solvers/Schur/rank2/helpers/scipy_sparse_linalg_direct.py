@@ -46,6 +46,8 @@ def ___scipy_sparse_linalg_direct___(M, B, C, D, g, h, GM_row, GM_col):
     rA = rA.assembled
     rb = rb.assembled
 
+    # print(rA.condition.condition_number)
+
     reduce_results, info, beta, ITER, solver_message = Direct()(rA, rb)
 
     del rA, rb
