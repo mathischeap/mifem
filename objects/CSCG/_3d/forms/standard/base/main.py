@@ -67,6 +67,7 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
 
     @property
     def shadow(self):
+        """A shadow is another me but without cochain."""
         is_hybrid, orientation, numbering_parameters, name = self.___ARGS___
         return self.__class__(self.mesh, self.space,
                               is_hybrid=is_hybrid,
@@ -86,18 +87,21 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
 
     @property
     def cochain(self):
+        """"""
         if self._cochain_ is None:
             self._cochain_ = _3dCSCG_Standard_Form_Cochain(self)
         return self._cochain_
 
     @property
     def error(self):
+        """"""
         if self._error_ is None:
             self._error_ = _3dCSCG_Standard_Form_Error(self)
         return self._error_
 
     @property
     def coboundary(self):
+        """"""
         if self._coboundary_ is None:
             self._coboundary_ = _3dCSCG_Standard_Form_Coboundary(self)
         return self._coboundary_

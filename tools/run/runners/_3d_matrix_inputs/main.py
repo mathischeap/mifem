@@ -85,7 +85,7 @@ class ParallelMatrix3dInputRunner(ParallelRunnerBase):
                                 cOmm.barrier()
                                 _ = self._solver_(INPUTS[0], INPUTS[1], INPUTS[2], **INPUTS[3])
 
-                # we do nothing after all computation in slave cores.
+                # we do nothing after all computation in slave cores -----------------------------
 
     @property
     def ___visualize___(self):

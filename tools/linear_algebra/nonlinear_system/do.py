@@ -73,5 +73,5 @@ class nLS_DO(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python tools/linear_algebra/nonlinear_system/do.py
     pass

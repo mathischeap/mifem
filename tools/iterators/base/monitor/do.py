@@ -226,9 +226,11 @@ class IteratorMonitorDo(FrozenOnly):
             matplotlib.use('Agg') # make sure we use the right backend.
 
             plt.rc('text', usetex=False)
+
             num_subplots = RDF.shape[1] + 4
-                # We plot 3 extra: 't iteration', 't accumulation', solver message, and machine load
-            colors = cm.get_cmap('cool_r', num_subplots - 6)
+            # We plot 4 extra: 't iteration', 't accumulation', solver message, and machine load
+
+            colors = cm.get_cmap('Dark2', num_subplots-6)
             r_num_subplots = int(np.ceil(num_subplots/2))
             x_len, y_len = 18, 4.5*r_num_subplots
             fig = plt.figure(figsize=(x_len, y_len))
@@ -240,7 +242,7 @@ class IteratorMonitorDo(FrozenOnly):
             # subplots ...
             for i, di in enumerate(plot_keys):
                 ylabel_backgroundcolor = 'paleturquoise'
-                face_color = 'lavender'
+                face_color = 'aliceblue'
                 ylabel = di.replace('_', '-')
                 m = int(i/2)
                 n = i % 2
@@ -367,6 +369,7 @@ class IteratorMonitorDo(FrozenOnly):
                     plt.text(0, ylim[0] + (ylim[1] - ylim[0])*0.2, f"compute from: t=%.3f s."%from_t, color= 'k',
                              fontsize=22, style='normal', ha='left',
                              va='bottom', wrap=True)
+
                     till_t = monitor._iterator_.RDF['t'][indices[-1]]
                     plt.text(0, ylim[0] + (ylim[1] - ylim[0])*0.1, f"compute till: t=%.3f s."%till_t, color= 'k',
                              fontsize=22, style='normal', ha='left',
@@ -475,7 +478,7 @@ class IteratorMonitorDo(FrozenOnly):
                                      va='top', wrap=True)
 
                 else:
-                    plt.plot(RDF['t'], RDF[di], color=colors(i-4), linewidth=1.5)
+                    plt.plot(RDF['t'], RDF[di], color=colors(i-6), linewidth=1.5)
 
                 ax.tick_params(axis="x", direction='in', length=8, labelsize=15)
                 ax.tick_params(axis="y", direction='in', length=8, labelsize=15)
@@ -498,7 +501,7 @@ class IteratorMonitorDo(FrozenOnly):
                                    horizontalalignment='left',
                                    verticalalignment='center',
                                    transform=ax.transAxes)
-                    text.set_alpha(.5)
+                    text.set_alpha(.2)
                 else:
                     pass
 
@@ -506,6 +509,8 @@ class IteratorMonitorDo(FrozenOnly):
                 if i < 4: # regular subplots always have face color
                     ax.set_facecolor(face_color)
                 elif di == 'solver message': # solver message subplot always have face color
+                    ax.set_facecolor(face_color)
+                elif di == 'machine load': # machine load subplot always have face color
                     ax.set_facecolor(face_color)
                 elif not judge1: # only have facecolor if it is not the last iteration.
                     ax.set_facecolor(face_color)

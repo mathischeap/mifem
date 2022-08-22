@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from abc import ABC
 from screws.numerical._2d_space.partial_derivative import NumericalPartialDerivative_xy
 

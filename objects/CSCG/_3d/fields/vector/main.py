@@ -27,6 +27,7 @@ from objects.CSCG._3d.fields.vector.helpers.add import ___VECTOR_ADD_HELPER_1___
 from objects.CSCG._3d.fields.vector.helpers.flux import ___VECTOR_FLUX___
 from objects.CSCG._3d.fields.vector.helpers.inner_product_with_1form import _VF_InnerWith1Form
 from objects.CSCG._3d.fields.vector.helpers.inner_product_with_2form import _VF_InnerWith2Form
+from objects.CSCG._3d.fields.vector.helpers.mul import _3dCSCG_VecMulHelper
 
 from objects.CSCG._3d.fields.vector.visualize.main import _3dCSCG_VectorField_Visualize
 
@@ -340,7 +341,55 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
         else:
             raise Exception(f"cannot do _3dCSCG_VectorField + {other.__class__}")
 
+    def __mul__(self, other):
+        """self * other"""
+        if other.__class__.__name__ in ('int', 'float', 'int64', 'int32'):
+            if self.ftype == 'standard':
+                w0, w1, w2 = self.func
 
+                x0 = _3dCSCG_VecMulHelper(w0, other)
+                x1 = _3dCSCG_VecMulHelper(w1, other)
+                x2 = _3dCSCG_VecMulHelper(w2, other)
+
+                mul_vector = _3dCSCG_VectorField(self.mesh,
+                                                 [x0, x1, x2],
+                                                 ftype='standard',
+                                                 valid_time=self.valid_time,
+                                                 name=self.standard_properties.name + f'*{other}'
+                                                 )
+                return mul_vector
+            else:
+                raise NotImplementedError()
+
+        elif other.__class__.__name__ == '_3dCSCG_ScalarField':
+            return other.__rmul__(self)
+
+        else:
+            raise NotImplementedError()
+
+    def __rmul__(self, other):
+        """other * self"""
+        if other.__class__.__name__ in ('int', 'float', 'int64', 'int32'):
+            if self.ftype == 'standard':
+                w0, w1, w2 = self.func
+
+                x0 = _3dCSCG_VecMulHelper(w0, other)
+                x1 = _3dCSCG_VecMulHelper(w1, other)
+                x2 = _3dCSCG_VecMulHelper(w2, other)
+
+                mul_vector = _3dCSCG_VectorField(self.mesh,
+                                                 [x0, x1, x2],
+                                                 ftype='standard',
+                                                 valid_time=self.valid_time,
+                                                 name=f'{other}*' + self.standard_properties.name
+                                                 )
+                return mul_vector
+            else:
+                raise NotImplementedError()
+        elif other.__class__.__name__ == '_3dCSCG_ScalarField':
+            return other.__mul__(self)
+        else:
+            raise NotImplementedError()
 
 
 

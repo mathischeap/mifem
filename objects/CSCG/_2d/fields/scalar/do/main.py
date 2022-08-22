@@ -6,7 +6,7 @@ from root.config.main import cOmm, rAnk, mAster_rank
 from objects.CSCG._2d.fields.scalar.do.reconstruct.main import _2dCSCG_Scalr_Do_Reconstruct
 from objects.CSCG._2d.fields.scalar.do.cross_product.main import _2dCSCG_SclarField_CrossProduct
 
-
+from objects.CSCG._2d.fields.scalar.helpers.mul import _2dCSCG_ScaMulHelper1
 
 class _2dCSCG_ScalarField_DO(FrozenOnly):
     def __init__(self, sf):
@@ -25,6 +25,30 @@ class _2dCSCG_ScalarField_DO(FrozenOnly):
     @property
     def cross_product(self):
         return self._cross_product_
+
+    def inner_product(self, other):
+        """"""
+        if other.__class__.__name__ == '_2dCSCG_ScalarField':
+            if self._sf_.ftype == 'standard' and other.ftype=='standard':
+                o_func = other.func[0]
+                s_func = self._sf_.func[0]
+
+                x0 = _2dCSCG_ScaMulHelper1(s_func, o_func)
+
+                ip_vector = self._sf_.__class__(self._sf_.mesh,
+                         x0,
+                         ftype='standard',
+                         valid_time=self._sf_.valid_time,
+                         name=self._sf_.standard_properties.name +
+                              "-inner-product-" +
+                              other.standard_properties.name
+                         )
+                return ip_vector
+            else:
+                raise NotImplementedError()
+        else:
+            raise NotImplementedError()
+
 
     def compute_Ln_norm(self, n=1, quad_degree=None):
         """We compute Ln norm of self.

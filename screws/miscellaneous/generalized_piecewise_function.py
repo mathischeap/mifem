@@ -143,7 +143,6 @@ if __name__ == '__main__':
 
     def Yp1(p, q): return 1
 
-
     def Yp2(p, q): return 2
 
 

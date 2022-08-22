@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from types import FunctionType, MethodType
 from root.config.main import saFe_mode

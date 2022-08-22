@@ -31,7 +31,7 @@ def WellTest_ParallelMatrix3dInputRunner():
     PR = RunnerDataReader(current_dir + '/WTP.txt')
     PR.visualize.quick('N', y='u_error_L2', saveto=current_dir + '/u_error_L2_quick.png')
     PR.visualize.quick('K', y='p_error_L2', saveto=current_dir + '/p_error_L2_quick.png')
-    #
+
     PR.visualize('loglog', 'N', 'u_error_L2', prime='input2', hcp=1, usetex=True,
              labels=['$N=1,c=0$'  , '$N=3, c=0$',
                     '$N=1,c=0.1$', '$N=3, c=0.1$',

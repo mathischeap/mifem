@@ -8,7 +8,6 @@ from screws.miscellaneous.random_string.digits import randomStringDigits
 
 
 
-
 def make_a_video_from_images_in_folder(image_folder, video_name=None, duration=5, clear_images=False):
     """Each image will be a frame of the video. Images must be named in an increasing sequence
     start with 0 or any other positive integer. They will be played in an increasing sequence as
@@ -36,7 +35,7 @@ def make_a_video_from_images_in_folder(image_folder, video_name=None, duration=5
 
     #-------- select all legal images --------------------------------------------------------------
     images = list()
-    image_file_extensions = ('png', 'jpg', 'jpeg', 'pdf')
+    image_file_extensions = ('png', 'jpg', 'jpeg', 'df')
     for file in all_files:
         if '.' in file and file.split('.')[-1] in image_file_extensions:
             images.append(file)

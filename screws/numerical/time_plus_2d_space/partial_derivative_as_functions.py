@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 import sys
 if './' not in sys.path: sys.path.append('./')
@@ -33,6 +33,8 @@ class NumericalPartialDerivative_txy_Functions(FrozenOnly):
         elif isinstance(func, MethodType):
             # noinspection PyUnresolvedReferences
             assert func.__code__.co_argcount == 4, " <PartialDerivative> : need a method of 4 args (4 including self)."
+        elif callable(func):
+            pass
         else:
             raise NotImplementedError(func.__class__.__name__)
         self._func_ = func

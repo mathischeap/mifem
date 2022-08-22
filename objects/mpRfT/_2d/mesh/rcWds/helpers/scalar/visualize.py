@@ -221,7 +221,7 @@ class mpRfT2_Mesh_rcWds_Scalar_Visualize(FrozenOnly):
         if saveto is None or saveto is False:
             plt.show()
         else:
-            if saveto[-4:] == '.pdf':
+            if saveto[-4:] == '.df':
                 plt.savefig(saveto, bbox_inches='tight')
             else:
                 plt.savefig(saveto, dpi=dpi, bbox_inches='tight')

@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from screws.decorators.classproperty.descriptor import ClassPropertyDescriptor
 

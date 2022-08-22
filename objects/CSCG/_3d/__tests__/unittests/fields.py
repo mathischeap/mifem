@@ -5,14 +5,14 @@ For testing fields
 """
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 from root.config.main import *
 from screws.miscellaneous.timer import MyTimer
 import random
 from objects.CSCG._3d.__tests__.Random.form_caller import random_FormCaller_of_total_load_around
 
-
+from __init__ import cscg3
 
 def test_Form_NO0_3dCSCG_Field_numerical():
     """"""
@@ -21,6 +21,21 @@ def test_Form_NO0_3dCSCG_Field_numerical():
         print(f"-N- [test_Form_NO0_3dCSCG_Field_numerical] {MyTimer.current_time()} with load={load}.", flush=True)
     else:
         load= None
+
+    mesh = cscg3.mesh('crazy', c=0.25)(element_layout=[3,3,3])
+    space = cscg3.space('polynomials')([1,1,1])
+    FC = cscg3.form(mesh, space)
+    def func(t, x, y, z): return t + 0 * x * y * z
+
+    SS = FC('scalar', func)
+    VV = FC('vector', [func, func, func])
+    SS.current_time = 1
+    VV.current_time = 1
+    SS_L1norm = SS.do.compute_Ln_norm(n=1)
+    VV_L2norm = VV.do.compute_Ln_norm(n=2)
+    np.testing.assert_almost_equal(SS_L1norm, 1)
+    np.testing.assert_almost_equal(VV_L2norm, np.sqrt(3))
+
     load = cOmm.bcast(load, root=mAster_rank)
     FC = random_FormCaller_of_total_load_around(load, exclude_periodic=False)
 
@@ -34,6 +49,21 @@ def test_Form_NO0_3dCSCG_Field_numerical():
     #================ test for scalar ======================================================================
     def func(t, x, y, z): return np.sin(2*np.pi*x) * np.sin(np.pi*y) * np.sin(np.pi*z) * t
     SS = FC('scalar', func)
+
+    af = 2 + random.random() * 10
+    SSaf = SS * af
+    afSS = af * SS
+    SSaf.current_time = t
+    afSS.current_time = t
+    R_xyz, R_v = SSaf.reconstruct(x, y, z)
+    _____, R_V = afSS.reconstruct(x, y, z)
+    for i in R_xyz:
+        xyz = R_xyz[i]
+        _V_ = func(t, *xyz) * af
+        np.testing.assert_array_almost_equal(R_v[i][0], _V_)
+        np.testing.assert_array_almost_equal(R_V[i][0], _V_)
+
+
     def APt(t, x, y, z): return np.sin(2*np.pi*x) * np.sin(np.pi*y) * np.sin(np.pi*z) + 0*t
     def APx(t, x, y, z): return 2*np.pi*np.cos(2*np.pi*x) * np.sin(np.pi*y) * np.sin(np.pi*z) * t
     def APy(t, x, y, z): return np.pi*np.sin(2*np.pi*x) * np.cos(np.pi*y) * np.sin(np.pi*z) * t
@@ -72,6 +102,28 @@ def test_Form_NO0_3dCSCG_Field_numerical():
     def W(t, x, y, z): return t * np.sin(2 * np.pi * x) * np.sin(np.pi * y) * np.cos(np.pi * z)
 
     SV = FC('vector', [U, V, W])
+
+    SS_SV = SS * SV
+    SV_SS = SV * SS
+
+    SS_SV.current_time = 2.5
+    SV_SS.current_time = 2.5
+
+    R_xyz, R_v = SS_SV.reconstruct(x, y, z)
+    _____, R_V = SV_SS.reconstruct(x, y, z)
+    for i in R_xyz:
+        xyz = R_xyz[i]
+        X = func(2.5, *xyz) * U(2.5, *xyz)
+        Y = func(2.5, *xyz) * V(2.5, *xyz)
+        Z = func(2.5, *xyz) * W(2.5, *xyz)
+
+        np.testing.assert_array_almost_equal(X, R_v[i][0])
+        np.testing.assert_array_almost_equal(Y, R_v[i][1])
+        np.testing.assert_array_almost_equal(Z, R_v[i][2])
+
+        np.testing.assert_array_almost_equal(X, R_V[i][0])
+        np.testing.assert_array_almost_equal(Y, R_V[i][1])
+        np.testing.assert_array_almost_equal(Z, R_V[i][2])
 
     def Ut(t, x, y, z): return 2 * np.sin(np.pi * x) * np.cos(np.pi * y) * np.cos(np.pi * z) + 0*t
     def Vt(t, x, y, z): return np.sin(2 * np.pi * x) * np.cos(np.pi * y) * np.sin(np.pi * z) + 0*t
@@ -275,6 +327,26 @@ def test_Form_NO1_3dCSCG_VectorField():
     FC = random_FormCaller_of_total_load_around(load, mesh_pool=('crazy',))
     W = FC('vector', (w0, w1, w2))
     W.current_time = t
+
+    af = 1.1 + random.random() * 10
+    fW = af * W
+    Wf = W * af
+    fW.current_time = t
+    Wf.current_time = t
+    R_xyz, R_v = fW.reconstruct(x, y, z)
+    _____, R_V = fW.reconstruct(x, y, z)
+    for i in R_xyz:
+        xyz = R_xyz[i]
+        _v0 = af * w0(t, *xyz)
+        _v1 = af * w1(t, *xyz)
+        _v2 = af * w2(t, *xyz)
+        np.testing.assert_array_almost_equal(R_v[i][0], _v0)
+        np.testing.assert_array_almost_equal(R_V[i][0], _v0)
+        np.testing.assert_array_almost_equal(R_v[i][1], _v1)
+        np.testing.assert_array_almost_equal(R_V[i][1], _v1)
+        np.testing.assert_array_almost_equal(R_v[i][2], _v2)
+        np.testing.assert_array_almost_equal(R_V[i][2], _v2)
+
     # ------ norm component ------------------------------------------------------------------
     N = W.components.norm
     N.current_time = t + t1
@@ -603,8 +675,6 @@ def test_Form_NO3_3dCSCG_TensorField():
 
 
 
-
-
 if __name__ == '__main__':
-    # mpiexec -n 6 python _3dCSCG\tests\unittests\fields.py
+    # mpiexec -n 6 python objects/CSCG/_3d/__tests__/unittests/fields.py
     test_Form_NO1_3dCSCG_VectorField()

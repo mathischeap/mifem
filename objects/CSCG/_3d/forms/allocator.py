@@ -20,7 +20,6 @@ class _3dCSCG_SF_Allocator(FrozenOnly):
 
                 '0-e': "_3dCSCG_0Edge",
                 '1-e': "_3dCSCG_1Edge",
-
         }
 
     @classmethod
@@ -38,5 +37,4 @@ class _3dCSCG_SF_Allocator(FrozenOnly):
 
                 '0-e': base_path + "edge._0eg.main",
                 '1-e': base_path + "edge._1eg.main",
-
         }

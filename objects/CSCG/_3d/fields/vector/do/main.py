@@ -8,6 +8,7 @@ from objects.CSCG._3d.fields.vector.do.cross_product.main import _3dCSCG_Vector_
 from objects.CSCG._3d.fields.vector.do.inner_product.main import _3dCSCG_Vector_Do_IP
 
 from screws.quadrature import Quadrature
+from root.config.main import rAnk, mAster_rank, np, cOmm
 
 
 class _3dCSCG_VectorField_DO(FrozenOnly):
@@ -36,20 +37,49 @@ class _3dCSCG_VectorField_DO(FrozenOnly):
     def inner_product(self):
         return self._ip_
 
-    def compute_Ln_norm(self, n=1, quad_degree=None):
+    def compute_Ln_norm(self, n=2, quad_degree=None):
         """We compute Ln norm of self.
 
         int(self)**(n) over the mesh.
         """
         if quad_degree is None:
-            quad_degree = (7, 7, 7)
+            quad_degree = (5, 5, 5)
 
         vf = self._vf_
 
         if vf.ftype == 'standard':
-            quad_nodes, quad_weights = Quadrature(quad_degree).quad_ndim
+            quad_nodes_weights = Quadrature(quad_degree).quad_ndim
 
-            print(quad_nodes.shape)
+            q_xi, q_et, q_sg = quad_nodes_weights[:3]
+            q_weights = quad_nodes_weights[-1]
+
+            R = vf.reconstruct(q_xi, q_et, q_sg)[1]
+
+            detJ = vf.mesh.elements.coordinate_transformation.Jacobian(q_xi, q_et, q_sg)
+
+            element_wise_norm = dict()
+            NORM = 0
+
+            for i in vf.mesh.elements:
+                norm = np.einsum('ijk, ijk, ijk ->',
+                                 R[i][0]**n + R[i][1]**n + R[i][2]**n,
+                                 q_weights,
+                                 detJ[i],
+                                 optimize='optimal')
+
+                element_wise_norm[i] = norm
+
+                NORM += norm
+
+            NORM = cOmm.gather(NORM, root=mAster_rank)
+
+            if rAnk == mAster_rank:
+                NORM = np.sum(NORM)**(1/n)
+
+            NORM = cOmm.bcast(NORM, root=mAster_rank)
+
+            return NORM
+
 
 
         else:

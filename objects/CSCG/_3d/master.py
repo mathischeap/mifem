@@ -317,6 +317,8 @@ if __name__ == "__main__":
 
     # es = ExactSolutionSelector(mesh)('TISE:sincos1', m=1e-68, E=1)
 
+    es = ExactSolutionSelector(mesh)('MHD:sincos1')
+
     # V = es.status.V(0,0,0,0)
     # print(es.standard_properties.name)
     # print(es.status.kinetic_energy(0))
@@ -328,14 +330,14 @@ if __name__ == "__main__":
     # r = it.___inverse_mapping_r_x_s0t0___(0.5)
     #
     # print(r)
-
-    mesh.visualize()
-    mesh.visualize.matplot.connection()
-    mesh.domain.visualize()
-    mesh.domain.regions.visualize()
-
-    print(mesh.domain.regions.map)
-    print(mesh.domain.boundaries.names)
+    #
+    # mesh.visualize()
+    # mesh.visualize.matplot.connection()
+    # mesh.domain.visualize()
+    # mesh.domain.regions.visualize()
+    #
+    # print(mesh.domain.regions.map)
+    # print(mesh.domain.boundaries.names)
 
     # print(MeshGenerator.___domain_input_statistic___())
     # print(MeshGenerator.___domain_input_random_parameters___())

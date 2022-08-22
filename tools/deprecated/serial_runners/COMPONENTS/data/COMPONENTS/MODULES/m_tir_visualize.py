@@ -149,7 +149,7 @@ class M_TIR_Visualize:
         #__ find the range of x_data___________________________________________________
         xd_max = ()
         xd_min = ()
-        ploter = getattr(plt, plot_type) # we get the ploter from matplotlib
+        ploter = getattr(plt, plot_type) # we get the plotter from matplotlib
         for i in range(line_groups):
             for j in range(num_lines_per_group):
                 k = j + i*num_lines_per_group

@@ -43,28 +43,22 @@ class _3dCSCG_ScalarField_DO(FrozenOnly):
 
             element_wise_norm = dict()
             NORM = 0
+            for i in sf.mesh.elements:
+                norm = np.einsum('ijk, ijk, ijk ->', R[i][0]**n, q_weights, detJ[i], optimize='optimal')
 
-            if n == 1:
-                for i in sf.mesh.elements:
-                    norm = np.einsum('ijk, ijk, ijk ->', R[i][0], q_weights, detJ[i], optimize='optimal')
+                element_wise_norm[i] = norm
 
-                    element_wise_norm[i] = norm
+                NORM += norm
 
-                    NORM += norm
+            NORM = cOmm.gather(NORM, root=mAster_rank)
 
-                NORM = cOmm.gather(NORM, root=mAster_rank)
+            if rAnk == mAster_rank:
+                NORM = np.sum(NORM)**(1/n)
 
-                if rAnk == mAster_rank:
-                    NORM = np.sum(NORM)
+            NORM = cOmm.bcast(NORM, root=mAster_rank)
 
-                NORM = cOmm.bcast(NORM, root=mAster_rank)
-
-                return NORM
-
-            else:
-                raise NotImplementedError()
-
-
+            return NORM
 
         else:
             raise NotImplementedError(f"")
+

@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from scipy.misc import derivative
 from types import FunctionType, MethodType

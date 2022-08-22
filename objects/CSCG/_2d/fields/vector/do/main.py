@@ -1,9 +1,10 @@
-
+# -*- coding: utf-8 -*-
 from screws.freeze.base import FrozenOnly
 from objects.CSCG._2d.fields.vector.do.reconstruct.main import _2dCSCG_Vector_Do_Reconstruct
 from objects.CSCG._2d.fields.vector.do.inner_product.main import _2CSCG_VectorField_InnerProduct
 
 from screws.quadrature import Quadrature
+from root.config.main import rAnk, mAster_rank, cOmm, np
 
 class _2dCSCG_VectorField_DO(FrozenOnly):
     def __init__(self, vf):
@@ -23,7 +24,7 @@ class _2dCSCG_VectorField_DO(FrozenOnly):
     def inner_product(self):
         return self._inner_product_
 
-    def compute_Ln_norm(self, n=1, quad_degree=None):
+    def compute_Ln_norm(self, n=2, quad_degree=None):
         """We compute Ln norm of self.
 
         int(self)**(n) over the mesh.
@@ -34,10 +35,33 @@ class _2dCSCG_VectorField_DO(FrozenOnly):
         vf = self._vf_
 
         if vf.ftype == 'standard':
-            quad_nodes, quad_weights = Quadrature(quad_degree).quad_ndim
+            qnx, qny, quad_weights = Quadrature(quad_degree).quad_ndim
 
-            print(quad_nodes.shape)
+            QuadValue = vf.do.reconstruct(qnx, qny)[1]
+            detJ = vf.mesh.elements.coordinate_transformation.Jacobian(qnx, qny)
 
+            local_norm = list()
+            for i in QuadValue:
+
+                local_norm.append(
+                    np.sum(
+                        ((QuadValue[i][0])**n+(QuadValue[i][1])**n+(QuadValue[i][2])**n)
+                        * quad_weights
+                        * detJ[i]
+                    )
+                )
+
+            local_norm = np.sum(local_norm)
+
+            local_norm = cOmm.gather(local_norm, root=mAster_rank)
+            if rAnk == mAster_rank:
+                local_norm = np.sum(local_norm) ** (1/n)
+            else:
+                pass
+
+            local_norm = cOmm.bcast(local_norm, root=mAster_rank)
+
+            return local_norm
 
         else:
-            raise NotImplementedError(f"")
+            raise NotImplementedError(f"L^{n}-norm of 2dCSCG scalar is not implemented.")

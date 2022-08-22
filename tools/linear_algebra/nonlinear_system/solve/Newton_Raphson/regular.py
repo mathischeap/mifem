@@ -21,6 +21,11 @@ class nLS_Solve_NR_regular(FrozenOnly):
         self._nLS_ = nLS
         self._freeze_self_()
 
+    def ___PRIVATE_find_shadow___(self, obj, shadows):
+        """"""
+        index = self._nLS_.unknown_variables.index(obj)
+        return shadows[index]
+
     def __call__(self, x0, atol=1e-4, maxiter=10,
         LS_solver_para='GMRES', LS_solver_kwargs=None):
         """
@@ -49,10 +54,22 @@ class nLS_Solve_NR_regular(FrozenOnly):
 
         LS_solver_kwargs : dict, NoneType
             The kwargs sent to the linear solver.
-            (If needed, x0 will be sent as for the first Newton-Raphson iteration.)
 
        Returns
        -------
+       outputs :
+           A tuple of 5 outputs:
+
+                1. (LocallyFullVector) results -- The result vector.
+                2. (int) info -- The info which provides convergence information:
+
+                    * 0 : successful exit
+                    * >0 : convergence to tolerance not achieved, number of iterations
+                    * -1 : divergence
+
+                3. (float) beta -- The residual; dx.vector_norm.
+                4. (int) ITER -- The number of Newton-Raphson iterations.
+                5. (str) message
 
        """
         t_start = time()
@@ -88,6 +105,7 @@ class nLS_Solve_NR_regular(FrozenOnly):
             itmV.append(uv.shadow)
 
         t_iteration_start = time()
+
         while 1:
             ITER += 1
 
@@ -118,7 +136,6 @@ class nLS_Solve_NR_regular(FrozenOnly):
                         pass
 
                     else:
-
                         known_pairs = list()
                         for _ in self._nLS_.unknown_variables:
                             if _ is not uv:
@@ -228,12 +245,6 @@ class nLS_Solve_NR_regular(FrozenOnly):
         #=======================================================================================1
 
         return xi1, convergence_info, BETA[-1], ITER, message
-
-
-    def ___PRIVATE_find_shadow___(self, obj, shadows):
-        """"""
-        index = self._nLS_.unknown_variables.index(obj)
-        return shadows[index]
 
 
 

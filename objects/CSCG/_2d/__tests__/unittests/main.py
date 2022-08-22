@@ -45,7 +45,7 @@ passed_2dCSCG_tests += test_APP_NO3_Euler_ShearLayerRollup_Direct_test()
 
 passed_2dCSCG_tests += test_Fields_NO1_vector()
 passed_2dCSCG_tests += test_Fields_NO2_scalar()
-
+passed_2dCSCG_tests += test_identities()
 
 
 

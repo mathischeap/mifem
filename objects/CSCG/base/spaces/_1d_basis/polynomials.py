@@ -385,8 +385,8 @@ class _1dPolynomial(FrozenOnly):
 
 if __name__ == "__main__":
     # p1 = _1dPolynomial('Lobatto',4)
-    # p1.plot_lagrange_basis(dual=False, saveto='nodal.pdf', title=False, figsize=(6,4),tick_size=20, label_size=20)
-    # p1.plot_edge_basis(dual=False, saveto='edge.pdf', title=False, figsize=(6,4), tick_size=20, label_size=20, fill_between=2)
+    # p1.plot_lagrange_basis(dual=False, saveto='nodal.df', title=False, figsize=(6,4),tick_size=20, label_size=20)
+    # p1.plot_edge_basis(dual=False, saveto='edge.df', title=False, figsize=(6,4), tick_size=20, label_size=20, fill_between=2)
 
     # p1 = _1dPolynomial(5)
     p1 = _1dPolynomial('Lobatto', 3)

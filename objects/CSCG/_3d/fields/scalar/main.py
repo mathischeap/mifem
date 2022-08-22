@@ -23,6 +23,7 @@ from objects.CSCG._3d.fields.scalar.numerical.main import _3dCSCG_ScalarField_Nu
 from objects.CSCG._3d.fields.scalar.helpers.neg import ___SCALAR_NEG_HELPER_1___
 from objects.CSCG._3d.fields.scalar.helpers.add import ___SCALAR_ADD_HELPER_1___
 from objects.CSCG._3d.fields.scalar.helpers.sub import ___SCALAR_SUB_HELPER_1___
+from objects.CSCG._3d.fields.scalar.helpers.mul import _3dCSCG_ScaMulHelper, _3dCSCG_ScaMulHelper1
 
 from objects.CSCG._3d.fields.scalar.visualize.main import _3dCSCG_ScalarField_Visualize
 
@@ -246,6 +247,90 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
 
 
+
+    def __mul__(self, other):
+        """self * other"""
+        if other.__class__.__name__ in ('int', 'float', 'int64', 'int32'):
+            if self.ftype == 'standard':
+                w0 = self.func[0]
+
+                x0 = _3dCSCG_ScaMulHelper(w0, other)
+
+                mul_vector = _3dCSCG_ScalarField(self.mesh,
+                                                 x0,
+                                                 ftype='standard',
+                                                 valid_time=self.valid_time,
+                                                 name=self.standard_properties.name + '*' + other.__class__.__name__
+                                                 )
+                return mul_vector
+            else:
+                raise NotImplementedError()
+
+        elif other.__class__.__name__ == '_3dCSCG_VectorField':
+            if self.ftype == 'standard' and other.ftype == 'standard':
+
+                sfunc = self.func[0]
+                vf0, vf1, vf2 = other.func
+
+                x0 = _3dCSCG_ScaMulHelper1(sfunc, vf0)
+                x1 = _3dCSCG_ScaMulHelper1(sfunc, vf1)
+                x2 = _3dCSCG_ScaMulHelper1(sfunc, vf2)
+
+                mul_vector = other.__class__(self.mesh,
+                                 [x0, x1, x2],
+                                 ftype='standard',
+                                 valid_time=self.valid_time,
+                                 name=self.standard_properties.name + '*' + other.standard_properties.name
+                                 )
+                return mul_vector
+
+            else:
+                raise NotImplementedError()
+
+        else:
+            raise NotImplementedError()
+
+    def __rmul__(self, other):
+        """other * self"""
+        if other.__class__.__name__ in ('int', 'float', 'int64', 'int32'):
+            if self.ftype == 'standard':
+                w0 = self.func[0]
+
+                x0 = _3dCSCG_ScaMulHelper(w0, other)
+
+                mul_vector = _3dCSCG_ScalarField(self.mesh,
+                                                 x0,
+                                                 ftype='standard',
+                                                 valid_time=self.valid_time,
+                                                 name=other.__class__.__name__ + '*' + self.standard_properties.name
+                                                 )
+                return mul_vector
+            else:
+                raise NotImplementedError()
+
+        elif other.__class__.__name__ == '_3dCSCG_VectorField':
+            if self.ftype == 'standard' and other.ftype == 'standard':
+
+                sfunc = self.func[0]
+                vf0, vf1, vf2 = other.func
+
+                x0 = _3dCSCG_ScaMulHelper1(sfunc, vf0)
+                x1 = _3dCSCG_ScaMulHelper1(sfunc, vf1)
+                x2 = _3dCSCG_ScaMulHelper1(sfunc, vf2)
+
+                mul_vector = other.__class__(self.mesh,
+                                 [x0, x1, x2],
+                                 ftype='standard',
+                                 valid_time=self.valid_time,
+                                 name=other.standard_properties.name + '*' + self.standard_properties.name
+                                 )
+                return mul_vector
+
+            else:
+                raise NotImplementedError()
+
+        else:
+            raise NotImplementedError()
 
 
 

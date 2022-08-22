@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from time import localtime, strftime, time
 
 def timeit1(method):

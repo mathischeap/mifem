@@ -5,8 +5,11 @@ from screws.freeze.base import FrozenOnly
 
 class _3dCSCG_ExactSolution_Allocator(FrozenOnly):
     """"""
+
+
     @classmethod
     def ___exact_solution_name___(cls):
+        """"""
         return {'icpsNS:TGV1'    : 'TGV1',
                 'icpsNS:sincosRC': 'SinCosRebholz_Conservation',
                 'icpsNS:sincos_CCBF'  : 'SinCos_Conservation_Conservative_Body_Force',
@@ -25,10 +28,13 @@ class _3dCSCG_ExactSolution_Allocator(FrozenOnly):
 
                 'TISE:sincos1': "TISE_SinCos1",
 
+                'MHD:sincos1': "MHD_SinCos1",
+
                 }
 
     @classmethod
     def ___exact_solution_path___(cls):
+        """"""
         base_path = '.'.join(str(cls).split(' ')[1][1:-2].split('.')[:-2]) + '.'
         _path_icpsNS_ =  base_path + 'incompressible_Navier_Stokes.'
         return {'icpsNS:TGV1'    : _path_icpsNS_ + 'Taylor_Green_vortex',
@@ -48,4 +54,6 @@ class _3dCSCG_ExactSolution_Allocator(FrozenOnly):
                 'Stokes:sincos1': base_path + "Stokes.sin_cos_1",
 
                 'TISE:sincos1': base_path + "time_independent_Schrodinger_equation.sin_cos_1",
+
+                'MHD:sincos1': base_path + "incompressible_MHD.sin_cos",
                 }

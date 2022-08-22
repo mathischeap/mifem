@@ -21,8 +21,10 @@ from objects.CSCG._2d.fields.scalar.numerical.main import _2dCSCG_ScalarField_Nu
 from objects.CSCG._2d.fields.scalar.visualize.main import _2dCSCG_ScalarField_Visualize
 
 
-
-
+from objects.CSCG._2d.fields.scalar.helpers.mul import _2dCSCG_ScaMulHelper1, _2dCSCG_ScaMulHelper
+from objects.CSCG._2d.fields.scalar.helpers.neg import _2dCSCG_ScalarNeg
+from objects.CSCG._2d.fields.scalar.helpers.sub import _2dCSCG_ScalarFieldSubHelper
+from objects.CSCG._2d.fields.scalar.helpers.add import _2dCSCG_ScalarFieldAddHelper
 
 
 class _2dCSCG_ScalarField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
@@ -108,6 +110,156 @@ class _2dCSCG_ScalarField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
     @property
     def visualize(self):
         return self._visualize_
+
+
+    def __mul__(self, other):
+        """self * other"""
+        if other.__class__.__name__ in ('int', 'float', 'int64', 'int32'):
+            if self.ftype == 'standard':
+                w0 = self.func[0]
+
+                x0 = _2dCSCG_ScaMulHelper(w0, other)
+
+                mul_vector = _2dCSCG_ScalarField(self.mesh,
+                         x0,
+                         ftype='standard',
+                         valid_time=self.valid_time,
+                         name=self.standard_properties.name + f'*{other}'
+                         )
+                return mul_vector
+            else:
+                raise NotImplementedError()
+
+        elif other.__class__.__name__ == '_2dCSCG_VectorField':
+            if self.ftype == 'standard' and other.ftype == 'standard':
+
+                sfunc = self.func[0]
+                vf0, vf1 = other.func
+
+                x0 = _2dCSCG_ScaMulHelper1(sfunc, vf0)
+                x1 = _2dCSCG_ScaMulHelper1(sfunc, vf1)
+
+                mul_vector = other.__class__(self.mesh,
+                     [x0, x1],
+                     ftype='standard',
+                     valid_time=self.valid_time,
+                     name=self.standard_properties.name + '*' + other.standard_properties.name
+                     )
+                return mul_vector
+
+            else:
+                raise NotImplementedError()
+
+        else:
+            raise NotImplementedError()
+
+    def __rmul__(self, other):
+        """other * self"""
+        if other.__class__.__name__ in ('int', 'float', 'int64', 'int32'):
+            if self.ftype == 'standard':
+                w0 = self.func[0]
+
+                x0 = _2dCSCG_ScaMulHelper(w0, other)
+
+                mul_vector = _2dCSCG_ScalarField(self.mesh,
+                                 x0,
+                                 ftype='standard',
+                                 valid_time=self.valid_time,
+                                 name= f'{other}*' + self.standard_properties.name
+                                 )
+                return mul_vector
+            else:
+                raise NotImplementedError()
+
+        elif other.__class__.__name__ == '_2dCSCG_VectorField':
+            if self.ftype == 'standard' and other.ftype == 'standard':
+
+                sfunc = self.func[0]
+                vf0, vf1 = other.func
+
+                x0 = _2dCSCG_ScaMulHelper1(sfunc, vf0)
+                x1 = _2dCSCG_ScaMulHelper1(sfunc, vf1)
+
+                mul_vector = other.__class__(self.mesh,
+                     [x0, x1],
+                     ftype='standard',
+                     valid_time=self.valid_time,
+                     name=other.standard_properties.name + '*' + self.standard_properties.name
+                     )
+                return mul_vector
+
+            else:
+                raise NotImplementedError()
+
+        else:
+            raise NotImplementedError()
+
+
+    def __add__(self, other):
+        """self + other"""
+        if other.__class__.__name__ == '_2dCSCG_ScalarField':
+            if self.ftype == 'standard' and other.ftype == 'standard':
+
+                sf = self.func[0]
+                of = other.func[0]
+
+                x0 = _2dCSCG_ScalarFieldAddHelper(sf, of)
+
+                scalar = _2dCSCG_ScalarField(self.mesh,
+                                 x0,
+                                 ftype='standard',
+                                 valid_time=self.valid_time,
+                                 name= self.standard_properties.name + '+' + other.standard_properties.name
+                                 )
+                return scalar
+
+            else:
+                raise NotImplementedError()
+        else:
+            raise NotImplementedError(f"a 2d CSCG scalar field can not + a {other.__class__.__name__}")
+
+    def __sub__(self, other):
+        """self - other"""
+        if other.__class__.__name__ == '_2dCSCG_ScalarField':
+            if self.ftype == 'standard' and other.ftype == 'standard':
+
+                sf = self.func[0]
+                of = other.func[0]
+
+                x0 = _2dCSCG_ScalarFieldSubHelper(sf, of)
+
+                scalar = _2dCSCG_ScalarField(self.mesh,
+                                 x0,
+                                 ftype='standard',
+                                 valid_time=self.valid_time,
+                                 name= self.standard_properties.name + '-' + other.standard_properties.name
+                                 )
+                return scalar
+
+            else:
+                raise NotImplementedError()
+
+        else:
+            raise NotImplementedError(f"a 2d CSCG scalar field can not - a {other.__class__.__name__}")
+
+
+    def __neg__(self):
+        """- self """
+        if self.ftype == 'standard':
+
+            x0 = _2dCSCG_ScalarNeg(self.func[0])
+
+            scalar = _2dCSCG_ScalarField(self.mesh,
+                             x0,
+                             ftype='standard',
+                             valid_time=self.valid_time,
+                             name= '-' + self.standard_properties.name
+                             )
+            return scalar
+
+        else:
+            raise NotImplementedError()
+
 
 
 
