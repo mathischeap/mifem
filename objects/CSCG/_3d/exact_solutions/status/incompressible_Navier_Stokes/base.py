@@ -17,6 +17,9 @@ from screws.numerical.time_plus_3d_space.partial_derivative import NumericalPart
 from screws.numerical.time_plus_3d_space.partial_derivative_as_functions import NumericalPartialDerivative_txyz_Functions
 import numpy as np
 
+
+
+
 class incompressible_NavierStokes_Base(Base):
     def __init__(self, es, nu):
         """
@@ -186,7 +189,8 @@ class incompressible_NavierStokes_Base(Base):
         if self._velocity_ is None:
             self._velocity_ =  _3dCSCG_VectorField(self.mesh,
                                                    (self.u, self.v, self.w),
-                                                   valid_time=self.valid_time)
+                                                   valid_time=self.valid_time,
+                                                   name="velocity")
         return self._velocity_
 
     @property
@@ -198,8 +202,9 @@ class incompressible_NavierStokes_Base(Base):
         if self._divergence_of_velocity_ is None:
             # this condition must be valid for all time.
             self._divergence_of_velocity_ = _3dCSCG_ScalarField(self.mesh,
-                                                                self.___div_of_velocity___,
-                                                                valid_time=None)
+                        self.___div_of_velocity___,
+                        valid_time=None,
+                        name='divergence_of_velocity')
         return self._divergence_of_velocity_
 
     def ___div_of_velocity___(self, t, x, y, z):
@@ -217,7 +222,8 @@ class incompressible_NavierStokes_Base(Base):
         if self._vorticity_ is None:
             self._vorticity_ = _3dCSCG_VectorField(self.mesh,
                                                    (self.omega_x, self.omega_y, self.omega_z),
-                                                   valid_time=self.valid_time)
+                                                   valid_time=self.valid_time,
+                                                   name='vorticity')
         return self._vorticity_
 
     def omega_x(self, t, x, y, z):
@@ -242,7 +248,8 @@ class incompressible_NavierStokes_Base(Base):
             self._curl_of_vorticity_ = _3dCSCG_VectorField(
                 self.mesh,
                 (self.___m_laplace_u___, self.___m_laplace_v___, self.___m_laplace_w___),
-                valid_time=self.valid_time
+                valid_time=self.valid_time,
+                name='curl_of_vorticity'
             )
         return self._curl_of_vorticity_
 
@@ -260,7 +267,8 @@ class incompressible_NavierStokes_Base(Base):
             # this condition must be valid for all time.
             self._divergence_of_vorticity_ = _3dCSCG_ScalarField(self.mesh,
                                                                  self.___div_of_vorticity___,
-                                                                 valid_time=None)
+                                                                 valid_time=None,
+                                                                 name='divergence_of_vorticity')
         return self._divergence_of_vorticity_
 
     @staticmethod
@@ -289,7 +297,8 @@ class incompressible_NavierStokes_Base(Base):
         if self._bodyForce_ is None:
             self._bodyForce_ = _3dCSCG_VectorField(self.mesh,
                                                    (self.fx, self.fy, self.fz),
-                                                   valid_time=self.valid_time)
+                                                   valid_time=self.valid_time,
+                                                   name='body_force')
         return self._bodyForce_
 
     @property
@@ -297,23 +306,28 @@ class incompressible_NavierStokes_Base(Base):
         if self._pressure_ is None:
             self._pressure_ = _3dCSCG_ScalarField(self.mesh,
                                                   self.p,
-                                                  valid_time=self.valid_time)
+                                                  valid_time=self.valid_time,
+                                                  name='pressure')
         return self._pressure_
 
     @property
     def gradient_of_pressure(self):
         if self._gradientOfPressure_ is None:
             self._gradientOfPressure_ =  _3dCSCG_VectorField(self.mesh,
-                                                             (self.p_x, self.p_y, self.p_z),
-                                                             valid_time=self.valid_time)
+                 (self.p_x, self.p_y, self.p_z),
+                 valid_time=self.valid_time,
+                 name="gradient_of_pressure",
+            )
         return self._gradientOfPressure_
 
     @property
     def total_pressure(self):
         if self._totalPressure_ is None:
             self._totalPressure_ = _3dCSCG_ScalarField(self.mesh,
-                                                       self.___total_pressure___,
-                                                       valid_time=self.valid_time)
+                   self.___total_pressure___,
+                   valid_time=self.valid_time,
+                   name='total_pressure'
+            )
         return self._totalPressure_
     def ___total_pressure___(self, t, x, y, z):
         return self.p(t, x, y, z) + self.___kinetic_energy_distribution___(t, x, y, z)
@@ -334,7 +348,8 @@ class incompressible_NavierStokes_Base(Base):
             self._gradientOfTotalPressure_ = _3dCSCG_VectorField(
                 self.mesh,
                 (self._tp_x_, self._tp_y_, self._tp_z_),
-                valid_time=self.valid_time
+                valid_time=self.valid_time,
+                name='gradient_of_total_pressure'
             )
         return self._gradientOfTotalPressure_
 
@@ -345,7 +360,9 @@ class incompressible_NavierStokes_Base(Base):
             self._kineticEnergyDistribution_ =_3dCSCG_ScalarField(
                 self.mesh,
                 self.___kinetic_energy_distribution___,
-                valid_time=self.valid_time)
+                valid_time=self.valid_time,
+                name='kinetic_energy_distribution'
+            )
         return self._kineticEnergyDistribution_
     def ___kinetic_energy_distribution___(self, t, x, y, z):
         return 0.5 * (self.u(t, x, y, z)**2 + self.v(t, x, y, z)**2 + self.w(t, x, y, z)**2)
@@ -372,7 +389,9 @@ class incompressible_NavierStokes_Base(Base):
             self._helicityDistribution_ =_3dCSCG_ScalarField(
                 self.mesh,
                 self.___helicity_distribution___,
-                valid_time=self.valid_time)
+                valid_time=self.valid_time,
+                name='helicity_distribution'
+            )
         return self._helicityDistribution_
     def ___helicity_distribution___(self, t, x, y, z):
         return self.u(t,x,y,z) * self.omega_x(t, x, y, z) + \
@@ -386,7 +405,9 @@ class incompressible_NavierStokes_Base(Base):
             self._enstrophyDistribution_ =_3dCSCG_ScalarField(
                 self.mesh,
                 self.___enstrophy_distribution___,
-                valid_time=self.valid_time)
+                valid_time=self.valid_time,
+                name='enstrophy_distribution'
+            )
         return self._enstrophyDistribution_
     def ___enstrophy_distribution___(self, t, x, y, z):
         return 0.5 * (self.omega_x(t, x, y, z) ** 2 +

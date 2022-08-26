@@ -27,14 +27,14 @@ def test_standard_forms_save_and_read():
     # f0.TW.func.do.set_func_body_as(es, 'pressure')
     # f0.TW.do.push_all_to_instant(0)
     # f0.discretize()
-    # # save(f0, '___f0_mi_SFsr___.mi')
+    # save(f0, '___f0_mi_SFsr___.mi')
     # print(f0.error.L())
     #
     # f1 = FC('1-f', is_hybrid=False)
     # f1.TW.func.do.set_func_body_as(es, 'velocity')
     # f1.TW.do.push_all_to_instant(0)
     # f1.discretize()
-    # # save(f1, '___f1_mi_SFsr___.mi')
+    # save(f1, '___f1_mi_SFsr___.mi')
     # print(f1.error.L())
     #
     #
@@ -42,27 +42,28 @@ def test_standard_forms_save_and_read():
     # f2.TW.func.do.set_func_body_as(es, 'velocity')
     # f2.TW.do.push_all_to_instant(0)
     # f2.discretize()
-    # # save(f2, '___f2_mi_SFsr___.mi')
+    # save(f2, '___f2_mi_SFsr___.mi')
     # print(f2.error.L())
     #
     # f3 = FC('3-f')
     # f3.TW.func.do.set_func_body_as(es, 'pressure')
     # f3.TW.do.push_all_to_instant(0)
     # f3.discretize()
-    # # save(f3, '___f3_mi_SFsr___.mi')
+    # save(f3, '___f3_mi_SFsr___.mi')
     # print(f3.error.L())
     #
     # save([f0, f1, f2, f3], '___f0123_mi_SFsr___.mi')
 
     absolute_path = os.path.dirname(__file__)
     f = read(absolute_path + '/auxiliaries/___f0_mi_SFsr___.mi')
+    # print(f.error.L())
     assert f.error.L() < 0.02
     f = read(absolute_path + '/auxiliaries/___f1_mi_SFsr___.mi')
     assert f.error.L() < 0.02
     f = read(absolute_path + '/auxiliaries/___f2_mi_SFsr___.mi')
     assert f.error.L() < 0.09
     f = read(absolute_path + '/auxiliaries/___f3_mi_SFsr___.mi')
-    assert f.error.L() < 0.07
+    assert f.error.L() < 0.05
 
     f0, f1, f2, f3 = read(absolute_path + '/auxiliaries/___f0123_mi_SFsr___.mi')
     assert f0.error.L() < 0.02 and f1.error.L() < 0.02 and f2.error.L() < 0.09 and f3.error.L() < 0.07
@@ -98,9 +99,6 @@ def test_standard_forms_save_and_read():
     df2, df1 = read('___df2_df1_mi_SFsr___.mi')
     assert df2.mesh is df1.mesh
     remove('___df2_df1_mi_SFsr___.mi')
-
-
-
 
     return 1
 

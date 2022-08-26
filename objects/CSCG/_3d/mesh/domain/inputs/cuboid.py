@@ -36,6 +36,12 @@ class Cuboid(_3dDomainInputBase):
                (region_layout[2] > 0 and region_layout[2] % 1==0), \
             f"region_layout = {region_layout} wrong!"
         assert width > 0 and length > 0 and height > 0
+
+        self._p_NWB = p_NWB
+        self._width = width
+        self._length = length
+        self._height = height
+
         # new we parse the 8 corners of all regions ---------------------------------------------
         L0, L1, L2 = region_layout
         x_step = width / L0
@@ -96,6 +102,21 @@ class Cuboid(_3dDomainInputBase):
         self.region_type_wr2_metric = 'orthogonal'
         self.region_sequence = region_sequence
 
+    @property
+    def p_NWB(self):
+        return self._p_NWB
+
+    @property
+    def width(self):
+        return self._width
+
+    @property
+    def length(self):
+        return self._length
+
+    @property
+    def height(self):
+        return self._height
 
     @classproperty
     def statistic(cls):

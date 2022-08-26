@@ -51,12 +51,12 @@ class _3dCSCG_S1F_Private:
         #------ take care of element range -----------------------------------------------
         if element_range is None:
             INDICES = self.mesh.elements
-        elif element_range == 'mesh boundary':
-            pass
+        elif element_range == 'mesh boundary':# all mesh-elements that are attached to any mesh boundary
+            INDICES = self.mesh.boundaries.involved_elements
         else:
             raise Exception(f"element_range = {element_range} is wrong!")
 
-        #-------- generating the reconstruction matrices for included mesh elements -------------
+        #-------- generating the reconstruction matrices for included mesh elements -------
         for i in INDICES:
             element = self.mesh.elements[i]
             typeWr2Metric = element.type_wrt_metric.mark
@@ -155,95 +155,95 @@ class _3dCSCG_S1F_Private:
         return csc_matrix(M)
 
 
-    def ___PRIVATE_basis_boundary_integral_over_region_side___(self,
-        vector, region_name, side_name, quad_degree=None):
-        """
-        TODO: to be completed.
-
-        :param vector:
-        :param region_name:
-        :param side_name:
-        :param quad_degree:
-        :return:
-        """
-        p = [self.dqp[i] + 3 for i in range(self.ndim)] if quad_degree is None else quad_degree
-        quad_nodes, quad_weights = Quadrature(p, category='Gauss').quad
-
-        if side_name == 'F':
-            quad_weights_2d = np.kron(quad_weights[1], quad_weights[0])
-
-
-        v0, v1 = vector
-        if isinstance(v0, (int, float)):
-            pass
-        else:
-            raise NotImplementedError()
-        if isinstance(v1, (int, float)):
-            pass
-        else:
-            raise NotImplementedError()
-
-
-        bfn_xi = self.space.basises[0].node_basis(x=quad_nodes[0])
-        bfn_et = self.space.basises[1].node_basis(x=quad_nodes[1])
-
-
-        bfe_xi = self.space.basises[0].edge_basis(x=quad_nodes[0])
-        bfe_et = self.space.basises[1].edge_basis(x=quad_nodes[1])
-
-        if side_name == 'F':
-            B = (np.kron(bfn_et, bfe_xi), np.kron(bfe_et, bfn_xi))
-
-        B0, B1 = B
-
-        elements = self.mesh.do.FIND_element_attach_to_region_side(region_name, side_name)
-        elements = elements.ravel('F')
-        ELEMENTS = list()
-        for i in elements:
-            if i in self.mesh.elements:
-                ELEMENTS.append(i)
-
-
-        GV = lil_matrix((1, self.GLOBAL_num_dofs))
-
-        for i in ELEMENTS:
-            dofs = self.numbering.do.find.dofs_on_element_side(i, side_name)
-            mark = self.mesh.elements[i].type_wrt_metric.mark
-            spacing = self.mesh.elements[i].spacing
-
-            if mark[:4] == 'Orth':
-                Lx, Ly, Lz = (spacing[0][1] - spacing[0][0]) * 2, \
-                             (spacing[1][1] - spacing[1][0]) * 2, \
-                             (spacing[2][1] - spacing[2][0]) * 2,
-
-                # print(spacing, flush=True)
-                Jx = Lx / 2
-                Jy = Ly / 2
-                Jz = Lz / 2
-
-                if side_name in 'NS':
-                    J0, J1 = Jy, Jz
-                elif side_name in 'WE':
-                    J0, J1 = Jx, Jz
-                elif side_name in 'BF':
-                    J0, J1 = Jx, Jy
-                else:
-                    raise Exception()
-
-                if isinstance(v0, (int, float)):
-                    # noinspection PyUnboundLocalVariable
-                    cewti1 = np.einsum('ki, i -> k', B0*v1*J1, quad_weights_2d, optimize='greedy')
-                if isinstance(v1, (int, float)):
-                    cewti2 = - np.einsum('ki, i -> k', B1*v0*J0, quad_weights_2d, optimize='greedy')
-
-                # noinspection PyUnboundLocalVariable
-                GV[0, dofs] += np.concatenate((cewti1, cewti2))
-
-            else:
-                raise NotImplementedError(f"can not handle non-orthogonal elements yet!")
-
-        GV = GlobalVector(GV.tocsr().T)
-        return GV
+    # def ___PRIVATE_basis_boundary_integral_over_region_side___(self,
+    #     vector, region_name, side_name, quad_degree=None):
+    #     """
+    #     TODO: to be completed.
+    #
+    #     :param vector:
+    #     :param region_name:
+    #     :param side_name:
+    #     :param quad_degree:
+    #     :return:
+    #     """
+    #     p = [self.dqp[i] + 3 for i in range(self.ndim)] if quad_degree is None else quad_degree
+    #     quad_nodes, quad_weights = Quadrature(p, category='Gauss').quad
+    #
+    #     if side_name == 'F':
+    #         quad_weights_2d = np.kron(quad_weights[1], quad_weights[0])
+    #
+    #
+    #     v0, v1 = vector
+    #     if isinstance(v0, (int, float)):
+    #         pass
+    #     else:
+    #         raise NotImplementedError()
+    #     if isinstance(v1, (int, float)):
+    #         pass
+    #     else:
+    #         raise NotImplementedError()
+    #
+    #
+    #     bfn_xi = self.space.basises[0].node_basis(x=quad_nodes[0])
+    #     bfn_et = self.space.basises[1].node_basis(x=quad_nodes[1])
+    #
+    #
+    #     bfe_xi = self.space.basises[0].edge_basis(x=quad_nodes[0])
+    #     bfe_et = self.space.basises[1].edge_basis(x=quad_nodes[1])
+    #
+    #     if side_name == 'F':
+    #         B = (np.kron(bfn_et, bfe_xi), np.kron(bfe_et, bfn_xi))
+    #
+    #     B0, B1 = B
+    #
+    #     elements = self.mesh.do.FIND_element_attach_to_region_side(region_name, side_name)
+    #     elements = elements.ravel('F')
+    #     ELEMENTS = list()
+    #     for i in elements:
+    #         if i in self.mesh.elements:
+    #             ELEMENTS.append(i)
+    #
+    #
+    #     GV = lil_matrix((1, self.GLOBAL_num_dofs))
+    #
+    #     for i in ELEMENTS:
+    #         dofs = self.numbering.do.find.dofs_on_element_side(i, side_name)
+    #         mark = self.mesh.elements[i].type_wrt_metric.mark
+    #         spacing = self.mesh.elements[i].spacing
+    #
+    #         if mark[:4] == 'Orth':
+    #             Lx, Ly, Lz = (spacing[0][1] - spacing[0][0]) * 2, \
+    #                          (spacing[1][1] - spacing[1][0]) * 2, \
+    #                          (spacing[2][1] - spacing[2][0]) * 2,
+    #
+    #             # print(spacing, flush=True)
+    #             Jx = Lx / 2
+    #             Jy = Ly / 2
+    #             Jz = Lz / 2
+    #
+    #             if side_name in 'NS':
+    #                 J0, J1 = Jy, Jz
+    #             elif side_name in 'WE':
+    #                 J0, J1 = Jx, Jz
+    #             elif side_name in 'BF':
+    #                 J0, J1 = Jx, Jy
+    #             else:
+    #                 raise Exception()
+    #
+    #             if isinstance(v0, (int, float)):
+    #                 # noinspection PyUnboundLocalVariable
+    #                 cewti1 = np.einsum('ki, i -> k', B0*v1*J1, quad_weights_2d, optimize='greedy')
+    #             if isinstance(v1, (int, float)):
+    #                 cewti2 = - np.einsum('ki, i -> k', B1*v0*J0, quad_weights_2d, optimize='greedy')
+    #
+    #             # noinspection PyUnboundLocalVariable
+    #             GV[0, dofs] += np.concatenate((cewti1, cewti2))
+    #
+    #         else:
+    #             raise NotImplementedError(f"can not handle non-orthogonal elements yet!")
+    #
+    #     GV = GlobalVector(GV.tocsr().T)
+    #     return GV
 
     def ___PRIVATE_operator_wedge___(self, f2, quad_degree=None):
         """"""

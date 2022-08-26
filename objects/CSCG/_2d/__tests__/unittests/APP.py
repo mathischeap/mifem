@@ -93,6 +93,6 @@ def test_APP_NO4_Poisson_hMSEM_test_1():
 
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/_2d/__tests__/unittests/APP.py
-    test_APP_NO4_Poisson_hMSEM_test_1()
+    test_APP_NO2_scalar_Laplace_essential_BC_iterative_solver()
     # test_APP_NO2_scalar_Laplace_essential_BC_iterative_solver()
 

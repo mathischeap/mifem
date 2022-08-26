@@ -8,6 +8,10 @@ from screws.freeze.base import FrozenOnly
 from root.config.main import np, rAnk, mAster_rank, cOmm
 from objects.CSCG.base.forms.standard.cochain.dofwise import CSCG_SF_Cochain_DofWise
 
+
+
+
+
 class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
@@ -242,11 +246,14 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
         numOfElements = self._sf_.mesh.elements.num
         numOfBasis = self._sf_.num.basis
         try:
-            assert isinstance(local, dict), f"local cochain needs to be a dict, now it is a {local.__class__.__name__}."
-            assert len(local) == numOfElements, "local cochain has to contain cochains for all local mesh elements."
+            assert isinstance(local, dict), \
+                f"local cochain needs to be a dict, now it is a {local.__class__.__name__}."
+            assert len(local) == numOfElements, \
+                "local cochain has to contain cochains for all local mesh elements."
             for i, j in zip(self._sf_.mesh.elements.indices, local):
-                assert np.shape(local[i]) == (numOfBasis,), f"local[{i}] shape = {np.shape(local[i])} wrong. " \
-                                                            f"It needs to be {(numOfBasis,)}."
+                assert np.shape(local[i]) == (numOfBasis,), \
+                    f"local[{i}] shape = {np.shape(local[i])} wrong. " \
+                    f"It needs to be {(numOfBasis,)}."
                 assert i == j, f"mesh element index sequence is wrong."
 
         except AssertionError:

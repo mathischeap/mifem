@@ -4,7 +4,8 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from objects.CSCG._2d.exact_solutions.status.incompressible_Navier_Stokes.base import incompressibleNavierStokesBase
+from objects.CSCG._2d.exact_solutions.status.incompressible_Navier_Stokes.base import \
+    incompressibleNavierStokesBase
 from numpy import sin, cos, exp, pi
 
 
@@ -20,20 +21,20 @@ class TaylorGreenVortex(incompressibleNavierStokesBase):
         :param nu:
         """
         super(TaylorGreenVortex, self).__init__(es, nu)
-        #-------- check the domain ---------------------------------------------------------------
+        #-------- check the domain -------------------------------------------------------
         if self.mesh.domain.name == 'CrazyPeriodic':
             bx, by = self.mesh.domain.domain_input.bounds
             assert tuple(bx) == (0, 2) and tuple(by) == (0, 2), \
-                f"ShearLayerRollup can only work in [0, 2]^2 periodic domain"
+                f"2D TGV can only work in [0, 2]^2 periodic domain"
         elif self.mesh.domain.name == 'RectanglePeriodic':
             p_UL = self.mesh.domain.domain_input.p_UL
             width = self.mesh.domain.domain_input.width
             length = self.mesh.domain.domain_input.length
             assert p_UL == (0, 0) and width == 2 and length == 2, \
-                f"ShearLayerRollup can only work in [0, 2]^2 periodic domain"
+                f"2D TGV can only work in [0, 2]^2 periodic domain"
         else:
-            raise Exception(f"ShearLayerRollup can only work in [0, 2]^2 periodic domain")
-        #-----------------------------------------------------------------------------------------
+            raise Exception(f"2D TGV can only work in [0, 2]^2 periodic domain")
+        #---------------------------------------------------------------------------------
 
 
     def u(self, t, x, y):

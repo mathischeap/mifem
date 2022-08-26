@@ -1,14 +1,25 @@
 # -*- coding: utf-8 -*-
+"""
+@author: Yi Zhang
+@contact: zhangyi_aero@hotmail.com
+@time: 2022/08/26 2:19 PM
+"""
 
 import numpy as np
 
 from screws.freeze.main import FrozenOnly
+from objects.CSCG._3d.mesh.trace.elements.element.coordinate_transformation.constant import _3dTraceElement_CT_Constant
 
 
 class _3dCSCG_Trace_Element_CoordinateTransformation(FrozenOnly):
     def __init__(self, te):
         self._te_ = te
+        self._constant_ = _3dTraceElement_CT_Constant(te)
         self._freeze_self_()
+
+    @property
+    def constant(self):
+        return self._constant_
 
     def mapping(self, *evaluation_points, from_element=None, side=None, parse_3_1d_eps=False):
         """

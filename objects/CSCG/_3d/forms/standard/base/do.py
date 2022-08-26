@@ -216,7 +216,7 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
     def reconstruct(self, *args, **kwargs):
         return self._sf_.reconstruct(*args, **kwargs)
 
-    def make_reconstruction_matrix_on_grid(self, xi, eta, sigma):
+    def make_reconstruction_matrix_on_grid(self, xi, eta, sigma, element_range=None):
         """Make the reconstruction matrices for all mesh elements.
 
         These matrices are stored in a dict whose keys are the numbers of mesh elements and values
@@ -231,8 +231,16 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
         #i. And if `f` is a scalar form, we get a 1d array. And if `f` is a vector form, we get a
         tuple of three 1d arrays (its three components along x, y, z directions.)
 
+        :param xi: 1d array
+        :param et: 1d array
+        :param sg: 1d array
+        :param element_range:
+            We are going to construct matrices for these mesh elements. It can be one of
+                1) None: for all local elements
+                2) 'mesh boundary': those local elements are attached to mesh boundary.
+
         """
-        return self._sf_.___PRIVATE_make_reconstruction_matrix_on_grid___(xi, eta, sigma)
+        return self._sf_.___PRIVATE_make_reconstruction_matrix_on_grid___(xi, eta, sigma, element_range=element_range)
 
     @property
     def boundary_integrate(self):

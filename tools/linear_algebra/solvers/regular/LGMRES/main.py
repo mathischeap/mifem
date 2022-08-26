@@ -75,7 +75,8 @@ class LGMRES(ParallelSolverBase):
             x0 = LocallyFullVector((x0,))
 
         elif isinstance(x0, (list, tuple)) and all(
-                [hasattr(_, 'standard_properties') and 'CSCG_form' in _.standard_properties.tags for _ in x0]
+                [hasattr(_, 'standard_properties') and 'CSCG_form' in _.standard_properties.tags
+                 for _ in x0]
             ):
             x0 = LocallyFullVector(x0)
 

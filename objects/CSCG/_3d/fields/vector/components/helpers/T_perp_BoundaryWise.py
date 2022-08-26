@@ -19,7 +19,7 @@ class _3dCSCG_T_perp_BW(FrozenOnly):
         self.mesh = mesh
         self.bn = bn
         self.w = bn_func
-        self.n = mesh.boundaries[bn].constant_unit_normal_vector
+        self.n = mesh.boundaries[bn].coordinate_transformation.constant.outward_unit_normal_vector
         self._freeze_self_()
 
     def fx(self, t, x, y, z):

@@ -6,7 +6,7 @@ import numpy as np
 
 # noinspection PyUnresolvedReferences
 class _3dCSCG_S0F_Private:
-    def ___PRIVATE_make_reconstruction_matrix_on_grid___(self, xi, et, sg):
+    def ___PRIVATE_make_reconstruction_matrix_on_grid___(self, xi, et, sg, element_range=None):
         """Make the reconstruction matrices for all mesh elements. These matrices are stored in
         a dict whose keys are the numbers of mesh elements and values are the local reconstruction
         matrices.
@@ -23,11 +23,25 @@ class _3dCSCG_S0F_Private:
         :param xi: 1d array
         :param et: 1d array
         :param sg: 1d array
+        :param element_range:
+            We are going to construct matrices for these mesh elements. It can be one of
+                1) None: for all local elements
+                2) 'mesh boundary': those local elements are attached to mesh boundary.
+
         :return:
         """
         _, basis = self.do.evaluate_basis_at_meshgrid(xi, et, sg)
         RM = dict()
-        INDICES = self.mesh.elements.indices
+
+        #------ take care of element range -----------------------------------------------
+        if element_range is None:
+            INDICES = self.mesh.elements
+        elif element_range == 'mesh boundary':
+            INDICES = self.mesh.boundaries.involved_elements
+        else:
+            raise Exception(f"element_range = {element_range} is wrong!")
+
+        #-------- generating the reconstruction matrices for included mesh elements -------------
         rmi = basis[0].T
         for i in INDICES:
             RM[i] = rmi

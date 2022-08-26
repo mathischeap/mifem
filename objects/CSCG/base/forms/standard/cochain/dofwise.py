@@ -16,7 +16,9 @@ class CSCG_SF_Cochain_DofWise(FrozenOnly):
     def __getitem__(self, i):
         """Return the cochain of the global dof #i in all cores."""
         GM = self._f_.numbering.gathering
-        assert i % 1 == 0 and - self._f_.num.GLOBAL_dofs <= i < self._f_.num.GLOBAL_dofs, f'i={i} is wrong!'
+        assert i % 1 == 0 and \
+               - self._f_.num.GLOBAL_dofs <= i < self._f_.num.GLOBAL_dofs, \
+               f'i={i} is wrong!'
 
         if i < 0:
             i += self._f_.num.GLOBAL_dofs

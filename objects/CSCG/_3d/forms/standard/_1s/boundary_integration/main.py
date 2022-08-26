@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
-    mesh = MeshGenerator('crazy')([2,2,2])
+    mesh = MeshGenerator('crazy', c=0.)([2,2,2])
     space = SpaceInvoker('polynomials')([1,1,1])
     FC = FormCaller(mesh, space)
 
@@ -86,3 +86,6 @@ if __name__ == '__main__':
 
     B = f1.do.boundary_integrate.T_perp(VP)
 
+
+    for i in B:
+        print(i, B[i])

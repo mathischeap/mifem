@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*_
 
-
 from screws.freeze.main import FrozenOnly
 from tools.linear_algebra.solvers.Schur.allocator import SchurSolverDistributor
 from tools.linear_algebra.solvers.regular.allocator import RegularSolverDistributor
 from tools.linear_algebra.linear_system.solve.helpers.routine_2b_run import RoutineToBeRun
-
-
-
 
 
 
@@ -45,7 +41,8 @@ class ___LinearSystem_Solve___(FrozenOnly):
             b = self._LS_.b.assembled
             solver_2b_run_with_parameters = RegularSolverDistributor(solver_name, **kwargs)
             RTB = RoutineToBeRun(solver_2b_run_with_parameters, A, b) # wrap A, b with the solver
-            # call RTB with any other args and kwargs in fact means a call of solver(A, b, *args, **kwargs)
+            # call RTB with any other args and kwargs in fact means a call
+            # of solver(A, b, *args, **kwargs)
             return RTB
         elif solver_name == 'Schur':
             assert 'rank' in kwargs, "we need rank"

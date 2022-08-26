@@ -6,8 +6,6 @@ Not working.
 
 """
 
-
-
 from tools.linear_algebra.preconditioners.allocator import PreconditionerAllocator
 from screws.miscellaneous.timer import MyTimer
 from tools.linear_algebra.solvers.regular.BiCGSTAB.helpers.mpi_v0 import ___mpi_v0_BiCGSTAB___
@@ -61,7 +59,7 @@ class BiCGSTAB(ParallelSolverBase):
         """
 
         message = "BiCGSTAB-" + MyTimer.current_time()
-        # ---- parse x0 ------------------------------------------------
+        # ---- parse x0 ------------------------------------------------------------------------1
         if x0 == 0: # we make it an empty LocallyFullVector
             x0 = LocallyFullVector(len(b))
         else:
@@ -70,7 +68,7 @@ class BiCGSTAB(ParallelSolverBase):
         assert x0.__class__.__name__ == "LocallyFullVector", \
             f"x0 needs to be a 'LocallyFullVector'. Now I get {x0.__class__}."
 
-        #----------------------------------------------------------------------------------------
+        #---------------------------------------------------------------------------------------1
         if isinstance(maxiter, int):
             assert maxiter >= 1 and maxiter % 1 == 0, f"maxiter={maxiter} must be >= 1."
         elif isinstance(maxiter, str):
@@ -81,7 +79,7 @@ class BiCGSTAB(ParallelSolverBase):
 
         assert tol > 0 and atol > 0, f"tol={tol} and atol={atol} wrong, they must be > 0."
 
-        # -------  Decide preconditioner ------------------------------------------------------------
+        # -------  Decide preconditioner ------------------------------------------------------1
         if preconditioner is None: preconditioner = (None, dict())
 
         preconditioner_ID, preconditioner_kwargs = preconditioner
@@ -90,9 +88,10 @@ class BiCGSTAB(ParallelSolverBase):
         else:
             preconditioner = None
 
-        # -------  Decide routine -------------------------------------------------------------------
+        # -------  Decide routine -------------------------------------------------------------1
         if self._routine_ == 'auto':
-        # in the future, we may want to make de function to decide which one is the best for particular matrices.
+            # in the future, we may want to make de function to decide which one is the best for
+            # particular matrices.
             ROUTINE = ___mpi_v0_BiCGSTAB___
         else:
             if self._routine_ == '0':
@@ -100,7 +99,7 @@ class BiCGSTAB(ParallelSolverBase):
             else:
                 raise Exception(f"routine={self._routine_} is wrong.")
 
-        # ---------- Do the computation ------------------------------------------------------------
+        # ---------- Do the computation ------------------------------------------------------1
         results, info, beta, ITER, solver_message = \
         ROUTINE(A, b, x0,
                 maxiter=maxiter, tol=tol, atol=atol,
@@ -109,6 +108,6 @@ class BiCGSTAB(ParallelSolverBase):
                 )
 
         MESSAGE =  message + '-' + solver_message
-        #===========================================================================================
+        #======================================================================================1
 
         return results, info, beta, ITER, MESSAGE

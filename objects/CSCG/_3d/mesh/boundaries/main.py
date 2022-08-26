@@ -46,6 +46,8 @@ class _3dCSCG_Mesh_Boundaries(FrozenOnly):
         self._names_ = None
         self._RANGE_element_sides_ = None
         self._RANGE_trace_elements_ = None
+        self._range_of_elements_ = None
+        self._involved_elements_ = None
 
     def ___PRIVATE_parse_boundaries___(self):
         """We study the elements.map and trace.elements.map to get information we need."""
@@ -114,6 +116,43 @@ class _3dCSCG_Mesh_Boundaries(FrozenOnly):
         return self._visualize_
 
     @property
+    def involved_elements(self):
+        """all local elements without indicating where it is."""
+
+        if self._involved_elements_ is None:
+
+            IE = list()
+
+            for bn in self.range_of_elements:
+                IE.extend(self.range_of_elements[bn])
+
+            self._involved_elements_ = IE
+
+        return self._involved_elements_
+
+    @property
+    def range_of_elements(self):
+        """(dict) Return a dict that contains the local elements on each boundary."""
+        if self._range_of_elements_ is None:
+
+            RoE = dict()
+
+            RES = self.range_of_element_sides
+            for bn in self.names:
+                ES = RES[bn]
+
+                LIST = list()
+
+                for es in ES:
+                    LIST.append(int(es[:-1]))
+
+                RoE[bn] = LIST
+
+            self._range_of_elements_ = RoE
+
+        return self._range_of_elements_
+
+    @property
     def range_of_element_sides(self):
         """(dict) Return a dict that contains the local element sides on each boundary."""
         if self._RANGE_element_sides_ is None:
@@ -152,6 +191,7 @@ class _3dCSCG_Mesh_Boundaries(FrozenOnly):
                 RRS[bn] = BRS[bn]
         self._range_of_region_sides_ = RRS
         return self._range_of_region_sides_
+
 
 
     def __getitem__(self, bn):

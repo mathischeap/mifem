@@ -138,6 +138,7 @@ class _3dCSCG_Standard_Form_Error(FrozenOnly):
 
             globalError = cOmm.bcast(globalError, root=mAster_rank)
 
+        #--------------- n < infty, n-error------------------------------------------------
         else:
 
             assert isinstance(n, int) and n > 0, f"L^{n} error is not valid."
@@ -160,6 +161,8 @@ class _3dCSCG_Standard_Form_Error(FrozenOnly):
             else:
                 globalError = None
             globalError = cOmm.bcast(globalError, root=mAster_rank)
+
+        #==========================================================================================
 
         assert globalError >= 0, f"L_{n}error = {globalError} wrong, it must >= 0."
 

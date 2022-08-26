@@ -8,8 +8,8 @@
 
 """
 from numpy import sin, cos
-from objects.CSCG._3d.exact_solutions.status.incompressible_Navier_Stokes.base import incompressible_NavierStokes_Base
-
+from objects.CSCG._3d.exact_solutions.status.incompressible_Navier_Stokes.base import \
+    incompressible_NavierStokes_Base
 
 class TGV1(incompressible_NavierStokes_Base):
     """
@@ -25,6 +25,7 @@ class TGV1(incompressible_NavierStokes_Base):
         self._L_ = L
         self._V0_ = V0
         super(TGV1, self).__init__(es, nu)
+
 
     @property
     def valid_time(self):

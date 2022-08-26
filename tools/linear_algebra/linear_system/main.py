@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-We make a class to represent a linear system.
-
+"""We make a class to represent a linear system.
 """
 
 import sys
@@ -151,5 +149,3 @@ if __name__ == '__main__':
     b.gathering_matrix = [f2, f3, t2]
 
     Axb = LinearSystem(A, b)
-
-    # print(Axb.GLOBAL_shape)

@@ -25,7 +25,7 @@ class GMRES(ParallelSolverBase):
 
 
     def __call__(self, A, b, x0,
-                 restart=100, maxiter=20, tol=1e-3, atol=1e-4,
+                 restart=100, maxiter=20, tol=1e-5, atol=1e-5,
                  preconditioner=(None, dict()),
                  COD=True,
                  plot_residuals=False,

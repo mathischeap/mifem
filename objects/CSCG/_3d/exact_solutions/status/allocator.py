@@ -11,6 +11,7 @@ class _3dCSCG_ExactSolution_Allocator(FrozenOnly):
     def ___exact_solution_name___(cls):
         """"""
         return {'icpsNS:TGV1'    : 'TGV1',
+                'icpsNS:LDC'     : 'LidDrivenCavity',
                 'icpsNS:sincosRC': 'SinCosRebholz_Conservation',
                 'icpsNS:sincos_CCBF'  : 'SinCos_Conservation_Conservative_Body_Force',
                 'icpsNS:sincos_CCBF1' : 'SinCos_Conservation_Conservative_Body_Force1',
@@ -38,6 +39,7 @@ class _3dCSCG_ExactSolution_Allocator(FrozenOnly):
         base_path = '.'.join(str(cls).split(' ')[1][1:-2].split('.')[:-2]) + '.'
         _path_icpsNS_ =  base_path + 'incompressible_Navier_Stokes.'
         return {'icpsNS:TGV1'    : _path_icpsNS_ + 'Taylor_Green_vortex',
+                'icpsNS:LDC'     : _path_icpsNS_ + 'lid_driven_cavity',
                 'icpsNS:sincosRC': _path_icpsNS_ + 'Sin_Cos',
                 'icpsNS:sincos_CCBF'  :  _path_icpsNS_ + 'Sin_Cos',
                 'icpsNS:sincos_CCBF1' :  _path_icpsNS_ + 'Sin_Cos',

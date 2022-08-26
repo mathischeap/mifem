@@ -55,7 +55,7 @@ def scalar_Laplace_solver_iterative_solver(c, Kx, Ky, Nx, Ny):
     b = concatenate([B0, B1])
     LS = LinearSystem(A, b)
 
-    results = LS.solve('GMRES')(0, restart=100, maxiter=20)[0]
+    results = LS.solve('GMRES')(0, restart=100, maxiter="20")[0]
     results.do.distributed_to(u, p)
 
     u.TW.func.do.set_func_body_as(ES, "velocity")

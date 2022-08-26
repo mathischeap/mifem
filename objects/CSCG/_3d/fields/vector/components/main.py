@@ -112,7 +112,7 @@ class _3dCSCG_VectorField_Components(FrozenOnly):
 
             for bn in func:
                 boundary = mesh.boundaries[bn]
-                C_unv = boundary.constant_unit_normal_vector
+                C_unv = boundary.coordinate_transformation.constant.outward_unit_normal_vector
 
                 if C_unv is not None:
                     F = _3dCSCG_T_para_BW(mesh, bn, func[bn])
@@ -178,7 +178,7 @@ class _3dCSCG_VectorField_Components(FrozenOnly):
 
             for bn in func:
                 boundary = mesh.boundaries[bn]
-                C_unv = boundary.constant_unit_normal_vector
+                C_unv = boundary.coordinate_transformation.constant.outward_unit_normal_vector
 
                 if C_unv is not None:
                     F = _3dCSCG_T_perp_BW(mesh, bn, func[bn])

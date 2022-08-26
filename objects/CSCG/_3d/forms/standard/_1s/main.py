@@ -109,7 +109,7 @@ class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form):
 
     @property
     def _BI_(self):
-        """This properties should be accessed through `self.do.boundary_integration`."""
+        """This properties should be accessed through `self.do.boundary_integrate`."""
         if self.__BI__ is None:
             self.__BI__ = _3dCSCG_S1F_BI(self)
         return self.__BI__

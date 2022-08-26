@@ -8,7 +8,8 @@ from root.config.main import rAnk
 
 from screws.freeze.main import FrozenOnly
 
-from objects.CSCG._3d.mesh.trace.elements.element.coordinate_transformation import _3dCSCG_Trace_Element_CoordinateTransformation
+from objects.CSCG._3d.mesh.trace.elements.element.coordinate_transformation.main import \
+    _3dCSCG_Trace_Element_CoordinateTransformation
 from objects.CSCG._3d.mesh.trace.elements.element.visualize import _3dCSCG_TraceElement_VIS
 from objects.CSCG._3d.mesh.trace.elements.element.IS import _3dCSCG_TraceElement_IS
 
@@ -50,8 +51,6 @@ class _3dCSCG_Trace_Element(FrozenOnly):
         self._visualize_ = None
         self._type_wrt_metric_ = None
         self._nd_ = None
-
-        self._constant_unit_normal_vector_ = True # do not use None
 
         self._freeze_self_()
         # # do a check for periodic trace element ________________________
@@ -190,48 +189,6 @@ class _3dCSCG_Trace_Element(FrozenOnly):
                     self.spacing)
 
         return self._type_wrt_metric_
-
-
-    @property
-    def constant_unit_normal_vector(self):
-        """The direction is the right-hand-rule, it can point the inner direction of a mesh.
-
-        Returns
-        -------
-
-        """
-        if self._constant_unit_normal_vector_ is True:
-            tMark = self.type_wrt_metric.mark
-
-            if isinstance(tMark, str) and tMark[:5] == 'Orth.':
-                # it has a constant_unit_normal_vector
-
-                x = [0,]
-                y = [0,]
-                z = [0]
-
-                nV = self.coordinate_transformation.unit_normal_vector(x, y, z, parse_3_1d_eps=True)
-
-                x, y, z = nV
-
-                x = x[0,0]
-                y = y[0,0]
-                z = z[0,0]
-
-                self._constant_unit_normal_vector_ = (x, y, z)
-
-            else:
-                self._constant_unit_normal_vector_ = None
-
-
-
-
-
-
-        return self._constant_unit_normal_vector_
-
-
-
 
 
 
