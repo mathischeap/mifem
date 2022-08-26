@@ -39,7 +39,9 @@ class RegularSolverDistributor(FrozenOnly):
             f"A needs to be a GlobalMatrix'. Now I get {A.__class__}."
         assert b.__class__.__name__ == "GlobalVector", \
             f"b needs to be a 'GlobalVector'. Now I get {b.__class__}."
+
         Results = self._solver_(A, b, *args, **kwargs)
+
         assert len(Results) == 5 and Results[0].__class__.__name__ == 'LocallyFullVector', \
             f"results must be of length 5, and results[0] must be a LocallyFullVector!"
         return Results

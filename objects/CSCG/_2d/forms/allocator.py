@@ -19,6 +19,7 @@ class _2dCSCG_FormsAllocator(FrozenOnly):
                 '1-t-o': "_2dCSCG_1Trace_Outer",
                 }
 
+
     @classmethod
     def ___form_path___(cls):
         base_path = '.'.join(str(cls).split(' ')[1][1:-2].split('.')[:-2]) + '.'

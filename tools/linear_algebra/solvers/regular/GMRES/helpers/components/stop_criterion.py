@@ -6,54 +6,105 @@ def ___gmres_stop_criterion___(tol, atol, ITER, maxiter, BETA):
     :param tol: relative tolerance.
     :param atol: absolute tolerance
     :param ITER:
-    :param maxiter:
+    :param maxiter: int, str
+        A positive integer.
+
+        if maxiter is a str, it must be a numeric str, and it means it is a
+        strong maxiter, that is no matter what happened, we will iterate the
+        solver for this many times. So it is a forced amount of iterations.
+
     :param BETA: A list of beta (residual) of some recent iterations.
     :return:
     """
-    assert tol < 0.01, f"tol={tol} too large, should be < 0.01."
 
-    # noinspection PyUnusedLocal
-    info = 'TBD'
+    if isinstance(maxiter, str):
 
-    beta0 = BETA[0]
-    beta = BETA[-1]
-    judge_1 = beta < atol # judge 1: reach absolute tolerance.
-    judge_2 = ITER >= maxiter # judge 2: reach max iteration number
-    # judge 3: divergence
-    if BETA[-1] > BETA[-2]: # error grows after one iteration
-        if BETA[-2] > 1 and (BETA[-1]-BETA[-2]) > 100 * BETA[-2]:
-            judge_3 = True
-        elif BETA[-1] > 10e6:
-            judge_3 = True
-        elif (BETA[-1]-BETA[-2]) > 100:
-            judge_3 = True
-        else:
-            judge_3 = False
-    else:
+        judge_1 = False
         judge_3 = False
-
-    # judge 4: reach relative tol.
-    if beta < beta0:
-        progress = beta0 - beta
-        if progress / beta0 < tol: # reach relative tol.
-            judge_4 = True
-        else:
-            judge_4 = False
-    else:
         judge_4 = False
-
-    # judge_5: slow converging
-    beta_old = BETA[-2]
-    if beta < beta_old:
-        progress = beta_old - beta
-        if progress / beta_old < tol: # slow converging
-            judge_5 = True
-        else:
-            judge_5 = False
-    else:
         judge_5 = False
 
-    # ...
+        MAXITER = int(maxiter)
+        judge_2 = ITER >= MAXITER # judge 2: reach max iteration number
+
+
+    else:
+
+        assert tol < 0.01, f"tol={tol} too large, should be < 0.01."
+
+        # noinspection PyUnusedLocal
+        info = 'TBD'
+
+        beta0 = BETA[0]
+        beta = BETA[-1]
+        judge_1 = beta < atol # judge 1: reach absolute tolerance.
+        judge_2 = ITER >= maxiter # judge 2: reach max iteration number
+        # judge 3: divergence
+        if BETA[-1] > BETA[-2]: # error grows after one iteration
+            if BETA[-2] > 1 and (BETA[-1]-BETA[-2]) > 100 * BETA[-2]:
+                judge_3 = True
+            elif BETA[-1] > 10e6:
+                judge_3 = True
+            elif (BETA[-1]-BETA[-2]) > 100:
+                judge_3 = True
+            else:
+                judge_3 = False
+        else:
+            judge_3 = False
+
+        # judge 4: reach relative tol.
+        if beta < beta0:
+            progress = beta0 - beta
+            if progress / beta0 < tol: # reach relative tol.
+                judge_4 = True
+            else:
+                judge_4 = False
+        else:
+            judge_4 = False
+
+        # judge_5: slow converging
+        if len(BETA) >= 5:
+
+            if len(BETA) > 10:
+                CHECKS = BETA[-8:]
+            else:
+                CHECKS = BETA[1:]
+
+            JUDGES = list()
+
+            Lc = len(CHECKS)
+
+            for i in range(Lc-1):
+                j = i + 1
+
+                OLD = CHECKS[i]
+                NEW = CHECKS[j]
+
+                progress = OLD - NEW
+
+                if progress < 0 :
+                    JUDGES.append(True)
+
+                else:
+                    if progress / OLD < tol: # slow converging
+                        JUDGES.append(True)
+                    else:
+                        JUDGES.append(False)
+
+            cT = JUDGES.count(True)
+            cF = JUDGES.count(False)
+
+            if cT >= 3:
+                judge_5 = True
+            elif cT >= cF:
+                judge_5 = True
+            else:
+                judge_5 = False
+
+        else:
+            judge_5 = False
+
+    # ................................................................
 
     if judge_1 or judge_2 or judge_3 or judge_4 or judge_5:
 

@@ -70,9 +70,16 @@ class GMRES(ParallelSolverBase):
 
         # ------------- check ----------------------------------------------------------------
         assert x0.__class__.__name__ == "LocallyFullVector", \
-                         f"x0 needs to be a 'LocallyFullVector'. Now I get {b.__class__}."
+            f"x0 needs to be a 'LocallyFullVector'. Now I get {b.__class__}."
 
-        assert maxiter >= 1 and maxiter % 1 == 0, f"maxiter={maxiter} must be >= 1."
+        if isinstance(maxiter, int):
+            assert maxiter >= 1 and maxiter % 1 == 0, f"maxiter={maxiter} must be >= 1."
+        elif isinstance(maxiter, str):
+            MAXITER = int(maxiter)
+            assert MAXITER >= 1 and MAXITER % 1 == 0, f"maxiter={maxiter} must be >= 1."
+        else:
+            raise Exception(f"maxiter={maxiter} is invalid")
+
         assert restart >= 3 and restart % 1 == 0, f"restart={restart} must be >= 3."
         assert tol > 0 and atol > 0, f"tol={tol} and atol={atol} wrong, they must be > 0."
 

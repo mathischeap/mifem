@@ -24,7 +24,7 @@ class LGMRES(ParallelSolverBase):
 
 
     def __call__(self, A, b, x0,
-                 m=100, k=10, maxiter=20, tol=1e-3, atol=1e-4,
+                 m=100, k=10, maxiter=20, tol=1e-5, atol=1e-4,
                  preconditioner=(None, dict()),
                  COD=True,
                  plot_residuals=False,
@@ -37,7 +37,13 @@ class LGMRES(ParallelSolverBase):
         :param x0: LocallyFullVector
         :param m: restart = `m` + `k`
         :param k: restart = `m` + `k`
-        :param maxiter:
+        :param maxiter: int, str
+            A positive integer.
+
+            if maxiter is a str, it must be a numeric str, and it means it is a
+            strong maxiter, that is no matter what happened, we will iterate the
+            solver for this many times. So it is a forced amount of iterations.
+
         :param tol: tolerance.
         :param atol: absolute tolerance.
         :param preconditioner: Format: (ID, kwargs (a dict) for the preconditioner)
@@ -79,7 +85,14 @@ class LGMRES(ParallelSolverBase):
                          f"x0 needs to be a 'LocallyFullVector'. Now I get {x0.__class__}."
 
         #--------------------------------------------------------------------
-        assert maxiter >= 1 and maxiter % 1 == 0, f"maxiter={maxiter} must be >= 1."
+        if isinstance(maxiter, int):
+            assert maxiter >= 1 and maxiter % 1 == 0, f"maxiter={maxiter} must be >= 1."
+        elif isinstance(maxiter, str):
+            MAXITER = int(maxiter)
+            assert MAXITER >= 1 and MAXITER % 1 == 0, f"maxiter={maxiter} must be >= 1."
+        else:
+            raise Exception(f"maxiter={maxiter} is invalid")
+
         assert m >= 3 and m % 1 == 0, f"restart={m} must be >= 3."
         assert k >= 0 and k % 1 == 0, f"restart={k} must be >= 0."
         if k == 0 and rAnk == mAster_rank:

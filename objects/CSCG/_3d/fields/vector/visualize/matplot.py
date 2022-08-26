@@ -90,7 +90,6 @@ class _3dCSCG_VectorField_matplot_Visualize(FrozenOnly):
         ax.set_ylabel(r'$y$', fontsize=10)
         ax.set_zlabel(r'$z$', fontsize=10)
 
-
         # --------- y - component --------------------------------------------------------------------------
         ax = fig.add_subplot(132, projection='3d')
         ax.view_init(45, 60)

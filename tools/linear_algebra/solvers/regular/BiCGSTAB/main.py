@@ -33,7 +33,13 @@ class BiCGSTAB(ParallelSolverBase):
         :param A: GlobalMatrix
         :param b: GlobalVector
         :param x0: LocallyFullVector
-        :param maxiter:
+        :param maxiter: int, str
+            A positive integer.
+
+            if maxiter is a str, it must be a numeric str, and it means it is a
+            strong maxiter, that is no matter what happened, we will iterate the
+            solver for this many times. So it is a forced amount of iterations.
+
         :param tol: tolerance.
         :param atol: absolute tolerance.
         :param preconditioner: Format: (ID, kwargs (a dict) for the preconditioner)
@@ -62,10 +68,17 @@ class BiCGSTAB(ParallelSolverBase):
             pass
 
         assert x0.__class__.__name__ == "LocallyFullVector", \
-                         f"x0 needs to be a 'LocallyFullVector'. Now I get {x0.__class__}."
-        #----------------------------------------------------------------------------------------
+            f"x0 needs to be a 'LocallyFullVector'. Now I get {x0.__class__}."
 
-        assert maxiter >= 1 and maxiter % 1 == 0, f"maxiter={maxiter} must be >= 1."
+        #----------------------------------------------------------------------------------------
+        if isinstance(maxiter, int):
+            assert maxiter >= 1 and maxiter % 1 == 0, f"maxiter={maxiter} must be >= 1."
+        elif isinstance(maxiter, str):
+            MAXITER = int(maxiter)
+            assert MAXITER >= 1 and MAXITER % 1 == 0, f"maxiter={maxiter} must be >= 1."
+        else:
+            raise Exception(f"maxiter={maxiter} is invalid")
+
         assert tol > 0 and atol > 0, f"tol={tol} and atol={atol} wrong, they must be > 0."
 
         # -------  Decide preconditioner ------------------------------------------------------------
@@ -99,6 +112,3 @@ class BiCGSTAB(ParallelSolverBase):
         #===========================================================================================
 
         return results, info, beta, ITER, MESSAGE
-
-
-

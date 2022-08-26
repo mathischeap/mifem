@@ -2,8 +2,10 @@
 from root.config.main import *
 from tools.linear_algebra.data_structures.global_matrix.main import LocallyFullVector
 from screws.exceptions import LinerSystemSolverDivergenceError
-from tools.linear_algebra.solvers.regular.GMRES.helpers.components.stop_criterion import ___gmres_stop_criterion___
-from tools.linear_algebra.solvers.regular.GMRES.helpers.components.residual_ploter import ___gmres_plot_residuals___
+from tools.linear_algebra.solvers.regular.GMRES.helpers.components.stop_criterion import \
+    ___gmres_stop_criterion___
+from tools.linear_algebra.solvers.regular.GMRES.helpers.components.residual_ploter import \
+    ___gmres_plot_residuals___
 
 
 def ___mpi_v1_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-4, preconditioner=None,
@@ -16,7 +18,13 @@ def ___mpi_v1_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
     :param rhs: GlobalVector
     :param X0: LocallyFullVector
     :param restart:
-    :param maxiter:
+    :param maxiter: int, str
+        A positive integer.
+
+        if maxiter is a str, it must be a numeric str, and it means it is a
+        strong maxiter, that is no matter what happened, we will iterate the
+        solver for this many times. So it is a forced amount of iterations.
+
     :param tol: relative tolerance.
     :param atol: absolute tolerance.
     :param preconditioner:
@@ -112,7 +120,8 @@ def ___mpi_v1_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
             if plot_residuals:
                 # noinspection PyUnboundLocalVariable
                 residuals.append(beta)
-        JUDGE, stop_iteration, info, JUDGE_explanation = ___gmres_stop_criterion___(tol, atol, ITER, maxiter, BETA)
+        JUDGE, stop_iteration, info, JUDGE_explanation = \
+            ___gmres_stop_criterion___(tol, atol, ITER, maxiter, BETA)
         if stop_iteration: break
         # ...
 
@@ -203,7 +212,8 @@ def ___mpi_v1_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
     Time_end = MPI.Wtime()
 
     COST_total = Time_end - Time_start
-    message = f" mpi_v2_gmres = [SYSTEM-SHAPE: {A.shape}] [ITER={ITER}][residual=%.2e] costs %.2f, " \
+    message = f" mpi_v2_gmres = [SYSTEM-SHAPE: {A.shape}] [ITER={ITER}] " \
+              f"[residual=%.2e] costs %.2f, " \
               f"convergence info={info}, restart={restart}, maxiter={maxiter}, " \
               f"stop_judge={JUDGE}: {JUDGE_explanation}]"%(beta, COST_total)
 

@@ -132,8 +132,6 @@ def manu_conserving_solver(N, k, t, steps):
        DIV_u1_L2_error_tk0h = D_u1_p_f2.error.L()
        DIV_u1_L_inf_error_tk0h = D_u1_p_f2.error.L(n='infinity', quad_density=1000000)
 
-
-
        iA00 =  M1/dt + 0.5*CP1
        iA00.gathering_matrices = (u1, u1)
        iB_0 = (M1/dt - 0.5*CP1) @ u1.cochain.EWC

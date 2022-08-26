@@ -31,6 +31,16 @@ from objects.CSCG._2d.fields.scalar.helpers.neg import _2dCSCG_ScalarNeg
 class _2dCSCG_VectorField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
     """The continuous vector field."""
     def __init__(self, mesh, func, ftype='standard', valid_time=None, name='vector-field'):
+        """
+
+        Parameters
+        ----------
+        mesh
+        func
+        ftype
+        valid_time
+        name
+        """
         super().__init__(mesh, ftype, valid_time)
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_vector_field')
         self.standard_properties.name = name

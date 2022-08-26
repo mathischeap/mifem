@@ -10,7 +10,7 @@ from tools.linear_algebra.solvers.regular.GMRES.helpers.components.residual_plot
 
 
 
-def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-3, atol=1e-4, preconditioner=None,
+def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-5, atol=1e-5, preconditioner=None,
                         COD=True, name=None, plot_residuals=False):
     """
 
@@ -19,7 +19,13 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-3, atol=1e
     :param X0: LocallyFullVector
     :param m:
     :param k:
-    :param maxiter:
+    :param maxiter: int, str
+        A positive integer.
+
+        if maxiter is a str, it must be a numeric str, and it means it is a
+        strong maxiter, that is no matter what happened, we will iterate the
+        solver for this many times. So it is a forced amount of iterations.
+
     :param tol: relative tolerance.
     :param atol: absolute tolerance.
     :param preconditioner: Format: (ID, kwargs (a dict) for the preconditioner)
@@ -269,13 +275,14 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-3, atol=1e
 
     if info < 0:
         raise LinerSystemSolverDivergenceError(
-            f"gmres0 diverges after {ITER} iterations with error reaching {beta}.")
+            f"lGMRES_0 diverges after {ITER} iterations with error reaching {beta}.")
 
     Time_end = MPI.Wtime()
 
     COST_total = Time_end - Time_start
-    message = f" mpi_v0_LGMRES = [SYSTEM-SHAPE: {A.shape}] [ITER={ITER}][residual=%.2e] costs %.2f, " \
-              f"convergence info={info}, m={_m_}, k={_k_} maxiter={maxiter}, " \
+    message = f" mpi_v0_LGMRES = [SYSTEM-SHAPE: {A.shape}] [ITER={ITER}] " \
+              f"[residual=%.2e] costs %.2f, " \
+              f"convergence info={info}, m={_m_}, k={_k_}, maxiter={maxiter}, " \
               f"stop_judge={JUDGE}: {JUDGE_explanation}]"%(beta, COST_total)
 
 

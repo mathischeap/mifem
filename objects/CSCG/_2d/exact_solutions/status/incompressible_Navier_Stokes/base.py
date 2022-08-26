@@ -34,6 +34,7 @@ class incompressibleNavierStokesBase(Base):
         self._total_pressure_ = None
         self._kinetic_energy_distribution_ = None
         self._curl_of_omega_ = None
+        self._divergence_of_velocity_ = None
 
         self._NPDf_u_ = None
         self._NPDf_v_ = None
@@ -91,6 +92,22 @@ class incompressibleNavierStokesBase(Base):
                 self.mesh, [self.u, self.v], valid_time=self.valid_time, name='velocity')
         return self._velocity_
 
+
+
+    @property
+    def divergence_of_velocity(self):
+        if self._divergence_of_velocity_ is None:
+            # this condition must be valid for all time.
+            self._divergence_of_velocity_ = _2dCSCG_ScalarField(self.mesh,
+                                                                self.___div_of_velocity___,
+                                                                valid_time=None)
+        return self._divergence_of_velocity_
+
+    def ___div_of_velocity___(self, t, x, y):
+        # must be zero
+        return self.u_x(t, x, y) + self.v_y(t, x, y)
+
+
     def omega(self, t, x, y):
         return self.v_x(t, x, y) - self.u_y(t, x, y)
 
@@ -127,6 +144,11 @@ class incompressibleNavierStokesBase(Base):
                 valid_time=self.valid_time,
                 name='curl_of_omega')
         return self._curl_of_omega_
+
+
+    @property
+    def curl_of_vorticity(self):
+        return self.curl_of_omega
 
 
     def p(self, t, x, y): # static pressure

@@ -52,6 +52,7 @@ class _3dCSCG_Vector_Do_Reconstruct(FrozenOnly):
                 return self._on_mesh_element___for_standard_(xi, eta, sigma, ravel, i)
             else:
                 raise NotImplementedError()
+
         elif where == 'trace-element':
             if ftype == 'standard':
                 return self._on_trace_element___for_standard_(xi, eta, sigma, ravel, i)
@@ -61,5 +62,6 @@ class _3dCSCG_Vector_Do_Reconstruct(FrozenOnly):
                 return self._on_trace_element___for_boundary_wise_(xi, eta, sigma, ravel, i)
             else:
                 raise NotImplementedError()
+
         else:
             raise NotImplementedError()

@@ -233,3 +233,8 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
 
         """
         return self._sf_.___PRIVATE_make_reconstruction_matrix_on_grid___(xi, eta, sigma)
+
+    @property
+    def boundary_integrate(self):
+        """"""
+        return self._sf_._BI_

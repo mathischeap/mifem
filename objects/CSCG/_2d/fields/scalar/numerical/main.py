@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from screws.freeze.main import FrozenOnly
 from importlib import import_module
 from screws.numerical.time_plus_2d_space.partial_derivative_as_functions import \

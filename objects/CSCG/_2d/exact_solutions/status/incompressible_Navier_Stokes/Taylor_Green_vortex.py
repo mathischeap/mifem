@@ -2,7 +2,7 @@
 import sys
 
 
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 from objects.CSCG._2d.exact_solutions.status.incompressible_Navier_Stokes.base import incompressibleNavierStokesBase
 from numpy import sin, cos, exp, pi
@@ -58,7 +58,7 @@ class TaylorGreenVortex(incompressibleNavierStokesBase):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python _2dCSCG\APP\exact_solution\status\incompressible_Navier_Stokes\Taylor_Green_vortex.py
+    # mpiexec -n 4 python objects/CSCG/_2d/exact_solutions/status/incompressible_Navier_Stokes/Taylor_Green_vortex.py
     from objects.CSCG._2d.master import MeshGenerator, ExactSolutionSelector
     mesh = MeshGenerator('crazy_periodic', bounds=[[0, 2], [0, 2]], c=0.0)([2, 2])
     es = ExactSolutionSelector(mesh)("icpsNS:TGV", show_info=True)

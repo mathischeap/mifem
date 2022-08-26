@@ -22,12 +22,35 @@ class nLS_Customize(FrozenOnly):
         """The current existing customizations."""
         return self.___customizations___
 
-    def set_no_evaluation(self, r):
+    def set_no_evaluation(self, i):
         """Let the nonlinear system do not affect the value of #r dof.
 
-        So dof_i will always be equal to dof_0 (the initial value (or initial guess)).
+        So dof_i will be equal to dof_0 (the initial value (or initial guess)).
         """
-        self.___customizations___.append(('set_no_evaluation', r))
+        self.___customizations___.append(('set_no_evaluation', i))
+
+    def set_fixed_solution(self, i, value):
+        """ So we make the initial value of dof #`i` to be `value`, plus we do `self.set_no_evaluation(i)`.
+
+        Parameters
+        ----------
+        i :
+            The dof #i.
+        value :
+            The value of dof #i will be this one.
+
+        Returns
+        -------
+
+        """
+        self.___customizations___.append(('set_ith_value_of_initial_guess', [i, value]))
+        self.___customizations___.append(('set_no_evaluation', i))
+
+
+
+
+
+
 
 
 if __name__ == '__main__':

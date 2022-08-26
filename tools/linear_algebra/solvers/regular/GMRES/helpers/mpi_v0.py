@@ -12,7 +12,13 @@ def ___mpi_v0_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
     :param rhs: GlobalVector
     :param X0: LocallyFullVector
     :param restart:
-    :param maxiter:
+    :param maxiter: int, str
+        A positive integer.
+
+        if maxiter is a str, it must be a numeric str, and it means it is a
+        strong maxiter, that is no matter what happened, we will iterate the
+        solver for this many times. So it is a forced amount of iterations.
+
     :param tol: relative tolerance.
     :param atol: absolute tolerance.
     :param preconditioner: Format: (ID, kwargs (a dict) for the preconditioner)
@@ -167,7 +173,8 @@ def ___mpi_v0_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
     Time_end = MPI.Wtime()
 
     COST_total = Time_end - Time_start
-    message = f" mpi_v0_gmres = [SYSTEM-SHAPE: {A.shape}] [ITER={ITER}][residual=%.2e] costs %.2f, " \
+    message = f" mpi_v0_gmres = [SYSTEM-SHAPE: {A.shape}] [ITER={ITER}] " \
+              f"[residual=%.2e] costs %.2f, " \
               f"convergence info={info}, restart={restart}, maxiter={maxiter}, " \
               f"stop_judge={JUDGE}: {JUDGE_explanation}]"%(beta, COST_total)
 

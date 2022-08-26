@@ -15,6 +15,9 @@ from tools.linear_algebra.elementwise_cache.operators.bmat.main import bmat
 from tools.linear_algebra.elementwise_cache.operators.concatenate.main import concatenate
 from time import time
 
+
+
+
 class nLS_Solve_NR_regular(FrozenOnly):
     def __init__(self, nLS):
         """"""
@@ -36,8 +39,13 @@ class nLS_Solve_NR_regular(FrozenOnly):
             The initial guess
         atol :
             Absolutely tolerance; norm of delta_x.
-        maxiter : int
+        maxiter : int, str
             A positive integer.
+
+            if maxiter is a str, it must be a numeric str, and it means it is a
+            strong maxiter, that is no matter what happened, we will iterate the
+            solver for this many times. So it is a forced amount of iterations.
+
         LS_solver_para : str, tuple
             The parameters to select and config the linear solver.
 
@@ -189,9 +197,20 @@ class nLS_Solve_NR_regular(FrozenOnly):
                 method_para = customization[1]
 
                 if method_name == "set_no_evaluation":
+                    # we make the #i dof unchanged .....
 
                     A.customize.identify_global_row(method_para)
                     f.customize.set_assembled_V_i_to(-1, 0)
+
+                elif method_name == "set_ith_value_of_initial_guess":
+                    # we make the initial value of dof #i to be v
+
+                    if ITER == 1: # only need to do it for the initial guess
+                        i, v = method_para
+                        xi.V[i] = v
+
+                    else:
+                        pass
 
                 else:
                     raise NotImplementedError(f"Cannot handle customization = {method_name}")
@@ -233,13 +252,13 @@ class nLS_Solve_NR_regular(FrozenOnly):
 
         #----------------------------------------------------------------------------------------1
         message += f"<nonlinear_solver>" \
-                   f" = [RegularNewtonRaphson-{A.shape}]" \
+                   f" = [RegularNewtonRaphson: {A.shape}]" \
                    f" of {self._nLS_.nonlinear_terms.num} nonlinear terms" \
                    f" = Linear solver args: {LS_solver_para} {LS_solver_kwargs}" \
-                   f" = [ITER:{ITER}]" \
-                   f" = [beta-{BETA[-1]}]" \
+                   f" = [ITER: {ITER}]" \
+                   f" = [beta: %.2e]" \
                    f" = [{convergence_info}-{JUDGE_explanation}]" \
-                   f" >>> nLS solving costs %.2f, each ITER cost %.2f"%(Ta, TiT/ITER)\
+                   f" >>> nLS solving costs %.2f, each ITER cost %.2f"%(BETA[-1], Ta, TiT/ITER)\
                    + '\n >>> Last Linear Solver Message:\n' + LSm
 
         #=======================================================================================1

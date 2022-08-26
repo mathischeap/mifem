@@ -17,6 +17,7 @@ from objects.CSCG._3d.forms.standard._1s.special.main import _1Form_Special
 from objects.CSCG._3d.forms.standard._1s.reconstruct import _3dCSCG_SF1_reconstruct
 from objects.CSCG._3d.forms.standard._1s.inheriting.private import _3dCSCG_S1F_Private
 from objects.CSCG._3d.forms.standard._1s.visualize.main import _3dCSCG_S1F_VISUALIZE
+from objects.CSCG._3d.forms.standard._1s.boundary_integration.main import _3dCSCG_S1F_BI
 
 
 
@@ -48,6 +49,7 @@ class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form):
         self._discretize_ = None
         self._reconstruct_ = None
         self._visualize_ = None
+        self.__BI__ = None
         self._freeze_self_()
 
     def ___PRIVATE_reset_cache___(self):
@@ -63,7 +65,6 @@ class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form):
         else:
             raise Exception(f"3dCSCG 1form FUNC do not accept func {func_body.__class__}")
 
-
     def ___PRIVATE_TW_BC_body_checker___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 3
@@ -73,6 +74,9 @@ class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form):
                 f"3dCSCG 1form BC do not accept func _3dCSCG_VectorField of ftype {func_body.ftype}."
         else:
             raise Exception(f"3dCSCG 1form BC do not accept func {func_body.__class__}")
+
+
+
 
     @property
     def special(self):
@@ -100,6 +104,15 @@ class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form):
         if self._visualize_ is None:
             self._visualize_ = _3dCSCG_S1F_VISUALIZE(self)
         return self._visualize_
+
+
+
+    @property
+    def _BI_(self):
+        """This properties should be accessed through `self.do.boundary_integration`."""
+        if self.__BI__ is None:
+            self.__BI__ = _3dCSCG_S1F_BI(self)
+        return self.__BI__
 
 
 

@@ -12,7 +12,13 @@ def ___mpi_v0_BiCGSTAB___(lhs, rhs, X0, maxiter=3, tol=1e-3, atol=1e-4, precondi
     :param lhs: GlobalMatrix
     :param rhs: LocallyFullVector
     :param X0: LocallyFullVector
-    :param maxiter:
+    :param maxiter: int, str
+        A positive integer.
+
+        if maxiter is a str, it must be a numeric str, and it means it is a
+        strong maxiter, that is no matter what happened, we will iterate the
+        solver for this many times. So it is a forced amount of iterations.
+
     :param tol: relative tolerance.
     :param atol: absolute tolerance.
     :param preconditioner: Format: (ID, kwargs (a dict) for the preconditioner)

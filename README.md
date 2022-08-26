@@ -1,6 +1,6 @@
 # mifem
 
-v3.2.1
+v3.2.2
 
 *mimetic finite element method*
 
@@ -11,5 +11,14 @@ applications.
 Nevertheless, significant efforts have be made to boost the computational efficiency of *mifem*.
 The most obvious feature as a result of such efforts is the usage of CPU parallelization powered by the Python binding of the
 Message Passing Interface (MPI) standard, the *mpi4py* package.
+
+
+To start up, please first check the installation of the dependent packages in *requirements.txt*. 
+Then you can direct to the dir where mifem library locates and run, for example,
+```
+$ mpiexec -n 4 py __tests__/test_all.py
+```
+This will do all the (>100) tests to fully validate the code in your machine.
+
 
 by Yi Zhang | www.mathischeap.com

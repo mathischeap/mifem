@@ -58,7 +58,6 @@ class SinCosRebholz_Conservation(incompressible_NavierStokes_Base):
 
     def fz(self, t, x, y, z): return 0 * x # can not name it by _fz_
 
-
     @property
     def body_force(self):
         """This makes body force valid at all time instants."""
@@ -126,13 +125,13 @@ class SinCosRebholz_Dissipation(incompressible_NavierStokes_Base):
 
     def w_zz(self, t, x, y, z): return 0 * x
 
-    def p(self, t, x, y, z): return sin(2 * pi * (x + y + z + t))
+    def p(self, t, x, y, z): return sin(2 * pi * (x + y + t)) # note that it is x + y, not x + y + z
 
-    def p_x(self, t, x, y, z): return 2 * pi * cos(2 * pi * (x + y + z + t))
+    def p_x(self, t, x, y, z): return 2 * pi * cos(2 * pi * (x + y + t))
 
-    def p_y(self, t, x, y, z): return 2 * pi * cos(2 * pi * (x + y + z + t))
+    def p_y(self, t, x, y, z): return 2 * pi * cos(2 * pi * (x + y + t))
 
-    def p_z(self, t, x, y, z): return 2 * pi * cos(2 * pi * (x + y + z + t))
+    def p_z(self, t, x, y, z): return 0 * x
 
 
 

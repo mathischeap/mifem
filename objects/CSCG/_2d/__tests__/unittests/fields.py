@@ -50,7 +50,6 @@ def test_Fields_NO1_vector():
     for i in R_xyz:
         assert np.max(np.abs(R_v[i][0] - dv_dx__m__du_dy(t, *R_xyz[i]))) < 1e-7
 
-
     #  ---- test numerical div -------------------------------------------------------------
     def du_dx__p__dv_dy(t, x, y):
         return - 2.56*np.pi**2 * np.cos(2.56*np.pi*x) * np.cos(3.12*np.pi*y) * np.sin(t)/1.554 + \
@@ -93,7 +92,6 @@ def test_Fields_NO2_scalar():
     for i in R_xyz:
         assert np.max(np.abs(R_v[i][0] - df_dt(t, *R_xyz[i]))) < 1e-7
 
-
     #----------- test numerical gradient ------------------------------------------
     grad_w = w.numerical.grad
     grad_w.current_time = t
@@ -109,7 +107,6 @@ def test_Fields_NO2_scalar():
     for i in R_xyz:
         assert np.max(np.abs(R_v[i][0] - df_dy(t, *R_xyz[i]))) < 1e-7
         assert np.max(np.abs(R_v[i][1] + df_dx(t, *R_xyz[i]))) < 1e-7
-
 
     return 1
 
@@ -247,7 +244,6 @@ def test_identities():
         np.testing.assert_array_almost_equal(R_v[i][1], f_V)
         np.testing.assert_array_almost_equal(R_V[i][0], f_U)
         np.testing.assert_array_almost_equal(R_V[i][1], f_V)
-
 
     #------------------------------------------------------------------------------------------------
     mesh = cscg2.mesh('crazy_periodic', c=0.)(element_layout=[5,5])
