@@ -42,6 +42,11 @@ class _3dCSCG_Mesh_Element(FrozenOnly):
         return self._in_region_
 
     @property
+    def region_indices(self):
+        """This element's indices in the region is this one."""
+        return self._mesh_.do.find.region_name_and_local_indices_of_element(self.i)[1]
+
+    @property
     def spacing(self):
         """What is the spacing of this element in the domain regions?
 

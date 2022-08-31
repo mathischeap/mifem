@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
-from screws.freeze.base import FrozenOnly
+import sys
+if './' not in sys.path: sys.path.append('./')
+from objects.CSCG._2d.forms.standard.base.reconstruct import _2dCSCG_SF_ReconstructBase
+from objects.CSCG._2d.discrete_fields.scalar.main import _2dCSCG_DF_Scalar
 import numpy as np
 
 
-class _2dCSCG_S2F_Reconstruct(FrozenOnly):
+class _2dCSCG_S2F_Reconstruct(_2dCSCG_SF_ReconstructBase):
     """"""
     def __init__(self, f):
-        self._f_ = f
+        super(_2dCSCG_S2F_Reconstruct, self).__init__(f)
         self._freeze_self_()
 
 
@@ -102,3 +105,65 @@ class _2dCSCG_S2F_Reconstruct(FrozenOnly):
                         xyz[i] = [xyz[i][j].reshape(shape, order='F') for j in range(2)]
                         value[i] = [v.reshape(shape, order='F'),]
                 return xyz, value
+
+
+
+    def discrete_scalar(self, rs):
+        """We reconstruct this outer S0F as a 2d CSCG discrete scalar in the `regions`.
+
+        Parameters
+        ----------
+        rs: dict, list, tuple
+            For example:
+                rst = [r, s, ], these r, s will be used for all regions.
+                rst = {'R:R1': [r1, s1], 'R:R2': [r2, s2], ....}, in each
+                    region, we use its own r, s
+
+            r or s can be in [-1,1] or [0,1].
+
+        Returns
+        -------
+
+        """
+        Xi_Eta_Sigma_D, rs = self.___PRIVATE_distribute_region_wise_meshgrid___(rs)
+        f = self._f_
+        mesh = f.mesh
+
+        #-------- reconstructing -----------------------------------------------------------------1
+        xy = dict()
+        value = dict()
+        EMPTY_DATA = np.empty((0,0))
+
+        for e in mesh.elements:
+            rn, ij = mesh.do.find.region_name_and_local_indices_of_element(e)
+            X, E = Xi_Eta_Sigma_D[rn]
+            i, j = ij
+            # these xi, et, sg are for reconstruction in local mesh element [e]
+            xi, et = X[i], E[j]
+            element = mesh.elements[e]
+            shape = [len(xi), len(et)]
+
+            if shape[0] < 1 or shape[1] < 1:
+                xy[e] = [EMPTY_DATA, EMPTY_DATA]
+                value[e] = [EMPTY_DATA, EMPTY_DATA]
+            else:
+                #___DIFF for different forms____ reconstruction in local mesh element #e________diff
+                xietasigma, basis = f.do.evaluate_basis_at_meshgrid(xi, et)
+                xy[e] = element.coordinate_transformation.mapping(*xietasigma)
+                det_iJ = element.coordinate_transformation.inverse_Jacobian(*xietasigma)
+                v = np.einsum('ij, i -> j', basis[0] * det_iJ, f.cochain.local[e], optimize='greedy')
+
+                # noinspection PyUnresolvedReferences
+                xy[e] = [xy[e][j].reshape(shape, order='F') for j in range(2)]
+                # noinspection PyUnresolvedReferences
+                value[e] = [v.reshape(shape, order='F'),] #=============================diff
+
+        #-------- prime-region-wise stack coordinates and values ----------------------------------1
+        XY, VAL, element_global_numbering = self.___PRIVATE_distribute_XY_and_VAL___(xy, value)
+
+        XY = self.___PRIVATE_prime_region_wise_stack___(XY, 2, rs, element_global_numbering)
+        VAL = self.___PRIVATE_prime_region_wise_stack___(VAL, 1, rs, element_global_numbering)
+
+        return _2dCSCG_DF_Scalar(mesh, XY, VAL,
+                                 name=self._f_.standard_properties.name,
+                                 structured=True, linspaces=rs)

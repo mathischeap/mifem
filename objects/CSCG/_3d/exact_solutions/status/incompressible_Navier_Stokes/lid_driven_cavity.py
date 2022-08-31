@@ -36,6 +36,10 @@ class LidDrivenCavity(incompressible_NavierStokes_Base):
 
     @property
     def velocity(self):
+        """The boundary velocity. We should only use this for the boundary condition.
+
+        And this boundary velocity is valid all time.
+        """
         if self._velocity_ is None:
             BV = {'North': [self._0_, self._0_, self._0_],
                   'South': [self._0_, self._0_, self._0_],
@@ -69,6 +73,7 @@ if __name__ == '__main__':
     mesh = MeshGenerator('crazy', c=0.0)([2, 2, 2])
     es = ExactSolutionSelector(mesh)("icpsNS:LDC", show_info=True)
 
-    print(es.status.velocity)
-    print(es.status.body_force)
+    T_perp = es.status.velocity.components.T_perp
 
+    T_perp.current_time = 0
+    T_perp.visualize()

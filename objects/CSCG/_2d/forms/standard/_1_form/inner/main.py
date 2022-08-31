@@ -37,7 +37,7 @@ class _2dCSCG_1Form_Inner(_1Form_BASE):
         self._special_ = _1Form_Inner_Special(self)
         self._discretize_ = _2dCSCG_S1Fi_Discretize(self)
         self._reconstruct_ = None
-        self.___PRIVATE_reset_cache___()
+        self.RESET_cache()
         self._freeze_self_()
 
     @property
@@ -57,7 +57,7 @@ class _2dCSCG_1Form_Inner(_1Form_BASE):
 
 
 
-    def ___PRIVATE_make_reconstruction_matrix_on_grid___(self, xi, eta):
+    def ___PRIVATE_make_reconstruction_matrix_on_grid___(self, xi, eta, element_range=None):
         """
         Make a dict (keys are #mesh-elements) of matrices whose columns refer to
         nodes of meshgrid(xi, eta, indexing='ij') and rows refer to
@@ -72,7 +72,13 @@ class _2dCSCG_1Form_Inner(_1Form_BASE):
         """
         xietasigma, basis = self.do.evaluate_basis_at_meshgrid(xi, eta)
 
-        INDICES = self.mesh.elements.indices
+        if element_range is None:
+            INDICES = self.mesh.elements.indices
+        elif element_range == 'mesh boundary':
+            INDICES = self.mesh.boundaries.involved_elements
+        else:
+            raise Exception(f"element_range = {element_range} is wrong!")
+
         iJ = self.mesh.elements.coordinate_transformation.inverse_Jacobian_matrix(*xietasigma)
 
         b0, b1 = basis[0].T, basis[1].T

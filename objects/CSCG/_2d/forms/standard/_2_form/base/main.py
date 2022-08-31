@@ -19,8 +19,8 @@ class _2Form_BASE(_2dCSCG_Standard_Form):
     def visualize(self):
         return self._visualize_
 
-    def ___PRIVATE_reset_cache___(self):
-        super().___PRIVATE_reset_cache___()
+    def RESET_cache(self):
+        super().RESET_cache()
 
     def ___PRIVATE_TW_FUNC_body_checker___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
@@ -48,7 +48,7 @@ class _2Form_BASE(_2dCSCG_Standard_Form):
         return self._reconstruct_
 
 
-    def ___PRIVATE_make_reconstruction_matrix_on_grid___(self, xi, eta):
+    def ___PRIVATE_make_reconstruction_matrix_on_grid___(self, xi, eta, element_range=None):
         """
         Make a dict (keys are #mesh-elements) of matrices whose columns refer to
         nodes of meshgrid(xi, eta, indexing='ij') and rows refer to
@@ -63,7 +63,14 @@ class _2Form_BASE(_2dCSCG_Standard_Form):
         """
         xietasigma, basis = self.do.evaluate_basis_at_meshgrid(xi, eta)
         RM = dict()
-        INDICES = self.mesh.elements.indices
+
+        if element_range is None:
+            INDICES = self.mesh.elements.indices
+        elif element_range == 'mesh boundary':
+            INDICES = self.mesh.boundaries.involved_elements
+        else:
+            raise Exception(f"element_range = {element_range} is wrong!")
+
         base = basis[0].T
         type_cache = dict()
         for i in INDICES:

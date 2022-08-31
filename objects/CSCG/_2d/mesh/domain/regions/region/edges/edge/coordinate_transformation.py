@@ -5,7 +5,7 @@ from screws.freeze.main import FrozenOnly
 
 
 class EdgeCoordinateTransformation(FrozenOnly):
-    """ """
+    """[0,1] -> edge """
 
     def __init__(self, edge):
         """ """

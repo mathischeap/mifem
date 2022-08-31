@@ -15,9 +15,10 @@ class _3dCSCG_S3F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
 
     def __call__(self, *args, **kwargs):
         """"""
-        return self.___PRIVATE_default_surface_plot___(*args, **kwargs)
+        return self.perpendicular_surface(*args, **kwargs)
 
-    def ___PRIVATE_default_surface_plot___(self, x=None, y=None, z=None,
+    def perpendicular_surface(self,
+        x=None, y=None, z=None, # only one of them can be not-None.
         plot_type='contourf', usetex=True, colormap='coolwarm',
         numOfSamples=100000, figsize=(6, 5),
         num_of_levels=20,

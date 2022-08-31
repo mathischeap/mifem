@@ -9,6 +9,7 @@ class _3dCSCG_Mesh_DO_FIND(FrozenOnly):
     def __init__(self, DO):
         self._DO_ = DO
         self._mesh_ = DO._mesh_
+        self._region_names_pool_ = dict()
         self._freeze_self_()
 
     def region_name_of_element(self, i):
@@ -22,19 +23,23 @@ class _3dCSCG_Mesh_DO_FIND(FrozenOnly):
         -------
 
         """
+        if i in self._region_names_pool_:
+            return self._region_names_pool_[i]
         region_name = None
         for num_elements_accumulation in self._mesh_._num_elements_accumulation_:
             if i < num_elements_accumulation:
                 region_name = self._mesh_._num_elements_accumulation_[num_elements_accumulation]
                 break
+        self._region_names_pool_[i] = region_name
         return region_name
 
     def region_name_and_local_indices_of_element(self, i):
-        """
+        """ith global numbered mesh element.
 
         Parameters
         ----------
-        i
+        i : int
+            The numbering of a global element.
 
         Returns
         -------

@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from root.config.main import *
 import matplotlib.pyplot as plt
@@ -29,10 +29,10 @@ class _2dCSCG_VectorField_Visualize_matplot(FrozenOnly):
         return levels
 
 
-    def __call__(self, ptype='contourf', **kwargs):
-        return getattr(self, '_plot__2dCSCG_VectorField' + f'_{ptype}')(**kwargs)
+    def __call__(self, **kwargs):
+        return self.contourf(**kwargs)
 
-    def _plot__2dCSCG_VectorField_contourf(self, time=None, density=10000, usetex=False, colormap='coolwarm',
+    def contourf(self, time=None, density=10000, usetex=False, colormap='coolwarm',
         show_colorbar=True, levels_x=None, levels_y=None, num_levels=20, show_boundaries=True, title=True):
         """
 

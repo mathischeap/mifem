@@ -42,7 +42,7 @@ class _3dTraceElement_CT_Constant(FrozenOnly):
                 # it has a constant_unit_normal_vector
                 x = [0,]
                 y = [0,]
-                z = [0]
+                z = [0,]
 
                 nV = te.coordinate_transformation.unit_normal_vector(x, y, z, parse_3_1d_eps=True)
 
@@ -83,6 +83,7 @@ class _3dTraceElement_CT_Constant(FrozenOnly):
                 f1 = float(f1[1:])
 
                 self._Jacobian_ = f0 * f1 / 4
+
 
             # + elif, because when it is not orthogonal, the unit_normal_vector can also be constant.
 

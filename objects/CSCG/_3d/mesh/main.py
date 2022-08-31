@@ -20,7 +20,7 @@ Components:
 """
 import matplotlib.pyplot as plt
 from typing import Dict, Union
-from root.config.main import *
+from root.config.main import rAnk, mAster_rank, cOmm, np, MPI, sIze, sEcretary_rank
 from objects.CSCG.base.mesh.base import CSCG_MESH_BASE
 from screws.decorators.accepts import accepts, memoize5#, memoize2
 from screws.exceptions import ElementsLayoutError, ElementSidePairError
@@ -1082,8 +1082,8 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         self.trace.___PRIVATE_reset_cache___()
         if self.trace._elements_ is not None:
             self.trace.elements.___PRIVATE_reset_cache___()
-        self.elements.___PRIVATE_reset_cache___()
-        self.boundaries.___PRIVATE_reset_cache___()
+        self.elements.RESET_cache()
+        self.boundaries.RESET_cache()
         self.___element_global_numbering___ = None
 
 

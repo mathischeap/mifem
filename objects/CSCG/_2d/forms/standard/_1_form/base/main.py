@@ -34,8 +34,8 @@ class _1Form_BASE(_2dCSCG_Standard_Form):
             self.k, xi, eta, orientation=self.orientation, compute_xietasigma=compute_xietasigma)
 
 
-    def ___PRIVATE_reset_cache___(self):
-        super().___PRIVATE_reset_cache___()
+    def RESET_cache(self):
+        super().RESET_cache()
 
     def ___PRIVATE_TW_FUNC_body_checker___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain

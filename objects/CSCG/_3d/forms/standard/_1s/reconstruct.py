@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from screws.freeze.base import FrozenOnly
 
 import numpy as np
+from objects.CSCG._3d.forms.standard.base.reconstruct import _3dCSCG_SF_Reconstruct
 
 
-class _3dCSCG_SF1_reconstruct(FrozenOnly):
+class _3dCSCG_SF1_reconstruct(_3dCSCG_SF_Reconstruct):
     """"""
     def __init__(self, sf):
-        self._sf_ = sf
+        super(_3dCSCG_SF1_reconstruct, self).__init__(sf)
         self._freeze_self_()
 
 

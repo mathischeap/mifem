@@ -124,6 +124,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                 # NOTE that we do not put the vector in a list or tuple, it should take (t, xi, eta, sigma) and then return xyz and the vector.
                 assert callable(func[i]), f"func[{i}] is not callable."
             self._func_ = func
+
         else:
             raise Exception(f" <_3dCSCG_VectorField> do not accept funcType={ftype}")
 

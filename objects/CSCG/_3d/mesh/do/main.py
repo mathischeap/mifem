@@ -29,7 +29,7 @@ class _3dCSCG_Mesh_DO(FrozenOnly):
         We use this method to stack a ndarray regions-wise. This function is very useful
         in plotting reconstruction data. Since in a regions, the elements are structure,
         we can plot element by element. But if we group data from elements of the same
-        regions, then we can plot regions by regions. This very increase the plotting speed
+        regions, then we can plot regions by regions. This increases the plotting speed
         significantly.
 
         Parameters

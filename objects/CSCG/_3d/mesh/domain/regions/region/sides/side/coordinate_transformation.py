@@ -9,9 +9,10 @@ from screws.freeze.main import FrozenOnly
 
 
 class SideCoordinateTransformation(FrozenOnly):
+    """[0,1]^2 -> side. Not [-1,1]^2!"""
     def __init__(self, side):
-        assert side.ndim == 3, " <Region> <DIII> <SideCoordinateTransformation> "
-        assert side.__class__.__name__ == 'Side', " <Region> <DIII> <SideCoordinateTransformation> "
+        assert side.ndim == 3, " <Region> <SideCoordinateTransformation> "
+        assert side.__class__.__name__ == 'Side', " <Region> <SideCoordinateTransformation> "
         self._side_ = side
         self._freeze_self_()
 

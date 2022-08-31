@@ -6,10 +6,10 @@ class CSCG_Standard_Form_Coboundary_BASE(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
         self._incidenceMatrix_ = None
-        self.___PRIVATE_reset_cache___()
+        self.RESET_cache()
         self._freeze_self_()
 
-    def ___PRIVATE_reset_cache___(self):
+    def RESET_cache(self):
         pass
 
     @property

@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from screws.freeze.base import FrozenOnly
+import sys
+if './' not in sys.path: sys.path.append('./')
+from objects.CSCG._2d.forms.standard.base.reconstruct import _2dCSCG_SF_ReconstructBase
+from objects.CSCG._2d.discrete_fields.vector.main import _2dCSCG_DF_Vector
 import numpy as np
 
 
-class _2dCSCG_Si1F_Reconstruct(FrozenOnly):
+class _2dCSCG_Si1F_Reconstruct(_2dCSCG_SF_ReconstructBase):
     """"""
     def __init__(self, f):
-        self._f_ = f
+        super(_2dCSCG_Si1F_Reconstruct, self).__init__(f)
         self._freeze_self_()
-
 
     def __call__(self, xi, eta, ravel=False, i=None, vectorized=False, value_only=False):
         """
@@ -42,7 +44,7 @@ class _2dCSCG_Si1F_Reconstruct(FrozenOnly):
         if vectorized:
 
             assert INDICES == mesh.elements.indices, f"currently, vectorized computation only works" \
-                                                          f"for full reconstruction."
+                                                     f"for full reconstruction."
 
             iJ = mesh.elements.coordinate_transformation.vectorized.inverse_Jacobian_matrix(*xietasigma)
 
@@ -119,3 +121,74 @@ class _2dCSCG_Si1F_Reconstruct(FrozenOnly):
                         # noinspection PyUnresolvedReferences
                         value[i] = [value[i][j].reshape(shape, order='F') for j in range(2)]
                 return xyz, value
+
+    def discrete_vector(self, rs):
+        """We reconstruct this outer S1F as a 2d CSCG discrete vector in the `regions`.
+
+        Parameters
+        ----------
+        rs: dict, list, tuple
+            For example:
+                rst = [r, s, ], these r, s will be used for all regions.
+                rst = {'R:R1': [r1, s1], 'R:R2': [r2, s2], ....}, in each
+                    region, we use its own r, s
+
+            r or s can be in [-1,1] or [0,1].
+
+        Returns
+        -------
+
+        """
+        Xi_Eta_Sigma_D, rs = self.___PRIVATE_distribute_region_wise_meshgrid___(rs)
+        f = self._f_
+        mesh = f.mesh
+
+        #-------- reconstructing -----------------------------------------------------------------1
+        xy = dict()
+        value = dict()
+        EMPTY_DATA = np.empty((0,0))
+
+        for e in mesh.elements:
+            rn, ij = mesh.do.find.region_name_and_local_indices_of_element(e)
+            X, E = Xi_Eta_Sigma_D[rn]
+            i, j = ij
+            # these xi, et, sg are for reconstruction in local mesh element [e]
+            xi, et = X[i], E[j]
+            element = mesh.elements[e]
+            shape = [len(xi), len(et)]
+
+            if shape[0] < 1 or shape[1] < 1:
+                xy[e] = [EMPTY_DATA, EMPTY_DATA]
+                value[e] = [EMPTY_DATA, EMPTY_DATA]
+            else:
+                #___DIFF for different forms____ reconstruction in local mesh element #e________diff
+                xietasigma, basis = f.do.evaluate_basis_at_meshgrid(xi, et)
+                iJi = element.coordinate_transformation.inverse_Jacobian_matrix(*xietasigma)
+                xy[e] = element.coordinate_transformation.mapping(*xietasigma)
+                u = np.einsum('ij, i -> j', basis[0], f.cochain.___PRIVATE_local_on_axis___('x', e), optimize='greedy')
+                v = np.einsum('ij, i -> j', basis[1], f.cochain.___PRIVATE_local_on_axis___('y', e), optimize='greedy')
+
+                value[e] = [None, None]
+                typeWr2Metric = element.type_wrt_metric.mark
+
+                if isinstance(typeWr2Metric, str) and typeWr2Metric[:4] == 'Orth':
+                    value[e][0] = u*iJi[0][0]
+                    value[e][1] = v*iJi[1][1]
+                else:
+                    value[e][0] = u*iJi[0][0] + v*iJi[1][0]
+                    value[e][1] = u*iJi[0][1] + v*iJi[1][1]
+
+                # noinspection PyUnresolvedReferences
+                xy[e] = [xy[e][j].reshape(shape, order='F') for j in range(2)]
+                # noinspection PyUnresolvedReferences
+                value[e] = [value[e][j].reshape(shape, order='F') for j in range(2)] #=========diff
+
+        #-------- prime-region-wise stack coordinates and values ----------------------------------1
+        XY, VAL, element_global_numbering = self.___PRIVATE_distribute_XY_and_VAL___(xy, value)
+
+        XY = self.___PRIVATE_prime_region_wise_stack___(XY, 2, rs, element_global_numbering)
+        VAL = self.___PRIVATE_prime_region_wise_stack___(VAL, 2, rs, element_global_numbering)
+
+        return _2dCSCG_DF_Vector(mesh, XY, VAL,
+                                 name=self._f_.standard_properties.name,
+                                 structured=True, linspaces=rs)

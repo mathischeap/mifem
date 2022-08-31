@@ -40,11 +40,14 @@ class _3dCSCG_0Form(_3dCSCG_S0F_Private, _3dCSCG_Standard_Form):
         self._k_ = 0
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_standard_0form')
         self._special_ = _0Form_Special(self)
-        self.___PRIVATE_reset_cache___()
+        self.RESET_cache()
         self._discretize_ = None
         self._reconstruct_ = None
         self._visualize_ = None
         self._freeze_self_()
+
+    def RESET_cache(self):
+        super().RESET_cache()
 
     def ___PRIVATE_TW_FUNC_body_checker___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
@@ -65,10 +68,6 @@ class _3dCSCG_0Form(_3dCSCG_S0F_Private, _3dCSCG_Standard_Form):
                 f"3dCSCG 0form BC do not accept func _3dCSCG_ScalarField of ftype {func_body.ftype}."
         else:
             raise Exception(f"3dCSCG 0form BC do not accept func {func_body.__class__}")
-
-
-    def ___PRIVATE_reset_cache___(self):
-        super().___PRIVATE_reset_cache___()
 
     @property
     def special(self):

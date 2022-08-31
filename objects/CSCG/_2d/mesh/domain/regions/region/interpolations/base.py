@@ -3,7 +3,7 @@ import numpy as np
 from screws.freeze.main import FrozenOnly
 from screws.decorators.accepts import accepts
 from screws.numerical._2d_space.Jacobian_21 import NumericalJacobian_xy_22
-
+from pynverse import inversefunc
 
 class InterpolationBase(FrozenOnly):
     """ """
@@ -11,6 +11,8 @@ class InterpolationBase(FrozenOnly):
     def __init__(self, region):
         self._region_ = region
         self._ndim_ = region.ndim
+        self._Rx00_ = None
+        self._Sy00_ = None
 
     @property
     def ndim(self):
@@ -37,7 +39,7 @@ class InterpolationBase(FrozenOnly):
         else:
             raise Exception()
 
-        assert np.shape(r) == np.shape(s), " <Interpolation> : inputs shape dismatch."
+        assert np.shape(r) == np.shape(s), " <Interpolation> : inputs shape dis-match."
         return r, s
 
     def mapping(self, r, s):
@@ -75,3 +77,56 @@ class InterpolationBase(FrozenOnly):
     def Jacobian_Ys(self, r, s):
         raise NotImplementedError()
 
+
+
+
+    def mapping_Xr_at_s0(self, r):
+        """x = mapping_X(r, 0)"""
+        return self.mapping_X(r, np.zeros_like(r))
+    def mapping_Ys_at_r0(self, s):
+        """y = mapping_Y(0, s)"""
+        return self.mapping_Y(np.zeros_like(s), s)
+
+
+
+
+
+    def ___mapping_Xr_s0___(self, r):
+        """x = mapping_X(r, 0); do not use, for inverse only"""
+        return self.mapping_X(r, 0)
+    def ___mapping_Ys_r0___(self, s):
+        """y = mapping_Y(0, s): do n ot use, for inverse only"""
+        return self.mapping_Y(0, s)
+
+
+    def ___inverse_mapping_r_x_s0___(self, x):
+        """Return r according to the inverse function of x = mapping_X(r, 0 , 0)
+
+        Parameters
+        ----------
+        x :
+
+        Returns
+        -------
+        r :
+
+        """
+        if self._Rx00_ is None:
+            self._Rx00_ = inversefunc(self.___mapping_Xr_s0___)
+        return self._Rx00_(x)
+
+    def ___inverse_mapping_s_y_r0___(self, y):
+        """Return s according to the inverse function of y = mapping_Y(0, s , 0)
+
+        Parameters
+        ----------
+        y :
+
+        Returns
+        -------
+        s :
+
+        """
+        if self._Sy00_ is None:
+            self._Sy00_ = inversefunc(self.___mapping_Ys_r0___)
+        return self._Sy00_(y)

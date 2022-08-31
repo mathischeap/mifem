@@ -30,10 +30,10 @@ class _2dCSCG_ScalarField_Visualize_matplot(FrozenOnly):
 
 
 
-    def __call__(self, ptype='contourf', **kwargs):
-        return getattr(self, '_plot__2dCSCG_ScalarField' + f'_{ptype}')(**kwargs)
+    def __call__(self, **kwargs):
+        return self.contourf(**kwargs)
 
-    def _plot__2dCSCG_ScalarField_contourf(self, time=None, density=10000, usetex=False, colormap='coolwarm',
+    def contourf(self, time=None, density=10000, usetex=False, colormap='coolwarm',
         show_colorbar=True, levels=None, num_levels=20, title=True,
         show_boundaries=True, domain_boundary_linewidth=3, boundary_name_fontsize=12,
         minor_tick_length=0, major_tick_length=0, tick_pad=5, tick_size=12):

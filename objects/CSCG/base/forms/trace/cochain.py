@@ -13,7 +13,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
     def __init__(self, tf):
         self._tf_ = tf
         self._local_ = None
-        self.___PRIVATE_reset_cache___()
+        self._local_TEW_ = None
         self._freeze_self_()
 
     def ___PRIVATE_reset_cache___(self):

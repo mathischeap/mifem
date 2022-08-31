@@ -30,7 +30,7 @@ class _2dCSCG_0Form_Inner(_0Form_BASE):
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_inner_0form')
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_0form')
         self._special_ = _0Form_Inner_Special(self)
-        self.___PRIVATE_reset_cache___()
+        self.RESET_cache()
         self._freeze_self_()
 
     @property

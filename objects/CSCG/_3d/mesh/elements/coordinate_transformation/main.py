@@ -14,10 +14,10 @@ class _3dCSCG_Mesh_Elements_CT(FrozenOnly):
     def __init__(self, elements):
         self._elements_ = elements
         self._vectorized_ = None
-        self.___PRIVATE_reset_cache___()
+        self.RESET_cache()
         self._freeze_self_()
 
-    def ___PRIVATE_reset_cache___(self):
+    def RESET_cache(self):
         self._ctq_1d_ = _3dCSCG_ECT_1d_QUAD(self)
         self._ctq_3d_ = _3dCSCG_ECT_3d_QUAD(self)
 

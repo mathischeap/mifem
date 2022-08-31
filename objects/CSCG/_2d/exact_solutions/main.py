@@ -9,7 +9,6 @@
 """
 from screws.freeze.main import FrozenClass
 
-
 from objects.CSCG._2d.exact_solutions.visualize.main import ExactSolution_Visualize
 from objects.CSCG._2d.exact_solutions.do import ExactSolution_do
 
@@ -65,7 +64,3 @@ class ExactSolution(FrozenClass):
 
     def __eq__(self, other):
         return self.standard_properties.parameters == other.standard_properties.parameters
-
-
-
-

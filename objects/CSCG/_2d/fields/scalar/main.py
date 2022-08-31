@@ -16,6 +16,7 @@ from objects.CSCG._2d.fields.base import _2dCSCG_Continuous_FORM_BASE
 from functools import partial
 import numpy as np
 from screws.functions.time_plus_2d_space._0_ import _0t_
+from screws.functions.time_plus_2d_space.constant import CFGt as CFG_t_plus_2d
 from objects.CSCG._2d.fields.scalar.do.main import _2dCSCG_ScalarField_DO
 from objects.CSCG._2d.fields.scalar.numerical.main import _2dCSCG_ScalarField_Numerical
 from objects.CSCG._2d.fields.scalar.visualize.main import _2dCSCG_ScalarField_Visualize
@@ -29,7 +30,19 @@ from objects.CSCG._2d.fields.scalar.helpers.add import _2dCSCG_ScalarFieldAddHel
 
 class _2dCSCG_ScalarField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
     """The continuous scalar field."""
-    def __init__(self, mesh, func, ftype='standard', valid_time=None, name='scalar-field'):
+    def __init__(self, mesh, func, ftype=None, valid_time=None, name='scalar-field'):
+        #--- when ftype is None, parse it from func type ----------------------------------------1
+        if ftype is None:
+            if callable(func) or isinstance(func, (int, float)):
+                ftype = 'standard'
+            elif isinstance(func, dict):
+                ftype = 'boundary-wise'
+            else:
+                raise Exception()
+        else:
+            pass
+
+        #----------------------------------------------------------------------------------------1
         super().__init__(mesh, ftype, valid_time)
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_scalar_field')
         self.standard_properties.name = name
@@ -64,6 +77,36 @@ class _2dCSCG_ScalarField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
             else:
                 raise Exception(f"func={func} is a {func.__class__}, cannot be understood.")
             self._func_ = [func,]
+
+        elif ftype == 'boundary-wise': # mesh boundary wise (not domain boundary-wise)
+            assert isinstance(func, dict), f" when ftype == 'boundary-wise', " \
+                                           f"we must put functions in a dict whose " \
+                                           f"keys are boundary names and values are" \
+                                           f"the functions."
+
+            self._func_ = dict()
+            for bn in func:
+                assert bn in self.mesh.boundaries.names, \
+                    f"func key: [{bn}] is not a valid boundary name " \
+                    f"({self.mesh.boundaries.names})"
+
+                func_bn = func[bn]
+
+                # standard func is function or method or int or float.
+                if isinstance(func_bn, FunctionType):
+                    assert func_bn.__code__.co_argcount >= 3
+                elif isinstance(func_bn, MethodType):
+                    # noinspection PyUnresolvedReferences
+                    assert func_bn.__code__.co_argcount >= 4
+                elif isinstance(func_bn, (int, float)):
+                    func_bn = CFG_t_plus_2d(func_bn)()
+                else:
+
+                    raise Exception()
+
+                self._func_[bn] = [func_bn,]
+                # we always put a func representing a scalar in a list or tuple of shape (1,)
+
         else:
             raise Exception(f" <ScalarField> do not accept funcType={ftype}")
         self._ftype_ = ftype
@@ -87,8 +130,16 @@ class _2dCSCG_ScalarField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
         else:
             if self.ftype == 'standard':
                 RETURN = [partial(self.func[0], time),]
+
+            elif self.ftype  == 'boundary-wise':
+
+                RETURN = dict()
+                for bn in self.func:
+                    RETURN[bn] = [partial(self.func[bn][0], time),]
+
             else:
                 raise Exception(f"Cannot do it for funcType={self.ftype}")
+
             self._previous_func_id_time_ = (id(self.func), time, RETURN)
             return RETURN
 

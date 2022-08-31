@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from screws.freeze.main import FrozenOnly
 import numpy as np
-from objects.CSCG._2d.mesh.elements.element.coordinate_transformation import _2dCSCG_Mesh_ECT
+from objects.CSCG._2d.mesh.elements.element.coordinate_transformation.main import _2dCSCG_Mesh_ECT
+from objects.CSCG._2d.mesh.elements.element.IS import _2dCSCG_Mesh_IS
 
 
 
@@ -14,6 +15,7 @@ class _2dCSCG_Mesh_Element(FrozenOnly):
         self._type_wrt_metric_ = None
         self._in_region_ = self._mesh_.do.find.region_name_of_element(self.i)
         self._ct_ = _2dCSCG_Mesh_ECT(self)
+        self._IS_ = _2dCSCG_Mesh_IS(self)
         self._freeze_self_()
 
     @property
@@ -50,3 +52,7 @@ class _2dCSCG_Mesh_Element(FrozenOnly):
     @property
     def coordinate_transformation(self):
         return self._ct_
+
+    @property
+    def IS(self):
+        return self._IS_

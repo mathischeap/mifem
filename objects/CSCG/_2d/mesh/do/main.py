@@ -14,7 +14,7 @@ class _2dCSCG_Mesh_DO(FrozenOnly):
         self._freeze_self_()
 
     def reset_cache(self):
-        self._mesh_.___PRIVATE_reset_cache___()
+        self._mesh_.RESET_cache()
 
     @staticmethod
     def parse_element_edge_pair(eP: str):

@@ -16,13 +16,16 @@ class nLS_DO(FrozenOnly):
         self._nLS_ = nLS
         self._freeze_self_()
 
-    def evaluate_f(self, unknown_variables):
+    def evaluate_f(self, unknown_variables, neg=False):
         """
 
         Parameters
         ----------
         unknown_variables : list
             Usually be the shadows of all unknown_variables.
+
+        neg : bool
+
 
         Returns
         -------
@@ -63,10 +66,17 @@ class nLS_DO(FrozenOnly):
                 # noinspection PyUnresolvedReferences
                 f[i] = f[i][0]
             elif LENfi == 2:
+                # noinspection PyUnresolvedReferences
                 f[i] = f[i][0] + f[i][1]
             else:
                 fi0 = f[i][0]
                 f[i] = fi0.___PRIVATE_sum___(f[i][1:])
+
+        if neg:
+            for i in range(S0):
+                f[i] = - f[i]
+        else:
+            pass
 
         return f
 

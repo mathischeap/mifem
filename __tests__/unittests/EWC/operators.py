@@ -30,7 +30,6 @@ def test_LinearAlgebra_EWC_No1_Operators():
     a, b, c, d = random.random(), random.random(), random.random(), random.random()
     rT = random.random()
     def P(t, x, y): return - sin(a*pi*x) * cos(b*pi*y) * exp(- 0.2 * pi * t )
-    # def Q(t, x, y): return cos(c*pi*x) * sin(d*pi*y) * exp(- 0.3 * pi * t )
 
     scalar = FC('scalar', P)
 
@@ -52,8 +51,8 @@ def test_LinearAlgebra_EWC_No1_Operators():
         ai = nu * M1[i].toarray() @ (E10[i].toarray() @ w.cochain.EWC[i].toarray())
         Ai = A[i].toarray()
         Bi = B[i].toarray()
-        np.testing.assert_array_almost_equal(Ai - ai, 0, decimal=5)
-        np.testing.assert_array_almost_equal(Bi - ai, 0, decimal=5)
+        np.testing.assert_array_almost_equal(Ai - ai, 0, decimal=4)
+        np.testing.assert_array_almost_equal(Bi - ai, 0, decimal=4)
 
 
 

@@ -28,7 +28,6 @@ class CuboidPeriodic(_3dDomainInputBase):
             If `region_layout = (a, b, c)`, there are `a` regions along x-direction, `b` regions
             along y-direction and `c` regions along z-direction.
         """
-        super().__init__(domain_name='CuboidPeriodic')
         #---- check region_layout : must be a tuple or list of two positive integers ------------
         assert len(region_layout) == 3 and \
                (region_layout[0] > 0 and region_layout[0] % 1==0) and \
@@ -42,6 +41,7 @@ class CuboidPeriodic(_3dDomainInputBase):
         self._length = length
         self._height = height
 
+        super().__init__(domain_name='CuboidPeriodic')
         # new we parse the 8 corners of all regions ---------------------------------------------
         L0, L1, L2 = region_layout
         x_step = width / L0

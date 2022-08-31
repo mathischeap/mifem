@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-
 @author: Yi Zhang.
          Department of Aerodynamics
          Faculty of Aerospace Engineering
@@ -12,6 +11,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 from objects.CSCG._2d.forms.standard._0_form.outer.special.main import _0Form_Outer_Special
 from objects.CSCG._2d.forms.standard._0_form.base.main import _0Form_BASE
+from objects.CSCG._2d.forms.standard._0_form.outer.boundary_integrate.main import _2dCSCG_Outer_S0Form_BI
 
 class _2dCSCG_0Form_Outer(_0Form_BASE):
     """
@@ -31,16 +31,14 @@ class _2dCSCG_0Form_Outer(_0Form_BASE):
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_outer_0form')
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_0form')
         self._special_ = _0Form_Outer_Special(self)
-        self.___PRIVATE_reset_cache___()
+        self._BI_ = _2dCSCG_Outer_S0Form_BI(self)
+        self.RESET_cache()
         self._freeze_self_()
 
     @property
     def special(self):
         return self._special_
 
-
-    def ___PRIVATE_reset_cache___(self):
-        super().___PRIVATE_reset_cache___()
 
 
 
@@ -82,10 +80,3 @@ if __name__ == '__main__':
     # t3 = time.time()
     #
     # print(E0, t2- t1, E1, t3 - t2)
-
-
-
-
-
-
-

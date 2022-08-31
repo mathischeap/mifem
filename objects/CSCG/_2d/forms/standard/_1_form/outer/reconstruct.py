@@ -1,13 +1,15 @@
+# -*- coding: utf-8 -*-
 
-
-from screws.freeze.base import FrozenOnly
+import sys
+if './' not in sys.path: sys.path.append('./')
 import numpy as np
+from objects.CSCG._2d.forms.standard.base.reconstruct import _2dCSCG_SF_ReconstructBase
+from objects.CSCG._2d.discrete_fields.vector.main import _2dCSCG_DF_Vector
 
-
-class _2dCSCG_So1F_Reconstruct(FrozenOnly):
+class _2dCSCG_So1F_Reconstruct(_2dCSCG_SF_ReconstructBase):
     """"""
     def __init__(self, f):
-        self._f_ = f
+        super(_2dCSCG_So1F_Reconstruct, self).__init__(f)
         self._freeze_self_()
 
     def __call__(self, xi, eta, ravel=False, i=None, vectorized=False, value_only=False):
@@ -119,4 +121,105 @@ class _2dCSCG_So1F_Reconstruct(FrozenOnly):
                         value[i] = [value[i][j].reshape(shape, order='F') for j in range(2)]
 
                 return xyz, value
-    
+
+    def discrete_vector(self, rs):
+        """We reconstruct this outer S1F as a 2d CSCG discrete vector in the `regions`.
+
+        Parameters
+        ----------
+        rs: dict, list, tuple
+            For example:
+                rst = [r, s, ], these r, s will be used for all regions.
+                rst = {'R:R1': [r1, s1], 'R:R2': [r2, s2], ....}, in each
+                    region, we use its own r, s
+
+            r or s can be in [-1,1] or [0,1].
+
+        Returns
+        -------
+
+        """
+        Xi_Eta_Sigma_D, rs = self.___PRIVATE_distribute_region_wise_meshgrid___(rs)
+        f = self._f_
+        mesh = f.mesh
+
+        #-------- reconstructing -----------------------------------------------------------------1
+        xy = dict()
+        value = dict()
+        EMPTY_DATA = np.empty((0,0))
+
+        for e in mesh.elements:
+            rn, ij = mesh.do.find.region_name_and_local_indices_of_element(e)
+            X, E = Xi_Eta_Sigma_D[rn]
+            i, j = ij
+            # these xi, et, sg are for reconstruction in local mesh element [e]
+            xi, et = X[i], E[j]
+            element = mesh.elements[e]
+            shape = [len(xi), len(et)]
+
+            if shape[0] < 1 or shape[1] < 1:
+                xy[e] = [EMPTY_DATA, EMPTY_DATA]
+                value[e] = [EMPTY_DATA, EMPTY_DATA]
+            else:
+                #___DIFF for different forms____ reconstruction in local mesh element #e________diff
+                xietasigma, basis = f.do.evaluate_basis_at_meshgrid(xi, et)
+                iJi = element.coordinate_transformation.inverse_Jacobian_matrix(*xietasigma)
+                xy[e] = element.coordinate_transformation.mapping(*xietasigma)
+                u = np.einsum('ij, i -> j', basis[0], f.cochain.___PRIVATE_local_on_axis___('x', e), optimize='greedy')
+                v = np.einsum('ij, i -> j', basis[1], f.cochain.___PRIVATE_local_on_axis___('y', e), optimize='greedy')
+
+                value[e] = [None, None]
+                typeWr2Metric = element.type_wrt_metric.mark
+
+                if isinstance(typeWr2Metric, str) and typeWr2Metric[:4] == 'Orth':
+                    value[e][0] = u*iJi[1][1]
+                    value[e][1] = v*iJi[0][0]
+                else:
+                    value[e][0] = + u*iJi[1][1] - v*iJi[0][1]
+                    value[e][1] = - u*iJi[1][0] + v*iJi[0][0]
+
+                # noinspection PyUnresolvedReferences
+                xy[e] = [xy[e][j].reshape(shape, order='F') for j in range(2)]
+                # noinspection PyUnresolvedReferences
+                value[e] = [value[e][j].reshape(shape, order='F') for j in range(2)] #=========diff
+
+        #-------- prime-region-wise stack coordinates and values ----------------------------------1
+        XY, VAL, element_global_numbering = self.___PRIVATE_distribute_XY_and_VAL___(xy, value)
+
+        XY = self.___PRIVATE_prime_region_wise_stack___(XY, 2, rs, element_global_numbering)
+        VAL = self.___PRIVATE_prime_region_wise_stack___(VAL, 2, rs, element_global_numbering)
+
+        return _2dCSCG_DF_Vector(mesh, XY, VAL,
+                                 name=self._f_.standard_properties.name,
+                                 structured=True, linspaces=rs)
+
+
+
+
+if __name__ == '__main__':
+    # mpiexec -n 4 python objects/CSCG/_2d/forms/standard/_1_form/outer/reconstruct.py
+    from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
+
+    # mesh = MeshGenerator('crazy', c=0.3)([50,45])
+    # mesh = MeshGenerator('chp1',)([2,2])
+    mesh = MeshGenerator('chp2')([10,10])
+    space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3)])
+    FC = FormCaller(mesh, space)
+
+    ES = ExactSolutionSelector(mesh)('sL:sincos1')
+
+    u = FC('1-f-o', is_hybrid=True)
+
+
+    u.TW.func.do.set_func_body_as(ES, 'velocity')
+    u.TW.current_time = 0
+    u.TW.do.push_all_to_instant()
+    u.discretize()
+
+    r = np.linspace(-1,1,5)
+    s = np.linspace(-1,1,6)
+
+    dv = u.reconstruct.discrete_vector([r, s])
+
+    # print(mesh.elements.region_wise_prime_core)
+

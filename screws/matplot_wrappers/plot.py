@@ -13,15 +13,23 @@ import matplotlib
 from matplotlib import cm
 
 def __matplot__(plot_type,
+    # data, and linewidth
     x ,y, num_lines=1, linewidth=1.2,
+    # style, color, and labels
     style=None, color=None, label=False,
     styles=None, colors=None, labels=None,
+    # config
     usetex=True, saveto=None, corlormap='Dark2',
+    # figure
     figsize=(5.5,4), left=0.15, bottom=0.15,
+    # title
     title = None, title_size=20, title_pad=12,
+    # labels
     xlabel=None, ylabel=None, label_size=16,
+    # ticks
     tick_style= 'sci', xticks = None, yticks = None,
     tick_size=16, tick_pad=6, minor_tick_length=4, major_tick_length=8,
+    # legend
     legend_size=18, legend_local='best', legend_frame=False,
     ):
     """
@@ -29,8 +37,10 @@ def __matplot__(plot_type,
     Parameters
     ----------
     plot_type
-    x
-    y
+    x :
+        If num_lines > 1, we plot (x[i], y[i]) for i in range(num_lines).
+    y :
+        If num_lines > 1, we plot (x[i], y[i]) for i in range(num_lines).
     num_lines
     style
     color

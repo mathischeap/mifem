@@ -17,7 +17,7 @@ from scipy import sparse as spspa
 from objects.CSCG._2d.forms.standard._1_form.base.main import _1Form_BASE
 from objects.CSCG._2d.forms.standard._1_form.outer.discretize.main import _2dCSCG_S1Fo_Discretize
 from objects.CSCG._2d.forms.standard._1_form.outer.reconstruct import _2dCSCG_So1F_Reconstruct
-
+from objects.CSCG._2d.forms.standard._1_form.outer.boundary_integrate.main import _2dCSCG_Outer_S1Form_BI
 
 
 class _2dCSCG_1Form_Outer(_1Form_BASE):
@@ -40,7 +40,8 @@ class _2dCSCG_1Form_Outer(_1Form_BASE):
         self._special_ = _1Form_Outer_Special(self)
         self._discretize_ = _2dCSCG_S1Fo_Discretize(self)
         self._reconstruct_ = None
-        self.___PRIVATE_reset_cache___()
+        self._BI_ = _2dCSCG_Outer_S1Form_BI(self)
+        self.RESET_cache()
         self._freeze_self_()
 
     @property
@@ -51,7 +52,6 @@ class _2dCSCG_1Form_Outer(_1Form_BASE):
     def discretize(self):
         return self._discretize_
 
-
     @property
     def reconstruct(self):
         if self._reconstruct_ is None:
@@ -59,7 +59,7 @@ class _2dCSCG_1Form_Outer(_1Form_BASE):
         return self._reconstruct_
 
 
-    def ___PRIVATE_make_reconstruction_matrix_on_grid___(self, xi, eta):
+    def ___PRIVATE_make_reconstruction_matrix_on_grid___(self, xi, eta, element_range=None):
         """
         Make a dict (keys are #mesh-elements) of matrices whose columns refer to
         nodes of meshgrid(xi, eta, indexing='ij') and rows refer to
@@ -74,7 +74,13 @@ class _2dCSCG_1Form_Outer(_1Form_BASE):
         """
         xietasigma, basis = self.do.evaluate_basis_at_meshgrid(xi, eta)
 
-        INDICES = self.mesh.elements.indices
+        if element_range is None:
+            INDICES = self.mesh.elements.indices
+        elif element_range == 'mesh boundary':
+            INDICES = self.mesh.boundaries.involved_elements
+        else:
+            raise Exception(f"element_range = {element_range} is wrong!")
+
         iJ = self.mesh.elements.coordinate_transformation.inverse_Jacobian_matrix(*xietasigma)
 
         b0, b1 = basis[0].T, basis[1].T
@@ -160,11 +166,14 @@ class _2dCSCG_1Form_Outer(_1Form_BASE):
         W11 = np.einsum('im, jm -> ij', bO[1], bS[1]*quad_weights[np.newaxis, :], optimize='optimal')
         i, j = other.num.basis_components
         m, n = self.num.basis_components
-        #      m   n
-        # i  |W00 W01 |
-        # j  |W10 W11 |
-        W = np.vstack((np.hstack((W00, np.zeros((i,n)))),
-                       np.hstack((np.zeros((j,m)), W11))))
+
+        #       m   n
+        # i  | W00 W01 |
+        # j  | W10 W11 |
+
+        W = np.vstack((np.hstack((W00            , np.zeros((i,n)))),
+                       np.hstack((np.zeros((j,m)), W11          ))))
+
         return spspa.csc_matrix(W)
 
 
@@ -186,7 +195,6 @@ if __name__ == '__main__':
 
     # M0 = f1.matrices.mass[0]
     # print(M0.toarray())
-    #
     # E21 = f1.matrices.incidence[0]
     # print(E21.toarray())
 
@@ -195,9 +203,11 @@ if __name__ == '__main__':
     u.TW.do.push_all_to_instant()
     u.discretize()
 
-    MF = u.matrices.mass
-    if 0 in MF:
-        print(MF[0])
+    u.visualize.matplot.contourf()
+
+    # MF = u.matrices.mass
+    # if 0 in MF:
+    #     print(MF[0])
     # MF.gathering_matrices = (u, u)
     # MF = MF.assembled
     # MF.visualize.spy()

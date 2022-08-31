@@ -16,8 +16,9 @@ from tools.filer.csv.do.main import csvFilerDo
 
 
 class csvFiler(FrozenOnly):
-    """"""
+    """We'd better do not use this class in parallel, although it works."""
     def __init__(self, csv_filename):
+        assert isinstance(csv_filename, str), "csv filename must be a str."
         if csv_filename[-4:] != '.csv': csv_filename += '.csv'
         self._df_ = pd.read_csv(csv_filename, index_col=0)
         self._visualize_ = csvFilerVisualize(self)

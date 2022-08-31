@@ -30,10 +30,17 @@ class _2dCSCG_Mesh_Boundaries(FrozenOnly):
         assert mesh.__class__.__name__ == '_2dCSCG_Mesh'
         self._mesh_ = mesh
         self._visualize_ = _2dCSCG_Mesh_Boundaries_Visualize(self)
-        self.___PRIVATE_reset_cache___()
+        self._involved_elements_ = None
+        self._range_of_elements_ = None
+        self._boundaries_dict_ = dict()
+        self._names_ = None
+        self._RANGE_element_edges_ = None
+        self._RANGE_trace_elements_ = None
         self._freeze_self_()
 
-    def ___PRIVATE_reset_cache___(self):
+    def RESET_cache(self):
+        self._involved_elements_ = None
+        self._range_of_elements_ = None
         self._boundaries_dict_ = dict()
         self._names_ = None
         self._RANGE_element_edges_ = None
@@ -98,6 +105,43 @@ class _2dCSCG_Mesh_Boundaries(FrozenOnly):
         if self._names_ is None:
             self.___PRIVATE_parse_boundaries___()
         return self._names_
+
+    @property
+    def involved_elements(self):
+        """all local elements without indicating where it is."""
+
+        if self._involved_elements_ is None:
+
+            IE = list()
+
+            for bn in self.range_of_elements:
+                IE.extend(self.range_of_elements[bn])
+
+            self._involved_elements_ = IE
+
+        return self._involved_elements_
+
+    @property
+    def range_of_elements(self):
+        """(dict) Return a dict that contains the local elements on each boundary."""
+        if self._range_of_elements_ is None:
+
+            RoE = dict()
+
+            REE = self.range_of_element_edges
+            for bn in self.names:
+                ES = REE[bn]
+
+                LIST = list()
+
+                for es in ES:
+                    LIST.append(int(es[:-1]))
+
+                RoE[bn] = LIST
+
+            self._range_of_elements_ = RoE
+
+        return self._range_of_elements_
 
     @property
     def range_of_element_edges(self):

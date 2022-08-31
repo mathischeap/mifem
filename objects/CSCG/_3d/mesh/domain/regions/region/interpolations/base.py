@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Here we define a class serves as a base for all interpolations. The mapping 
-maps [0, 1]^3 into the regions.
+Here we define a class serves as a base for all interpolations. The mapping
+map [0, 1]^3 into the regions.
 
 Yi Zhang (C)
 Created on Wed Nov 21 23:32:57 2018

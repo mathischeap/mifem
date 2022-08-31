@@ -78,8 +78,9 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
     def __repr__(self):
         return f"3dCSCG>{self.k}SF>{self.standard_properties.name}:{id(self)}"
 
-    def ___PRIVATE_reset_cache___(self):
-        pass
+    def RESET_cache(self):
+        self.cochain.RESET_cache()
+        self.coboundary.RESET_cache()
 
     @property
     def numbering(self):

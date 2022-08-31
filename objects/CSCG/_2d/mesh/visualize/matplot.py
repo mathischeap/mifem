@@ -249,7 +249,7 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
 
 
     def _matplot_mesh_(self, paper_version=False, region_boundary=True, density=6000, usetex=False,
-        show_numbering=True, saveto=None, corlormap='tab10', fontsize=12,
+        show_numbering=False, saveto=None, corlormap='tab10', fontsize=12,
         xlim=None, ylim=None, labelsize=15, ticksize=15, show_boundary_names=True,
         domain_boundary_linewidth=3, region_boundary_linewidth=0.8, element_linewidth=0.4,
         element_color='red'):

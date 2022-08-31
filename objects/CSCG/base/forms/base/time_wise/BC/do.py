@@ -7,7 +7,6 @@ class CSCG_FTWBC_DO(FrozenOnly):
         self._twBC_ = twBC
         self._freeze_self_()
 
-    def set_BC_body_as(self, *args, **kwargs):
-        self._twBC_.___DO_set_BC_body_as___(*args, **kwargs)
-
-
+    def set_BC_body_as(self, body):
+        #- set the BC func body, also do some checks here ----------------------
+        self._twBC_.body = body

@@ -45,15 +45,15 @@ class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form):
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_standard_1form')
         self._special_ = _1Form_Special(self)
         self._projection_ = _1Form_Projection(self)
-        self.___PRIVATE_reset_cache___()
+        self.RESET_cache()
         self._discretize_ = None
         self._reconstruct_ = None
         self._visualize_ = None
         self.__BI__ = None
         self._freeze_self_()
 
-    def ___PRIVATE_reset_cache___(self):
-        super().___PRIVATE_reset_cache___()
+    def RESET_cache(self):
+        super().RESET_cache()
 
     def ___PRIVATE_TW_FUNC_body_checker___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain

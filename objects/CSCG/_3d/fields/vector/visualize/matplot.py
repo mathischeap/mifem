@@ -18,7 +18,7 @@ class _3dCSCG_VectorField_matplot_Visualize(FrozenOnly):
         return self.boundary_values(*args, **kwargs)
 
     def boundary_values(self,
-        density=500000, colormap='coolwarm',
+        density=5000, colormap='coolwarm',
         num_color_bar_ticks=5):
         """"""
         mesh = self._f_.mesh

@@ -41,9 +41,9 @@ class ___LinearSystem_Customize___(FrozenOnly):
             elif hasattr(pc, 'standard_properties') and \
                  'CSCG_form' in pc.standard_properties.tags:
                 pc = pc.BC.partial_cochain
-            elif hasattr(pc, 'standard_properties') and \
-                 'mpRfT_form' in pc.standard_properties.tags:
-                pc = pc.BC.partial_cochain
+            # elif hasattr(pc, 'standard_properties') and \
+            #      'mpRfT_form' in pc.standard_properties.tags:
+            #     pc = pc.BC.partial_cochain
             else:
                 pass
 

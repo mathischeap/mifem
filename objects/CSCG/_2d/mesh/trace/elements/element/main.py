@@ -3,7 +3,8 @@
 from screws.freeze.main import FrozenOnly
 
 from objects.CSCG._2d.mesh.trace.elements.element.IS import _2dCSCG_TraceElement_IS
-from objects.CSCG._2d.mesh.trace.elements.element.coordinate_transformation import _2dCSCG_Trace_Element_CoordinateTransformation
+from objects.CSCG._2d.mesh.trace.elements.element.coordinate_transformation.main import \
+    _2dCSCG_Trace_Element_CoordinateTransformation
 from root.config.main import rAnk
 
 
@@ -61,14 +62,21 @@ class _2dCSCG_Trace_Element(FrozenOnly):
     @property
     def normal_direction(self):
         """"""
-        if self._p1_[-1] in 'NS':
-            return 'NS'
-        elif self._p1_[-1] in 'WE':
-            return 'WE'
-        elif self._p1_[-1] in 'BF':
-            return 'BF'
+        if self._p1_[-1] in 'UD':
+            return 'UD'
+        elif self._p1_[-1] in 'LR':
+            return 'LR'
         else:
-            raise Exception()
+            raise Exception(self._p1_)
+
+
+    @property
+    def on_mesh_boundary(self):
+        """Return the mesh boundary name this trace element is on. If it is not on one, return None."""
+        if self._ondb_:
+            return self.NON_CHARACTERISTIC_position
+        else:
+            return None
 
     @property
     def NON_CHARACTERISTIC_position(self):

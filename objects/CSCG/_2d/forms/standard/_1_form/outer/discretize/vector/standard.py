@@ -1,8 +1,7 @@
+# -*- coding: utf-8 -*-
 from screws.freeze.base import FrozenOnly
 
 import numpy as np
-
-
 
 
 class _2dCSCG_S1Fo_Discretize_StandardVector(FrozenOnly):

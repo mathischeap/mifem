@@ -23,8 +23,8 @@ import objects.CSCG._3d.__init__ as cscg3
 
 
 import root.__init__ as root
-import root.save as save
-import root.read.main as read
+from root.save import save as save
+from root.read.main import read as read
 
 
 import screws.__init__ as screws

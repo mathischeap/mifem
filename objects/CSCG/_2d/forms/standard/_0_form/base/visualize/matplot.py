@@ -41,8 +41,9 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
     def contourf(self, *args, **kwargs):
         return  self.contour(*args, **kwargs, plot_type='contourf')
 
-    def contour(self, density=10000, levels=None, num_levels=20,
-        linewidth=1, linestyle=None,
+    def contour(self, density=10000,
+
+        levels=None, num_levels=20, linewidth=1, linestyle=None,
 
         usetex=False, colormap='coolwarm',
 
@@ -127,21 +128,28 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
         if colormap is not None: plt.rcParams['image.cmap'] = colormap
         fig, ax = plt.subplots()
         ax.set_aspect('equal')
+        #------- label and  ticks -------------------------------------------------------
         ax.spines['top'].set_visible(False)
         ax.spines['right'].set_visible(False)
         ax.spines['left'].set_visible(True)
         ax.spines['bottom'].set_visible(True)
+        plt.xlabel('$x$', fontsize=labelsize)
+        plt.ylabel('$y$', fontsize=labelsize)
+        ax.tick_params(labelsize=ticksize)
 
-
+        #-------------- plot -------------------------------------------------------------
         for rn in self._sf_.mesh.domain.regions.names:
             if plot_type =='contour':
                 plt.contour(x[rn], y[rn], v[rn], levels=levels, linewidths=linewidth, linestyles=linestyle)
             elif plot_type =='contourf':
-                plt.contourf(x[rn], y[rn], v[rn], levels=levels)
+                VAL = v[rn]
+                VAL[VAL > levels[-1]] = levels[-1]
+                VAL[VAL < levels[0]] = levels[0]
+                plt.contourf(x[rn], y[rn], VAL, levels=levels)
             else:
                 raise Exception(f"plot_type={plot_type} is wrong. Should be one of ('contour', 'contourf')")
 
-
+        #-------- boundaries ------------------------------------------------------------------
         RB, RBN, boundary_name_color_dict, pb_text = \
             self._mesh_.visualize.matplot.___PRIVATE_DO_generate_boundary_data___(
                 50, usetex=usetex)[0:4]
@@ -175,7 +183,7 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
                             ax.text(RBN[rn][ei][0], RBN[rn][ei][1],
                                     '$<$' + bn + '$>$',
                                     c=boundary_name_color_dict[bn], ha='center', va='center')
-
+        # --------------- title -------------------------------------------------------------------
         if title is True:
             title = self._sf_.orientation + f' {self._sf_.k}form: ' + self._sf_.standard_properties.name
             plt.title(title)
@@ -184,10 +192,6 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
             pass
         else:
             plt.title(title)
-
-        plt.xlabel('$x$', fontsize=labelsize)
-        plt.ylabel('$y$', fontsize=labelsize)
-        ax.tick_params(labelsize=ticksize)
         #-------------------------------- color bar ---------------------------------
         if show_colorbar:
             mappable = cm.ScalarMappable()

@@ -2,7 +2,7 @@
 
 
 
-from screws.freeze.main import FrozenOnly
+from objects.CSCG._3d.forms.standard.base.reconstruct import _3dCSCG_SF_Reconstruct
 import numpy as np
 
 
@@ -10,9 +10,10 @@ import numpy as np
 
 
 
-class _3dCSCG_SF3_Reconstruct(FrozenOnly):
-    def __init__(self, _3sf):
-        self._sf_ = _3sf
+class _3dCSCG_SF3_Reconstruct(_3dCSCG_SF_Reconstruct):
+    """"""
+    def __init__(self, sf):
+        super(_3dCSCG_SF3_Reconstruct, self).__init__(sf)
         self._freeze_self_()
 
 

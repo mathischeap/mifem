@@ -14,9 +14,10 @@ class _3dCSCG_S2F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
 
     def __call__(self, *args, **kwargs):
         """"""
-        return self.___PRIVATE_default_surface_plot___(*args, **kwargs)
+        return self.perpendicular_surface(*args, **kwargs)
 
-    def ___PRIVATE_default_surface_plot___(self, x=None, y=None, z=None,
+    def perpendicular_surface(self,
+        x=None, y=None, z=None, # which perpendicular surface, only one of them can be not None.
         plot_type='contourf', usetex=False, colormap='coolwarm',
         numOfSamples=100000, figsize=(6, 5),
         num_of_levels=20,
@@ -202,6 +203,7 @@ class _3dCSCG_S2F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
             FIGURES = list()
             for n in range(NUM_PLOT):
 
+                #---------------------------------------------------------------------------------------3
                 fig = plt.figure(figsize=figsize)
 
                 for e in VAL: # go through all involved elements.
@@ -242,7 +244,6 @@ class _3dCSCG_S2F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
                         raise Exception()
                 plt.ylabel(ylabel, fontsize=label_size)
 
-
                 plt.tick_params(which='both', labeltop=False, labelright=False, top=True, right=True)
                 plt.tick_params(axis='both', which='minor', direction='out', length=minor_tick_length)
                 plt.tick_params(axis='both', which='major', direction='out', length=major_tick_length)
@@ -250,18 +251,27 @@ class _3dCSCG_S2F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
                 plt.tick_params(axis='x', which='both', pad=tick_pad)
                 plt.tick_params(axis='y', which='both', pad=tick_pad)
 
-
                 plt.title(title[n], fontsize=title_size, pad=title_pad)
 
-
+                #------------ save to figure file ------------------------------------------------------3
                 if saveto is not None and saveto != '':
-                    assert saveto.count('.') == 1, f'filename {saveto} is wrong, cannot save to it.'
-                    filename, extension = saveto.split('.')
-                    plt.savefig(filename + f'_{n}th_component'+'.'+extension, bbox_inches='tight')
+                    if isinstance(saveto, str): # only one filename, we make it three_______________4
+                        assert saveto.count('.') >= 1, f'filename {saveto} is wrong, cannot save to it.'
+                        filename_extension = saveto.split('.')
+                        extension = filename_extension[-1]
+                        filename = '.'.join(filename_extension[:-1])
+                        plt.savefig(filename + f'_{n}th_component'+'.'+extension, bbox_inches='tight')
+
+                    elif isinstance(saveto, (list, tuple)): # multiple names provided_______________4
+                        plt.savefig(saveto[n], bbox_inches='tight')
+
+                    else: #--------- else, do not understand the names, raise Error ================4
+                        raise Exception()
+
                 else:
                     plt.show()
                 plt.close()
-
+                #=======================================================================================3
                 FIGURES.append(fig)
 
             return FIGURES, XYZ, VAL

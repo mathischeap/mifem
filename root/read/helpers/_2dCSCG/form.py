@@ -28,21 +28,26 @@ def ___restore__2dCSCG_Form___(parameters, mesh_cache, space_cache):
     else:
         ES_parameters = TW_func_ES_parameters[0]
         ES_variable_name = TW_func_ES_parameters[1]
-        ES = ___restore__2dCSCG_ExactSolution___(ES_parameters, mesh_cache)
 
+        try:
+            ES = ___restore__2dCSCG_ExactSolution___(ES_parameters, mesh_cache)
+            assert mesh_parameters == ES.mesh.standard_properties.parameters
+            mesh = ES.mesh
+            # OR use
+            # if mesh_parameters == ES.mesh.standard_properties.parameters:
+            #     mesh = ES.mesh
+            # else:
+            #     mesh = ___restore__2dCSCG_Mesh___(mesh_parameters, ___CACHE_2dCSCG_mesh___)
 
-        assert mesh_parameters == ES.mesh.standard_properties.parameters
-        mesh = ES.mesh
-        # OR use
-        # if mesh_parameters == ES.mesh.standard_properties.parameters:
-        #     mesh = ES.mesh
-        # else:
-        #     mesh = ___restore__2dCSCG_Mesh___(mesh_parameters, ___CACHE_2dCSCG_mesh___)
+            form = _2dCSCG_FormCaller(mesh, space)(ID, **kwargs)
+            form.TW.current_time = TW_current_time
+            form.TW.func.___DO_set_func_body_as___(ES, ES_variable_name)
+            form.TW.___DO_push_all_to_instant___()
 
-        form = _2dCSCG_FormCaller(mesh, space)(ID, **kwargs)
-        form.TW.current_time = TW_current_time
-        form.TW.func.___DO_set_func_body_as___(ES, ES_variable_name)
-        form.TW.___DO_push_all_to_instant___()
+        except AssertionError: # may some method or property names be changed.
+            mesh = ___restore__2dCSCG_Mesh___(mesh_parameters, mesh_cache)
+            form = _2dCSCG_FormCaller(mesh, space)(ID, **kwargs)
+
 
     form.cochain.___PRIVATE_do_distribute_region_wise_local_index_grouped_cochain_to_local___(COCHAIN)
 

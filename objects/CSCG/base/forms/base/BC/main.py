@@ -80,7 +80,7 @@ class CSCG_Form_BC(FrozenOnly):
 
     @property
     def partial_dofs(self):
-        """We will interpret the BC as a PartialCochain instance which then can
+        """We will interpret the BC as a PartialDofs instance which then can
         further be interpreted as data structures that can be used by,
         for example, EWC sparse matrices.
         """

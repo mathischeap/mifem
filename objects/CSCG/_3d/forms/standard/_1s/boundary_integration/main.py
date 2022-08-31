@@ -10,7 +10,7 @@ if './' not in sys.path: sys.path.append('./')
 from screws.freeze.main import FrozenOnly
 
 from tools.linear_algebra.elementwise_cache.objects.column_vector.main import EWC_ColumnVector
-from objects.CSCG._3d.forms.standard._1s.boundary_integration.helpers.T_perp_helper import S1F_BI_TpHelper
+from objects.CSCG._3d.forms.standard._1s.boundary_integration.helpers.V_helper import S1F_BI_V_Helper
 
 
 class _3dCSCG_S1F_BI(FrozenOnly):
@@ -21,19 +21,17 @@ class _3dCSCG_S1F_BI(FrozenOnly):
         self._s1f_ = s1f
         self._freeze_self_()
 
-    def T_perp(self, V_T_perp, quad_degree=None):
-        """Let s1f be denoted as w. We do (w,  u x n)_{\partial\Omega} here.
-
-        Note that the norm component of w will not contribute to this boundary integral.
-        So it is actually equal to (n x (w x n), u x n).
+    def inner_product_with(self, V, quad_degree=None):
+        """Let s1f be denoted as w. We do (w,  V)_{\partial\Omega} here. V must be given. And we
+        get a vector.
 
         This returns a `EWC_ColumnVector` whose local vector refers to the
         local dofs (basis functions) of the self form, i.e., `s1f`.
 
         Parameters
         ----------
-        V_T_perp
-        quad_degree
+        V : must be a vector
+        quad_degree :
 
         Returns
         -------
@@ -41,11 +39,11 @@ class _3dCSCG_S1F_BI(FrozenOnly):
 
         """
 
-        assert V_T_perp.mesh == self._s1f_.mesh, f"meshes do not match."
+        assert V.mesh == self._s1f_.mesh, f"meshes do not match."
 
-        assert V_T_perp.__class__.__name__ == '_3dCSCG_VectorField', f"I need a vector."
+        assert V.__class__.__name__ == '_3dCSCG_VectorField', f"I need a vector."
 
-        VDG = S1F_BI_TpHelper(self._s1f_, V_T_perp, quad_degree)
+        VDG = S1F_BI_V_Helper(self._s1f_, V, quad_degree)
 
         # no cache, vector.current_time may change
         return EWC_ColumnVector(self._s1f_.mesh, VDG, 'no_cache')
@@ -62,7 +60,7 @@ if __name__ == '__main__':
 
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
-    mesh = MeshGenerator('crazy', c=0.)([2,2,2])
+    mesh = MeshGenerator('crazy', c=0.)([10,10,10])
     space = SpaceInvoker('polynomials')([1,1,1])
     FC = FormCaller(mesh, space)
 
@@ -84,7 +82,7 @@ if __name__ == '__main__':
     VP = V.components.T_perp
     VP.current_time = 0
 
-    B = f1.do.boundary_integrate.T_perp(VP)
+    B = f1.do.boundary_integrate.inner_product_with(VP)
 
 
     for i in B:

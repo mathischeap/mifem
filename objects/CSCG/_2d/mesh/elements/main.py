@@ -25,12 +25,12 @@ class _2dCSCG_Mesh_Elements(FrozenOnly):
         for i in self.indices:
             self._elements_[i] = _2dCSCG_Mesh_Element(self, i)
         self.___PRIVATE_parse_elements_type_wrt_metric___()
-        self.___PRIVATE_reset_cache___()
+        self._rwPc_ = None
         self._freeze_self_()
 
-    def ___PRIVATE_reset_cache___(self):
+    def RESET_cache(self):
         """"""
-        self.coordinate_transformation.___PRIVATE_reset_cache___()
+        self.coordinate_transformation.RESET_cache()
 
     def ___PRIVATE_parse_elements_type_wrt_metric___(self):
         counter: dict = dict()
@@ -97,6 +97,42 @@ class _2dCSCG_Mesh_Elements(FrozenOnly):
     def in_regions(self):
         """The regions the local mesh elements of this core are in."""
         return self._mesh_._elements_in_regions_
+
+    @property
+    def region_wise_prime_core(self):
+        """A dict same in all cores. It shows which core (value) has the most elements of
+        a particular region (key)"""
+        if self._rwPc_ is None:
+            rns = self._mesh_.domain.regions.names
+            COUNT = dict()
+            for rn in rns:
+                COUNT[rn] = 0
+
+            for i in self:
+                rn = self._mesh_.do.find.region_name_of_element(i)
+                COUNT[rn] += 1
+
+            CTs = cOmm.gather(COUNT, root=mAster_rank)
+            if rAnk == mAster_rank:
+                overall_count = dict()
+                for rn in rns:
+                    overall_count[rn] = [0 for _ in range(sIze)]
+
+                for i, CT in enumerate(CTs):
+                    for rn in CT:
+                        overall_count[rn][i] = CT[rn]
+
+                self._rwPc_ = dict()
+                for rn in overall_count:
+                    Pc = overall_count[rn].index(max(overall_count[rn]))
+                    self._rwPc_[rn] = Pc
+
+            else:
+                pass
+
+            self._rwPc_ = cOmm.bcast(self._rwPc_, root=mAster_rank)
+
+        return self._rwPc_
 
     @property
     def indices(self):

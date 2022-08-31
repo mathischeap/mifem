@@ -11,8 +11,6 @@ class _2dCSCG_TraceElement_IS(FrozenOnly):
         self._shared_by_cores_ = None
         self._freeze_self_()
 
-
-
     @property
     def on_mesh_boundary(self):
         return self._element_._ondb_

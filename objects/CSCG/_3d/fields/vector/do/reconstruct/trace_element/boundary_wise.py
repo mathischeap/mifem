@@ -8,10 +8,11 @@ class OnTraceElement_BoundaryWise(FrozenOnly):
         self._freeze_self_()
 
     def __call__(self, xi, eta, sigma, ravel, i):
-        """
+        """When on trace-element reconstruction, we only accept 1d xi, eta and sigma
 
-        :param xi:
-        :param eta:
+        :param xi: 1d array
+        :param eta: 1d array
+        :param sigma: 1d array
         :param ravel:
         :param i:
             1) self.ftype == 'standard':

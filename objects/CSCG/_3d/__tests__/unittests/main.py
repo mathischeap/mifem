@@ -18,6 +18,7 @@ if './' not in sys.path: sys.path.append('./')
 passed_3dCSCG_tests = 0
 
 from objects.CSCG._3d.__tests__.unittests.standard_forms.general import *
+from objects.CSCG._3d.__tests__.unittests.standard_forms.reconstruct_2_DF import *
 from objects.CSCG._3d.__tests__.unittests.fields import *
 from objects.CSCG._3d.__tests__.unittests.spaces import *
 from objects.CSCG._3d.__tests__.unittests.mesh import *
@@ -117,7 +118,7 @@ passed_3dCSCG_tests += test_hdMSEM_Poisson_Inner()
 
 passed_3dCSCG_tests += test_hdMSEM_Schrodinger_Inner()
 passed_3dCSCG_tests += test_hdMSEM_Schrodinger_Inner_Cuboid()
-
+passed_3dCSCG_tests += test_reconstruct_S2F_to_DV()
 
 
 if rAnk == mAster_rank:

@@ -24,5 +24,5 @@ class OrthogonalTraceElement(TraceElementTypeWr2MetricBase):
         assert len(perp_to) == 1 and perp_to in 'xyz', f"perp_to={perp_to} wrong."
         assert isinstance(d1, (int, float)) and d1 > 0, f"d1={d1} wrong."
         assert isinstance(d2, (int, float)) and d2 > 0, f"d2={d2} wrong."
-        self._mark_ = f'Orth.{perp_to}' + 'd1{}d2{}'.format('%.6f' % d1, '%.6f' % d2)
+        self._mark_ = f'Orth.{perp_to}' + 'd1{}d2{}'.format('%.8f' % d1, '%.8f' % d2)
         self._freeze_self_()

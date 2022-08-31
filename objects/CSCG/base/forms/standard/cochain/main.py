@@ -17,10 +17,10 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
         self._sf_ = sf
         self._local_ = None
         self._dofwise_ = None
-        self.___PRIVATE_reset_cache___()
+        self.RESET_cache()
         self._freeze_self_()
 
-    def ___PRIVATE_reset_cache___(self):
+    def RESET_cache(self):
         pass
 
     @property
@@ -259,7 +259,7 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
         except AssertionError:
             raise LocalCochainShapeError("Cannot set local cochain.")
 
-        self.___PRIVATE_reset_cache___()
+        self.RESET_cache()
         self._local_ = local
 
 

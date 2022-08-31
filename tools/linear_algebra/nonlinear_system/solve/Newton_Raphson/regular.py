@@ -180,11 +180,11 @@ class nLS_Solve_NR_regular(FrozenOnly):
                         LHS[i][j] = LHSij0.___PRIVATE_sum___(LHS[i][j][1:])
 
             #--------- now we evaluate vector f ---------------------------------------------2
-            f = self._nLS_.do.evaluate_f(itmV)
+            f = self._nLS_.do.evaluate_f(itmV, neg=True) # notice the neg here!
 
             #--------- A, f -----------------------------------------------------------------2
             A = bmat(LHS)
-            f = - concatenate(f) # notice the minus here, it is important.
+            f = concatenate(f) # notice the minus in already included here, it is important.
 
             A.gathering_matrices = (self._nLS_.test_variables, self._nLS_.unknown_variables)
             f.gathering_matrix = self._nLS_.test_variables
@@ -211,6 +211,14 @@ class nLS_Solve_NR_regular(FrozenOnly):
 
                     else:
                         pass
+
+                elif method_name == "set_no_evaluations":
+                    i, pd, interpreted_as = method_para
+                    A.customize.identify_global_rows_according_to_CSCG_partial_dofs(
+                        i, pd, interpreted_as=interpreted_as)
+
+                    f.customize.set_constant_entries_according_to_CSCG_partial_dofs(
+                        i, pd, 0, interpreted_as=interpreted_as)
 
                 else:
                     raise NotImplementedError(f"Cannot handle customization = {method_name}")

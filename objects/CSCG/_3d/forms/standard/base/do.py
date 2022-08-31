@@ -232,8 +232,8 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
         tuple of three 1d arrays (its three components along x, y, z directions.)
 
         :param xi: 1d array
-        :param et: 1d array
-        :param sg: 1d array
+        :param eta: 1d array
+        :param sigma: 1d array
         :param element_range:
             We are going to construct matrices for these mesh elements. It can be one of
                 1) None: for all local elements

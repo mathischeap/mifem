@@ -14,9 +14,10 @@ class _3dCSCG_S1F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
 
     def __call__(self, *args, **kwargs):
         """"""
-        return self.___PRIVATE_default_surface_plot___(*args, **kwargs)
+        return self.perpendicular_surface(*args, **kwargs)
 
-    def ___PRIVATE_default_surface_plot___(self, x=None, y=None, z=None,
+    def perpendicular_surface(self,
+        x=None, y=None, z=None, # only one of them can be not-None.
         plot_type='contourf', usetex=False, colormap='coolwarm',
         numOfSamples=100000, figsize=(6, 5),
         num_of_levels=20,
@@ -250,14 +251,25 @@ class _3dCSCG_S1F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
 
                 plt.title(title[n], fontsize=title_size, pad=title_pad)
 
+                #------------ save to figure file ------------------------------------------------------3
                 if saveto is not None and saveto != '':
-                    assert saveto.count('.') == 1, f'filename {saveto} is wrong, cannot save to it.'
-                    filename, extension = saveto.split('.')
-                    plt.savefig(filename + f'_{n}th_component'+'.'+extension, bbox_inches='tight')
+                    if isinstance(saveto, str): # only one filename, we make it three_______________4
+                        assert saveto.count('.') >= 1, f'filename {saveto} is wrong, cannot save to it.'
+                        filename_extension = saveto.split('.')
+                        extension = filename_extension[-1]
+                        filename = '.'.join(filename_extension[:-1])
+                        plt.savefig(filename + f'_{n}th_component'+'.'+extension, bbox_inches='tight')
+
+                    elif isinstance(saveto, (list, tuple)): # multiple names provided_______________4
+                        plt.savefig(saveto[n], bbox_inches='tight')
+
+                    else: #--------- else, do not understand the names, raise Error ================4
+                        raise Exception()
+
                 else:
                     plt.show()
+                #======================================================================================3
                 plt.close()
-
                 FIGURES.append(fig)
 
             return FIGURES, XYZ, VAL

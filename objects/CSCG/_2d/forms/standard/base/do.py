@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import numpy as np
 
 from screws.freeze.base import FrozenOnly
@@ -21,7 +22,7 @@ class _2dCSCG_Standard_Form_DO(FrozenOnly):
     def reconstruct(self, *args, **kwargs):
         return self._sf_.reconstruct(*args, **kwargs)
 
-    def make_reconstruction_matrix_on_grid(self, xi, eta):
+    def make_reconstruction_matrix_on_grid(self, xi, eta, element_range=None):
         """Make the reconstruction matrices for all mesh elements. These matrices are stored in
         a dict whose keys are the numbers of mesh elements and values are the local reconstruction
         matrices.
@@ -35,7 +36,7 @@ class _2dCSCG_Standard_Form_DO(FrozenOnly):
         tuple of two 1d arrays (its two components along x, y directions.)
 
         """
-        return self._sf_.___PRIVATE_make_reconstruction_matrix_on_grid___(xi, eta)
+        return self._sf_.___PRIVATE_make_reconstruction_matrix_on_grid___(xi, eta, element_range=element_range)
 
     def compute_Ln_energy(self, n=2, quad_degree=None, vectorized=True):
         """Compute int_{Omega}(self^n).
@@ -133,6 +134,7 @@ class _2dCSCG_Standard_Form_DO(FrozenOnly):
         :return:
         """
         if other is None: other = self._sf_
+
         assert self._sf_.mesh == other.mesh, "Meshes do not match."
         if M is None: M = self._sf_.operators.inner(other)
 
@@ -179,3 +181,8 @@ class _2dCSCG_Standard_Form_DO(FrozenOnly):
         Ln_norm_of_d_self = d_self.do.compute_Ln_norm(n=n, quad_degree=quad_degree)
 
         return Ln_norm_of_d_self
+
+    @property
+    def boundary_integrate(self):
+        """"""
+        return self._sf_._BI_

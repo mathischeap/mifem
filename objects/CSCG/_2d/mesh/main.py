@@ -618,10 +618,10 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
 
 
 
-    def ___PRIVATE_reset_cache___(self):
-        self.trace.___PRIVATE_reset_cache___()
-        self.elements.___PRIVATE_reset_cache___()
-        self.boundaries.___PRIVATE_reset_cache___()
+    def RESET_cache(self):
+        self.trace.RESET_cache()
+        self.elements.RESET_cache()
+        self.boundaries.RESET_cache()
         self.___element_global_numbering___ = None
 
     @memoize5 # must use memoize
