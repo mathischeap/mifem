@@ -41,6 +41,9 @@ class EWC_SparseMatrix(FrozenOnly):
             we make locally empty sparse matrix of shape `data_generator`. (just like situation 1).
         3) `data_generator = ('identity', int-a)` and `cache_key_generator = constant `
             We will make identity local sparse matrix of shape (int-a, int-a) in all mesh elements.
+        4) `data_generator` is a dict. This means the data are already stored in this dict. We do
+            not need to set `cache_key_generator` anymore of course.
+
     :param cache_key_generator:
         1) `cache_key_generator = 'all_diff'`
             The local sparse matrix will be all different in all mesh elements.
@@ -76,7 +79,11 @@ class EWC_SparseMatrix(FrozenOnly):
         # check mesh elements ---------------------------------------------------------------
         if mesh_elements.__class__.__name__ in ('_3dCSCG_Mesh_Elements', '_2dCSCG_Mesh_Elements'):
             self._elements_ = mesh_elements
+        elif mesh_elements.__class__.__name__ in ('miUsGrid_TriangularMesh_Elements',):
+            self._elements_ = mesh_elements
         elif mesh_elements.__class__.__name__ in ('_3dCSCG_Mesh', '_2dCSCG_Mesh'):
+            self._elements_ = mesh_elements.elements
+        elif mesh_elements.__class__.__name__ in ('miUsGrid_TriangularMesh',):
             self._elements_ = mesh_elements.elements
         elif isinstance(mesh_elements, dict):
             self._elements_ = mesh_elements

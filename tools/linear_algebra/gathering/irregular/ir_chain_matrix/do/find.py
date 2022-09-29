@@ -62,71 +62,75 @@ class iR_CGM_DO_FIND(FrozenOnly):
         if len(self._CGM_) == 0: # iR_chain_gathering_matrix is empty: no local element at all.
             return None
 
-        LRS = self._CGM_.local_ranges
+        if self._CGM_.chain_method == 'silly':
+            LRS = self._CGM_.local_ranges
 
-        where = -1
+            where = -1
 
-        if self._CGM_.NUM_GMs == 1:
-            MIN, MAX = LRS[0]
-            if MIN <= m < MAX:
-                where = 0
-            else:
-                return None
-
-        else:
-            for i, LR in enumerate(LRS):
-                MIN, MAX = LR
-                if i == 0: # the first GM
-                    if m < MIN:
-                        return None
-                    elif MIN <= m < MAX:
-                        where = i
-                        break
-                    else:
-                        pass
-
+            if self._CGM_.NUM_GMs == 1:
+                MIN, MAX = LRS[0]
+                if MIN <= m < MAX:
+                    where = 0
                 else:
+                    return None
 
-                    if LRS[i-1][1] <= m < MIN:
-                        return None
-                    elif MIN <= m < MAX:
-                        where = i
-                        break
-                    else:
-                        if i == self._CGM_.NUM_GMs - 1: # the last GM
-                            if m >= MAX:
-                                return None
+            else:
+                for i, LR in enumerate(LRS):
+                    MIN, MAX = LR
+                    if i == 0: # the first GM
+                        if m < MIN:
+                            return None
+                        elif MIN <= m < MAX:
+                            where = i
+                            break
                         else:
                             pass
 
-        # if we reach here, we know this core may have element(s) containing the target dof...
-        assert 0 <= where < self._CGM_.NUM_GMs, "MUST BE!" # we know we only need to look at GMs[where] to find m.
+                    else:
 
-        m -= self._CGM_._To_Be_Added_[where]
-        GM = self._CGM_.GMs[where]
+                        if LRS[i-1][1] <= m < MIN:
+                            return None
+                        elif MIN <= m < MAX:
+                            where = i
+                            break
+                        else:
+                            if i == self._CGM_.NUM_GMs - 1: # the last GM
+                                if m >= MAX:
+                                    return None
+                            else:
+                                pass
 
-        # now we go through `GM` to find the element(s) having `m`
-        ELE = list()
+            # if we reach here, we know this core may have element(s) containing the target dof...
+            assert 0 <= where < self._CGM_.NUM_GMs, "MUST BE!" # we know we only need to look at GMs[where] to find m.
 
-        if N is None:
-            for rp in GM:
-                if m in GM[rp]: # NICE! we find one element containing m.
-                    ELE.append(rp)
+            m -= self._CGM_._To_Be_Added_[where]
+            GM = self._CGM_.GMs[where]
+
+            # now we go through `GM` to find the element(s) having `m`
+            ELE = list()
+
+            if N is None:
+                for rp in GM:
+                    if m in GM[rp]: # NICE! we find one element containing m.
+                        ELE.append(rp)
+
+            else:
+                n = 0
+                for rp in GM:
+                    if m in GM[rp]: # NICE! we find one element containing m.
+                        ELE.append(rp)
+                        n += 1
+
+                        if n == N: # we have found enough elements. Let's break the loop.
+                            break
+
+            if ELE == list():
+                return None
+            else:
+                return ELE, int(where)
 
         else:
-            n = 0
-            for rp in GM:
-                if m in GM[rp]: # NICE! we find one element containing m.
-                    ELE.append(rp)
-                    n += 1
-
-                    if n == N: # we have found enough elements. Let's break the loop.
-                        break
-
-        if ELE == list():
-            return None
-        else:
-            return ELE, int(where)
+            raise NotImplementedError()
 
 
     @accepts('self', (int, float, 'int32', 'int64'))
@@ -152,18 +156,52 @@ class iR_CGM_DO_FIND(FrozenOnly):
         if not isinstance(m, int): m = int(m)
 
         OUT = self.elements_contain_dof_numbered(m, N=N)
-        if OUT is None:
-            return None
-        elements = OUT[0]
-        local_indices = list()
 
-        for rp in elements:
+        if self._CGM_.chain_method == 'silly':
+            if OUT is None:
+                return None
+            elements = OUT[0]
+            local_indices = list()
 
-            index = np.argwhere(self._CGM_[rp]==m)[0,0]
-            local_indices.append(int(index))
+            for rp in elements:
 
-        return elements, local_indices
+                index = np.argwhere(self._CGM_[rp]==m)[0,0]
+                local_indices.append(int(index))
 
+            return elements, local_indices
+
+        else:
+            mesh_elements = list()
+            local_indices = list()
+
+            for e in self._CGM_: # go through all local mesh elements
+                gv = self._CGM_[e] # get the local gathering vector in each local mesh element
+                if m in gv:
+                    mesh_elements.append(e)
+                    local_indices.append(gv.index(m))
+
+            if len(mesh_elements) == 0:
+                return None
+            else:
+                return mesh_elements, local_indices
+
+    def elements_and_local_indices_of_dofs(self, dofs):
+        """"""
+        mesh_elements = dict()
+        local_indices = dict()
+
+        for i in dofs:
+            mesh_elements[i] = list()
+            local_indices[i] = list()
+
+        for e in self._CGM_: # go through all local mesh elements
+            gv = self._CGM_[e] # get the local gathering vector in each local mesh element
+            for i in dofs:
+                if i in gv:
+                    mesh_elements[i].append(e)
+                    local_indices[i].append(gv.index(i))
+
+        return mesh_elements, local_indices
 
 
 

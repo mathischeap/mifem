@@ -14,9 +14,12 @@ class OnTraceElement_BoundaryWise(FrozenOnly):
         :param eta:
         :param ravel:
         :param i:
-            1) self.ftype == 'standard':
-                Do the reconstruction in mesh element #i. When it is None, it means all local mesh
-                elements.
+            Which trace elements we are going to reconstruct the scalar.
+
+            If `i` is:
+                1) one of {None, 'on_mesh_boundaries'}, we reconstruct on all trace-elements on the
+                    mesh boundaries.
+
         :return:
         """
         SELF = self._sf_

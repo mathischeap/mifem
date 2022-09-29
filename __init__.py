@@ -20,7 +20,9 @@ if absolute_path not in sys.path:
 
 import objects.CSCG._2d.__init__ as cscg2
 import objects.CSCG._3d.__init__ as cscg3
+import objects.CSCG.tools.__init__ as cscg_tools
 
+import objects.miUsGrid.triangular.__init__ as miTri
 
 import root.__init__ as root
 from root.save import save as save
@@ -31,10 +33,10 @@ import screws.__init__ as screws
 import tools.__init__ as tools
 
 
-import objects.mpRfT._2d.__init__ as rfT2
 
 
 if __name__ == '__main__':
+
     print(cscg2)
     print(cscg3)
     print(tools)
@@ -42,7 +44,9 @@ if __name__ == '__main__':
     print(root)
     print(save)
     print(read)
-    print(rfT2)
+    print(cscg_tools)
+
+    print(miTri)
 
 
     mesh = cscg2.mesh('rectangle_periodic', p_UL=(-1,-1), region_layout=(3,5))([5,5], show_info=True)

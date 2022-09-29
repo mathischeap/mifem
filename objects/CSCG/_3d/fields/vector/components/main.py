@@ -12,8 +12,6 @@ from objects.CSCG._3d.fields.vector.components.helpers.T_perp import ___VECTOR_T
 from objects.CSCG._3d.fields.vector.components.helpers.T_perp_BoundaryWise import _3dCSCG_T_perp_BW
 
 
-
-
 class _3dCSCG_VectorField_Components(FrozenOnly):
     """A wrapper of all components of the vector."""
     def __init__(self, vf):
@@ -227,7 +225,3 @@ if __name__ == '__main__':
     VP = V.components.T_perp
     VP.current_time = 0
     VP.visualize()
-
-
-
-

@@ -215,7 +215,7 @@ class _3dCSCG_Discretize_Standard(FrozenOnly):
         for i in SELF.mesh.elements.indices:
             cochainLocal[i] = np.hstack((local_dydz[i], local_dzdx[i], local_dxdy[i]))
         if update_cochain: SELF.cochain.local = cochainLocal
-        # 'locally full local cochain': provide cochain.local and locally they are full for all local dofs
+        # 'locally full local cochain': provide `cochain.local` and locally they are full for all local dofs
         return 'locally full local cochain', cochainLocal
 
 

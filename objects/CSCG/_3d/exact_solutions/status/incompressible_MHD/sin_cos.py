@@ -44,5 +44,11 @@ class MHD_SinCos1(incompressible_MHD_Base):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass
+    # mpiexec -n 4 python objects/CSCG/_3d/exact_solutions/status/incompressible_MHD/sin_cos.py
+    from objects.CSCG._3d.master import MeshGenerator, ExactSolutionSelector
+    mesh = MeshGenerator('crazy', c=0.0)([5, 5, 5])
+    es = ExactSolutionSelector(mesh)("MHD:sincos1", show_info=True)
+
+    r= es.status.velocity
+    r.current_time = 1
+    r.visualize()

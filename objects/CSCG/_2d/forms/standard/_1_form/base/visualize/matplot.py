@@ -40,7 +40,10 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
                  colorbar_label=None, colorbar_orientation='vertical', colorbar_aspect=20,
                  colorbar_labelsize=12.5, colorbar_extend='both',
 
-        title=True, show_boundaries=True,
+        title_x=True,
+        title_y=True,
+        suptitle = False,
+        show_boundaries=True,
         saveto = None,
         plot_type='contourf',
         ):
@@ -60,7 +63,9 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
         colorbar_aspect
         colorbar_labelsize
         colorbar_extend
-        title
+        title_x
+        title_y
+        suptitle
         show_boundaries
         saveto
         plot_type
@@ -70,7 +75,13 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
 
         """
         density = int(np.ceil(np.sqrt(density / self._mesh_.elements.GLOBAL_num)))
-        rs = [np.linspace(-1, 1, density) for _ in range(self._sf_.ndim)]
+
+        rs = list()
+        for _ in range(self._sf_.ndim):
+            __ = np.linspace(-1, 1, density+1)
+            __ = (__[:-1] + __[1:]) / 2
+            rs.append(__)
+
         xy, v = self._sf_.reconstruct(*rs)
 
         xy = cOmm.gather(xy, root=sEcretary_rank)
@@ -110,7 +121,7 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
             plt.rc('text', usetex=usetex)
             plt.rcParams['text.latex.preamble'] = r"\usepackage{amsmath}"
             if colormap is not None: plt.rcParams['image.cmap'] = colormap
-            fig = plt.figure(figsize=(12,5.5))
+            fig = plt.figure(figsize=(12,4))
 
             plotter = getattr(plt, plot_type)
             # ---------------- x component ---------------------------------------------------------
@@ -128,27 +139,29 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
             for rn in self._sf_.mesh.domain.regions.names:
                 plotter(x[rn], y[rn], vx[rn], levels=levels_x)
 
-            if show_boundaries:
-                RB, RBN, boundary_name_color_dict, pb_text = \
-                    self._mesh_.visualize.matplot.___PRIVATE_DO_generate_boundary_data___(
-                        50, usetex=usetex)[0:4]
 
-                reo_db = self._mesh_.domain.regions.edges_on_domain_boundaries
+            RB, RBN, boundary_name_color_dict, pb_text = \
+                self._mesh_.visualize.matplot.___PRIVATE_DO_generate_boundary_data___(
+                    50, usetex=usetex)[0:4]
 
-                for rn in self._mesh_.domain.regions.names:
-                    for ei in range(4):
-                        if reo_db[rn][ei] == 1:
-                            bn = self._mesh_.domain.regions.map[rn][ei]
+            reo_db = self._mesh_.domain.regions.edges_on_domain_boundaries
+
+            for rn in self._mesh_.domain.regions.names:
+                for ei in range(4):
+                    if reo_db[rn][ei] == 1:
+                        bn = self._mesh_.domain.regions.map[rn][ei]
+                        if show_boundaries:
                             # noinspection PyUnresolvedReferences
                             ax.plot(RB[rn][ei][0], RB[rn][ei][1], color=boundary_name_color_dict[bn],
                                     linewidth=3)
-                            # noinspection PyUnresolvedReferences
-                            ax.plot(RB[rn][ei][0], RB[rn][ei][1], color='k',
-                                    linewidth=0.25*3)
+                        # noinspection PyUnresolvedReferences
+                        ax.plot(RB[rn][ei][0], RB[rn][ei][1], color='k',
+                                linewidth=0.25*3)
 
-                        if RBN[rn][ei] is None:
-                            pass
-                        else:
+                    if RBN[rn][ei] is None:
+                        pass
+                    else:
+                        if show_boundaries:
                             bn = self._mesh_.domain.regions.map[rn][ei]
                             if bn in pb_text:
                                 # noinspection PyUnresolvedReferences
@@ -162,16 +175,16 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
                                         c=boundary_name_color_dict[bn], ha='center', va='center')
             plt.xlabel('$x$')
             plt.ylabel('$y$')
-            if title is True:
+            if title_x is True:
                 if self._sf_.orientation == 'inner':
                     dfx = r"$(u, \cdot)$ on $\mathrm{d}x$"
                 else:
                     dfx = r"$(u, \cdot)$ on $\mathrm{d}y$"
                 plt.title(dfx)
-            elif title is False:
+            elif title_x is False:
                 pass
             else:
-                pass
+                plt.title(title_x)
 
             if show_colorbar:
                 mappable = cm.ScalarMappable()
@@ -201,21 +214,22 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
             for rn in self._sf_.mesh.domain.regions.names:
                 plotter(x[rn], y[rn], vy[rn], levels=levels_y)
 
-            if show_boundaries:
-                for rn in self._mesh_.domain.regions.names:
-                    for ei in range(4):
-                        if reo_db[rn][ei] == 1:
-                            bn = self._mesh_.domain.regions.map[rn][ei]
-                            # noinspection PyUnresolvedReferences
+            for rn in self._mesh_.domain.regions.names:
+                for ei in range(4):
+                    if reo_db[rn][ei] == 1:
+                        bn = self._mesh_.domain.regions.map[rn][ei]
+                        # noinspection PyUnresolvedReferences
+                        if show_boundaries:
                             ax.plot(RB[rn][ei][0], RB[rn][ei][1], color=boundary_name_color_dict[bn],
                                     linewidth=3)
-                            # noinspection PyUnresolvedReferences
-                            ax.plot(RB[rn][ei][0], RB[rn][ei][1], color='k',
-                                    linewidth=0.25*3)
+                        # noinspection PyUnresolvedReferences
+                        ax.plot(RB[rn][ei][0], RB[rn][ei][1], color='k',
+                                linewidth=0.25*3)
 
-                        if RBN[rn][ei] is None:
-                            pass
-                        else:
+                    if RBN[rn][ei] is None:
+                        pass
+                    else:
+                        if show_boundaries:
                             bn = self._mesh_.domain.regions.map[rn][ei]
                             if bn in pb_text:
                                 # noinspection PyUnresolvedReferences
@@ -229,16 +243,17 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
                                         c=boundary_name_color_dict[bn], ha='center', va='center')
             plt.xlabel('$x$')
             plt.ylabel('$y$')
-            if title is True:
+            if title_y is True:
                 if self._sf_.orientation == 'inner':
                     dfy = r"$(\cdot, v)$ on $\mathrm{d}y$"
                 else:
                     dfy = r"$(\cdot, v)$ on $\mathrm{d}x$"
                 plt.title(dfy)
-            elif title is False:
+            elif title_y is False:
                 pass
             else:
-                pass
+                plt.title(title_y)
+
             if show_colorbar:
                 mappable = cm.ScalarMappable()
                 mappable.set_array(np.array(levels_y))
@@ -253,14 +268,14 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
                 cb.ax.tick_params(labelsize=colorbar_labelsize)
 
             # --------------------------------------------------------------------------------------
-            if title is True:
+            if suptitle is True:
                 default_title = f'{self._sf_.orientation} {self._sf_.k}-form: ' + \
                                 f'{self._sf_.standard_properties.name}'
                 plt.suptitle(default_title)
-            elif title is False:
+            elif suptitle is False:
                 pass
             else:
-                pass
+                plt.suptitle(suptitle)
             #---------------------- save to --------------------------------------------------------
             if saveto is None or saveto == '':
                 plt.show()
@@ -335,7 +350,12 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
 
         mesh = self._mesh_
 
-        rs = [np.linspace(-1, 1, density) for _ in range(self._sf_.ndim)]
+        rs = list()
+        for _ in range(self._sf_.ndim):
+            __ = np.linspace(-1, 1, density+1)
+            __ = (__[:-1] + __[1:]) / 2
+            rs.append(__)
+
         xy, v = self._sf_.reconstruct(*rs)
 
         xy = cOmm.gather(xy, root=sEcretary_rank)

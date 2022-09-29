@@ -217,6 +217,7 @@ class _3dCSCG_Discretize_BoundaryWise(FrozenOnly):
                     cochainLocal[i] = dict()
 
                 cochainLocal[i][side] = LOCAL_FULL_COCHAIN[local_dofs]
+
         # 'Boundary only local cochain': provide cochain.local and only for local dofs on the element sides.
         return 'Boundary only local cochain', cochainLocal
 

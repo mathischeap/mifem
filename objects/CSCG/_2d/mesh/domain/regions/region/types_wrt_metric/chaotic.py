@@ -3,6 +3,7 @@ from objects.CSCG._2d.mesh.domain.regions.region.types_wrt_metric.base import Ty
 from root.config.main import rAnk, cOmm
 import numpy as np
 from objects.CSCG._2d.mesh.elements.element.types_wrt_metric.chaotic import ChaoticElement
+from objects.CSCG._2d.mesh.trace.elements.element.types_wrt_metric.chaotic import  ChaoticTraceElement
 
 class Chaotic(TypeWr2Metric):
     """
@@ -34,3 +35,10 @@ class Chaotic(TypeWr2Metric):
         return ChaoticElement()
 
 
+    def ___CLASSIFY_TRACE_ELEMENT_of_spacing___(self, trace_spacing: tuple) -> ChaoticTraceElement:
+        """
+
+        :param trace_spacing: the trace_spacing representing a trace element.
+        :return:
+        """
+        return ChaoticTraceElement()

@@ -17,7 +17,7 @@ from tools.linear_algebra.gathering.irregular.ir_chain_matrix.do.main import iR_
 class iR_Chain_Gathering_Matrix(FrozenOnly):
     """"""
 
-    def __init__(self, GMs):
+    def __init__(self, GMs, chain_method='silly'):
         """
         GMs can be a gathering matrix or a chain gathering matrix. Or a list of them.
 
@@ -44,6 +44,8 @@ class iR_Chain_Gathering_Matrix(FrozenOnly):
                 NEW_GMs.extend(gm.GMs)
             else:
                 raise Exception(f'GMs[{i}] is {gm.__class__.__name__}, wrong!')
+
+        self._chain_method_ = chain_method
 
         self._mesh_type_ = mesh_types[0]
         GMs = NEW_GMs
@@ -79,6 +81,11 @@ class iR_Chain_Gathering_Matrix(FrozenOnly):
         self._freeze_self_()
 
     @property
+    def chain_method(self):
+        """Which method we use to chain the gathering matrices."""
+        return self._chain_method_
+
+    @property
     def ___Pr_IS_regular___(self):
         return False
 
@@ -102,8 +109,11 @@ class iR_Chain_Gathering_Matrix(FrozenOnly):
         if self.___NUM___ == 1:
             return self.GMs[0][item].full_vector
         else:
-            _ = [gm[item].full_vector+self._To_Be_Added_[i] for i, gm in enumerate(self._GMs_)]
-            return np.concatenate(_)
+            if self.chain_method == 'silly':
+                _ = [gm[item].full_vector+self._To_Be_Added_[i] for i, gm in enumerate(self._GMs_)]
+                return np.concatenate(_)
+            else:
+                raise NotImplementedError(f"chain method={self.chain_method} is not implemented.")
 
     def __iter__(self):
         """Go through all local mesh elements."""
@@ -146,48 +156,28 @@ class iR_Chain_Gathering_Matrix(FrozenOnly):
     def GMs(self):
         return self._GMs_
 
-    def ___Pr_LENs___(self, rc_rp):
-        """Return the length of each local GM in the root-cell."""
-        if rc_rp not in self.___LENs___:
-
-            LENs = list()
-            for gm in self.GMs:
-                LENs.append(len(gm[rc_rp]))
-            if LENs in self.___LENs_pool___:
-                i = self.___LENs_pool___.index(LENs)
-                self.___LENs___[rc_rp] = self.___LENs_pool___[i]
-            else:
-                self.___LENs_pool___.append(LENs)
-                self.___LENs___[rc_rp] = self.___LENs_pool___[-1]
-
-        return self.___LENs___[rc_rp]
-
     @property
     def local_ranges(self):
         """The local dofs are in this range."""
-        if self._local_ranges_ is None:
+        if self.chain_method == 'silly':
+            if self._local_ranges_ is None:
 
-            if len(self) == 0:
-                self._local_ranges_ = [tuple() for _ in range(len(self.GMs))]
+                if len(self) == 0:
+                    self._local_ranges_ = [tuple() for _ in range(len(self.GMs))]
 
-            else:
-                self._local_ranges_ = list()
-                tba = self._To_Be_Added_
-                for i, gm in enumerate(self.GMs):
-                    LR = gm.local_range
-                    MIN, MAX = LR
-                    MIN += tba[i]
-                    MAX += tba[i]
-                    self._local_ranges_.append((MIN, MAX))
+                else:
+                    self._local_ranges_ = list()
+                    tba = self._To_Be_Added_
+                    for i, gm in enumerate(self.GMs):
+                        LR = gm.local_range
+                        MIN, MAX = LR
+                        MIN += tba[i]
+                        MAX += tba[i]
+                        self._local_ranges_.append((MIN, MAX))
 
-        return self._local_ranges_
-
-    @property
-    def GLOBAL_dofs_distribution(self):
-        """Like [100, 127, 80], we know GMs[0].GLOBAL_num_dofs=100, GMs[1].GLOBAL_num_dofs=127,
-         GMs[2].GLOBAL_num_dofs=80. So we know, for example, how to distribution the result vector
-         by solving the assembled EWC_SparseMatrix."""
-        return self._dofs_distribution_
+            return self._local_ranges_
+        else:
+            raise Exception(f'local_ranges only applicable to silly chain_matrix.')
 
     @property
     def do(self):
@@ -200,18 +190,5 @@ class iR_Chain_Gathering_Matrix(FrozenOnly):
 
 if __name__ == "__main__":
     # mpiexec -n 4 python tools/linear_algebra/gathering/irregular/ir_chain_matrix/main.py
-    from __init__ import rfT2
-    fc = rfT2.rf(100)
-
-    f2 = fc('2-f-o')
-    f1 = fc('1-f-o')
-    nt = fc('nst')
-
-    GM2 = f2.numbering.gathering
-    GM1 = f1.numbering.gathering
-    GMT = nt.numbering.gathering
-
-    GM1 = iR_Chain_Gathering_Matrix([GM2, GM1, GMT])
-    GM2 = iR_Chain_Gathering_Matrix(GM2)
-
+    pass
 

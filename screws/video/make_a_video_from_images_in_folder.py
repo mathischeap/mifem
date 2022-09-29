@@ -6,9 +6,8 @@ from screws.miscellaneous.timer import MyTimer
 from screws.miscellaneous.random_string.digits import randomStringDigits
 
 
-
-
-def make_a_video_from_images_in_folder(image_folder, video_name=None, duration=5, clear_images=False):
+# noinspection PyUnresolvedReferences
+def make_a_video_from_images_in_folder(image_folder, video_name=None, duration=5, clean_images=False):
     """Each image will be a frame of the video. Images must be named in an increasing sequence
     start with 0 or any other positive integer. They will be played in an increasing sequence as
     well.
@@ -16,7 +15,7 @@ def make_a_video_from_images_in_folder(image_folder, video_name=None, duration=5
     :param image_folder:
     :param video_name:
     :param duration: The video will be of time `duration` seconds.
-    :param clear_images: {bool,} Do we delete the used images when we have released the video?
+    :param clean_images: {bool,} Do we delete the used images when we have released the video?
     :return:
     """
     if rAnk != mAster_rank: return
@@ -65,7 +64,7 @@ def make_a_video_from_images_in_folder(image_folder, video_name=None, duration=5
     video.release()
 
     #---------- clear images -----------------------------------------------------------------------
-    if clear_images:
+    if clean_images: # do not easily clean images!
         for file in images:
             os.remove(image_folder + '/' + file)
     else:

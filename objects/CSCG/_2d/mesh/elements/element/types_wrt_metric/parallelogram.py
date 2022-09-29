@@ -2,10 +2,10 @@
 
 import numpy as np
 from objects.CSCG._2d.mesh.elements.element.types_wrt_metric.base import ElementTypeWr2MetricBase
-from objects.mpRfT._2d.mesh.cell.types_wrt_metric.parallelogram import mpRfT2_ParallelogramCell
+# from objects.mpRfT._2d.mesh.cell.types_wrt_metric.parallelogram import mpRfT2_ParallelogramCell
 
 from screws.decorators.accepts import accepts
-from objects.mpRfT._2d.mesh.segments.segment.types_wrt_metric.straight import mpRfT2_StraightSegment
+# from objects.mpRfT._2d.mesh.segments.segment.types_wrt_metric.straight import mpRfT2_StraightSegment
 
 
 class ParallelogramElement(ElementTypeWr2MetricBase):
@@ -28,35 +28,35 @@ class ParallelogramElement(ElementTypeWr2MetricBase):
         self._freeze_self_()
 
 
-    def ___CLASSIFY_mpRfT2_CELL_of_origin_and_delta___(self, origin_and_delta):
-        """"""
-        angleL, L, L_angle_U, U = self._data_
-        delta = origin_and_delta[1]
-        L *= delta / 2
-        U *= delta / 2
-        return mpRfT2_ParallelogramCell(angleL, L, L_angle_U, U)
-
-    def ___CLASSIFY_mpRfT2_segment___(self, seg):
-        """"""
-        direction = seg.direction
-        a1, L1, a2, L2 = self._data_
-
-        rp = seg.__repr__()
-        if rp[3] == 'c':
-            ind = rp.split(':')[-1]
-        elif rp[3] == 't':
-            ind =  rp.split('-')[-1]
-        else:
-            raise Exception()
-
-        if direction == 'UD':
-            angle = a1
-            L = L1
-        else:
-            angle = a1 + a2
-            L = L2
-
-        LEN = len(ind) -  1
-        length = 0.5 ** LEN * L
-
-        return mpRfT2_StraightSegment(angle, length)
+    # def ___CLASSIFY_mpRfT2_CELL_of_origin_and_delta___(self, origin_and_delta):
+    #     """"""
+    #     angleL, L, L_angle_U, U = self._data_
+    #     delta = origin_and_delta[1]
+    #     L *= delta / 2
+    #     U *= delta / 2
+    #     return mpRfT2_ParallelogramCell(angleL, L, L_angle_U, U)
+    #
+    # def ___CLASSIFY_mpRfT2_segment___(self, seg):
+    #     """"""
+    #     direction = seg.direction
+    #     a1, L1, a2, L2 = self._data_
+    #
+    #     rp = seg.__repr__()
+    #     if rp[3] == 'c':
+    #         ind = rp.split(':')[-1]
+    #     elif rp[3] == 't':
+    #         ind =  rp.split('-')[-1]
+    #     else:
+    #         raise Exception()
+    #
+    #     if direction == 'UD':
+    #         angle = a1
+    #         L = L1
+    #     else:
+    #         angle = a1 + a2
+    #         L = L2
+    #
+    #     LEN = len(ind) -  1
+    #     length = 0.5 ** LEN * L
+    #
+    #     return mpRfT2_StraightSegment(angle, length)

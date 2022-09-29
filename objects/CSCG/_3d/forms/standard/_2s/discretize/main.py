@@ -27,6 +27,7 @@ class _3dCSCG_Discretize(FrozenOnly):
         :rtype: Its type can be different according to the particular discretize method.
         """
         SELF = self._sf_
+
         if target == 'func':
 
             if SELF.TW.func.body.__class__.__name__ == '_3dCSCG_VectorField':

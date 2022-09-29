@@ -41,6 +41,7 @@ class _2dCSCG_Trace_Element(FrozenOnly):
             assert self.NON_CHARACTERISTIC_position[0] not in '1234567890'
         self._ct_ = None
         self._IS_ = None
+        self._type_wrt_metric_ = None
         self._freeze_self_()
 
     @property
@@ -93,6 +94,29 @@ class _2dCSCG_Trace_Element(FrozenOnly):
         return self._cp_[-1]
 
     @property
+    def CHARACTERISTIC_region(self):
+        """We mainly consider this trace element is in this regions."""
+        region = self._mesh_.do.find.region_name_of_element(
+            self.CHARACTERISTIC_element)
+        return region
+
+    @property
+    def spacing(self):
+        element_spacing = self._mesh_.elements[self.CHARACTERISTIC_element].spacing
+        edge = self.CHARACTERISTIC_edge
+        if edge == 'U':
+            trace_spacing = (element_spacing[0][0], element_spacing[1])
+        elif edge == 'D':
+            trace_spacing = (element_spacing[0][1], element_spacing[1])
+        elif edge == 'L':
+            trace_spacing = (element_spacing[0], element_spacing[1][0])
+        elif edge == 'R':
+            trace_spacing = (element_spacing[0], element_spacing[1][1])
+        else:
+            raise Exception()
+        return trace_spacing
+
+    @property
     def i(self):
         return self._i_
 
@@ -109,3 +133,16 @@ class _2dCSCG_Trace_Element(FrozenOnly):
             return CORE
         else:
             return None
+
+
+    @property
+    def type_wrt_metric(self):
+        """Return the trace-element-metric-type object reflecting the element type."""
+        if self._type_wrt_metric_ is None:
+
+            self._type_wrt_metric_ = \
+                self._mesh_.domain.regions[
+                    self.CHARACTERISTIC_region].type_wrt_metric.___CLASSIFY_TRACE_ELEMENT_of_spacing___(
+                    self.spacing)
+
+        return self._type_wrt_metric_

@@ -9,8 +9,7 @@ from tools.linear_algebra.data_structures.vectors.GLOBAL.do import GlobalVectorD
 from tools.linear_algebra.data_structures.vectors.GLOBAL.IS import GlobalVectorIS
 
 class GlobalVector(FrozenOnly):
-    """
-    An entry can be split into parts and stored in multiple cores.
+    """An entry can be split into parts and stored in multiple cores.
 
     This is convenient for, for example, the rhs of a linear system. To see the exact value of one entry,
     we must sum up that entry in all cores.

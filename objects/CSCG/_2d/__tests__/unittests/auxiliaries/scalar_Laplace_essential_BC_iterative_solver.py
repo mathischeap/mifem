@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from tools.linear_algebra.linear_system.main import LinearSystem
 from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector

@@ -15,8 +15,7 @@ class Gathering_Matrix_DO(FrozenOnly):
 
 
     def hstack(self, *args):
-        """
-        `hstack` other gathering matrices to the right of self.
+        """`hstack` other gathering matrices to the right of self.
 
         For example, we can do GM1.DO_hstack(GM2, GM3).
 

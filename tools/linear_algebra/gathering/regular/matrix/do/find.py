@@ -3,8 +3,6 @@ from screws.freeze.main import FrozenOnly
 
 
 
-
-
 class Gathering_Matrix_FIND(FrozenOnly):
     """"""
     def __init__(self, GM):

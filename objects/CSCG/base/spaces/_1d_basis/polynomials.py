@@ -60,6 +60,8 @@ class _1dPolynomial(FrozenOnly):
         self._nodes_ = nodes
         self._p_ = np.size(self.nodes) - 1
         self._isKronecker_ = True
+        self._Lb_cache_ = {'x':-100, 'cache':np.array([])}
+        self._eb_cache_ = {'x':-100, 'cache':np.array([])}
         self._freeze_self_()
 
     @property
@@ -90,28 +92,39 @@ class _1dPolynomial(FrozenOnly):
         """Return the lagrange polynomials."""
         return self.lagrange_basis(x)
 
-    def lagrange_basis(self, x=None):
+    def lagrange_basis(self, x):
         """Return the lagrange polynomials evaluated at ``x``."""
-        if x is None:
-            x = self.nodes
-        p = np.size(self.nodes)
-        basis = np.ones((p, np.size(x)))
-        # lagrange basis functions
-        for i in range(p):
-            for j in range(p):
-                if i != j:
-                    basis[i, :] *= (x - self.nodes[j]) / (self.nodes[i] - self.nodes[j])
-        return basis
+        if x.__class__.__name__ == 'ndarray' and np.shape(x) == np.shape(self._Lb_cache_['x']) and \
+                np.all(self._Lb_cache_['x'] == x):
+            return self._Lb_cache_['cache']
+        else:
+            p = np.size(self.nodes)
+            basis = np.ones((p, np.size(x)))
+            # lagrange basis functions
+            for i in range(p):
+                for j in range(p):
+                    if i != j:
+                        basis[i, :] *= (x - self.nodes[j]) / (self.nodes[i] - self.nodes[j])
+
+            self._Lb_cache_['x'] = x
+            self._Lb_cache_['cache'] = basis
+            return basis
 
     def edge_basis(self, x):
         """Return the edge polynomials evaluated at ``x``."""
-        p = np.size(self.nodes) - 1
-        derivatives_poly = self._derivative_poly_(p, x)
-        edge_poly = np.zeros((p, np.size(x)))
-        for i in range(p):
-            for j in range(i + 1):
-                edge_poly[i] -= derivatives_poly[j, :]
-        return edge_poly
+        if x.__class__.__name__ == 'ndarray' and np.shape(x) == np.shape(self._eb_cache_['x']) and \
+            np.all(self._eb_cache_['x'] == x):
+            return self._eb_cache_['cache']
+        else:
+            p = np.size(self.nodes) - 1
+            derivatives_poly = self._derivative_poly_(p, x)
+            edge_poly = np.zeros((p, np.size(x)))
+            for i in range(p):
+                for j in range(i + 1):
+                    edge_poly[i] -= derivatives_poly[j, :]
+            self._eb_cache_['x'] = x
+            self._eb_cache_['cache'] = edge_poly
+            return edge_poly
 
 
 

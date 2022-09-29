@@ -28,7 +28,7 @@ class _3dCSCG_MeshBoundaryCT_constant(FrozenOnly):
         number), otherwise, we return None.
 
         """
-        if self._constant_unit_normal_vector_ is True: # we need to compute it, DO NOT USE NONE FOR THIS ONE.
+        if self._constant_unit_normal_vector_ is True: # DO NOT USE NONE FOR THIS ONE.
 
             boundary = self._boundary_
 

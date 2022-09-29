@@ -16,6 +16,7 @@ from objects.CSCG._3d.forms.standard._3s.special import _3Form_Special
 from objects.CSCG._3d.forms.standard._3s.reconstruct import _3dCSCG_SF3_Reconstruct
 from objects.CSCG._3d.forms.standard._3s.inheriting.private import _3dCSCG_S3F_Private
 from objects.CSCG._3d.forms.standard._3s.visualize.main import _3dCSCG_S3F_VISUALIZE
+from objects.CSCG._3d.forms.standard._3s.do.main import _3dCSCG_S3F_Do
 
 
 class _3dCSCG_3Form(_3dCSCG_S3F_Private, _3dCSCG_Standard_Form):
@@ -43,6 +44,7 @@ class _3dCSCG_3Form(_3dCSCG_S3F_Private, _3dCSCG_Standard_Form):
         self._discretize_ = None
         self._reconstruct_ = None
         self._visualize_ = None
+        self._DO_ = _3dCSCG_S3F_Do(self)
         self._freeze_self_()
 
     def RESET_cache(self):

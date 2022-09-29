@@ -18,4 +18,3 @@ class VF2_IP_H(object):
 
     def __call__(self, t, x, y):
         return self._f0_(t, x, y) * self._f2_(t, x, y) + self._f1_(t, x, y) * self._f3_(t, x, y)
-

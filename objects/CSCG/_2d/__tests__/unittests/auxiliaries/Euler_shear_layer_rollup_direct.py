@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """the second program for the 2d inviscid shear lay rollup test case, using direct solver"""
 
 from numpy import pi
@@ -180,7 +181,7 @@ def Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename
     SI(SOLVER, [EN_t0_half, KE_t0, Vor_t0_half, L2_du_t0])
     SI.run()
 
-    make_a_video_from_images_in_folder(image_folder, duration=t, clear_images=True)
+    make_a_video_from_images_in_folder(image_folder, duration=t, clean_images=True)
 
 
     return SI

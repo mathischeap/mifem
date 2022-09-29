@@ -72,8 +72,6 @@ class incompressible_MHD_Base(Base):
         self._pressure_ = None
         self._body_force_ = None
 
-        self._r_ = None # \partial_t(B) + curl(E) = r, should be 0.
-
         self._volume_current_density_ = None # j
         self._magnetic_field_ = None # B
         self._electric_field_ = None #E
@@ -119,6 +117,10 @@ class incompressible_MHD_Base(Base):
 
         self._cross_helicity_distribution_ = None
         self._magnetic_helicity_distribution_ = None
+
+        self._mass_source_term_ = None #s,  div (u) = s, should be 0;
+        self._magnetic_source_term_ = None # m, div(B) = m, should be 0;
+        self._electric_source_term_ = None # r, \partial_t(B) + curl(E) = r, should be 0;
 
         self._freeze_self_()
 
@@ -195,7 +197,6 @@ class incompressible_MHD_Base(Base):
         if self._NPDf_w_ is None:
             self._NPDf_w_ = NumericalPartialDerivative_txyz_Functions(self.w)
         return self._NPDf_w_('z')(t, x, y, z)
-
 
     def u_xx(self, t, x, y, z):
         if self._NPDf_ux_ is None:
@@ -447,16 +448,41 @@ class incompressible_MHD_Base(Base):
         # must be zero
         return self.u_x(t, x, y, z) + self.v_y(t, x, y, z) + self.w_z(t, x, y, z)
 
-    # noinspection PyUnusedLocal
-    @staticmethod
-    def source_term(t, x, y, z):
-        """By default, we have divergence free condition; the source term is zero."""
-        return 0 * x
 
     # noinspection PyUnusedLocal
     @staticmethod
-    def magnetic_source_term(t, x, y, z):
+    def s(t, x, y, z):
+        """The mass source term.
+
+        By default, we have divergence free condition for velocity; the source term is zero.
+        But we make define a non-zero source term through method `s` for some particular
+        manufactured solutions.
+        """
         return 0 * x
+
+    @property
+    def mass_source_term(self):
+        if self._mass_source_term_ is None:
+            self._mass_source_term_ = _3dCSCG_ScalarField(self.mesh,
+                                                    self.s,
+                                                    valid_time=None,
+                                                    name='mass-source-term')
+        return self._mass_source_term_
+
+    # noinspection PyUnusedLocal
+    @staticmethod
+    def m(t, x, y, z):
+        """the magnetic source term. So, div(B) = m"""
+        return 0 * x
+
+    @property
+    def magnetic_source_term(self):
+        if self._magnetic_source_term_ is None:
+            self._magnetic_source_term_ = _3dCSCG_ScalarField(self.mesh,
+                                                    self.m,
+                                                    valid_time=None,
+                                                    name='magnetic-source-term')
+        return self._magnetic_source_term_
 
     @property
     def vorticity(self):
@@ -553,6 +579,17 @@ class incompressible_MHD_Base(Base):
                 - self._1_over_Re_ * (self.w_xx(t,x,y,z) + self.w_yy(t,x,y,z) + self.w_zz(t,x,y,z)) \
                 - self.j_x(t, x, y, z) * self.By(t, x, y, z) + self.j_y(t, x, y, z) * self.Bx(t, x, y, z)
 
+    @property
+    def body_force(self):
+        """In fact, it is sort of momentum source term."""
+        if self._body_force_ is None:
+            self._body_force_ = _3dCSCG_VectorField(self.mesh,
+                                                   (self.fx, self.fy, self.fz),
+                                                   valid_time=self.valid_time)
+        return self._body_force_
+
+
+
     def rx(self, t, x, y, z):
         return self.Bx_t(t, x, y, z) + self._CurlEx_(t, x, y, z)
 
@@ -563,24 +600,16 @@ class incompressible_MHD_Base(Base):
         return self.Bz_t(t, x, y, z) + self._CurlEz_(t, x, y, z)
 
     @property
-    def extra_term_r(self):
-        """partial_t(B) + curl(E) = r"""
-        if self._r_ is None:
+    def electric_source_term(self):
+        """r; partial_t(B) + curl(E) = r"""
+        if self._electric_source_term_ is None:
 
-            self._r_ = _3dCSCG_VectorField(self.mesh,
+            self._electric_source_term_ = _3dCSCG_VectorField(self.mesh,
                                    (self.rx, self.ry, self.rz),
                                    valid_time=self.valid_time)
-        return self._r_
+        return self._electric_source_term_
 
 
-
-    @property
-    def body_force(self):
-        if self._body_force_ is None:
-            self._body_force_ = _3dCSCG_VectorField(self.mesh,
-                                                   (self.fx, self.fy, self.fz),
-                                                   valid_time=self.valid_time)
-        return self._body_force_
 
     @property
     def pressure(self):
@@ -791,18 +820,18 @@ class incompressible_MHD_Base(Base):
 
             assert np.all(np.isclose(
                 self.u_x(t, *rst) + self.v_y(t, *rst) + self.w_z(t, *rst),
-                self.source_term(time, *rst))), \
-                " <exact solution> <icpNS> : velocity divergence condition."
+                self.s(time, *rst))), \
+                " <exact solution> <MHD> : velocity divergence condition."
 
             assert np.all(np.isclose(
                 self.___div_of_velocity___(time, *rst),
-                self.source_term(time, *rst))), \
-                " <exact solution> <icpNS> : velocity divergence free condition."
+                self.s(time, *rst))), \
+                " <exact solution> <MHD> : velocity divergence free condition."
 
             assert np.all(np.isclose(
                 self.___div_of_B___(time, *rst),
-                self.magnetic_source_term(time, *rst))), \
-                " <exact solution> <icpNS> : magnetic field divergence free condition."
+                self.m(time, *rst))), \
+                " <exact solution> <MHD> : magnetic field divergence free condition."
 
             wx = partial(self.omega_x, time)
             wy = partial(self.omega_y, time)

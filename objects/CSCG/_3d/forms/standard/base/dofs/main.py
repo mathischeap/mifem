@@ -78,6 +78,7 @@ class _3dCSCG_Standard_forms_DOFs(FrozenOnly):
 
 
 
+
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\form\standard\dofs\main.py
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector

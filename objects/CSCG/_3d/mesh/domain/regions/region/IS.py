@@ -11,6 +11,7 @@ class _3dCSCG_Region_IS(FrozenOnly):
         """"""
         self._region_ = region
         self._periodic_to_self_ = None
+        self._orthogonal_ = None
         self._freeze_self_()
 
     @property
@@ -35,3 +36,16 @@ class _3dCSCG_Region_IS(FrozenOnly):
             self._periodic_to_self_ = T_or_F
 
         return self._periodic_to_self_
+
+    @property
+    def orthogonal(self):
+        if self._orthogonal_ is None:
+            TwM = self._region_.type_wrt_metric
+            mark = TwM.mark
+            if isinstance(mark, str) and mark[:10] == "orthogonal":
+                self._orthogonal_ = True
+            elif isinstance(mark, str) and mark[:5] == "crazy" and TwM._c_ == 0:
+                    self._orthogonal_ = True
+            else:
+                self._orthogonal_ = False
+        return self._orthogonal_

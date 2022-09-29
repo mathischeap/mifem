@@ -130,7 +130,7 @@ class NonLinearSystem(FrozenOnly):
         self._nonlinear_terms_ = nLS_NonlinearTerms(self)
 
         #----- parse regularity lhs: inhomogeneous_MDM -------------------------------------
-        regularity = 'inhomogeneous_MDM'
+        regularity = 'inhomogeneous_MDM' # only have linear inhomogeneous `MultiDimMatrix` terms.
         for i, row_terms in enumerate(terms):
             if row_terms == 0 or row_terms is None:
                 pass

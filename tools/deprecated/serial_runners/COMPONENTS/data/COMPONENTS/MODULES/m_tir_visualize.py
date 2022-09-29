@@ -137,8 +137,13 @@ class M_TIR_Visualize:
                                        input_names[2]+'='+str(list_input2[0])+', '+
                                        res2plot[m].replace('_','-'),)
             labels = list(labels)
+        elif labels is False:
+            pass
+        else:
+            pass
         #___ preparing orders _________________________________________________________
-        orders : List[float] = [0.0 for _ in range(len(labels))]
+        if show_order:
+            orders : List[float] = [0.0 for _ in range(len(labels))]
         #___ pre-parameterize the plot_________________________________________________
         if saveto is not None: matplotlib.use('Agg')
         plt.rc('text', usetex=usetex)
@@ -205,11 +210,19 @@ class M_TIR_Visualize:
                         #--------------------------------------------------------------
                     #------------------------------------------------------------------
                     if COLORS is None:
-                        ploter(xdata2plot, ydata2plot, styles[J], 
-                               color=colors[i], label=labels[n], linewidth=linewidth)
+                        if labels is False:
+                            ploter(xdata2plot, ydata2plot, styles[J],
+                               color=colors[i], linewidth=linewidth)
+                        else:
+                            ploter(xdata2plot, ydata2plot, styles[J],
+                                   color=colors[i], label=labels[n], linewidth=linewidth)
                     else:
-                        ploter(xdata2plot, ydata2plot, styles[J], 
-                               color=COLORS[N], label=labels[n], linewidth=linewidth)
+                        if labels is False:
+                            ploter(xdata2plot, ydata2plot, styles[J],
+                                   color=COLORS[N], linewidth=linewidth)
+                        else:
+                            ploter(xdata2plot, ydata2plot, styles[J],
+                                   color=COLORS[N], label=labels[n], linewidth=linewidth)
         #___ post-parameterize the plot________________________________________________
         plt.tick_params(which='both', labeltop=False, labelright=False, top=True, right=True)
         plt.tick_params(axis='both', which='minor', direction='in', length=minor_tick_length)
@@ -217,7 +230,10 @@ class M_TIR_Visualize:
         plt.tick_params(axis='both', which='both', labelsize=tick_size)
         plt.tick_params(axis='x', which='both', pad=tick_pad)
         plt.tick_params(axis='y', which='both', pad=tick_pad)
-        plt.legend(fontsize=legend_size, loc=legend_local, frameon=legend_frame)
+        if labels is False:
+            pass
+        else:
+            plt.legend(fontsize=legend_size, loc=legend_local, frameon=legend_frame)
         if xlabel is not None: 
             plt.xlabel(xlabel, fontsize=label_size)
         else:

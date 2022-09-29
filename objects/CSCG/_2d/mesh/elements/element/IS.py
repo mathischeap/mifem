@@ -18,6 +18,7 @@ class _2dCSCG_Mesh_IS(FrozenOnly):
         """"""
         self._element_ = element
         self._internal_ = None
+        self._orthogonal_ = None
         self._freeze_self_()
 
     @property
@@ -31,6 +32,16 @@ class _2dCSCG_Mesh_IS(FrozenOnly):
                     self._internal_ = False
                     break
         return self._internal_
+
+    @property
+    def orthogonal(self):
+        if self._orthogonal_ is None:
+            eMark = self._element_.type_wrt_metric.mark
+            if isinstance(eMark, str) and eMark[:4] == 'Orth':
+                self._orthogonal_ = True
+            else:
+                self._orthogonal_ = False
+        return self._orthogonal_
 
 
 if __name__ == "__main__":

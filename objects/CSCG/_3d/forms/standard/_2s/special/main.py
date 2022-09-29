@@ -10,6 +10,7 @@ from screws.freeze.main import FrozenOnly
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
 from tools.linear_algebra.elementwise_cache.objects.column_vector.main import EWC_ColumnVector
 
+from objects.CSCG._3d.forms.standard._2s.special.helpers.cross_product_2__ip_2_2M0 import ___3dCSCG_2Form_CrossProduct_2__ip_2_2M0___
 from objects.CSCG._3d.forms.standard._2s.special.helpers.cross_product_2__ip_2 import ___3dCSCG_2Form_CrossProduct_2__ip_2___
 from objects.CSCG._3d.forms.standard._2s.special.helpers.cross_product_2__ip_1 import ___3dCSCG_2Form_CrossProduct_2__ip_1___
 
@@ -22,7 +23,7 @@ class _2Form_Special(FrozenOnly):
         self._vortex_detection_ = None
         self._freeze_self_()
 
-    def cross_product_2f__ip_2f(self, u, e, quad_degree=None, output='2-M-1'):
+    def cross_product_2f__ip_2f(self, u, e, quad_degree=None, output='2-M-1', cache=None):
         """
         (self X 2form, 2form)
 
@@ -32,11 +33,21 @@ class _2Form_Special(FrozenOnly):
 
         output:
             '2-M-1': Means we return a local matrix refers to local dofs of e (rows, index-0) and u (cols, index-1)
+            'MDM' : return a Multi-Dimensional-Matrix whose 0-, 1-, 2-axis refer to self, u, e.
+
+        cache :
+            A cache to pass known variables (to save computational time and memory cost.)
 
         :return:
         """
         if output == '2-M-1':
             SCP_generator = ___3dCSCG_2Form_CrossProduct_2__ip_2___(self._sf_, u, e, quad_degree=quad_degree)
+        elif output == 'MDM':
+            SCP_generator = ___3dCSCG_2Form_CrossProduct_2__ip_2___(self._sf_, u, e, quad_degree=quad_degree)
+            return SCP_generator.MDM
+        elif output == '2-M-0':
+            SCP_generator = ___3dCSCG_2Form_CrossProduct_2__ip_2_2M0___(self._sf_, u, e, quad_degree=quad_degree,
+                                                                        cache=cache)
         else:
             raise NotImplementedError(f"output={output} is not implemented.")
 

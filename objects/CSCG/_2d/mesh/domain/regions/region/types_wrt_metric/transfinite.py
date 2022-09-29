@@ -12,6 +12,9 @@ from typing import Union
 from root.config.main import rAnk, cOmm
 
 
+from objects.CSCG._2d.mesh.trace.elements.element.types_wrt_metric.chaotic import  ChaoticTraceElement
+from objects.CSCG._2d.mesh.trace.elements.element.types_wrt_metric.orthogonal import OrthogonalTraceElement
+
 
 
 
@@ -95,3 +98,15 @@ class Transfinite(TypeWr2Metric):
             return ParallelogramElement(self._angle_L, LR_UD[0], self.___L_angle_U___ ,LR_UD[1])
         else:
             raise Exception("Something is wrong.")
+
+
+    def ___CLASSIFY_TRACE_ELEMENT_of_spacing___(self, trace_spacing: tuple) -> Union[ChaoticTraceElement, OrthogonalTraceElement]:
+        """
+
+        :param trace_spacing: the trace_spacing representing a trace element.
+        :return:
+        """
+        raise NotImplementedError(
+            f"Please implement ___CLASSIFY_TRACE_ELEMENT_of_spacing___ for "
+            f"TypeWr2Metric named: {self.__class__.__name__}"
+        )

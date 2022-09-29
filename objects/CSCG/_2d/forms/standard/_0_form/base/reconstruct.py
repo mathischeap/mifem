@@ -88,12 +88,12 @@ class _2dCSCG_S0F_Reconstruct(_2dCSCG_SF_ReconstructBase):
 
                 return xyz, value
 
-    def discrete_scalar(self, rs):
+    def discrete_scalar(self, grid):
         """We reconstruct this outer S0F as a 2d CSCG discrete scalar in the `regions`.
 
         Parameters
         ----------
-        rs: dict, list, tuple
+        grid: dict, list, tuple
             For example:
                 rst = [r, s, ], these r, s will be used for all regions.
                 rst = {'R:R1': [r1, s1], 'R:R2': [r2, s2], ....}, in each
@@ -105,9 +105,9 @@ class _2dCSCG_S0F_Reconstruct(_2dCSCG_SF_ReconstructBase):
         -------
 
         """
-        Xi_Eta_Sigma_D, rs = self.___PRIVATE_distribute_region_wise_meshgrid___(rs)
         f = self._f_
         mesh = f.mesh
+        Xi_Eta_Sigma_D, grid = self.___PRIVATE_distribute_region_wise_meshgrid___(mesh, grid)
 
         #-------- reconstructing -----------------------------------------------------------------1
         xy = dict()
@@ -138,14 +138,14 @@ class _2dCSCG_S0F_Reconstruct(_2dCSCG_SF_ReconstructBase):
                 value[e] = [v.reshape(shape, order='F'),] #=============================diff
 
         #-------- prime-region-wise stack coordinates and values ----------------------------------1
-        XY, VAL, element_global_numbering = self.___PRIVATE_distribute_XY_and_VAL___(xy, value)
+        XY, VAL, element_global_numbering = self.___PRIVATE_distribute_XY_and_VAL___(mesh, xy, value)
 
-        XY = self.___PRIVATE_prime_region_wise_stack___(XY, 2, rs, element_global_numbering)
-        VAL = self.___PRIVATE_prime_region_wise_stack___(VAL, 1, rs, element_global_numbering)
+        XY = self.___PRIVATE_prime_region_wise_stack___(mesh, XY, 2, grid, element_global_numbering)
+        VAL = self.___PRIVATE_prime_region_wise_stack___(mesh, VAL, 1, grid, element_global_numbering)
 
         return _2dCSCG_DF_Scalar(mesh, XY, VAL,
                                  name=self._f_.standard_properties.name,
-                                 structured=True, linspaces=rs)
+                                 structured=True, grid=grid)
 
 
 if __name__ == '__main__':
@@ -167,3 +167,4 @@ if __name__ == '__main__':
     x = np.linspace(-1,1,10)
 
     ds = f0.reconstruct.discrete_scalar([x, x])
+    ds.visualize()

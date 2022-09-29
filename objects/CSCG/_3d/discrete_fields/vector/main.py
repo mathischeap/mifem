@@ -13,9 +13,10 @@ from objects.CSCG._3d.discrete_fields.base.main import _3dCSCG_DiscreteField
 class _3dCSCG_DF_Vector(_3dCSCG_DiscreteField):
     """"""
 
-    def __init__(self, mesh, coordinates, values, name='no-name'):
+    def __init__(self, mesh, coordinates, values, name='no-name', structured=False, grid=None):
         """"""
-        super(_3dCSCG_DF_Vector, self).__init__(mesh, coordinates, values, name)
+        super(_3dCSCG_DF_Vector, self).__init__(mesh, coordinates, values, name,
+                                                structured=structured, grid=grid)
         assert self.vdim == self.mesh.ndim, f"vdim must be 3, now it is {self.vdim}."
 
 
@@ -23,5 +24,5 @@ class _3dCSCG_DF_Vector(_3dCSCG_DiscreteField):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python objects/CSCG/_3d/discrete_fields/vector/main.py
     pass

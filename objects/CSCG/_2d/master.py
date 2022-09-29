@@ -83,7 +83,10 @@ class MeshGenerator(FrozenOnly):
             cls_name = DomainInputFinder.___defined_DI___()[diID]
             cls_path = DomainInputFinder.___DI_path___()[diID]
             diClass = getattr(import_module(cls_path), cls_name)
-            Statistic[diID] = diClass.statistic
+            try:
+                Statistic[diID] = diClass.statistic
+            except NotImplementedError:
+                pass
         return Statistic
 
     @classmethod
@@ -93,7 +96,10 @@ class MeshGenerator(FrozenOnly):
             cls_name = DomainInputFinder.___defined_DI___()[diID]
             cls_path = DomainInputFinder.___DI_path___()[diID]
             diClass = getattr(import_module(cls_path), cls_name)
-            random_parameters[diID] = diClass.random_parameters
+            try:
+                random_parameters[diID] = diClass.random_parameters
+            except NotImplementedError:
+                pass
         return random_parameters
 
 
@@ -219,33 +225,60 @@ class ExactSolutionSelector(FrozenOnly):
 
 if __name__ == "__main__":
     # mpiexec -n 4 python objects\CSCG\_2d\master.py
+    import numpy as np
 
     # mesh = MeshGenerator('cic',)([14,14])
     # mesh = MeshGenerator('rectangle', p_UL=(-1,-1),region_layout=(3,5))([5,5], show_info=True)
     # mesh = MeshGenerator('rectangle_periodic', p_UL=(-1,-1),region_layout=(3,5))([5,5], show_info=True)
-    mesh = MeshGenerator('crazy_periodic')([3,3], show_info=True)
-
-
-
-    # print(mesh.___PRIVATE_element_division_and_numbering_quality___())
-    # mesh.visualize.matplot.element_division()
-    #
-    mesh.visualize()
-    mesh.domain.visualize()
-    mesh.domain.regions.visualize()
-    mesh.trace.visualize(usetex=True)
-
-    # print(rAnk, mesh._element_indices_)
-
-    # space = SpaceInvoker('polynomials')([([-1,0.1,1],), ('Lobatto',1)], show_info=True)
-    #
-    # # from mifem import save, read
-    #
+    mesh = MeshGenerator('triangle_test')([1,1], show_info=True)
+    N = 10
     # mesh.visualize()
+    space = SpaceInvoker('polynomials')([N,N])
+    fc = FormCaller(mesh, space)
+
+    f0 = fc('0-f-o', is_hybrid=False)
+    f1 = fc('1-f-o', is_hybrid=False)
+    f2 = fc('2-f-o', is_hybrid=False)
+
+    def p(t, x, y): return np.sin(np.pi*x) *  np.sin(np.pi*y) + t
+    def u(t, x, y): return np.sin(np.pi*x) *  np.cos(np.pi*y) + t
+    def v(t, x, y): return np.cos(np.pi*x) *  np.sin(np.pi*y) + t
+
+    scalar = fc('scalar', p)
+    vector = fc('vector', (u,v))
+
+    # # f0.TW.func.body = scalar
+    # # f0.TW.current_time = 1
+    # # f0.TW.do.push_all_to_instant()
+    # # f0.discretize()
+    # # # f0.visualize(show_boundaries=False, title=f"$N={N}$")
+    # # # ds = f0.reconstruct.discrete_field([np.linspace(-1, 1, 20), np.linspace(-1, 1, 20)])
+    # # # ds.visualize.matplot.contourf()
+    # #
+    # # df0 = f0.coboundary()
+    # # df0.visualize(show_boundaries=False, suptitle=f"$N={N}$")
     #
-    # es = ExactSolutionSelector(mesh)("sL:sincos1", show_info=True)
+    # # # if  0 in mesh.elements:
+    # # #     print(f0.cochain.local[0])
+    # #
+    # f1.TW.func.body = vector
+    # f1.TW.current_time = 1
+    # f1.TW.do.push_all_to_instant()
+    # f1.discretize()
+    # # dv = f1.reconstruct.discrete_field([np.linspace(-0.99, 0.99, 20), np.linspace(-0.99, 0.99, 20)])
+    # # dv.visualize.matplot.contourf()
+    # # if  0 in mesh.elements:
+    # #     print(f1.cochain.local[0])
+    # # f1.visualize(show_boundaries=False, suptitle=f"$N={N}$")
+    # df1 = f1.coboundary()
+    # df1.visualize(show_boundaries=False, title=f"$N={N}$")
 
-    # print(mesh.domain.IS.fully_periodic, mesh.domain.boundaries.names)
-
-    # print(MeshGenerator.___domain_input_statistic___())
-    # print(MeshGenerator.___domain_input_random_parameters___())
+    f2.TW.func.body = scalar
+    f2.TW.current_time = 1
+    f2.TW.do.push_all_to_instant()
+    f2.discretize()
+    f2.visualize(show_boundaries=False, title=f"$N={N}$")
+    # ds = f2.reconstruct.discrete_field([np.linspace(-0.99, 0.99, 20), np.linspace(-0.99, 0.99, 20)])
+    # ds.visualize.matplot.contourf()
+    # if  0 in mesh.elements:
+    #     print(f2.cochain.local[0])

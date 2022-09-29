@@ -27,7 +27,7 @@ class _2dCSCG_DF_PortionBase(FrozenOnly):
         assert y0 < y1,  f"y={y} wrong, y0 must be lower than y1."
 
         assert self._df_.structured, f"xy_range portion only works for structured data."
-        assert self._df_.linspaces is not None, f"xy_range needs linspaces."
+        assert self._df_.grid is not None, f"xy_range needs grid."
         mesh = self._df_.mesh
 
         INDICES = dict()
@@ -45,6 +45,7 @@ class _2dCSCG_DF_PortionBase(FrozenOnly):
             if x0 >= x_lim[1] or x1 <= x_lim[0] or y0 >= y_lim[1] or y1 <= y_lim[0]:
                 # this region has no business with the portion data.
                 pass
+
             else:
                 if x0 < x_lim[0]: x0 = x_lim[0]
                 if x1 > x_lim[1]: x1 = x_lim[1]
@@ -53,7 +54,7 @@ class _2dCSCG_DF_PortionBase(FrozenOnly):
                 assert x0 < x1,  f"trivial check, must be"
                 assert y0 < y1,  f"trivial check, must be"
 
-                r, s = self._df_.linspaces[rn]
+                r, s = self._df_.grid[rn]
                 R = rItp.mapping_Xr_at_s0(r)
                 S = rItp.mapping_Ys_at_r0(s)
 

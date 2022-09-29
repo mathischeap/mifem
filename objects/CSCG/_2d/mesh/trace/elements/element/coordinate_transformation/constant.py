@@ -35,6 +35,7 @@ class _2dCSCG_TE_CT_Constant(FrozenOnly):
             eMark = element.type_wrt_metric.mark
 
             if isinstance(eMark, str) and eMark[:4] == 'Orth':
+                # orthogonal(straight and parallel to axis)
                 if 'x' in eMark: # not a square
                     xy = eMark[6:]
                     x, y = xy.split('y')

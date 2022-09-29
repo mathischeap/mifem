@@ -21,5 +21,5 @@ class OrthogonalTraceElement(TraceElementTypeWr2MetricBase):
         """
         assert len(along) == 1 and along in 'xy', f"along={along} wrong."
         assert isinstance(length, (int, float)) and length > 0, f"length={length} wrong."
-        self._mark_ = f'Orth.{along}' + '{}'.format('%.6f' % length)
+        self._mark_ = f'Orth.{along}' + '{}'.format('%.8f' % length)
         self._freeze_self_()

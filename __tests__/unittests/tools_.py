@@ -42,7 +42,7 @@ def ___TEST_SOLVER___(tk, tk1):
     Returns
     -------
     exit_code : The standard exit code.
-    shut_down : If it is ``True``, the outer iterator will shutdown immediately.
+    shut_down : If it is ``True``, the outer iterator will `shutdown` immediately.
     message : The solver message.
     output1 :
     output2 :
@@ -104,7 +104,7 @@ def test_TOOLS_NO2_0_linear_algebra_gmres0_solver():
     br[k] = 0
     if sIze > 3:
         if rAnk == sIze -1:
-            Ar = np.zeros((3,3)) # A even can be empty in some cores.
+            Ar = np.zeros((3,3)) # `A` even can be empty in some cores.
     AA = cOmm.gather(Ar, root=0)
     bb = cOmm.gather(br, root=0)
     if rAnk == 0:
@@ -124,14 +124,14 @@ def test_TOOLS_NO2_0_linear_algebra_gmres0_solver():
     if 1 in x0.indices: np.testing.assert_almost_equal(x0[1,0],  1.8362068965517)
     if 2 in x0.indices: np.testing.assert_almost_equal(x0[2,0], -0.5948275862068)
     assert info == 0
-    A.DO.___PRIVATE_being_regularly_distributed___('row') # this will gathering all data to core 0.
+    A.DO.___PRIVATE_being_regularly_distributed___('row') # this will gather all data to core 0.
     if rAnk == 0:
         np.testing.assert_array_almost_equal(A.M.toarray(),
                                       np.array([(1, 4, 7),
                                                 (2, 9, 7),
                                                 (5, 8, 3)]))
     A = GlobalMatrixOld(spspa.csc_matrix(Ar))
-    A.DO.___PRIVATE_being_regularly_distributed___('column') # this will gathering all data to core 0.
+    A.DO.___PRIVATE_being_regularly_distributed___('column') # this will gather all data to core 0.
     if rAnk == 0:
         np.testing.assert_array_almost_equal(A.M.toarray(),
                                       np.array([(1, 4, 7),
@@ -158,7 +158,7 @@ def test_TOOLS_NO2_1_linear_algebra_gmres1_solver():
     br[k] = 0
     if sIze > 3:
         if rAnk == sIze -1:
-            Ar = np.zeros((3,3)) # A even can be empty in some cores.
+            Ar = np.zeros((3,3)) # `A` even can be empty in some cores.
     AA = cOmm.gather(Ar, root=0)
     bb = cOmm.gather(br, root=0)
     if rAnk == 0:
@@ -274,7 +274,7 @@ def test_TOOLS_NO2_3_linear_algebra_serial_scipy_sparse_solver():
     if sIze > 3:
         if rAnk == sIze -1:
             if i in (1,2):
-                Ar = np.zeros((3,3)) # A even can be empty in some cores.
+                Ar = np.zeros((3,3)) # `A` even can be empty in some cores.
     AA = cOmm.gather(Ar, root=0)
     bb = cOmm.gather(br, root=0)
     if rAnk == 0:
@@ -352,7 +352,7 @@ def test_TOOLS_NO2_4_linear_algebra_serial_spsolve_solver():
     if sIze > 3:
         if rAnk == sIze -1:
             if i in (1,2):
-                Ar = np.zeros((3,3)) # A even can be empty in some cores.
+                Ar = np.zeros((3,3)) # `A` even can be empty in some cores.
     AA = cOmm.gather(Ar, root=0)
     bb = cOmm.gather(br, root=0)
     if rAnk == 0:
@@ -979,7 +979,7 @@ def test_TOOLS_NO9_test_Chained_Gathering_Matrix():
         n = 0
 
         for m in range(GND):
-            I = CGM.do.find.elements_contain_dof_numbered(m)
+            I = CGM.do.find.elements_and_local_indices_of_dof(m)
             if I is None:
                 exclude_list = list()
             else:

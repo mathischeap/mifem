@@ -37,7 +37,7 @@ class _2dCSCG_DF_ScalarPortion(_2dCSCG_DF_PortionBase):
 
         """
         assert self._df_.structured, f"xy_range portion only works for structured data."
-        assert self._df_.linspaces is not None, f"xy_range needs linspaces."
+        assert self._df_.grid is not None, f"xy_range needs grid."
 
         INDICES = self.___PRIVATE_parse_region_wise_structured_data_indices___(x, y)
 
@@ -65,7 +65,7 @@ class _2dCSCG_DF_ScalarPortion(_2dCSCG_DF_PortionBase):
         CLASS = self._df_.__class__
 
         range_df = CLASS(self._df_.mesh, COO, VAL, 'xy-range-of-' + self._df_.name,
-                         structured=False, linspaces=None)
+                         structured=False, grid=None)
 
         return range_df
 
@@ -96,4 +96,4 @@ if __name__ == "__main__":
 
     pdf = portion.xy_range([-0.25, 0.5], [0.75, 2])
 
-    ds.visualize.matplot.contour()
+    pdf.visualize.matplot.contour()

@@ -151,7 +151,6 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
             for rn in _xy_:
                 _xy = _xy_[rn]
                 _v = _v_[rn]
-
                 _x, _y = _xy
                 X.append(_x.ravel('F'))
                 Y.append(_y.ravel('F'))
@@ -161,7 +160,6 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
 
         X = np.concatenate(X)
         Y = np.concatenate(Y)
-
         U = np.concatenate(U)
         V = np.concatenate(V)
         M = np.hypot(U, V)
@@ -265,11 +263,12 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
             pass
         else:
             if show_colorbar:
-                Q = ax.quiver(X, Y, U, V, color=cm(norm(M)), scale=scale, scale_units=scale_units)
+                ax.quiver(X, Y, U, V, color=cm(norm(M)), scale=scale, scale_units=scale_units)
 
-                ax.quiverkey(Q, *key_coordinates, key_length, key_label,
-                             color = 'k', # override the color by black
-                             labelpos='E', coordinates='figure')
+                # Q = ax.quiver(X, Y, U, V, color=cm(norm(M)), scale=scale, scale_units=scale_units)
+                # ax.quiverkey(Q, *key_coordinates, key_length, key_label,
+                #              color = 'k', # override the color by black
+                #              labelpos='E', coordinates='figure')
 
             else:
 
@@ -625,7 +624,7 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
         else:
             pass
 
-        #---------------------- save to ---------------------------------------------------------1
+        #---------------------- save to ----------------------------------------------------------1
         if saveto is None:
             plt.show()
         else:

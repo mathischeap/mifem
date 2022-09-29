@@ -20,6 +20,9 @@ class _2dCSCG_DV_Visualize(FrozenOnly):
         self._matplot_ = _2cCSCG_DV_VisualizeMatplot(dv)
         self._freeze_self_()
 
+    def __call__(self, *args, **kwargs):
+        return self.matplot(*args, **kwargs)
+
     @property
     def matplot(self):
         return self._matplot_
@@ -30,5 +33,5 @@ class _2dCSCG_DV_Visualize(FrozenOnly):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python objects/CSCG/_2d/discrete_fields/vector/visualize/main.py
     pass

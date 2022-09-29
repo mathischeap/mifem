@@ -22,7 +22,7 @@ class _3dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
 
 
     def grid(self, elements=None, density=10000, usetex=False,
-        saveto = None, linewidth=0.6, aspect='equal',):
+        saveto = None, linewidth=0.6, aspect='equal', title=True):
         """We compute the grid from mesh element, so even for periodic boundaries, the grid will be full.
 
         :param elements: (default: ``None``) If it is ``None``, we plot
@@ -130,10 +130,14 @@ class _3dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         ax.set_ylabel(r'$y$', fontsize=15)
         ax.set_zlabel(r'$z$', fontsize=15)
 
-        if usetex is False:
+        if title is False:
+            pass
+        elif title is True:
             plt.title(self._mesh_.domain.name + ', ID: '+
                       self._mesh_.standard_properties.parameters['ID'] +
                       ', <mesh>')
+        else:
+            plt.title(title)
 
         #__________ SAVE TO ___________________________________________________________
         plt.tight_layout()

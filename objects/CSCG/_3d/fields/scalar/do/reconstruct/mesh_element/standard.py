@@ -14,9 +14,12 @@ class OnMeshElement_Standard(FrozenOnly):
         :param eta:
         :param ravel:
         :param i:
-            1) self.ftype == 'standard':
-                Do the reconstruction in mesh element #i. When it is None, it means all local mesh
-                elements.
+            In which mesh-element(s) we reconstruct the scalar.
+
+            if `i` is:
+                1) int: reconstruct in the particular mesh element #i.
+                2) None: in all mesh-elements.
+
         :return:
         """
         SELF = self._sf_
@@ -24,8 +27,12 @@ class OnMeshElement_Standard(FrozenOnly):
         xyz = dict()
         value = dict()
 
-        assert isinstance(i, int) or i is None, f"We currently only accept int or None for i"
-        INDICES = SELF.mesh.elements.indices if i is None else [i, ]
+        if isinstance(i, int):
+            INDICES = [i,]
+        elif i is None:
+            INDICES = SELF.mesh.elements.indices
+        else:
+            raise NotImplementedError( f"We can not reconstruct in elements={i}.")
 
         func = SELF.___DO_evaluate_func_at_time___()
 

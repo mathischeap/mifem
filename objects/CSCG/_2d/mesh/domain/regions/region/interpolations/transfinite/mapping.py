@@ -47,9 +47,7 @@ class TransfiniteMapping(FrozenOnly):
         self.gamma3_x1, self.gamma3_y1 = self.gamma[2](1.0)
 
     def mapping(self, r, s):
-        """
-        mapping (r, s) = (0, 1)^2 into (x, y) using the transfinite mapping.
-
+        """mapping (r, s) = (0, 1)^2 into (x, y) using the transfinite mapping.
         """
         gamma1_xs, gamma1_ys = self.gamma[0](r)
         gamma2_xt, gamma2_yt = self.gamma[1](s)
@@ -64,9 +62,7 @@ class TransfiniteMapping(FrozenOnly):
         return x, y
 
     def mapping_X(self, r, s):
-        """
-        mapping (r, s) = (0, 1)^2 into (x, y) using the transfinite mapping.
-
+        """mapping (r, s) = (0, 1)^2 into (x, y) using the transfinite mapping.
         """
         gamma1_xs, gamma1_ys = self.gamma[0](r)
         gamma2_xt, gamma2_yt = self.gamma[1](s)
@@ -74,13 +70,11 @@ class TransfiniteMapping(FrozenOnly):
         gamma4_xt, gamma4_yt = self.gamma[3](s)
         x = (1 - r) * gamma4_xt + r * gamma2_xt + (1 - s) * gamma1_xs + s * gamma3_xs - \
             (1 - r) * ((1 - s) * self.gamma1_x0 + s * self.gamma3_x0) - r * (
-                        (1 - s) * self.gamma1_x1 + s * self.gamma3_x1)
+            (1 - s) * self.gamma1_x1 + s * self.gamma3_x1)
         return x
 
     def mapping_Y(self, r, s):
-        """
-        mapping (r, s) = (0, 1)^2 into (x, y) using the transfinite mapping.
-
+        """mapping (r, s) = (0, 1)^2 into (x, y) using the transfinite mapping.
         """
         gamma1_xs, gamma1_ys = self.gamma[0](r)
         gamma2_xt, gamma2_yt = self.gamma[1](s)
@@ -88,22 +82,22 @@ class TransfiniteMapping(FrozenOnly):
         gamma4_xt, gamma4_yt = self.gamma[3](s)
         y = (1 - r) * gamma4_yt + r * gamma2_yt + (1 - s) * gamma1_ys + s * gamma3_ys - \
             (1 - r) * ((1 - s) * self.gamma1_y0 + s * self.gamma3_y0) - r * (
-                        (1 - s) * self.gamma1_y1 + s * self.gamma3_y1)
+            (1 - s) * self.gamma1_y1 + s * self.gamma3_y1)
         return y
 
     def dx_dr(self, r, s):
-        """ """
+        """"""
         gamma2_xt, gamma2_yt = self.gamma[1](s)
         gamma4_xt, gamma_4yt = self.gamma[3](s)
         dgamma1_xds, dgamma1_yds = self.dgamma[0](r)
         dgamma3_xds, dgamma3_yds = self.dgamma[2](r)
         dx_dxi_result = (-gamma4_xt + gamma2_xt + (1 - s) * dgamma1_xds + s * dgamma3_xds +
                          ((1 - s) * self.gamma1_x0 + s * self.gamma3_x0) - (
-                                     (1 - s) * self.gamma1_x1 + s * self.gamma3_x1))
+                          (1 - s) * self.gamma1_x1 + s * self.gamma3_x1))
         return dx_dxi_result
 
     def dx_ds(self, r, s):
-        """ """
+        """"""
         gamma1_xs, gamma1_ys = self.gamma[0](r)
         gamma3_xs, gamma3_ys = self.gamma[2](r)
         dgamma2_xdt, dgamma2_ydt = self.dgamma[1](s)
@@ -113,18 +107,18 @@ class TransfiniteMapping(FrozenOnly):
         return dx_deta_result
 
     def dy_dr(self, r, s):
-        """ """
+        """"""
         gamma2_xt, gamma2_yt = self.gamma[1](s)
         gamma4_xt, gamma4_yt = self.gamma[3](s)
         dgamma1_xds, dgamma1_yds = self.dgamma[0](r)
         dgamma3_xds, dgamma3_yds = self.dgamma[2](r)
         dy_dxi_result = (-gamma4_yt + gamma2_yt + (1 - s) * dgamma1_yds + s * dgamma3_yds +
                          ((1 - s) * self.gamma1_y0 + s * self.gamma3_y0) - (
-                                     (1 - s) * self.gamma1_y1 + s * self.gamma3_y1))
+                          (1 - s) * self.gamma1_y1 + s * self.gamma3_y1))
         return dy_dxi_result
 
     def dy_ds(self, r, s):
-        """ """
+        """"""
         gamma1_xs, gamma1_ys = self.gamma[0](r)
         gamma3_xs, gamma3_ys = self.gamma[2](r)
         dgamma2_xdt, dgamma2_ydt = self.dgamma[1](s)

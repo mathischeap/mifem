@@ -579,7 +579,7 @@ def test_Form_NO7_weak_curl():
     space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 4)])
     FC = FormCaller(mesh, space)
     U = FC('vector', (u, v))
-    curl_U = U.numerical.curl
+    rot_U = U.numerical.rot
 
     w0 = FC('0-f-o', is_hybrid=False)  # w0 = curl (u1)
     u1 = FC('1-f-o', is_hybrid=False)  # w0 = curl (u1)
@@ -602,7 +602,7 @@ def test_Form_NO7_weak_curl():
 
     result = LS.solve('GMRES')(0, restart=100, maxiter=50)
 
-    w0.TW.func.do.set_func_body_as(curl_U)
+    w0.TW.func.do.set_func_body_as(rot_U)
     w0.TW.current_time = 1
     w0.TW.do.push_all_to_instant()
     result[0].do.distributed_to(w0)
@@ -616,7 +616,7 @@ def test_Form_NO7_weak_curl():
     space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 4)])
     FC = FormCaller(mesh, space)
     U = FC('vector', (u, v))
-    curl_U = U.numerical.curl
+    rot_U = U.numerical.rot
 
     w0 = FC('0-f-o', is_hybrid=False)  # w0 = curl (u1)
     u1 = FC('1-f-o', is_hybrid=False)  # w0 = curl (u1)
@@ -639,7 +639,7 @@ def test_Form_NO7_weak_curl():
 
     result = LS.solve('GMRES')(0, restart=100, maxiter=50)
 
-    w0.TW.func.do.set_func_body_as(curl_U)
+    w0.TW.func.do.set_func_body_as(rot_U)
     w0.TW.current_time = 0
     w0.TW.do.push_all_to_instant()
     result[0].do.distributed_to(w0)

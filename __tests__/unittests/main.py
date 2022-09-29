@@ -36,6 +36,9 @@ from __tests__.unittests.MultiDimMatrix.cross_product_MDM_test import test_MDM_s
 from __tests__.unittests.nonlinear_solver.regular_Newton_Raphson import test_Regular_Newton_Raphson
 from __tests__.unittests.Parallel_Matrix3dInput_Runner.WellTest import WellTest_ParallelMatrix3dInputRunner
 
+from __tests__.unittests.VTK.unstructuredGridToVTK import TEST_save_CSCG_objects_to_unstructured_VTK_file
+from __tests__.unittests.VTK.gridToVTK import TEST_save_CSCG_objects_to_structured_VTK_file
+
 t_global_start = MPI.Wtime()
 
 passed_GLOBAL_tests += test_mifem_NO1_2dCSCG_save_read()
@@ -83,6 +86,8 @@ passed_GLOBAL_tests += test_MDM_sf_CrossProduct()
 passed_GLOBAL_tests += test_Regular_Newton_Raphson()
 passed_GLOBAL_tests += WellTest_ParallelMatrix3dInputRunner()
 
+passed_GLOBAL_tests += TEST_save_CSCG_objects_to_structured_VTK_file()
+passed_GLOBAL_tests += TEST_save_CSCG_objects_to_unstructured_VTK_file()
 
 
 

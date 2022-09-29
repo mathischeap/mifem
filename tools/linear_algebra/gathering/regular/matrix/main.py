@@ -47,6 +47,10 @@ class Gathering_Matrix(GatheringMatrix):
         self._do_ = None
         self._freeze_self_()
 
+    def __repr__(self):
+        """"""
+        return f"Gathering_Matrix <{self.mesh_type}> {self.GLOBAL_shape}"
+
     @property
     def ___Pr_IS_regular___(self):
         return True
@@ -85,6 +89,17 @@ class Gathering_Matrix(GatheringMatrix):
 
         RETURN = cOmm.allreduce(RETURN, op=MPI.LAND)
         return RETURN
+
+    @property
+    def local_dofs(self):
+        """return a set of all local dofs."""
+        dofs = list()
+        for i in self:
+            gv = self[i].full_vector
+            dofs.extend(gv)
+        dofs.sort()
+        dofs = set(dofs)
+        return dofs
 
     @property
     def GLOBAL_num_dofs(self):
@@ -139,7 +154,6 @@ class Gathering_Matrix(GatheringMatrix):
                     LOCAL_MAX.append(gv.___PRIVATE_find_max_label___())
                 self._local_range_ = (np.min(LOCAL_MIN), np.max(LOCAL_MAX)+1)
         return self._local_range_
-
 
     @property
     def do(self):

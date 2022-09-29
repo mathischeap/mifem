@@ -6,6 +6,7 @@ if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.main import FrozenOnly
 from root.config.main import *
+from scipy.sparse import lil_matrix
 
 from tools.linear_algebra.gathering.vector import Gathering_Vector
 from tools.linear_algebra.gathering.regular.matrix.main import Gathering_Matrix
@@ -21,7 +22,7 @@ class Chain_Gathering_Matrix(FrozenOnly):
     The idea is not just chain them, we also provide a mechanism to save memory, we do not make a new Gathering_Matrix
     for this chained Chain_Gathering_Matrix.
     """
-    def __init__(self, GMs):
+    def __init__(self, GMs, chain_method='silly'):
         """
         GMs can be a gathering matrix or a chain gathering matrix. Or a list of them.
 
@@ -78,20 +79,117 @@ class Chain_Gathering_Matrix(FrozenOnly):
         self._GLOBAL_num_dofs_ = To_Be_Added[-1] + GMs[-1].GLOBAL_num_dofs
         self._GMs_ = GMs
         self._NUM_GMs_ = len(GMs)
-        self._dofs_distribution_ = [_.GLOBAL_num_dofs for _ in self.GMs]
         self._local_dofs_distribution_ = [_.GLOBAL_shape[1] for _ in self.GMs]
         self._local_ranges_ = None
         self._do_ = None
-        if len(self) > 0:
-            for i in self:
-                assert sum(self.GV_LENs) == len(self[i]), "A safety check."
-                break
-            self._LOCAL_To_Be_Added_ = [0,] # when len(self) == 0, we do not even initialize self._LOCAL_To_Be_Added_
-            for i in range(self.NUM_GMs-1):
-                # noinspection PyUnresolvedReferences
-                self._LOCAL_To_Be_Added_.append(self._LOCAL_To_Be_Added_[-1] + self.GV_LENs[i])
 
+        #--------- silly way is nice when len(GMs) == 1 ------------------------------------------------3
+        if len(GMs) == 1:
+            chain_method = 'silly'
+        else:
+            pass
+
+        #------------------------------------------------------------------------------------------------3
+        if chain_method == 'sequent':
+            #-------------------- do the re-numbering ---------------------------------------------2
+            for rank in range(sIze):
+                if rAnk == rank:
+                    #----- initialize cache which saving the re-numbering ---------------------1
+                    cache = list()
+                    for gm in GMs:
+                        cache.append(lil_matrix((1, gm.GLOBAL_num_dofs), dtype=int))
+
+                    #-------------- update cache ----------------------------------------------1
+                    if rAnk == 0:
+                        current_number = 0
+                        filters = [0 for _ in range(len(GMs))]
+                    else:
+                        current_number, filters = cOmm.recv(source=rAnk-1, tag=rAnk)
+
+                    #------ renumbering -------------------------------------------------------1
+                    for i in self:
+                        for j, gm in enumerate(GMs):
+                            fv = gm[i].full_vector
+                            Filter = filters[j]
+                            fv = fv[fv>=Filter] # these dofs should be re-numbered
+                            amount_re_numbered = len(fv)
+                            filters[j] += amount_re_numbered
+                            cache[j][0, fv] = np.arange(current_number, current_number+amount_re_numbered)
+                            current_number += amount_re_numbered
+
+                    #---------------- send to next --------------------------------------------1
+                    if rAnk != sIze - 1:
+                        cOmm.send([current_number, filters], dest=rAnk+1, tag=rAnk+1)
+                    else:
+                        pass
+
+            #--------- merge cache ----------------------------------------------------------------2
+            cache = cOmm.gather(cache, root=mAster_rank)
+            if rAnk == mAster_rank:
+                CACHE = list()
+                for gm in GMs:
+                    CACHE.append(lil_matrix((1, gm.GLOBAL_num_dofs), dtype=int))
+
+                for caches in cache:
+                    for i, ch in enumerate(caches):
+                        CACHE[i] += ch
+
+                del caches, cache
+
+            else:
+                pass
+
+            #------------- distribute re-numbering to each core -----------------------------------2
+            local_dofs = list()
+            for gm in GMs:
+                local_dofs.append(gm.local_dofs)
+
+            local_dofs = cOmm.gather(local_dofs, root=mAster_rank)
+            if rAnk == mAster_rank:
+                cache_d = list()
+                for core in range(sIze):
+                    cache_d.append(
+                        [lil_matrix((1, gm.GLOBAL_num_dofs), dtype=int) for gm in GMs]
+                    )
+
+                for i, LDs in enumerate(local_dofs):
+                    for j, lds in enumerate(LDs):
+                        lds = list(lds)
+                        cache_d[i][j][0,lds] = CACHE[j][0, lds]
+
+            else:
+                cache_d = None
+
+            cache_d = cOmm.scatter(cache_d, root=mAster_rank)
+
+            del local_dofs
+            self._cache_ = [_.tocsr() for _ in cache_d]
+
+        #-------------------------------------------------------------------------------------------------3
+        elif chain_method == 'silly':
+            if len(self) > 0:
+                for i in self:
+                    assert sum(self.GV_LENs) == len(self[i]), "A safety check."
+                    break
+                self._LOCAL_To_Be_Added_ = [0,] # when len(self) == 0, we do not even initialize self._LOCAL_To_Be_Added_
+                for i in range(self.NUM_GMs-1):
+                    # noinspection PyUnresolvedReferences
+                    self._LOCAL_To_Be_Added_.append(self._LOCAL_To_Be_Added_[-1] + self.GV_LENs[i])
+            else:
+                pass
+
+        #------------------------------------------------------------------------------------------------3
+        else:
+            raise NotImplementedError(f"chain_method={chain_method} not implemented")
+        #================================================================================================3
+
+        self._chain_method_ = chain_method
         self._freeze_self_()
+
+    @property
+    def chain_method(self):
+        """Which method we use to chain the gathering matrices."""
+        return self._chain_method_
 
     @property
     def ___Pr_IS_regular___(self):
@@ -116,8 +214,20 @@ class Chain_Gathering_Matrix(FrozenOnly):
         if self.___NUM___ == 1:
             return self.GMs[0][item].full_vector
         else:
-            _ = [gm[item].full_vector+self._To_Be_Added_[i] for i, gm in enumerate(self._GMs_)]
-            return np.concatenate(_)
+            if self.chain_method == 'silly':
+                _ = [gm[item].full_vector+self._To_Be_Added_[i] for i, gm in enumerate(self._GMs_)]
+                return np.concatenate(_)
+
+            elif self.chain_method == 'sequent':
+                _ = list()
+                for j, gm in enumerate(self.GMs):
+                    old_numbering = gm[item].full_vector
+                    new_numbering = self._cache_[j][0, old_numbering].toarray().ravel()
+                    _.append(new_numbering)
+                return np.concatenate(_)
+
+            else:
+                raise NotImplementedError(f"chain method={self.chain_method} is not implemented.")
 
     def __iter__(self):
         """Go through all local mesh elements."""
@@ -149,7 +259,6 @@ class Chain_Gathering_Matrix(FrozenOnly):
                         RETURN = False
                         break
 
-
         RETURN = cOmm.allreduce(RETURN, op=MPI.LAND)
         return RETURN
 
@@ -164,34 +273,31 @@ class Chain_Gathering_Matrix(FrozenOnly):
     @property
     def local_ranges(self):
         """The local dofs are in this range."""
-        if self._local_ranges_ is None:
+        if self.chain_method == 'silly':
+            if self._local_ranges_ is None:
 
-            if len(self) == 0:
-                self._local_ranges_ = [tuple() for _ in range(len(self.GMs))]
+                if len(self) == 0:
+                    self._local_ranges_ = [tuple() for _ in range(len(self.GMs))]
 
-            else:
-                self._local_ranges_ = list()
-                tba = self._To_Be_Added_
-                for i, gm in enumerate(self.GMs):
-                    LR = gm.local_range
-                    MIN, MAX = LR
-                    MIN += tba[i]
-                    MAX += tba[i]
-                    self._local_ranges_.append((MIN, MAX))
+                else:
+                    self._local_ranges_ = list()
+                    tba = self._To_Be_Added_
+                    for i, gm in enumerate(self.GMs):
+                        LR = gm.local_range
+                        MIN, MAX = LR
+                        MIN += tba[i]
+                        MAX += tba[i]
+                        self._local_ranges_.append((MIN, MAX))
 
-        return self._local_ranges_
+            return self._local_ranges_
+        else:
+            raise Exception(f'local_ranges only applicable to silly chain_matrix.')
 
-
-    @property
-    def GLOBAL_dofs_distribution(self):
-        """Like [100, 127, 80], we know GMs[0].GLOBAL_num_dofs=100, GMs[1].GLOBAL_num_dofs=127,
-         GMs[2].GLOBAL_num_dofs=80. So we know, for example, how to distribution the result vector
-         by solving the assembled EWC_SparseMatrix."""
-        return self._dofs_distribution_
 
     @property
     def ___Pr_regular__local_dofs_ranges___(self):
-        """if self.local_dofs_distribution = [20, 12, 8], then self.___Pr_regular__local_dofs_ranges___ = [range(0,20), range(20, 32), range(32,40)]"""
+        """if self._local_dofs_distribution_ = [20, 12, 8],
+        then self.___Pr_regular__local_dofs_ranges___ = [range(0,20), range(20, 32), range(32,40)]"""
         SUM = 0
         ranges = list()
         for i in self._local_dofs_distribution_:
@@ -210,6 +316,9 @@ class Chain_Gathering_Matrix(FrozenOnly):
     def GV_LENs(self):
         """The length (size) of the gathering_vector (gv.full_vector) of each GM.
 
+        So if GV_LENs = [10, 15, 8], we know that the frst 10 numbers are the numbering of the
+        GMs[0], GMs[1] has 15 dofs, and  GMs[2] has 8 dofs.
+
         Therefore, sum(GV_LENs) == len(self[i]).
 
         """
@@ -220,14 +329,6 @@ class Chain_Gathering_Matrix(FrozenOnly):
                 LENs = [len(gm[i]) for gm in self.GMs]
                 break
         return LENs
-
-
-
-
-
-
-
-
 
 
 

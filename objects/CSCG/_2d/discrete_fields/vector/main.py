@@ -16,10 +16,10 @@ from objects.CSCG._2d.discrete_fields.vector.portion import _2dCSCG_DF_VectorPor
 class _2dCSCG_DF_Vector(_2dCSCG_DiscreteField):
     """Region wise vector data."""
 
-    def __init__(self, mesh, coordinates, values, name, structured=False, linspaces=None):
+    def __init__(self, mesh, coordinates, values, name, structured=False, grid=None):
         """"""
         super(_2dCSCG_DF_Vector, self).__init__(mesh, coordinates, values, name,
-                                                structured=structured, linspaces=linspaces)
+                                                structured=structured, grid=grid)
         assert self.vdim == self.mesh.ndim, f"vdim must be 2, now it is {self.vdim}."
         self._visualize_ = _2dCSCG_DV_Visualize(self)
         self._portion_ = _2dCSCG_DF_VectorPortion(self)
@@ -54,4 +54,4 @@ if __name__ == '__main__':
 
     portion = dv.portion.xy_range(x, y)
     dv.visualize.matplot(scale=50)
-    portion.visualize.matplot.quiver()
+    portion.visualize.matplot.quiver(scale=100)

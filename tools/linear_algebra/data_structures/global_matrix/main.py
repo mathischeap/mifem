@@ -351,7 +351,7 @@ class GlobalMatrix(FrozenOnly):
             else:
                 assert core == mAster_rank, "This routine only work for root=master yet!"
                 tree = tRee(2)
-                for Hi in tree:  # combine A to master core, A will be cleaned.
+                for Hi in tree:  # combine `A` to master core, `A` will be cleaned.
                     if Hi is None:
                         pass
 

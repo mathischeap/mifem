@@ -5,6 +5,7 @@
 @time: 2022/08/31 6:12 PM
 """
 import sys
+import numpy as np
 
 if './' not in sys.path: sys.path.append('./')
 from objects.CSCG._2d.discrete_fields.base.portion import _2dCSCG_DF_PortionBase
@@ -36,7 +37,7 @@ class _2dCSCG_DF_VectorPortion(_2dCSCG_DF_PortionBase):
 
         """
         assert self._df_.structured, f"xy_range portion only works for structured data."
-        assert self._df_.linspaces is not None, f"xy_range needs linspaces."
+        assert self._df_.grid is not None, f"xy_range needs grid."
 
         INDICES = self.___PRIVATE_parse_region_wise_structured_data_indices___(x, y)
 
@@ -64,11 +65,36 @@ class _2dCSCG_DF_VectorPortion(_2dCSCG_DF_PortionBase):
         CLASS = self._df_.__class__
 
         range_df = CLASS(self._df_.mesh, COO, VAL, 'xy-range-of-' + self._df_.name,
-                         structured=False, linspaces=None)
+                         structured=False, grid=None)
 
         return range_df
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python 
-    pass
+    # mpiexec -n 4 python objects/CSCG/_2d/discrete_fields/vector/portion.py
+    from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
+
+    # mesh = MeshGenerator('crazy', c=0.3)([50,45])
+    # mesh = MeshGenerator('chp1',)([2,2])
+    mesh = MeshGenerator('chp2')([10,10])
+    space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3)])
+    FC = FormCaller(mesh, space)
+
+    ES = ExactSolutionSelector(mesh)('sL:sincos1')
+
+    u = FC('1-f-o', is_hybrid=True)
+
+    u.TW.func.do.set_func_body_as(ES, 'velocity')
+    u.TW.current_time = 0
+    u.TW.do.push_all_to_instant()
+    u.discretize()
+
+    r = np.linspace(-1,1,20)
+    s = np.linspace(-1,1,20)
+
+    dv = u.reconstruct.discrete_vector([r, s])
+    x = [-1., -0]
+    y = [-1., -0]
+
+    portion = dv.portion.xy_range(x, y)
+    portion.visualize.matplot.quiver(scale=100)

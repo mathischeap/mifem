@@ -62,14 +62,13 @@ class _1Form_Special(FrozenOnly):
         :return:
         """
         if output == '2-M-1':
-            SCP_generator = ___3dCSCG_1Form_CrossProduct_2__ip_2___(
-                self._sf_, u, e, quad_degree=quad_degree)
-        elif output == '2-M-0':
-            SCP_generator = ___3dCSCG_1Form_CrossProduct_2__ip_2_2M0___(
-                self._sf_, u, e, quad_degree=quad_degree, cache=cache)
+            SCP_generator = ___3dCSCG_1Form_CrossProduct_2__ip_2___(self._sf_, u, e, quad_degree=quad_degree)
         elif output == 'MDM':
             SCP_generator = ___3dCSCG_1Form_CrossProduct_2__ip_2___(self._sf_, u, e, quad_degree=quad_degree)
             return SCP_generator.MDM
+        elif output == '2-M-0':
+            SCP_generator = ___3dCSCG_1Form_CrossProduct_2__ip_2_2M0___(
+                self._sf_, u, e, quad_degree=quad_degree, cache=cache)
         else:
             raise NotImplementedError(f"output={output} is not implemented.")
 

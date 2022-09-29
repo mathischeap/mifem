@@ -3,6 +3,7 @@ from screws.freeze.base import FrozenOnly
 from objects.CSCG._3d.fields.scalar.do.reconstruct.mesh_element.standard import OnMeshElement_Standard
 from objects.CSCG._3d.fields.scalar.do.reconstruct.trace_element.trace_element_wise import OnTraceElement_TraceElementWise
 from objects.CSCG._3d.fields.scalar.do.reconstruct.trace_element.boundary_wise import OnTraceElement_BoundaryWise
+from objects.CSCG._3d.fields.scalar.do.reconstruct.trace_element.standard import OnTraceElement_Standard
 
 class _3dCSCG_Scalar_Do_Reconstruct(FrozenOnly):
     def __init__(self, sf):
@@ -10,6 +11,7 @@ class _3dCSCG_Scalar_Do_Reconstruct(FrozenOnly):
         self._on_mesh_element___for_standard_ = OnMeshElement_Standard(sf)
         self._on_trace_element___for_trace_element_wise_ = OnTraceElement_TraceElementWise(sf)
         self._on_trace_element___for_boundary_wise_ = OnTraceElement_BoundaryWise(sf)
+        self._on_trace_element___for_standard_ = OnTraceElement_Standard(sf)
         self._freeze_self_()
 
 
@@ -55,7 +57,10 @@ class _3dCSCG_Scalar_Do_Reconstruct(FrozenOnly):
                 return self._on_trace_element___for_trace_element_wise_(xi, eta, sigma, ravel, i)
             elif ftype == 'boundary-wise':
                 return self._on_trace_element___for_boundary_wise_(xi, eta, sigma, ravel, i)
+            elif ftype == 'standard':
+                return self._on_trace_element___for_standard_(xi, eta, sigma, ravel, i)
             else:
-                raise NotImplementedError()
+                raise NotImplementedError(f"trace-element reconstruction for "
+                                          f"3dCSCG ScalarField of type = {ftype} not implemented.")
         else:
             raise NotImplementedError()

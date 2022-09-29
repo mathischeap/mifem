@@ -2,13 +2,15 @@
 """
 Here we put all unittests in mpi environment here.
 
-mpiexec -n 4 py __tests__/test_all.py
+mpiexec -n 4 python __tests__/test_all.py
 
 mpiexec -n 4 python __tests__/unittests/main.py
 
 mpiexec -n 4 python objects/CSCG/_2d/__tests__/unittests/main.py
 
 mpiexec -n 4 python objects/CSCG/_3d/__tests__/unittests/main.py
+
+mpiexec -n 4 python objects/miUsGrid/triangular/__test__/unittests/main.py
 
 """
 
@@ -21,9 +23,11 @@ if rAnk == mAster_rank:
     from screws.miscellaneous.timer import count_files_and_lines
     files, lines = count_files_and_lines('./')
 
-passed_2dCSCG_tests = 0
-passed_3dCSCG_tests = 0
-passed_GLOBAL_tests = 0
+passed_2dCSCG_tests = 0 # do not commit this
+passed_3dCSCG_tests = 0 # do not commit this
+passed_GLOBAL_tests = 0 # do not commit this
+passed_miUSGridTriangle_tests = 0 # do not commit this
+
 t_global_start = MPI.Wtime()
 
 
@@ -37,13 +41,13 @@ from objects.CSCG._2d.__tests__.unittests.main import passed_2dCSCG_tests # comm
 from objects.CSCG._3d.__tests__.unittests.main import passed_3dCSCG_tests # comment to skip these tests.
 
 
-# from objects.mpRfT._2d.__tests__.unittests.main import passed_mpRfT2_tests
-
+from objects.miUsGrid.triangular.__test__.unittests.main import passed_miUSGridTriangle_tests
 
 
 total_Tests = passed_2dCSCG_tests + \
               passed_3dCSCG_tests + \
-              passed_GLOBAL_tests
+              passed_GLOBAL_tests + \
+              passed_miUSGridTriangle_tests
 
 if rAnk == mAster_rank:
     print("\n<{}> total tests passed; cost {:.3f} seconds.\n".format(

@@ -7,7 +7,7 @@ from screws.freeze.main import FrozenOnly
 from importlib import import_module
 from screws.numerical.time_plus_2d_space.partial_derivative_as_functions import \
     NumericalPartialDerivative_txy_Functions
-from objects.CSCG._2d.fields.vector.numerical.helpers.curl import ___VECTOR_CURL_HELPER___
+from objects.CSCG._2d.fields.vector.numerical.helpers.rot import ___VECTOR_rot_HELPER___
 from objects.CSCG._2d.fields.vector.numerical.helpers.divergence import ___VECTOR_DIV_HELPER___
 
 
@@ -46,7 +46,7 @@ class _2dCSCG_VectorField_Numerical(FrozenOnly):
 
 
     @property
-    def curl(self):
+    def rot(self):
         """Return a _2dCSCG_ScalarField instance which is the numerical curl of self."""
         if self._vf_.ftype == 'standard':
             u, v = self._vf_.func
@@ -55,7 +55,7 @@ class _2dCSCG_VectorField_Numerical(FrozenOnly):
             u_y = NPD3F_u('y')
             v_x = NPD3F_v('x')
 
-            curl_vector = ___VECTOR_CURL_HELPER___(v_x, u_y)
+            curl_vector = ___VECTOR_rot_HELPER___(v_x, u_y)
 
             base_path = '.'.join(str(self.__class__).split(' ')[1][1:-2].split('.')[:-4]) + '.'
 

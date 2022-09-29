@@ -16,7 +16,7 @@ from root.config.main import cOmm, rAnk, mAster_rank
 class CSCG_DiscreteField(FrozenClass):
     """Data are region wise. And regions can be distributed in different cores."""
 
-    def __init__(self, mesh, coordinates, values, name, structured=False, linspaces=None):
+    def __init__(self, mesh, coordinates, values, name, structured=False, grid=None):
         """
 
         Parameters
@@ -27,9 +27,9 @@ class CSCG_DiscreteField(FrozenClass):
         name
         structured : bool, optional, default: False
             If the data are made from a structured grid?
-        linspaces : {None, list, tuple}, optional
+        grid : {None, list, tuple}, optional
             If the data are made from a structured grid,
-            the grid is meshgrid(*linspaces, indexing='ij').
+            the grid is meshgrid(*grid, indexing='ij').
 
             So it will only be valid when structured is True.
         """
@@ -90,22 +90,22 @@ class CSCG_DiscreteField(FrozenClass):
         self._values_ =values
 
         if structured: # the data are on a structured grid.
-            if linspaces is not None:
-                if not isinstance(linspaces, dict):
+            if grid is not None:
+                if not isinstance(grid, dict):
                     _LPD_ = dict()
                     for rn in self.regions:
-                        _LPD_[rn] = linspaces
-                    linspaces = _LPD_
+                        _LPD_[rn] = grid
+                    grid = _LPD_
 
                 for rn in self.regions:
-                    lsp = linspaces[rn]
+                    lsp = grid[rn]
 
                     for i, _ in enumerate(lsp):
                         assert np.ndim(_) == 1 and np.min(_) >=0 and np.max(_) <= 1, \
-                            f"linspaces[{rn}][{i}] wrong, must be 1d and in [-1,1]."
+                            f"grid[{rn}][{i}] wrong, must be 1d and in [-1,1]."
                         if len(_) > 1:
                             assert np.all(np.diff(_)) > 0, \
-                                f"linspaces[{rn}][{i}] wrong, must be in [-1,1] and increasing."
+                                f"grid[{rn}][{i}] wrong, must be in [-1,1] and increasing."
                         else:
                             pass
 
@@ -118,22 +118,13 @@ class CSCG_DiscreteField(FrozenClass):
                     for i, v in enumerate(val):
                         assert v.shape == SHAPE, f"{i}th dimension of values dis-match shape={SHAPE}."
 
-                DEL = list()
-                for rn in linspaces:
-                    if rn not in self.regions:
-                        DEL.append(rn)
-                    else:
-                        pass
-
-                for rn in DEL:
-                    del linspaces[rn]
             else:
                 pass
         else:
             pass
 
         self._structured_ = structured
-        self._linspaces_ = linspaces
+        self._grid_ = grid
 
         self._visualize_ = None
         self._portion_ = None
@@ -170,14 +161,17 @@ class CSCG_DiscreteField(FrozenClass):
         return self._structured_
 
     @property
-    def linspaces(self):
-        """If `self.structured`, the grid is `self.linspaces`"""
-        return self._linspaces_
+    def grid(self):
+        """If `self.structured`, the grid is `self.grid`"""
+        return self._grid_
 
     @property
     def regions(self):
         """The locally involved regions. So data are actually stored in different regions distributed
         in different cores.
+
+        The locally involved regions will be according to the region-wise-prime-core property of
+        the mesh. So it is fixed for a given mesh.
         """
         return self._locally_involved_regions_
 

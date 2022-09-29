@@ -13,9 +13,10 @@ from objects.CSCG.base.discrete_fields.base.main import CSCG_DiscreteField
 class _3dCSCG_DiscreteField(CSCG_DiscreteField):
     """"""
 
-    def __init__(self, mesh, coordinates, values, name):
+    def __init__(self, mesh, coordinates, values, name, structured=False, grid=None):
         """"""
-        super(_3dCSCG_DiscreteField, self).__init__(mesh, coordinates, values, name)
+        super(_3dCSCG_DiscreteField, self).__init__(mesh, coordinates, values, name,
+                                                    structured=structured, grid=grid)
 
 
 

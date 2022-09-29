@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
-
-
 from screws.freeze.main import FrozenOnly
 import random
 import numpy as np
-
-
-
 
 
 class Base(FrozenOnly):

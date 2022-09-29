@@ -16,11 +16,11 @@ from objects.CSCG._2d.discrete_fields.scalar.portion import _2dCSCG_DF_ScalarPor
 class _2dCSCG_DF_Scalar(_2dCSCG_DiscreteField):
     """Region wise scalar data."""
 
-    def __init__(self, mesh, coordinates, values, name, structured=False, linspaces=None):
+    def __init__(self, mesh, coordinates, values, name, structured=False, grid=None):
         """"""
         super(_2dCSCG_DF_Scalar, self).__init__(mesh, coordinates, values, name,
-                                                structured=structured, linspaces=linspaces)
-        assert self.vdim == 1, f"vdim must be 2, now it is {self.vdim}."
+                                                structured=structured, grid=grid)
+        assert self.vdim == 1, f"vdim must be 1, now it is {self.vdim}."
         self._visualize_ = _2cCSCG_DS_Visualize(self)
         self._portion_ = _2dCSCG_DF_ScalarPortion(self)
 
@@ -49,4 +49,4 @@ if __name__ == '__main__':
 
     ds = f0.reconstruct.discrete_scalar([x, x])
 
-
+    ds.visualize()

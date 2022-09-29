@@ -2,6 +2,7 @@
 import numpy as np
 from scipy.sparse import csr_matrix
 from screws.freeze.base import FrozenOnly
+from tools.linear_algebra.elementwise_cache.objects.multi_dim_matrix.main import MultiDimMatrix
 
 
 class ___3dCSCG_2Form_CrossProduct_2__ip_2___(FrozenOnly):
@@ -94,6 +95,11 @@ class ___3dCSCG_2Form_CrossProduct_2__ip_2___(FrozenOnly):
         """return 2d matrix of output = '2-M-1' type for mesh-element #i."""
         M = np.einsum('ijk, i -> kj', self._CP_IP_3dM_[i], self._w2_.cochain.local[i], optimize='greedy')
         return csr_matrix(M)
+
+    @property
+    def MDM(self):
+        """Return a multi-dimension matrix representing this triple-operator."""
+        return MultiDimMatrix(self._w2_.mesh.elements, self._CP_IP_3dM_, [self._w2_, self._u2_, self._e2_], 'no_cache')
 
     #     assert a.ndim == b.ndim == e.ndim, " <___3dCSCG_2Form_CrossProduct_2__ip_2___> "
     #     assert a.k == b.k == e.k == 2, " <___3dCSCG_2Form_CrossProduct_2__ip_2___> "

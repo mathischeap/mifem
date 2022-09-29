@@ -13,17 +13,12 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
     def reset_cache(self):
         self._sf_.___PRIVATE_reset_cache___()
 
-
-
     def evaluate_basis_at_meshgrid(self, *args, **kwargs):
         return self._sf_.___PRIVATE_do_evaluate_basis_at_meshgrid___(*args, **kwargs)
 
     def evaluate_basis_at_quadrature(self, quad_degree, quad_type=None, compute_xietasigma=True):
         return self._sf_.space.do.evaluate_form_basis_at_quadrature(
             self._sf_.k, quad_degree, quad_type=quad_type, compute_xietasigma=compute_xietasigma)
-
-
-
 
     def resemble(self, *args, **kwargs):
         """get cochain from another form (with a different mesh.)"""
@@ -36,15 +31,6 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
         :return:
         """
         raise NotImplementedError()
-
-
-
-
-    def cross_product(self, *args, **kwargs):
-        return self._sf_.special.cross_product(*args, **kwargs)
-
-
-
 
     def compute_L2_energy_with(self, other=None, M=None):
         """Compute (self, other)_{L2} = int_{Omega}(self dot other)
@@ -203,12 +189,6 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
             return globalError
         else:
             raise NotImplementedError('Can only work on forms from the same mesh now.')
-
-
-
-
-
-
 
     def discretize(self, *args, **kwargs):
         return self._sf_.discretize(*args, **kwargs)

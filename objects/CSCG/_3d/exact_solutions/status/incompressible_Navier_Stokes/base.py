@@ -42,6 +42,7 @@ class incompressible_NavierStokes_Base(Base):
         self._divergence_of_velocity_ = None
         self._divergence_of_vorticity_ = None
         self._curl_of_vorticity_ = None
+        self._source_term_ = None
 
         self._NPDf_u_ = None
         self._NPDf_v_ = None
@@ -211,11 +212,32 @@ class incompressible_NavierStokes_Base(Base):
         # must be zero
         return self.u_x(t, x, y, z) + self.v_y(t, x, y, z) + self.w_z(t, x, y, z)
 
+    # noinspection PyUnusedLocal
     @staticmethod
-    def source_term(t, x, y, z):
-        """By default, we have divergence free condition; the source term is zero."""
-        return 0 * (x + y + z + t)
+    def s(t, x, y, z):
+        """The mass source term.
 
+        By default, we have divergence free condition for velocity; the source term is zero.
+        But we make define a non-zero source term through method `s` for some particular
+        manufactured solutions.
+        """
+        return 0 * x
+
+    @property
+    def source_term(self):
+        """The mass source term. by default, it should be zero. But we make define a non-zero
+        source term through method `s` for some particular manufactured solutions.
+
+        Returns
+        -------
+
+        """
+        if self._source_term_ is None:
+            self._source_term_ = _3dCSCG_ScalarField(self.mesh,
+                                                    self.s,
+                                                    valid_time=None,
+                                                    name='mass-source-term')
+        return self._source_term_
 
     @property
     def vorticity(self):
@@ -488,12 +510,12 @@ class incompressible_NavierStokes_Base(Base):
 
             assert np.all(np.isclose(
                 self.u_x(t, *rst) + self.v_y(t, *rst) + self.w_z(t, *rst),
-                self.source_term(time, *rst))), \
+                self.s(time, *rst))), \
                 " <exact solution> <icpNS> : velocity divergence condition."
 
             assert np.all(np.isclose(
                 self.___div_of_velocity___(time, *rst),
-                self.source_term(time, *rst))), \
+                self.s(time, *rst))), \
                 " <exact solution> <icpNS> : velocity divergence free condition."
 
             wx = partial(self.omega_x, time)

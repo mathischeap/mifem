@@ -30,6 +30,7 @@ class _3dCSCG_ExactSolution_Allocator(FrozenOnly):
                 'TISE:sincos1': "TISE_SinCos1",
 
                 'MHD:sincos1': "MHD_SinCos1",
+                'MHD:as1': "AS1",
 
                 }
 
@@ -58,4 +59,5 @@ class _3dCSCG_ExactSolution_Allocator(FrozenOnly):
                 'TISE:sincos1': base_path + "time_independent_Schrodinger_equation.sin_cos_1",
 
                 'MHD:sincos1': base_path + "incompressible_MHD.sin_cos",
+                'MHD:as1': base_path + "incompressible_MHD.analytic_solution_1",
                 }

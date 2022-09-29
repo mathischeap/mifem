@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from screws.decorators.accepts import accepts
 
 @accepts((int, float), (int, float), (int, float))

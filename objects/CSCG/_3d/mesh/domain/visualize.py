@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """"""
 from root.config.main import *
-import tecplot as tp
-from tecplot.constant import PlotType
+# import tecplot as tp
+# from tecplot.constant import PlotType
 from screws.freeze.main import FrozenOnly
 import matplotlib.pyplot as plt
 from matplotlib import cm
@@ -19,69 +19,69 @@ class _3dCSCG_Domain_Visualize(FrozenOnly):
     def __call__(self, **kwargs):
         return self.matplot(**kwargs)
 
-    def tecplot(self, nodes=None):
-        """Here we call the tecplot API and plot self in Tecplot 360.
-
-        In Tecplot: layout -> page -> frame -> dataset -> zones. And each frame can also
-        have multiple plots, each time, only one plot will be activated by
-        doing plot.activate().
-
-        Parameters
-        ----------
-        nodes : int or None, optional
-            A positive int to determine how good we are going to follow the real shape
-            of each region. When it is None (default), it will be set to be the optimal
-            according the regions type.
-
-        """
-        if rAnk != mAster_rank: return
-        tp.session.connect()
-        tp.new_layout()
-        page = tp.active_page()
-        page.name = 'Domain: ' + self._domain_.name
-        frame = page.active_frame()
-        dataset = frame.create_dataset('Domain')
-        dataset.add_variable('x')
-        dataset.add_variable('y')
-        dataset.add_variable('z')
-
-        for region_name in self._domain_.regions():
-            region = self._domain_.regions(region_name)
-
-            if nodes is None: nodes = 5
-
-            if isinstance(nodes, int):
-                assert nodes >= 2, " <Region3D> : density={} wrong".format(nodes)
-                r = s = t = np.linspace(0, 1, nodes)
-            else:
-                # noinspection PyUnresolvedReferences
-                r, s, t = nodes[region_name]
-
-            size_x = np.size(r)
-            size_y = np.size(s)
-            size_z = np.size(t)
-            r, s, t = np.meshgrid(r, s, t, indexing='ij')
-            r = r.ravel('F')
-            s = s.ravel('F')
-            t = t.ravel('F')
-            x, y, z = region.interpolation(r, s, t)
-            zone = dataset.add_ordered_zone('Zone: ' + region.name,
-                                            (size_x, size_y, size_z))
-            zone.values('x')[:] = x
-            zone.values('y')[:] = y
-            zone.values('z')[:] = z
-
-        frame.plot_type = PlotType.Cartesian3D
-        plot = frame.plot()
-        plot.show_shade = True
-        plot.show_edge = True
-        plot.use_translucency = True
-        for i in range(self._domain_._num_regions_):
-            surfaces = plot.fieldmap(i).surfaces
-            surfaces.surfaces_to_plot = True
-        plot.show_mesh = False
-        plot.view.fit()
-        frame.plot().activate()
+    # def tecplot(self, nodes=None):
+    #     """Here we call the tecplot API and plot self in Tecplot 360.
+    #
+    #     In Tecplot: layout -> page -> frame -> dataset -> zones. And each frame can also
+    #     have multiple plots, each time, only one plot will be activated by
+    #     doing plot.activate().
+    #
+    #     Parameters
+    #     ----------
+    #     nodes : int or None, optional
+    #         A positive int to determine how good we are going to follow the real shape
+    #         of each region. When it is None (default), it will be set to be the optimal
+    #         according the regions type.
+    #
+    #     """
+    #     if rAnk != mAster_rank: return
+    #     tp.session.connect()
+    #     tp.new_layout()
+    #     page = tp.active_page()
+    #     page.name = 'Domain: ' + self._domain_.name
+    #     frame = page.active_frame()
+    #     dataset = frame.create_dataset('Domain')
+    #     dataset.add_variable('x')
+    #     dataset.add_variable('y')
+    #     dataset.add_variable('z')
+    #
+    #     for region_name in self._domain_.regions():
+    #         region = self._domain_.regions(region_name)
+    #
+    #         if nodes is None: nodes = 5
+    #
+    #         if isinstance(nodes, int):
+    #             assert nodes >= 2, " <Region3D> : density={} wrong".format(nodes)
+    #             r = s = t = np.linspace(0, 1, nodes)
+    #         else:
+    #             # noinspection PyUnresolvedReferences
+    #             r, s, t = nodes[region_name]
+    #
+    #         size_x = np.size(r)
+    #         size_y = np.size(s)
+    #         size_z = np.size(t)
+    #         r, s, t = np.meshgrid(r, s, t, indexing='ij')
+    #         r = r.ravel('F')
+    #         s = s.ravel('F')
+    #         t = t.ravel('F')
+    #         x, y, z = region.interpolation(r, s, t)
+    #         zone = dataset.add_ordered_zone('Zone: ' + region.name,
+    #                                         (size_x, size_y, size_z))
+    #         zone.values('x')[:] = x
+    #         zone.values('y')[:] = y
+    #         zone.values('z')[:] = z
+    #
+    #     frame.plot_type = PlotType.Cartesian3D
+    #     plot = frame.plot()
+    #     plot.show_shade = True
+    #     plot.show_edge = True
+    #     plot.use_translucency = True
+    #     for i in range(self._domain_._num_regions_):
+    #         surfaces = plot.fieldmap(i).surfaces
+    #         surfaces.surfaces_to_plot = True
+    #     plot.show_mesh = False
+    #     plot.view.fit()
+    #     frame.plot().activate()
 
 
     def matplot(self, density=1000, corlormap='tab10',

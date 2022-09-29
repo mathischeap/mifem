@@ -37,8 +37,11 @@ class DomainInputBase(FrozenOnly):
 
         INSP = inspect.getfullargspec(self.__init__)
         self.__arg_names___ = INSP[0][1:]
-        assert INSP[1] is None and INSP[2] is None, "A domain input class can not have *args and **kwargs."
-        assert len(INSP[3]) == len(self.__arg_names___), "A domain input class can only have kwargs."
+        assert INSP[1] is None and INSP[2] is None, "A domain input class can not have '*args' and '**kwargs'."
+        if len(self.__arg_names___) == 0:
+            assert INSP[3] is None, "trivial check."
+        else:
+            assert len(INSP[3]) == len(self.__arg_names___), "A domain input class can only have kwargs."
 
         self._freeze_self_()
 

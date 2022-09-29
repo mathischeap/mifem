@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
@@ -123,10 +123,10 @@ def test_Mesh_NO2_mesh_coordinate_transformation():
             mesh = MeshGenerator(mid, c=c)([II, JJ], EDM='debug')
         else:
             mesh = MeshGenerator(mid)([II, JJ], EDM='debug')
-        # ... generate r, s, t ...
+        # ... generate r, s...
         if rAnk == mAster_rank:
-            r = np.linspace(-1, 1, random.randint(2,8))
-            s = np.linspace(random.uniform(-1, -0.9), random.uniform(0.85, 0.99), random.randint(1,7))
+            r = np.linspace(-0.95, 0.975, random.randint(2,8))
+            s = np.linspace(random.uniform(-0.99, -0.9), random.uniform(0.85, 0.99), random.randint(1,7))
         else:
             r, s = None, None
         r, s = cOmm.bcast([r, s], root=mAster_rank)
@@ -262,7 +262,7 @@ def test_Mesh_NO3_mesh_coordinate_transformation_QUAD():
     if rAnk == mAster_rank:
         print("+++ [test_Mesh_NO3_mesh_coordinate_transformation_QUAD] ...... ", flush=True)
 
-    MID = list(DomainInputFinder.___defined_DI___().keys())
+    MID = list(MeshGenerator.___domain_input_statistic___().keys())
 
     if rAnk == mAster_rank:
         __ = random.sample(range(0,len(MID)), 3)

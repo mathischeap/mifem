@@ -23,7 +23,7 @@ from objects.CSCG._3d.forms.standard.base.matrices import _3dCSCG_Standard_Form_
 from objects.CSCG._3d.forms.standard.base.coboundary import _3dCSCG_Standard_Form_Coboundary
 from objects.CSCG._3d.forms.standard.base.error import _3dCSCG_Standard_Form_Error
 from objects.CSCG._3d.forms.standard.base.cochain.main import _3dCSCG_Standard_Form_Cochain
-from objects.CSCG._3d.forms.standard.base.do import _3dCSCG_Standard_Form_DO
+
 
 
 
@@ -122,8 +122,6 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
     @property
     def do(self):
         """If it has too many do methods, we group them in to do."""
-        if self._DO_ is None:
-            self._DO_ = _3dCSCG_Standard_Form_DO(self)
         return self._DO_
 
     @property

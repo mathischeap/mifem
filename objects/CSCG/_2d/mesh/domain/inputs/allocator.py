@@ -44,7 +44,9 @@ class DomainInputFinder(FrozenOnly):
                   'bcr': "BottomCustomizedRectangle",
                   'cic': "CylinderInChannel",
                   'rectangle': "Rectangle",
-                  'rectangle_periodic': "RectanglePeriodic",}
+                  'rectangle_periodic': "RectanglePeriodic",
+                  'triangle_test': "TriangleTest",
+                  }
         return _dict_
 
     @classmethod
@@ -60,7 +62,9 @@ class DomainInputFinder(FrozenOnly):
                 'bcr': base_path + "bcr",
                 'cic': base_path + "cic",
                 'rectangle': base_path + "rectangle",
-                'rectangle_periodic': base_path + "rectangle_periodic",}
+                'rectangle_periodic': base_path + "rectangle_periodic",
+                'triangle_test': base_path + "triangle_test",
+                }
 
 
 

@@ -97,4 +97,3 @@ if __name__ == "__main__":
 
     for i in xy:
         print(R[i])
-

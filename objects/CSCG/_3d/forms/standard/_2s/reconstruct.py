@@ -135,12 +135,12 @@ class _3dCSCG_SF2_reconstruct(_3dCSCG_SF_Reconstruct):
                         value[i] = [value[i][j].reshape(shape, order='F') for j in range(3)]
                 return xyz, value
 
-    def discrete_vector(self, rst):
+    def discrete_vector(self, grid):
         """We reconstruct this S2F as a 3d CSCG discrete vector in the `regions`.
 
         Parameters
         ----------
-        rst: dict, list, tuple
+        grid: dict, list, tuple
             For example:
                 rst = [r, s, t], these r, s, t will be used for all regions.
                 rst = {'R:R1': [r1, s1, t1], 'R:R2': [r2, s2, t2], ....}, in each
@@ -150,9 +150,9 @@ class _3dCSCG_SF2_reconstruct(_3dCSCG_SF_Reconstruct):
         -------
 
         """
-        Xi_Eta_Sigma_D, rst = self.___PRIVATE_distribute_region_wise_meshgrid___(rst)
         f = self._sf_
         mesh = f.mesh
+        Xi_Eta_Sigma_D, grid = self.___PRIVATE_distribute_region_wise_meshgrid___(mesh, grid)
         EMPTY_DATA = np.empty((0,0,0))
 
         #-------- reconstructing -----------------------------------------------------------------1
@@ -213,11 +213,12 @@ class _3dCSCG_SF2_reconstruct(_3dCSCG_SF_Reconstruct):
                 value[e] = [value[e][j].reshape(shape, order='F') for j in range(3)] #=========diff
 
         #-------- prime-region-wise stack coordinates and values ----------------------------------1
-        XYZ, VAL, element_global_numbering = self.___PRIVATE_distribute_XYZ_and_VAL___(xyz, value)
-        XYZ = self.___PRIVATE_prime_region_wise_stack___(XYZ, 3, rst, element_global_numbering)
-        VAL = self.___PRIVATE_prime_region_wise_stack___(VAL, 3, rst, element_global_numbering)
+        XYZ, VAL, element_global_numbering = self.___PRIVATE_distribute_XYZ_and_VAL___(mesh, xyz, value)
+        XYZ = self.___PRIVATE_prime_region_wise_stack___(mesh, XYZ, 3, grid, element_global_numbering)
+        VAL = self.___PRIVATE_prime_region_wise_stack___(mesh, VAL, 3, grid, element_global_numbering)
 
-        return _3dCSCG_DF_Vector(mesh, XYZ, VAL, name=self._sf_.standard_properties.name)
+        return _3dCSCG_DF_Vector(mesh, XYZ, VAL, name=self._sf_.standard_properties.name,
+                                 structured=True, grid=grid)
 
 
 

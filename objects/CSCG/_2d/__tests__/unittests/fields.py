@@ -44,9 +44,9 @@ def test_Fields_NO1_vector():
     def dv_dx__m__du_dy(t, x, y):
         return -2.112*np.pi**2 * np.sin(2.112*np.pi*x) * np.sin(1.98*np.pi*y) * np.sin(t)*1.23 - \
                3.12 * np.pi**2 * np.sin(2.56 * np.pi * x) * np.sin(3.12 * np.pi * y) * np.sin(t)/1.554
-    curl_v = v.numerical.curl
-    curl_v.current_time = t
-    R_xyz, R_v = curl_v.reconstruct(x, y)
+    rot_v = v.numerical.rot
+    rot_v.current_time = t
+    R_xyz, R_v = rot_v.reconstruct(x, y)
     for i in R_xyz:
         assert np.max(np.abs(R_v[i][0] - dv_dx__m__du_dy(t, *R_xyz[i]))) < 1e-7
 
@@ -288,5 +288,5 @@ def test_identities():
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects\CSCG\_2d\__tests__\unittests\fields.py
+    # mpiexec -n 4 python objects/CSCG/_2d/__tests__/unittests/fields.py
     test_identities()

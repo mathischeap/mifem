@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
 from screws.freeze.main import FrozenOnly
 from importlib import import_module
 from screws.numerical.time_plus_3d_space.partial_derivative_as_functions import \
@@ -31,7 +30,8 @@ class _3dCSCG_ScalarField_Numerical(FrozenOnly):
             return TDS
 
         else:
-            raise NotImplementedError(f"Numerical time derivative not implemented for scalar type = {self._sf_.ftype}.")
+            raise NotImplementedError(f"Numerical time derivative not implemented for "
+                                      f"scalar type = {self._sf_.ftype}.")
 
     @property
     def gradient(self):
@@ -51,7 +51,7 @@ class _3dCSCG_ScalarField_Numerical(FrozenOnly):
                               name = 'gradient-of-' + self._sf_.standard_properties.name
                               )
             return GV
+
         else:
-            raise NotImplementedError(f"Numerical gradient not implemented for scalar type = {self._sf_.ftype}.")
-
-
+            raise NotImplementedError(f"Numerical gradient not implemented for "
+                                      f"scalar type = {self._sf_.ftype}.")

@@ -29,6 +29,8 @@ class DipoleCollision(incompressibleNavierStokesBase):
         (x1, y1) : center of the monopole 1
         (x2, y2) : center of the monopole 2
 
+        These default inputs imply a typical normal collision.
+
         Parameters
         ----------
         es
@@ -130,4 +132,6 @@ if __name__ == '__main__':
     mesh = MeshGenerator('crazy', bounds=[[-1, 1], [-1, 1]], c=0.0)([2, 2])
     es = ExactSolutionSelector(mesh)("icpsNS:dipole_collision", show_info=True)
 
-    es.status.vorticity.visualize(time=0)
+    # es.status.vorticity.visualize(time=0)
+    a = es.do.compute_Ln_norm_of('vorticity')
+    print(0.5 * a**2 * 2 / 2.282512)

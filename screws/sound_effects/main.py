@@ -41,13 +41,13 @@ class MiSoundEffect(FrozenOnly):
         """
 
         # noinspection PyBroadException
-        # if rAnk != mAster_rank: return
+        if rAnk != mAster_rank: return
 
         try:
             absolute_path = os.path.dirname(__file__)
 
             if i == 0:
-                playsound(absolute_path + '/transitions/mixkit-fast-small-sweep-transition-166.wav')
+                playsound(absolute_path + '/mixkit_fast_small_sweep_transition_166.wav')
             elif i == 1:
                 playsound(absolute_path + '/transitions/mixkit-arcade-retro-game-over-213.wav')
             elif i == 2:
@@ -76,4 +76,4 @@ class MiSoundEffect(FrozenOnly):
 
 if __name__ == '__main__':
     # mpiexec -n 4 python screws/sound_effects/main.py
-    MiSoundEffect.transition(1)
+    MiSoundEffect.transition(0)

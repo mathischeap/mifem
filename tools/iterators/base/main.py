@@ -155,7 +155,7 @@ class Iterator(FrozenClass):
         self._shut_down_ = False
         self.___shut_down_reason___ = None
         self._message_ = None
-        self._t_ = self.t0 # initialing t here
+        self._t_ = self.t0 # initialing `t` here
 
         self._solver_ = solver
         self._solver_source_code_ = inspect.getsource(solver)

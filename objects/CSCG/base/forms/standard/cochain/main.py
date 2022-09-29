@@ -51,6 +51,9 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
         return ewc
 
 
+    def ___PRIVATE_local_call___(self, i):
+        return csr_matrix(self.local[i]).T
+
     def ___PRIVATE_do_gather_to_master_and_make_them_region_wise_local_index_grouped___(self):
         """make it regions-wise-element-local-indexed, thus we can save it and when read a form, we can always have the
         correct local cochain allocated even element numbering is different.
@@ -103,9 +106,6 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
 
         self.local = LOC_COCHAIN
 
-
-    def ___PRIVATE_local_call___(self, i):
-        return csr_matrix(self.local[i]).T
 
 
 

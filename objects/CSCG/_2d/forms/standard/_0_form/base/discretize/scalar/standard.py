@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 from screws.freeze.base import FrozenOnly
-
 import numpy as np
 
 
-
-
 class _2dCSCG_S0F_Discretize_StandardScalar(FrozenOnly):
+    """"""
     def __init__(self, sf):
+        """"""
         self._sf_ = sf
         self._freeze_self_()
 

@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from screws.miscellaneous.checks.check_no_splcharacter import check_no_splcharacter
 

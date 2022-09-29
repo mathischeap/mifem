@@ -23,7 +23,7 @@ def test_Regular_Newton_Raphson():
     miprint("RNR [test_Regular_Newton_Raphson] ...... ", flush=True)
     #--------- define the problem ---------------------------------------------------------
     c = 0
-    K = 5 # K * K elements (uniform)
+    K = 5   # K * K elements (uniform)
     N = 3   # polynomial degree
     dt = 0.01
     t = 0.05
@@ -50,12 +50,12 @@ def test_Regular_Newton_Raphson():
     FC = cscg2.form(mesh, space)
     es = cscg2.exact_solution(mesh)("Euler:shear_layer_rollup", show_info=False)
 
-    #----------- unknowns ------------------------------------------------
+    #----------- unknowns -----------------------------------------------------------------
     u = FC('1-f-o', is_hybrid=False, name='velocity')
     w = FC('0-f-o', is_hybrid=False, name='vorticity')
     P = FC('2-f-o', is_hybrid=False, name='total pressure')
 
-    #--------- tests ----------------------------------------------------------
+    #--------- tests ----------------------------------------------------------------------
     v = FC('1-f-o', is_hybrid=False, name='test-velocity')
     o = FC('0-f-o', is_hybrid=False, name='test-vorticity')
     q = FC('2-f-o', is_hybrid=False, name='test-total pressure')
@@ -73,7 +73,7 @@ def test_Regular_Newton_Raphson():
 
     Cv = MDM.do.reduce_to_vector(v)
 
-    #----------- initial condition: u, w @ t0 ----------------------------------------
+    #----------- initial condition: u, w @ t0 ----------------------------------------------
     u.TW.func.do.set_func_body_as(es, 'velocity')
     u.TW.current_time = t0
     u.TW.do.push_all_to_instant()
@@ -93,7 +93,7 @@ def test_Regular_Newton_Raphson():
     EN_t0 = 0.5*w.do.compute_L2_energy_with(M=M0)
     Vor_t0 = w.do.compute_Ln_energy(n=1)
 
-    # ------------ nonlinear system @ tk --------------------------------------------------
+    # ------------ nonlinear system @ tk -------------------------------------------------
     A = ([(1/dt) * M1 + 0.25 * C_wk_uk1, 0.25 * C_wk1_uk, - E12 @ M2],
          [                     E01 @ M1,            - M0,       None],
          [                          E21,            None,       None])
@@ -131,7 +131,7 @@ def test_Regular_Newton_Raphson():
         assert tk1 == tk + dt, f"A trivial check."
         message = list()
 
-        #---- u, w @ tk ------------------------------------------------
+        #---- u, w @ tk -----------------------------------------------------------------------
         x0 = linalg.LocallyFullVector((u, w, P))
         # R = nLS.solve(x0, atol=1e-3, maxiter=5,
                       # LS_solver_para='GMRES', LS_solver_kwargs={'atol':1e-5})
@@ -163,7 +163,7 @@ def test_Regular_Newton_Raphson():
         output2 = data[-2][1:]
         np.testing.assert_array_almost_equal(output1, output2)
 
-    ms.make_a_video_from_images_in_folder(image_folder, duration=t, clear_images=True)
+    ms.make_a_video_from_images_in_folder(image_folder, duration=t, clean_images=True)
 
     remove('shear_layer_rollup_p1_NRR_test.csv')
     remove('MPI_IGR_shear-layer-rollup-p1_NRR_test.png')

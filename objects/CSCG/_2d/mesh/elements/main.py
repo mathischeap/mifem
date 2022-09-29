@@ -101,7 +101,12 @@ class _2dCSCG_Mesh_Elements(FrozenOnly):
     @property
     def region_wise_prime_core(self):
         """A dict same in all cores. It shows which core (value) has the most elements of
-        a particular region (key)"""
+        a particular region (key).
+
+        If two cores have the same amount of mesh-elements of a particular region, we use the
+        core of lower rank as the prime core.
+
+        """
         if self._rwPc_ is None:
             rns = self._mesh_.domain.regions.names
             COUNT = dict()

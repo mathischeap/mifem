@@ -12,6 +12,10 @@ from screws.freeze.base import FrozenOnly
 import numpy as np
 from root.config.main import sIze, cOmm, rAnk
 
+___grid_cache_3dCSCG_SF_Reconstruct___ = {
+    'grid': None,
+    'Xi_Eta_Sigma': None
+}
 
 
 class _3dCSCG_SF_Reconstruct(FrozenOnly):
@@ -22,7 +26,18 @@ class _3dCSCG_SF_Reconstruct(FrozenOnly):
         self._sf_ = sf
         self._freeze_self_()
 
-    def ___PRIVATE_distribute_region_wise_meshgrid___(self, rst):
+    def discrete_field(self, grid):
+        """"""
+        if hasattr(self, 'discrete_scalar'):
+            return self.discrete_scalar(grid)
+        elif hasattr(self, 'discrete_vector'):
+            return self.discrete_vector(grid)
+        else:
+            raise NotImplementedError()
+
+    # noinspection PyTypedDict,PyUnresolvedReferences
+    @classmethod
+    def ___PRIVATE_distribute_region_wise_meshgrid___(cls, mesh, rst):
         """
 
         Parameters
@@ -39,8 +54,6 @@ class _3dCSCG_SF_Reconstruct(FrozenOnly):
         -------
 
         """
-        f = self._sf_
-        mesh = f.mesh
         local_elements_in_regions = mesh.elements.in_regions
 
         #----------- parse rst -------------------------------------------------------------------1
@@ -49,9 +62,13 @@ class _3dCSCG_SF_Reconstruct(FrozenOnly):
             for rn in local_elements_in_regions:
                 ___[rn] = rst
             rst = ___
+
         elif isinstance(rst, dict):
             for rn in rst:
                 assert rn in mesh.domain.regions.names, f"rst[{rn}] is not a valid region name."
+
+            for rn in local_elements_in_regions:
+                assert rn in rst, f"grid missed for region {rn}."
 
             ___ = dict()
             for rn in rst:
@@ -65,9 +82,27 @@ class _3dCSCG_SF_Reconstruct(FrozenOnly):
         #-------- parse r, s, t -------------------------------------------------------------------1
         for rn in rst:
             r, s, t = rst[rn]
-            if isinstance(r, (int, float)): r = np.array([r, ])
-            if isinstance(s, (int, float)): s = np.array([s, ])
-            if isinstance(t, (int, float)): t = np.array([t, ])
+            if isinstance(r, (int, float)):
+                r = np.array([r, ])
+            elif not r.__class__.__name__ == 'ndarray':
+                r = np.array(r)
+            else:
+                pass
+
+            if isinstance(s, (int, float)):
+                s = np.array([s, ])
+            elif not s.__class__.__name__ == 'ndarray':
+                s = np.array(s)
+            else:
+                pass
+
+            if isinstance(t, (int, float)):
+                t = np.array([t, ])
+            elif not t.__class__.__name__ == 'ndarray':
+                t = np.array(t)
+            else:
+                pass
+
             if np.ndim(r) == 1 and min(r) >=0 and max(r) <=1 and np.all(np.diff(r) > 0):
                 pass
             elif np.ndim(r) == 1 and min(r) >=-1 and max(r) <=1 and np.all(np.diff(r) > 0):
@@ -91,57 +126,97 @@ class _3dCSCG_SF_Reconstruct(FrozenOnly):
 
             rst[rn] = r, s, t
 
+        #------- check cache ----------------------------------------------------------------------1
+        if ___grid_cache_3dCSCG_SF_Reconstruct___['grid'] is not None:
+            c_rst = ___grid_cache_3dCSCG_SF_Reconstruct___['grid']
+            cached = True
+
+            for rn in rst:
+
+                if rn in c_rst:
+                    if any([
+                        rst[rn][0].shape != c_rst[rn][0].shape,
+                        rst[rn][1].shape != c_rst[rn][1].shape,
+                        rst[rn][2].shape != c_rst[rn][2].shape
+                    ]):
+                        cached = False
+                        break
+
+                    elif all([
+                            np.all(np.abs(rst[rn][0] - c_rst[rn][0]) < 1e-9),
+                            np.all(np.abs(rst[rn][1] - c_rst[rn][1]) < 1e-9),
+                            np.all(np.abs(rst[rn][2] - c_rst[rn][2]) < 1e-9),
+                    ]):
+                        pass
+
+                    else:
+                        cached = False
+                        break
+
+                else:
+                    cached = False
+                    break
+
+            if cached:
+                return ___grid_cache_3dCSCG_SF_Reconstruct___['Xi_Eta_Sigma'], rst
+            else:
+                pass
+
+        else:
+            pass
+
         #-------- generating RST for region elements ----------------------------------------------1
 
         Xi_Eta_Sigma_D = dict()
         for rn in rst:
-            if rn in local_elements_in_regions:
-                spacing = mesh.elements.spacing[rn]
-                SPr, SPs, SPt = spacing
-                L_SPr = len(SPr)
-                L_SPs = len(SPs)
-                L_SPt = len(SPt)
+            assert rn in local_elements_in_regions, f"trivial check."
+            spacing = mesh.elements.spacing[rn]
+            SPr, SPs, SPt = spacing
+            L_SPr = len(SPr)
+            L_SPs = len(SPs)
+            L_SPt = len(SPt)
 
-                RST = list()
-                for SP, Len, D in zip(spacing, [L_SPr, L_SPs, L_SPt], rst[rn]):
+            RST = list()
+            for SP, Len, D in zip(spacing, [L_SPr, L_SPs, L_SPt], rst[rn]):
 
-                    Segments = [list() for _ in range(Len-1)]
+                Segments = [list() for _ in range(Len-1)]
 
-                    base_i = 0
-                    for _ in D:
-                        for i, low_bound in enumerate(SP[base_i:-1]):
-                            I = base_i + i
-                            up_bound = SP[I +1]
-                            if low_bound <= _ < up_bound:
-                                Segments[I].append(_)
-                                base_i = I
-                                break
+                base_i = 0
+                for _ in D:
+                    for i, low_bound in enumerate(SP[base_i:-1]):
+                        I = base_i + i
+                        up_bound = SP[I +1]
+                        if low_bound <= _ < up_bound:
+                            Segments[I].append(_)
+                            base_i = I
+                            break
 
-                    if D[-1] == 1:
-                        if Segments[-1] == list():
+                if D[-1] == 1:
+                    if Segments[-1] == list():
+                        Segments[-1].append(1)
+                    else:
+                        if Segments[-1][-1] != 1.0:
                             Segments[-1].append(1)
                         else:
-                            if Segments[-1][-1] != 1.0:
-                                Segments[-1].append(1)
+                            pass
 
-                    for i, seg in enumerate(Segments):
-                        Seg_Len = SP[i+1] - SP[i]
-                        ARR = (np.array(seg) - SP[i]) * 2 / Seg_Len - 1
-                        Segments[i] = ARR
+                for i, seg in enumerate(Segments):
+                    Seg_Len = SP[i+1] - SP[i]
+                    ARR = (np.array(seg) - SP[i]) * 2 / Seg_Len - 1
+                    Segments[i] = ARR
 
-                    RST.append(Segments)
+                RST.append(Segments)
 
-                Xi_Eta_Sigma_D[rn] = RST
+            Xi_Eta_Sigma_D[rn] = RST
 
-            else: # this region is not involved in this core
-                pass
-
+        ___grid_cache_3dCSCG_SF_Reconstruct___['grid']  = rst
+        ___grid_cache_3dCSCG_SF_Reconstruct___['Xi_Eta_Sigma'] = Xi_Eta_Sigma_D
         #==========================================================================================1
         return Xi_Eta_Sigma_D, rst
 
-    def ___PRIVATE_distribute_XYZ_and_VAL___(self, xyz, value):
+    @classmethod
+    def ___PRIVATE_distribute_XYZ_and_VAL___(cls, mesh, xyz, value):
         """"""
-        mesh = self._sf_.mesh
         rwPc = mesh.elements.region_wise_prime_core #
 
         #---------- we distribute xyz, and value to prime cores -------------------------------------1
@@ -177,9 +252,9 @@ class _3dCSCG_SF_Reconstruct(FrozenOnly):
 
         return XYZ, VAL, element_global_numbering
 
-    def ___PRIVATE_prime_region_wise_stack___(self, data_dict, dim, rst, element_global_numbering):
+    @classmethod
+    def ___PRIVATE_prime_region_wise_stack___(cls, mesh, data_dict, dim, rst, element_global_numbering):
         """"""
-        mesh = self._sf_.mesh
         _sd_ = dict()
 
         for Rn in element_global_numbering:

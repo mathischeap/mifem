@@ -118,7 +118,7 @@ passed_3dCSCG_tests += test_hdMSEM_Poisson_Inner()
 
 passed_3dCSCG_tests += test_hdMSEM_Schrodinger_Inner()
 passed_3dCSCG_tests += test_hdMSEM_Schrodinger_Inner_Cuboid()
-passed_3dCSCG_tests += test_reconstruct_S2F_to_DV()
+passed_3dCSCG_tests += test_reconstruct_DF()
 
 
 if rAnk == mAster_rank:

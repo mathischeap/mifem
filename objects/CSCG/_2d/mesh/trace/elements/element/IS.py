@@ -9,7 +9,18 @@ class _2dCSCG_TraceElement_IS(FrozenOnly):
         """"""
         self._element_ = element
         self._shared_by_cores_ = None
+        self._orthogonal_ = None
         self._freeze_self_()
+
+    @property
+    def orthogonal(self):
+        if self._orthogonal_ is None:
+            tMark = self._element_.type_wrt_metric.mark
+            if isinstance(tMark, str) and tMark[:4] == 'Orth':
+                self._orthogonal_ = True
+            else:
+                self._orthogonal_ = False
+        return self._orthogonal_
 
     @property
     def on_mesh_boundary(self):
