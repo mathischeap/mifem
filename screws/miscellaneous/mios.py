@@ -5,6 +5,17 @@
 from root.config.main import rAnk, mAster_rank, cOmm
 import os
 
+
+def isfile(filename):
+    """"""
+    if rAnk == mAster_rank:
+        ToF = os.path.isfile(filename)
+    else:
+        ToF = None
+
+    return cOmm.bcast(ToF, root=mAster_rank)
+
+
 def mkdir(folder_name):
     """"""
     if rAnk == mAster_rank:

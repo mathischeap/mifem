@@ -28,6 +28,7 @@ class CSCG_FORM_BASE(FrozenClass):
         self._k_ = None
         self.___define_parameters___ = None
         self.standard_properties.___PRIVATE_add_tag___('CSCG_form')
+        self.standard_properties.___PRIVATE_add_tag___('form')
 
         self._TW_ = CSCG_Form_TimeWise(self) # TW has 1) func
         self._func_ = CSCG_Form_Func(self)

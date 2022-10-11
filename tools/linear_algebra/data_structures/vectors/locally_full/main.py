@@ -1,41 +1,72 @@
 # -*- coding: utf-8 -*-
 
-
 from screws.freeze.main import FrozenOnly
 from root.config.main import rAnk, mAster_rank, cOmm, np
 from tools.linear_algebra.data_structures.vectors.locally_full.do import LocallyFullVectorDo
+from tools.linear_algebra.elementwise_cache.objects.column_vector.main import EWC_ColumnVector
+from tools.linear_algebra.elementwise_cache.operators.concatenate.main import concatenate
+
 
 class LocallyFullVector(FrozenOnly):
     """A LocallyFullVector is a vector: In each core, a full vector is saved. """
 
-    def __init__(self, V):
+    def __init__(self, V, chain_method='silly'):
         """
 
         :param V:
-            - A tuple or list of CSCG forms : we make a LocallyFullVector from their `cochain.globe`
+            - A tuple or list of forms : we make a LocallyFullVector from their `cochain.globe`
+                When GM is None:
+                    we chain the `cochain.globe` in the silly way. Otherwise, we chain them using the
+                    GM.
             - GlobalVector or DistributedVector
             - csc_matrix of shape (x, 1)
             - 1d array.
             - int: we make a zero 1d array of shape (V,)
+        :param chain_method:
+            Only play its role when V is a list (tuple) of forms. It indicates which chain_method
+            we use for chaining the dofs of these forms.
 
         """
         # ------- parse input ---------------------------------------------------------------
         if isinstance(V, (tuple, list)): # tuple of forms
             if all(hasattr(Vi, 'standard_properties') for Vi in V) and \
-                all('CSCG_form' in Vi.standard_properties.tags for Vi in V):
+                all('form' in Vi.standard_properties.tags for Vi in V):
 
-                globe_cochains = list()
-                for f in V:
-                    if f.cochain.local is not None:
-                        globe_cochains.append(LocallyFullVector(f.cochain.globe))
-                    else:
-                        globe_cochains.append(LocallyFullVector(f.numbering.gathering.GLOBAL_num_dofs))
+                if chain_method == 'silly':
+                    globe_cochains = list()
+                    for f in V:
+                        if f.cochain.local is not None:
+                            globe_cochains.append(LocallyFullVector(f.cochain.globe))
+                        else:
+                            globe_cochains.append(LocallyFullVector(f.numbering.gathering.GLOBAL_num_dofs))
 
-                v = np.concatenate([f.V for f in globe_cochains])
-                self._V_ = v
+                    v = np.concatenate([f.V for f in globe_cochains])
+                    self._V_ = v
+
+                elif chain_method == 'sequent':
+                    EWC = list()
+                    for f in V:
+                        if f.cochain.local is not None:
+                            EWC.append(f.cochain.EWC)
+                        else:
+                            EWC.append(
+                                EWC_ColumnVector(f.mesh.elements, f.num.basis)
+                            )
+                    EWC = concatenate(EWC)
+                    EWC.assembler.chain_method = chain_method
+                    EWC.gathering_matrix = V
+                    V = EWC.assembled               # GlobalVector
+                    V = LocallyFullVector(V).V      # make it a LocallyFullVector
+                    self._V_ = V                    # use the V of LocallyFullVector as self._V_
+
+                else:
+                    raise NotImplementedError(f"initializing locally full vector from "
+                                              f"chain_method={chain_method} "
+                                              f"not implemented.")
+
             else:
-                raise NotImplementedError(f"Cannot accept a list {V}.")
-
+                raise NotImplementedError(f"Cannot accept a list: {V}.")
+        #___________________________________________________________________________________________
         elif str(V.__class__.__name__) in ("GlobalVector", "DistributedVector"):
             v = V.V
             v = cOmm.gather(v, root=mAster_rank)
@@ -43,14 +74,18 @@ class LocallyFullVector(FrozenOnly):
                 v = np.sum(v)
             v = cOmm.bcast(v, root=mAster_rank)
             self._V_ = v.toarray().ravel()
+
         elif V.__class__.__name__ == 'csc_matrix':
             assert V.shape[1] == 1, f"V must be of shape (x, 1)."
             self._V_ = V.toarray().ravel()
+
         elif V.__class__.__name__ == 'ndarray':
             assert np.ndim(V) == 1, f"can only be 1d array."
             self._V_ = V
+
         elif V.__class__.__name__ in ('int', 'int32', 'int64'):
             self._V_ = np.zeros(V)
+
         else:
             raise Exception(f"Cannot build LocallyFullVector from {V.__class__.__name__}.")
 

@@ -288,6 +288,63 @@ class SpaMat_Customize(FrozenOnly):
 
 
 
+    def identify_global_rows_according_to_miUsGrid_BC(self, i, BC_itp, interpret='local_dofs'):
+        """
+
+        Parameters
+        ----------
+        i
+        BC_itp :
+            for example, `u.BC.interpret`.
+        interpret
+
+        Returns
+        -------
+
+        """
+        assert not self._spa_mat_.do.___locker___, f"the assembled matrix is locked!"
+        assert not self._spa_mat_.do.___sparsity_locker___, f"the sparsity is locked!"
+
+        assert self._spa_mat_.elements._mesh_ == BC_itp._mesh_, "BC_itp mesh != EWC mesh."
+        bsp = self._spa_mat_.bmat_shape
+
+        assert bsp is not False and np.shape(bsp) == (2,), \
+            "we can only use this to bmat EWC matrices to keep the block safe. " \
+            "if you want to apply it to a single EWC matrix, first wrap it in a list, then send it to bmat"
+
+        assert i % 1 == 0, f"i={i}({i.__class__.__name__}) cannot be an index!"
+        if isinstance(i, float): i = int(i)
+        assert 0 <= i < bsp[0], f"i={i} is beyond the shape of this " \
+                                f"EWC spare matrix of block shape ({bsp[0]},.)."
+
+        assert self._spa_mat_._gathering_matrices_0_ is not None, \
+            f"We at least need row gathering matrix!"
+
+        if interpret == 'local_dofs':
+            LDF = BC_itp.local.dofs
+
+            GM = self._spa_mat_.gathering_matrices[0]
+            if GM.___Pr_IS_regular___:
+                LDR = GM.___Pr_regular__local_dofs_ranges___[i]
+                start = LDR.start
+            else:
+                raise NotImplementedError(f"Not implemented for irregular Gathering Matrix.")
+
+            for e in LDF: # go through all locally involved mesh element numbers
+                assert e in self._spa_mat_
+
+                if e not in self.___customizations___:
+                    self.___customizations___[e] = list()
+
+                local_dofs = np.array(LDF[e], dtype=int) + start
+
+                self.___customizations___[e].append(('ilrs', local_dofs))
+
+        else:
+            raise Exception(f"Cannot identify global rows through"
+                            f" SCG_partial_dofs interpreted"
+                            f" as <{interpret}>.")
+
 
 
     def identify_global_rows_according_to_CSCG_partial_dofs(self, i, pds, interpreted_as='local_dofs'):
@@ -300,7 +357,7 @@ class SpaMat_Customize(FrozenOnly):
         IMPORTANT: as this is done only locally, after assembly, M[r,r] may be greater than 1.
             for example, for a corner point, M[r,r] can be 8 if it is internal. This, for example,
             will not introduce problem for imposing bc if in the right-hand-side vector, we
-            also give a 8 times greater value.
+            also give an 8 times greater value.
 
         :param pds: we will get dofs form this.
         :param i: We locally make block[i][:][dofs, :] = 0 except block[i][i][dofs, dofs] = 1
@@ -333,8 +390,11 @@ class SpaMat_Customize(FrozenOnly):
         if interpreted_as == 'local_dofs':
 
             GM = self._spa_mat_.gathering_matrices[0]
-            LDR = GM.___Pr_regular__local_dofs_ranges___[i]
-            start = LDR.start
+            if GM.___Pr_IS_regular___:
+                LDR = GM.___Pr_regular__local_dofs_ranges___[i]
+                start = LDR.start
+            else:
+                raise NotImplementedError(f"Not implemented for irregular Gathering Matrix.")
 
             LDF = pds.interpreted_as.local_dofs
 
@@ -344,7 +404,7 @@ class SpaMat_Customize(FrozenOnly):
                 if e not in self.___customizations___:
                     self.___customizations___[e] = list()
 
-                local_dofs = np.array(LDF[e]) + start
+                local_dofs = np.array(LDF[e], dtype=int) + start
 
                 self.___customizations___[e].append(('ilrs', local_dofs))
 
@@ -408,10 +468,17 @@ class SpaMat_Customize(FrozenOnly):
         if interpreted_as == 'local_dofs':
 
             GM = self._spa_mat_.gathering_matrices
-            LDR_row = GM[0].___Pr_regular__local_dofs_ranges___[i]
-            LDR_col = GM[1].___Pr_regular__local_dofs_ranges___[j]
-            start_row = LDR_row.start
-            start_col = LDR_col.start
+            if GM[0].___Pr_IS_regular___:
+                LDR_row = GM[0].___Pr_regular__local_dofs_ranges___[i]
+                start_row = LDR_row.start
+            else:
+                raise NotImplementedError(f"Not implemented for irregular Gathering Matrix.")
+
+            if GM[1].___Pr_IS_regular___:
+                LDR_col = GM[1].___Pr_regular__local_dofs_ranges___[j]
+                start_col = LDR_col.start
+            else:
+                raise NotImplementedError(f"Not implemented for irregular Gathering Matrix.")
 
             LDF_row = row_pds.interpreted_as.local_dofs
             LDF_col = col_pds.interpreted_as.local_dofs
@@ -430,8 +497,8 @@ class SpaMat_Customize(FrozenOnly):
                 # COL = self.___PRIVATE_correcting_correspondence___(
                 #     row_pds._form_, ROW, COL, col_pds._form_)
 
-                row_local_dofs = np.array(ROW) + start_row
-                col_local_dofs = np.array(COL) + start_col
+                row_local_dofs = np.array(ROW, dtype=int) + start_row
+                col_local_dofs = np.array(COL, dtype=int) + start_col
 
                 self.___customizations___[e].append(
                     ('ilrsac', (row_local_dofs, col_local_dofs)))

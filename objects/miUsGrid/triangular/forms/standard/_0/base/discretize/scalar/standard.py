@@ -37,6 +37,8 @@ class miUsTriangular_S0F_Discretize_StandardScalar(FrozenOnly):
 
         if target == 'CF':
             FUNC = self._sf_.CF.___DO_evaluate_func_at_time___()[0]
+        elif target == 'BC':
+            FUNC = self._sf_.BC.CF.___DO_evaluate_func_at_time___()[0]
         else:
             raise NotImplementedError(
                 f"miUsTriangular_S0F discretization does not work for target={target}.")

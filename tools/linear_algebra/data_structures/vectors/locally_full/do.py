@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from screws.freeze.base import FrozenOnly
-
+from tools.linear_algebra.gathering.chain import GatheringMatrixChaining
 
 class LocallyFullVectorDo(FrozenOnly):
     """"""
@@ -8,20 +8,25 @@ class LocallyFullVectorDo(FrozenOnly):
         self._v_ = LFV
         self._freeze_self_()
 
-    def distributed_to(self, *args, method='sequence'):
+    def distributed_to(self, *args, chain_method=None):
         """
         Consider this vector represents cochains of some forms in sequence, we can distribute this vector to the forms.
 
         :param args: the forms.
-        :param method: It can be one of:
+        :param chain_method: It can be one of:
 
-            1. ``sequence`` -- We distribute the values in sequence to *args.
+            1. ``silly`` -- We distribute the values in sequence to *args. This is corresponded to
+                the silly chain method in the chain gathering matrix.
+            2. ``sequent`` --
+            3. A Chain Gathering Matrix --
 
         :return:
         """
-        if method == 'sequence':
+        if chain_method is None: chain_method = 'silly'
 
-            V = self._v_.V # V now is 1-d array already.
+        V = self._v_.V  # V now is 1-d array already.
+        
+        if chain_method == 'silly':
 
             if args.count(None) == 0:
                 indices = 0
@@ -54,5 +59,56 @@ class LocallyFullVectorDo(FrozenOnly):
             else:
                 raise Exception("I can only understand zero or one None")
 
+        elif chain_method == 'sequent':
+            cgm = GatheringMatrixChaining(*args)(chain_method='sequent')
+
+            assert cgm.NUM_GMs == len(args)
+
+            GM0 = cgm.GMs[0]
+            local_cochain_all = dict()
+            for e in GM0:
+                dofs = cgm[e]
+                local_cochain_all[e] = V[dofs]
+
+            num_basis = list()
+            for f in args:
+                _ = f.num.basis
+                num_basis.append(_)
+
+            current_local_index = 0
+            for i, f in enumerate(args):
+                local_cochain = dict()
+                for e in GM0:
+                    local_cochain[e] = \
+                        local_cochain_all[e][current_local_index : current_local_index+num_basis[i]]
+                current_local_index += num_basis[i]
+                f.cochain.local = local_cochain
+
+        elif chain_method.__class__.__name__  == 'Chain_Gathering_Matrix': # we receive a regular Chain_Gathering_Matrix.
+            # we will distribute the entries to forms according to this Chain_Gathering_Matrix.
+            cgm = chain_method
+            assert cgm.NUM_GMs == len(args)
+            
+            GM0 = cgm.GMs[0]
+            local_cochain_all = dict()
+            for e in GM0:
+                dofs = cgm[e]
+                local_cochain_all[e] = V[dofs]
+
+            num_basis = list()
+            for f in args:
+                _ = f.num.basis
+                num_basis.append(_)
+
+            current_local_index = 0
+            for i, f in enumerate(args):
+                local_cochain = dict()
+                for e in GM0:
+                    local_cochain[e] = \
+                        local_cochain_all[e][current_local_index : current_local_index+num_basis[i]]
+                current_local_index += num_basis[i]
+                f.cochain.local = local_cochain
+
+
         else:
-            raise NotImplementedError(f'distribution method: {method} not coded.')
+            raise NotImplementedError(f'distribution method: {chain_method} not coded.')

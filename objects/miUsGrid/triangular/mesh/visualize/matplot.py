@@ -35,6 +35,7 @@ class miUsGrid_TriangularMesh_Matplot(FrozenOnly):
         for gd in grid_data:
             GD.update(gd)
         grid_data = GD
+
         #------- config plt ----------------------------------------------------------------------1
         if saveto is not None: matplotlib.use('Agg')
         plt.rc('text', usetex=usetex)
@@ -56,13 +57,19 @@ class miUsGrid_TriangularMesh_Matplot(FrozenOnly):
 
         #------------------ grid data ------------------------------------------------------------1
         for i in grid_data:
-            edges_coordinates, center, singular_vertex = grid_data[i]
+            edges_coordinates, center, singular_vertex, inner_edges = grid_data[i]
             plt.plot(*edges_coordinates, '-k', linewidth=1)
             if show_singular_vertex:
                 cx, cy = center
                 sx, sy = singular_vertex
                 plt.plot([cx, sx], [cy, sy], '--r', linewidth=0.5)
                 plt.text(*center, f"{i}", color='gray', fontsize=11, ha='center', va='center')
+
+                U, D, L, R = inner_edges
+                plt.plot(*D, '--r', linewidth=0.5)
+                plt.plot(*U, '--g', linewidth=0.5)
+                plt.plot(*R, '--b', linewidth=0.5)
+                plt.plot(*L, '--k', linewidth=0.5)
 
         #---------------------- save to ----------------------------------------------------------1
         if saveto is None:

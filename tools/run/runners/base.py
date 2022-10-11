@@ -14,7 +14,7 @@ class ParallelRunnerBase(FrozenOnly):
             raise Exception('This parallel runner is locked; '
                             'it can not run ``iterate`` function. '
                             'This is probably because it is read from a file. '
-                            'So it lack a solver.')
+                            'So it lacks a solver.')
         else:
             return self.___iterate___(*args, **kwargs)
 

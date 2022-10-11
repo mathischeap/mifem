@@ -11,6 +11,11 @@ from objects.miUsGrid.triangular.forms.standard._1.base.main import miUsTriangul
 from objects.miUsGrid.triangular.forms.standard._1.inner.discretize.main import miUsTriangular_iS1F_Discretize
 from objects.miUsGrid.triangular.forms.standard._1.inner.reconstruct.main import miUsTriangular_iS1F_Reconstruct
 from objects.miUsGrid.triangular.forms.standard._1.inner.do.main import miUs_Triangular_iS1F_Do
+from objects.miUsGrid.triangular.forms.standard._1.inner.matrices.main import miUs_Triangular_iS1F_Matrices
+from objects.miUsGrid.triangular.forms.standard._1.inner.operators.main import miUs_Triangular_iS1F_Operators
+from objects.miUsGrid.triangular.forms.standard._1.inner.IDT import miUs_Triangular_iS1F_InterfaceDofTopology
+from objects.miUsGrid.triangular.forms.standard._1.inner.export.main import miUsTriangular_iS1F_Export
+
 
 
 class miUsTriangular_S1F_Inner(miUsTriangular_S1F_Base):
@@ -23,12 +28,21 @@ class miUsTriangular_S1F_Inner(miUsTriangular_S1F_Base):
         self._discretize_ = miUsTriangular_iS1F_Discretize(self)
         self._reconstruct_ = miUsTriangular_iS1F_Reconstruct(self)
         self._do_ = miUs_Triangular_iS1F_Do(self)
+        self._matrices_ = miUs_Triangular_iS1F_Matrices(self)
+        self._operators_ = miUs_Triangular_iS1F_Operators(self)
+        self._IDT_ = miUs_Triangular_iS1F_InterfaceDofTopology(self)
+        self._export_ = miUsTriangular_iS1F_Export(self)
 
         self._freeze_self_()
 
-    @property
-    def do(self):
-        return self._do_
+
+    def ___Pr_check_BC_CF___(self, func):
+        """"""
+        assert func.__class__.__name__ in (
+            "miUsGrid_Triangular_Vector", # it is considered as w, and we will w \times n on boundary
+            "miUsGrid_Triangular_Scalar", # itself is considered as w \times n.
+        ), f"I need a miUsGrid_Triangular_Vector or _scalar as BC.CF."
+        assert func.mesh == self.mesh, f"meshes do not match!"
 
 
 
@@ -36,10 +50,10 @@ if __name__ == "__main__":
     # mpiexec -n 4 python objects/miUsGrid/triangular/forms/standard/_1/inner/main.py
     import numpy as np
     from objects.miUsGrid.triangular.fields.vector.main import miUsGrid_Triangular_Vector
-    from objects.miUsGrid.triangular.__test__.Random.test_mesh import mesh
+    from objects.miUsGrid.triangular.__test__.Random.rand_mesh import mesh
     from objects.miUsGrid.triangular.space.main import miUsGrid_TriangularFunctionSpace
 
-    p = 3
+    p = 15
 
     space = miUsGrid_TriangularFunctionSpace(p)
 
@@ -56,4 +70,5 @@ if __name__ == "__main__":
 
     f1.discretize()
 
-    GM = f1.numbering.gathering
+
+    print(f1.error.L())

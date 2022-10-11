@@ -15,6 +15,9 @@ class ___GM_VISUALIZE___(FrozenOnly):
         self._gm_ = gm
         self._freeze_self_()
 
+    def __call__(self, *args, **kwargs):
+        return self.spy(*args, **kwargs)
+
     def spy(self, markerfacecolor='k', markeredgecolor='g', markersize=6):
         """
         The spy plot of self.

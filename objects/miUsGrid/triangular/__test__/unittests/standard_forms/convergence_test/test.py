@@ -12,9 +12,9 @@ from screws.freeze.base import FrozenOnly
 import numpy as np
 
 from screws.miscellaneous.miprint import miprint
-from screws.miscellaneous.mios import remove
+from screws.miscellaneous.mios import remove, isfile
 from tools.run.reader import ParallelMatrix3dInputRunner
-from objects.miUsGrid.triangular.master import FormCaller
+from objects.miUsGrid.triangular.master import Call
 
 current_dir = os.path.dirname(__file__)
 
@@ -48,7 +48,7 @@ def ___Pr_error_function___(N, K, c):
 
     """
     mesh_id = f"st{int(K)}"
-    fc = FormCaller(mesh_id, N)
+    fc = Call(mesh_id, N)
     if K == 8:
         fc.mesh.visualize(saveto=current_dir + '/hc_mesh_K8.pdf', show_singular_vertex=False)
 
@@ -139,10 +139,9 @@ def ___Pr_error_function_pc___(N, K, c):
     df1o_er :
 
     """
-    fc = FormCaller('test0', N)
+    fc = Call('rand0', N)
 
-    if N == 10:
-        fc.mesh.visualize(saveto=current_dir + '/pc_mesh.pdf')
+    if N == 10: fc.mesh.visualize(saveto=current_dir + '/pc_mesh.pdf')
 
     f0i = fc('0-f-i')
     f0o = fc('0-f-o')
@@ -204,6 +203,20 @@ def ___Pr_error_function_pc___(N, K, c):
     df1o = f1o.coboundary()
     df1o.CF = div_vector
     df1o_er = df1o.error.L()
+
+    if N >= 20: # a check of reduction and reconstruction.
+        # when N is significantly large, we should reach machine zero.
+        assert f0i_er < 1e-11
+        assert f0o_er < 1e-11
+        assert f1i_er < 1e-11
+        assert f1o_er < 1e-11
+        assert f2i_er < 1e-11
+        assert f2o_er < 1e-11
+        assert df1i_er < 1e-8
+        assert df1o_er < 1e-8
+        assert df0i_er < 1e-8
+        assert df0o_er < 1e-8
+
     return f0i_er, f0o_er, f1i_er, f1o_er, f2i_er, f2o_er, df0i_er, df0o_er, df1i_er, df1o_er
 
 
@@ -228,7 +241,12 @@ class miUsGrid_TriangleMesh_ConvergenceTest(FrozenOnly):
         cs = [0,]
 
         pr = ParallelMatrix3dInputRunner(___Pr_error_function___)
+
+        if isfile(current_dir + '/WTP.txt'): remove(current_dir + '/WTP.txt')
+
         pr.iterate(Ns, Ks, cs, writeto=current_dir + '/WTP.txt', show_progress=False)
+
+
 
         remove(current_dir + '/WTP.txt')
 
@@ -241,9 +259,9 @@ class miUsGrid_TriangleMesh_ConvergenceTest(FrozenOnly):
                      xlabel=r'$1/K$',
                      ylabel=r"$\left\| \varphi^h\right\|_{L^2-\mathrm{error}}$",
                      order_text_size=15,
-                     plot_order_triangle={0: {'tp': (0.02, -0.5), 'order': 1},
-                                          1: {'tp': (0.02, 0.2), 'order': 2},
-                                          2: {'tp': (0.02, 0.2), 'order': 3}},
+                     plot_order_triangle={0: {'tp': (0.02, -0.5), 'order': 2},
+                                          1: {'tp': (0.02, 0.2), 'order': 3},
+                                          2: {'tp': (0.02, 0.2), 'order': 4}},
                      saveto=current_dir + '/f0_error_L2.pdf')
 
         pr.visualize('loglog', 'N', 'f1i_er', prime='input2', hcp=1, usetex=True,
@@ -286,7 +304,6 @@ class miUsGrid_TriangleMesh_ConvergenceTest(FrozenOnly):
                      plot_order_triangle={0: {'tp': (0.02, -0.5), 'order': 0},
                                           1: {'tp': (0.02, 0.2), 'order': 1},
                                           2: {'tp': (0.02, 0.2), 'order': 2}},
-
                      saveto=current_dir + '/f2_error_L2.pdf')
 
         pr.visualize('loglog', 'N', 'df0i_er', prime='input2', hcp=1, usetex=True,
@@ -317,8 +334,6 @@ class miUsGrid_TriangleMesh_ConvergenceTest(FrozenOnly):
                                           2: {'tp': (0.02, 0.2), 'order': 3}},
                      saveto=current_dir + '/df0o_error_L2.pdf')
 
-
-
         pr.visualize('loglog', 'N', 'df1i_er', prime='input2', hcp=1, usetex=True,
                      labels=['$N=1$', '$N=2$', '$N=3$',],
                      styles=["-s", "-v", '-^'],
@@ -347,10 +362,13 @@ class miUsGrid_TriangleMesh_ConvergenceTest(FrozenOnly):
                                           2: {'tp': (0.02, 0.2), 'order': 2}},
                      saveto=current_dir + '/df1o_error_L2.pdf')
 
-        Ns = [[i for i in range(1,25)],]
+        Ns = [[i for i in range(1, 25)],]
         Ks = [[0 for _ in range(1, 25)],]
         cs = [0, ]
         pr = ParallelMatrix3dInputRunner(___Pr_error_function_pc___)
+
+        if isfile(current_dir + '/WTP_pc.txt'): remove(current_dir + '/WTP_pc.txt')
+
         pr.iterate(Ns, Ks, cs, writeto=current_dir + '/WTP_pc.txt', show_progress=False)
         remove(current_dir + '/WTP_pc.txt')
 
@@ -399,6 +417,7 @@ class miUsGrid_TriangleMesh_ConvergenceTest(FrozenOnly):
                      ylabel=r"$\left\| \mathrm{grad}(\varphi)^h\right\|_{L^2-\mathrm{error}}$",
                      order_text_size=15,
                      saveto=current_dir + '/pc_df0i_error_L2.pdf')
+
         pr.visualize('semilogy', 'K', 'df0o_er', prime='input2', usetex=True,
                      labels=False,
                      styles=["-v", "-v"],

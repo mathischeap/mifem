@@ -64,26 +64,26 @@ def test_Stokes_MSEM_trivial_BC():
     b2 = EWC_ColumnVector(p)
     b = concatenate([b0, b1, b2])
 
+    A.assembler.chain_method = 'sequent'
+    b.assembler.chain_method = 'sequent'
+
     A.gathering_matrices = ([w, u, p], [w, u, p])
     b.gathering_matrix = (w, u, p)
     LS = LinearSystem(A, b)
 
     results = LS.solve('direct')()[0]
 
-    results.do.distributed_to(w, u, p)
+    results.do.distributed_to(w, u, p, chain_method='sequent')
 
-    # w_L2 = w.error.L()
-    # u_L2 = u.error.L()
-    # p_L2 = p.error.L()
-    #
-    # if rAnk == mAster_rank:
-    #     print(w_L2)
-    #     print(u_L2)
-    #     print(p_L2)
+    w_L2 = w.error.L()
+    u_L2 = u.error.L()
+    p_L2 = p.error.L()
 
-    assert w.error.L() < 0.4
-    assert u.error.L() < 0.05
-    assert p.error.L() < 0.03
+    # print(w_L2, u_L2, p_L2)
+
+    assert w_L2 < 0.4
+    assert u_L2 < 0.05
+    assert p_L2 < 0.03
 
     return 1
 

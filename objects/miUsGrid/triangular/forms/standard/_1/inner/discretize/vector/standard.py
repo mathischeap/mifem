@@ -99,6 +99,8 @@ class miUsTriangular_iS1F_Discretize_StandardVector(FrozenOnly):
         # --- target --------------------------------------------------------
         if target == 'CF':
             FUNC = SELF.CF.do.evaluate_func_at_time()
+        elif target == 'BC':
+            FUNC = SELF.BC.CF.do.evaluate_func_at_time()
         else:
             raise NotImplementedError(f"I cannot deal with target = {target}.")
         # =======================================================================
@@ -124,10 +126,19 @@ class miUsTriangular_iS1F_Discretize_StandardVector(FrozenOnly):
                 'jk, j, k -> k', J[0]*u + J[1]*v, quad_weights[1], edge_size[1]*0.5, optimize='greedy'
             )
 
+        tM = self._sf_.IDT.transition_matrices
+
         # give it to cochain.local ...
         cochainLocal = dict()
         for i in SELF.mesh.elements.indices:
-            cochainLocal[i] = np.hstack((local_dx[i], local_dy[i])) # the difference from inner.
+            local_cochain = np.hstack((local_dx[i], local_dy[i]))  # the difference from outer.
+
+            if i not in tM:
+                pass
+            else:
+                local_cochain = tM[i] @ local_cochain
+
+            cochainLocal[i] = local_cochain
         if update_cochain:
             SELF.cochain.local = cochainLocal
         # ...

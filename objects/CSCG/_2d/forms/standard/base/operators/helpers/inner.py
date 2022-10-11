@@ -5,7 +5,7 @@ import numpy as np
 
 class ___Operators_Inner___(FrozenOnly):
     """The class for the inner product matrix."""
-    def __init__(self, sf, of, quad_degree=None):
+    def __init__(self, sf, of, quad_degree=None, quad_type='Lobatto'):
         assert sf.ndim == of.ndim and sf.k == of.k, " <___STORAGE_OPERATORS_INNER___> "
         assert sf.mesh == of.mesh, "Meshes do not match."
         self._mesh_ = sf.mesh
@@ -16,7 +16,7 @@ class ___Operators_Inner___(FrozenOnly):
             quad_degree = [int(np.max([sf.dqp[i], of.dqp[i]])) + 1 for i in range(2)]
 
         quad_nodes, _, quad_weights = sf.space.___PRIVATE_do_evaluate_quadrature___(
-            quad_degree, quad_type='Gauss')
+            quad_degree, quad_type=quad_type)
         xietasigma, bfSelf = sf.do.evaluate_basis_at_meshgrid(*quad_nodes)
         if of is sf:
             bfOther = bfSelf

@@ -58,6 +58,7 @@ def unstructuredGridToVTK(grid, objs, filename):
         if i == 0:
             mesh = obj.mesh
         else:
+            # noinspection PyUnboundLocalVariable
             assert mesh == obj.mesh, f"mesh of {i}th obj does not match that of 0th obj."
 
     DiscreteFields = list()
@@ -67,6 +68,7 @@ def unstructuredGridToVTK(grid, objs, filename):
             xyz = df.coordinates
         else:
             _xyz = df.coordinates
+            # noinspection PyUnboundLocalVariable
             for rn in xyz:
                 for j, axis in enumerate(xyz[rn]):
                     np.testing.assert_array_almost_equal(axis, _xyz[rn][j], decimal=8)
@@ -460,6 +462,7 @@ def _3dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
         for vn in var_names:
             V[vn] = list()
             for _ in range(var_dim[vn]):
+                # noinspection PyUnresolvedReferences
                 V[vn].append(np.zeros(Gnd))
 
         for var_core in VAR:
@@ -509,9 +512,9 @@ if __name__ == "__main__":
     space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3), ('Lobatto',3)])
     FC = FormCaller(mesh, space)
 
-    def u(t,x,y,z): return np.cos(np.pi*x)*np.cos(2*np.pi*y)*np.cos(np.pi*z) + t
-    def v(t,x,y,z): return np.cos(np.pi*x)*np.cos(np.pi*y)*np.cos(2*np.pi*z) + t
-    def w(t,x,y,z): return np.cos(np.pi*x)*np.cos(np.pi*y)*np.cos(2*np.pi*z) + t
+    def u(t,x,y,z): return np.cos(2*np.pi*y)*np.cos(np.pi*z) + t
+    def v(t,x,y,z): return np.cos(np.pi*x)*np.cos(2*np.pi*z) + t
+    def w(t,x,y,z): return np.cos(np.pi*x)*np.cos(np.pi*y) + t
 
     def p(t,x,y,z): return np.sin(2*np.pi*x)*np.sin(np.pi*y)*np.sin(2*np.pi*z) + t
 
@@ -541,9 +544,9 @@ if __name__ == "__main__":
     f3.TW.___DO_push_all_to_instant___()
     f3.discretize()
 
-    grid = [np.linspace(-1,1,30), np.linspace(-1,1,30), np.linspace(-1,1,30)]
+    grid = [np.linspace(-1,1,15), np.linspace(-1,1,15), np.linspace(-1,1,15)]
 
-    unstructuredGridToVTK(grid, [f0, f1, f2, f3], 'unstructuredGridToVTK_test')
+    unstructuredGridToVTK(grid, [f0, f2], 'unstructuredGridToVTK_test')
 
     # ----------- 2d test below ------------------------------------------------
     from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller

@@ -54,15 +54,12 @@ class _3dCSCG_Space_Base(FrozenClass):
     def __eq__(self, other):
         return self.standard_properties.parameters == other.standard_properties.parameters
 
-
-
     def ___PRIVATE_generate_1D_basises___(self):
         """ """
         ndim = len(self._inputs_)
         basises = ()
         p = ()
         nodes = ()
-
 
         for i in range(ndim):
             # for all 1d space, it must accept following input types.

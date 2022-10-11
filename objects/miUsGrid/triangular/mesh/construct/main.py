@@ -12,7 +12,6 @@ import vtk
 # noinspection PyUnresolvedReferences
 from vtk.util.numpy_support import vtk_to_numpy
 from root.config.main import cOmm, mAster_rank, rAnk, sIze, np
-from screws.functions._2d_space.angle import angle
 
 
 
@@ -21,7 +20,7 @@ class miUsGrid_TriangularMesh_Construct(FrozenOnly):
     A triangle cell has three vertexes, there are number 0, 1, 2, 0->1->2->0 must form a right hand
     rule.
 
-    The three edges of a cell are: 0->1, 0->2, 1->2. This is very important.
+    The three edges of a cell are: 0->1, 0->2, 2->1. This is very important.
 
     """
 
@@ -32,11 +31,12 @@ class miUsGrid_TriangularMesh_Construct(FrozenOnly):
         ----------
         source
         """
-
+        cOmm.barrier()
         if isinstance(source, str) and source[-4:] == '.vtu': # unstructured VTK file.
             self._cells_and_points_ = self.from_vtu_file(source)
         else:
             raise NotImplementedError(f"")
+        cOmm.barrier()
 
         self._freeze_self_()
 
@@ -48,40 +48,17 @@ class miUsGrid_TriangularMesh_Construct(FrozenOnly):
 
             #--- we go through the cells to check if we need to switch vertex 1 and vertex 2.------1
             for i, cell in enumerate(cells):
-                c0, c1, c2 = points[cell]
-
-                angle0 = angle(c0, c1)
-                angle1 = angle(c0, c2)
-
-                if angle0 == 0:
-                    if 0 < angle1 < np.pi:
-                        pass
-                    elif angle1 > np.pi:# circle 0->1->2->0 is left-hand-ruled.
-                        # switch vertex 1 and vertex 2
-                        cells[i][1:] = cells[i][1:][::-1]
-
-                    else:
-                        raise Exception(f"cell[{i}] is illegal.")
-
-                elif angle1 == 0:
-                    if angle0 > np.pi:
-                        pass
-                    elif 0 < angle0 < np.pi:# circle 0->1->2->0 is left-hand-ruled.
-                        # switch vertex 1 and vertex 2
-                        cells[i][1:] = cells[i][1:][::-1]
-                    else:
-                        raise Exception(f"cell[{i}] is illegal.")
-
+                p0, p1, p2 = points[cell]
+                orientation = (p1[1] - p0[1]) * (p2[0] - p1[0]) - (p1[0] - p0[0]) * (p2[1] - p1[1])
+                if orientation > 0:
+                    # p0 -> p1 -> p2 Clockwise, bad, switch point1 and point2
+                    cells[i][1:] = cells[i][1:][::-1]
+                elif orientation < 0:
+                    # p0 -> p1 -> p2 Counterclockwise
+                    pass
                 else:
-                    ad = angle0 - angle1
-                    if ad == 0:
-                        raise Exception(f"cell #[{i}] is not a triangle.")
-                    elif ad > 0 : # circle 0->1->2->0 is left-hand-ruled.
-                        # switch vertex 1 and vertex 2
-                        cells[i][1:] = cells[i][1:][::-1]
-
-                    else:
-                        pass
+                    # Collinear orientation
+                    raise Exception()
 
             #--------- now make the element map in the master core --------------------------------1
             ELEMENT_MAP = dict()
@@ -93,7 +70,7 @@ class miUsGrid_TriangularMesh_Construct(FrozenOnly):
 
                 edges = [(v0, v1),
                          (v0, v2),
-                         (v1, v2)]
+                         (v2, v1)]
 
                 for j in range(i+1, NUM_element):
                     target_vertexes = cells[j]
@@ -104,12 +81,12 @@ class miUsGrid_TriangularMesh_Construct(FrozenOnly):
 
                     if num_shared_vertexes == 2:
                         tv0, tv1, tv2 = target_vertexes
-                        Tes = {0:(tv0, tv1),
+                        Tes = { 0:(tv0, tv1),
                                 1:(tv0, tv2),
-                                2:(tv1, tv2),
-                                -1:(tv1, tv0),
-                                -2:(tv2, tv0),
-                                -3:(tv2, tv1)}
+                                2:(tv2, tv1),
+                               -1:(tv1, tv0),
+                               -2:(tv2, tv0),
+                               -3:(tv1, tv2)}
 
                         for m, E in enumerate(edges):
                             for n in Tes:
@@ -162,11 +139,11 @@ class miUsGrid_TriangularMesh_Construct(FrozenOnly):
             for i, num in enumerate(distribution):
                 RANGE = range(current_num, current_num + num)
                 for c in RANGE:
-                    element_maps_DIS[i][c] = ELEMENT_MAP[c]
+                    element_maps_DIS[i][c] = ELEMENT_MAP[c] # do not convert to tuple.
 
-                    CELLS[i][c] = list(cells[c])
+                    CELLS[i][c] = tuple(cells[c])
                     for cell in cells[c]:
-                        POINTS[i][cell] = list(points[cell])
+                        POINTS[i][cell] = tuple(points[cell])
 
                 current_num += num
                 LOCAL_ELEMENT_RANGES.append(RANGE)
@@ -214,6 +191,8 @@ class miUsGrid_TriangularMesh_Construct(FrozenOnly):
             return cells, points
         else:
             return None
+
+
 
 
 

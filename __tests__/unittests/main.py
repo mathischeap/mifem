@@ -28,6 +28,8 @@ from __tests__.unittests.EWC.operators import test_LinearAlgebra_EWC_No1_Operato
 from __tests__.unittests.EWC.adjust import test_EWC_adjust
 
 from __tests__.unittests.gathering_matrix.find import test_GatheringMatrix_find
+from __tests__.unittests.gathering_matrix.chain_gathering_matrix import Test_ChainGM_sequent_chain_method
+
 from __tests__.unittests.linear_system.strong_BC_of_Poisson import \
     test_applying_strong_BC_for_Poisson_problem
 from __tests__.unittests.linear_system.strong_BC_of_Poisson_non_trivial_BC import \
@@ -38,6 +40,10 @@ from __tests__.unittests.Parallel_Matrix3dInput_Runner.WellTest import WellTest_
 
 from __tests__.unittests.VTK.unstructuredGridToVTK import TEST_save_CSCG_objects_to_unstructured_VTK_file
 from __tests__.unittests.VTK.gridToVTK import TEST_save_CSCG_objects_to_structured_VTK_file
+
+from __tests__.unittests.gathering_matrix.customize_sequent import CustomizeSequent
+
+
 
 t_global_start = MPI.Wtime()
 
@@ -79,6 +85,8 @@ passed_GLOBAL_tests += test_LinearAlgebra_EWC_No1_Operators()
 passed_GLOBAL_tests += test_EWC_adjust()
 
 passed_GLOBAL_tests += test_GatheringMatrix_find()
+passed_GLOBAL_tests += Test_ChainGM_sequent_chain_method()()
+passed_GLOBAL_tests += CustomizeSequent()()
 passed_GLOBAL_tests += test_applying_strong_BC_for_Poisson_problem()
 passed_GLOBAL_tests += test_applying_strong_BC_for_Poisson_problem_NT()
 

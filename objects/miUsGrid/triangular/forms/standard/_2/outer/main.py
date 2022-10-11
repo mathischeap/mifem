@@ -42,5 +42,3 @@ if __name__ == "__main__":
     scalar.current_time = 0
 
     f2.discretize()
-
-    f2.numbering.gathering

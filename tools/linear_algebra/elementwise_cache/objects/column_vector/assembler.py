@@ -12,8 +12,17 @@ class EWC_ColumnVector_Assembler(FrozenOnly):
     """"""
     def __init__(self, Vec):
         self._Vec_ = Vec
+        self._chain_method_ = 'silly'
         self._freeze_self_()
 
+    @property
+    def chain_method(self):
+        return self._chain_method_
+
+    @chain_method.setter
+    def chain_method(self, chm):
+        """"""
+        self._chain_method_ = chm
 
     def __call__(self, routine=None, **kwargs):
         """Do the assembling."""

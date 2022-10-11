@@ -77,11 +77,11 @@ class ParallelMatrix3dInputRunner(ParallelRunnerBase):
                     for i in range(I):  # we let the axis0 go secondly.
                         for j in range(J):  # we let the axis1 go firstly.
 
-                            Compute_Or_Not = cOmm.recv(source=mAster_rank, tag=rAnk + 2)  # position mark 2 <<<<<<<<<<
+                            Compute_Or_Not = cOmm.recv(source=mAster_rank, tag=rAnk + 2)  # position mark 2 <<<<<<<
                             cOmm.barrier()
 
                             if Compute_Or_Not:
-                                INPUTS = cOmm.recv(source=mAster_rank, tag=rAnk + 3)  # position mark 3 <<<<<<<<<<<<<<
+                                INPUTS = cOmm.recv(source=mAster_rank, tag=rAnk + 3)  # position mark 3 <<<<<<<<<<<
                                 cOmm.barrier()
                                 _ = self._solver_(INPUTS[0], INPUTS[1], INPUTS[2], **INPUTS[3])
 

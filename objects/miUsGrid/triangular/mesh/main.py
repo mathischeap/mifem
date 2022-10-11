@@ -13,6 +13,10 @@ from objects.miUsGrid.triangular.mesh.construct.main import miUsGrid_TriangularM
 from objects.miUsGrid.triangular.mesh.elements.main import miUsGrid_TriangularMesh_Elements
 from objects.miUsGrid.triangular.mesh.visualize.main import miUsGrid_TriangularMesh_Visualize
 from objects.miUsGrid.triangular.mesh.boundaries.main import miUsGrid_TriangularMesh_Boundaries
+from objects.miUsGrid.triangular.mesh.miscellaneous.main import miUsGrid_TriangularMesh_Miscellaneous
+from objects.miUsGrid.triangular.mesh.IS import miUsTriangleMesh_IS
+from objects.miUsGrid.triangular.mesh.domain.main import miUsTriangle_Domain
+from objects.miUsGrid.triangular.mesh.do.main import miUsTriangle_DO
 
 class miUsGrid_TriangularMesh(miUsGrid_MeshBase):
     """"""
@@ -46,7 +50,11 @@ class miUsGrid_TriangularMesh(miUsGrid_MeshBase):
         miUsGrid_TriangularMesh_Construct(source)(self)
         self._visualize_ = miUsGrid_TriangularMesh_Visualize(self)
         self._boundaries_ = miUsGrid_TriangularMesh_Boundaries(self, boundaries)
-
+        self._miscellaneous_ = miUsGrid_TriangularMesh_Miscellaneous(self)
+        self._IS_ = miUsTriangleMesh_IS(self)
+        self.elements.___Pr_analyze_element_shapes___()
+        self._domain_ = miUsTriangle_Domain(self)
+        self._do_ = miUsTriangle_DO(self)
 
 
 
@@ -54,5 +62,5 @@ class miUsGrid_TriangularMesh(miUsGrid_MeshBase):
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/miUsGrid/triangular/mesh/main.py
     from objects.miUsGrid.triangular.__test__.Random.test_mesh import mesh
-    # mesh.visualize()
-    print(mesh == mesh)
+    mesh.visualize()
+

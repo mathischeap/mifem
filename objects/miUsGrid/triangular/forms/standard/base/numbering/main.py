@@ -9,6 +9,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 from screws.freeze.main import FrozenOnly
 from importlib import import_module
+from objects.miUsGrid.triangular.forms.standard.base.numbering.do.main import miUsTriangle_Numbering_Do
 
 
 class miUs_Triangular_SF_Numbering(FrozenOnly):
@@ -19,6 +20,7 @@ class miUs_Triangular_SF_Numbering(FrozenOnly):
         self._sf_ = sf
         self._routine_ = 'Naive'
         self._gathering_ = None
+        self._do_ = None
         self._freeze_self_()
 
     @property
@@ -31,6 +33,11 @@ class miUs_Triangular_SF_Numbering(FrozenOnly):
             self._gathering_ = getattr(number, self._sf_.__class__.__name__)
         return self._gathering_
 
+    @property
+    def do(self):
+        if self._do_ is None:
+            self._do_ = miUsTriangle_Numbering_Do(self._sf_)
+        return self._do_
 
 
 

@@ -146,13 +146,13 @@ class _2dCSCG_Standard_Form_DO(FrozenOnly):
             repM = M[i].toarray() # representative Mass matrix
             LOCAL = np.einsum('ij, ki, kj -> ',
                               repM,
-                              self._sf_.cochain.array,
                               other.cochain.array,
+                              self._sf_.cochain.array,
                               optimize='greedy')
         else:
             LOCAL = list()
             for i in self._sf_.mesh.elements:
-                LOCAL.append(self._sf_.cochain.local[i] @ M[i] @ other.cochain.local[i])
+                LOCAL.append(other.cochain.local[i] @ M[i] @ self._sf_.cochain.local[i])
             LOCAL = np.sum(LOCAL)
 
         return cOmm.allreduce(LOCAL, op=MPI.SUM)

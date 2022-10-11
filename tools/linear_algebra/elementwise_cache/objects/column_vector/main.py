@@ -4,8 +4,8 @@
 import types
 from screws.freeze.main import FrozenOnly
 from scipy import sparse as spspa
-from tools.linear_algebra.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
-from tools.linear_algebra.gathering.irregular.ir_chain_matrix.main import iR_Chain_Gathering_Matrix
+# from tools.linear_algebra.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
+# from tools.linear_algebra.gathering.irregular.ir_chain_matrix.main import iR_Chain_Gathering_Matrix
 from tools.linear_algebra.data_structures.global_matrix.main import GlobalVector
 
 from tools.linear_algebra.elementwise_cache.objects.column_vector.helpers.add import ___CV_ADD___
@@ -18,6 +18,8 @@ from tools.linear_algebra.elementwise_cache.objects.column_vector.customize impo
 from tools.linear_algebra.elementwise_cache.objects.column_vector.assembler import EWC_ColumnVector_Assembler
 from tools.linear_algebra.elementwise_cache.objects.column_vector.adjust import SpaVec_Adjust
 from tools.linear_algebra.elementwise_cache.objects.column_vector.blocks.main import EWC_ColVec_Blocks
+
+from tools.linear_algebra.gathering.chain import GatheringMatrixChaining
 
 class EWC_ColumnVector(FrozenOnly):
     """
@@ -89,6 +91,7 @@ class EWC_ColumnVector(FrozenOnly):
         DATA_TYPE = None
 
         if data_generator.__class__.__name__ in ('int', 'float', 'int32', 'int64'):
+            assert data_generator % 1 == 0 and data_generator > 0, f"empty vector size {data_generator} wrong!"
             DATA_TYPE = 'EMPTY'
         elif hasattr(data_generator, 'standard_properties') and \
             'CSCG_form' in data_generator.standard_properties.tags:
@@ -218,7 +221,11 @@ class EWC_ColumnVector(FrozenOnly):
     def gathering_matrix(self, gathering_matrix):
         """"""
         if gathering_matrix.__class__.__name__ in ('Chain_Gathering_Matrix', 'iR_Chain_Gathering_Matrix'):
-            pass
+
+            assert gathering_matrix.chain_method == self.assembler.chain_method, \
+                f"The GM.chain_method = {gathering_matrix.chain_method} does not match that of the " \
+                f"vector, {self.assembler.chain_method}."
+
         else:
             if not isinstance(gathering_matrix, (list, tuple)):
                 gathering_matrix = [gathering_matrix,]
@@ -233,10 +240,13 @@ class EWC_ColumnVector(FrozenOnly):
                     else:
                         cgm0.append(_.numbering.gathering)
 
-            if any([_.__class__.__name__ == 'iR_Gathering_Matrix' for _ in cgm0]):
-                gathering_matrix = iR_Chain_Gathering_Matrix(cgm0)
-            else:
-                gathering_matrix = Chain_Gathering_Matrix(cgm0)
+            gathering_matrix = GatheringMatrixChaining(*cgm0)(chain_method=self.assembler.chain_method)
+
+            # if any([_.__class__.__name__ == 'iR_Gathering_Matrix' for _ in cgm0]):
+            #     gathering_matrix = iR_Chain_Gathering_Matrix(cgm0, chain_method=self.assembler.chain_method)
+            # else:
+            #     gathering_matrix = Chain_Gathering_Matrix(cgm0, chain_method=self.assembler.chain_method)
+
         self._gathering_matrix_ = gathering_matrix
 
     @property

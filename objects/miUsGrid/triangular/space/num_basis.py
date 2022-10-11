@@ -41,6 +41,7 @@ class miUsGrid_TriangularFunctionSpace_NumBasis(FrozenOnly):
         p = self._space_.p
         return p * p + p * (p+1)
 
+
     @property
     def miUsTriangular_S2F_Outer(self):
         p = self._space_.p
@@ -50,6 +51,8 @@ class miUsGrid_TriangularFunctionSpace_NumBasis(FrozenOnly):
     def miUsTriangular_S2F_Inner(self):
         p = self._space_.p
         return p * p
+
+
 
 if __name__ == "__main__":
     # mpiexec -n 4 python 

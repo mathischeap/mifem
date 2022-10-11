@@ -45,7 +45,15 @@ class Gathering_Matrix(GatheringMatrix):
         self._local_range_ = None
         self._mesh_type_ = mesh_type
         self._do_ = None
+        self._stamp_ = str(id(self))
+        # we do this such that we can stamp different GM same, for example, two forms (one variable, one test),
+        # they have different GM which are the same. So we can stamp them same such that the CGM could
+        # be cached same.
         self._freeze_self_()
+
+    @property
+    def stamp(self):
+        return self._stamp_
 
     def __repr__(self):
         """"""

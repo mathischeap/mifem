@@ -8,6 +8,7 @@ from objects.CSCG._3d.forms.standard.base.operators.helpers.inner import ___Oper
 class _3dCSCG_Standard_Form_Operators(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
+        self._inner_quad_type_ = 'Gauss'
         self._freeze_self_()
 
     def inner(self, other, quad_degree=None):
@@ -18,7 +19,7 @@ class _3dCSCG_Standard_Form_Operators(FrozenOnly):
         :param other: The other form.
         :param quad_degree:
         """
-        data_generator = ___Operators_3dCSCG_sf_Inner___(self._sf_, other, quad_degree=quad_degree)
+        data_generator = ___Operators_3dCSCG_sf_Inner___(self._sf_, other, quad_degree=quad_degree, quad_type=self._inner_quad_type_)
         # note that even all mesh elements are unique, we still cache the output because we may use it for multiple times.
 
         if self._sf_.mesh.elements.IS.homogeneous_according_to_types_wrt_metric:

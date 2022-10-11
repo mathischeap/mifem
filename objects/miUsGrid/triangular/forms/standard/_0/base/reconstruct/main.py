@@ -53,47 +53,30 @@ class miUsTriangular_S0F_Reconstruct(FrozenOnly):
 
             raise NotImplementedError()
 
-            # assert INDICES == mesh.elements.indices, f"currently, vectorized computation only works" \
-            #                                          f"for full reconstruction."
-            #
-            # if len(INDICES) > 0:
-            #     v = np.einsum('ij, ki -> kj', basis[0], f.cochain.array, optimize='greedy')
-            #
-            # else:
-            #     v = None
-            #
-            # if ravel:
-            #     pass
-            # else:
-            #     raise NotImplementedError()
-            #
-            # if value_only:
-            #     return v, # do not remove comma
-            # else:
-            #     raise Exception()
-
         # ----------- non-vectorized reconstruction ----------------------------------------
         else:
+            value = dict()
+            shape = [len(xi), len(eta)]
+            for i in INDICES:
+                v = np.einsum('ij, i -> j', basis[0], f.cochain.local[i], optimize='greedy')
+                if ravel:
+                    value[i] = [v,]
+                else:
+                    value[i] = [v.reshape(shape, order='F'),]
 
             if value_only:
-                raise Exception()
+                return value
 
             else:
-
                 xyz = dict()
-                value = dict()
-                shape = [len(xi), len(eta)]
                 for i in INDICES:
                     element = mesh.elements[i]
-                    # noinspection PyUnresolvedReferences
                     xyz[i] = element.coordinate_transformation.mapping(*xietasigma)
-                    v = np.einsum('ij, i -> j', basis[0], f.cochain.local[i], optimize='greedy')
                     if ravel:
-                        value[i] = [v,]
+                        pass
                     else:
                         # noinspection PyUnresolvedReferences
                         xyz[i] = [xyz[i][j].reshape(shape, order='F') for j in range(2)]
-                        value[i] = [v.reshape(shape, order='F'),]
 
                 return xyz, value
 

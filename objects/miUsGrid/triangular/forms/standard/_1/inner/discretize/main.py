@@ -41,8 +41,18 @@ class miUsTriangular_iS1F_Discretize(FrozenOnly):
                                           f'discretize {self._sf_.CF.__class__}.')
 
         elif target == 'BC':
-                raise NotImplementedError(f'miUsTriangular_iS1F can not (target BC) '
-                                          f'discretize {self._sf_.CF.__class__}.')
+
+            if self._sf_.BC.CF.__class__.__name__ == 'miUsGrid_Triangular_Vector':
+
+                if self._sf_.BC.CF.ftype == 'standard':
+                    return self._standard_vector_(update_cochain=False, target='BC', **kwargs)
+
+                else:
+                    raise NotImplementedError()
+
+            else:
+                raise NotImplementedError()
+
 
         else:
             raise NotImplementedError(f"miUsTriangular_iS1F cannot discretize "

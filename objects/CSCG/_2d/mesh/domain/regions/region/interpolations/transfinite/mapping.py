@@ -30,7 +30,7 @@ class TransfiniteMapping(FrozenOnly):
             A tuple of first derivative of gamma.
 
         """
-        t = np.linspace(0, 1, 12)[1:-1]
+        t = np.linspace(0, 1, 11)[1:-1:3]
         _dict_ = {0: 'L', 1: 'D', 2: 'R', 3: 'U'}
         for i in range(4):
             XY = gamma[i]

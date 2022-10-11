@@ -133,7 +133,7 @@ def test_applying_strong_BC_for_Poisson_problem():
     p.TW.do.push_all_to_instant(0)
     p_error_L2 = p.error.L()
 
-    assert u_error_L2 < 0.2 and p_error_L2 < 0.021
+    assert u_error_L2 < 0.2 and p_error_L2 < 0.022
 
     # ---------- 3d test hdMSEM --------------------------------------------
     u_boundaries = boundaries
@@ -203,7 +203,7 @@ def test_applying_strong_BC_for_Poisson_problem():
     p_error_L2 = p.error.L()
     p_error_dH1 = p.error.dH(t, ES.status.velocity, 0)
 
-    assert u_error_L2 < 0.2 and p_error_L2 < 0.021 and p_error_dH1 < 0.2
+    assert u_error_L2 < 0.2 and p_error_L2 < 0.022 and p_error_dH1 < 0.2
 
     return 1
 

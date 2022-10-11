@@ -51,6 +51,7 @@ def gridToVTK(grid, objs, path):
         if i == 0:
             mesh = obj.mesh
         else:
+            # noinspection PyUnboundLocalVariable
             assert mesh == obj.mesh, f"mesh of {i}th obj does not match that of 0th obj."
 
     DiscreteFields = list()
@@ -95,6 +96,7 @@ def gridToVTK(grid, objs, path):
             else:
                 VALs[var_names[j]] = tuple(df.values[rn])
 
+        # noinspection PyUnboundLocalVariable
         if len(xyz) == 2: # we are in a 2d CSCG mesh ------
             x, y = xyz
             x = x[:,:,np.newaxis]
@@ -110,6 +112,7 @@ def gridToVTK(grid, objs, path):
                     for data in VALs[vn]:
                         new_VALs[vn].append(data[:,:,np.newaxis])
                     new_VALs[vn].append(np.zeros_like(new_VALs[vn][0]))
+                    # noinspection PyUnresolvedReferences
                     new_VALs[vn] = tuple(new_VALs[vn])
 
             hl.gridToVTK(

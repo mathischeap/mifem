@@ -16,6 +16,7 @@ class miUsTriangular_FormBase(miUsGrid_FormBase):
     def __init__(self, mesh, space, name):
         """"""
         super(miUsTriangular_FormBase, self).__init__(mesh, space, name)
+        self.standard_properties.___PRIVATE_add_tag___('miUsGrid_triangular_form')
 
 
 if __name__ == "__main__":

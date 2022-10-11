@@ -24,7 +24,6 @@ class miUsGrid_FormsAllocator(FrozenOnly):
                 '2-f-o': "miUsTriangular_S2F_Outer",
                 }
 
-
     @classmethod
     def ___form_path___(cls):
         base_path = '.'.join(str(cls).split(' ')[1][1:-2].split('.')[:-2]) + '.'

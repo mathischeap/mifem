@@ -29,8 +29,59 @@ class miUs_Triangular_SF_Coboundary(FrozenOnly):
         if self._incidenceMatrix_ is None:
             formName = self._sf_.__class__.__name__
             _incidenceMatrix_ = getattr(self._sf_.space.incidence_matrix, formName)
-            self._incidenceMatrix_ = \
-                EWC_SparseMatrix(self._sf_.mesh.elements, _incidenceMatrix_, 'constant')
+
+            elements = self._sf_.mesh.elements
+
+            if self._sf_.k == 0:
+                nextFmClass = self.___PRIVATE_next_class___()
+                nextFmInstance = nextFmClass(
+                    self._sf_.mesh, self._sf_.space,
+                    name='d(' + self._sf_.standard_properties.name + ')'
+                )
+                tT = nextFmInstance.IDT.transition_types
+                tM = nextFmInstance.IDT.transition_matrices
+
+                imD = dict()
+                imPool = dict()
+
+                for e in elements:
+                    if e not in tT:
+                        imD[e] = _incidenceMatrix_
+                    else:
+                        key = tT[e]
+                        if key in imPool:
+                            im = imPool[key]
+                        else:
+                            im = tM[e] @ _incidenceMatrix_
+                            imPool[key] = im
+
+                        imD[e] = im
+
+            elif self._sf_.k == 1:
+                tT = self._sf_.IDT.transition_types
+                tM = self._sf_.IDT.transition_matrices
+
+                imD = dict()
+                imPool = dict()
+
+                for e in elements:
+                    if e not in tT:
+                        imD[e] = _incidenceMatrix_
+                    else:
+                        key = tT[e]
+                        if key in imPool:
+                            im = imPool[key]
+                        else:
+                            im = _incidenceMatrix_ @ tM[e]
+                            imPool[key] = im
+
+                        imD[e] = im
+
+            else:
+                raise Exception()
+
+            self._incidenceMatrix_ = EWC_SparseMatrix(elements, imD, 'no_cache')
+
         return self._incidenceMatrix_
 
 
@@ -81,5 +132,5 @@ class miUs_Triangular_SF_Coboundary(FrozenOnly):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python objects/miUsGrid/triangular/forms/standard/base/coboundary.py
     pass

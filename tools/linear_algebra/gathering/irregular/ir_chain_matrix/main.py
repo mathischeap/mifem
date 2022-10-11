@@ -17,7 +17,7 @@ from tools.linear_algebra.gathering.irregular.ir_chain_matrix.do.main import iR_
 class iR_Chain_Gathering_Matrix(FrozenOnly):
     """"""
 
-    def __init__(self, GMs, chain_method='silly'):
+    def __init__(self, GMs, chain_method=None):
         """
         GMs can be a gathering matrix or a chain gathering matrix. Or a list of them.
 
@@ -45,12 +45,18 @@ class iR_Chain_Gathering_Matrix(FrozenOnly):
             else:
                 raise Exception(f'GMs[{i}] is {gm.__class__.__name__}, wrong!')
 
+        self.___NUM___ = len(GMs)
+
+        if self.___NUM___ == 1 or chain_method is None:
+            chain_method = 'silly'
+        else:
+            pass
+        
         self._chain_method_ = chain_method
 
         self._mesh_type_ = mesh_types[0]
         GMs = NEW_GMs
 
-        self.___NUM___ = len(GMs)
         # ... check GM in GMs are actually representing same local elements.
         if self.___NUM___ == 1:
             pass

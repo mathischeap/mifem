@@ -18,9 +18,15 @@ class ___LinearSystem_Customize___(FrozenOnly):
         :param interpreted_as: how we interpret the `pd` and `pc`.
         :return:
         """
-        if hasattr(pd, 'standard_properties') and \
-             'CSCG_form' in pd.standard_properties.tags:
+        if hasattr(pd, 'standard_properties') and 'CSCG_form' in pd.standard_properties.tags:
             pd = pd.BC.partial_cochain
+
+        elif hasattr(pd, 'standard_properties') and 'miUsGrid_form' in pd.standard_properties.tags:
+            pd = pd.BC.interpret
+
+        else:
+            pass
+
 
         #------ for cscg meshes -------------------------------------------------------------------
         if hasattr(pd, '_mesh_') and \
@@ -73,6 +79,42 @@ class ___LinearSystem_Customize___(FrozenOnly):
                         i, pd, pc=pc, interpreted_as=interpreted_as)
             else:
                 raise NotImplementedError(f"Not implemented")
+
+
+        #------ for miUsGrid meshes ----------------------------------------------------------------
+        elif hasattr(pd, '_mesh_') and pd._mesh_.__class__.__name__ in ('miUsGrid_TriangularMesh',):
+
+            # check 1 _______________________________________________________________2
+            if i == j:
+                assert pc is None, f"when i == j is None, we must have pc is None."
+
+            if pc is None:
+                assert i == j, \
+                    f"when do not provide pc, we must set diagonal block, " \
+                    f"so i == j, now i={i}, j={j}."
+                pc = pd
+            elif hasattr(pc, 'standard_properties') and 'miUsGrid_form' in pc.standard_properties.tags:
+                pc = pc.BC.interpret
+            else:
+                pass
+
+            I, J = self._LS_.block_shape
+            assert i % 1 == 0, f"i={i}({i.__class__.__name__}) cannot be an index!"
+            assert j % 1 == 0, f"j={j}({j.__class__.__name__}) cannot be an index!"
+            assert 0 <= i < I and 0 <= j < J, f"(i,j)= ({i},{j}) is out of range!"
+
+            if i == j:
+                self._LS_.A.customize.\
+                    identify_global_rows_according_to_miUsGrid_BC(
+                    i, pd, interpret=interpreted_as)
+
+                self._LS_.b.customize.\
+                    set_entries_according_to_miUsGrid_BC(
+                    i, pd, interpret=interpreted_as)
+
+            else:
+                raise NotImplementedError(f"{pc}")
+
 
         #--------- other meshes --------------------------------------------------------------------
         else:

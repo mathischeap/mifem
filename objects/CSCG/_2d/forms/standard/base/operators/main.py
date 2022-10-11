@@ -17,6 +17,7 @@ from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EW
 class _2dCSCG_Standard_Form_Operators(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
+        self._inner_quad_type_ = 'Lobatto'
         self._freeze_self_()
 
     def inner(self, other, quad_degree=None):
@@ -27,7 +28,7 @@ class _2dCSCG_Standard_Form_Operators(FrozenOnly):
         :param other: The other form.
         :param quad_degree:
         """
-        data_generator = ___Operators_Inner___(self._sf_, other, quad_degree=quad_degree)
+        data_generator = ___Operators_Inner___(self._sf_, other, quad_degree=quad_degree, quad_type=self._inner_quad_type_)
         return EWC_SparseMatrix(self._sf_.mesh.elements, data_generator,
                                 self._sf_.mesh.elements.___PRIVATE_elementwise_cache_metric_key___)
 

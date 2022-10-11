@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-
 from screws.decorators.accepts import accepts
 from screws.freeze.main import FrozenOnly
 from scipy import sparse as spspa
 import numpy as np
 from root.config.main import cOmm, rAnk, mAster_rank, sIze
+
+
 
 class SpaVec_Customize(FrozenOnly):
     def __init__(self, spa_vec):
@@ -125,8 +126,101 @@ class SpaVec_Customize(FrozenOnly):
         return RETURN
 
 
+    def set_entries_according_to_miUsGrid_BC(self, i, BC_itp, interpret='local_dofs'):
+        """"""
+        assert self._spa_vec_.elements._mesh_ == BC_itp._mesh_, "BC_itp mesh != EWC mesh."
+
+        bsp = self._spa_vec_.con_shape
+        assert bsp is not False and np.shape(bsp) == (1,), \
+            "we can only use this to concatenate EWC vectors to keep the block safe. " \
+            "if you want to apply it to a single EWC vectors, first wrap it in a list, then send it to concatenate"
+
+        assert i % 1 == 0, f"i={i}({i.__class__.__name__}) cannot be an index!"
+        if isinstance(i, float): i = int(i)
+        assert 0 <= i < bsp[0], f"i={i} is beyond the shape of this " \
+                                f"EWC spare vector of block shape {bsp}."
 
 
+        if interpret == 'local_dofs':
+            dofs = BC_itp.local.dofs
+            cochains = BC_itp.local.cochains
+
+            GM = self._spa_vec_.gathering_matrix
+            if GM.___Pr_IS_regular___:
+                LDR_row = GM.___Pr_regular__local_dofs_ranges___[i]
+                start_row = LDR_row.start
+            else:
+                raise NotImplementedError(f"Not implemented for irregular Gathering Matrix.")
+
+            for e in dofs:
+
+                local_dofs = np.array(dofs[e], dtype=int) + start_row
+                ENTRIES = cochains[e]
+
+                assert local_dofs.shape[0] == len(ENTRIES)
+
+                if e not in self.___customizations___:
+                    self.___customizations___[e] = list()
+
+                self.___customizations___[e].append(('slest', (local_dofs, ENTRIES)))
+
+
+
+
+        else:
+            raise NotImplementedError()
+
+    def set_constant_entries_according_to_miUsGrid_BC(self, i, BC_itp, constant, interpret='local_dofs'):
+        """
+
+        Parameters
+        ----------
+        i
+        BC_itp :
+            For example, `u.BC.interpret`.
+        constant
+        interpret
+
+        Returns
+        -------
+
+        """
+        assert self._spa_vec_.elements._mesh_ == BC_itp._mesh_, "BC_itp mesh != EWC mesh."
+
+        bsp = self._spa_vec_.con_shape
+        assert bsp is not False and np.shape(bsp) == (1,), \
+            "we can only use this to concatenate EWC vectors to keep the block safe. " \
+            "if you want to apply it to a single EWC vectors, first wrap it in a list, then send it to concatenate"
+
+        assert i % 1 == 0, f"i={i}({i.__class__.__name__}) cannot be an index!"
+        if isinstance(i, float): i = int(i)
+        assert 0 <= i < bsp[0], f"i={i} is beyond the shape of this " \
+                                f"EWC spare vector of block shape {bsp}."
+
+
+        if interpret == 'local_dofs':
+            dofs = BC_itp.local.dofs
+
+            GM = self._spa_vec_.gathering_matrix
+            if GM.___Pr_IS_regular___:
+                LDR_row = GM.___Pr_regular__local_dofs_ranges___[i]
+                start_row = LDR_row.start
+            else:
+                raise NotImplementedError(f"Not implemented for irregular Gathering Matrix.")
+
+            for e in dofs:
+
+                local_dofs = np.array(dofs[e], dtype=int) + start_row
+                CONSTANT = constant * np.ones(len(local_dofs))
+
+                if e not in self.___customizations___:
+                    self.___customizations___[e] = list()
+
+                self.___customizations___[e].append(('slest', (local_dofs, CONSTANT)))
+
+
+        else:
+            raise NotImplementedError(f"interpret={interpret} not implemented.")
 
 
     @accepts('self', (int, float, 'int32', 'int64'),
@@ -159,14 +253,18 @@ class SpaVec_Customize(FrozenOnly):
                                 f"EWC spare vector of block shape {bsp}."
 
         if interpreted_as == 'local_dofs':
-            GM = self._spa_vec_.gathering_matrix
-            LDR_row = GM.___Pr_regular__local_dofs_ranges___[i]
-            start_row = LDR_row.start
             dofs = pd.interpreted_as.local_dofs
+
+            GM = self._spa_vec_.gathering_matrix
+            if GM.___Pr_IS_regular___:
+                LDR_row = GM.___Pr_regular__local_dofs_ranges___[i]
+                start_row = LDR_row.start
+            else:
+                raise NotImplementedError(f"Not implemented for irregular Gathering Matrix.")
 
             for e in dofs:
 
-                local_dofs = np.array(dofs[e]) + start_row
+                local_dofs = np.array(dofs[e], dtype=int) + start_row
                 CONSTANT = constant * np.ones(len(local_dofs))
 
                 if e not in self.___customizations___:
@@ -215,8 +313,11 @@ class SpaVec_Customize(FrozenOnly):
 
         if interpreted_as == 'local_dofs':
             GM = self._spa_vec_.gathering_matrix
-            LDR_row = GM.___Pr_regular__local_dofs_ranges___[i]
-            start_row = LDR_row.start
+            if GM.___Pr_IS_regular___:
+                LDR_row = GM.___Pr_regular__local_dofs_ranges___[i]
+                start_row = LDR_row.start
+            else:
+                raise NotImplementedError(f"Not implemented for irregular Gathering Matrix.")
             LDF_row = pd.interpreted_as.local_dofs
             # LDF_col = pc.dofs.interpreted_as.local_dofs
             cochain = pc.cochain

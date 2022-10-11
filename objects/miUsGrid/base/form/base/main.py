@@ -18,6 +18,8 @@ class miUsGrid_FormBase(FrozenClass):
         self._mesh_ = mesh
         self._space_ = space
         self.standard_properties.name = name
+        self.standard_properties.___PRIVATE_add_tag___('form')
+        self.standard_properties.___PRIVATE_add_tag___('miUsGrid_form')
 
         self._CF_ = None
         self._discretize_ = None

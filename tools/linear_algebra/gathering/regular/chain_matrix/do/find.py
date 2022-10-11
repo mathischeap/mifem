@@ -174,7 +174,7 @@ class ___Chain_Gathering_Matrix_FIND___(FrozenOnly):
                 gv = self._CGM_[e] # get the local gathering vector in each local mesh element
                 if m in gv:
                     mesh_elements.append(e)
-                    local_indices.append(gv.index(m))
+                    local_indices.append(np.argwhere(gv==m).ravel()[0])
 
             if len(mesh_elements) == 0:
                 return None
@@ -195,6 +195,6 @@ class ___Chain_Gathering_Matrix_FIND___(FrozenOnly):
             for i in dofs:
                 if i in gv:
                     mesh_elements[i].append(e)
-                    local_indices[i].append(gv.index(i))
+                    local_indices[i].append(np.argwhere(gv==i).ravel()[0])
 
         return mesh_elements, local_indices

@@ -5,7 +5,7 @@ from tqdm import tqdm
 from time import time, sleep
 from screws.freeze.main import FrozenClass
 from screws.miscellaneous.timer import NumpyStyleDocstringReader
-from screws.miscellaneous.timer import MyTimer, randomStringDigits
+from screws.miscellaneous.timer import randomStringDigits
 import inspect, pickle, psutil
 
 from root.config.main import cOmm, rAnk, mAster_rank, ASSEMBLE_COST
@@ -299,7 +299,7 @@ class Iterator(FrozenClass):
             self.monitor._ft_firstRun_ = time()
             self.monitor._preparation_time_ = time() - self.monitor._ft_start_time_
             pbar = tqdm(total=self.max_steps,
-                        desc = MyTimer.current_time() + ' <' + self.__class__.__name__ + '>')
+                        desc = ' <' + self.__class__.__name__ + '>')
 
         IN = 0 # if in the while loop.
 

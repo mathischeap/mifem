@@ -61,51 +61,37 @@ class miUsTriangular_S2F_Reconstruct(FrozenOnly):
 
             raise NotImplementedError()
 
-            # assert INDICES == mesh.elements.indices, f"currently, vectorized computation only works" \
-            #                                               f"for full reconstruction."
-            #
-            # det_iJ = mesh.elements.coordinate_transformation.vectorized.inverse_Jacobian(*xietasigma)
-            #
-            # if len(INDICES) > 0:
-            #     if mesh.elements.IS.homogeneous_according_to_types_wrt_metric:
-            #         v = np.einsum('ij, ki, j -> kj', basis[0], f.cochain.array, det_iJ, optimize='greedy')
-            #     else:
-            #         v = np.einsum('ij, ki, kj -> kj', basis[0], f.cochain.array, det_iJ, optimize='greedy')
-            #
-            # else:
-            #     v = None
-            #
-            # if ravel:
-            #     pass
-            # else:
-            #     raise NotImplementedError()
-            #
-            # if value_only:
-            #     return v,
-            # else:
-            #     raise Exception()
-
         #----- non-vectorized ------------------------------------------------
         else:
+            value = dict()
+            shape = [len(xi), len(eta)]
+
+            E_det_iJ = mesh.elements.coordinate_transformation.inverse_Jacobian(*xietasigma)
+
+            for i in INDICES:
+                basis_det_iJ = basis[0] * E_det_iJ[i]
+
+                v = np.einsum('ij, i -> j', basis_det_iJ, f.cochain.local[i], optimize='greedy')
+                if ravel:
+                    value[i] = [v,]
+                else:
+                    value[i] = [v.reshape(shape, order='F'),]
+
             if value_only:
-                raise NotImplementedError()
+                return value
+
             else:
                 xyz = dict()
-                value = dict()
-                shape = [len(xi), len(eta)]
                 for i in INDICES:
                     element = mesh.elements[i]
                     xyz[i] = element.coordinate_transformation.mapping(*xietasigma)
-                    det_iJ = element.coordinate_transformation.inverse_Jacobian(*xietasigma)
-                    basis_det_iJ = basis[0] * det_iJ
 
-                    v = np.einsum('ij, i -> j', basis_det_iJ, f.cochain.local[i], optimize='greedy')
                     if ravel:
-                        value[i] = [v,]
+                        pass
                     else:
                         # noinspection PyUnresolvedReferences
                         xyz[i] = [xyz[i][j].reshape(shape, order='F') for j in range(2)]
-                        value[i] = [v.reshape(shape, order='F'),]
+
                 return xyz, value
 
 

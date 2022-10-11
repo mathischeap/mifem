@@ -12,13 +12,22 @@ class EWC_SparseMatrix_Assembler(FrozenOnly):
     """"""
     def __init__(self, MAT):
         self._MAT_ = MAT
-        self.___PRIVATE_reset_cache___()
+        self._chain_method_ = 'silly'
+        self.Reset_cache()
         self._freeze_self_()
 
-    def ___PRIVATE_reset_cache___(self):
+    def Reset_cache(self):
         self._cache_ = None
         self.___AMC___ = None # assembled matrix cache
 
+    @property
+    def chain_method(self):
+        return self._chain_method_
+
+    @chain_method.setter
+    def chain_method(self, chm):
+        """"""
+        self._chain_method_ = chm
 
     def __call__(self, routine=None, **kwargs):
         """Do the assembling."""

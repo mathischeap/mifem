@@ -15,7 +15,6 @@ TU Delft
 """
 import types
 from tqdm import tqdm
-from screws.miscellaneous.timer import MyTimer
 from time import localtime, strftime, time, sleep
 from screws.miscellaneous.timer import initialize_3d_list
 from tools.deprecated.serial_runners._runner_ import Runner
@@ -272,7 +271,7 @@ class Matrix3dInputRunner(Runner):
         self.___parse_and_check_iterate_inputs___(i0, i1, i2, criterion=criterion)
         self.___kwargs___ = kwargs
         self.___prepare_write_file___(writeto)
-        print("------------------------ > M3IR computations < -------------------------------------", flush=True)
+        print("------------------------ > M3IR computations < -----------------------------", flush=True)
         I, J, K = self._input_shape_
 
         if sIze > 1:
@@ -284,7 +283,7 @@ class Matrix3dInputRunner(Runner):
 
         if not show_progress:
             pbar = tqdm(total=I * J * K,
-                        desc=MyTimer.current_time() + ' <' + self.__class__.__name__ + '>')
+                        desc=self.__class__.__name__)
 
         n = 0
         for k in range(K): # we let the axis2 go at the last.
@@ -292,6 +291,7 @@ class Matrix3dInputRunner(Runner):
                 for j in range(J): # we let the axis1 go firstly.
 
                     if not show_progress:
+                        # noinspection PyUnboundLocalVariable
                         pbar.update(1)
                     else:
                         pass
@@ -314,7 +314,7 @@ class Matrix3dInputRunner(Runner):
                             print(f'\n -----> REPEATED {n+1}/{self.num_iterations} computation of '
                                   f'inputs:\n\t{[self._I0Seq_[i][j][k], self._I1Seq_[i][j][k], self._I2Seq_[i][j][k]]}')
 
-                            print('\t__________________________________________________________________________\n', flush=True)
+                            print('\t____________________________________________________________________\n', flush=True)
                         else:
                             pass
                         n += 1
@@ -389,7 +389,7 @@ class Matrix3dInputRunner(Runner):
         print('>->->->->->->->->->->-> Computations Done >>>>> Post-processing ...', flush=True)
         self.___deal_with_saveto___(writeto, saveto)
         # self.___send_an_completion_reminder_email_to_me___(writeto, saveto)
-        print("______________________ > M3IR Iterations Done < __________________________________", flush=True)
+        print("______________________ > M3IR Iterations Done < ____________________________", flush=True)
         
     @property
     def tabular(self):

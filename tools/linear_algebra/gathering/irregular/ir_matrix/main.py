@@ -22,7 +22,12 @@ class iR_Gathering_Matrix(FrozenOnly):
         self._mesh_type_ = mesh_type
         self._local_range_ = None
         self._do_ = iR_Gathering_Matrix_DO(self)
+        self._stamp_ = str(id(self))
         self._freeze_self_()
+
+    @property
+    def stamp(self):
+        return self._stamp_
 
     @property
     def ___Pr_IS_regular___(self):

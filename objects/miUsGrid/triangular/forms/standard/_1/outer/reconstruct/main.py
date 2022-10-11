@@ -51,83 +51,46 @@ class miUsTriangular_oS1F_Reconstruct(FrozenOnly):
 
         #---- vectorized -----------------------------------------------
         if vectorized:
-            raise NotImplementedError()
 
-            # assert INDICES == mesh.elements.indices, f"currently, vectorized computation only works" \
-            #                                               f"for full reconstruction."
-            #
-            # iJ = mesh.elements.coordinate_transformation.vectorized.inverse_Jacobian_matrix(*xietasigma)
-            #
-            # if len(INDICES) == 0:
-            #     vx, vy = None, None
-            # else:
-            #     numOfBasisComponents = f.num.basis_components
-            #     Arr = f.cochain.array
-            #     ArrX = Arr[:,:numOfBasisComponents[0]]
-            #     ArrY = Arr[:,numOfBasisComponents[0]:]
-            #
-            #     u = np.einsum('ij, ki -> kj', basis[0], ArrX, optimize='greedy')
-            #     v = np.einsum('ij, ki -> kj', basis[1], ArrY, optimize='greedy')
-            #
-            #     if mesh.elements.IS.homogeneous_according_to_types_wrt_metric:
-            #         if mesh.elements.IS.all_orthogonal:
-            #             vx = + np.einsum('kj, j -> kj', u, iJ[1][1], optimize='greedy')
-            #             vy = + np.einsum('kj, j -> kj', v, iJ[0][0], optimize='greedy')
-            #         else:
-            #             vx = + np.einsum('kj, j -> kj', u, iJ[1][1], optimize='greedy') \
-            #                  - np.einsum('kj, j -> kj', v, iJ[0][1], optimize='greedy')
-            #             vy = - np.einsum('kj, j -> kj', u, iJ[1][0], optimize='greedy') \
-            #                  + np.einsum('kj, j -> kj', v, iJ[0][0], optimize='greedy')
-            #
-            #     else:
-            #         if mesh.elements.IS.all_orthogonal:
-            #             vx = + np.einsum('kj, kj -> kj', u, iJ[1][1], optimize='greedy')
-            #             vy = + np.einsum('kj, kj -> kj', v, iJ[0][0], optimize='greedy')
-            #         else:
-            #             vx = + np.einsum('kj, kj -> kj', u, iJ[1][1], optimize='greedy') \
-            #                  - np.einsum('kj, kj -> kj', v, iJ[0][1], optimize='greedy')
-            #             vy = - np.einsum('kj, kj -> kj', u, iJ[1][0], optimize='greedy') \
-            #                  + np.einsum('kj, kj -> kj', v, iJ[0][0], optimize='greedy')
-            #
-            # if ravel:
-            #     pass
-            # else:
-            #     raise NotImplementedError()
-            #
-            # if value_only:
-            #     return [vx, vy]
-            # else:
-            #     raise Exception()
+            raise NotImplementedError()
 
         # ----- non-vectorized ------------------------------------------------
         else:
+            value = dict()
+            shape = [len(xi), len(eta)]
+            IJI = mesh.elements.coordinate_transformation.inverse_Jacobian_matrix(*xietasigma)
+
+            for i in INDICES:
+
+                u = np.einsum('ij, i -> j', basis[i][0], f.cochain.___PRIVATE_local_on_axis___('x', i), optimize='greedy')
+                v = np.einsum('ij, i -> j', basis[i][1], f.cochain.___PRIVATE_local_on_axis___('y', i), optimize='greedy')
+
+                value[i] = [None, None]
+                iJi = IJI[i]
+
+                value[i][0] = + u*iJi[1][1] - v*iJi[0][1]
+                value[i][1] = - u*iJi[1][0] + v*iJi[0][0]
+
+                if ravel:
+                    pass
+                else:
+                    # noinspection PyUnresolvedReferences
+                    value[i] = [value[i][j].reshape(shape, order='F') for j in range(2)]
+
             if value_only:
-                raise NotImplementedError()
+                return value
             else:
                 xyz = dict()
-                value = dict()
-                shape = [len(xi), len(eta)]
+
                 for i in INDICES:
                     element = mesh.elements[i]
                     xyz[i] = element.coordinate_transformation.mapping(*xietasigma)
-
-                    u = np.einsum('ij, i -> j', basis[0], f.cochain.___PRIVATE_local_on_axis___('x', i), optimize='greedy')
-                    v = np.einsum('ij, i -> j', basis[1], f.cochain.___PRIVATE_local_on_axis___('y', i), optimize='greedy')
-
-
-                    value[i] = [None, None]
-                    iJi = element.coordinate_transformation.inverse_Jacobian_matrix(*xietasigma)
-
-                    value[i][0] = + u*iJi[1][1] - v*iJi[0][1]
-                    value[i][1] = - u*iJi[1][0] + v*iJi[0][0]
 
                     if ravel:
                         pass
                     else:
                         # noinspection PyUnresolvedReferences
                         xyz[i] = [xyz[i][j].reshape(shape, order='F') for j in range(2)]
-                        # noinspection PyUnresolvedReferences
-                        value[i] = [value[i][j].reshape(shape, order='F') for j in range(2)]
 
                 return xyz, value
 

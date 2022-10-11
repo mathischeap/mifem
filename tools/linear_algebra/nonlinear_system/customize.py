@@ -82,15 +82,18 @@ class nLS_Customize(FrozenOnly):
 
         """
         #------------- parse special pd  ---------------------------------------------------------1
-        if hasattr(pdi, 'standard_properties') and \
-             'CSCG_form' in pdi.standard_properties.tags:
+        if hasattr(pdi, 'standard_properties') and 'CSCG_form' in pdi.standard_properties.tags:
             pdi = pdi.BC.partial_dofs
+
+        if hasattr(pdi, 'standard_properties') and 'miUsGrid_form' in pdi.standard_properties.tags:
+            pdi = pdi.BC.interpret
+
         else:
             pass
 
+
         #------ for cscg meshes ------------------------------------------------------------------1
-        if hasattr(pdi, '_mesh_') and \
-            pdi._mesh_.__class__.__name__ in ('_3dCSCG_Mesh', '_2dCSCG_Mesh'):
+        if hasattr(pdi, '_mesh_') and pdi._mesh_.__class__.__name__ in ('_3dCSCG_Mesh', '_2dCSCG_Mesh'):
 
             # check 1 _______________________________________________________________2
             if i == j:
@@ -120,6 +123,38 @@ class nLS_Customize(FrozenOnly):
                 ))
             else:
                 raise NotImplementedError(pdi, pdj)
+
+        #------------------- miUsGrid Triangle mesh ----------------------------------------------1
+        elif hasattr(pdi, '_mesh_') and pdi._mesh_.__class__.__name__ in ('miUsGrid_TriangularMesh',):
+
+            # check 1 _______________________________________________________________2
+            if i == j:
+                assert pdj is None, f"when i == j is None, we must have pc is None."
+
+            # check 2 _______________________________________________________________2
+            if pdj is None:
+                assert i == j, \
+                    f"when do not provide pc, we must set diagonal block, " \
+                    f"so i == j, now i={i}, j={j}."
+            elif hasattr(pdj, 'standard_properties') and 'miUsGrid_form' in pdj.standard_properties.tags:
+                pdj = pdj.BC.interpret
+            else:
+                pass
+
+            #======== customize =============================================================
+            I, J = self._nLS_.shape
+            assert i % 1 == 0, f"i={i}({i.__class__.__name__}) cannot be an index!"
+            assert j % 1 == 0, f"j={j}({j.__class__.__name__}) cannot be an index!"
+            assert 0 <= i < I and 0 <= j < J, f"(i,j)= ({i},{j}) is out of index range!"
+
+            if i == j:
+                self.___customizations___.append((
+                    'set_no_evaluations',       # key
+                    [i, pdi, interpreted_as]    # para
+                ))
+            else:
+                raise NotImplementedError(pdi, pdj)
+
 
         #--------- other meshes --------------------------------------------------------------------
         else:

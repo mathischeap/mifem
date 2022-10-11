@@ -20,6 +20,7 @@ from objects.CSCG._2d.__tests__.unittests.auxiliaries.scalar_Laplace_essential_B
 from objects.CSCG._2d.__tests__.unittests.auxiliaries.Euler_shear_layer_rollup_direct import \
     Euler_shear_layer_rollup_direct_test
 
+from screws.miscellaneous.mios import isfile, remove
 
 
 def test_APP_NO1_scalar_Laplace_essential_BC():
@@ -60,6 +61,8 @@ def test_APP_NO3_Euler_ShearLayerRollup_Direct_test():
     image_folder = './APP_test_No3_images_direct'
     RDF_filename = 'shear_layer_rollup_direct_test'
 
+    if isfile(RDF_filename + '.csv'): remove(RDF_filename + '.csv')
+
     SI = Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename)
 
     if rAnk == mAster_rank:
@@ -93,6 +96,6 @@ def test_APP_NO4_Poisson_hMSEM_test_1():
 
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/_2d/__tests__/unittests/APP.py
-    test_APP_NO2_scalar_Laplace_essential_BC_iterative_solver()
+    test_APP_NO3_Euler_ShearLayerRollup_Direct_test()
     # test_APP_NO2_scalar_Laplace_essential_BC_iterative_solver()
 

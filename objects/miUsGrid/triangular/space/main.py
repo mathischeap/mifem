@@ -42,6 +42,13 @@ class miUsGrid_TriangularFunctionSpace(FrozenClass):
         self._num_basis_components_ = miUsGrid_TriangularFunctionSpace_NumBasisComponents(self)
         self._freeze_self_()
 
+    def __repr__(self):
+        """"""
+        return f"miUsGrid_TriangularFunctionSpace{self.p}"
+
+    def __eq__(self, other):
+        return other.__class__.__name__ == 'miUsGrid_TriangularFunctionSpace' and other.p == self.p
+
     @property
     def ndim(self):
         return 2

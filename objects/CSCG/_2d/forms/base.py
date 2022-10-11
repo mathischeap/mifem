@@ -14,8 +14,7 @@ from objects.CSCG.base.forms.base.main import CSCG_FORM_BASE
 
 # noinspection PyAbstractClass
 class _2dCSCG_FORM_BASE(CSCG_FORM_BASE):
-    """
-    This a parent for all forms. It initializes some fundamental properties,
+    """This a parent for all forms. It initializes some fundamental properties,
     like, ``mesh``, ``space``, ``ndim``, ``p`` (basis function degree) and
     ``defaultQuadDegree (dqp)``.
     """

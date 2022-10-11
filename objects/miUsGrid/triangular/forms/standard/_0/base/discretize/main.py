@@ -41,9 +41,17 @@ class miUsTriangular_S0F_Discretize(FrozenOnly):
                                           f'discretize {self._sf_.CF.__class__}.')
 
         elif target == 'BC':
-                raise NotImplementedError(f'miUsTriangular_S0F can not (target BC) '
-                                          f'discretize {self._sf_.CF.__class__}.')
 
+            if self._sf_.BC.CF.__class__.__name__ == 'miUsGrid_Triangular_Scalar':
+
+                if self._sf_.BC.CF.ftype == 'standard':
+                    return self._standard_scalar_(update_cochain=False, target='BC')
+
+                else:
+                    raise NotImplementedError()
+
+            else:
+                raise NotImplementedError()
 
         else:
             raise NotImplementedError(f"miUsTriangular_S0F cannot discretize "

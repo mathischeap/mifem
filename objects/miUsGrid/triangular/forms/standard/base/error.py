@@ -64,7 +64,7 @@ class miUs_Triangular_SF_Error(FrozenOnly):
 
         return globalError
 
-    def H(self, d_func, quad_degree=None):
+    def H(self, d_func=None, quad_degree=None):
         """
         Global :math:`H^1`-error; :math:`H^1` error includes :math:`H(\mathrm{curl})` and :math:`H(\mathrm{div})`;
         since it basically use the ``globalL2`` method, so the computation is done in the secretary core and
@@ -77,9 +77,23 @@ class miUs_Triangular_SF_Error(FrozenOnly):
         """
         selfErrorL2 = self.L(n=2, quad_degree=quad_degree)
         D_self = self._sf_.coboundary()
-        D_self.TW.func.body = d_func
-        D_self.TW.current_time = self._sf_.TW.current_time
-        D_self.TW.___DO_push_all_to_instant___()
+        if d_func is None:
+            func = self._sf_.CF
+            if self._sf_.__class__.__name__ == 'miUsTriangular_S0F_Inner':
+                d_func = func.numerical.grad
+            elif self._sf_.__class__.__name__ == 'miUsTriangular_S0F_Outer':
+                d_func = func.numerical.curl
+            elif self._sf_.__class__.__name__ == 'miUsTriangular_S1F_Inner':
+                d_func = func.numerical.rot
+            elif self._sf_.__class__.__name__ == 'miUsTriangular_S1F_Outer':
+                d_func = func.numerical.div
+            else:
+                raise Exception(f"{self._sf_.__class__.__name__} has no coboundary.")
+        else:
+            pass
+
+        D_self.CF = d_func
+        D_self.CF.current_time = self._sf_.CF.current_time
         DErrorL2 = D_self.error.L(n=2, quad_degree=quad_degree)
         return (selfErrorL2 ** 2 + DErrorL2 ** 2) ** 0.5
 

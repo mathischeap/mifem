@@ -113,6 +113,7 @@ class miUsGrid_Triangle_Incidence_matrices(FrozenOnly):
         Dr1 = np.array(Dr1)
         Dr2 = np.array(Dr2)
         Dr3 = np.array(Dr3)
+
         assert all(np.diff(Dr0) < 0)
         assert all(np.diff(Dr1) < 0)
         assert all(np.diff(Dr2) < 0)

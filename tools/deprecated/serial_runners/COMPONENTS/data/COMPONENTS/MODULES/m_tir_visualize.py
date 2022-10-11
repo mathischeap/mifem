@@ -181,6 +181,7 @@ class M_TIR_Visualize:
                     #__add order to label______________________________________________
                     if show_order:
                         try:
+                            # noinspection PyUnboundLocalVariable
                             orders[n] = (np.log10(ydata2plot.values[-1])- np.log10(ydata2plot.values[-2])) /\
                                         (np.log10(xdata2plot[-1])-np.log10(xdata2plot[-2]))
                         except IndexError:
@@ -257,7 +258,11 @@ class M_TIR_Visualize:
 
         plt.tight_layout()
         if saveto is not None and saveto != '':
-            plt.savefig(saveto, bbox_inches='tight')
+            if saveto[:-4] == 'pdf':
+                plt.savefig(saveto, bbox_inches='tight')
+            else:
+                plt.savefig(saveto, dpi=210, bbox_inches='tight')
+
         else:
             plt.show()
 

@@ -17,16 +17,16 @@ mpiexec -n 4 python objects/miUsGrid/triangular/__test__/unittests/main.py
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from root.config.main import *
+from root.config.main import rAnk, mAster_rank, MPI
 
 if rAnk == mAster_rank:
     from screws.miscellaneous.timer import count_files_and_lines
     files, lines = count_files_and_lines('./')
 
-passed_2dCSCG_tests = 0 # do not commit this
-passed_3dCSCG_tests = 0 # do not commit this
-passed_GLOBAL_tests = 0 # do not commit this
-passed_miUSGridTriangle_tests = 0 # do not commit this
+passed_2dCSCG_tests = 0           # do not comment this
+passed_3dCSCG_tests = 0           # do not comment this
+passed_GLOBAL_tests = 0           # do not comment this
+passed_miUSGridTriangle_tests = 0 # do not comment this
 
 t_global_start = MPI.Wtime()
 
@@ -48,6 +48,8 @@ total_Tests = passed_2dCSCG_tests + \
               passed_3dCSCG_tests + \
               passed_GLOBAL_tests + \
               passed_miUSGridTriangle_tests
+
+
 
 if rAnk == mAster_rank:
     print("\n<{}> total tests passed; cost {:.3f} seconds.\n".format(

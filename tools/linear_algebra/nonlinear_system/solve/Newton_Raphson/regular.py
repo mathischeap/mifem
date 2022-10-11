@@ -29,8 +29,10 @@ class nLS_Solve_NR_regular(FrozenOnly):
         index = self._nLS_.unknown_variables.index(obj)
         return shadows[index]
 
-    def __call__(self, x0, atol=1e-4, maxiter=10,
-        LS_solver_para='GMRES', LS_solver_kwargs=None):
+    def __call__(self,
+                 x0, atol=1e-4, maxiter=10,                    # args for the outer Newton method.
+                 LS_solver_para='GMRES', LS_solver_kwargs=None # args for the internal linear solver.
+                 ):
         """
 
         Parameters
@@ -92,21 +94,21 @@ class nLS_Solve_NR_regular(FrozenOnly):
         linear_solver_name = LS_solver_para[0]
         linear_solver_parameters = LS_solver_para[1]
 
-        #--find the linear solver caller; call it with LS_solver_kwargs to solve a linear system--
+        #--find the linear solver caller; call it with LS_solver_kwargs to solve a linear system----1
         if linear_solver_name in RegularSolverDistributor.___solver_name___():
             linear_solver_caller = RegularSolverDistributor(linear_solver_name,
                                                             **linear_solver_parameters)
         else:
             raise NotImplementedError()
 
-        #----- initialize the variables -------------------------------------------------------1
+        #----- initialize the variables ------------------------------------------------------------1
 
         xi = x0
         ITER = 0
         message = ''
         BETA = list()
 
-        #------------ define intermediate variables -------------------------------------------1
+        #------------ define intermediate variables ------------------------------------------------1
 
         itmV = list()
         for uv in self._nLS_.unknown_variables:
@@ -118,7 +120,7 @@ class nLS_Solve_NR_regular(FrozenOnly):
             ITER += 1
 
             #---------- distribute xi to the intermediate forms -------------------------------2
-            xi.do.distributed_to(*itmV)
+            xi.do.distributed_to(*itmV, chain_method=self._nLS_.chain_method)
 
             #--- evaluate blocks of the left-hand-side matrix with xi -------------------------2
             S0, S1 = self._nLS_.shape
@@ -129,14 +131,14 @@ class nLS_Solve_NR_regular(FrozenOnly):
                 tv = self._nLS_.test_variables[i]
 
                 for j in range(S1):
-                    #__________ we first find the linear term from A _________________________3
+                    #__________ we first find the linear term from A ______________________3
                     linear_term = self._nLS_.A[i][j]
                     if linear_term is not None:
                         LHS[i][j].append(linear_term)
                     else:
                         pass
 
-                    #____ we then look at the nonlinear terms to find the contributions _____3
+                    #__ we then look at the nonlinear terms to find the contributions ____3
 
                     uv = self._nLS_.unknown_variables[j]
 
@@ -163,7 +165,7 @@ class nLS_Solve_NR_regular(FrozenOnly):
                             if contribution_2_Aij is not None:
                                 LHS[i][j].append(contribution_2_Aij)
 
-                    #----------- sum up blocks ____________________________________________3
+                    #----------- sum up blocks _________________________________________3
                     LEN = len(LHS[i][j])
                     if LEN == 0:
                         # noinspection PyTypeChecker
@@ -186,6 +188,9 @@ class nLS_Solve_NR_regular(FrozenOnly):
             A = bmat(LHS)
             f = concatenate(f) # notice the minus in already included here, it is important.
 
+            A.assembler.chain_method = self._nLS_.chain_method
+            f.assembler.chain_method = self._nLS_.chain_method
+
             A.gathering_matrices = (self._nLS_.test_variables, self._nLS_.unknown_variables)
             f.gathering_matrix = self._nLS_.test_variables
 
@@ -196,30 +201,53 @@ class nLS_Solve_NR_regular(FrozenOnly):
                 method_name = customization[0]
                 method_para = customization[1]
 
+                #------------------------------------------------------------3
                 if method_name == "set_no_evaluation":
                     # we make the #i dof unchanged .....
 
                     A.customize.identify_global_row(method_para)
-                    f.customize.set_assembled_V_i_to(-1, 0)
+                    f.customize.set_assembled_V_i_to(method_para, 0)
 
+                #------------------------------------------------------------3
                 elif method_name == "set_ith_value_of_initial_guess":
                     # we make the initial value of dof #i to be v
 
                     if ITER == 1: # only need to do it for the initial guess
                         i, v = method_para
-                        xi.V[i] = v
+                        xi._V_[i] = v
 
                     else:
                         pass
 
+                #------------------------------------------------------------3
                 elif method_name == "set_no_evaluations":
+
                     i, pd, interpreted_as = method_para
-                    A.customize.identify_global_rows_according_to_CSCG_partial_dofs(
-                        i, pd, interpreted_as=interpreted_as)
 
-                    f.customize.set_constant_entries_according_to_CSCG_partial_dofs(
-                        i, pd, 0, interpreted_as=interpreted_as)
+                    # -------------------------------------4
+                    if pd._mesh_.__class__.__name__ in ('_3dCSCG_Mesh', '_2dCSCG_Mesh'):
 
+                        A.customize.identify_global_rows_according_to_CSCG_partial_dofs(
+                            i, pd, interpreted_as=interpreted_as)
+
+                        f.customize.set_constant_entries_according_to_CSCG_partial_dofs(
+                            i, pd, 0, interpreted_as=interpreted_as)
+
+                    # -------------------------------------4
+                    elif pd._mesh_.__class__.__name__ in ('miUsGrid_TriangularMesh',):
+
+                        A.customize.identify_global_rows_according_to_miUsGrid_BC(
+                            i, pd, interpret=interpreted_as)
+
+                        f.customize.set_constant_entries_according_to_miUsGrid_BC(
+                            i, pd, 0, interpret=interpreted_as)
+
+                    #======================================4
+                    else:
+                        raise NotImplementedError(f"{pd._mesh_.__class__.__name__}")
+
+
+                # ========================================================3
                 else:
                     raise NotImplementedError(f"Cannot handle customization = {method_name}")
 
@@ -253,12 +281,12 @@ class nLS_Solve_NR_regular(FrozenOnly):
             else:
                 xi = xi1
 
-        #----------------------------------------------------------------------------------------1
+        #----------------------------------------------------------------------------------------------1
         t_iteration_end = time()
         Ta = t_iteration_end-t_start
         TiT = t_iteration_end-t_iteration_start
 
-        #----------------------------------------------------------------------------------------1
+        #----------------------------------------------------------------------------------------------1
         message += f"<nonlinear_solver>" \
                    f" = [RegularNewtonRaphson: {A.shape}]" \
                    f" of {self._nLS_.nonlinear_terms.num} nonlinear terms" \
@@ -267,9 +295,9 @@ class nLS_Solve_NR_regular(FrozenOnly):
                    f" = [beta: %.2e]" \
                    f" = [{convergence_info}-{JUDGE_explanation}]" \
                    f" >>> nLS solving costs %.2f, each ITER cost %.2f"%(BETA[-1], Ta, TiT/ITER)\
-                   + '\n >>> Last Linear Solver Message:\n' + LSm
+                   + '\n >>> Last Linear Solver Message: \n' + LSm
 
-        #=======================================================================================1
+        #=============================================================================================1
 
         return xi1, convergence_info, BETA[-1], ITER, message
 

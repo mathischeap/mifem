@@ -39,15 +39,15 @@ class miUsGrid_TriangularMesh_Boundaries(FrozenOnly):
                 if m == '': # the `i`th edge of element #c is empty. Must be a boundary.
                     element = mesh.elements[c]
 
-                    if i == 0: # the 0th edge
+                    if i == 0: # the 0th edge: vertex 0 -> vertex 1 (topologically down edge)
                         vertex0 = element.coordinates[0]
                         vertex1 = element.coordinates[1]
-                    elif i == 1: # the 1st edge
+                    elif i == 1: # the 1st edge: vertex 0 -> vertex 2 (topologically upper edge)
                         vertex0 = element.coordinates[0]
                         vertex1 = element.coordinates[2]
-                    elif i == 2: # the 2nd edge
-                        vertex0 = element.coordinates[1]
-                        vertex1 = element.coordinates[2]
+                    elif i == 2: # the 2nd edge: vertex 2 -> vertex 1 (topologically right edge)
+                        vertex0 = element.coordinates[2]
+                        vertex1 = element.coordinates[1]
                     else:
                         raise Exception()
 
@@ -71,6 +71,8 @@ class miUsGrid_TriangularMesh_Boundaries(FrozenOnly):
                     else:
                         assert '+' in m
 
+            emp[c] = tuple(emp[c]) # convert element map to tuple for safety
+
     @property
     def names(self):
         return self._names_
@@ -89,6 +91,4 @@ class miUsGrid_TriangularMesh_Boundaries(FrozenOnly):
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/miUsGrid/triangular/mesh/boundaries/main.py
     from objects.miUsGrid.triangular.__test__.Random.test_mesh import mesh
-
-
-    print(mesh.boundaries.range_of_element_edge)
+    print(mesh.elements.map)

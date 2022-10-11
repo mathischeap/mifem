@@ -22,7 +22,7 @@ class Chain_Gathering_Matrix(FrozenOnly):
     The idea is not just chain them, we also provide a mechanism to save memory, we do not make a new Gathering_Matrix
     for this chained Chain_Gathering_Matrix.
     """
-    def __init__(self, GMs, chain_method='silly'):
+    def __init__(self, GMs, chain_method=None):
         """
         GMs can be a gathering matrix or a chain gathering matrix. Or a list of them.
 
@@ -42,7 +42,6 @@ class Chain_Gathering_Matrix(FrozenOnly):
             mesh_types.append(gm.mesh_type)
             assert mesh_types[i] == mesh_types[0], f"mesh_types[{i}]: {mesh_types[i]} is different from mesh_types[0]: {mesh_types[0]}"
 
-
             if gm.__class__.__name__ == 'Gathering_Matrix':
                 NEW_GMs.append(gm)
             elif gm.__class__.__name__ == 'Chain_Gathering_Matrix':
@@ -51,9 +50,7 @@ class Chain_Gathering_Matrix(FrozenOnly):
                 raise Exception(f'GMs[{i}] is a {gm.__class__.__name__}, '
                                 f'not a Gathering_Matrix or Chain_Gathering_Matrix.')
 
-
         self._mesh_type_ = mesh_types[0]
-
 
         GMs = NEW_GMs
 
@@ -77,6 +74,7 @@ class Chain_Gathering_Matrix(FrozenOnly):
 
         self._To_Be_Added_ = To_Be_Added
         self._GLOBAL_num_dofs_ = To_Be_Added[-1] + GMs[-1].GLOBAL_num_dofs
+
         self._GMs_ = GMs
         self._NUM_GMs_ = len(GMs)
         self._local_dofs_distribution_ = [_.GLOBAL_shape[1] for _ in self.GMs]
@@ -84,10 +82,11 @@ class Chain_Gathering_Matrix(FrozenOnly):
         self._do_ = None
 
         #--------- silly way is nice when len(GMs) == 1 ------------------------------------------------3
-        if len(GMs) == 1:
+        if len(GMs) == 1 or chain_method is None:
             chain_method = 'silly'
         else:
             pass
+        self._chain_method_ = chain_method
 
         #------------------------------------------------------------------------------------------------3
         if chain_method == 'sequent':
@@ -124,6 +123,7 @@ class Chain_Gathering_Matrix(FrozenOnly):
                         pass
 
             #--------- merge cache ----------------------------------------------------------------2
+            # noinspection PyUnboundLocalVariable
             cache = cOmm.gather(cache, root=mAster_rank)
             if rAnk == mAster_rank:
                 CACHE = list()
@@ -155,6 +155,7 @@ class Chain_Gathering_Matrix(FrozenOnly):
                 for i, LDs in enumerate(local_dofs):
                     for j, lds in enumerate(LDs):
                         lds = list(lds)
+                        # noinspection PyUnboundLocalVariable
                         cache_d[i][j][0,lds] = CACHE[j][0, lds]
 
             else:
@@ -183,7 +184,6 @@ class Chain_Gathering_Matrix(FrozenOnly):
             raise NotImplementedError(f"chain_method={chain_method} not implemented")
         #================================================================================================3
 
-        self._chain_method_ = chain_method
         self._freeze_self_()
 
     @property
@@ -322,8 +322,9 @@ class Chain_Gathering_Matrix(FrozenOnly):
         Therefore, sum(GV_LENs) == len(self[i]).
 
         """
+        LENs = [None for _ in range(self.NUM_GMs)]
         if len(self) == 0:
-            LENs = [None for _ in range(self.NUM_GMs)]
+            pass
         else:
             for i in self:
                 LENs = [len(gm[i]) for gm in self.GMs]

@@ -215,6 +215,11 @@ def test_Form_NO3_mass_matrices():
     f1o = FC('1-f-o', is_hybrid=False)
     f2 = FC('2-f-i', is_hybrid=False)
 
+    f0.operators._inner_quad_type_ = 'Gauss'
+    f1i.operators._inner_quad_type_ = 'Gauss'
+    f1o.operators._inner_quad_type_ = 'Gauss'
+    f2.operators._inner_quad_type_ = 'Gauss'
+
     M0 = f0.matrices.mass
     M1I = f1i.matrices.mass
     M1O = f1o.matrices.mass
@@ -509,7 +514,7 @@ def test_Form_NO6_reconstruction_matrices():
     LnEnT = f1o.do.compute_Ln_energy(vectorized=True)
     np.testing.assert_almost_equal(LnEnF, LnEnT, decimal=5)
     L2Energy = f1o.do.compute_L2_energy_with()
-    np.testing.assert_almost_equal(LnEnT, L2Energy, decimal=3)
+    np.testing.assert_almost_equal(LnEnT, L2Energy, decimal=2)
 
     #------------- inner 1-form ------------------------------
     vector = FC('vector', (P, Q))
@@ -535,7 +540,7 @@ def test_Form_NO6_reconstruction_matrices():
     LnEnT = f1i.do.compute_Ln_energy(vectorized=True)
     np.testing.assert_almost_equal(LnEnF, LnEnT, decimal=5)
     L2Energy = f1i.do.compute_L2_energy_with()
-    np.testing.assert_almost_equal(LnEnT, L2Energy, decimal=3)
+    np.testing.assert_almost_equal(LnEnT, L2Energy, decimal=1)
 
 
     #------------ 2-form -------------
@@ -559,7 +564,7 @@ def test_Form_NO6_reconstruction_matrices():
         np.testing.assert_almost_equal(LnEnF, LnEnT)
 
         L2Energy = f2.do.compute_L2_energy_with()
-        np.testing.assert_almost_equal(LnEnT, L2Energy, decimal=3)
+        np.testing.assert_almost_equal(LnEnT, L2Energy, decimal=1)
 
     return 1
 
@@ -654,6 +659,6 @@ def test_Form_NO7_weak_curl():
 if __name__ == '__main__':
     # mpiexec -n 4 python objects\CSCG\_2d\__tests__\unittests\standard_forms\general.py
     # test_Form_NO5_cross_product()
-    test_Form_NO6_reconstruction_matrices()
     # test_Form_NO6_reconstruction_matrices()
-    # test_Form_NO3_mass_matrices()
+    # test_Form_NO6_reconstruction_matrices()
+    test_Form_NO6_reconstruction_matrices()

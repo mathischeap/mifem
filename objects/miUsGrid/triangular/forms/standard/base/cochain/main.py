@@ -10,7 +10,6 @@ if './' not in sys.path: sys.path.append('./')
 
 from objects.miUsGrid.base.form.standard.cochain import miUsGrid_SF_CochainBase
 
-
 class miUs_Triangular_SF_Cochain(miUsGrid_SF_CochainBase):
     """"""
 
@@ -18,8 +17,6 @@ class miUs_Triangular_SF_Cochain(miUsGrid_SF_CochainBase):
         """"""
         super(miUs_Triangular_SF_Cochain, self).__init__(sf)
         self._freeze_self_()
-
-
 
     def ___PRIVATE_local_on_axis___(self, axis, i):
         """

@@ -93,7 +93,7 @@ class Gathering_Vector(FrozenOnly):
     def __repr__(self):
         return 'element#' + str(self.i) + '-' +\
                f"({self.___PRIVATE_find_min_label___()}, " \
-                f"{self.___PRIVATE_find_max_label___()})"
+               f"{self.___PRIVATE_find_max_label___()})"
 
     def ___PRIVATE_find_max_label___(self):
         return np.max(self.full_vector)

@@ -35,10 +35,14 @@ class miUsGrid_MeshBase(FrozenClass):
         self._elements_ = None
         self._visualize_ = None
         self._boundaries_ = None
+        self._miscellaneous_ = None
+        self._IS_ = None
+        self._domain_ = None
+        self._do_ = None
         self._freeze_self_()
 
     def __repr__(self):
-        return f"{self.__class__.__name__}@{id(self)}"
+        return f"{self.__class__.__name__} of {self.elements.num.GLOBAL_cells} elements @{id(self)}"
 
     def __eq__(self, other):
         """"""
@@ -64,7 +68,26 @@ class miUsGrid_MeshBase(FrozenClass):
     def boundaries(self):
         return self._boundaries_
 
+    @property
+    def miscellaneous(self):
+        return self._miscellaneous_
+
+    @property
+    def IS(self):
+        return self._IS_
+
+    @property
+    def domain(self):
+        return self._domain_
+
+    @property
+    def do(self):
+        return self._do_
+
+
+
+
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python objects/miUsGrid/base/mesh/main.py
     pass

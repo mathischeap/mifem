@@ -10,7 +10,7 @@ from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EW
 from tools.linear_algebra.linear_system.customize import ___LinearSystem_Customize___
 from tools.linear_algebra.linear_system.condition import ___LinearSystem_Condition___
 from tools.linear_algebra.linear_system.solve.main import ___LinearSystem_Solve___
-
+from tools.linear_algebra.linear_system.visualize import LinearSystem_Visualize
 
 
 class LinearSystem(FrozenClass):
@@ -47,6 +47,7 @@ class LinearSystem(FrozenClass):
         self._customize_ = ___LinearSystem_Customize___(self)
         self._condition_ = ___LinearSystem_Condition___(self)
         self._solve_ = ___LinearSystem_Solve___(self)
+        self._visualize_ = LinearSystem_Visualize(self)
 
         self._freeze_self_()
 
@@ -65,6 +66,9 @@ class LinearSystem(FrozenClass):
     def solve(self):
         return self._solve_
 
+    @property
+    def visualize(self):
+        return self._visualize_
 
     # ------- properties ---------------------------------------------------------------------------
 

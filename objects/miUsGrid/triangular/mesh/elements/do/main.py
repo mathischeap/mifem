@@ -46,7 +46,12 @@ class miUsGrid_TriangularMesh_Elements_DO(FrozenOnly):
             center = element.coordinate_transformation.mapping(0, 0)
             singular_vertex = element.coordinate_transformation.mapping(-1, -1)
 
-            GD[i] = [(ex, ey), center, singular_vertex]
+            U_edge = element.coordinate_transformation.mapping(np.array([-0.9,-0.9]), np.array([-0.9,0.9]))
+            D_edge = element.coordinate_transformation.mapping(np.array([0.9,0.9]), np.array([-0.9,0.9]))
+            L_edge = element.coordinate_transformation.mapping(np.array([-0.9,0.9]), np.array([-0.9,-0.9]))
+            R_edge = element.coordinate_transformation.mapping(np.array([-0.9,0.9]), np.array([0.9,0.9]))
+
+            GD[i] = [(ex, ey), center, singular_vertex, [U_edge, D_edge, L_edge, R_edge]]
 
         return GD
 

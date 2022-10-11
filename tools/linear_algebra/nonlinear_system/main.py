@@ -41,6 +41,7 @@ class NonLinearSystem(FrozenOnly):
         self._num_ = nLS_num(self)
         self._do_ = nLS_DO(self)
         self._customize_ = nLS_Customize(self)
+        self._chain_method_ = 'silly'
         self._freeze_self_()
 
     def __repr__(self):
@@ -121,6 +122,18 @@ class NonLinearSystem(FrozenOnly):
     @property
     def shape(self):
         return self._shape_
+
+    @property
+    def chain_method(self):
+        """`chain method` is the method how we chain dofs of variables into a single vector. it
+        will for example affect the bandwidth of the assembled linear system.
+        """
+        return self._chain_method_
+
+    @chain_method.setter
+    def chain_method(self, cm):
+        assert isinstance(cm, str), f"chain method name must be str"
+        self._chain_method_ = cm
 
     def ___PRIVATE_parse_nonlinear_terms___(self, terms):
         """"""
@@ -233,7 +246,6 @@ class NonLinearSystem(FrozenOnly):
     @property
     def customize(self):
         return self._customize_
-
 
 
 

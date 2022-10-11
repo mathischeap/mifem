@@ -2,8 +2,8 @@
 import types
 from screws.freeze.main import FrozenOnly
 from scipy import sparse as spspa
-from tools.linear_algebra.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
-from tools.linear_algebra.gathering.irregular.ir_chain_matrix.main import iR_Chain_Gathering_Matrix
+# from tools.linear_algebra.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
+# from tools.linear_algebra.gathering.irregular.ir_chain_matrix.main import iR_Chain_Gathering_Matrix
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.customize import SpaMat_Customize
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.adjust import SpaMat_Adjust
 from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.blocks.main import EWC_SpaMat_Blocks
@@ -27,7 +27,7 @@ from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.visualize impo
 
 from tools.linear_algebra.elementwise_cache.objects.column_vector.main import EWC_ColumnVector
 
-
+from tools.linear_algebra.gathering.chain import GatheringMatrixChaining
 
 class EWC_SparseMatrix(FrozenOnly):
     """
@@ -301,20 +301,39 @@ class EWC_SparseMatrix(FrozenOnly):
         for gms in GMS:
 
             if gms.__class__.__name__  == 'iR_Chain_Gathering_Matrix':
+
+                assert gms.chain_method == self.assembler.chain_method, \
+                    f"The GM.chain_method = {gms.chain_method} does not match that of the " \
+                    f"vector, {self.assembler.chain_method}."
+
                 FINAL_GMS.append(gms)
 
             elif gms.__class__.__name__ == 'Chain_Gathering_Matrix':
+
+                assert gms.chain_method == self.assembler.chain_method, \
+                    f"The GM.chain_method = {gms.chain_method} does not match that of the " \
+                    f"vector, {self.assembler.chain_method}."
+
                 FINAL_GMS.append(gms)
 
             elif isinstance(gms, list):
-                if all([_.__class__.__name__ == 'iR_Gathering_Matrix' for _ in gms]):
-                    FINAL_GMS.append(iR_Chain_Gathering_Matrix(gms))
 
-                elif all([_.__class__.__name__ == 'Gathering_Matrix' for _ in gms]):
-                    FINAL_GMS.append(Chain_Gathering_Matrix(gms))
+                FINAL_GMS.append(
+                    GatheringMatrixChaining(*gms)(chain_method=self.assembler.chain_method)
+                )
 
-                else:
-                    raise Exception()
+                # if all([_.__class__.__name__ == 'iR_Gathering_Matrix' for _ in gms]):
+                #     FINAL_GMS.append(
+                #         iR_Chain_Gathering_Matrix(gms, chain_method=self.assembler.chain_method)
+                #     )
+                #
+                # elif all([_.__class__.__name__ == 'Gathering_Matrix' for _ in gms]):
+                #     FINAL_GMS.append(
+                #         Chain_Gathering_Matrix(gms, chain_method=self.assembler.chain_method)
+                #     )
+                #
+                # else:
+                #     raise Exception()
             else:
                 raise Exception()
 
@@ -519,13 +538,16 @@ class EWC_SparseMatrix(FrozenOnly):
             DKC = ___MATMUL___(self, other)
             return EWC_SparseMatrix(self._elements_, DKC.__DG_call__, DKC.__KG_call__)
 
+
         elif other.__class__.__name__ == 'EWC_ColumnVector':
             DKC = ___VECMUL___(self, other)
             return EWC_ColumnVector(self._elements_, DKC.__DG_call__, DKC.__KG_call__)
 
-        elif hasattr(other, 'standard_properties') and 'CSCG_form' in other.standard_properties.tags:
+
+        elif hasattr(other, 'standard_properties') and 'form' in other.standard_properties.tags:
             DKC = ___VECMUL___(self, other.cochain.EWC)
             return EWC_ColumnVector(self._elements_, DKC.__DG_call__, DKC.__KG_call__)
+
 
         else:
             raise NotImplementedError()
@@ -543,7 +565,10 @@ class EWC_SparseMatrix(FrozenOnly):
 
     @property
     def inv(self):
-        """inv of self."""
+        """inv of self.
+
+        Watch out, this could be very slow.
+        """
         data_generator = ___LinearAlgebraINV___(self)
         return EWC_SparseMatrix(self._elements_, data_generator, self._KG_)
 

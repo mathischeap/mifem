@@ -529,6 +529,11 @@ def test_Form_NO2_mass_matrix():
     f2 = FC('2-f', is_hybrid=True)
     f3 = FC('3-f', is_hybrid=True)
 
+    f0.operators._inner_quad_type_ = 'Gauss'
+    f1.operators._inner_quad_type_ = 'Gauss'
+    f2.operators._inner_quad_type_ = 'Gauss'
+    f3.operators._inner_quad_type_ = 'Gauss'
+
     benchmark0 = np.array([
         3.69464136e-04,  1.88796948e-04, -8.62687140e-05,  1.88796948e-04,
         9.64309140e-05, -4.41505770e-05, -8.62687140e-05, -4.41505770e-05,

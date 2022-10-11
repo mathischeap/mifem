@@ -1625,8 +1625,6 @@ def test_TOOLS_NO13_EWC_Customize_CSCG_partial_dofs():
         for i in range(np.shape(M_new)[0]):
             if i in ALL:
                 assert M_new[i].nnz == 1 and M_new[i,i] == 1
-            else:
-                assert M_new[i].nnz > 1
 
     return 1
 

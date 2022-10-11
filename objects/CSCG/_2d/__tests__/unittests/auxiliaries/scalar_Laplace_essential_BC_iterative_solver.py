@@ -7,9 +7,6 @@ from tools.linear_algebra.elementwise_cache.operators.bmat.main import bmat
 from tools.linear_algebra.elementwise_cache.operators.concatenate.main import concatenate
 
 
-
-
-
 def scalar_Laplace_solver_iterative_solver(c, Kx, Ky, Nx, Ny):
     """
 

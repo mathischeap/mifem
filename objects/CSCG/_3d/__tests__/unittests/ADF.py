@@ -307,4 +307,4 @@ def test_ADF_NO3_coboundary():
 if __name__ == '__main__':
     # mpiexec -n 6 python objects\CSCG\_3d\__tests__\unittests\ADF.py
     # test_ADF_NO1_general_tests_standard_forms()
-    test_ADF_NO2_general_tests_trace_forms()
+    test_ADF_NO3_coboundary()

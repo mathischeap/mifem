@@ -23,6 +23,9 @@ class miUs_Triangular_SF_Num(FrozenOnly):
     def basis(self):
         return getattr(self._sf_.space.num_basis, self._sf_.__class__.__name__)
 
+    @property
+    def GLOBAL_dofs(self):
+        return self._sf_.numbering.gathering.GLOBAL_num_dofs
 
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/miUsGrid/triangular/forms/standard/base/num.py

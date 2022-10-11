@@ -10,6 +10,11 @@ if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.base import FrozenOnly
 import numpy as np
+from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_ColumnVector
+from scipy.sparse import csr_matrix
+from root.config.main import rAnk, mAster_rank, cOmm
+from scipy.sparse import lil_matrix, csc_matrix
+from tools.linear_algebra.data_structures.global_matrix.main import DistributedVector
 
 
 class miUsGrid_SF_CochainBase(FrozenOnly):
@@ -37,6 +42,119 @@ class miUsGrid_SF_CochainBase(FrozenOnly):
     def __len__(self):
         return len(self.local)
 
+
+
+    @property
+    def globe(self):
+        """"""
+        GM = self._sf_.numbering.gathering
+        globe = lil_matrix((1, self._sf_.num.GLOBAL_dofs))
+        for i in GM: # go through all local elements
+            globe[0, GM[i].full_vector] = self.local[i]
+        globe = globe.tocsr().T
+
+        if self._sf_.ndim == self._sf_.k:
+            # clearly, for a volume form, we can make a distributed vector directly
+            return DistributedVector(globe)
+
+        else:
+            # otherwise, we make a master dominating distributed vector.
+            GLOBE = cOmm.gather(globe, root=mAster_rank)
+
+            if rAnk == mAster_rank:
+                measure = np.zeros(self._sf_.num.GLOBAL_dofs, dtype=int)
+                for G in GLOBE:
+                    indices = G.indices
+                    measure[indices] += 1
+
+                measure[measure==0] = 1
+                # noinspection PyUnresolvedReferences
+                _____ = np.sum(GLOBE).toarray().ravel() / measure
+                globe = csr_matrix(_____).T
+
+            else:
+                globe = csc_matrix((self._sf_.num.GLOBAL_dofs,1))
+
+            GDV = DistributedVector(globe)
+            assert GDV.IS.master_dominating
+            return GDV
+
+    @globe.setter
+    def globe(self, glb):
+        """
+        This process is complex, but it makes sure that the distribution is correct for all cases.
+
+        :param glb:
+        :return:
+        """
+        if glb.__class__.__name__ == 'DistributedVector':
+            assert glb.V.shape == (self._sf_.num.GLOBAL_dofs, 1), "globe cochain shape wrong."
+            # gather vector to master core ...
+            if glb.IS.master_dominating:
+                # no need to gather
+                VV = glb.V.T.toarray()[0]
+            else:
+                V = glb.V
+                V = cOmm.gather(V, root=mAster_rank)
+                if rAnk == mAster_rank:
+                    VV = np.empty((self._sf_.num.GLOBAL_dofs,))
+                    for v in V:
+                        indices = v.indices
+                        data = v.data
+                        VV[indices] = data
+            # distribute vector to individual cores ...
+            local_range = self._sf_.numbering.gathering.local_range
+            local_range = cOmm.gather(local_range, root=mAster_rank)
+            if rAnk == mAster_rank:
+                TO_BE_SENT = list()
+                for lr in local_range:
+                    if lr == tuple():
+                        to_be_sent = None
+                    else:
+                        # noinspection PyUnboundLocalVariable
+                        to_be_sent = csc_matrix(
+                            (VV[lr[0]:lr[1]], range(lr[0],lr[1]), [0, lr[1]-lr[0]]),
+                            shape=(self._sf_.num.GLOBAL_dofs, 1))
+                    TO_BE_SENT.append(to_be_sent)
+            else:
+                TO_BE_SENT = None
+            TO_BE_SENT = cOmm.scatter(TO_BE_SENT, root=mAster_rank)
+            # distribute to local cochain ...
+            local = dict()
+            GM = self._sf_.numbering.gathering
+            for i in GM: # go through all local elements
+                idx = GM[i].full_vector
+                local[i] = TO_BE_SENT[idx].toarray().ravel()
+            self.local = local
+
+        elif glb.__class__.__name__ == 'LocallyFullVector':
+            V = glb.V # V already be 1-d array.
+            local = dict()
+            GM = self._sf_.numbering.gathering
+            for i in GM:  # go through all local elements
+                idx = GM[i].full_vector
+                local[i] = V[idx]
+            self.local = local
+
+        else:
+            raise Exception(f"Can not set cochain from {glb}.")
+
+    @property
+    def EWC(self):
+        """Return the cochain as an Element-Wise-Cached vector.
+
+        Notice that if we have changed the local cochain, the EWC will also change because we make the vector in real
+        time.
+
+        """
+        ewc = EWC_ColumnVector(self._sf_.mesh.elements,
+                               self.___PRIVATE_local_call___,
+                               cache_key_generator='no_cache')
+        ewc.gathering_matrix = self._sf_
+        return ewc
+
+    def ___PRIVATE_local_call___(self, i):
+        return csr_matrix(self.local[i]).T
 
     # ------------- DEPENDENT PROPERTIES (MAJOR): When set, clear BRANCHES by set _branches_ to None -------------------
     @property
@@ -71,10 +189,10 @@ class miUsGrid_SF_CochainBase(FrozenOnly):
         self._local_ = local
 
 
-    #--------------- DEPENDENT PROPERTIES (BRANCHES, must have the two switching methods): when set, update local ------
+    #--- DEPENDENT PROPERTIES (BRANCHES, must have the two switching methods): when set, update local ------
 
 
-    #=================================== ABOVE =========================================================================
+    #======================== ABOVE =========================================================================
 
 if __name__ == "__main__":
     # mpiexec -n 4 python 

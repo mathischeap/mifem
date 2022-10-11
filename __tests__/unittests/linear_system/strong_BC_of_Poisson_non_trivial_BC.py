@@ -99,7 +99,7 @@ def test_applying_strong_BC_for_Poisson_problem_NT():
     p_error_L2 = p.error.L()
     p_error_dH1 = p.error.dH(t, ES.status.velocity, 0)
 
-    assert u_error_L2 < 0.2 and p_error_L2 < 0.021 and p_error_dH1 < 0.2
+    assert u_error_L2 < 0.2 and p_error_L2 < 0.022 and p_error_dH1 < 0.2
 
     return 1
 
