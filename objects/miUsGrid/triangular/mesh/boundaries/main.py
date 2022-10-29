@@ -16,8 +16,32 @@ class miUsGrid_TriangularMesh_Boundaries(FrozenOnly):
     def __init__(self, mesh, conditions):
         """"""
         self._mesh_ = mesh
+        self.___Pr_parse_periodic___(conditions)
         self.___Pr_parse_boundaries___(conditions)
         self._freeze_self_()
+
+    def ___Pr_parse_periodic___(self, conditions):
+        """If we have periodic boundaries, we should claim their setting in the condition dictionary.
+
+        We get the periodic setting in this private method and analyze the details and record the
+        pairing information in the `elements.map`.
+
+        Parameters
+        ----------
+        conditions : dict
+
+        Returns
+        -------
+
+        """
+        if 'periodic' not in conditions:
+            return
+
+        raise NotImplementedError(f"{conditions.pop('periodic')}")
+
+
+
+
 
     def ___Pr_parse_boundaries___(self, conditions):
         """"""
@@ -90,5 +114,5 @@ class miUsGrid_TriangularMesh_Boundaries(FrozenOnly):
 
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/miUsGrid/triangular/mesh/boundaries/main.py
-    from objects.miUsGrid.triangular.__test__.Random.test_mesh import mesh
+    from tests.objects.miUsGrid.triangular.randObj.rand_mesh import mesh
     print(mesh.elements.map)

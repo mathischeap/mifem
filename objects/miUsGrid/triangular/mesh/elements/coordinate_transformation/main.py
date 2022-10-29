@@ -95,7 +95,7 @@ class miUsTriangle_Elements_CoordinateTransformation(FrozenOnly):
         Which means for a square Jacobian matrix, the metric turns out to be the square of the
         determinant of the Jacobian matrix.
 
-        The entries of G is normally denoted as g_{i,j}.
+        The entries of G are normally denoted as g_{i,j}.
 
         intermediate_data (itmD) is: Jacobian_matrix
         """
@@ -111,7 +111,7 @@ class miUsTriangle_Elements_CoordinateTransformation(FrozenOnly):
         The ``inverseMetricMatrix`` is the metric matrix of the inverse Jacobian matrix
         or the metric of the inverse mapping. It is usually denoted as G^{-1}.
 
-        The entries of G^{-1} is normally denoted as g^{i,j}.
+        The entries of G^{-1} are normally denoted as g^{i,j}.
 
         intermediate_data (itmD) is: inverse_Jacobian_matrix
         """

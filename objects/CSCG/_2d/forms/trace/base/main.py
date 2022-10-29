@@ -88,9 +88,9 @@ class _2dCSCG_Standard_Trace(CSCG_Trace_Form, _2dCSCG_FORM_BASE, ndim=2):
         return self._DO_
 
 
-    def ___PRIVATE_reset_cache___(self):
-        self.cochain.___PRIVATE_reset_cache___()
-        self.coboundary.___PRIVATE_reset_cache___()
+    def RESET_cache(self):
+        self.cochain.RESET_cache()
+        self.coboundary.RESET_cache()
 
     def ___DO_evaluate_basis_at_meshgrid___(self, xi, eta, compute_xietasigma=True):
         """

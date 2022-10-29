@@ -47,6 +47,7 @@ class miUsTriangle_Numbering_DoFind(FrozenOnly):
             raise Exception(f"volume-form does not have dofs on element edge")
 
         elif self._sf_.k == 1:
+
             if self._sf_.__class__.__name__ == 'miUsTriangular_S1F_Outer':
                 dy, dx = getattr(self._sf_.space.local_numbering, self._sf_.__class__.__name__)
 
@@ -172,6 +173,8 @@ class miUsTriangle_Numbering_DoFind(FrozenOnly):
 
         else:
             raise Exception()
+
+
 
 
 

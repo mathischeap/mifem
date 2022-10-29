@@ -11,7 +11,7 @@ TU Delft
 import numpy as np
 from screws.freeze.main import FrozenOnly
 from screws.decorators.accepts import accepts
-from screws.numerical._3d_space.Jacobian_33 import NumericalJacobian_xyz_33, NumericalPartialDerivative_xyz
+from screws.numerical._3dSpace.Jacobian_33 import NumericalJacobian_xyz_33, NumericalPartialDerivative_xyz
 from pynverse import inversefunc
 
 

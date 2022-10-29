@@ -8,7 +8,7 @@ from screws.miscellaneous.timer import NumpyStyleDocstringReader
 from screws.miscellaneous.timer import randomStringDigits
 import inspect, pickle, psutil
 
-from root.config.main import cOmm, rAnk, mAster_rank, ASSEMBLE_COST
+from root.config.main import COMM, RANK, MASTER_RANK, ASSEMBLE_COST
 
 from tools.iterators.base.monitor.main import IteratorMonitor
 from tools.iterators.base.visualize.main import IteratorVisualize
@@ -49,7 +49,7 @@ class Iterator(FrozenClass):
         # ... not needed to be initialized in the particular iterator.
         self._running_step_ = 1
         self._computed_steps_ = 0
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             self._monitor_ = IteratorMonitor(self,
                                              auto_save_frequency,
                                              RDF_filename,
@@ -63,7 +63,7 @@ class Iterator(FrozenClass):
 
         self._visualize_ = IteratorVisualize(self)
 
-        name = cOmm.bcast(name, root=mAster_rank)
+        name = COMM.bcast(name, root=MASTER_RANK)
         self.standard_properties.name = name
         self._save_to_mitr_ = save_to_mitr
         self.___cpu_load___ = None
@@ -161,7 +161,7 @@ class Iterator(FrozenClass):
         self._solver_source_code_ = inspect.getsource(solver)
         self._solver_dir_ = os.path.abspath(inspect.getfile(solver))
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             rdf_ret = solver_ret[3:]
             RDF = dict()
             RDF['t'] = self.t0
@@ -294,7 +294,7 @@ class Iterator(FrozenClass):
         outputs in all cores. Otherwise, cores may stop after different time steps. This very
         cause some serious problems.
         """
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             sleep(0.05)
             self.monitor._ft_firstRun_ = time()
             self.monitor._preparation_time_ = time() - self.monitor._ft_start_time_
@@ -309,10 +309,10 @@ class Iterator(FrozenClass):
 
             IN = 1
 
-            ALL_IN = cOmm.gather(IN, root=mAster_rank)
+            ALL_IN = COMM.gather(IN, root=MASTER_RANK)
 
             # decide do the iteration or pass it (when running_step is in the RDF) ...
-            if rAnk == mAster_rank:
+            if RANK == MASTER_RANK:
 
                 assert all(ALL_IN), "Not all cores are in the while loop."
 
@@ -322,11 +322,11 @@ class Iterator(FrozenClass):
                     _pass = 0
             else:
                 _pass = None
-            _pass = cOmm.bcast(_pass, root=mAster_rank)
+            _pass = COMM.bcast(_pass, root=MASTER_RANK)
             # Do or pass ...
             dt = self.dt # must do this since dt will be updated in next()
 
-            if rAnk == mAster_rank:
+            if RANK == MASTER_RANK:
                 psutil.cpu_percent(None)
                 self.___assembling_cost___ = 0
 
@@ -335,19 +335,21 @@ class Iterator(FrozenClass):
             else:
                 outputs = next(self)
 
-            if rAnk == mAster_rank:
+            if RANK == MASTER_RANK:
                 self.___cpu_load___ = psutil.cpu_percent(None)
                 if len(ASSEMBLE_COST['recent']) > 0:
                     self.___assembling_cost___ = sum(ASSEMBLE_COST['recent'])
                     ASSEMBLE_COST['accumulated'] += self.___assembling_cost___
                     ASSEMBLE_COST['recent'] = list()
+            else:
+                pass
 
             # updates other self properties
             self.running_step += 1
             self.computed_steps += 1
             self.t += dt
             self.exit_code, self.shut_down, self.message = outputs[:3]
-            if rAnk == mAster_rank:
+            if RANK == MASTER_RANK:
                 # update RDF ...
                 if _pass == 0: # not already in RDF
                     self.___PRIVATE_append_outputs_to_RDF___(outputs)
@@ -368,7 +370,7 @@ class Iterator(FrozenClass):
 
         assert IN == 0 # must be out.
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             pbar.close()
             print(flush=True)
             # Save it when iterations are done.
@@ -381,12 +383,12 @@ class Iterator(FrozenClass):
                     self.RDF.to_csv(self.monitor.RDF_filename, header=True)
 
                 except:
-                    sleep(5) # wait 5 seconds
+                    sleep(2) # wait 2 seconds
                     # noinspection PyBroadException
                     try: # try once more
                         self.RDF.to_csv(self.monitor.RDF_filename, header=True)
                     except:
-                        sleep(5) # wait 5 seconds
+                        sleep(2) # wait 2 seconds
                         # noinspection PyBroadException
                         try: # try once more
                             self.RDF.to_csv(self.monitor.RDF_filename, header=True)
@@ -425,8 +427,8 @@ class Iterator(FrozenClass):
     @classmethod
     def read(cls, filename):
         """ """
-        cOmm.barrier() # this is important to make the program safe.
-        if rAnk == mAster_rank:
+        COMM.barrier() # this is important to make the program safe.
+        if RANK == MASTER_RANK:
             if filename[-4:] == '.csv':
                 return pd.read_csv(filename, index_col=0)
 

@@ -29,7 +29,7 @@ class _3dCSCG_Trace_Error(FrozenOnly):
         :return:
         """
 
-        assert self._tf_.func.ftype == 'standard', f"Currently, this L^n error method only works for standard functions."
+        assert self._tf_.CF.ftype == 'standard', f"Currently, this L^n error method only works for standard functions."
         assert self._tf_.cochain.local is not None, " I have no cochain."
 
         quad_degree = [self._tf_.dqp[i] + 2 for i in range(3)] \
@@ -69,19 +69,21 @@ class _3dCSCG_Trace_Error(FrozenOnly):
             localError = -1
             for i in self._tf_.mesh.trace.elements:
 
-                error_i = [np.max(np.abs(v[i][m] - self._tf_.func.body[m](*xyz[i]))) for m in range(OneOrTwo)]
+                error_i = [np.max(np.abs(v[i][m] -
+                                         self._tf_.CF.___DO_evaluate_func_at_time___()[m](*xyz[i])))
+                           for m in range(OneOrTwo)]
                 error_i = max(error_i)
 
                 localError = error_i if error_i > localError else localError
 
-            LOC_ERR = cOmm.gather(localError, root=mAster_rank)
+            LOC_ERR = COMM.gather(localError, root=MASTER_RANK)
 
-            if rAnk == mAster_rank:
+            if RANK == MASTER_RANK:
                 globalError = max(LOC_ERR)
             else:
                 globalError = None
 
-            globalError = cOmm.bcast(globalError, root=mAster_rank)
+            globalError = COMM.bcast(globalError, root=MASTER_RANK)
         else:
             raise NotImplementedError(f"Not implemented for L^{n}-error of trace forms.")
 

@@ -12,7 +12,7 @@ from evtk import hl
 from scipy.sparse import lil_matrix
 if './' not in sys.path: sys.path.append('./')
 
-from root.config.main import cOmm, rAnk, mAster_rank
+from root.config.main import COMM, RANK, MASTER_RANK
 
 from objects.CSCG._3d.forms.standard._0s.main import _3dCSCG_0Form
 from objects.CSCG._3d.spaces.polynomials import _3dCSCG_PolynomialSpace
@@ -104,13 +104,13 @@ def _2dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
     """
     #------ get element_layout for the new reference mesh -----------------------------------------1
     df0 = dfs[0]
-    GRID = cOmm.gather(df0.grid, root=mAster_rank)
-    if rAnk == mAster_rank:
+    GRID = COMM.gather(df0.grid, root=MASTER_RANK)
+    if RANK == MASTER_RANK:
         _grid = dict()
         for G in GRID:
             _grid.update(G)
         GRID = _grid
-    GRID = cOmm.bcast(GRID, root=mAster_rank)
+    GRID = COMM.bcast(GRID, root=MASTER_RANK)
     element_layout = dict()
     for rn in GRID:
         element_layout[rn] = [
@@ -131,7 +131,7 @@ def _2dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
     COO = df0.coordinates
     in_regions = new_mesh.elements.in_regions
 
-    ALL_COO = cOmm.allgather(COO)
+    ALL_COO = COMM.allgather(COO)
     need_COO = dict()
     for ac in ALL_COO:
         for bn in ac:
@@ -166,7 +166,7 @@ def _2dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
     for i, df in enumerate(dfs):
         VAL = df.values
 
-        VAL = cOmm.allgather(VAL)
+        VAL = COMM.allgather(VAL)
         need_VAL = dict()
         for v in VAL:
             for bn in v:
@@ -224,15 +224,15 @@ def _2dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
 
     del ALL_needed_VAL, COO
 
-    X = cOmm.gather(X, root=mAster_rank)
-    Y = cOmm.gather(Y, root=mAster_rank)
+    X = COMM.gather(X, root=MASTER_RANK)
+    Y = COMM.gather(Y, root=MASTER_RANK)
 
-    VAR = cOmm.gather(VAR, root=mAster_rank)
+    VAR = COMM.gather(VAR, root=MASTER_RANK)
 
-    CONN = cOmm.gather(CONN, root=mAster_rank)
-    cTypes = cOmm.gather(cTypes, root=mAster_rank)
+    CONN = COMM.gather(CONN, root=MASTER_RANK)
+    cTypes = COMM.gather(cTypes, root=MASTER_RANK)
 
-    if rAnk == mAster_rank:
+    if RANK == MASTER_RANK:
         _x, _y = np.zeros(Gnd), np.zeros(Gnd)
         for x_ in X:
             x_ = x_.tocsr()
@@ -283,7 +283,7 @@ def _2dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
     else:
         full_save_path = None
 
-    return cOmm.bcast(full_save_path, root=mAster_rank)
+    return COMM.bcast(full_save_path, root=MASTER_RANK)
 
 
 
@@ -305,13 +305,13 @@ def _3dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
     """
     #------ get element_layout for the new reference mesh -----------------------------------------1
     df0 = dfs[0]
-    GRID = cOmm.gather(df0.grid, root=mAster_rank)
-    if rAnk == mAster_rank:
+    GRID = COMM.gather(df0.grid, root=MASTER_RANK)
+    if RANK == MASTER_RANK:
         _grid = dict()
         for G in GRID:
             _grid.update(G)
         GRID = _grid
-    GRID = cOmm.bcast(GRID, root=mAster_rank)
+    GRID = COMM.bcast(GRID, root=MASTER_RANK)
     element_layout = dict()
     for rn in GRID:
         element_layout[rn] = [
@@ -332,7 +332,7 @@ def _3dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
     COO = df0.coordinates
     in_regions = new_mesh.elements.in_regions
 
-    ALL_COO = cOmm.allgather(COO)
+    ALL_COO = COMM.allgather(COO)
     need_COO = dict()
     for ac in ALL_COO:
         for bn in ac:
@@ -367,7 +367,7 @@ def _3dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
     for i, df in enumerate(dfs):
         VAL = df.values
 
-        VAL = cOmm.allgather(VAL)
+        VAL = COMM.allgather(VAL)
         need_VAL = dict()
         for v in VAL:
             for bn in v:
@@ -431,16 +431,16 @@ def _3dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
 
     del ALL_needed_VAL, COO
 
-    X = cOmm.gather(X, root=mAster_rank)
-    Y = cOmm.gather(Y, root=mAster_rank)
-    Z = cOmm.gather(Z, root=mAster_rank)
+    X = COMM.gather(X, root=MASTER_RANK)
+    Y = COMM.gather(Y, root=MASTER_RANK)
+    Z = COMM.gather(Z, root=MASTER_RANK)
 
-    VAR = cOmm.gather(VAR, root=mAster_rank)
+    VAR = COMM.gather(VAR, root=MASTER_RANK)
 
-    CONN = cOmm.gather(CONN, root=mAster_rank)
-    cTypes = cOmm.gather(cTypes, root=mAster_rank)
+    CONN = COMM.gather(CONN, root=MASTER_RANK)
+    cTypes = COMM.gather(cTypes, root=MASTER_RANK)
 
-    if rAnk == mAster_rank:
+    if RANK == MASTER_RANK:
         _x, _y, _z = np.zeros(Gnd), np.zeros(Gnd), np.zeros(Gnd)
         for x_ in X:
             x_ = x_.tocsr()
@@ -495,7 +495,7 @@ def _3dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
     else:
         full_save_path = None
 
-    return cOmm.bcast(full_save_path, root=mAster_rank)
+    return COMM.bcast(full_save_path, root=MASTER_RANK)
 
 
 
@@ -522,26 +522,21 @@ if __name__ == "__main__":
     vector = FC('vector', (u,v,w))
 
     f0 = FC('0-f', is_hybrid=False, name='pressure')
-    f0.TW.func.do.set_func_body_as(scalar)
-    f0.TW.current_time = 0
-    f0.TW.___DO_push_all_to_instant___()
+    f0.CF = scalar
+    f0.CF.current_time = 0
     f0.discretize()
 
     f1 = FC('1-f', is_hybrid=False, name='vorticity')
-    f1.TW.func.do.set_func_body_as(vector)
-    f1.TW.current_time = 0
-    f1.TW.___DO_push_all_to_instant___()
+    f1.CF = vector
+    f1.CF.current_time = 0
     f1.discretize()
 
     f2 = FC('2-f', is_hybrid=False, name='velocity')
-    f2.TW.func.do.set_func_body_as(vector)
-    f2.TW.current_time = 0
-    f2.TW.___DO_push_all_to_instant___()
+    f2.CF = vector
     f2.discretize()
+
     f3 = FC('3-f', is_hybrid=False, name='total pressure')
-    f3.TW.func.do.set_func_body_as(scalar)
-    f3.TW.current_time = 0
-    f3.TW.___DO_push_all_to_instant___()
+    f3.CF = scalar
     f3.discretize()
 
     grid = [np.linspace(-1,1,15), np.linspace(-1,1,15), np.linspace(-1,1,15)]

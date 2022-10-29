@@ -8,7 +8,7 @@ from objects.CSCG._3d.fields.vector.do.cross_product.main import _3dCSCG_Vector_
 from objects.CSCG._3d.fields.vector.do.inner_product.main import _3dCSCG_Vector_Do_IP
 
 from screws.quadrature import Quadrature
-from root.config.main import rAnk, mAster_rank, np, cOmm
+from root.config.main import RANK, MASTER_RANK, np, COMM
 
 
 class _3dCSCG_VectorField_DO(FrozenOnly):
@@ -71,12 +71,12 @@ class _3dCSCG_VectorField_DO(FrozenOnly):
 
                 NORM += norm
 
-            NORM = cOmm.gather(NORM, root=mAster_rank)
+            NORM = COMM.gather(NORM, root=MASTER_RANK)
 
-            if rAnk == mAster_rank:
+            if RANK == MASTER_RANK:
                 NORM = np.sum(NORM)**(1/n)
 
-            NORM = cOmm.bcast(NORM, root=mAster_rank)
+            NORM = COMM.bcast(NORM, root=MASTER_RANK)
 
             return NORM
 

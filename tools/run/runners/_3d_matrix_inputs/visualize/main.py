@@ -6,7 +6,7 @@ from tools.run.runners._3d_matrix_inputs.visualize.quick import ___SPM3IRV_quick
 
 # noinspection PyUnusedLocal
 class ___SlaveParallelMatrix3dInputRunnerVisualize___(FrozenOnly):
-    """We have this just to make that we can call visualize without indicate rAnk."""
+    """We have this just to make that we can call visualize without indicate RANK."""
     def __init__(self, pm3ir):
         self._pm3ir_ = pm3ir
         self._quick_ = ___SPM3IRV_quick___()

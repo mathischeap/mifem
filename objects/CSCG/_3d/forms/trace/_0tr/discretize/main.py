@@ -28,45 +28,45 @@ class _3dCSCG_0Trace_Discretize(FrozenOnly):
         """
         SELF = self._tf_
         if target == 'func':
-            if SELF.TW.func.body.__class__.__name__ == '_3dCSCG_ScalarField':
-                if SELF.func.ftype == 'standard':
+            if SELF.CF.__class__.__name__ == '_3dCSCG_ScalarField':
+                if SELF.CF.ftype == 'standard':
                     return self._standard_scalar_(
                         target = 'func',
                         update_cochain=update_cochain)
                 else:
                     raise Exception(f'3dCSCG 0-trace can not (target func) discretize '
-                                    f'_3dCSCG_ScalarField of ftype {SELF.func.ftype}.')
+                                    f'_3dCSCG_ScalarField of ftype {SELF.CF.ftype}.')
 
-            elif SELF.TW.func.body.__class__.__name__ == '_3dCSCG_VectorField':
-                if SELF.func.ftype == 'standard':
+            elif SELF.CF.__class__.__name__ == '_3dCSCG_VectorField':
+                if SELF.CF.ftype == 'standard':
                     return self._standard_vector_flux_(
                         target='func',
                         update_cochain=update_cochain)
                 else:
                     raise Exception(f'3dCSCG 0-trace can not (target func) discretize '
-                                    f'_3dCSCG_VectorField of ftype {SELF.func.ftype}.')
+                                    f'_3dCSCG_VectorField of ftype {SELF.CF.ftype}.')
 
             else:
                 raise NotImplementedError(f'3dCSCG 0-trace can not (target func) '
-                                          f'discretize {SELF.TW.func.body.__class__}.')
+                                          f'discretize {SELF.CF.body.__class__}.')
 
 
         elif target == 'BC':
-            if SELF.TW.BC.body.__class__.__name__ == '_3dCSCG_ScalarField':
-                if SELF.BC.ftype == 'standard':
+            if SELF.BC.CF.__class__.__name__ == '_3dCSCG_ScalarField':
+                if SELF.BC.CF.ftype == 'standard':
                     return self._standard_scalar_(
                         target = 'BC',
                         update_cochain=False)
-                elif SELF.BC.ftype == 'trace-element-wise':
+                elif SELF.BC.CF.ftype == 'trace-element-wise':
                     return self._trace_element_wise_scalar_(
                         target = 'BC',
                         update_cochain=False)
                 else:
                     raise Exception(f'3dCSCG 0-trace can not (target BC) discretize '
-                                    f'_3dCSCG_ScalarField of ftype {SELF.BC.ftype}.')
+                                    f'_3dCSCG_ScalarField of ftype {SELF.BC.CF.ftype}.')
             else:
                 raise NotImplementedError(f'3dCSCG 0-trace can not (target BC) '
-                                          f'discretize {SELF.TW.BC.body.__class__}.')
+                                          f'discretize {SELF.BC.CF.__class__}.')
         else:
             raise NotImplementedError()
 

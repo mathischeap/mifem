@@ -1,11 +1,11 @@
-
+# -*- coding: utf-8 -*-
 from mpi4py import MPI
 cOmm = MPI.COMM_WORLD
 sIze: int = cOmm.Get_size()
 rAnk: int = cOmm.Get_rank()
 import numpy as np
 
-def gRoup_cores(member_num, group_num=None):
+def GROUP_CORES(member_num, group_num=None):
     """
     Group cores into groups each of ``member_num`` cores.
 

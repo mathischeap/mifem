@@ -38,10 +38,10 @@ class _3dCSCG_ADF_SF_Error(FrozenOnly):
         dual_d_form = self._dsf_.coboundary(dt)
 
         if time is None:
-            time = self._dsf_.prime.TW.current_time
+            time = self._dsf_.prime.CF.current_time
 
-        dual_d_form.prime.TW.func.body = dfunc
-        dual_d_form.prime.TW.do.push_func_to_instant(time)
+        dual_d_form.prime.CF = dfunc
+        dual_d_form.prime.CF.current_time = time
 
         self_error_L2 = self.L()
         ddf_error_L2 = dual_d_form.error.L()

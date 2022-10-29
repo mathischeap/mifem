@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-from root.config.main import np, rAnk, mAster_rank, cOmm, saFe_mode
-from tools.linear_algebra.data_structures.global_matrix.main import DistributedVector
+from root.config.main import np, RANK, MASTER_RANK, COMM, SAFE_MODE
+from tools.linearAlgebra.dataStructures.global_matrix.main import DistributedVector
 from scipy import sparse as spspa
 from screws.exceptions import LocalCochainShapeError
 from scipy.sparse import lil_matrix, csr_matrix, csc_matrix
-from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_ColumnVector
+from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_ColumnVector
 from screws.freeze.base import FrozenOnly
 
 
@@ -16,7 +16,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
         self._local_TEW_ = None
         self._freeze_self_()
 
-    def ___PRIVATE_reset_cache___(self):
+    def RESET_cache(self):
         self._local_TEW_ = None
 
     @property
@@ -36,8 +36,8 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
 
     def ___PRIVATE_gather_local_to_master___(self):
         """Do what the method name says."""
-        local = cOmm.gather(self.local, root=mAster_rank)
-        if rAnk == mAster_rank:
+        local = COMM.gather(self.local, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
             LOCAL = dict()
             for li in local:
                 if li is not None:
@@ -56,15 +56,15 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
 
             RN_LI_dict[i] = rn + '=|=' + str(loc_ind)
 
-        RN_LI_dict = cOmm.gather(RN_LI_dict, root=mAster_rank)
-        if rAnk == mAster_rank:
+        RN_LI_dict = COMM.gather(RN_LI_dict, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
             RID = dict()
             for rid in RN_LI_dict:
                 RID.update(rid)
         del RN_LI_dict
 
         LOCAL = self.___PRIVATE_gather_local_to_master___()
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
 
             RW_LOCAL = dict()
 
@@ -106,9 +106,9 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
             globe[0, GM[i].full_vector] = self.local[i]
 
         globe = globe.tocsr().T
-        GLOBE = cOmm.gather(globe, root=mAster_rank)
+        GLOBE = COMM.gather(globe, root=MASTER_RANK)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             measure = np.zeros(self._tf_.GLOBAL_num_dofs, dtype=int)
             for G in GLOBE:
                 indices = G.indices
@@ -136,8 +136,8 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
                 VV = globe.V.T.toarray()[0]
             else:
                 V = globe.V
-                V = cOmm.gather(V, root=mAster_rank)
-                if rAnk == mAster_rank:
+                V = COMM.gather(V, root=MASTER_RANK)
+                if RANK == MASTER_RANK:
                     VV = np.empty((self._tf_.GLOBAL_num_dofs,))
                     for v in V:
                         indices = v.indices
@@ -145,8 +145,8 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
                         VV[indices] = data
             # distribute vector to individual cores ...
             local_range = self._tf_.numbering.gathering.local_range
-            local_range = cOmm.gather(local_range, root=mAster_rank)
-            if rAnk == mAster_rank:
+            local_range = COMM.gather(local_range, root=MASTER_RANK)
+            if RANK == MASTER_RANK:
                 TO_BE_SENT = list()
                 for lr in local_range:
                     if lr == tuple():
@@ -159,7 +159,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
                     TO_BE_SENT.append(to_be_sent)
             else:
                 TO_BE_SENT = None
-            TO_BE_SENT = cOmm.scatter(TO_BE_SENT, root=mAster_rank)
+            TO_BE_SENT = COMM.scatter(TO_BE_SENT, root=MASTER_RANK)
             # distribute to local cochain ...
             local = dict()
             GM = self._tf_.numbering.gathering
@@ -219,7 +219,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
         except AssertionError:
             raise LocalCochainShapeError()
 
-        self.___PRIVATE_reset_cache___()
+        self.RESET_cache()
         self._local_ = local
 
     #--DEPENDENT PROPERTIES (BRANCHES, must have the two switching methods): when set below, update local ------
@@ -254,14 +254,14 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
         except AssertionError:
             raise LocalCochainShapeError()
 
-        self.___PRIVATE_reset_cache___()
+        self.RESET_cache()
         self._local_TEW_ = local_TEW
         self.___local_TEW_2_local___()
 
     def ___local_TEW_2_local___(self):
         """"""
         MAP = self._tf_.mesh.trace.elements.map
-        if saFe_mode:
+        if SAFE_MODE:
             for i in MAP:
                 for key in MAP[i]:
                     assert key in self._local_TEW_, "'local_TEW' is not full."

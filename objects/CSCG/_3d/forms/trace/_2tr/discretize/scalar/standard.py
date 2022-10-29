@@ -94,11 +94,11 @@ class _3dCSCG_2Trace_Discretize_StandardScalar(FrozenOnly):
             quad_weights = self.___cache_DISCRETIZE_STANDARD___['quad_weights']
 
         if target == 'func':
-            assert SELF.func.body is not None, f"No func.body!"
-            _lf_ = SELF.func.body[0]
+            assert SELF.CF is not None, f"No func.body!"
+            _lf_ = SELF.CF.___DO_evaluate_func_at_time___()[0]
         elif target == 'BC':
-            assert SELF.BC.body is not None, f"No BC.body!"
-            _lf_ = SELF.BC.body[0]
+            assert SELF.BC.CF is not None, f"No BC.body!"
+            _lf_ = SELF.BC.CF.___DO_evaluate_func_at_time___()[0]
         else:
             raise NotImplementedError(f"Not applicable for target={target}.")
 

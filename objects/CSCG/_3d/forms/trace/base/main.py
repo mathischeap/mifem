@@ -54,9 +54,9 @@ class _3dCSCG_Standard_Trace(CSCG_Trace_Form, _3dCSCG_FORM_BASE, ndim=3):
     def __repr__(self):
         return f"3dCSCG>{self.k}TF>{self.standard_properties.name}:{id(self)}"
 
-    def ___PRIVATE_reset_cache___(self):
-        self.cochain.___PRIVATE_reset_cache___()
-        self.coboundary.___PRIVATE_reset_cache___()
+    def RESET_cache(self):
+        self.cochain.RESET_cache()
+        self.coboundary.RESET_cache()
 
     @property
     def numbering(self):

@@ -19,7 +19,7 @@ class miUsTriangle_SF_BC(FrozenOnly):
         self._sf_ = sf
         self._CF_ = None
         self._boundaries_ = None
-        self._involved_element_edges_ = None
+        self._involved_element_parts_ = None
         self._interpret_ = miUsTriangle_SF_BC_Interpret(sf)
         self._freeze_self_()
 
@@ -49,22 +49,16 @@ class miUsTriangle_SF_BC(FrozenOnly):
         assert isinstance(bns, (list, tuple)), f"pls put boundary names into a list or tuple."
         for i, bn in enumerate(bns):
             assert bn in BNS, f"boundary names [{i}] = {bn} is not a valid boundary name."
-        self.___Pr_parse_involved_element_edges___(bns)
+        self.___Pr_parse_involved_element_parts___(bns)
         self.interpret.RESET_cache() # reset current interpretations.
         self._boundaries_ = bns
 
-
-    def ___Pr_parse_involved_element_edges___(self, bns):
+    def ___Pr_parse_involved_element_parts___(self, bns):
         """"""
         RoE = self._sf_.mesh.boundaries.range_of_element_edge
-        self._involved_element_edges_ = list()
+        self._involved_element_parts_ = list()
         for bn in bns:
-            self._involved_element_edges_.extend(RoE[bn])
-
-    @property
-    def involved_element_edges(self):
-        """The involved local element edges."""
-        return self._involved_element_edges_
+            self._involved_element_parts_.extend(RoE[bn])
 
     @property
     def interpret(self):

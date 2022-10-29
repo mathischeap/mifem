@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 
 from screws.freeze.main import FrozenOnly
-from root.config.main import cOmm, rAnk, mAster_rank
+from root.config.main import COMM, RANK, MASTER_RANK
 from screws.generators.counter import Counter
 import numpy as np
 from screws.miscellaneous.matrix_simplify import rsmat
@@ -83,8 +83,8 @@ class _3dCSCG_S1F_DOFs_Matplot(FrozenOnly):
 
         TEi_PD = tf.dofs[i].do.generate_plot_data(density=2*density, zoom=zoom)
 
-        TEi_PD = cOmm.gather(TEi_PD, root=mAster_rank)
-        if rAnk == mAster_rank:
+        TEi_PD = COMM.gather(TEi_PD, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
             ___ = list()
             for _ in TEi_PD:
                 if _ is not None:
@@ -132,8 +132,8 @@ class _3dCSCG_S1F_DOFs_Matplot(FrozenOnly):
             INVOLVED_ef_local_dofs = None
 
         #---------------------------------------------------------------------------------------
-        INVOLVED_sf_local_dofs = cOmm.allgather(INVOLVED_sf_local_dofs)
-        INVOLVED_ef_local_dofs = cOmm.allgather(INVOLVED_ef_local_dofs)
+        INVOLVED_sf_local_dofs = COMM.allgather(INVOLVED_sf_local_dofs)
+        INVOLVED_ef_local_dofs = COMM.allgather(INVOLVED_ef_local_dofs)
 
         ___ = list()
         for _ in INVOLVED_sf_local_dofs:
@@ -180,11 +180,11 @@ class _3dCSCG_S1F_DOFs_Matplot(FrozenOnly):
         else:
             eEFD = None
 
-        EFD = cOmm.gather(EFD, root=mAster_rank)
-        XYZ = cOmm.gather(XYZ, root=mAster_rank)
+        EFD = COMM.gather(EFD, root=MASTER_RANK)
+        XYZ = COMM.gather(XYZ, root=MASTER_RANK)
 
         #----------------------------------------------------------------------------------------
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
 
             ___ = list()
             for _ in XYZ: ___.extend(_)
@@ -349,12 +349,12 @@ class _3dCSCG_S1F_DOFs_Matplot(FrozenOnly):
                             tf_dofs_numbers.append([tf_dof_number, tf_dof_local_index])
                 else:
                     pass
-        ___ = cOmm.allgather(sf_dofs_numbers)
+        ___ = COMM.allgather(sf_dofs_numbers)
         sf_dofs_numbers = list()
         for _ in ___:
             sf_dofs_numbers.extend(_)
 
-        ___ = cOmm.allgather(tf_dofs_numbers)
+        ___ = COMM.allgather(tf_dofs_numbers)
         tf_dofs_numbers = list()
         for __ in ___:
             for _ in __:
@@ -380,23 +380,23 @@ class _3dCSCG_S1F_DOFs_Matplot(FrozenOnly):
                                 efd,
                                 xyz])
 
-        sDOF_PD = cOmm.gather(sDOF_PD, root=mAster_rank)
-        if rAnk == mAster_rank:
+        sDOF_PD = COMM.gather(sDOF_PD, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
             ___ = list()
             for _ in sDOF_PD:
                 ___.extend(_)
             sDOF_PD = ___
 
         #-------- make the plot data of the 1-tf dofs only in master core ------------------
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             tDOF_PD = list()
 
         for _ in tf_dofs_numbers:
             tf_dof_number, tf_dof_local_index = _
             TEi_PD = tf.dofs[tf_dof_number].do.generate_plot_data(density=2*density, zoom=zoom)
 
-            TEi_PD = cOmm.gather(TEi_PD, root=mAster_rank)
-            if rAnk == mAster_rank:
+            TEi_PD = COMM.gather(TEi_PD, root=MASTER_RANK)
+            if RANK == MASTER_RANK:
                 ___ = list()
                 for _ in TEi_PD:
                     if _ is not None:
@@ -417,7 +417,7 @@ class _3dCSCG_S1F_DOFs_Matplot(FrozenOnly):
                                 Trace_dof_xyz])
 
         #--------- do the checking ------------------------------------------------------
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             involved_tf_dof = list()
             involved_sf_dofs = list()
             for tDOF_pd in tDOF_PD:
@@ -426,7 +426,7 @@ class _3dCSCG_S1F_DOFs_Matplot(FrozenOnly):
                 involved_sf_dofs.append(sDOF_pd[1]) # involved mesh-elements
         else:
             involved_tf_dof = None
-        involved_tf_dof = cOmm.bcast(involved_tf_dof, root=mAster_rank)
+        involved_tf_dof = COMM.bcast(involved_tf_dof, root=MASTER_RANK)
 
         CONNECT = dict()
         involved_tf_dof = set(involved_tf_dof)
@@ -456,9 +456,9 @@ class _3dCSCG_S1F_DOFs_Matplot(FrozenOnly):
                         assert eGM[element][indices[0]] == i, f"if find a ef dof, must be `i`."
                         CONNECT[i_td].append(('ef', i, C_row[0,indices[0]]))
 
-        CONNECT = cOmm.gather(CONNECT, root=mAster_rank)
+        CONNECT = COMM.gather(CONNECT, root=MASTER_RANK)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             ___ = dict()
             for CON in CONNECT:
                 for t_dof in CON:
@@ -518,7 +518,7 @@ class _3dCSCG_S1F_DOFs_Matplot(FrozenOnly):
                                   HybridSingularityWarning)
 
         #------------- make the plot ----------------------------------------------------------
-        if rAnk == mAster_rank and checking_mode is False:
+        if RANK == MASTER_RANK and checking_mode is False:
 
             if saveto is not None: matplotlib.use('Agg')
             fig = plt.figure(figsize=(12, 8))

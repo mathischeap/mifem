@@ -29,7 +29,7 @@ class miUsTriangle_SF_BC_Interpret_Local(FrozenOnly):
 
     def ___Pr_parse_dofs___(self):
         """Need no `BC.CF`"""
-        iEE = self._sf_.BC.involved_element_edges
+        iEE = self._sf_.BC._involved_element_parts_
         self._dofs_ = dict()
         for e_e in iEE:
             element, edge = e_e

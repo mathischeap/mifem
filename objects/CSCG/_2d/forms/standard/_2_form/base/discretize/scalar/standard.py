@@ -53,7 +53,7 @@ class _2dCSCG_S2F_Discretize_StandardScalar(FrozenOnly):
         # ----------- target ---------------------------------------------------
         cochainLocal = dict()
         if target == 'func':
-            FUNC = SELF.func.body[0]
+            FUNC = self._sf_.CF.___DO_evaluate_func_at_time___()[0]
         else:
             raise NotImplementedError(f"I cannot deal with target = {target}.")
         # ============================================================================

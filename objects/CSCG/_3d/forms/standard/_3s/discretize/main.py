@@ -27,16 +27,16 @@ class _3dCSCG_Discretize(FrozenOnly):
         """
         SELF = self._sf_
         if target == 'func':
-            if SELF.TW.func.body.__class__.__name__ == '_3dCSCG_ScalarField':
+            if SELF.CF.__class__.__name__ == '_3dCSCG_ScalarField':
 
-                if SELF.func.ftype == 'standard':
+                if SELF.CF.ftype == 'standard':
                     return self._standard_(update_cochain=update_cochain, **kwargs)
                 else:
                     raise NotImplementedError(
-                        f"3dCSCG 3-form cannot (target func) discretize _3dCSCG_ScalarField of ftype={SELF.func.ftype}")
+                        f"3dCSCG 3-form cannot (target func) discretize _3dCSCG_ScalarField of ftype={SELF.CF.ftype}")
 
             else:
                 raise NotImplementedError(
-                    f'3dCSCG 3-form can not (target func) discretize {SELF.TW.func.body.__class__}.')
+                    f'3dCSCG 3-form can not (target func) discretize {SELF.CF.__class__}.')
         else:
             raise NotImplementedError(f"3dCSCG 3-form cannot discretize while targeting at {target}.")

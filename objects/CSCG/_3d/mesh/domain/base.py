@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-from root.config.main import cOmm
+from root.config.main import COMM
 from screws.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.domain.regions.main import Regions
 from objects.CSCG._3d.mesh.domain.regions.region.main import Region
@@ -66,7 +66,7 @@ class _3dCSCG_DomainBase(FrozenOnly):
         several regions (instances of Region2D or Region3D).
 
         """
-        cOmm.barrier()
+        COMM.barrier()
         _regions_ = dict()
         for rn in self._region_names_:
             _R_ = Region(

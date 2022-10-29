@@ -47,7 +47,7 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
         :param element_color:
         :return:
         """
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
 
             density = int(np.ceil(density/self._mesh_.elements.GLOBAL_num))
             max_element_layout = 0
@@ -255,9 +255,9 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
             MAPPING[i] = ele.coordinate_transformation.mapping(*nodes)
             GATHERING[i] = self._f_.numbering.gathering[i]
 
-        MAPPING = cOmm.gather(MAPPING, root=mAster_rank)
-        GATHERING = cOmm.gather(GATHERING, root=mAster_rank)
-        if rAnk == mAster_rank:
+        MAPPING = COMM.gather(MAPPING, root=MASTER_RANK)
+        GATHERING = COMM.gather(GATHERING, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
             mapping = dict()
             gathering = dict()
             for i, MPi in enumerate(MAPPING):
@@ -269,7 +269,7 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
         else:
             pass
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             fig, ax = plt.subplots(figsize=(15,9))
             LN_colors = self._matplot_mesh_BASE_(ax, **kwargs)
 
@@ -338,15 +338,15 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
             ele = elements[i]
             MAPPING_dx[i] = ele.coordinate_transformation.mapping(*dx)
             MAPPING_dy[i] = ele.coordinate_transformation.mapping(*dy)
-        MAPPING_dx = cOmm.gather(MAPPING_dx, root=mAster_rank)
-        MAPPING_dy = cOmm.gather(MAPPING_dy, root=mAster_rank)
+        MAPPING_dx = COMM.gather(MAPPING_dx, root=MASTER_RANK)
+        MAPPING_dy = COMM.gather(MAPPING_dy, root=MASTER_RANK)
 
         GATHERING = dict()
         for i in elements:
             GATHERING[i] = self._f_.numbering.gathering[i]
-        GATHERING = cOmm.gather(GATHERING, root=mAster_rank)
+        GATHERING = COMM.gather(GATHERING, root=MASTER_RANK)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             mapping_dx = dict()
             mapping_dy = dict()
             gathering = dict()
@@ -361,7 +361,7 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
         else:
             pass
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             fig, ax = plt.subplots(figsize=(15, 9))
             LN_colors = self._matplot_mesh_BASE_(ax, **kwargs)
 
@@ -430,15 +430,15 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
             ele = elements[i]
             MAPPING_dx[i] = ele.coordinate_transformation.mapping(*dx)
             MAPPING_dy[i] = ele.coordinate_transformation.mapping(*dy)
-        MAPPING_dx = cOmm.gather(MAPPING_dx, root=mAster_rank)
-        MAPPING_dy = cOmm.gather(MAPPING_dy, root=mAster_rank)
+        MAPPING_dx = COMM.gather(MAPPING_dx, root=MASTER_RANK)
+        MAPPING_dy = COMM.gather(MAPPING_dy, root=MASTER_RANK)
 
         GATHERING = dict()
         for i in elements:
             GATHERING[i] = self._f_.numbering.gathering[i]
-        GATHERING = cOmm.gather(GATHERING, root=mAster_rank)
+        GATHERING = COMM.gather(GATHERING, root=MASTER_RANK)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             mapping_dx = dict()
             mapping_dy = dict()
             gathering = dict()
@@ -453,7 +453,7 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
         else:
             pass
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             fig, ax = plt.subplots(figsize=(15, 9))
             LN_colors = self._matplot_mesh_BASE_(ax, **kwargs)
 
@@ -524,9 +524,9 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
             MAPPING[i] = ele.coordinate_transformation.mapping(*nodes)
             GATHERING[i] = self._f_.numbering.gathering[i]
 
-        MAPPING = cOmm.gather(MAPPING, root=mAster_rank)
-        GATHERING = cOmm.gather(GATHERING, root=mAster_rank)
-        if rAnk == mAster_rank:
+        MAPPING = COMM.gather(MAPPING, root=MASTER_RANK)
+        GATHERING = COMM.gather(GATHERING, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
             mapping = dict()
             gathering = dict()
             for i, MPi in enumerate(MAPPING):
@@ -538,7 +538,7 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
         else:
             pass
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             fig, ax = plt.subplots(figsize=(15,9))
             LN_colors = self._matplot_mesh_BASE_(ax, **kwargs)
 

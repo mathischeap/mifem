@@ -42,7 +42,7 @@ if __name__ == '__main__':
     # mesh = MeshGenerator('bridge_arch_cracked')(elements)
     nodes = mesh.node.elements
 
-    # print(rAnk, mesh.___local_periodic_element_sides___)
+    # print(RANK, mesh.___local_periodic_element_sides___)
 
     print(nodes.GLOBAL_num)
 

@@ -2,7 +2,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 from objects.CSCG._2d.forms.standard.base.reconstruct import _2dCSCG_SF_ReconstructBase
-from objects.CSCG._2d.discrete_fields.scalar.main import _2dCSCG_DF_Scalar
+from objects.CSCG._2d.discreteFields.scalar.main import _2dCSCG_DF_Scalar
 import numpy as np
 
 

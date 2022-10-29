@@ -220,7 +220,7 @@ class _1dPolynomial(FrozenOnly):
         :param tuple figsize: (`default`: ``(6,4)``)
         :param bool usetex: (`default`: ``True``)
         """
-        if rAnk != mAster_rank:
+        if RANK != MASTER_RANK:
             return
         plt.rc('text', usetex=usetex)
         if usetex: plt.rcParams['text.latex.preamble'] = r"\usepackage{amsmath}"
@@ -302,7 +302,7 @@ class _1dPolynomial(FrozenOnly):
         :param tuple figsize: (`default`: ``(6, 4)``)
         :param bool usetex: (`default`: ``True``)
         """
-        if rAnk != mAster_rank:
+        if RANK != MASTER_RANK:
             return
         plt.rc('text', usetex=usetex)
         if usetex: plt.rcParams['text.latex.preamble'] = r"\usepackage{amsmath}"

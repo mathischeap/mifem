@@ -25,13 +25,13 @@ class miUsGrid_TriangularFunctionSpace_Evaluation(FrozenOnly):
 
     def quadrature(self, quad_degree):
         """
-        We only do cache the results for last call. We must use Gauss quadrature.
+        We only do cache the results for its last call. We must use Gauss quadrature.
 
         :param quad_degree:
         :return:
         """
 
-        if [quad_degree, 'Gauss'] == self._quadrature_cache_[:2]:
+        if quad_degree == self._quadrature_cache_[0]:
             pass
         else:
             assert np.shape(quad_degree) == (2,), " <quadrature> "
@@ -39,10 +39,11 @@ class miUsGrid_TriangularFunctionSpace_Evaluation(FrozenOnly):
             quad_nodes, quad_weights = _Quadrature_.quad
             quad_weights_ravel = _Quadrature_.quad_ndim_ravel[-1]
             # return quad_nodes, quad_weights, quad_weights_ravel
-            self._quadrature_cache_ = [quad_degree, 'Gauss',
-                                       quad_nodes, quad_weights, quad_weights_ravel]
+            self._quadrature_cache_ = [
+                quad_degree, quad_nodes, quad_weights, quad_weights_ravel
+            ]
 
-        return self._quadrature_cache_[2:]
+        return self._quadrature_cache_[1:]
 
 
     @staticmethod
@@ -59,8 +60,8 @@ class miUsGrid_TriangularFunctionSpace_Evaluation(FrozenOnly):
                 assert np.all(np.diff(domain[i]) > 0) and \
                        np.max(domain[i]) <= 1 and \
                        np.min(domain[i]) >= -1, \
-                    " <2dCSCG Space> : domain[i]={} wrong, need to be " \
-                    "increasing and bounded in [-1, 1].".format( domain[i])
+                    " <Space> : domain[i]={} wrong, need to be" \
+                    " increasing and bounded in [-1, 1].".format( domain[i])
             else:
                 pass
 

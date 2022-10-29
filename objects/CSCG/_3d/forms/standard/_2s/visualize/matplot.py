@@ -73,15 +73,15 @@ class _3dCSCG_S2F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
         PTA = MPS.perpendicular_to_axis
 
         loc_len = len(MPS)
-        ALL_LEN = cOmm.gather(loc_len, root=mAster_rank)
+        ALL_LEN = COMM.gather(loc_len, root=MASTER_RANK)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             ALL_LEN = sum(ALL_LEN)
             assert ALL_LEN > 0, "MPS is empty!"
             density = int(np.sqrt(numOfSamples / ALL_LEN)) + 1
         else:
             density = None
-        density = cOmm.bcast(density, root=mAster_rank)
+        density = COMM.bcast(density, root=MASTER_RANK)
         sample = np.linspace(-1, 1, density)
 
         XYZ, VAL = dict(), dict() # get data for plot.
@@ -135,9 +135,9 @@ class _3dCSCG_S2F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
             VAL[e] = _val_
 
         # gather all information to the mAster core ----------- BELOW ------------------------------
-        XYZ = cOmm.gather(XYZ, root=mAster_rank)
-        VAL = cOmm.gather(VAL, root=mAster_rank)
-        if rAnk == mAster_rank:
+        XYZ = COMM.gather(XYZ, root=MASTER_RANK)
+        VAL = COMM.gather(VAL, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
             ___ = dict()
             for xyz in XYZ:
                 ___.update(xyz)
@@ -187,7 +187,7 @@ class _3dCSCG_S2F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
 
         # Now, we can do the plot ------------- BELOW ----------------------------------------------
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
 
             NUM_PLOT = 3
             if title is None:

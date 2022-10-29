@@ -4,7 +4,7 @@ from screws.freeze.main import FrozenOnly
 import matplotlib.pyplot as plt
 
 
-from root.config.main import np, rAnk, mAster_rank
+from root.config.main import np, RANK, MASTER_RANK
 
 class _3dCSCG_Regions_Visualize_Matplot_(FrozenOnly):
     def __init__(self, visualize):
@@ -22,7 +22,7 @@ class _3dCSCG_Regions_Visualize_Matplot_(FrozenOnly):
     def connection(self, density=5000,):
         """"""
         # we can do everything in the master core.
-        if rAnk != mAster_rank: return
+        if RANK != MASTER_RANK: return
 
         density = int( np.ceil( np.sqrt(density / (self._regions_.num * 6)) ) )
         r = np.linspace(0, 1, density)

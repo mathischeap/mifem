@@ -10,11 +10,11 @@ if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.base import FrozenOnly
 import numpy as np
-from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_ColumnVector
+from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_ColumnVector
 from scipy.sparse import csr_matrix
-from root.config.main import rAnk, mAster_rank, cOmm
+from root.config.main import RANK, MASTER_RANK, COMM
 from scipy.sparse import lil_matrix, csc_matrix
-from tools.linear_algebra.data_structures.global_matrix.main import DistributedVector
+from tools.linearAlgebra.dataStructures.global_matrix.main import DistributedVector
 
 
 class miUsGrid_SF_CochainBase(FrozenOnly):
@@ -59,9 +59,9 @@ class miUsGrid_SF_CochainBase(FrozenOnly):
 
         else:
             # otherwise, we make a master dominating distributed vector.
-            GLOBE = cOmm.gather(globe, root=mAster_rank)
+            GLOBE = COMM.gather(globe, root=MASTER_RANK)
 
-            if rAnk == mAster_rank:
+            if RANK == MASTER_RANK:
                 measure = np.zeros(self._sf_.num.GLOBAL_dofs, dtype=int)
                 for G in GLOBE:
                     indices = G.indices
@@ -95,8 +95,8 @@ class miUsGrid_SF_CochainBase(FrozenOnly):
                 VV = glb.V.T.toarray()[0]
             else:
                 V = glb.V
-                V = cOmm.gather(V, root=mAster_rank)
-                if rAnk == mAster_rank:
+                V = COMM.gather(V, root=MASTER_RANK)
+                if RANK == MASTER_RANK:
                     VV = np.empty((self._sf_.num.GLOBAL_dofs,))
                     for v in V:
                         indices = v.indices
@@ -104,8 +104,8 @@ class miUsGrid_SF_CochainBase(FrozenOnly):
                         VV[indices] = data
             # distribute vector to individual cores ...
             local_range = self._sf_.numbering.gathering.local_range
-            local_range = cOmm.gather(local_range, root=mAster_rank)
-            if rAnk == mAster_rank:
+            local_range = COMM.gather(local_range, root=MASTER_RANK)
+            if RANK == MASTER_RANK:
                 TO_BE_SENT = list()
                 for lr in local_range:
                     if lr == tuple():
@@ -118,7 +118,7 @@ class miUsGrid_SF_CochainBase(FrozenOnly):
                     TO_BE_SENT.append(to_be_sent)
             else:
                 TO_BE_SENT = None
-            TO_BE_SENT = cOmm.scatter(TO_BE_SENT, root=mAster_rank)
+            TO_BE_SENT = COMM.scatter(TO_BE_SENT, root=MASTER_RANK)
             # distribute to local cochain ...
             local = dict()
             GM = self._sf_.numbering.gathering

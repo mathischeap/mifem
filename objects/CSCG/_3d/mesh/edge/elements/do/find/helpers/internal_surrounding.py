@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from root.config.main import cOmm
+from root.config.main import COMM
 from itertools import combinations
 
 
@@ -31,7 +31,7 @@ class OBJ_SurInternal_EdgeElement(object):
         else:
             involved_mesh_elements = None
 
-        involved_mesh_elements = cOmm.allgather(involved_mesh_elements)
+        involved_mesh_elements = COMM.allgather(involved_mesh_elements)
 
         for _ in involved_mesh_elements:
             if _ is not None:

@@ -11,7 +11,7 @@ from objects.miUsGrid.triangular.fields.base import miUsGrid_TriangularFieldBase
 
 from functools import partial
 from types import FunctionType, MethodType
-from screws.functions.time_plus_2d_space._0_ import _0t_
+from screws.functions.timePlus2dSpace._0_ import _0t_
 
 from objects.miUsGrid.triangular.fields.vector.reconstruct.main import miUsGrid_Triangular_Vector_Reconstruct
 from objects.miUsGrid.triangular.fields.vector.do.main import miUsGrid_Triangular_Vector_Do
@@ -119,7 +119,7 @@ if __name__ == "__main__":
     # mpiexec -n 4 python objects/miUsGrid/triangular/fields/vector/main.py
     def fx(t, x, y): return t + x - y
     def fy(t, x, y): return t - x + y
-    from objects.miUsGrid.triangular.__test__.Random.test_mesh import mesh
+    from tests.objects.miUsGrid.triangular.randObj.rand_mesh import mesh
 
     v = miUsGrid_Triangular_Vector(mesh, (fx, fy))
     v.current_time = 0

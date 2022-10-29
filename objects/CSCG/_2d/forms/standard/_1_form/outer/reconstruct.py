@@ -4,7 +4,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 import numpy as np
 from objects.CSCG._2d.forms.standard.base.reconstruct import _2dCSCG_SF_ReconstructBase
-from objects.CSCG._2d.discrete_fields.vector.main import _2dCSCG_DF_Vector
+from objects.CSCG._2d.discreteFields.vector.main import _2dCSCG_DF_Vector
 
 class _2dCSCG_So1F_Reconstruct(_2dCSCG_SF_ReconstructBase):
     """"""

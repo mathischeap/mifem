@@ -15,7 +15,7 @@ if './' not in sys.path: sys.path.append('./')
 import numpy as np
 from objects.CSCG._3d.fields.base import _3dCSCG_Continuous_FORM_BASE
 from types import FunctionType, MethodType
-from screws.functions.time_plus_3d_space.constant import CFG
+from screws.functions.timePlus3dSpace.constant import CFG
 from functools import partial
 from objects.CSCG._3d.fields.tensor.do.main import _3dCSCG_TensorField_DO
 from objects.CSCG._3d.fields.tensor.numerical.main import _3dCSCG_TensorField_Numerical

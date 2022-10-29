@@ -20,18 +20,18 @@ Components:
 """
 import matplotlib.pyplot as plt
 from typing import Dict, Union
-from root.config.main import rAnk, mAster_rank, cOmm, np, MPI, sIze, sEcretary_rank
+from root.config.main import RANK, MASTER_RANK, COMM, np, MPI, SIZE, SECRETARY_RANK
 from objects.CSCG.base.mesh.base import CSCG_MESH_BASE
 from screws.decorators.accepts import accepts, memoize5#, memoize2
 from screws.exceptions import ElementsLayoutError, ElementSidePairError
 from screws.miscellaneous.timer import break_list_into_parts
 from objects.CSCG._3d.mesh.elements.main import _3dCSCG_Mesh_Elements
-from objects.CSCG._3d.mesh.periodic_setting.main import _3dCSCG_PeriodicDomainSetting
-from objects.CSCG._3d.mesh.deprecated.coordinate_transformation.transformer import \
+from objects.CSCG._3d.mesh.periodicSetting.main import _3dCSCG_PeriodicDomainSetting
+from objects.CSCG._3d.mesh.legacy.coordinate_transformation.transformer import \
     CoordinateTransformation as ___DCT___
 from objects.CSCG._3d.mesh.visualize.main import _3dCSCG_Mesh_Visualize
 from objects.CSCG._3d.mesh.boundaries.main import _3dCSCG_Mesh_Boundaries
-from objects.CSCG._3d.mesh.sub_geometry.main import _3dCSCG_Mesh_SubGeometry
+from objects.CSCG._3d.mesh.subGeometry.main import _3dCSCG_Mesh_SubGeometry
 from objects.CSCG._3d.mesh.do.main import _3dCSCG_Mesh_DO
 
 from objects.CSCG._3d.mesh.node.main import _3dCSCG_Node
@@ -79,7 +79,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         """
         assert domain.ndim == 3, " <Mesh> "
         self._domain_ = domain
-        cOmm.barrier() # for safety reason
+        COMM.barrier() # for safety reason
 
         self.___chaotic_EGN_cache___ = dict()
 
@@ -592,7 +592,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                 1. The overall quality (of the whole mesh across all cores.) 1 is best, 0 is worst.
                 2. The local quality of this core.
         """
-        if sIze == 1: return 1, 1
+        if SIZE == 1: return 1, 1
 
         INTERNAL = 0
         EXTERNAL = 0
@@ -612,18 +612,18 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
         loc_qua = (INTERNAL + BOUNDARY) / (self.elements.num * 6)
 
-        I = cOmm.reduce(INTERNAL, root=mAster_rank, op=MPI.SUM)
-        E = cOmm.reduce(EXTERNAL, root=mAster_rank, op=MPI.SUM)
-        B = cOmm.reduce(BOUNDARY, root=mAster_rank, op=MPI.SUM)
+        I = COMM.reduce(INTERNAL, root=MASTER_RANK, op=MPI.SUM)
+        E = COMM.reduce(EXTERNAL, root=MASTER_RANK, op=MPI.SUM)
+        B = COMM.reduce(BOUNDARY, root=MASTER_RANK, op=MPI.SUM)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             ALL_FACES = self.elements.GLOBAL_num * 6
             assert I + E + B == ALL_FACES, "Something is wrong."
             QUALITY = (I + B) / ALL_FACES
         else:
             QUALITY = None
 
-        QUALITY = cOmm.bcast(QUALITY, root=mAster_rank)
+        QUALITY = COMM.bcast(QUALITY, root=MASTER_RANK)
 
         return QUALITY, loc_qua
 
@@ -642,8 +642,8 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
             indices[1].append(lid[1])
             indices[2].append(lid[2])
 
-        LOCAL_ELEMENTS = cOmm.gather(local_elements, root=mAster_rank)
-        if rAnk == mAster_rank:
+        LOCAL_ELEMENTS = COMM.gather(local_elements, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
 
             for i, LE in enumerate(LOCAL_ELEMENTS):
 
@@ -686,13 +686,13 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         if self._EDM_ == 'SWV0':
 
             JUST_PASS = self.___SWV0_para___ == dict()
-            JUST_PASS = cOmm.allreduce(JUST_PASS, op=MPI.LAND)
+            JUST_PASS = COMM.allreduce(JUST_PASS, op=MPI.LAND)
 
             if JUST_PASS: return
 
             # we first merge all ___SWV0_para___ to master ...
-            _PA_ = cOmm.gather(self.___SWV0_para___, root=mAster_rank)
-            if rAnk == mAster_rank:
+            _PA_ = COMM.gather(self.___SWV0_para___, root=MASTER_RANK)
+            if RANK == MASTER_RANK:
                 PARA = dict()
                 for P in _PA_:
                     for pr in P:
@@ -749,12 +749,12 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                                         assert num_ele_per_layer * layers == B, "Something is wrong."
 
 
-                                        if mAster_rank in _d2_[i]:
+                                        if MASTER_RANK in _d2_[i]:
 
                                             OC = list()
 
                                             for c, L in zip(_d2_[i], _d3_):
-                                                if c == mAster_rank:
+                                                if c == MASTER_RANK:
                                                     if L <= 2:
                                                         ML = L
                                                     else:
@@ -773,19 +773,19 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                                                 DIS_D = [TO_OTHER // NOC + (1 if x < TO_OTHER % NOC else 0) for x in range(NOC)]
 
                                                 for j, c in enumerate(_d2_[i]):
-                                                    if c == mAster_rank:
+                                                    if c == MASTER_RANK:
                                                         # noinspection PyUnboundLocalVariable
                                                         _d3_[j] = ML
                                                     else:
                                                         _d3_[j] += DIS_D.pop()
 
-                                        if sEcretary_rank in _d2_[i]:
+                                        if SECRETARY_RANK in _d2_[i]:
                                             OC = list()
                                             for c, L in zip(_d2_[i], _d3_):
-                                                if c == mAster_rank:
+                                                if c == MASTER_RANK:
                                                     pass
 
-                                                elif c == sEcretary_rank:
+                                                elif c == SECRETARY_RANK:
                                                     if L <= 2:
                                                         ML = L
                                                     else:
@@ -804,9 +804,9 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                                                 DIS_D = [TO_OTHER // NOC + (1 if x < TO_OTHER % NOC else 0) for x in range(NOC)]
 
                                                 for j, c in enumerate(_d2_[i]):
-                                                    if c == sEcretary_rank:
+                                                    if c == SECRETARY_RANK:
                                                         _d3_[j] = ML
-                                                    elif c == mAster_rank:
+                                                    elif c == MASTER_RANK:
                                                         pass
                                                     else:
                                                         _d3_[j] += DIS_D.pop()
@@ -823,19 +823,19 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
                 # do the things: Now, we must have disDict ...
                 assert isinstance(NEW_DIS, dict)
-                for i in range(sIze): assert i in NEW_DIS, f"NEW_DIS not full, miss distribution for core #{i}."
+                for i in range(SIZE): assert i in NEW_DIS, f"NEW_DIS not full, miss distribution for core #{i}."
                 ED = dict()
                 before_elements = 0
-                for i in range(sIze):
+                for i in range(SIZE):
                     ED[i] = range(before_elements, before_elements + NEW_DIS[i])
                     before_elements += NEW_DIS[i]
 
             else:
                 ED = None
 
-            ED = cOmm.bcast(ED, root=mAster_rank)
+            ED = COMM.bcast(ED, root=MASTER_RANK)
             self._element_distribution_ = ED
-            self._element_indices_ = self._element_distribution_[rAnk]
+            self._element_indices_ = self._element_distribution_[RANK]
             self._num_local_elements_ = len(self._element_indices_)
 
         else: # no need to optimize ...

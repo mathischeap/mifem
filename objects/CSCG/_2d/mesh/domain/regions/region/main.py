@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 
 from objects.CSCG._2d.mesh.domain.regions.region.interpolations.allocator import InterpolationSearcher

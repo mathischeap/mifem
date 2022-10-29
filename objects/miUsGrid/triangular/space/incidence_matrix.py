@@ -80,8 +80,8 @@ class miUsGrid_TriangularFunctionSpace_IncidenceMatrix(FrozenOnly):
         for j in range(J):
             for i in range(I):
                 Left = sn[1][i,j]
-                if Left  >= 0:
-                    E[dn[0][i,j], Left] = -1    # L
+                if Left >= 0:
+                    E[dn[0][i,j], Left] = -1        # L
                 E[dn[0][i,j], sn[1][i,j+1]] = +1    # R
                 E[dn[0][i,j], sn[0][i  ,j]] = -1    # U
                 E[dn[0][i,j], sn[0][i+1,j]] = +1    # D
@@ -99,7 +99,7 @@ class miUsGrid_TriangularFunctionSpace_IncidenceMatrix(FrozenOnly):
             for i in range(I):
                 Left = sn[0][i,j]
                 if Left >= 0:
-                    E[dn[0][i,j], Left] = +1    # L
+                    E[dn[0][i,j], Left] = +1        # L
                 E[dn[0][i,j], sn[0][i,j+1]] = -1    # R
                 E[dn[0][i,j], sn[1][i  ,j]] = -1    # U
                 E[dn[0][i,j], sn[1][i+1,j]] = +1    # D

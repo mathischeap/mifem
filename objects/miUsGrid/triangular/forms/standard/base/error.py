@@ -9,7 +9,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.base import FrozenOnly
-from root.config.main import rAnk, mAster_rank, np, cOmm
+from root.config.main import RANK, MASTER_RANK, np, COMM
 
 
 class miUs_Triangular_SF_Error(FrozenOnly):
@@ -54,13 +54,13 @@ class miUs_Triangular_SF_Error(FrozenOnly):
             localError.append(np.sum(LEIntermediate * detJ * quad_weights))
 
         core_local = np.sum(localError)
-        core_local = cOmm.gather(core_local, root=mAster_rank)
+        core_local = COMM.gather(core_local, root=MASTER_RANK)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             globalError = np.sum(core_local) ** (1 / n)
         else:
             globalError = None
-        globalError = cOmm.bcast(globalError, root=mAster_rank)
+        globalError = COMM.bcast(globalError, root=MASTER_RANK)
 
         return globalError
 

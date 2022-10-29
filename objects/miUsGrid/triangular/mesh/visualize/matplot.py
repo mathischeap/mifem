@@ -9,7 +9,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.base import FrozenOnly
-from root.config.main import rAnk, mAster_rank, cOmm
+from root.config.main import RANK, MASTER_RANK, COMM
 import matplotlib
 import matplotlib.pyplot as plt
 
@@ -29,8 +29,8 @@ class miUsGrid_TriangularMesh_Matplot(FrozenOnly):
     def grid(self, usetex=False, saveto=None, dpi=210, axis_on=True, show_singular_vertex=True):
         """"""
         grid_data = self._mesh_.elements.do.generate_grid_data()
-        grid_data = cOmm.gather(grid_data, root=mAster_rank)
-        if rAnk != mAster_rank: return
+        grid_data = COMM.gather(grid_data, root=MASTER_RANK)
+        if RANK != MASTER_RANK: return
         GD = dict()
         for gd in grid_data:
             GD.update(gd)
@@ -59,6 +59,7 @@ class miUsGrid_TriangularMesh_Matplot(FrozenOnly):
         for i in grid_data:
             edges_coordinates, center, singular_vertex, inner_edges = grid_data[i]
             plt.plot(*edges_coordinates, '-k', linewidth=1)
+
             if show_singular_vertex:
                 cx, cy = center
                 sx, sy = singular_vertex

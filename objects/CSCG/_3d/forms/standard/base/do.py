@@ -10,8 +10,8 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
         self._freeze_self_()
 
 
-    def reset_cache(self):
-        self._sf_.___PRIVATE_reset_cache___()
+    def RESET_cache(self):
+        self._sf_.RESET_cache()
 
     def evaluate_basis_at_meshgrid(self, *args, **kwargs):
         return self._sf_.___PRIVATE_do_evaluate_basis_at_meshgrid___(*args, **kwargs)
@@ -19,18 +19,6 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
     def evaluate_basis_at_quadrature(self, quad_degree, quad_type=None, compute_xietasigma=True):
         return self._sf_.space.do.evaluate_form_basis_at_quadrature(
             self._sf_.k, quad_degree, quad_type=quad_type, compute_xietasigma=compute_xietasigma)
-
-    def resemble(self, *args, **kwargs):
-        """get cochain from another form (with a different mesh.)"""
-        return self._sf_.___PRIVATE_do_resemble___(*args, **kwargs)
-
-    def interpolate(self, data_set):
-        """Like resemble, but `interpolate` is from a data set, not another form.
-
-        :param data_set:
-        :return:
-        """
-        raise NotImplementedError()
 
     def compute_L2_energy_with(self, other=None, M=None):
         """Compute (self, other)_{L2} = int_{Omega}(self dot other)
@@ -60,7 +48,7 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
                 LOCAL.append(self._sf_.cochain.local[i] @ M[i] @ other.cochain.local[i])
             LOCAL = np.sum(LOCAL)
 
-        return cOmm.allreduce(LOCAL, op=MPI.SUM)
+        return COMM.allreduce(LOCAL, op=MPI.SUM)
 
     def compute_Ln_energy(self, n=2, quad_degree=None, vectorized=False):
         """So compute int_{Omega}( self ** n). When n = 2, it is equal to `self.compute_L2_energy_with()`.
@@ -113,7 +101,7 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
                                              quad_weights,
                                              optimize='optimal')
 
-            total_energy = cOmm.allreduce(total_energy, op=MPI.SUM)
+            total_energy = COMM.allreduce(total_energy, op=MPI.SUM)
 
         #-------- non-vectorized --------------------------------------------------------
         else:
@@ -127,7 +115,7 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
                 LEIntermediate = np.sum([SV[i][m]**n for m in range(OneOrThree)], axis=0)
                 local_energy += np.sum( LEIntermediate * detJ * quad_weights )
 
-            total_energy = cOmm.allreduce(local_energy, op=MPI.SUM)
+            total_energy = COMM.allreduce(local_energy, op=MPI.SUM)
 
         return total_energy
 
@@ -180,12 +168,12 @@ class _3dCSCG_Standard_Form_DO(FrozenOnly):
                 LEIntermediate = np.sum([(SV[i][m] - OV[i][m])**n for m in range(OneOrThree)], axis=0)
                 localError.append(np.sum(LEIntermediate * detJ * quad_weights))
             core_local = np.sum(localError)
-            core_local = cOmm.gather(core_local, root=mAster_rank)
-            if rAnk == mAster_rank:
+            core_local = COMM.gather(core_local, root=MASTER_RANK)
+            if RANK == MASTER_RANK:
                 globalError = np.sum(core_local) ** (1/n)
             else:
                 globalError = None
-            globalError = cOmm.bcast(globalError, root=mAster_rank)
+            globalError = COMM.bcast(globalError, root=MASTER_RANK)
             return globalError
         else:
             raise NotImplementedError('Can only work on forms from the same mesh now.')

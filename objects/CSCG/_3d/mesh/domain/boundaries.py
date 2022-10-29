@@ -79,7 +79,7 @@ class _3dCSCG_Boundaries(FrozenOnly):
 
         :return: bool
         """
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             ToF = True
             # for test reasons we
             NUM = self._domain_.regions.num
@@ -123,7 +123,7 @@ class _3dCSCG_Boundaries(FrozenOnly):
         else:
             ToF = None
 
-        ToF = cOmm.bcast(ToF, root=mAster_rank)
+        ToF = COMM.bcast(ToF, root=MASTER_RANK)
 
         return ToF
 

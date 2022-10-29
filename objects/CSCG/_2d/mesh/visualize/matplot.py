@@ -30,7 +30,7 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         xlim=None, ylim=None, labelsize=15, ticksize=15, element_linewidth=0.4,
         element_color='red', corlormap = None):
         """plot element division."""
-        if rAnk != mAster_rank: return
+        if RANK != MASTER_RANK: return
 
         density = int(np.ceil(density/self._mesh_.elements.GLOBAL_num))
         max_element_layout = 0
@@ -100,9 +100,9 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
 
         # prepare colors for different cores...
         if corlormap is None: corlormap = 'tab20'
-        color = cm.get_cmap(corlormap, sIze)
+        color = cm.get_cmap(corlormap, SIZE)
         COLOR = dict()
-        for i in range(sIze):
+        for i in range(SIZE):
             COLOR[i] = color(i)
 
         for rn in self._mesh_.domain.regions.names:
@@ -114,7 +114,7 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
 
                     C = self._mesh_.do.find.slave_of_element(gnrn[i, j])
 
-                    if C == mAster_rank: # for the master core, we box the element numbering.
+                    if C == MASTER_RANK: # for the master core, we box the element numbering.
                         plt.text(eccrn[0][i,j], eccrn[1][i,j], "${}$".format(gnrn[i,j]),
                                  bbox={'facecolor': 'gray', 'alpha': 0.5, 'pad': 0},
                                  color = COLOR[C], fontsize=11, ha='center', va='center')
@@ -274,7 +274,7 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         :param element_color:
         :return:
         """
-        if rAnk != mAster_rank: return
+        if RANK != MASTER_RANK: return
         if paper_version: return self.___PRIVATE_matplot_paper_version___()
 
         density = int(np.ceil(density/self._mesh_.elements.GLOBAL_num))

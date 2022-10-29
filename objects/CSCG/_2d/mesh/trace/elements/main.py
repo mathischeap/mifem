@@ -28,10 +28,10 @@ class _2dCSCG_Trace_Elements(FrozenOnly):
         :rtype: dict
         """
         if self._type_amount_dict_ is None:
-            if rAnk == 0:
+            if RANK == 0:
                 POOL = dict()
             else:
-                POOL = cOmm.recv(source=rAnk - 1, tag=rAnk)
+                POOL = COMM.recv(source=RANK - 1, tag=RANK)
 
             type_amount_dict = dict()
 
@@ -64,13 +64,13 @@ class _2dCSCG_Trace_Elements(FrozenOnly):
                     del POOL[i]
                 else:
                     CORE = tei.shared_with_core
-                    if CORE < rAnk:
+                    if CORE < RANK:
                         del POOL[i]
 
-            if rAnk == sIze - 1:
+            if RANK == SIZE - 1:
                 pass
             else:
-                cOmm.send(POOL, dest=rAnk+1, tag=rAnk+1)
+                COMM.send(POOL, dest=RANK + 1, tag=RANK + 1)
 
             self._type_amount_dict_ = type_amount_dict
 
@@ -121,11 +121,11 @@ class _2dCSCG_Trace_Elements(FrozenOnly):
         upesp = self._mesh_.___useful_periodic_element_edge_pairs___
         self._MAP_ = dict()
 
-        if rAnk == 0: # first core
+        if RANK == 0: # first core
             cn = 0
             POOL = dict()
         else: # intermediate cores
-            POOL, cn = cOmm.recv(source=rAnk-1, tag=rAnk)
+            POOL, cn = COMM.recv(source=RANK - 1, tag=RANK)
 
         LOCAL_POOL = dict()
         for i in elements_map:
@@ -178,17 +178,17 @@ class _2dCSCG_Trace_Elements(FrozenOnly):
                         del POOL[position_1]
                         del POOL[position_2]
 
-        if rAnk == sIze - 1:
+        if RANK == SIZE - 1:
             assert len(POOL) == 0
         else:
-            cOmm.send([POOL, cn], dest=rAnk+1, tag=rAnk+1)
+            COMM.send([POOL, cn], dest=RANK + 1, tag=RANK + 1)
 
-        cOmm.barrier()
+        COMM.barrier()
 
-        cn = cOmm.bcast(cn, root=sIze-1)
+        cn = COMM.bcast(cn, root=SIZE - 1)
         self._GLOBAL_num_ = cn
 
-        if saFe_mode:
+        if SAFE_MODE:
             for i in elements_map:
                 for j in range(4):
                     assert self._MAP_[i][j] in self, f"Miss local trace element {self._MAP_[i][j]}"
@@ -211,9 +211,9 @@ class _2dCSCG_Trace_Elements(FrozenOnly):
         else:
             xy = None
 
-        xy = cOmm.gather(xy, root=mAster_rank)
-        if rAnk == mAster_rank:
-            assert xy.count(None) == sIze - 1
+        xy = COMM.gather(xy, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
+            assert xy.count(None) == SIZE - 1
             return next(item for item in xy if item is not None) # find the first i which is not None.
 
     @staticmethod

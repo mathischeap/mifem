@@ -32,18 +32,18 @@ class _3dCSCG_1Edge(_3dCSCG_Edge, ABC):
         super().__init__(mesh, space, orientation, numbering_parameters, name)
         self._k_ = 1
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_edge_1form')
-        self.___PRIVATE_reset_cache___()
+        self.RESET_cache()
         self._discretize_ = _3dCSCG_Edge1Form_Discretize(self)
         self._special_ = None
         self._dofs_ = None
         self._freeze_self_()
 
 
-    def ___PRIVATE_reset_cache___(self):
-        super().___PRIVATE_reset_cache___()
+    def RESET_cache(self):
+        super().RESET_cache()
 
 
-    def ___TW_FUNC_body_checker___(self, func_body):
+    def ___Pr_check_CF___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 3
 
@@ -53,7 +53,7 @@ class _3dCSCG_1Edge(_3dCSCG_Edge, ABC):
         else:
             raise Exception(f"3dCSCG 1edge FUNC do not accept func {func_body.__class__}")
 
-    def ___TW_BC_body_checker___(self, func_body):
+    def ___Pr_check_BC_CF___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 3
 

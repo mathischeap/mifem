@@ -5,7 +5,7 @@ from screws.freeze.main import FrozenOnly
 from objects.CSCG._3d.fields.scalar.do.reconstruct.main import _3dCSCG_Scalar_Do_Reconstruct
 from screws.quadrature import Quadrature
 
-from root.config.main import cOmm, mAster_rank, rAnk
+from root.config.main import COMM, MASTER_RANK, RANK
 
 class _3dCSCG_ScalarField_DO(FrozenOnly):
     def __init__(self, sf):
@@ -50,12 +50,12 @@ class _3dCSCG_ScalarField_DO(FrozenOnly):
 
                 NORM += norm
 
-            NORM = cOmm.gather(NORM, root=mAster_rank)
+            NORM = COMM.gather(NORM, root=MASTER_RANK)
 
-            if rAnk == mAster_rank:
+            if RANK == MASTER_RANK:
                 NORM = np.sum(NORM)**(1/n)
 
-            NORM = cOmm.bcast(NORM, root=mAster_rank)
+            NORM = COMM.bcast(NORM, root=MASTER_RANK)
 
             return NORM
 

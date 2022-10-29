@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 import socket
-from root.config.main import rAnk, mAster_rank
+from root.config.main import RANK, MASTER_RANK
 
 
 
 def whether_in_the_great_fire_wall():
     """Return True if we are in the great cyber fire wall."""
-    assert rAnk == mAster_rank, "Should only call it in master core."
+    assert RANK == MASTER_RANK, "Should only call it in master core."
     # we use these typical walled websites to check.
     domain_names = ["www.google.com", "www.facebook.com", "www.twitter.com"]
     IN_THE_WALL = [True for _ in range(len(domain_names))]

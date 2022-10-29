@@ -4,7 +4,7 @@ from objects.CSCG._2d.fields.vector.do.reconstruct.main import _2dCSCG_Vector_Do
 from objects.CSCG._2d.fields.vector.do.inner_product.main import _2CSCG_VectorField_InnerProduct
 
 from screws.quadrature import Quadrature
-from root.config.main import rAnk, mAster_rank, cOmm, np
+from root.config.main import RANK, MASTER_RANK, COMM, np
 
 class _2dCSCG_VectorField_DO(FrozenOnly):
     def __init__(self, vf):
@@ -53,13 +53,13 @@ class _2dCSCG_VectorField_DO(FrozenOnly):
 
             local_norm = np.sum(local_norm)
 
-            local_norm = cOmm.gather(local_norm, root=mAster_rank)
-            if rAnk == mAster_rank:
+            local_norm = COMM.gather(local_norm, root=MASTER_RANK)
+            if RANK == MASTER_RANK:
                 local_norm = np.sum(local_norm) ** (1/n)
             else:
                 pass
 
-            local_norm = cOmm.bcast(local_norm, root=mAster_rank)
+            local_norm = COMM.bcast(local_norm, root=MASTER_RANK)
 
             return local_norm
 

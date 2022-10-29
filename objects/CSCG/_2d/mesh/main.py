@@ -8,8 +8,8 @@ from objects.CSCG._2d.mesh.elements.main import _2dCSCG_Mesh_Elements
 from objects.CSCG._2d.mesh.trace.main import _2dCSCG_Trace
 from objects.CSCG._2d.mesh.visualize.main import _2dCSCG_Mesh_Visualize
 from objects.CSCG._2d.mesh.boundaries.main import _2dCSCG_Mesh_Boundaries
-from objects.CSCG._2d.mesh.periodic_setting.main import _2dCSCG_PeriodicDomainSetting
-from objects.CSCG._2d.mesh.deprecated.coordinate_transformation import CoordinateTransformation
+from objects.CSCG._2d.mesh.periodicSetting.main import _2dCSCG_PeriodicDomainSetting
+from objects.CSCG._2d.mesh.legacy.coordinate_transformation import CoordinateTransformation
 from objects.CSCG._2d.mesh.do.main import _2dCSCG_Mesh_DO
 
 
@@ -20,7 +20,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
     def __init__(self, domain, element_layout=None, EDM=None):
         assert domain.ndim == 2, " <Mesh> "
         self._domain_ = domain
-        cOmm.barrier() # for safety reasons
+        COMM.barrier() # for safety reasons
 
         self._DO_ = _2dCSCG_Mesh_DO(self)
         self.___PRIVATE_parse_element_layout___(element_layout)
@@ -368,7 +368,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
                 1. The overall quality (of the whole mesh across all cores.)
                 2. The local quality of this core.
         """
-        if sIze == 1: return 1, 1
+        if SIZE == 1: return 1, 1
 
         INTERNAL = 0
         EXTERNAL = 0
@@ -388,18 +388,18 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
 
         loc_qua = (INTERNAL + BOUNDARY) / (self.elements.num * 4)
 
-        I = cOmm.reduce(INTERNAL, root=mAster_rank, op=MPI.SUM)
-        E = cOmm.reduce(EXTERNAL, root=mAster_rank, op=MPI.SUM)
-        B = cOmm.reduce(BOUNDARY, root=mAster_rank, op=MPI.SUM)
+        I = COMM.reduce(INTERNAL, root=MASTER_RANK, op=MPI.SUM)
+        E = COMM.reduce(EXTERNAL, root=MASTER_RANK, op=MPI.SUM)
+        B = COMM.reduce(BOUNDARY, root=MASTER_RANK, op=MPI.SUM)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             ALL_FACES = self.elements.GLOBAL_num * 4
             assert I + E + B == ALL_FACES, "Something is wrong."
             QUALITY = (I + B) / ALL_FACES
         else:
             QUALITY = None
 
-        QUALITY = cOmm.bcast(QUALITY, root=mAster_rank)
+        QUALITY = COMM.bcast(QUALITY, root=MASTER_RANK)
 
         return QUALITY, loc_qua
 
@@ -416,7 +416,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
         if self._EDM_ == 'SWV0':
 
             JUST_PASS = self.___SWV0_para___ == dict()
-            JUST_PASS = cOmm.allreduce(JUST_PASS, op=MPI.LAND)
+            JUST_PASS = COMM.allreduce(JUST_PASS, op=MPI.LAND)
 
             if JUST_PASS: return
 

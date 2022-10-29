@@ -80,9 +80,9 @@ class _3dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
             LINES[i]['SW'] = element.coordinate_transformation.mapping(*SW)
             LINES[i]['SE'] = element.coordinate_transformation.mapping(*SE)
 
-        LINES = cOmm.gather(LINES, root=mAster_rank)
+        LINES = COMM.gather(LINES, root=MASTER_RANK)
 
-        if rAnk != mAster_rank: return
+        if RANK != MASTER_RANK: return
 
         # from now on, we will only in the master core.
         ALL_LINES = dict()
@@ -186,12 +186,12 @@ class _3dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
             edge = edges[i]
             edges_coo[i] = edge.coordinate_transformation.mapping(ep0, ep1, ep2, from_element='any')
 
-        nodes_coo = cOmm.gather(nodes_coo, root=mAster_rank)
-        nodes_omb = cOmm.gather(nodes_omb, root=mAster_rank)
-        nodes_opb = cOmm.gather(nodes_opb, root=mAster_rank)
-        edges_coo = cOmm.gather(edges_coo, root=mAster_rank)
+        nodes_coo = COMM.gather(nodes_coo, root=MASTER_RANK)
+        nodes_omb = COMM.gather(nodes_omb, root=MASTER_RANK)
+        nodes_opb = COMM.gather(nodes_opb, root=MASTER_RANK)
+        edges_coo = COMM.gather(edges_coo, root=MASTER_RANK)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             ___ = dict()
             for _ in nodes_coo:
                 ___.update(_)

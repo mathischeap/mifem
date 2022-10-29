@@ -64,7 +64,7 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
                 getattr(self._numberer_, self._sf_.__class__.__name__)()
 
             assert len(self._gathering_) == len(self._sf_.mesh.elements), "GM length wrong."
-            if saFe_mode:
+            if SAFE_MODE:
                 for i in self._sf_.mesh.elements: assert i in self._gathering_, "SAFETY test failed."
         else:
             pass
@@ -138,8 +138,8 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
         if self._sf_.k == 3:
             return LOCAL
         else:
-            bd = cOmm.gather(LOCAL, root=mAster_rank)
-            if rAnk == mAster_rank:
+            bd = COMM.gather(LOCAL, root=MASTER_RANK)
+            if RANK == MASTER_RANK:
                 mesh = self._sf_.mesh
                 BD = dict()
                 names = mesh.boundaries.names
@@ -149,7 +149,7 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
                     for name in names:
                         # noinspection PyUnresolvedReferences
                         A = BD[name]
-                        if saFe_mode: assert isinstance(A, list), "SAFETY check failed."
+                        if SAFE_MODE: assert isinstance(A, list), "SAFETY check failed."
                         A.extend(bdi[name])
                         BD[name] = A
 
@@ -158,7 +158,7 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
                     BD[name] = list(set(BD[name]))
             else:
                 BD = None
-            return cOmm.bcast(BD, root=mAster_rank)
+            return COMM.bcast(BD, root=MASTER_RANK)
 
     @property
     def GLOBAL_boundary_dofs_ravel(self):
@@ -192,11 +192,11 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
                 kwargs['is_hybrid'] = False
                 non_hybrid_form = self._sf_.__class__(self._sf_.mesh, self._sf_.space, **kwargs)
                 NHF = non_hybrid_form.numbering.gathering
-                NHF = cOmm.gather(NHF, root=mAster_rank)
+                NHF = COMM.gather(NHF, root=MASTER_RANK)
 
                 GM = self.gathering
-                GM = cOmm.gather(GM, root=mAster_rank)
-                if rAnk == mAster_rank: # in the master rank.
+                GM = COMM.gather(GM, root=MASTER_RANK)
+                if RANK == MASTER_RANK: # in the master rank.
                     DICT = dict()
                     for _, nhf in enumerate(NHF):
                         gm = GM[_]

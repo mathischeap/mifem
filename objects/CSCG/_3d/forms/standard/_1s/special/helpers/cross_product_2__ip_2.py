@@ -3,7 +3,7 @@
 import numpy as np
 from scipy.sparse import csc_matrix
 from screws.freeze.main import FrozenOnly
-from tools.linear_algebra.elementwise_cache.objects.multi_dim_matrix.main import MultiDimMatrix
+from tools.linearAlgebra.elementwiseCache.objects.multiDimMatrix.main import MultiDimMatrix
 
 
 class ___3dCSCG_1Form_CrossProduct_2__ip_2___(FrozenOnly):

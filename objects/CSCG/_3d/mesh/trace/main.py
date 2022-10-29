@@ -33,11 +33,11 @@ class _3dCSCG_Trace(FrozenOnly):
                              self.elements._WorstQ_, \
                              self.elements._BestQ_
 
-        AvQ = cOmm.gather(AvQ, root=mAster_rank)
-        WorstQ = cOmm.gather(WorstQ, root=mAster_rank)
-        BestQ = cOmm.gather(BestQ, root=mAster_rank)
+        AvQ = COMM.gather(AvQ, root=MASTER_RANK)
+        WorstQ = COMM.gather(WorstQ, root=MASTER_RANK)
+        BestQ = COMM.gather(BestQ, root=MASTER_RANK)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             AvQ = [i for i in AvQ if i]
             WorstQ = [i for i in WorstQ if i]
             BestQ = [i for i in BestQ if i]
@@ -46,9 +46,9 @@ class _3dCSCG_Trace(FrozenOnly):
             BestQ = max(BestQ)
         else:
             pass
-        AvQ = cOmm.bcast(AvQ, root=mAster_rank)
-        WorstQ = cOmm.bcast(WorstQ, root=mAster_rank)
-        BestQ = cOmm.bcast(BestQ, root=mAster_rank)
+        AvQ = COMM.bcast(AvQ, root=MASTER_RANK)
+        WorstQ = COMM.bcast(WorstQ, root=MASTER_RANK)
+        BestQ = COMM.bcast(BestQ, root=MASTER_RANK)
 
         return {'average quality': AvQ,
                 'worst quality': WorstQ,

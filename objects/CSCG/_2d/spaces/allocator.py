@@ -3,12 +3,8 @@ from screws.freeze.base import FrozenOnly
 
 
 
-
-
 class _2dCSCG_SpaceAllocator(FrozenOnly):
     """"""
-
-
 
     @classmethod
     def ___space_name___(cls):

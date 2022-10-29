@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from mpi4py import MPI
 cOmm = MPI.COMM_WORLD
 sIze: int = cOmm.Get_size()
@@ -6,14 +6,14 @@ rAnk: int = cOmm.Get_rank()
 mAster_rank: int = 0 # you can, but you do not need to change this!
 sLave_ranks: list = [i for i in range(sIze)]
 """(list) The collections of ranks of all slaves (cores other than the master). So, 
-the secretary core can be also a slave if ``sEcretary_rank != mAster_rank``."""
+the secretary core can be also a slave if ``SECRETARY_RANK != MASTER_RANK``."""
 sLave_ranks.remove(mAster_rank)
 import numpy as np
 
 
 
 
-def dIspatching(originalTaskInputs: list, method):
+def DISPATCHING(originalTaskInputs: list, method):
     """
     Dispatch each input of ``originalTaskInputs`` from master to slaves.
 

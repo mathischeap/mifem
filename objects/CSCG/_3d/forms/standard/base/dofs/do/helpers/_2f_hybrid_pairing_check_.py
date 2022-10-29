@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from root.config.main import rAnk, mAster_rank
+from root.config.main import RANK, MASTER_RANK
 
 
 def _2f_hybrid_pairing_check_(sf, adt, T, D, b):
@@ -33,12 +33,12 @@ def _2f_hybrid_pairing_check_(sf, adt, T, D, b):
     tGB_dofs = adt.prime.numbering.GLOBAL_boundary_dofs
     sGB_dofs = sf.numbering.GLOBAL_boundary_dofs
 
-    if rAnk == mAster_rank:
+    if RANK == MASTER_RANK:
         Ta = Ta.tocsr() # just in case
         Da = Da.tocsr() # just in case
 
-        DB = adt.BC.valid_boundaries
-        NB = sf.BC.valid_boundaries
+        DB = adt.BC.boundaries
+        NB = sf.BC.boundaries
 
         DB_dofs = set()
         for db in DB:

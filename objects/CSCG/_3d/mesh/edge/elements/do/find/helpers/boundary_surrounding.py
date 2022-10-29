@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from root.config.main import cOmm
+from root.config.main import COMM
 from itertools import combinations
 
 
@@ -37,8 +37,8 @@ class OBJ_SurBoundary_EdgeElement(object):
             involved_mesh_elements = None
             involved_mesh_boundaries = None
 
-        involved_mesh_elements = cOmm.allgather(involved_mesh_elements)
-        involved_mesh_boundaries = cOmm.allgather(involved_mesh_boundaries)
+        involved_mesh_elements = COMM.allgather(involved_mesh_elements)
+        involved_mesh_boundaries = COMM.allgather(involved_mesh_boundaries)
 
         for _ in involved_mesh_elements:
             if _ is not None:
@@ -129,8 +129,8 @@ class OBJ_SurBoundary_EdgeElement(object):
             else:
                 mb2 = None
 
-            mb1 = cOmm.allgather(mb1)
-            mb2 = cOmm.allgather(mb2)
+            mb1 = COMM.allgather(mb1)
+            mb2 = COMM.allgather(mb2)
 
             for _ in mb1:
                 if _ is not None:

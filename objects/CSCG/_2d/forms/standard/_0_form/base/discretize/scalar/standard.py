@@ -23,9 +23,9 @@ class _2dCSCG_S0F_Discretize_StandardScalar(FrozenOnly):
         cochainLocal = dict()
 
         if target == 'func':
-            FUNC = self._sf_.func.body[0]
+            FUNC = self._sf_.CF.___DO_evaluate_func_at_time___()[0]
         elif target == 'BC':
-            FUNC = self._sf_.BC.body[0]
+            FUNC = self._sf_.BC.CF.___DO_evaluate_func_at_time___()[0]
             assert update_cochain is False, \
                 f"When target is {target}, cannot update cochain!"
         else:

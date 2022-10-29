@@ -2,7 +2,7 @@
 import numpy as np
 
 from screws.freeze.base import FrozenOnly
-from root.config.main import cOmm, MPI
+from root.config.main import COMM, MPI
 
 
 class _2dCSCG_Standard_Form_DO(FrozenOnly):
@@ -10,8 +10,8 @@ class _2dCSCG_Standard_Form_DO(FrozenOnly):
         self._sf_ = sf
         self._freeze_self_()
 
-    def reset_cache(self):
-        self._sf_.___PRIVATE_reset_cache___()
+    def RESET_cache(self):
+        self._sf_.RESET_cache()
 
     def evaluate_basis_at_meshgrid(self, *args, **kwargs):
         return self._sf_.___PRIVATE_do_evaluate_basis_at_meshgrid___(*args, **kwargs)
@@ -99,7 +99,7 @@ class _2dCSCG_Standard_Form_DO(FrozenOnly):
                                              quad_weights_1d,
                                              optimize='optimal')
 
-            total_energy = cOmm.allreduce(total_energy, op=MPI.SUM)
+            total_energy = COMM.allreduce(total_energy, op=MPI.SUM)
 
         #-------- non-vectorized --------------------------------------------------------
         else:
@@ -122,7 +122,7 @@ class _2dCSCG_Standard_Form_DO(FrozenOnly):
                     Ei = np.sum(v * quad_weights_1d * detJ[i])
                     total_energy += Ei
 
-            total_energy = cOmm.allreduce(total_energy, op=MPI.SUM)
+            total_energy = COMM.allreduce(total_energy, op=MPI.SUM)
 
         return total_energy
 
@@ -155,7 +155,7 @@ class _2dCSCG_Standard_Form_DO(FrozenOnly):
                 LOCAL.append(other.cochain.local[i] @ M[i] @ self._sf_.cochain.local[i])
             LOCAL = np.sum(LOCAL)
 
-        return cOmm.allreduce(LOCAL, op=MPI.SUM)
+        return COMM.allreduce(LOCAL, op=MPI.SUM)
 
     def compute_Ln_norm(self, n=2, quad_degree=None):
         """Compute  ||self ||_{L^n} = ( int_{Omega}(self^n) )^(1/n) , which is the n-root of Ln-energy.

@@ -10,8 +10,8 @@ if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.base import FrozenOnly
 
-from root.config.main import rAnk, mAster_rank, cOmm, np
-from screws.functions._3d_space.angle import angle_between_two_vectors
+from root.config.main import RANK, MASTER_RANK, COMM, np
+from screws.functions._3dSpace.angle import angle_between_two_vectors
 
 class _3dCSCG_MeshBoundaryCT_constant(FrozenOnly):
     """"""
@@ -59,9 +59,9 @@ class _3dCSCG_MeshBoundaryCT_constant(FrozenOnly):
             else:
                 LOCAL_CV = None
 
-            LOCAL_CV = cOmm.gather(LOCAL_CV, root=mAster_rank)
+            LOCAL_CV = COMM.gather(LOCAL_CV, root=MASTER_RANK)
 
-            if rAnk == mAster_rank:
+            if RANK == MASTER_RANK:
 
                 cN = LOCAL_CV.count(None)
 
@@ -77,7 +77,7 @@ class _3dCSCG_MeshBoundaryCT_constant(FrozenOnly):
             else:
                 pass
 
-            Constant_unit_normal_vector_ = cOmm.bcast(LOCAL_CV, root=mAster_rank)
+            Constant_unit_normal_vector_ = COMM.bcast(LOCAL_CV, root=MASTER_RANK)
 
             # now we need to check if this is outward, because for a trace element we don't know this!
 
@@ -119,10 +119,10 @@ class _3dCSCG_MeshBoundaryCT_constant(FrozenOnly):
                     oppo = None
                     same = None
 
-                oppo = cOmm.gather(oppo, root=mAster_rank)
-                same = cOmm.gather(same, root=mAster_rank)
+                oppo = COMM.gather(oppo, root=MASTER_RANK)
+                same = COMM.gather(same, root=MASTER_RANK)
 
-                if rAnk == mAster_rank:
+                if RANK == MASTER_RANK:
 
                     oppo = all([_ is True or _ is None for _ in oppo])
                     same = all([_ is True or _ is None for _ in same])
@@ -138,7 +138,7 @@ class _3dCSCG_MeshBoundaryCT_constant(FrozenOnly):
                 else:
                     change = None
 
-                change = cOmm.bcast(change, root=mAster_rank)
+                change = COMM.bcast(change, root=MASTER_RANK)
 
                 if change is None:
                     Constant_unit_normal_vector_ = None

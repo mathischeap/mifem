@@ -10,7 +10,7 @@ if './' not in sys.path: sys.path.append('./')
 
 import numpy as np
 from screws.freeze.main import FrozenClass
-from root.config.main import cOmm, rAnk, mAster_rank
+from root.config.main import COMM, RANK, MASTER_RANK
 
 
 class CSCG_DiscreteField(FrozenClass):
@@ -70,8 +70,8 @@ class CSCG_DiscreteField(FrozenClass):
             else:
                 assert vdim == len(values[rn])
 
-        vdim = cOmm.gather(vdim, root=mAster_rank)
-        if rAnk == mAster_rank:
+        vdim = COMM.gather(vdim, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
             __ck = None
             for _v in vdim:
                 if _v is not None:
@@ -82,7 +82,7 @@ class CSCG_DiscreteField(FrozenClass):
         else:
             __ck = None
 
-        __ck = cOmm.bcast(__ck, root=mAster_rank)
+        __ck = COMM.bcast(__ck, root=MASTER_RANK)
 
         self._vdim_ = __ck
 

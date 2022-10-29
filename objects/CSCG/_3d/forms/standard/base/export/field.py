@@ -8,7 +8,6 @@ from screws.miscellaneous.timer import check_filename, check_no_splcharacter
 from scipy.io import savemat
 
 
-
 class _3dCSC_SF_Export_Field(FrozenOnly):
     """"""
 
@@ -59,7 +58,7 @@ class _3dCSC_SF_Export_Field(FrozenOnly):
         xyz, v = self._sf_.reconstruct(*rst, regions=regions)
 
         # Now, we gather xyz & v from all cores into Master Core, store in XYZ & V --- BELOW ---
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             X = [None for _ in range(mesh.elements.GLOBAL_num)]
             Y = [None for _ in range(mesh.elements.GLOBAL_num)]
             Z = [None for _ in range(mesh.elements.GLOBAL_num)]
@@ -77,8 +76,8 @@ class _3dCSC_SF_Export_Field(FrozenOnly):
                     Vy[j] = v[j][1]
                     # noinspection PyUnboundLocalVariable
                     Vz[j] = v[j][2]
-            for i in sLave_ranks:
-                xyz, v = cOmm.recv(source=i, tag=0)
+            for i in SLAVE_RANKS:
+                xyz, v = COMM.recv(source=i, tag=0)
                 for j in xyz:
                     X[j] = xyz[j][0]
                     Y[j] = xyz[j][1]
@@ -89,11 +88,11 @@ class _3dCSC_SF_Export_Field(FrozenOnly):
                         Vz[j] = v[j][2]
             del xyz, v
         else:
-            cOmm.send([xyz, v], dest=mAster_rank, tag=0)
+            COMM.send([xyz, v], dest=MASTER_RANK, tag=0)
             del xyz, v
 
         # Now, we reshape the XYZ and V for export in the master core. -------- BELOW ----------
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             if self._sf_.k in (1, 2):
                 # noinspection PyUnboundLocalVariable
                 X, Y, Z, Vx, Vy, Vz = mesh.do.regionwsie_stack(X, Y, Z, Vx, Vy, Vz)

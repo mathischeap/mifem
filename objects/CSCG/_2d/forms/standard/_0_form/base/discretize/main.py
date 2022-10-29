@@ -23,9 +23,9 @@ class _2dCSCG_S0F_Discretize(FrozenOnly):
         """
         if target == 'func':
 
-            if self._sf_.TW.func.body.__class__.__name__ == '_2dCSCG_ScalarField':
+            if self._sf_.CF.__class__.__name__ == '_2dCSCG_ScalarField':
                 #
-                if self._sf_.func.ftype == 'standard':
+                if self._sf_.CF.ftype == 'standard':
                     return self._standard_scalar_(update_cochain=update_cochain)
                 else:
                     raise NotImplementedError(f"2dCSCG outer 0-form cannot (target func) "

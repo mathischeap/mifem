@@ -35,53 +35,53 @@ class _3dCSCG_2Trace_Discretize(FrozenOnly):
         SELF = self._tf_
 
         if target == 'func':
-            if SELF.TW.func.body.__class__.__name__ == '_3dCSCG_ScalarField':
-                if SELF.func.ftype == 'standard':
+            if SELF.CF.__class__.__name__ == '_3dCSCG_ScalarField':
+                if SELF.CF.ftype == 'standard':
                     return self._standard_scalar_(
                         update_cochain=update_cochain, **kwargs)
                 else:
                     raise Exception(f'3dCSCG 2-trace can not (target func) discretize '
-                                    f'_3dCSCG_ScalarField of ftype {SELF.func.ftype}.')
+                                    f'_3dCSCG_ScalarField of ftype {SELF.CF.ftype}.')
 
-            elif SELF.TW.func.body.__class__.__name__ == '_3dCSCG_VectorField':
-                if SELF.func.ftype == 'standard': # we will discretize the norm component of the vector.
+            elif SELF.CF.__class__.__name__ == '_3dCSCG_VectorField':
+                if SELF.CF.ftype == 'standard': # we will discretize the norm component of the vector.
                     return self._standard_vector_(
                         update_cochain=update_cochain, **kwargs)
                 else:
                     raise Exception(f'3dCSCG 2-trace can not (target func) discretize '
-                                    f'_3dCSCG_VectorField of ftype {SELF.func.ftype}.')
+                                    f'_3dCSCG_VectorField of ftype {SELF.CF.ftype}.')
 
             else:
                 raise NotImplementedError(f'3dCSCG 2-trace can not (target func) '
-                                          f'discretize {SELF.TW.func.body.__class__}.')
+                                          f'discretize {SELF.CF.__class__}.')
 
         elif target == 'BC': # We target at the BC, so we do not update the cochain!
 
-            if SELF.TW.BC.body.__class__.__name__ == '_3dCSCG_ScalarField':
-                if SELF.BC.ftype == 'standard':
+            if SELF.BC.CF.__class__.__name__ == '_3dCSCG_ScalarField':
+                if SELF.BC.CF.ftype == 'standard':
                     return self._standard_scalar_(
                         update_cochain=False, target='BC', **kwargs)
-                elif SELF.BC.ftype == 'boundary-wise':
+                elif SELF.BC.CF.ftype == 'boundary-wise':
                     return self._boundary_wise_scalar_(
                         **kwargs) # must be False update_cochain and 'BC' target.
                 else:
                     raise Exception(f'3dCSCG 2-trace can not (target BC) discretize '
-                                    f'_3dCSCG_ScalarField of ftype {SELF.BC.ftype}.')
+                                    f'_3dCSCG_ScalarField of ftype {SELF.BC.CF.ftype}.')
 
-            elif SELF.TW.BC.body.__class__.__name__ == '_3dCSCG_VectorField':
-                if SELF.BC.ftype == 'standard': # we will discretize the norm flux of the vector.
+            elif SELF.BC.CF.__class__.__name__ == '_3dCSCG_VectorField':
+                if SELF.BC.CF.ftype == 'standard': # we will discretize the norm flux of the vector.
                     return self._standard_vector_(
                         update_cochain=False, target='BC', **kwargs)
-                elif SELF.BC.ftype == 'boundary-wise': # we will discretize the norm flux of the vector.
+                elif SELF.BC.CF.ftype == 'boundary-wise': # we will discretize the norm flux of the vector.
                     return self._boundary_wise_vector_(
                         **kwargs) # must be False update_cochain and 'BC' target.
                 else:
                     raise Exception(f'3dCSCG 2-trace can not (target BC) discretize '
-                                    f'_3dCSCG_VectorField of ftype {SELF.BC.ftype}.')
+                                    f'_3dCSCG_VectorField of ftype {SELF.BC.CF.ftype}.')
 
             else:
                 raise NotImplementedError(f'3dCSCG 2-trace can not (target BC) '
-                                          f'discretize {SELF.TW.BC.body.__class__}.')
+                                          f'discretize {SELF.BC.CF.__class__}.')
 
         else:
             raise NotImplementedError(f"target={target} not implemented "

@@ -54,10 +54,10 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
         :rtype: dict
         """
         if self._type_amount_dict_ is None:
-            if rAnk == 0:
+            if RANK == 0:
                 POOL = dict()
             else:
-                POOL = cOmm.recv(source=rAnk - 1, tag=rAnk)
+                POOL = COMM.recv(source=RANK - 1, tag=RANK)
 
             type_amount_dict = dict()
 
@@ -92,13 +92,13 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
                     del POOL[i]
                 else:
                     CORE = tei.shared_with_core
-                    if CORE < rAnk:
+                    if CORE < RANK:
                         del POOL[i]
 
-            if rAnk == sIze - 1:
+            if RANK == SIZE - 1:
                 pass
             else:
-                cOmm.send(POOL, dest=rAnk+1, tag=rAnk+1)
+                COMM.send(POOL, dest=RANK + 1, tag=RANK + 1)
 
             self._type_amount_dict_ = type_amount_dict
 
@@ -208,11 +208,11 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
         upesp = self._mesh_.___useful_periodic_element_side_pairs___
         self._MAP_ = dict()
 
-        if rAnk == 0: # first core
+        if RANK == 0: # first core
             cn = 0
             POOL = dict()
         else: # intermediate cores
-            POOL, cn = cOmm.recv(source=rAnk-1, tag=rAnk)
+            POOL, cn = COMM.recv(source=RANK - 1, tag=RANK)
 
         LOCAL_POOL = dict()
         for i in elements_map:
@@ -265,17 +265,17 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
                         del POOL[position_1]
                         del POOL[position_2]
 
-        if rAnk == sIze - 1:
+        if RANK == SIZE - 1:
             assert len(POOL) == 0
         else:
-            cOmm.send([POOL, cn], dest=rAnk+1, tag=rAnk+1)
+            COMM.send([POOL, cn], dest=RANK + 1, tag=RANK + 1)
 
-        cOmm.barrier()
+        COMM.barrier()
 
-        cn = cOmm.bcast(cn, root=sIze-1)
+        cn = COMM.bcast(cn, root=SIZE - 1)
         self._GLOBAL_num_ = cn
 
-        if saFe_mode:
+        if SAFE_MODE:
             map_set = set()
             for i in elements_map:
                 map_set.update(self._MAP_[i])
@@ -329,7 +329,7 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
             ep0, ep1 = evaluation_points
             shape0 = np.shape(ep0)
 
-            if saFe_mode:
+            if SAFE_MODE:
                 assert shape0 == np.shape(ep1), \
                     " <TraceElement3D> : evaluation_points shape wrong."
 
@@ -367,7 +367,7 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
                 return ep
 
             else: # two valid plus one -1 or +1 coordinates are provided
-                if saFe_mode:
+                if SAFE_MODE:
                     # noinspection PyUnresolvedReferences
                     assert evaluation_points[0].shape == \
                            evaluation_points[1].shape == \
@@ -409,4 +409,4 @@ if __name__ == '__main__':
         # if i in mesh.trace.elements:
         #     te = mesh.trace.elements[i]
         #
-        #     print(rAnk, te.type_wrt_metric.mark)
+        #     print(RANK, te.type_wrt_metric.mark)

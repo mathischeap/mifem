@@ -10,6 +10,9 @@ if './' not in sys.path: sys.path.append('./')
 
 from objects.miUsGrid.base.form.base.main import miUsGrid_FormBase
 
+
+
+
 class miUsTriangular_FormBase(miUsGrid_FormBase):
     """"""
 
@@ -20,5 +23,5 @@ class miUsTriangular_FormBase(miUsGrid_FormBase):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python objects/miUsGrid/triangular/forms/base/main.py
     pass

@@ -28,21 +28,21 @@ class _3dCSCG_Discretize(FrozenOnly):
         """
         SELF = self._sf_
         if target == 'func':
-            if SELF.TW.func.body.__class__.__name__ == '_3dCSCG_VectorField':
+            if SELF.CF.__class__.__name__ == '_3dCSCG_VectorField':
 
-                if SELF.func.ftype == 'standard':
+                if SELF.CF.ftype == 'standard':
                     return self._standard_(update_cochain=update_cochain, **kwargs)
                 else:
                     raise NotImplementedError(f"3dCSCG 1-form cannot (target func) discretize "
-                                              f"_3dCSCG_VectorField of ftype={SELF.func.ftype}")
+                                              f"_3dCSCG_VectorField of ftype={SELF.CF.ftype}")
 
             else:
-                raise NotImplementedError(f'3dCSCG 1-form can not discretize {SELF.TW.func.body.__class__}.')
+                raise NotImplementedError(f'3dCSCG 1-form can not discretize {SELF.CF.body.__class__}.')
 
         elif target == 'BC':
-            if SELF.TW.BC.body.__class__.__name__ == '_3dCSCG_VectorField':
+            if SELF.BC.CF.__class__.__name__ == '_3dCSCG_VectorField':
 
-                if SELF.BC.ftype == 'standard':
+                if SELF.BC.CF.ftype == 'standard':
                     # always do not update cochain & and target always be "BC"
                     return self._standard_(update_cochain=False, target='BC', **kwargs)
         

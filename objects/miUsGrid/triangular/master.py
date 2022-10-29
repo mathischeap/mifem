@@ -9,20 +9,22 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from root.config.main import cOmm
+from root.config.main import COMM
 from importlib import import_module
 from screws.freeze.base import FrozenOnly
+from screws.miscellaneous.timer import MyTimer
+from screws.miscellaneous.miprint import miprint
 from objects.miUsGrid.triangular.mesh.main import miUsGrid_TriangularMesh
 from objects.miUsGrid.triangular.space.main import miUsGrid_TriangularFunctionSpace
 
 from objects.miUsGrid.triangular.forms.allocator import miUsGrid_FormsAllocator
 
-from objects.miUsGrid.triangular.exact_solution.allocator import miUsGrid_ExactSolutionAllocator
+from objects.miUsGrid.triangular.exactSolution.allocator import miUsGrid_ExactSolutionAllocator
 
 from objects.miUsGrid.triangular.fields.scalar.main import miUsGrid_Triangular_Scalar
 from objects.miUsGrid.triangular.fields.vector.main import miUsGrid_Triangular_Vector
-from objects.miUsGrid.triangular.__test__.mesh_samples.allocator import miUsGrid_TriangularMeshAllocator
-from objects.miUsGrid.triangular.__test__.realtime_meshes.allocator import miUsGrid_RealTime_TriangularMeshAllocator
+from objects.miUsGrid.triangular.mesh.instances.samples.allocator import miUsGrid_TriangularMeshAllocator
+from objects.miUsGrid.triangular.mesh.instances.realtime.allocator import miUsGrid_RealTime_TriangularMeshAllocator
 
 
 
@@ -30,7 +32,7 @@ from objects.miUsGrid.triangular.__test__.realtime_meshes.allocator import miUsG
 class Call(FrozenOnly):
     """"""
 
-    def __init__(self, mesh_source_or_ID, p, boundaries=None, **kwargs):
+    def __init__(self, mesh_source_or_ID, p, boundaries=None, show_info=False, **kwargs):
         """
 
         Parameters
@@ -41,23 +43,32 @@ class Call(FrozenOnly):
         kwargs :
             For generating real time mesh.
         """
+        mesh_name = 'NoNameMesh'
 
         if mesh_source_or_ID in miUsGrid_TriangularMeshAllocator.___mesh_path___():
+            mesh_name = mesh_source_or_ID
             # do not change the sequence of below two lines.
             boundaries = miUsGrid_TriangularMeshAllocator.___mesh_boundaries___()[mesh_source_or_ID]
             mesh_source_or_ID = miUsGrid_TriangularMeshAllocator.___mesh_path___()[mesh_source_or_ID]
 
         elif miUsGrid_RealTime_TriangularMeshAllocator.check_mesh(mesh_source_or_ID):
-
+            mesh_name = mesh_source_or_ID
             mesh_source_or_ID, boundaries = miUsGrid_RealTime_TriangularMeshAllocator.make_mesh(
                 mesh_source_or_ID, **kwargs)
 
         else:
             pass
 
-        cOmm.barrier()
-        self._mesh_ = miUsGrid_TriangularMesh(mesh_source_or_ID, boundaries)
+        COMM.barrier()
+        if show_info:
+            miprint(f"---[miUsTriangle]-{MyTimer.current_time()} ...... ")
+            miprint(f"   Mesh name: {mesh_name}")
+        self._mesh_ = miUsGrid_TriangularMesh(mesh_source_or_ID, boundaries, name=mesh_name)
+        if show_info:
+            miprint(f"   Total elements: {self._mesh_.elements.num.GLOBAL_cells}")
         self._space_ = miUsGrid_TriangularFunctionSpace(p)
+        if show_info:
+            miprint(f"   Polynomial degree: {self._space_.p}")
         self._freeze_self_()
 
 
@@ -109,7 +120,7 @@ class Call(FrozenOnly):
 
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/miUsGrid/triangular/master.py
-    fc = Call('rand0', 2)
+    fc = Call('rand0', 2, show_info=True)
 
     f0 = fc('0-f-i')
     f1 = fc('1-f-i')
@@ -129,11 +140,11 @@ if __name__ == "__main__":
 
     # print(gm0.local_dofs)
 
-    from tools.linear_algebra.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
-
-    GM = Chain_Gathering_Matrix([gm0, gm1], chain_method='sequent')
-
-    print(GM.GLOBAL_num_dofs)
+    # from tools.linear_algebra.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
+    #
+    # GM = Chain_Gathering_Matrix([gm0, gm1], chain_method='sequent')
+    #
+    # print(GM.GLOBAL_num_dofs)
 
     # for i in GM:
     #     print(i, GM[i])

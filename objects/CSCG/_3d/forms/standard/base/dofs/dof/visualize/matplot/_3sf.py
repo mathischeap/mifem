@@ -22,8 +22,8 @@ class _3dCSCG_SF_DOF_VISUALIZE_matplot_3SF(FrozenOnly):
             EF[E] = self._sf_.___PRIVATE_element_grid_data_generator_1___(E, density=density)
         GPs = self._dof_.GLOBAL_positions
         assert len(GPs) == 1, f"trivial check."
-        Element_Frames = cOmm.gather(EF, root=mAster_rank)
-        if rAnk == mAster_rank:
+        Element_Frames = COMM.gather(EF, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
             # ------------ prepare figure -----------------------------------------------------------------
             fig = plt.figure(figsize=(12, 8))
             ax = fig.add_subplot(111, projection='3d')
@@ -89,16 +89,16 @@ class _3dCSCG_SF_DOF_VISUALIZE_matplot_3SF(FrozenOnly):
         else:
             element = None
             xyz = None
-        xyz, element = cOmm.bcast([xyz, element], root=mAster_rank)
+        xyz, element = COMM.bcast([xyz, element], root=MASTER_RANK)
 
         if element in self._mesh_.elements:
             xyz = self._mesh_.elements[element].coordinate_transformation.mapping(*xyz)
         else:
             xyz = None
 
-        xyz = cOmm.gather(xyz, root=mAster_rank)
+        xyz = COMM.gather(xyz, root=MASTER_RANK)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             for ___ in xyz:
                 if ___ is not None:
                     X, Y, Z = ___

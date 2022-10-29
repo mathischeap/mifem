@@ -33,7 +33,7 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
         xyz, v = self._sf_.reconstruct(*rst)
         # Now, we gather xyz & v from all cores into Master Core, store in XYZ & V ...
         X = Y = Z = V = 0
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             X = [None for _ in range(mesh.elements.GLOBAL_num)]
             Y = [None for _ in range(mesh.elements.GLOBAL_num)]
             Z = [None for _ in range(mesh.elements.GLOBAL_num)]
@@ -43,8 +43,8 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
                 Y[j] = xyz[j][1]
                 Z[j] = xyz[j][2]
                 V[j] = v[j][0]
-            for i in sLave_ranks:
-                xyz, v = cOmm.recv(source=i, tag=113)
+            for i in SLAVE_RANKS:
+                xyz, v = COMM.recv(source=i, tag=113)
                 for j in xyz:
                     X[j] = xyz[j][0]
                     Y[j] = xyz[j][1]
@@ -52,11 +52,11 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
                     V[j] = v[j][0]
             del xyz, v
         else:
-            cOmm.send([xyz, v], dest=mAster_rank, tag=113)
+            COMM.send([xyz, v], dest=MASTER_RANK, tag=113)
             del xyz, v
 
         # Now, we reshape the XYZ and V for tecplot and do the plot ...
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             X, Y, Z, V = mesh.do.regionwsie_stack(X, Y, Z, V)
             tp.session.connect(port=port)
             tp.new_layout()
@@ -99,7 +99,7 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
         xyz, v = self._sf_.reconstruct(*rst)
         # Now, we gather xyz & v from all cores into Master Core, store in XYZ & V ...
         X = Y = Z = Vx= Vy = Vz = 0
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             X = [None for _ in range(mesh.elements.GLOBAL_num)]
             Y = [None for _ in range(mesh.elements.GLOBAL_num)]
             Z = [None for _ in range(mesh.elements.GLOBAL_num)]
@@ -113,8 +113,8 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
                 Vx[j] = v[j][0]
                 Vy[j] = v[j][1]
                 Vz[j] = v[j][2]
-            for i in sLave_ranks:
-                xyz, v = cOmm.recv(source=i, tag=112)
+            for i in SLAVE_RANKS:
+                xyz, v = COMM.recv(source=i, tag=112)
                 for j in xyz:
                     X[j] = xyz[j][0]
                     Y[j] = xyz[j][1]
@@ -124,11 +124,11 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
                     Vz[j] = v[j][2]
             del xyz, v
         else:
-            cOmm.send([xyz, v], dest=mAster_rank, tag=112)
+            COMM.send([xyz, v], dest=MASTER_RANK, tag=112)
             del xyz, v
 
         # Now, we reshape the XYZ and V for tecplot and do the plot ...
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             X, Y, Z, Vx, Vy, Vz = mesh.do.regionwsie_stack(X, Y, Z, Vx, Vy, Vz)
             tp.session.connect(port=port)
             tp.new_layout()
@@ -175,7 +175,7 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
         xyz, v = self._sf_.reconstruct(*rst)
         # Now, we gather xyz & v from all cores into Master Core, store in XYZ & V ...
         X = Y = Z = Vx= Vy = Vz = 0
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             X = [None for _ in range(mesh.elements.GLOBAL_num)]
             Y = [None for _ in range(mesh.elements.GLOBAL_num)]
             Z = [None for _ in range(mesh.elements.GLOBAL_num)]
@@ -189,8 +189,8 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
                 Vx[j] = v[j][0]
                 Vy[j] = v[j][1]
                 Vz[j] = v[j][2]
-            for i in sLave_ranks:
-                xyz, v = cOmm.recv(source=i, tag=111)
+            for i in SLAVE_RANKS:
+                xyz, v = COMM.recv(source=i, tag=111)
                 for j in xyz:
                     X[j] = xyz[j][0]
                     Y[j] = xyz[j][1]
@@ -200,11 +200,11 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
                     Vz[j] = v[j][2]
             del xyz, v
         else:
-            cOmm.send([xyz, v], dest=mAster_rank, tag=111)
+            COMM.send([xyz, v], dest=MASTER_RANK, tag=111)
             del xyz, v
 
         # Now, we reshape the XYZ and V for tecplot and do the plot ...
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             X, Y, Z, Vx, Vy, Vz = mesh.do.regionwsie_stack(X, Y, Z, Vx, Vy, Vz)
             tp.session.connect(port=port)
             tp.new_layout()
@@ -252,7 +252,7 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
         xyz, v = self._sf_.reconstruct(*rst)
         # Now, we gather xyz & v from all cores into Master Core, store in XYZ & V ...
         X = Y = Z = V = 0
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             X = [None for _ in range(mesh.elements.GLOBAL_num)]
             Y = [None for _ in range(mesh.elements.GLOBAL_num)]
             Z = [None for _ in range(mesh.elements.GLOBAL_num)]
@@ -262,8 +262,8 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
                 Y[j] = xyz[j][1]
                 Z[j] = xyz[j][2]
                 V[j] = v[j][0]
-            for i in sLave_ranks:
-                xyz, v = cOmm.recv(source=i, tag=110)
+            for i in SLAVE_RANKS:
+                xyz, v = COMM.recv(source=i, tag=110)
                 for j in xyz:
                     X[j] = xyz[j][0]
                     Y[j] = xyz[j][1]
@@ -271,11 +271,11 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
                     V[j] = v[j][0]
             del xyz, v
         else:
-            cOmm.send([xyz, v], dest=mAster_rank, tag=110)
+            COMM.send([xyz, v], dest=MASTER_RANK, tag=110)
             del xyz, v
 
         # Now, we reshape the XYZ and V for tecplot and do the plot ...
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             X, Y, Z, V = mesh.do.regionwsie_stack(X, Y, Z, V)
             tp.session.connect(port=port)
             tp.new_layout()
@@ -326,7 +326,7 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
 
         # Now, we gather xyz & v from all cores into Master Core, store in XYZ & V ...
         X = Y = Z = V = 0
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             X = [None for _ in range(mesh.elements.GLOBAL_num)]
             Y = [None for _ in range(mesh.elements.GLOBAL_num)]
             Z = [None for _ in range(mesh.elements.GLOBAL_num)]
@@ -336,8 +336,8 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
                 Y[j] = xyz[j][1]
                 Z[j] = xyz[j][2]
                 V[j] = v[j]
-            for i in sLave_ranks:
-                xyz, v = cOmm.recv(source=i, tag=115)
+            for i in SLAVE_RANKS:
+                xyz, v = COMM.recv(source=i, tag=115)
                 for j in xyz:
                     X[j] = xyz[j][0]
                     Y[j] = xyz[j][1]
@@ -345,11 +345,11 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
                     V[j] = v[j]
             del xyz, v
         else:
-            cOmm.send([xyz, v], dest=mAster_rank, tag=115)
+            COMM.send([xyz, v], dest=MASTER_RANK, tag=115)
             del xyz, v
 
         # Now, we reshape the XYZ and V for tecplot and do the plot ...
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             X, Y, Z, V = mesh.do.regionwsie_stack(X, Y, Z, V)
             tp.session.connect(port=port)
             tp.new_layout()
@@ -400,7 +400,7 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
 
         # Now, we gather xyz & v from all cores into Master Core, store in XYZ & V ...
         X = Y = Z = V = 0
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             X = [None for _ in range(mesh.elements.GLOBAL_num)]
             Y = [None for _ in range(mesh.elements.GLOBAL_num)]
             Z = [None for _ in range(mesh.elements.GLOBAL_num)]
@@ -410,8 +410,8 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
                 Y[j] = xyz[j][1]
                 Z[j] = xyz[j][2]
                 V[j] = v[j]
-            for i in sLave_ranks:
-                xyz, v = cOmm.recv(source=i, tag=112)
+            for i in SLAVE_RANKS:
+                xyz, v = COMM.recv(source=i, tag=112)
                 for j in xyz:
                     X[j] = xyz[j][0]
                     Y[j] = xyz[j][1]
@@ -419,11 +419,11 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
                     V[j] = v[j]
             del xyz, v
         else:
-            cOmm.send([xyz, v], dest=mAster_rank, tag=112)
+            COMM.send([xyz, v], dest=MASTER_RANK, tag=112)
             del xyz, v
 
         # Now, we reshape the XYZ and V for tecplot and do the plot ...
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             X, Y, Z, V = mesh.do.regionwsie_stack(X, Y, Z, V)
             tp.session.connect(port=port)
             tp.new_layout()

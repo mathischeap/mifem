@@ -2,7 +2,7 @@
 
 
 
-from root.config.main import rAnk, mAster_rank, cOmm
+from root.config.main import RANK, MASTER_RANK, COMM
 from screws.freeze.main import FrozenOnly
 
 import matplotlib.pyplot as plt
@@ -37,9 +37,9 @@ class _3dCSCG_0Trace_Visualize(FrozenOnly):
         density = int(np.sqrt(density/mesh.trace.elements.GLOBAL_num)) + 1
         xi = eta = sigma = np.linspace(-1, 1, density)
         xyz, v = self._tf_.reconstruct(xi, eta, sigma, i=i)
-        xyz = cOmm.gather(xyz, root=mAster_rank)
-        v = cOmm.gather(v, root=mAster_rank)
-        if rAnk != mAster_rank: return
+        xyz = COMM.gather(xyz, root=MASTER_RANK)
+        v = COMM.gather(v, root=MASTER_RANK)
+        if RANK != MASTER_RANK: return
 
         XYZ = list()
         V = list()

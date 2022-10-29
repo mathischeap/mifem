@@ -27,10 +27,10 @@ class _3dCSCG_VectorField_matplot_Visualize(FrozenOnly):
 
         x = y = z = np.linspace(-1, 1, density)
         xyz, v = self._f_.reconstruct(x, y, z, i='on_mesh_boundaries', where='trace-element')
-        xyz = cOmm.gather(xyz, root=mAster_rank)
-        v = cOmm.gather(v, root=mAster_rank)
+        xyz = COMM.gather(xyz, root=MASTER_RANK)
+        v = COMM.gather(v, root=MASTER_RANK)
 
-        if rAnk != mAster_rank: return
+        if RANK != MASTER_RANK: return
 
         XYZ = list()
         Vx = list()

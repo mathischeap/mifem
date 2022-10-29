@@ -31,7 +31,7 @@ class csvFilerDo(FrozenOnly):
         -------
 
         """
-        self._filer_.df = self._filer_.df.drop(index)
+        self._filer_._df_ = self._filer_.df.drop(index)
 
 
 

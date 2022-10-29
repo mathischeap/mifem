@@ -30,8 +30,8 @@ class _3dCSCG_Edge_Cochain(FrozenOnly):
 
     def ___PRIVATE_DO_gather_local_to_master___(self):
         """Do what the method name says."""
-        local = cOmm.gather(self.local, root=mAster_rank)
-        if rAnk == mAster_rank:
+        local = COMM.gather(self.local, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
             LOCAL = dict()
             for li in local:
                 if li is not None:
@@ -50,15 +50,15 @@ class _3dCSCG_Edge_Cochain(FrozenOnly):
 
             RN_LI_dict[i] = rn + '=|=' + str(loc_ind)
 
-        RN_LI_dict = cOmm.gather(RN_LI_dict, root=mAster_rank)
-        if rAnk == mAster_rank:
+        RN_LI_dict = COMM.gather(RN_LI_dict, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
             RID = dict()
             for rid in RN_LI_dict:
                 RID.update(rid)
         del RN_LI_dict
 
         LOCAL = self.___PRIVATE_DO_gather_local_to_master___()
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
 
             RW_LOCAL = dict()
 

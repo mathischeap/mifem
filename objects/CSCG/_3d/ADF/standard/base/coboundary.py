@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from importlib import import_module
 from screws.freeze.main import FrozenOnly
-from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
+from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
 
 
 class _3dCSCG_Algebra_DUAL_Standard_Form_Coboundary(FrozenOnly):

@@ -16,8 +16,8 @@ from screws.miscellaneous.checks.check_filename import check_filename
 from screws.miscellaneous.checks.check_filename_mi import check_filename_mi
 from screws.miscellaneous.checks.check_almost_in_range import check_almost_in_range
 
-from screws.miscellaneous.docstring_readers.numpy_styple import NumpyStyleDocstringReader
-from screws.miscellaneous.random_string.digits import randomStringDigits
+from screws.miscellaneous.docstringReaders.numpy_styple import NumpyStyleDocstringReader
+from screws.miscellaneous.randomString.digits import randomStringDigits
 from screws.miscellaneous.break_list import break_list_into_parts
 from screws.miscellaneous.get_my_IP_data import get_my_IP_data
 from screws.miscellaneous.initialize_3d_list import initialize_3d_list

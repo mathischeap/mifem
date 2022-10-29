@@ -57,7 +57,7 @@ class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form):
     def RESET_cache(self):
         super().RESET_cache()
 
-    def ___PRIVATE_TW_FUNC_body_checker___(self, func_body):
+    def ___Pr_check_CF___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 3
 
@@ -67,7 +67,7 @@ class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form):
         else:
             raise Exception(f"3dCSCG 1form FUNC do not accept func {func_body.__class__}")
 
-    def ___PRIVATE_TW_BC_body_checker___(self, func_body):
+    def ___Pr_check_BC_CF___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 3
 

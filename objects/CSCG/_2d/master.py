@@ -2,7 +2,6 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
-from objects.CSCG._2d.exact_solutions.main import ExactSolution
 from importlib import import_module
 from screws.freeze.main import FrozenOnly
 from objects.CSCG._2d.mesh.domain.inputs.allocator import DomainInputFinder
@@ -14,7 +13,7 @@ from objects.CSCG._2d.spaces.allocator import _2dCSCG_SpaceAllocator
 from objects.CSCG._2d.forms.allocator import _2dCSCG_FormsAllocator
 from objects.CSCG._2d.fields.allocator import _2dCSCG_FieldsAllocator
 
-from objects.CSCG._2d.exact_solutions.status.allocator import _2dCSCG_ExactSolutionAllocator
+from objects.CSCG._2d.exactSolutions.allocator import _2dCSCG_ExactSolutionAllocator
 
 from copy import deepcopy
 from screws.miscellaneous.timer import MyTimer
@@ -26,7 +25,7 @@ class MeshGenerator(FrozenOnly):
         """Remember, **kwargs are parameters to customize the domain.
         The rule is: they can not change the topology of the regions!
         """
-        cOmm.barrier()  # for safety reason
+        COMM.barrier()  # for safety reason
         di = DomainInputFinder(ID)(**kwargs)
         self._domain_ = _2dCSCG_Domain(di)
         self._ID_ = ID
@@ -35,7 +34,7 @@ class MeshGenerator(FrozenOnly):
 
 
     def __call__(self, element_layout, EDM=None, show_info=False):
-        if show_info and rAnk == mAster_rank:
+        if show_info and RANK == MASTER_RANK:
             print(f"---[2dCSCG]-[MESH]-{MyTimer.current_time()}-----")
             print(f"   <domain ID>: {self._ID_}")
             str_dp = str(self._kwargs_)
@@ -43,7 +42,7 @@ class MeshGenerator(FrozenOnly):
             print( "   <domain_parameters>: {}".format(str_dp))
             print(f"   <EDM>: {EDM}", flush=True)
 
-        cOmm.barrier()  # for safety reason
+        COMM.barrier()  # for safety reason
         mesh = _2dCSCG_Mesh(self._domain_, element_layout, EDM=EDM)
         mp = dict()
         mp['type'] = '_2dCSCG_Mesh'
@@ -58,7 +57,7 @@ class MeshGenerator(FrozenOnly):
             dp[key] = self._kwargs_[key]
         mesh.domain.___define_parameters___ = dp
 
-        if show_info and rAnk == mAster_rank:
+        if show_info and RANK == MASTER_RANK:
             str_element_layout = str(element_layout)
             if len(str_element_layout) < 40:
                 print( "   <element_layout input>: {}".format(str_element_layout))
@@ -68,7 +67,7 @@ class MeshGenerator(FrozenOnly):
                 print(f"   <element_layout>: {rn} {mesh.elements.layout[rn]}")
             print(f"   <total elements>: {mesh.elements.GLOBAL_num}", flush=True)
 
-        cOmm.barrier()  # for safety reason
+        COMM.barrier()  # for safety reason
 
         return mesh
 
@@ -108,7 +107,7 @@ class MeshGenerator(FrozenOnly):
 
 class SpaceInvoker(FrozenOnly):
     def __init__(self, ID):
-        cOmm.barrier()  # for safety reason
+        COMM.barrier()  # for safety reason
         assert ID in _2dCSCG_SpaceAllocator.___space_name___(), \
             " <SpaceInvoker> : space <{}> is not coded yet.".format(ID)
         self._ID_ = ID
@@ -118,12 +117,12 @@ class SpaceInvoker(FrozenOnly):
         self._freeze_self_()
 
     def __call__(self, inputs, ndim=None, show_info=False):
-        if show_info and rAnk == mAster_rank:
+        if show_info and RANK == MASTER_RANK:
             print(f"---[2dCSCG]-[SPACE]-{MyTimer.current_time()}-----")
             print(f"   <space ID>: {self._ID_}")
             print(f"   <space inputs>: {inputs}")
 
-        cOmm.barrier()  # for safety reason
+        COMM.barrier()  # for safety reason
         if ndim is not None: assert ndim == 2
         S = self._space_(inputs, ndim)
         sp = dict()
@@ -132,7 +131,7 @@ class SpaceInvoker(FrozenOnly):
         sp['inputs'] = inputs
         sp['ndim'] = ndim
         S.___define_parameters___ = sp
-        cOmm.barrier()  # for safety reason
+        COMM.barrier()  # for safety reason
         return S
 
 
@@ -142,7 +141,7 @@ class SpaceInvoker(FrozenOnly):
 class FormCaller(FrozenOnly):
     """Generate a form."""
     def __init__(self, mesh, space):
-        cOmm.barrier()  # for safety reason
+        COMM.barrier()  # for safety reason
         self._mesh_ = mesh
         self._space_ = space
 
@@ -157,7 +156,7 @@ class FormCaller(FrozenOnly):
         self._freeze_self_()
 
     def __call__(self, ID, *args, **kwargs):
-        cOmm.barrier()  # for safety reason
+        COMM.barrier()  # for safety reason
 
         cls_body = getattr(import_module(self._PATH_[ID]), self._NAME_[ID])
         if ID in ('scalar', 'vector'):
@@ -173,7 +172,7 @@ class FormCaller(FrozenOnly):
             fp['space_parameters'] = deepcopy(self._space_.standard_properties.parameters)
             fp['kwargs'] = kwargs
             FM.___define_parameters___ = fp
-        cOmm.barrier()  # for safety reason
+        COMM.barrier()  # for safety reason
         return FM
 
     @property
@@ -189,32 +188,24 @@ class FormCaller(FrozenOnly):
 class ExactSolutionSelector(FrozenOnly):
     """We select an exact solution object with this class."""
     def __init__(self, mesh):
-        cOmm.barrier()  # for safety reason
+        COMM.barrier()  # for safety reason
         self._mesh_ = mesh
         self._freeze_self_()
 
     def __call__(self, ID, show_info=False, **kwargs):
-        if show_info and rAnk == mAster_rank:
+        if show_info and RANK == MASTER_RANK:
             print(f"---[2dCSCG]-[Exact Solution]-{MyTimer.current_time()}-----")
             print(f"   <ES ID>: {ID}")
             print(f"   <ES kwargs>: {kwargs}", flush=True)
 
-        cOmm.barrier()  # for safety reason
+        COMM.barrier()  # for safety reason
         assert ID in _2dCSCG_ExactSolutionAllocator.___exact_solution_name___(), \
             f"Exact solution ID={ID} not found."
         className = _2dCSCG_ExactSolutionAllocator.___exact_solution_name___()[ID]
         classPath = _2dCSCG_ExactSolutionAllocator.___exact_solution_path___()[ID]
 
-        ES =  ExactSolution(self._mesh_)
-        status = getattr(import_module(classPath), className)(ES, **kwargs)
-        ES.___PRIVATE_set_status___(status)
-        esp = dict()
-        esp['type'] = '_2dCSCG_ExactSolution'
-        esp['ID'] = ID
-        esp['mesh_parameters'] = deepcopy(self._mesh_.standard_properties.parameters)
-        esp['kwargs'] = kwargs
-        ES.___define_parameters___ = esp
-        cOmm.barrier()  # for safety reason
+        ES = getattr(import_module(classPath), className)(self._mesh_, **kwargs)
+
         return ES
 
 
@@ -225,60 +216,9 @@ class ExactSolutionSelector(FrozenOnly):
 
 if __name__ == "__main__":
     # mpiexec -n 4 python objects\CSCG\_2d\master.py
-    import numpy as np
+    # import numpy as np
 
     # mesh = MeshGenerator('cic',)([14,14])
     # mesh = MeshGenerator('rectangle', p_UL=(-1,-1),region_layout=(3,5))([5,5], show_info=True)
     # mesh = MeshGenerator('rectangle_periodic', p_UL=(-1,-1),region_layout=(3,5))([5,5], show_info=True)
-    mesh = MeshGenerator('triangle_test')([1,1], show_info=True)
-    N = 10
-    # mesh.visualize()
-    space = SpaceInvoker('polynomials')([N,N])
-    fc = FormCaller(mesh, space)
-
-    f0 = fc('0-f-o', is_hybrid=False)
-    f1 = fc('1-f-o', is_hybrid=False)
-    f2 = fc('2-f-o', is_hybrid=False)
-
-    def p(t, x, y): return np.sin(np.pi*x) *  np.sin(np.pi*y) + t
-    def u(t, x, y): return np.sin(np.pi*x) *  np.cos(np.pi*y) + t
-    def v(t, x, y): return np.cos(np.pi*x) *  np.sin(np.pi*y) + t
-
-    scalar = fc('scalar', p)
-    vector = fc('vector', (u,v))
-
-    # # f0.TW.func.body = scalar
-    # # f0.TW.current_time = 1
-    # # f0.TW.do.push_all_to_instant()
-    # # f0.discretize()
-    # # # f0.visualize(show_boundaries=False, title=f"$N={N}$")
-    # # # ds = f0.reconstruct.discrete_field([np.linspace(-1, 1, 20), np.linspace(-1, 1, 20)])
-    # # # ds.visualize.matplot.contourf()
-    # #
-    # # df0 = f0.coboundary()
-    # # df0.visualize(show_boundaries=False, suptitle=f"$N={N}$")
-    #
-    # # # if  0 in mesh.elements:
-    # # #     print(f0.cochain.local[0])
-    # #
-    # f1.TW.func.body = vector
-    # f1.TW.current_time = 1
-    # f1.TW.do.push_all_to_instant()
-    # f1.discretize()
-    # # dv = f1.reconstruct.discrete_field([np.linspace(-0.99, 0.99, 20), np.linspace(-0.99, 0.99, 20)])
-    # # dv.visualize.matplot.contourf()
-    # # if  0 in mesh.elements:
-    # #     print(f1.cochain.local[0])
-    # # f1.visualize(show_boundaries=False, suptitle=f"$N={N}$")
-    # df1 = f1.coboundary()
-    # df1.visualize(show_boundaries=False, title=f"$N={N}$")
-
-    f2.TW.func.body = scalar
-    f2.TW.current_time = 1
-    f2.TW.do.push_all_to_instant()
-    f2.discretize()
-    f2.visualize(show_boundaries=False, title=f"$N={N}$")
-    # ds = f2.reconstruct.discrete_field([np.linspace(-0.99, 0.99, 20), np.linspace(-0.99, 0.99, 20)])
-    # ds.visualize.matplot.contourf()
-    # if  0 in mesh.elements:
-    #     print(f2.cochain.local[0])
+    mesh = MeshGenerator('rectangle')([1,1], show_info=True)

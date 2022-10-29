@@ -2,7 +2,7 @@
 import numpy as np
 from screws.quadrature import Quadrature
 from screws.freeze.base import FrozenOnly
-from root.config.main import cOmm, rAnk, mAster_rank
+from root.config.main import COMM, RANK, MASTER_RANK
 from objects.CSCG._2d.fields.scalar.do.reconstruct.main import _2dCSCG_Scalr_Do_Reconstruct
 from objects.CSCG._2d.fields.scalar.do.cross_product.main import _2dCSCG_SclarField_CrossProduct
 
@@ -73,13 +73,13 @@ class _2dCSCG_ScalarField_DO(FrozenOnly):
 
             local_norm = np.sum(local_norm)
 
-            local_norm = cOmm.gather(local_norm, root=mAster_rank)
-            if rAnk == mAster_rank:
+            local_norm = COMM.gather(local_norm, root=MASTER_RANK)
+            if RANK == MASTER_RANK:
                 local_norm = np.sum(local_norm) ** (1/n)
             else:
                 pass
 
-            local_norm = cOmm.bcast(local_norm, root=mAster_rank)
+            local_norm = COMM.bcast(local_norm, root=MASTER_RANK)
 
             return local_norm
 

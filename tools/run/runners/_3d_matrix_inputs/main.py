@@ -3,7 +3,7 @@ from root.config.main import *
 import inspect
 import os
 from tools.run.runners.base import ParallelRunnerBase
-from tools.deprecated.serial_runners.INSTANCES.matrix3d_input_runner import Matrix3dInputRunner
+from tools.legacy.serialRunners.INSTANCES.matrix3d_input_runner import Matrix3dInputRunner
 from tools.run.runners._3d_matrix_inputs.visualize.main import ___SlaveParallelMatrix3dInputRunnerVisualize___
 
 
@@ -17,7 +17,7 @@ class ParallelMatrix3dInputRunner(ParallelRunnerBase):
 
         self._solver_ = solver
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             if solver.__class__.__name__ == 'Matrix3dInputRunner':
                 # this is only for RunnerDataReader. Never use this manually
                 self._SR_ = solver
@@ -63,44 +63,44 @@ class ParallelMatrix3dInputRunner(ParallelRunnerBase):
         :return:
         """
 
-        if sIze == 1:
+        if SIZE == 1:
             self._SR_.iterate(I1, I2, I3, criterion=criterion, writeto=writeto, saveto=False, **kwargs)
 
         else:
-            if rAnk == mAster_rank:
+            if RANK == MASTER_RANK:
                 self._SR_.iterate(I1, I2, I3, criterion=criterion, writeto=writeto, saveto=False, **kwargs)
             else:
-                I, J, K = cOmm.recv(source=mAster_rank, tag=rAnk+1) # position mark 1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-                cOmm.barrier()
+                I, J, K = COMM.recv(source=MASTER_RANK, tag=RANK + 1) # position mark 1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                COMM.barrier()
 
                 for k in range(K):  # we let the axis2 go at the last.
                     for i in range(I):  # we let the axis0 go secondly.
                         for j in range(J):  # we let the axis1 go firstly.
 
-                            Compute_Or_Not = cOmm.recv(source=mAster_rank, tag=rAnk + 2)  # position mark 2 <<<<<<<
-                            cOmm.barrier()
+                            Compute_Or_Not = COMM.recv(source=MASTER_RANK, tag=RANK + 2)  # position mark 2 <<<<<<<
+                            COMM.barrier()
 
                             if Compute_Or_Not:
-                                INPUTS = cOmm.recv(source=mAster_rank, tag=rAnk + 3)  # position mark 3 <<<<<<<<<<<
-                                cOmm.barrier()
+                                INPUTS = COMM.recv(source=MASTER_RANK, tag=RANK + 3)  # position mark 3 <<<<<<<<<<<
+                                COMM.barrier()
                                 _ = self._solver_(INPUTS[0], INPUTS[1], INPUTS[2], **INPUTS[3])
 
                 # we do nothing after all computation in slave cores -----------------------------
 
     @property
     def ___visualize___(self):
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             return self._SR_.visualize
         else:
             return self._slave_visualize_
 
     @property
     def ___results___(self):
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             R = self._SR_.rdf
         else:
             R = None
 
-        R = cOmm.bcast(R, root=mAster_rank)
+        R = COMM.bcast(R, root=MASTER_RANK)
 
         return R

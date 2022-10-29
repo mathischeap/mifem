@@ -2,7 +2,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 from screws.freeze.base import FrozenOnly
-from root.config.main import rAnk, mAster_rank, np
+from root.config.main import RANK, MASTER_RANK, np
 
 import matplotlib.pyplot as plt
 from matplotlib import cm
@@ -26,7 +26,7 @@ class _3dCSCG_MeshBoundaries_VIS(FrozenOnly):
         boundaries_num = len(boundaries_name)
         range_of_region_sides = self._boundaries_.range_of_region_sides
 
-        if rAnk != mAster_rank: return
+        if RANK != MASTER_RANK: return
 
         domain = self._mesh_.domain
 

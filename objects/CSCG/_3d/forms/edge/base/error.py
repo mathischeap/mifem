@@ -29,7 +29,7 @@ class _3dCSCG_Edge_Error(FrozenOnly):
         :return:
         """
 
-        assert self._ef_.func.ftype == 'standard', f"Currently, this L^n error method only works for standard functions."
+        assert self._ef_.CF.ftype == 'standard', f"Currently, this L^n error method only works for standard functions."
         assert self._ef_.cochain.local is not None, " I have no cochain."
 
         quad_degree = [self._ef_.dqp[i] + 2 for i in range(3)] \
@@ -68,19 +68,21 @@ class _3dCSCG_Edge_Error(FrozenOnly):
             localError = -1
             for i in self._ef_.mesh.edge.elements:
 
-                error_i = [np.max(np.abs(v[i][m] - self._ef_.func.body[m](*xyz[i]))) for m in range(1)]
+                error_i = [np.max(np.abs(v[i][m] -
+                                         self._ef_.CF.___DO_evaluate_func_at_time___()[m](*xyz[i])))
+                           for m in range(1)]
                 error_i = max(error_i)
 
                 localError = error_i if error_i > localError else localError
 
-            LOC_ERR = cOmm.gather(localError, root=mAster_rank)
+            LOC_ERR = COMM.gather(localError, root=MASTER_RANK)
 
-            if rAnk == mAster_rank:
+            if RANK == MASTER_RANK:
                 globalError = max(LOC_ERR)
             else:
                 globalError = None
 
-            globalError = cOmm.bcast(globalError, root=mAster_rank)
+            globalError = COMM.bcast(globalError, root=MASTER_RANK)
         else:
             raise NotImplementedError(f"Not implemented for L^{n}-error of edge forms.")
 

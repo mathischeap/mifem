@@ -6,7 +6,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.main import FrozenOnly
-from root.config.main import cOmm, MPI
+from root.config.main import COMM, MPI
 
 from objects.CSCG._3d.mesh.edge.elements.do.find.helpers.boundary_surrounding import \
     OBJ_SurBoundary_EdgeElement
@@ -74,7 +74,7 @@ class _3dCSCG_Edge_Elements_DO_FIND(FrozenOnly):
         else:
             trace_elements = None
 
-        trace_elements = cOmm.allgather(trace_elements)
+        trace_elements = COMM.allgather(trace_elements)
 
         TE = set()
         for te in trace_elements:
@@ -103,7 +103,7 @@ class _3dCSCG_Edge_Elements_DO_FIND(FrozenOnly):
         else:
             on_mesh_boundary = False
 
-        on_mesh_boundary = cOmm.allreduce(on_mesh_boundary, op=MPI.LOR)
+        on_mesh_boundary = COMM.allreduce(on_mesh_boundary, op=MPI.LOR)
 
         if on_mesh_boundary: # on mesh boundary
             return OBJ_SurBoundary_EdgeElement(self._mesh_, i)

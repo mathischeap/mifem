@@ -29,10 +29,10 @@ class _3dCSCG_ScalarField_matplot_Visualize(FrozenOnly):
 
         xyz, v = self._f_.reconstruct(x, y, z, where='trace-element')
 
-        xyz = cOmm.gather(xyz, root=mAster_rank)
-        v = cOmm.gather(v, root=mAster_rank)
+        xyz = COMM.gather(xyz, root=MASTER_RANK)
+        v = COMM.gather(v, root=MASTER_RANK)
 
-        if rAnk != mAster_rank: return
+        if RANK != MASTER_RANK: return
 
         XYZ = list()
         V = list()

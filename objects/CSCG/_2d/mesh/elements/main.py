@@ -108,6 +108,7 @@ class _2dCSCG_Mesh_Elements(FrozenOnly):
 
         """
         if self._rwPc_ is None:
+
             rns = self._mesh_.domain.regions.names
             COUNT = dict()
             for rn in rns:
@@ -117,11 +118,12 @@ class _2dCSCG_Mesh_Elements(FrozenOnly):
                 rn = self._mesh_.do.find.region_name_of_element(i)
                 COUNT[rn] += 1
 
-            CTs = cOmm.gather(COUNT, root=mAster_rank)
-            if rAnk == mAster_rank:
+            CTs = COMM.gather(COUNT, root=MASTER_RANK)
+
+            if RANK == MASTER_RANK:
                 overall_count = dict()
                 for rn in rns:
-                    overall_count[rn] = [0 for _ in range(sIze)]
+                    overall_count[rn] = [0 for _ in range(SIZE)]
 
                 for i, CT in enumerate(CTs):
                     for rn in CT:
@@ -135,7 +137,7 @@ class _2dCSCG_Mesh_Elements(FrozenOnly):
             else:
                 pass
 
-            self._rwPc_ = cOmm.bcast(self._rwPc_, root=mAster_rank)
+            self._rwPc_ = COMM.bcast(self._rwPc_, root=MASTER_RANK)
 
         return self._rwPc_
 
@@ -190,7 +192,7 @@ class _2dCSCG_Mesh_Elements(FrozenOnly):
         mesh_judge = self._mesh_ == other._mesh_
         indices_judge = self.indices == other.indices
         judge = mesh_judge and indices_judge
-        return cOmm.allreduce(judge, op=MPI.LAND)
+        return COMM.allreduce(judge, op=MPI.LAND)
 
     def ___PRIVATE_elementwise_cache_metric_key___(self, i):
         """This is an import method, for example, it can be used as a key generator for EWC objects."""

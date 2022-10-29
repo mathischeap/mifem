@@ -8,7 +8,7 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
+from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
 from objects.miUsGrid.triangular.forms.standard.base.do import miUs_Triangular_SF_Do
 from objects.miUsGrid.triangular.forms.standard._0.base.do.helpers._0x1_ip_1 import ___0_x_1__ip__1___
 

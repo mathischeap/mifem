@@ -89,8 +89,8 @@ class _3dCSCG_2Trace_Discretize_BoundaryWiseScalar(FrozenOnly):
             area_BF = self.___cache_DISCRETIZE_STANDARD___['area_BF']
             quad_weights = self.___cache_DISCRETIZE_STANDARD___['quad_weights']
 
-        assert SELF.BC.body is not None, f"No BC.body!"
-        FUNC = SELF.BC.body
+        assert SELF.BC.CF is not None, f"No BC.CF!"
+        FUNC = SELF.BC.CF.___DO_evaluate_func_at_time___()
         RANGE_trace_elements = SELF.mesh.boundaries.range_of_trace_elements
         local_TEW = dict()
         for bn in FUNC:

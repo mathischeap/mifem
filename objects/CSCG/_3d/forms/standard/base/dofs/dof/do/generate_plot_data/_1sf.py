@@ -2,7 +2,7 @@
 
 import numpy as np
 from screws.freeze.base import FrozenOnly
-from root.config.main import cOmm, MPI
+from root.config.main import COMM, MPI
 
 
 class GPD_1SF(FrozenOnly):
@@ -34,7 +34,7 @@ class GPD_1SF(FrozenOnly):
             if _ == mesh_element:
                 FIND += 1
 
-        FIND = cOmm.allreduce(FIND, op=MPI.SUM)
+        FIND = COMM.allreduce(FIND, op=MPI.SUM)
         assert FIND == 1, f"I (dof # {self._dof_.i}) not in the mesh element #{mesh_element}"
 
         if mesh_element in self._dof_._sf_.mesh.elements:

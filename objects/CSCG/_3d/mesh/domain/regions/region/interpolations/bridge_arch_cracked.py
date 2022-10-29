@@ -4,10 +4,10 @@
 
 from objects.CSCG._3d.mesh.domain.regions.region.interpolations.base import InterpolationBase
 
-from screws.functions._2d_space.geometrical_functions.straight_line import StraightLine
-from screws.functions._2d_space.geometrical_functions.clockwise_arc import ArcClockWise
+from screws.functions._2dSpace.geometrical_functions.straight_line import StraightLine
+from screws.functions._2dSpace.geometrical_functions.clockwise_arc import ArcClockWise
 
-from screws.functions._2d_space.transfinite import TransfiniteMapping
+from screws.functions._2dSpace.transfinite import TransfiniteMapping
 
 import numpy as np
 

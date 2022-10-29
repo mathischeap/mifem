@@ -25,7 +25,7 @@ class _2dCSCG_Domain_Visualize(FrozenOnly):
         self._freeze_self_()
 
     def __call__(self, **kwargs):
-        if rAnk != mAster_rank: return
+        if RANK != MASTER_RANK: return
         return self.matplot(**kwargs)
 
     def matplot(self, show_region_boundary=True, usetex=False, corlormap='tab10',
@@ -51,7 +51,7 @@ class _2dCSCG_Domain_Visualize(FrozenOnly):
         :param region_linewidth:
         :return:
         """
-        if rAnk != mAster_rank: return
+        if RANK != MASTER_RANK: return
         density = int(np.ceil(density / self._domain_.regions.num / 4))
         if density > 100: density = 100
         if density < 30: density = 30
@@ -129,6 +129,7 @@ class _2dCSCG_Domain_Visualize(FrozenOnly):
         ax.set_aspect('equal')
         # ax.spines['top'].set_visible(False)
         # ax.spines['right'].set_visible(False)
+
         if xlim is not None: plt.xlim(xlim)
         if ylim is not None: plt.ylim(ylim)
         for rn in self._domain_.regions.names:

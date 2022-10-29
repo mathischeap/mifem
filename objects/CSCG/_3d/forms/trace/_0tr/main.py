@@ -31,15 +31,15 @@ class _3dCSCG_0Trace(_3dCSCG_Standard_Trace, ABC):
         super().__init__(mesh, space, orientation, numbering_parameters, name)
         self._k_ = 0
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_trace_0form')
-        self.___PRIVATE_reset_cache___()
+        self.RESET_cache()
         self._discretize_ = _3dCSCG_0Trace_Discretize(self)
         self._visualize_ = None
         self._freeze_self_()
 
-    def ___PRIVATE_reset_cache___(self):
-        super().___PRIVATE_reset_cache___()
+    def RESET_cache(self):
+        super().RESET_cache()
 
-    def ___PRIVATE_TW_FUNC_body_checker___(self, func_body):
+    def ___Pr_check_CF___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 3
 
@@ -55,7 +55,7 @@ class _3dCSCG_0Trace(_3dCSCG_Standard_Trace, ABC):
             raise NotImplementedError(
                 f"0-trace form cannot accommodate {func_body}.")
 
-    def ___PRIVATE_TW_BC_body_checker___(self, func_body):
+    def ___Pr_check_BC_CF___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 3
 

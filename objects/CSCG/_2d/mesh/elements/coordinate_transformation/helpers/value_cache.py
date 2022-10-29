@@ -6,7 +6,7 @@
 
 
 from screws.freeze.base import FrozenOnly
-from root.config.main import caChe_factor
+from root.config.main import CACHE_FACTOR
 
 
 
@@ -60,7 +60,7 @@ class ElementsCTValuesCache(FrozenOnly):
                 if isinstance(type_wrt_metric, str) and \
                     type_wrt_metric in self._multi_elements_metric_ and \
                     type_wrt_metric not in self._cache_ and \
-                    self._multi_elements_metric_[type_wrt_metric] >= caChe_factor:
+                    self._multi_elements_metric_[type_wrt_metric] >= CACHE_FACTOR:
                     self._cache_[type_wrt_metric] = JM
                 return JM
         else:
@@ -76,7 +76,7 @@ class ElementsCTValuesCache(FrozenOnly):
                 if isinstance(type_wrt_metric, str) and \
                     type_wrt_metric in self._multi_elements_metric_ and \
                     type_wrt_metric not in self._cache_ and \
-                    self._multi_elements_metric_[type_wrt_metric] >= caChe_factor:
+                    self._multi_elements_metric_[type_wrt_metric] >= CACHE_FACTOR:
                     # here we have very strict cache rule.
                     self._cache_[type_wrt_metric] = result
                 return result

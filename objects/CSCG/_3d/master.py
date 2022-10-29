@@ -9,7 +9,6 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from objects.CSCG._3d.exact_solutions.main import _3dCSCG_ExactSolution
 from importlib import import_module
 from screws.freeze.main import FrozenOnly
 from screws.miscellaneous.timer import MyTimer
@@ -20,9 +19,9 @@ from objects.CSCG._3d.spaces.allocator import _3dCSCG_SpaceAllocator
 from objects.CSCG._3d.ADF.allocator import _3dCSCG_ADF_Allocator
 from objects.CSCG._3d.forms.allocator import _3dCSCG_SF_Allocator
 from objects.CSCG._3d.fields.allocator import _3dCSCG_Field_Allocator
-from objects.CSCG._3d.exact_solutions.status.allocator import _3dCSCG_ExactSolution_Allocator
+from objects.CSCG._3d.exactSolutions.allocator import _3dCSCG_ExactSolution_Allocator
 from copy import deepcopy
-from root.config.main import rAnk, mAster_rank, cOmm
+from root.config.main import RANK, MASTER_RANK, COMM
 
 
 class MeshGenerator(FrozenOnly):
@@ -46,7 +45,7 @@ class MeshGenerator(FrozenOnly):
         :param show_info:
         :return:
         """
-        if show_info and rAnk == mAster_rank:
+        if show_info and RANK == MASTER_RANK:
             print(f"---[3dCSCG]-[MESH]-{MyTimer.current_time()}-----")
             print(f"   <domain ID>: {self._ID_}")
             str_dp = str(self._kwargs_)
@@ -54,7 +53,7 @@ class MeshGenerator(FrozenOnly):
             print( "   <domain_parameters>: {}".format(str_dp))
             print(f"   <EDM>: {EDM}", flush=True)
 
-        cOmm.barrier()  # for safety reason
+        COMM.barrier()  # for safety reason
         mesh = _3dCSCG_Mesh(self._domain_, element_layout, EDM=EDM)
         mp = dict()
         mp['type'] = '_3dCSCG_Mesh'
@@ -70,7 +69,7 @@ class MeshGenerator(FrozenOnly):
             dp[key] = self._kwargs_[key]
         mesh.domain.___define_parameters___ = dp
 
-        if show_info and rAnk == mAster_rank:
+        if show_info and RANK == MASTER_RANK:
             str_element_layout = str(element_layout)
             if len(str_element_layout) < 40:
                 print( "   <element_layout input>: {}".format(str_element_layout))
@@ -79,7 +78,7 @@ class MeshGenerator(FrozenOnly):
             for rn in mesh.elements.layout:
                 print(f"   <element_layout>: {rn} {mesh.elements.layout[rn]}")
             print(f"   <total elements>: {mesh.elements.GLOBAL_num}", flush=True)
-        cOmm.barrier()  # for safety reason
+        COMM.barrier()  # for safety reason
 
         return mesh
 
@@ -116,7 +115,7 @@ class MeshGenerator(FrozenOnly):
 
 class SpaceInvoker(FrozenOnly):
     def __init__(self, ID):
-        cOmm.barrier()  # for safety reason
+        COMM.barrier()  # for safety reason
         assert ID in _3dCSCG_SpaceAllocator.___space_name___(), \
             " <SpaceInvoker> : space <{}> is not coded yet.".format(ID)
         self._ID_ = ID
@@ -126,13 +125,13 @@ class SpaceInvoker(FrozenOnly):
         self._freeze_self_()
 
     def __call__(self, inputs, ndim=None, show_info=False):
-        if show_info and rAnk == mAster_rank:
+        if show_info and RANK == MASTER_RANK:
             print(f"---[3dCSCG]-[SPACE]-{MyTimer.current_time()}-----")
             print(f"   <space ID>: {self._ID_}")
             print(f"   <space inputs>: {inputs}")
             print(f"   <space ndim>: {ndim}", flush=True)
 
-        cOmm.barrier()  # for safety reason
+        COMM.barrier()  # for safety reason
         S = self._space_(inputs, ndim)
         sp = dict()
         sp['type'] = '_3dCSCG_Space'
@@ -140,14 +139,14 @@ class SpaceInvoker(FrozenOnly):
         sp['inputs'] = inputs
         sp['ndim'] = ndim
         S.___define_parameters___ = sp
-        cOmm.barrier()  # for safety reason
+        COMM.barrier()  # for safety reason
         return S
 
 
 class FormCaller(FrozenOnly):
     """Generate a form."""
     def __init__(self, mesh, space):
-        cOmm.barrier()  # for safety reason
+        COMM.barrier()  # for safety reason
         self._mesh_ = mesh
         self._space_ = space
         PATH = dict()
@@ -160,7 +159,7 @@ class FormCaller(FrozenOnly):
         self._freeze_self_()
 
     def __call__(self, ID, *args, **kwargs):
-        cOmm.barrier()  # for safety reason
+        COMM.barrier()  # for safety reason
 
         cls_body = getattr(import_module(self._PATH_[ID]), self._NAME_[ID])
 
@@ -223,16 +222,13 @@ class FormCaller(FrozenOnly):
                         else:
                             p_kwargs[kw] = kwargs[kw]
 
-
                     if ID in ('0-adf', '1-adf', '2-adf', '3-adf'):
                         prime_class_ID = ID.split('-')[0] + '-f'
                         prime = self(prime_class_ID, *args, **p_kwargs, is_hybrid=True)
 
-
                     elif ID in ('0-adt', '1-adt', '2-adt'): # note that trace forms must be hybrid.
                         prime_class_ID = ID.split('-')[0] + '-t'
                         prime = self(prime_class_ID, *args, **p_kwargs)
-
 
                     else:
                         raise Exception()
@@ -258,7 +254,7 @@ class FormCaller(FrozenOnly):
             #====================================================================================
             FM.___define_parameters___ = fp
 
-        cOmm.barrier()  # for safety reason
+        COMM.barrier()  # for safety reason
         return FM
 
     @property
@@ -272,33 +268,26 @@ class FormCaller(FrozenOnly):
 
 class ExactSolutionSelector(FrozenOnly):
     """We select an exact solution object with this class."""
+
     def __init__(self, mesh):
-        cOmm.barrier()  # for safety reason
+        COMM.barrier()  # for safety reason
         self._mesh_ = mesh
         self._freeze_self_()
 
     def __call__(self, ID, show_info=False, **kwargs):
-        if show_info and rAnk == mAster_rank:
+        """"""
+        if show_info and RANK == MASTER_RANK:
             print(f"---[3dCSCG]-[Exact Solution]-{MyTimer.current_time()}-----")
             print(f"   <ES ID>: {ID}")
             print(f"   <ES kwargs>: {kwargs}", flush=True)
 
-        cOmm.barrier()  # for safety reason
+        COMM.barrier()  # for safety reason
         assert ID in _3dCSCG_ExactSolution_Allocator.___exact_solution_name___(), \
             f"Exact solution ID={ID} not found."
         className = _3dCSCG_ExactSolution_Allocator.___exact_solution_name___()[ID]
         classPath = _3dCSCG_ExactSolution_Allocator.___exact_solution_path___()[ID]
 
-        ES =  _3dCSCG_ExactSolution(self._mesh_)
-        status = getattr(import_module(classPath), className)(ES, **kwargs)
-        ES.___PRIVATE_set_status___(status)
-        esp = dict()
-        esp['type'] = '_3dCSCG_ExactSolution'
-        esp['ID'] = ID
-        esp['mesh_parameters'] = deepcopy(self._mesh_.standard_properties.parameters)
-        esp['kwargs'] = deepcopy(kwargs)
-        ES.___define_parameters___ = esp
-        cOmm.barrier()  # for safety reason
+        ES = getattr(import_module(classPath), className)(self._mesh_, **kwargs)
 
         return ES
 
@@ -346,5 +335,5 @@ if __name__ == "__main__":
     # for rn in regions:
     #     region = regions[rn]
     #
-    #     # if rAnk == mAster_rank:
+    #     # if RANK == MASTER_RANK:
     #     print(rn, region.IS.periodic_to_self)

@@ -3,7 +3,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 from screws.freeze.base import FrozenOnly
-from root.config.main import cOmm, MPI
+from root.config.main import COMM, MPI
 
 from objects.CSCG._3d.mesh.node.elements.do.find.helpers.SOS_internal import _3dCSCG_InternalNodeSOS
 from objects.CSCG._3d.mesh.node.elements.do.find.helpers.SOS_boundary.corner import _3dCSCG_CornerNodeSOS
@@ -37,7 +37,7 @@ class _3dCSCG_NodeMesh_DoFind(FrozenOnly):
         else:
             omb = False
 
-        omb = cOmm.allreduce(omb, op=MPI.LOR)
+        omb = COMM.allreduce(omb, op=MPI.LOR)
 
         if omb:
 
@@ -46,7 +46,7 @@ class _3dCSCG_NodeMesh_DoFind(FrozenOnly):
             else:
                 indicator = None
 
-            indicator = cOmm.allgather(indicator)
+            indicator = COMM.allgather(indicator)
 
             for ind in indicator:
                 if ind is not None:
@@ -122,7 +122,7 @@ class _3dCSCG_NodeMesh_DoFind(FrozenOnly):
         else:
             EDGE_ELEMENTS = None
 
-        EDGE_ELEMENTS = cOmm.allgather(EDGE_ELEMENTS)
+        EDGE_ELEMENTS = COMM.allgather(EDGE_ELEMENTS)
 
         ___ = set()
 
@@ -170,7 +170,7 @@ class _3dCSCG_NodeMesh_DoFind(FrozenOnly):
         else:
             TRACE_ELEMENTS = None
 
-        TRACE_ELEMENTS = cOmm.allgather(TRACE_ELEMENTS)
+        TRACE_ELEMENTS = COMM.allgather(TRACE_ELEMENTS)
 
         ___ = set()
 

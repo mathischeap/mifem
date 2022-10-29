@@ -31,7 +31,7 @@ class _3dCSCG_Standard_Form_Error(FrozenOnly):
         :rtype: float
         """
 
-        assert self._sf_.func.ftype == 'standard', \
+        assert self._sf_.CF.ftype == 'standard', \
             f"Currently, this L^n error method only works for standard functions."
 
         assert self._sf_.cochain.local is not None, " I have no cochain."
@@ -89,9 +89,9 @@ class _3dCSCG_Standard_Form_Error(FrozenOnly):
             else:
                 base_xyz = None
                 base_val = None
-            base_xyz = cOmm.gather(base_xyz, root=mAster_rank)
-            base_val = cOmm.gather(base_val, root=mAster_rank)
-            if rAnk == mAster_rank:
+            base_xyz = COMM.gather(base_xyz, root=MASTER_RANK)
+            base_val = COMM.gather(base_val, root=MASTER_RANK)
+            if RANK == MASTER_RANK:
                 for i, bi in enumerate(base_xyz):
                     if bi is not None:
                         break
@@ -107,7 +107,7 @@ class _3dCSCG_Standard_Form_Error(FrozenOnly):
                 # this add_to will be added to all reconstructed value.
             else:
                 pass
-            add_to = cOmm.bcast(add_to, root=mAster_rank)
+            add_to = COMM.bcast(add_to, root=MASTER_RANK)
         elif upon is False:
             pass
         else:
@@ -124,19 +124,21 @@ class _3dCSCG_Standard_Form_Error(FrozenOnly):
 
             for i in self._sf_.mesh.elements.indices:
 
-                error_i = [np.max(np.abs(v[i][m] - self._sf_.func.body[m](*xyz[i]))) for m in range(OneOrThree)]
+                error_i = [np.max(np.abs(v[i][m] -
+                    self._sf_.CF.___DO_evaluate_func_at_time___()[m](*xyz[i])))
+                           for m in range(OneOrThree)]
                 error_i = max(error_i)
 
                 localError = error_i if error_i > localError else localError
 
-            LOC_ERR = cOmm.gather(localError, root=mAster_rank)
+            LOC_ERR = COMM.gather(localError, root=MASTER_RANK)
 
-            if rAnk == mAster_rank:
+            if RANK == MASTER_RANK:
                 globalError = max(LOC_ERR)
             else:
                 globalError = None
 
-            globalError = cOmm.bcast(globalError, root=mAster_rank)
+            globalError = COMM.bcast(globalError, root=MASTER_RANK)
 
         #--------------- n < infty, n-error------------------------------------------------
         else:
@@ -148,19 +150,20 @@ class _3dCSCG_Standard_Form_Error(FrozenOnly):
                 element = self._sf_.mesh.elements[i]
                 detJ = element.coordinate_transformation.Jacobian(xi, eta, sigma)
                 LEIntermediate = np.sum(
-                    [(v[i][m] - self._sf_.func.body[m](*xyz[i]))**n for m in range(OneOrThree)], axis=0
+                    [(v[i][m] - self._sf_.CF.___DO_evaluate_func_at_time___()[m](*xyz[i]))**n
+                     for m in range(OneOrThree)], axis=0
                 )
                 # noinspection PyUnboundLocalVariable
                 localError.append(np.sum(LEIntermediate * detJ * quad_weights))
 
             core_local = np.sum(localError)
-            core_local = cOmm.gather(core_local, root=mAster_rank)
+            core_local = COMM.gather(core_local, root=MASTER_RANK)
 
-            if rAnk == mAster_rank:
+            if RANK == MASTER_RANK:
                 globalError = np.sum(core_local) ** (1 / n)
             else:
                 globalError = None
-            globalError = cOmm.bcast(globalError, root=mAster_rank)
+            globalError = COMM.bcast(globalError, root=MASTER_RANK)
 
         #==========================================================================================
 
@@ -183,9 +186,8 @@ class _3dCSCG_Standard_Form_Error(FrozenOnly):
         """
         selfErrorL2 = self.L(n=2, quad_degree=quad_degree, upon=upon, quad_density=quad_density)
         D_self = self._sf_.coboundary()
-        D_self.TW.func.body = d_func
-        D_self.TW.current_time = self._sf_.TW.current_time
-        D_self.TW.do.push_all_to_instant()
+        D_self.CF = d_func
+        D_self.CF.current_time = self._sf_.CF.current_time
         DErrorL2 = D_self.error.L(n=2, quad_degree=quad_degree)
         return (selfErrorL2 ** 2 + DErrorL2 ** 2) ** 0.5
 
@@ -206,7 +208,7 @@ class _3dCSCG_Standard_Form_Error(FrozenOnly):
         name = 'dual-' +  sf.standard_properties.name
 
         if time is None:
-            time = self._sf_.TW.current_time
+            time = self._sf_.CF.current_time
 
         dual_form = CLASS(self._sf_, mesh, space, orientation=orientation, name=name)
 

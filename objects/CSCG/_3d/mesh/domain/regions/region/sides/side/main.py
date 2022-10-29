@@ -1,7 +1,7 @@
 
 from screws.freeze.main import FrozenOnly
 import numpy as np
-from root.config.main import saFe_mode
+from root.config.main import SAFE_MODE
 
 from objects.CSCG._3d.mesh.domain.regions.region.sides.side.coordinate_transformation import SideCoordinateTransformation
 
@@ -40,7 +40,7 @@ class Side(FrozenOnly):
 
             ep0, ep1 = evaluation_points
             shape0 = np.shape(ep0)
-            if saFe_mode:
+            if SAFE_MODE:
                 assert shape0 == np.shape(ep1), \
                     " <TraceElement3D> : evaluation_points shape wrong."
 
@@ -56,7 +56,7 @@ class Side(FrozenOnly):
             return ep
 
         elif len(evaluation_points) == 3: # two valid plus one -1 or +1 coordinates are provided
-            if saFe_mode:
+            if SAFE_MODE:
                 assert evaluation_points[0].shape == \
                        evaluation_points[1].shape == \
                        evaluation_points[2].shape, "evaluation_points shape wrong."

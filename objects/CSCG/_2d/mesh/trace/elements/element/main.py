@@ -5,7 +5,7 @@ from screws.freeze.main import FrozenOnly
 from objects.CSCG._2d.mesh.trace.elements.element.IS import _2dCSCG_TraceElement_IS
 from objects.CSCG._2d.mesh.trace.elements.element.coordinate_transformation.main import \
     _2dCSCG_Trace_Element_CoordinateTransformation
-from root.config.main import rAnk
+from root.config.main import RANK
 
 
 
@@ -129,7 +129,7 @@ class _2dCSCG_Trace_Element(FrozenOnly):
                 CORE = self._elements_._mesh_.do.find.slave_of_element(int(self._p1_[:-1]))
             else:
                 raise Exception()
-            assert CORE != rAnk
+            assert CORE != RANK
             return CORE
         else:
             return None

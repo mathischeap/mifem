@@ -61,6 +61,6 @@ class miUsGrid_TriangularMesh(miUsGrid_MeshBase):
 
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/miUsGrid/triangular/mesh/main.py
-    from objects.miUsGrid.triangular.__test__.Random.test_mesh import mesh
+    from tests.objects.miUsGrid.triangular.randObj.test_mesh import mesh
     mesh.visualize()
 

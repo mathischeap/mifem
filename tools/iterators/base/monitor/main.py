@@ -18,7 +18,7 @@ class IteratorMonitor(FrozenOnly):
     :param real_time_monitor:
     """
     def __init__(self, iterator, auto_save_frequency, RDF_filename, factor: float, real_time_monitor: bool):
-        assert rAnk == mAster_rank, "Should only initialize and use it in master core."
+        assert RANK == MASTER_RANK, "Should only initialize and use it in master core."
         self.___graph_report_default_time___ = 600 # seconds; 10 minutes     --> affected by ``factor``
         self.___auto_save_default_time___ = 600  # seconds: 10 minutes       --> affected by ``factor``
         self.___email_report_default_time___ = 3600 * 12 # seconds; 12 hours --> affected by ``factor``

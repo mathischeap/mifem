@@ -138,7 +138,8 @@ class _3dCSCG_1Trace_Discretize_StandardVector_T_para(FrozenOnly):
             quad_weights = self.___cache_DISCRETIZE_STANDARD___['quad_weights']
 
         if target == 'func':
-            assert SELF.func.body is not None, f"No func.body!"
+            assert SELF.CF is not None, f"No func.body!"
+            FUNC = SELF.CF.___DO_evaluate_func_at_time___()
         else:
             raise NotImplementedError(f"1Trace = discretize_VectorField_standard: "
                                       f"Not applicable for target={target}.")
@@ -155,9 +156,9 @@ class _3dCSCG_1Trace_Discretize_StandardVector_T_para(FrozenOnly):
                 J = te.coordinate_transformation.Jacobian_matrix(qn_NS_dy_y, qn_NS_dy_z)
                 J = (J[0][0], J[1][0], J[2][0]) # dy of (dy, dz)
                 x, y, z = te.coordinate_transformation.mapping(qn_NS_dy_y, qn_NS_dy_z, from_element=ele, side=ele_side)
-                u = SELF.func.body[0](x, y, z)
-                v = SELF.func.body[1](x, y, z)
-                w = SELF.func.body[2](x, y, z)
+                u = FUNC[0](x, y, z)
+                v = FUNC[1](x, y, z)
+                w = FUNC[2](x, y, z)
                 A = J[0] * u + J[1] * v + J[2] * w
                 B = quad_weights[1]
                 C = lens_NS_dy
@@ -167,9 +168,9 @@ class _3dCSCG_1Trace_Discretize_StandardVector_T_para(FrozenOnly):
                 J = te.coordinate_transformation.Jacobian_matrix(qn_NS_dz_y, qn_NS_dz_z)
                 J = (J[0][1], J[1][1], J[2][1]) # dz of (dy, dz)
                 x, y, z = te.coordinate_transformation.mapping(qn_NS_dz_y, qn_NS_dz_z, from_element=ele, side=ele_side)
-                u = SELF.func.body[0](x, y, z)
-                v = SELF.func.body[1](x, y, z)
-                w = SELF.func.body[2](x, y, z)
+                u = FUNC[0](x, y, z)
+                v = FUNC[1](x, y, z)
+                w = FUNC[2](x, y, z)
                 A = J[0] * u + J[1] * v + J[2] * w
                 B = quad_weights[2]
                 C = lens_NS_dz
@@ -183,9 +184,9 @@ class _3dCSCG_1Trace_Discretize_StandardVector_T_para(FrozenOnly):
                 J = te.coordinate_transformation.Jacobian_matrix(qn_WE_dx_x, qn_WE_dx_z)
                 J = (J[0][1], J[1][1], J[2][1]) # dx of (dz, dx)
                 x, y, z = te.coordinate_transformation.mapping(qn_WE_dx_x, qn_WE_dx_z, from_element=ele, side=ele_side)
-                u = SELF.func.body[0](x, y, z)
-                v = SELF.func.body[1](x, y, z)
-                w = SELF.func.body[2](x, y, z)
+                u = FUNC[0](x, y, z)
+                v = FUNC[1](x, y, z)
+                w = FUNC[2](x, y, z)
                 A = J[0] * u + J[1] * v + J[2] * w
                 B = quad_weights[0]
                 C = lens_WE_dx
@@ -195,9 +196,9 @@ class _3dCSCG_1Trace_Discretize_StandardVector_T_para(FrozenOnly):
                 J = te.coordinate_transformation.Jacobian_matrix(qn_WE_dz_x, qn_WE_dz_z)
                 J = (J[0][0], J[1][0], J[2][0]) # dz of (dz, dx)
                 x, y, z = te.coordinate_transformation.mapping(qn_WE_dz_x, qn_WE_dz_z, from_element=ele, side=ele_side)
-                u = SELF.func.body[0](x, y, z)
-                v = SELF.func.body[1](x, y, z)
-                w = SELF.func.body[2](x, y, z)
+                u = FUNC[0](x, y, z)
+                v = FUNC[1](x, y, z)
+                w = FUNC[2](x, y, z)
                 A = J[0] * u + J[1] * v + J[2] * w
                 B = quad_weights[2]
                 C = lens_WE_dz
@@ -211,9 +212,9 @@ class _3dCSCG_1Trace_Discretize_StandardVector_T_para(FrozenOnly):
                 J = te.coordinate_transformation.Jacobian_matrix(qn_BF_dx_x, qn_BF_dx_y)
                 J = (J[0][0], J[1][0], J[2][0]) # dx of (dx, dy)
                 x, y, z = te.coordinate_transformation.mapping(qn_BF_dx_x, qn_BF_dx_y, from_element=ele, side=ele_side)
-                u = SELF.func.body[0](x, y, z)
-                v = SELF.func.body[1](x, y, z)
-                w = SELF.func.body[2](x, y, z)
+                u = FUNC[0](x, y, z)
+                v = FUNC[1](x, y, z)
+                w = FUNC[2](x, y, z)
                 A = J[0] * u + J[1] * v + J[2] * w
                 B = quad_weights[0]
                 C = lens_BF_dx
@@ -223,9 +224,9 @@ class _3dCSCG_1Trace_Discretize_StandardVector_T_para(FrozenOnly):
                 J = te.coordinate_transformation.Jacobian_matrix(qn_BF_dy_x, qn_BF_dy_y)
                 J = (J[0][1], J[1][1], J[2][1]) # dy of (dx, dy)
                 x, y, z = te.coordinate_transformation.mapping(qn_BF_dy_x, qn_BF_dy_y, from_element=ele, side=ele_side)
-                u = SELF.func.body[0](x, y, z)
-                v = SELF.func.body[1](x, y, z)
-                w = SELF.func.body[2](x, y, z)
+                u = FUNC[0](x, y, z)
+                v = FUNC[1](x, y, z)
+                w = FUNC[2](x, y, z)
                 A = J[0] * u + J[1] * v + J[2] * w
                 B = quad_weights[1]
                 C = lens_BF_dy

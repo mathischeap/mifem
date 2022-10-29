@@ -11,7 +11,7 @@ import numpy as np
 if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.base import FrozenOnly
-from root.config.main import MPI, cOmm
+from root.config.main import MPI, COMM
 
 
 class miUs_Triangular_SF_Do(FrozenOnly):
@@ -136,7 +136,7 @@ class miUs_Triangular_SF_Do(FrozenOnly):
         assert n >= 1 and isinstance(n ,int), f'n={n} is wrong.'
         #-------- parse quad_degree ---------------------------------------------------
         if quad_degree is None:
-            quad_degree = [f.space.p + 2 for _ in range(2)]
+            quad_degree = [f.space.p + 1 for _ in range(2)]
         else:
             pass
 
@@ -163,7 +163,7 @@ class miUs_Triangular_SF_Do(FrozenOnly):
                 Ei = np.sum(v * quad_weights_1d * detJ)
                 total_energy += Ei
 
-        total_energy = cOmm.allreduce(total_energy, op=MPI.SUM)
+        total_energy = COMM.allreduce(total_energy, op=MPI.SUM)
 
         return total_energy
 
@@ -199,7 +199,7 @@ class miUs_Triangular_SF_Do(FrozenOnly):
                 LOCAL.append(self._sf_.cochain.local[i] @ M[i] @ other.cochain.local[i])
             LOCAL = np.sum(LOCAL)
 
-        return cOmm.allreduce(LOCAL, op=MPI.SUM)
+        return COMM.allreduce(LOCAL, op=MPI.SUM)
 
     def compute_Ln_norm_of_coboundary(self, n=2, quad_degree=None):
         """Compute || d(self) ||_{L^n} .

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from screws.freeze.base import FrozenOnly
-from root.config.main import cOmm
+from root.config.main import COMM
 
 
 class _3dCSCG_E1F_Dofs_DoFind(FrozenOnly):
@@ -96,7 +96,7 @@ class _3dCSCG_E1F_Dofs_DoFind(FrozenOnly):
         else:
             edge_element_and_local_index = None
 
-        edge_element_and_local_index = cOmm.allgather(edge_element_and_local_index)
+        edge_element_and_local_index = COMM.allgather(edge_element_and_local_index)
 
         EE__LI = None
         for ___ in edge_element_and_local_index:

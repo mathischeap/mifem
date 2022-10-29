@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import cv2
 import os
-from root.config.main import rAnk, mAster_rank
+from root.config.main import RANK, MASTER_RANK
 from screws.miscellaneous.timer import MyTimer
-from screws.miscellaneous.random_string.digits import randomStringDigits
+from screws.miscellaneous.randomString.digits import randomStringDigits
 
 
 # noinspection PyUnresolvedReferences
@@ -18,7 +18,7 @@ def make_a_video_from_images_in_folder(image_folder, video_name=None, duration=5
     :param clean_images: {bool,} Do we delete the used images when we have released the video?
     :return:
     """
-    if rAnk != mAster_rank: return
+    if RANK != MASTER_RANK: return
     all_files = os.listdir(image_folder)
 
     #-------- parse the video name -----------------------------------------------------------------

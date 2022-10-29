@@ -25,8 +25,8 @@ class _2dCSCG_S2F_Discretize(FrozenOnly):
 
         if target == 'func':
 
-            if self._sf_.TW.func.body.__class__.__name__ == '_2dCSCG_ScalarField':
-                if self._sf_.func.ftype == 'standard':
+            if self._sf_.CF.__class__.__name__ == '_2dCSCG_ScalarField':
+                if self._sf_.CF.ftype == 'standard':
                     return self._standard_scalar_(
                         update_cochain=update_cochain, target=target,**kwargs)
                 else:
@@ -37,7 +37,7 @@ class _2dCSCG_S2F_Discretize(FrozenOnly):
         elif target == 'BC':
 
             raise NotImplementedError(f'2dCSCG 1-form can not (target BC) '
-                                      f'discretize {self._sf_.TW.BC.body.__class__}.')
+                                      f'discretize {self._sf_.BC.CF.__class__}.')
 
         else:
             raise NotImplementedError(f"2dCSCG 1-form cannot discretize "

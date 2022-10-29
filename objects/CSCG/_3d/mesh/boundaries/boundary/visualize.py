@@ -5,7 +5,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 from screws.freeze.base import FrozenOnly
 
-from root.config.main import rAnk, mAster_rank, np
+from root.config.main import RANK, MASTER_RANK, np
 import matplotlib.pyplot as plt
 
 
@@ -24,7 +24,7 @@ class _3dCSCG_Mesh_Boundary_VIS(FrozenOnly):
         """"""
         region_sides = self._boundary_.region_sides
 
-        if rAnk != mAster_rank: return
+        if RANK != MASTER_RANK: return
 
         domain = self._mesh_.domain
         density = int(np.ceil(np.sqrt(density/(domain.regions.num*6))))

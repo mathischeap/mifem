@@ -18,11 +18,11 @@ class _3dCSCG_0Trace_Discretize_TEW_Scalar(FrozenOnly):
         nx, ny, nz = nodes
 
         if target == 'func':
-            assert SELF.func.body is not None, f"No func.body!"
-            TEW_FUNC = SELF.func.body
+            assert SELF.CF is not None, f"No func.body!"
+            TEW_FUNC = SELF.CF.___DO_evaluate_func_at_time___()
         elif target == 'BC':
-            assert SELF.BC.body is not None, f"No BC.body!"
-            TEW_FUNC = SELF.BC.body
+            assert SELF.BC.CF is not None, f"No BC.body!"
+            TEW_FUNC = SELF.BC.CF.___DO_evaluate_func_at_time___()
         else:
             raise NotImplementedError(f"Not applicable for target={target}.")
 

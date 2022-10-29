@@ -63,21 +63,21 @@ class _2dCSCG_Trace_Numbering_Visualize(FrozenOnly):
                 # for finding  the position of the other mesh element edge of a periodic trace element.
                 TEC_P[i] = tei.NON_CHARACTERISTIC_position
 
-        TED = cOmm.gather(TED, root=mAster_rank)
-        TEC = cOmm.gather(TEC, root=mAster_rank)
-        TEC_P = cOmm.gather(TEC_P, root=mAster_rank)
+        TED = COMM.gather(TED, root=MASTER_RANK)
+        TEC = COMM.gather(TEC, root=MASTER_RANK)
+        TEC_P = COMM.gather(TEC_P, root=MASTER_RANK)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             # for finding  the position of the other mesh element edge of a periodic trace element.
             tec_p = dict()
             for TEcp_i in TEC_P:  tec_p.update(TEcp_i)
         else:
             tec_p = None
-        tec_p = cOmm.bcast(tec_p, root=mAster_rank)
+        tec_p = COMM.bcast(tec_p, root=MASTER_RANK)
         for pi in tec_p:
             tec_p[pi] = self._trace_.elements.DO_compute_mapping_of_trace_at_position(tec_p[pi], c)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             ted, tec = dict(), dict()
             for TEDi in TED:  ted.update(TEDi)
             for TECi in TEC:  tec.update(TECi)
@@ -256,12 +256,12 @@ class _2dCSCG_Trace_Numbering_Visualize(FrozenOnly):
 
             GATHERING[i] = self._tf_.numbering.trace_element_wise[i].full_vector
 
-        MAPPING = cOmm.gather(MAPPING, root=mAster_rank)
-        GATHERING = cOmm.gather(GATHERING, root=mAster_rank)
-        MP_P = cOmm.gather(MP_P, root=mAster_rank)
+        MAPPING = COMM.gather(MAPPING, root=MASTER_RANK)
+        GATHERING = COMM.gather(GATHERING, root=MASTER_RANK)
+        MP_P = COMM.gather(MP_P, root=MASTER_RANK)
 
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             mapping = dict()
             gathering = dict()
             for i, MPi in enumerate(MAPPING):
@@ -274,7 +274,7 @@ class _2dCSCG_Trace_Numbering_Visualize(FrozenOnly):
         else:
             mp_p = None
 
-        mp_p = cOmm.bcast(mp_p, root=mAster_rank)
+        mp_p = COMM.bcast(mp_p, root=MASTER_RANK)
         for pi in mp_p:
             position = mp_p[pi][-1]
             if position in 'UD':
@@ -285,14 +285,14 @@ class _2dCSCG_Trace_Numbering_Visualize(FrozenOnly):
                 raise Exception()
 
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             fig, ax = plt.subplots(figsize=(15,9))
         else:
             ax = None
 
         LN_colors = self._matplot_trace_mesh_BASE_(ax, **kwargs)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             # .. now, we attach the numbering of 1-trace-form to the fig.
             for k in mapping: # go through all trace-elements (kth).
                 mpk = mapping[k]

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from screws.freeze.base import FrozenOnly
-from root.config.main import np, sEcretary_rank, cOmm, rAnk
+from root.config.main import np, SECRETARY_RANK, COMM, RANK
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib import cm
@@ -84,10 +84,10 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
 
         xy, v = self._sf_.reconstruct(*rs)
 
-        xy = cOmm.gather(xy, root=sEcretary_rank)
-        v = cOmm.gather(v, root=sEcretary_rank)
+        xy = COMM.gather(xy, root=SECRETARY_RANK)
+        v = COMM.gather(v, root=SECRETARY_RANK)
 
-        if rAnk != sEcretary_rank:
+        if RANK != SECRETARY_RANK:
             pass
         else:
             XY = dict()
@@ -358,10 +358,10 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
 
         xy, v = self._sf_.reconstruct(*rs)
 
-        xy = cOmm.gather(xy, root=sEcretary_rank)
-        v = cOmm.gather(v, root=sEcretary_rank)
+        xy = COMM.gather(xy, root=SECRETARY_RANK)
+        v = COMM.gather(v, root=SECRETARY_RANK)
 
-        if rAnk != sEcretary_rank: return
+        if RANK != SECRETARY_RANK: return
 
         XY = dict()
         VV = dict()

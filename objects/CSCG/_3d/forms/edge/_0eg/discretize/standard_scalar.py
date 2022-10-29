@@ -23,9 +23,9 @@ class _3dCSCG_Edge0Form_Discretize_StandardScalar(FrozenOnly):
 
         local_EEW = dict()
         if target == 'func':
-            FUNC = SELF.func.body[0]
+            FUNC = SELF.CF.___DO_evaluate_func_at_time___()[0]
         elif target == 'BC':
-            FUNC = SELF.BC.body[0]
+            FUNC = SELF.BC.CF.___DO_evaluate_func_at_time___()[0]
             assert update_cochain is False, \
                 f"When target is {target}, cannot update cochain!"
         else:

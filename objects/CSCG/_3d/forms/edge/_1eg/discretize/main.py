@@ -31,16 +31,16 @@ class _3dCSCG_Edge1Form_Discretize(FrozenOnly):
 
 
         if target == 'func':
-            if self._ef_.TW.func.body.__class__.__name__ == '_3dCSCG_ScalarField':
-                if self._ef_.func.ftype == 'standard':
+            if self._ef_.CF.__class__.__name__ == '_3dCSCG_ScalarField':
+                if self._ef_.CF.ftype == 'standard':
                     return self._standard_scalar_(update_cochain=update_cochain)
                 else:
                     raise NotImplementedError(f"3dCSCG 1-edge cannot (target func) discretize "
-                                              f"_3dCSCG_ScalarField of ftype={self._ef_.func.ftype}")
+                                              f"_3dCSCG_ScalarField of ftype={self._ef_.CF.ftype}")
 
             else:
                 raise NotImplementedError(f'3dCSCG 1-edge can not (target func) '
-                                          f'discretize {self._ef_.TW.func.body.__class__}.')
+                                          f'discretize {self._ef_.CF.__class__}.')
 
         else:
             raise NotImplementedError(f"3dCSCG 1-edge cannot discretize while targeting at {target}.")

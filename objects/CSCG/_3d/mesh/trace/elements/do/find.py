@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from screws.freeze.main import FrozenOnly
 
-from root.config.main import cOmm
+from root.config.main import COMM
 
 
 class _3dCSCG_Trace_Elements_Do_Find(FrozenOnly):
@@ -48,7 +48,7 @@ class _3dCSCG_Trace_Elements_Do_Find(FrozenOnly):
         else:
             pos = None
 
-        pos = cOmm.allgather(pos)
+        pos = COMM.allgather(pos)
 
         for _ in pos:
             if _ is not None:
@@ -68,7 +68,7 @@ class _3dCSCG_Trace_Elements_Do_Find(FrozenOnly):
         else:
             edges = None
 
-        edges = cOmm.allgather(edges)
+        edges = COMM.allgather(edges)
 
         for _ in edges:
             if _ is not None:
@@ -140,7 +140,7 @@ class _3dCSCG_Trace_Elements_Do_Find(FrozenOnly):
         else:
             node_elements = None
 
-        node_elements = cOmm.allgather(node_elements)
+        node_elements = COMM.allgather(node_elements)
 
         NE = None
         for _ in node_elements:
@@ -184,8 +184,8 @@ class _3dCSCG_Trace_Elements_Do_Find(FrozenOnly):
         else:
             MEj = None
 
-        MEi = cOmm.allgather(MEi)
-        MEj = cOmm.allgather(MEj)
+        MEi = COMM.allgather(MEi)
+        MEj = COMM.allgather(MEj)
 
         for _ in MEi:
             if _ is not None:

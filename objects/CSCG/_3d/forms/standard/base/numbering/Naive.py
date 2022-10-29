@@ -9,7 +9,7 @@
 
 from root.config.main import *
 from screws.freeze.main import FrozenOnly
-from tools.linear_algebra.gathering.regular.chain_matrix.main import \
+from tools.linearAlgebra.gathering.regular.chain_matrix.main import \
     Gathering_Matrix, Gathering_Vector
 
 
@@ -135,7 +135,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
 
         mesh = self._sf_.mesh
         if mesh.domain.IS.periodic:
-            if rAnk == mAster_rank:
+            if RANK == MASTER_RANK:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:
                     region = mesh.domain.regions[rn]
@@ -145,11 +145,11 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
                             f" elements.layout[{rn}]={regionElementLayout} wrong," \
                             f" needs (>1, >1, >1) to make it work for periodic domain."
 
-        if rAnk != mAster_rank:
+        if RANK != MASTER_RANK:
             element_map = mesh.elements.map
             element_indices = mesh.elements.indices
-            cOmm.send([element_map, element_indices], dest=mAster_rank, tag=rAnk)
-            global_numbering = cOmm.recv(source=mAster_rank, tag=rAnk)
+            COMM.send([element_map, element_indices], dest=MASTER_RANK, tag=RANK)
+            global_numbering = COMM.recv(source=MASTER_RANK, tag=RANK)
         else:
             p = self._sf_.p
             numOfBasisComponents = self._sf_.num.basis_components
@@ -157,12 +157,12 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
             currentNumber = 0
             other_side_name = 'SNEWFB' # not an error, this is other side name.
             sidePairDict = {'N':'S', 'S':'N', 'W':'E', 'E':'W', 'B':'F', 'F':'B'}
-            for i in range(sIze):
-                if i == mAster_rank:
+            for i in range(SIZE):
+                if i == MASTER_RANK:
                     element_map = mesh.elements.map
                     element_indices = mesh.elements.indices
                 else:
-                    element_map, element_indices = cOmm.recv(source=i, tag=i)
+                    element_map, element_indices = COMM.recv(source=i, tag=i)
                 for k in element_indices:
                     if k == 0:
                         assert numberingCache == dict(), "We make sure #0 element is numbered firstly."
@@ -217,10 +217,10 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
                                 )
                 toBeSentAway = dict()
                 for k in element_indices: toBeSentAway[k] = numberingCache[k]
-                if i == mAster_rank:
+                if i == MASTER_RANK:
                     global_numbering = toBeSentAway
                 else:
-                    cOmm.send(toBeSentAway, dest=i, tag=i)
+                    COMM.send(toBeSentAway, dest=i, tag=i)
                 for k in element_indices: del numberingCache[k]
 
         dofsPOOL = set()
@@ -281,7 +281,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         # non-hybrid numbering ...
         mesh = self._sf_.mesh
         if mesh.domain.IS.periodic:
-            if rAnk == mAster_rank:
+            if RANK == MASTER_RANK:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:
                     region = mesh.domain.regions[rn]
@@ -291,11 +291,11 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
                             f" elements.layout[{rn}]={regionElementLayout} wrong," \
                             f" needs (>1, >1, >1) to make it work for periodic domain."
 
-        if rAnk != mAster_rank:
+        if RANK != MASTER_RANK:
             element_map = mesh.elements.map
             element_indices = mesh.elements.indices
-            cOmm.send([element_map, element_indices], dest=mAster_rank, tag=rAnk)
-            global_numbering = cOmm.recv(source=mAster_rank, tag=rAnk)
+            COMM.send([element_map, element_indices], dest=MASTER_RANK, tag=RANK)
+            global_numbering = COMM.recv(source=MASTER_RANK, tag=RANK)
 
         else:
             p = self._sf_.p
@@ -305,12 +305,12 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
             other_side_name = 'SNEWFB' # not an error, this is other side name.
             sidePairDict = {'N':'S', 'S':'N', 'W':'E', 'E':'W', 'B':'F', 'F':'B'}
 
-            for i in range(sIze):
-                if i == mAster_rank:
+            for i in range(SIZE):
+                if i == MASTER_RANK:
                     element_map = mesh.elements.map
                     element_indices = mesh.elements.indices
                 else:
-                    element_map, element_indices = cOmm.recv(source=i, tag=i)
+                    element_map, element_indices = COMM.recv(source=i, tag=i)
                 for k in element_indices:
                     if k == 0:
                         assert numberingCache == dict(), "We make sure #0 element is numbered firstly."
@@ -365,10 +365,10 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
                                 )
                 toBeSentAway = dict()
                 for k in element_indices: toBeSentAway[k] = numberingCache[k]
-                if i == mAster_rank:
+                if i == MASTER_RANK:
                     global_numbering = toBeSentAway
                 else:
-                    cOmm.send(toBeSentAway, dest=i, tag=i)
+                    COMM.send(toBeSentAway, dest=i, tag=i)
                 for k in element_indices: del numberingCache[k]
 
         dofsPOOL = set()
@@ -456,7 +456,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         # non-hybrid numbering ...
         mesh = self._sf_.mesh
         if mesh.domain.IS.periodic:
-            if rAnk == mAster_rank:
+            if RANK == MASTER_RANK:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:
                     region = mesh.domain.regions[rn]
@@ -466,11 +466,11 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
                             f" elements.layout[{rn}]={regionElementLayout} wrong," \
                             f" needs (>1, >1, >1) to make it work for periodic domain."
 
-        if rAnk != mAster_rank:
+        if RANK != MASTER_RANK:
             element_map = mesh.elements.map
             element_indices = mesh.elements.indices
-            cOmm.send([element_map, element_indices], dest=mAster_rank, tag=rAnk)
-            global_numbering = cOmm.recv(source=mAster_rank, tag=rAnk)
+            COMM.send([element_map, element_indices], dest=MASTER_RANK, tag=RANK)
+            global_numbering = COMM.recv(source=MASTER_RANK, tag=RANK)
         else:
             p = self._sf_.p
             p = (p[0]+1, p[1]+1, p[2]+1)
@@ -479,12 +479,12 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
             other_side_name = 'SNEWFB' # not an error, this is other side name.
             sidePairDict = {'N':'S', 'S':'N', 'W':'E', 'E':'W', 'B':'F', 'F':'B'}
 
-            for i in range(sIze):
-                if i == mAster_rank:
+            for i in range(SIZE):
+                if i == MASTER_RANK:
                     element_map = mesh.elements.map
                     element_indices = mesh.elements.indices
                 else:
-                    element_map, element_indices = cOmm.recv(source=i, tag=i)
+                    element_map, element_indices = COMM.recv(source=i, tag=i)
 
                 for k in element_indices:
                     if k == 0:
@@ -515,10 +515,10 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
                                 )
                 toBeSentAway = dict()
                 for k in element_indices: toBeSentAway[k] = numberingCache[k]
-                if i == mAster_rank:
+                if i == MASTER_RANK:
                     global_numbering = toBeSentAway
                 else:
-                    cOmm.send(toBeSentAway, dest=i, tag=i)
+                    COMM.send(toBeSentAway, dest=i, tag=i)
                 for k in element_indices: del numberingCache[k]
 
         dofsPOOL = set()
@@ -581,7 +581,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
             for i in range(I):
                 dofs_1, dofs_2 = None, None
 
-                if saFe_mode:
+                if SAFE_MODE:
                     e1 = elements_1[i, j]
                     if e1 in self._mesh_.elements:
                         dofs_1 = self._sf_.numbering.do.find.dofs_on_element_side(e1, s1, GM=gathering_matrix)
@@ -592,7 +592,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
                     involved_elements.append(e2)
                     dofs_2 = self._sf_.numbering.do.find.dofs_on_element_side(e2, s2, GM=gathering_matrix)
 
-                if saFe_mode:
+                if SAFE_MODE:
                     if dofs_2 is not None and dofs_1 is not None:
                         np.testing.assert_array_equal(dofs_1, dofs_2)
 
@@ -603,8 +603,8 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
 
         GLOBAL_num_dofs = gathering_matrix.GLOBAL_num_dofs
 
-        ALL_DOFs_2b_updated = cOmm.gather(DOFs_2b_updated, root=mAster_rank)
-        if rAnk == mAster_rank:
+        ALL_DOFs_2b_updated = COMM.gather(DOFs_2b_updated, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
             DOFS = set()
             for _ in ALL_DOFs_2b_updated:
                 DOFS.update(_)
@@ -614,7 +614,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
                 all_new_number_dict[old_number] = GLOBAL_num_dofs + i
         else:
             all_new_number_dict = None
-        all_new_number_dict = cOmm.bcast(all_new_number_dict, root=mAster_rank)
+        all_new_number_dict = COMM.bcast(all_new_number_dict, root=MASTER_RANK)
         PAIRS = dict()
         for i in DOFs_2b_updated:
             PAIRS[i] = all_new_number_dict[i]

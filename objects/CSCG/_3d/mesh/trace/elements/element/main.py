@@ -3,7 +3,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from root.config.main import rAnk
+from root.config.main import RANK
 
 
 from screws.freeze.main import FrozenOnly
@@ -173,7 +173,7 @@ class _3dCSCG_Trace_Element(FrozenOnly):
                 CORE = self._elements_._mesh_.do.find.slave_of_element(int(self._p1_[:-1]))
             else:
                 raise Exception()
-            assert CORE != rAnk
+            assert CORE != RANK
             return CORE
         else:
             return None
@@ -212,5 +212,5 @@ if __name__ == '__main__':
         if i in mesh.trace.elements:
             te = mesh.trace.elements[i]
 
-            # print(rAnk, te.type_wrt_metric.mark)
+            # print(RANK, te.type_wrt_metric.mark)
             te.visualize()

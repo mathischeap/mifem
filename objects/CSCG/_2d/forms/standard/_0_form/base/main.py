@@ -17,7 +17,7 @@ class _0Form_BASE(_2dCSCG_Standard_Form):
     def visualize(self):
         return self._visualize_
 
-    def ___PRIVATE_TW_FUNC_body_checker___(self, func_body):
+    def ___Pr_check_CF___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 2
 
@@ -27,12 +27,10 @@ class _0Form_BASE(_2dCSCG_Standard_Form):
         else:
             raise Exception(f"2dCSCG 0form FUNC do not accept func {func_body.__class__}")
 
-
-    def ___PRIVATE_TW_BC_body_checker___(self, func_body):
+    def ___Pr_check_BC_CF___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 2
         raise Exception(f"2dCSCG 0form BC do not accept func {func_body.__class__}")
-
 
     def RESET_cache(self):
         super().RESET_cache()
@@ -74,8 +72,6 @@ class _0Form_BASE(_2dCSCG_Standard_Form):
             RM[i] = rmi
         return RM
 
-
-
     def ___PRIVATE_operator_inner___(self, _, i, xietasigma, quad_weights, bfSelf, bfOther):
         """Note that here we only return a local matrix."""
         element = self.mesh.elements[i]
@@ -83,7 +79,6 @@ class _0Form_BASE(_2dCSCG_Standard_Form):
         Mi = np.einsum('im, jm, m -> ij', bfOther[0], bfSelf[0], detJ*quad_weights, optimize='greedy')
         Mi = spspa.csc_matrix(Mi)
         return Mi
-
 
     def ___PRIVATE_operator_wedge___(self, other, quad_degree=None):
         """ """

@@ -6,7 +6,7 @@ if './' not in sys.path: sys.path.append('./')
 
 from root.config.main import np
 from objects.CSCG._3d.forms.standard.base.reconstruct import _3dCSCG_SF_Reconstruct
-from objects.CSCG._3d.discrete_fields.vector.main import _3dCSCG_DF_Vector
+from objects.CSCG._3d.discreteDields.vector.main import _3dCSCG_DF_Vector
 
 class _3dCSCG_SF2_reconstruct(_3dCSCG_SF_Reconstruct):
     """"""

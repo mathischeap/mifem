@@ -6,7 +6,7 @@
 """
 from objects.CSCG._2d.mesh.domain.inputs.base import DomainInputBase
 # import random
-from root.config.main import cOmm, rAnk, mAster_rank
+from root.config.main import COMM, RANK, MASTER_RANK
 
 class TriangleTest(DomainInputBase):
     """"""
@@ -15,7 +15,7 @@ class TriangleTest(DomainInputBase):
         """
         super().__init__(domain_name='TriangleTest')
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             x0 = 0.053
             y0 = 0.08712
 
@@ -29,7 +29,7 @@ class TriangleTest(DomainInputBase):
         else:
             COO = None
 
-        COO = cOmm.bcast(COO, root=mAster_rank)
+        COO = COMM.bcast(COO, root=MASTER_RANK)
         x0, x1, x2, y0, y1, y2 = COO
 
         # _____________ standard inputs ________________________________________________

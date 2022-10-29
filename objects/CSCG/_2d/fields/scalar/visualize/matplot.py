@@ -61,10 +61,10 @@ class _2dCSCG_ScalarField_Visualize_matplot(FrozenOnly):
         rs = np.meshgrid(*rs, indexing='ij')
         xy, v = self._cf_.reconstruct(*rs, time=time)
 
-        xy = cOmm.gather(xy, root=sEcretary_rank)
-        v = cOmm.gather(v, root=sEcretary_rank)
+        xy = COMM.gather(xy, root=SECRETARY_RANK)
+        v = COMM.gather(v, root=SECRETARY_RANK)
 
-        if rAnk != sEcretary_rank:
+        if RANK != SECRETARY_RANK:
             pass
         else:
             XY = dict()

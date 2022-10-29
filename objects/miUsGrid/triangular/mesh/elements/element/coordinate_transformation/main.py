@@ -15,6 +15,9 @@ from objects.CSCG._2d.mesh.domain.regions.region.interpolations.transfinite.mapp
 
 class miUsGrid_TriangularMesh_Element_CT(FrozenOnly):
     """We map the LEFT edge of the reference element into the singular vertex.
+
+    We use the transfinite mapping for the transformation.
+
     """
     def __init__(self, element):
         """"""

@@ -31,7 +31,7 @@ class _3dCSCG_Node_Elements(FrozenOnly):
         mesh = self._mesh_
 
         if mesh.domain.IS.periodic:
-            if rAnk == mAster_rank:
+            if RANK == MASTER_RANK:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:
                     region = mesh.domain.regions[rn]
@@ -41,11 +41,11 @@ class _3dCSCG_Node_Elements(FrozenOnly):
                             f" elements.layout[{rn}]={regionElementLayout} wrong," \
                             f" needs (>1, >1, >1) to make it work for periodic domain."
 
-        if rAnk != mAster_rank:
+        if RANK != MASTER_RANK:
             element_map = mesh.elements.map
             element_indices = mesh.elements.indices
-            cOmm.send([element_map, element_indices], dest=mAster_rank, tag=rAnk)
-            global_numbering = cOmm.recv(source=mAster_rank, tag=rAnk)
+            COMM.send([element_map, element_indices], dest=MASTER_RANK, tag=RANK)
+            global_numbering = COMM.recv(source=MASTER_RANK, tag=RANK)
         else:
             p = (2, 2, 2)
             numberingCache = dict()
@@ -53,12 +53,12 @@ class _3dCSCG_Node_Elements(FrozenOnly):
             currentNumber = 0
             other_side_name = 'SNEWFB' # not an error, this is other side name.
             sidePairDict = {'N':'S', 'S':'N', 'W':'E', 'E':'W', 'B':'F', 'F':'B'}
-            for i in range(sIze):
-                if i == mAster_rank:
+            for i in range(SIZE):
+                if i == MASTER_RANK:
                     element_map = mesh.elements.map
                     element_indices = mesh.elements.indices
                 else:
-                    element_map, element_indices = cOmm.recv(source=i, tag=i)
+                    element_map, element_indices = COMM.recv(source=i, tag=i)
 
                 for k in element_indices:
                     if k == 0:
@@ -89,10 +89,10 @@ class _3dCSCG_Node_Elements(FrozenOnly):
                                 )
                 toBeSentAway = dict()
                 for k in element_indices: toBeSentAway[k] = numberingCache[k]
-                if i == mAster_rank:
+                if i == MASTER_RANK:
                     global_numbering = toBeSentAway
                 else:
-                    cOmm.send(toBeSentAway, dest=i, tag=i)
+                    COMM.send(toBeSentAway, dest=i, tag=i)
                 for k in element_indices: del numberingCache[k]
 
         MAX = list()
@@ -106,11 +106,11 @@ class _3dCSCG_Node_Elements(FrozenOnly):
         else:
             MAX = max(MAX)
 
-        MAX = cOmm.gather(MAX, root=mAster_rank)
-        if rAnk == mAster_rank:
+        MAX = COMM.gather(MAX, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
             MAX = max(MAX) + 1
 
-        self._GLOBAL_num_ = cOmm.bcast(MAX, root=mAster_rank)
+        self._GLOBAL_num_ = COMM.bcast(MAX, root=MASTER_RANK)
 
         return MAP
 
@@ -142,8 +142,8 @@ class _3dCSCG_Node_Elements(FrozenOnly):
     def ___PRIVATE_generating_node_elements___(self):
         """"""
         MAP = self.map
-        MAP = cOmm.gather(MAP, root=mAster_rank)
-        if rAnk == mAster_rank:
+        MAP = COMM.gather(MAP, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
             ___ = dict()
             for mp in MAP:
                 add_len = len(mp)
@@ -188,10 +188,10 @@ class _3dCSCG_Node_Elements(FrozenOnly):
         else:
             LOCAL_NODES = None
 
-        LOCAL_NODES = cOmm.scatter(LOCAL_NODES, root=mAster_rank)
+        LOCAL_NODES = COMM.scatter(LOCAL_NODES, root=MASTER_RANK)
         mesh_map = self._mesh_.elements.map
 
-        if saFe_mode:
+        if SAFE_MODE:
             for i in self.map:
                 for node in self.map[i]:
                     assert node in LOCAL_NODES, f"safety check!"
@@ -218,11 +218,11 @@ class _3dCSCG_Node_Elements(FrozenOnly):
             if node in LOCAL_NODES_BNS:
                 LOCAL_NODES[node].extend(LOCAL_NODES_BNS[node])
 
-        for i in range(sIze):
-            to_be_check = cOmm.bcast(LOCAL_NODES, root=i)
+        for i in range(SIZE):
+            to_be_check = COMM.bcast(LOCAL_NODES, root=i)
 
             send_back = dict()
-            if rAnk == i:
+            if RANK == i:
                 pass
             else:
                 for node in to_be_check:
@@ -236,9 +236,9 @@ class _3dCSCG_Node_Elements(FrozenOnly):
                                     send_back[node].append(loc)
 
 
-            send_back = cOmm.gather(send_back, root=i)
+            send_back = COMM.gather(send_back, root=i)
 
-            if rAnk == i:
+            if RANK == i:
                 for back in send_back:
                     for node in back:
                         assert node in LOCAL_NODES, "safety check!"
@@ -334,7 +334,7 @@ class _3dCSCG_Node_Elements(FrozenOnly):
 
     def __getitem__(self, item):
         if item not in self._elements_:
-            assert item in self._locations_, f"node element #{item} is not included in this core (#{rAnk})."
+            assert item in self._locations_, f"node element #{item} is not included in this core (#{RANK})."
             self._elements_[item] = _3dCSCG_Node_Element(self, item)
         return self._elements_[item]
 

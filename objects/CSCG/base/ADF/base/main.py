@@ -61,7 +61,7 @@ class CSCG_Algebra_DUAL_FORM_BASE(FrozenClass):
         _2bs_ = dict()
         _2bs_['obj'] = self.__class__.__name__
         _2bs_['parameters'] = self.prime.standard_properties.parameters # this is the key
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             if do_save:
                 if filename[-3:] != '.mi': filename += '.mi'
                 assert filename.count('.') == 1, f"filename={filename} wrong."
@@ -72,7 +72,7 @@ class CSCG_Algebra_DUAL_FORM_BASE(FrozenClass):
 
     #-----------------------------------------------------------------------------
     @property
-    def BC(self):
+    def BC(self): # ADF form has its own BC property
         if self._BC_ is None:
             self._BC_ = CSCG_ADForm_BC(self)
         return self._BC_

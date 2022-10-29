@@ -50,7 +50,7 @@ if __name__ == "__main__":
     # mpiexec -n 4 python objects/miUsGrid/triangular/forms/standard/_1/inner/main.py
     import numpy as np
     from objects.miUsGrid.triangular.fields.vector.main import miUsGrid_Triangular_Vector
-    from objects.miUsGrid.triangular.__test__.Random.rand_mesh import mesh
+    from tests.objects.miUsGrid.triangular.randObj.rand_mesh import mesh
     from objects.miUsGrid.triangular.space.main import miUsGrid_TriangularFunctionSpace
 
     p = 15

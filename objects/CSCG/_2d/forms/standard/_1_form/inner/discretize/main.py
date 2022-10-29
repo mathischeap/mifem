@@ -25,9 +25,9 @@ class _2dCSCG_S1Fi_Discretize(FrozenOnly):
         :rtype: Its type can be different according to the particular discretize method.
         """
         if target == 'func':
-            if self._sf_.TW.func.body.__class__.__name__ == '_2dCSCG_VectorField':
+            if self._sf_.CF.__class__.__name__ == '_2dCSCG_VectorField':
 
-                if self._sf_.func.ftype == 'standard':
+                if self._sf_.CF.ftype == 'standard':
                     return self._standard_vector_(
                         update_cochain=update_cochain, target='func', **kwargs)
                 else:

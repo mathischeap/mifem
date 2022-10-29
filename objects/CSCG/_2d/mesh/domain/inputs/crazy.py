@@ -4,7 +4,7 @@ from objects.CSCG._2d.mesh.domain.inputs.base import DomainInputBase
 import numpy as np
 from screws.decorators.classproperty.main import classproperty
 import random
-from root.config.main import cOmm, rAnk, mAster_rank
+from root.config.main import COMM, RANK, MASTER_RANK
 
 class Crazy(DomainInputBase):
     """"""
@@ -52,7 +52,7 @@ class Crazy(DomainInputBase):
 
     @classproperty
     def random_parameters(cls):
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             rp = {'c': random.randint(0,3)*random.random()/10,
                   'bounds': [(-random.random(), random.random()+0.5),
                              (-random.random(), random.random()+0.5)]
@@ -60,4 +60,4 @@ class Crazy(DomainInputBase):
         else:
             rp = None
 
-        return cOmm.bcast(rp, root=mAster_rank)
+        return COMM.bcast(rp, root=MASTER_RANK)

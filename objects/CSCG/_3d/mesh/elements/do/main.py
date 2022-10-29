@@ -2,7 +2,7 @@
 """"""
 
 from screws.freeze.main import FrozenOnly
-from root.config.main import cOmm, np
+from root.config.main import COMM, np
 import matplotlib.pyplot as plt
 
 from objects.CSCG._3d.mesh.elements.do.find import _3dCSCG_Mesh_Elements_DO_FIND
@@ -25,7 +25,7 @@ class _3dCSCG_Mesh_Elements_DO(FrozenOnly):
 
         """
         if not i in self._elements_:
-            cOmm.barrier()
+            COMM.barrier()
             return
         density = 5 + 4 * density_factor
         i0 = 1 + density_factor
@@ -82,7 +82,7 @@ class _3dCSCG_Mesh_Elements_DO(FrozenOnly):
 
         plt.show()
         plt.close()
-        cOmm.barrier()
+        COMM.barrier()
 
     @property
     def find(self):

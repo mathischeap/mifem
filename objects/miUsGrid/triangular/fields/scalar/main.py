@@ -13,7 +13,7 @@ from objects.miUsGrid.triangular.fields.base import miUsGrid_TriangularFieldBase
 
 from functools import partial
 from types import FunctionType, MethodType
-from screws.functions.time_plus_2d_space._0_ import _0t_
+from screws.functions.timePlus2dSpace._0_ import _0t_
 
 from objects.miUsGrid.triangular.fields.scalar.reconstruct.main import miUsGrid_Triangular_Scalar_Reconstruct
 from objects.miUsGrid.triangular.fields.scalar.do.main import miUsGrid_Triangular_Scalar_Do

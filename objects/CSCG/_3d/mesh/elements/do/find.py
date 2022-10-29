@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """"""
 from screws.freeze.main import FrozenOnly
-from root.config.main import cOmm
+from root.config.main import COMM
 
 
 
@@ -89,8 +89,8 @@ class _3dCSCG_Mesh_Elements_DO_FIND(FrozenOnly):
         else:
             TEsj = None
 
-        TEsi = cOmm.allgather(TEsi)
-        TEsj = cOmm.allgather(TEsj)
+        TEsi = COMM.allgather(TEsi)
+        TEsj = COMM.allgather(TEsj)
 
         for _ in TEsi:
             if _ is not None:

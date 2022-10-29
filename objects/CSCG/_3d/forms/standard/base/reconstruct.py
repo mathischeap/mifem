@@ -10,7 +10,7 @@ if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.base import FrozenOnly
 import numpy as np
-from root.config.main import sIze, cOmm, rAnk
+from root.config.main import SIZE, COMM, RANK
 
 ___grid_cache_3dCSCG_SF_Reconstruct___ = {
     'grid': None,
@@ -220,8 +220,8 @@ class _3dCSCG_SF_Reconstruct(FrozenOnly):
         rwPc = mesh.elements.region_wise_prime_core #
 
         #---------- we distribute xyz, and value to prime cores -------------------------------------1
-        XYZ = [dict() for _ in range(sIze)]
-        VAL = [dict() for _ in range(sIze)]
+        XYZ = [dict() for _ in range(SIZE)]
+        VAL = [dict() for _ in range(SIZE)]
 
         for e in xyz:
             rn = mesh.do.find.region_name_of_element(e)
@@ -229,8 +229,8 @@ class _3dCSCG_SF_Reconstruct(FrozenOnly):
             XYZ[prime_core][e] = xyz[e]
             VAL[prime_core][e] = value[e]
 
-        XYZ = cOmm.alltoall(XYZ)
-        VAL = cOmm.alltoall(VAL)
+        XYZ = COMM.alltoall(XYZ)
+        VAL = COMM.alltoall(VAL)
 
         #----------- collect xyz and value in the prime cores --------------------------------------1
         _XYZ_ = dict()
@@ -245,7 +245,7 @@ class _3dCSCG_SF_Reconstruct(FrozenOnly):
         element_global_numbering = dict()
         for rn in rwPc:
             core = rwPc[rn]
-            if core == rAnk: # I am the prime core of this region.
+            if core == RANK: # I am the prime core of this region.
                 if rn not in element_global_numbering:
                     element_global_numbering[rn] = \
                         mesh.___PRIVATE_generate_element_global_numbering___(number_what=rn)

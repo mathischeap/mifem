@@ -27,33 +27,33 @@ class _3dCSCG_Discretize(FrozenOnly):
         """
         SELF = self._sf_
         if target == 'func':
-            if SELF.TW.func.body.__class__.__name__ == '_3dCSCG_ScalarField':
-                if SELF.func.ftype == 'standard':
+            if SELF.CF.__class__.__name__ == '_3dCSCG_ScalarField':
+                if SELF.CF.ftype == 'standard':
                     return self._standard_(update_cochain=update_cochain)
                 else:
                     raise NotImplementedError(f"3dCSCG 0-form cannot (target func) discretize "
-                                              f"_3dCSCG_ScalarField of ftype={SELF.func.ftype}")
+                                              f"_3dCSCG_ScalarField of ftype={SELF.CF.ftype}")
 
             else:
                 raise NotImplementedError(f'3dCSCG 0-form can not (target func) discretize '
-                                          f'{SELF.TW.func.body.__class__}.')
+                                          f'{SELF.CF.__class__}.')
 
         elif target == 'BC':
-            if SELF.TW.BC.body.__class__.__name__ == '_3dCSCG_ScalarField':
-                if SELF.BC.ftype == 'standard':
+            if SELF.BC.CF.__class__.__name__ == '_3dCSCG_ScalarField':
+                if SELF.BC.CF.ftype == 'standard':
                     # always do not update cochain & and target always be "BC"
                     return self._standard_(update_cochain=False, target='BC')
 
-                elif SELF.BC.ftype == "boundary-wise":
+                elif SELF.BC.CF.ftype == "boundary-wise":
                     # we will always not update cochain & and always set target to be "BC"
                     return self._boundary_wise_()
 
                 else:
                     raise NotImplementedError(f"3dCSCG 0-form cannot (target BC) discretize "
-                                              f"_3dCSCG_ScalarField of ftype={SELF.BC.ftype}")
+                                              f"_3dCSCG_ScalarField of ftype={SELF.BC.CF.ftype}")
 
             else:
                 raise NotImplementedError(f'3dCSCG 0-form can not (target BC) '
-                                          f'discretize {SELF.TW.BC.body.__class__}.')
+                                          f'discretize {SELF.BC.CF.__class__}.')
         else:
             raise NotImplementedError(f"3dCSCG 0-form cannot discretize while targeting at {target}.")

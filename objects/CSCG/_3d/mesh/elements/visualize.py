@@ -4,7 +4,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 from screws.freeze.base import FrozenOnly
 
-from root.config.main import rAnk, mAster_rank, np, sEcretary_rank
+from root.config.main import RANK, MASTER_RANK, np, SECRETARY_RANK
 import matplotlib.pyplot as plt
 
 class _3dCSCG_MeshElements_VIS(FrozenOnly):
@@ -20,7 +20,7 @@ class _3dCSCG_MeshElements_VIS(FrozenOnly):
         :return:
         """
 
-        # if rAnk != mAster_rank: return
+        # if RANK != MASTER_RANK: return
         domain = self._elements_._mesh_.domain
         density = int(np.ceil(np.sqrt(density/(domain.regions.num*6))))
         if density <= 2: density = 3
@@ -109,12 +109,12 @@ class _3dCSCG_MeshElements_VIS(FrozenOnly):
         ax.set_xlabel(r'$x$', fontsize=15)
         ax.set_ylabel(r'$y$', fontsize=15)
         ax.set_zlabel(r'$z$', fontsize=15)
-        if rAnk == mAster_rank:
-            plt.title(domain.name + f'; mesh elements in the MASTER core #{rAnk}')
-        elif rAnk == sEcretary_rank:
-            plt.title(domain.name + f'; mesh elements in the SECRETARY core #{rAnk}')
+        if RANK == MASTER_RANK:
+            plt.title(domain.name + f'; mesh elements in the MASTER core #{RANK}')
+        elif RANK == SECRETARY_RANK:
+            plt.title(domain.name + f'; mesh elements in the SECRETARY core #{RANK}')
         else:
-            plt.title(domain.name + f'; mesh elements in core #{rAnk}')
+            plt.title(domain.name + f'; mesh elements in core #{RANK}')
 
         fig.tight_layout()
         plt.show()

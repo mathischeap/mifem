@@ -116,7 +116,7 @@ class LocalNumbering(FrozenOnly):
 
     def ___PRIVATE_matplot_form___(self, what_form, saveto=None, usetex=False):
         """"""
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             fig, ax = plt.subplots(figsize=(14, 10))
             if 'Inner' in what_form:
                 LN0 = self._2dCSCG_0Form_Inner
@@ -200,7 +200,7 @@ class LocalNumbering(FrozenOnly):
 
     def ___PRIVATE_plot_reference_mesh___(self, ax, orientation, k, usetex=False):
         """"""
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             plt.rc('text', usetex=usetex)
             ax.set_aspect('equal')
             ax.spines['top'].set_visible(False)

@@ -1,5 +1,5 @@
 from screws.freeze.base import FrozenOnly
-from root.config.main import cOmm, mAster_rank, rAnk
+from root.config.main import COMM, MASTER_RANK, RANK
 
 
 
@@ -30,13 +30,13 @@ class _2dCSCG_SF_dofs_FIND(FrozenOnly):
             dof_local_numbering = self._dofs_._sf_.numbering.local[0][id0, id1] # local numbering
             dof_num = GM[corner_element][dof_local_numbering]
 
-        dof_num = cOmm.gather(dof_num, root=mAster_rank)
+        dof_num = COMM.gather(dof_num, root=MASTER_RANK)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             dof_num = [ i for i in dof_num if i is not None ]
             assert len(dof_num) == 1, f"We must only find dof as we first will only find one mesh-element"
             dof_num = dof_num[0]
 
-        dof_num = cOmm.bcast(dof_num, root=mAster_rank)
+        dof_num = COMM.bcast(dof_num, root=MASTER_RANK)
 
         return self._dofs_[dof_num]

@@ -48,7 +48,7 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
         # non-hybrid numbering ...
         mesh = self._mesh_
         if mesh.domain.IS.periodic:
-            if rAnk == mAster_rank:
+            if RANK == MASTER_RANK:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:
                     region = mesh.domain.regions[rn]
@@ -58,11 +58,11 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
                             f" elements.layout[{rn}]={regionElementLayout} wrong," \
                             f" needs (>1, >1, >1) to make it work for periodic region: {rn}."
 
-        if rAnk != mAster_rank:
+        if RANK != MASTER_RANK:
             element_map = mesh.elements.map
             element_indices = mesh.elements.indices
-            cOmm.send([element_map, element_indices], dest=mAster_rank, tag=rAnk)
-            global_numbering = cOmm.recv(source=mAster_rank, tag=rAnk)
+            COMM.send([element_map, element_indices], dest=MASTER_RANK, tag=RANK)
+            global_numbering = COMM.recv(source=MASTER_RANK, tag=RANK)
         else:
             p = [1,1,1]
             numOfBasisComponents = [4,4,4]
@@ -70,12 +70,12 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
             currentNumber = 0
             other_side_name = 'SNEWFB' # not an error, this is other side name.
             sidePairDict = {'N':'S', 'S':'N', 'W':'E', 'E':'W', 'B':'F', 'F':'B'}
-            for i in range(sIze):
-                if i == mAster_rank:
+            for i in range(SIZE):
+                if i == MASTER_RANK:
                     element_map = mesh.elements.map
                     element_indices = mesh.elements.indices
                 else:
-                    element_map, element_indices = cOmm.recv(source=i, tag=i)
+                    element_map, element_indices = COMM.recv(source=i, tag=i)
 
                 for k in element_indices:
                     if k == 0:
@@ -143,10 +143,10 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
 
                 toBeSentAway = dict()
                 for k in element_indices: toBeSentAway[k] = numberingCache[k]
-                if i == mAster_rank:
+                if i == MASTER_RANK:
                     global_numbering = toBeSentAway
                 else:
-                    cOmm.send(toBeSentAway, dest=i, tag=i)
+                    COMM.send(toBeSentAway, dest=i, tag=i)
                 for k in element_indices: del numberingCache[k]
 
         MAX = list()
@@ -162,12 +162,12 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
         else:
             MAX = max(MAX)
 
-        MAX = cOmm.gather(MAX, root=mAster_rank)
-        if rAnk == mAster_rank:
+        MAX = COMM.gather(MAX, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
             MAX = max(MAX) + 1
             assert MAX >= 4
 
-        self._GLOBAL_num_ = cOmm.bcast(MAX, root=mAster_rank)
+        self._GLOBAL_num_ = COMM.bcast(MAX, root=MASTER_RANK)
 
         return MAP
 
@@ -229,10 +229,10 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
         """
         if self._type_amount_dict_ is None:
 
-            if rAnk == 0:
+            if RANK == 0:
                 POOL = dict()
             else:
-                POOL = cOmm.recv(source=rAnk - 1, tag=rAnk)
+                POOL = COMM.recv(source=RANK - 1, tag=RANK)
 
             type_amount_dict = dict()
 
@@ -263,10 +263,10 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
 
                 type_amount_dict[i] = POOL[i]
 
-            if rAnk == sIze - 1:
+            if RANK == SIZE - 1:
                 pass
             else:
-                cOmm.send(POOL, dest=rAnk+1, tag=rAnk+1)
+                COMM.send(POOL, dest=RANK + 1, tag=RANK + 1)
 
             for i in type_amount_dict:
                 assert np.sum(type_amount_dict[i]) == i
@@ -302,8 +302,8 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
     def ___PRIVATE_generating_edge_locations___(self):
         """"""
         MAP = self.map
-        MAP = cOmm.gather(MAP, root=mAster_rank)
-        if rAnk == mAster_rank:
+        MAP = COMM.gather(MAP, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
             ___ = dict()
             for mp in MAP:
                 add_len = len(mp)
@@ -348,10 +348,10 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
         else:
             LOCAL_EDGES = None
 
-        LOCAL_EDGES = cOmm.scatter(LOCAL_EDGES, root=mAster_rank)
+        LOCAL_EDGES = COMM.scatter(LOCAL_EDGES, root=MASTER_RANK)
         mesh_map = self._mesh_.elements.map
 
-        if saFe_mode:
+        if SAFE_MODE:
             for i in self.map:
                 for edge in self.map[i]:
                     assert edge in LOCAL_EDGES, f"safety check!"
@@ -378,11 +378,11 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
             if edge in LOCAL_EDGES_BNS:
                 LOCAL_EDGES[edge].extend(LOCAL_EDGES_BNS[edge])
 
-        for i in range(sIze):
-            to_be_check = cOmm.bcast(LOCAL_EDGES, root=i)
+        for i in range(SIZE):
+            to_be_check = COMM.bcast(LOCAL_EDGES, root=i)
 
             send_back = dict()
-            if rAnk == i:
+            if RANK == i:
                 pass
             else:
                 for edge in to_be_check:
@@ -395,9 +395,9 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
                                 if loc not in send_back[edge]:
                                     send_back[edge].append(loc)
 
-            send_back = cOmm.gather(send_back, root=i)
+            send_back = COMM.gather(send_back, root=i)
 
-            if rAnk == i:
+            if RANK == i:
                 for back in send_back:
                     for edge in back:
                         assert edge in LOCAL_EDGES, "safety check!"
@@ -478,7 +478,7 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
 
     def __getitem__(self, item):
         if item not in self._elements_:
-            assert item in self._locations_, f"edge element #{item} is not included in this core (#{rAnk})."
+            assert item in self._locations_, f"edge element #{item} is not included in this core (#{RANK})."
             self._elements_[item] = _3dCSCG_Edge_Element(self, item)
         return self._elements_[item]
 

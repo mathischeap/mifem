@@ -107,9 +107,9 @@ class _3dCSCG_Discretize_Standard(FrozenOnly):
         JXC, JYC, JZC = dict(), dict(), dict()
 
         if target == 'func':
-            FUNC = SELF.func
+            FUNC = SELF.CF.___DO_evaluate_func_at_time___()
         elif target == 'BC':
-            FUNC = SELF.BC
+            FUNC = SELF.BC.CF.___DO_evaluate_func_at_time___()
             assert update_cochain is False, \
                 f"When target is {target}, cannot update cochain!"
         else:
@@ -177,32 +177,32 @@ class _3dCSCG_Discretize_Standard(FrozenOnly):
 
             # Now it is time to do the reduction.
 
-            u = FUNC.body[0](*smctm_x)
+            u = FUNC[0](*smctm_x)
             if isinstance(typeWr2Metric, str) and typeWr2Metric[:4] == 'Orth':
                 uvw_dydz = Jx_0 * u
             else:
-                v = FUNC.body[1](*smctm_x)
-                w = FUNC.body[2](*smctm_x)
+                v = FUNC[1](*smctm_x)
+                w = FUNC[2](*smctm_x)
                 uvw_dydz = Jx_0 * u + Jx_1 * v + Jx_2 * w
             local_dydz[i] = self.___PRIVATE_discretize_standard_einsum___(
                 uvw_dydz, quad_weights[1], quad_weights[2], area_dydz
             )
-            v = FUNC.body[1](*smctm_y)
+            v = FUNC[1](*smctm_y)
             if isinstance(typeWr2Metric, str) and typeWr2Metric[:4] == 'Orth':
                 uvw_dzdx = Jy_1 * v
             else:
-                u = FUNC.body[0](*smctm_y)
-                w = FUNC.body[2](*smctm_y)
+                u = FUNC[0](*smctm_y)
+                w = FUNC[2](*smctm_y)
                 uvw_dzdx = Jy_0 * u + Jy_1 * v + Jy_2 * w
             local_dzdx[i] = self.___PRIVATE_discretize_standard_einsum___(
                 uvw_dzdx, quad_weights[0], quad_weights[2], area_dzdx
             )
-            w = FUNC.body[2](*smctm_z)
+            w = FUNC[2](*smctm_z)
             if isinstance(typeWr2Metric, str) and typeWr2Metric[:4] == 'Orth':
                 uvw_dxdy = Jz_2 * w
             else:
-                u = FUNC.body[0](*smctm_z)
-                v = FUNC.body[1](*smctm_z)
+                u = FUNC[0](*smctm_z)
+                v = FUNC[1](*smctm_z)
                 uvw_dxdy = Jz_0 * u + Jz_1 * v + Jz_2 * w
             local_dxdy[i] = self.___PRIVATE_discretize_standard_einsum___(
                 uvw_dxdy, quad_weights[0], quad_weights[1], area_dxdy

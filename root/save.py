@@ -5,7 +5,7 @@ In this script, we DO NOT use the structure of naming files and folders of the m
 
 """
 from screws.miscellaneous.timer import check_filename_mi
-from root.config.main import mAster_rank, rAnk, cOmm
+from root.config.main import MASTER_RANK, RANK, COMM
 import pickle
 from root.read.main import read
 
@@ -36,8 +36,8 @@ def save(obj, filename):
 
         _2bs_.append(_sif_)
 
-        cOmm.barrier()
-        if rAnk == mAster_rank:
+        COMM.barrier()
+        if RANK == MASTER_RANK:
             with open(filename, 'wb') as output:
                 pickle.dump(_2bs_, output, pickle.HIGHEST_PROTOCOL)
             output.close()

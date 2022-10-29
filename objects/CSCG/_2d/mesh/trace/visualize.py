@@ -63,22 +63,22 @@ class _2dCSCG_Trace_Visualize(FrozenOnly):
             if tei.IS.on_periodic_boundary:
                 TEC_P[i] = tei.NON_CHARACTERISTIC_position
 
-        TED = cOmm.gather(TED, root=mAster_rank)
-        TEC = cOmm.gather(TEC, root=mAster_rank)
-        TEC_P = cOmm.gather(TEC_P, root=mAster_rank)
+        TED = COMM.gather(TED, root=MASTER_RANK)
+        TEC = COMM.gather(TEC, root=MASTER_RANK)
+        TEC_P = COMM.gather(TEC_P, root=MASTER_RANK)
 
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             # for finding  the position of the other mesh element edge of a periodic trace element.
             tec_p = dict()
             for TEcp_i in TEC_P:  tec_p.update(TEcp_i)
         else:
             tec_p = None
-        tec_p = cOmm.bcast(tec_p, root=mAster_rank)
+        tec_p = COMM.bcast(tec_p, root=MASTER_RANK)
         for pi in tec_p:
             tec_p[pi] = self._trace_.elements.DO_compute_mapping_of_trace_at_position(tec_p[pi], c)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             ted, tec = dict(), dict()
             for TEDi in TED:  ted.update(TEDi)
             for TECi in TEC:  tec.update(TECi)

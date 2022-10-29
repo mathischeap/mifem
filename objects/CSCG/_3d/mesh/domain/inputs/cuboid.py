@@ -4,7 +4,7 @@ from objects.CSCG._3d.mesh.domain.inputs.base import _3dDomainInputBase
 
 from screws.decorators.classproperty.main import classproperty
 import random
-from root.config.main import rAnk, mAster_rank, cOmm
+from root.config.main import RANK, MASTER_RANK, COMM
 
 
 
@@ -127,7 +127,7 @@ class Cuboid(_3dDomainInputBase):
 
     @classproperty
     def random_parameters(cls):
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             rp = {'p_NWB': (random.uniform(-1,1), random.uniform(-1,1), random.uniform(-1,1)),
                   'width':random.uniform(1,3),
                   'length':random.uniform(1,3),
@@ -137,4 +137,4 @@ class Cuboid(_3dDomainInputBase):
         else:
             rp = None
 
-        return cOmm.bcast(rp, root=mAster_rank)
+        return COMM.bcast(rp, root=MASTER_RANK)

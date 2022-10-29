@@ -33,6 +33,10 @@ class miUsGrid_TriangularMesh_Visualize(FrozenOnly):
         return self.matplot(*args, **kwargs)
 
 
+
+
+
+
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/miUsGrid/triangular/mesh/visualize/main.py
     pass

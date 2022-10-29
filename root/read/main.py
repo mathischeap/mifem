@@ -1,6 +1,6 @@
+# -*- coding: utf-8 -*-
 
-
-from root.config.main import cHaining, cOmm
+from root.config.main import CHAINING, COMM
 
 from root.read.helpers._2dCSCG.mesh import ___restore__2dCSCG_Mesh___
 from root.read.helpers._2dCSCG.space import ___restore__2dCSCG_Space___
@@ -10,7 +10,6 @@ from root.read.helpers._3dCSCG.form import ___restore__3dCSCG_Form___
 from root.read.helpers._3dCSCG.mesh import ___restore__3dCSCG_Mesh___
 from root.read.helpers._3dCSCG.space import ___restore__3dCSCG_Space___
 from root.read.helpers._3dCSCG.ADF import ___restore__3dCSCG_Algebra_DUAL_Form___
-from root.read.helpers._3dCSCG.exact_solution import ___restore__3dCSCG_ExactSolution___
 
 # from root.read.helpers.mpRfT2.mesh import ___restore__mpRfT2_Mesh___
 
@@ -36,7 +35,7 @@ def read(filename, read_individuals=None):
         If read_individuals is None, we read all objects.
     :return:
     """
-    OBJ = cHaining(chain, filename)
+    OBJ = CHAINING(chain, filename)
 
     if isinstance(OBJ,  list): # multiple saving objects: must be a list.
         if isinstance(OBJ[-1], tuple): # multiple saving objects with saving info:
@@ -72,7 +71,7 @@ def read(filename, read_individuals=None):
             assert isinstance(ri, bool) or ri == 1 or ri == 0, \
                 f"read_individuals[{_}]={ri} is wrong, must be True, False, 1 or 0."
 
-    cOmm.barrier()
+    COMM.barrier()
     objs = tuple()
 
     for i in range(LEN):
@@ -86,12 +85,11 @@ def read(filename, read_individuals=None):
             if obj_name == '_3dCSCG_Mesh':
                 obj = ___restore__3dCSCG_Mesh___(obj_para,
                                                  ___CACHE_3dCSCG_mesh___)
+
             elif obj_name == '_3dCSCG_PolynomialSpace':
                 obj = ___restore__3dCSCG_Space___(obj_para,
                                                   ___CACHE_3dCSCG_space___)
-            elif obj_name == '_3dCSCG_ExactSolution':
-                obj = ___restore__3dCSCG_ExactSolution___(obj_para,
-                                                          ___CACHE_3dCSCG_mesh___)
+
             elif obj_name in ('_3dCSCG_0Form',
                               '_3dCSCG_1Form',
                               '_3dCSCG_2Form',
@@ -103,6 +101,7 @@ def read(filename, read_individuals=None):
                 obj = ___restore__3dCSCG_Form___(obj_para,
                                                  ___CACHE_3dCSCG_mesh___,
                                                  ___CACHE_3dCSCG_space___)
+
             elif obj_name in ('_3dCSCG_S0_ADF',
                               '_3dCSCG_S1_ADF',
                               '_3dCSCG_S2_ADF',
@@ -117,8 +116,10 @@ def read(filename, read_individuals=None):
             #----------- 2d CSCG objects -----------------------------------------------------
             elif obj_name == '_2dCSCG_Mesh':
                 obj = ___restore__2dCSCG_Mesh___(obj_para, ___CACHE_2dCSCG_mesh___)
+
             elif obj_name == '_2dCSCG_PolynomialSpace':
                 obj = ___restore__2dCSCG_Space___(obj_para, ___CACHE_2dCSCG_space___)
+
             elif obj_name in ('_2dCSCG_0Form_Inner',
                               '_2dCSCG_0Form_Outer',
                               '_2dCSCG_1Form_Inner',
@@ -133,7 +134,6 @@ def read(filename, read_individuals=None):
             # elif obj_name == 'mpRfT2_Mesh':
             #     obj = ___restore__mpRfT2_Mesh___(obj_para, ___CACHE_2dCSCG_mesh___)
 
-
             else:
                 raise Exception(f'Can not restore {obj_name}')
 
@@ -141,7 +141,7 @@ def read(filename, read_individuals=None):
             obj = None
 
         objs += (obj,)
-        cOmm.barrier()
+        COMM.barrier()
         OBJ[i] = None # clean memory.
 
     if len(objs) == 1: objs = objs[0]

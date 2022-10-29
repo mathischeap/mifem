@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from screws.freeze.base import FrozenOnly
-from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
+from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
 
 
 

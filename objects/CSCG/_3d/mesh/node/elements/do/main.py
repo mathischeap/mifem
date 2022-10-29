@@ -3,7 +3,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from root.config.main import rAnk, mAster_rank, cOmm, np, MPI
+from root.config.main import RANK, MASTER_RANK, COMM, np, MPI
 import matplotlib.pyplot as plt
 
 from screws.freeze.base import FrozenOnly
@@ -89,13 +89,13 @@ class _3dCSCG_NodeMesh_Do(FrozenOnly):
             on_mesh_boundary = None
             TraceElement_Data = dict()
 
-        DATA = cOmm.gather(DATA, root=mAster_rank)
-        TraceElement_Data = cOmm.gather(TraceElement_Data, root=mAster_rank)
-        node_LOCATION = cOmm.gather(node_LOCATION, root=mAster_rank)
-        on_mesh_boundary = cOmm.reduce(on_mesh_boundary, root=mAster_rank, op=MPI.LOR)
+        DATA = COMM.gather(DATA, root=MASTER_RANK)
+        TraceElement_Data = COMM.gather(TraceElement_Data, root=MASTER_RANK)
+        node_LOCATION = COMM.gather(node_LOCATION, root=MASTER_RANK)
+        on_mesh_boundary = COMM.reduce(on_mesh_boundary, root=MASTER_RANK, op=MPI.LOR)
 
         nL = list()
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             ___ = dict()
             for data in DATA:
                 ___.update(data)

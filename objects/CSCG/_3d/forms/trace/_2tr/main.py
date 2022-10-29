@@ -33,15 +33,15 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
         super().__init__(mesh, space, orientation, numbering_parameters, name)
         self._k_ = 2
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_trace_2form')
-        self.___PRIVATE_reset_cache___()
+        self.RESET_cache()
         self._discretize_ = _3dCSCG_2Trace_Discretize(self)
         self._visualize_ = None
         self._freeze_self_()
 
-    def ___PRIVATE_reset_cache___(self):
-        super().___PRIVATE_reset_cache___()
+    def RESET_cache(self):
+        super().RESET_cache()
 
-    def ___PRIVATE_TW_FUNC_body_checker___(self, func_body):
+    def ___Pr_check_CF___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 3
 
@@ -55,7 +55,7 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
             raise NotImplementedError(
                 f"3d CSCG 2-trace form FUNC cannot accommodate {func_body}.")
 
-    def ___PRIVATE_TW_BC_body_checker___(self, func_body):
+    def ___Pr_check_BC_CF___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 3
 
@@ -205,16 +205,16 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
         t = np.linspace(-1 + gap[2], 1 - gap[2], p[2])
         xyz, V = ot.reconstruct(r, s, t, ravel=True)
 
-        xyz = cOmm.gather(xyz, root=mAster_rank)
-        V = cOmm.gather(V, root=mAster_rank)
+        xyz = COMM.gather(xyz, root=MASTER_RANK)
+        V = COMM.gather(V, root=MASTER_RANK)
 
         tep = dict()
         for i in ot.mesh.trace.elements:
             TEi = ot.mesh.trace.elements[i]
             tep[i] = TEi.CHARACTERISTIC_side
-        tep = cOmm.gather(tep, root=mAster_rank)
+        tep = COMM.gather(tep, root=MASTER_RANK)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             XYZ, VVV, TEP = dict(), dict(), dict()
             for i in range(len(xyz)):
                 XYZ.update(xyz[i])
@@ -249,7 +249,7 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
             I_func['BF'] = NearestNDInterpolator((z_x, z_y, z_z), V_z)
         else:
             I_func = None
-        I_func = cOmm.bcast(I_func, root=mAster_rank)
+        I_func = COMM.bcast(I_func, root=MASTER_RANK)
         func = (I_func['NS'], I_func['WE'], I_func['BF'])
         self.func._body_ = func
         self.discretize._standard_vector_()

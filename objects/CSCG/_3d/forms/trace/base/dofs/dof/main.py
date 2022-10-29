@@ -120,14 +120,14 @@ class _3dCSCG_Trace_forms_DOF(FrozenOnly):
         positions. The positions are indicated in the same way as the local positions, see `positions`."""
         if self._GLOBAL_positions_ is None:
             positions = self.positions
-            positions = cOmm.gather(positions, root=mAster_rank)
-            if rAnk == mAster_rank:
+            positions = COMM.gather(positions, root=MASTER_RANK)
+            if RANK == MASTER_RANK:
                 GP = list()
                 for PS in positions:
                     GP.extend(PS)
             else:
                 GP = None
-            self._GLOBAL_positions_ = cOmm.bcast(GP, root=mAster_rank)
+            self._GLOBAL_positions_ = COMM.bcast(GP, root=MASTER_RANK)
         return self._GLOBAL_positions_
 
     @property

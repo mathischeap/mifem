@@ -10,7 +10,7 @@ from objects.CSCG._3d.mesh.domain.regions.region.interpolations.base import Inte
 
 from screws.exceptions import ThreeDimensionalTransfiniteInterpolationError
 
-from screws.numerical._2d_space.Jacobian_21 import NumericalPartialDerivative_xy
+from screws.numerical._2dSpace.Jacobian_21 import NumericalPartialDerivative_xy
 
 
 
@@ -77,7 +77,7 @@ class Transfinite(InterpolationBase):
         except AssertionError:
             raise_Error = True
 
-        raise_Error = cOmm.allreduce(raise_Error, op=MPI.LOR)
+        raise_Error = COMM.allreduce(raise_Error, op=MPI.LOR)
 
         if raise_Error:
             raise ThreeDimensionalTransfiniteInterpolationError(

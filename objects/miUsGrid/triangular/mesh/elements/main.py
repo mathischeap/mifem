@@ -42,7 +42,7 @@ class miUsGrid_TriangularMesh_Elements(FrozenOnly):
 
     @property
     def distributions(self):
-        """A list of shape `(sIze,)`.
+        """A list of shape `(SIZE,)`.
 
         How many local cells in each core? distribution[i] means core #`i` have this many local
          cells.
@@ -163,7 +163,7 @@ if __name__ == "__main__":
     # mpiexec -n 4 python objects/miUsGrid/triangular/mesh/elements/main.py
 
     from __init__ import miTri
-    fc = miTri.form('rand0', 2)
+    fc = miTri.call('rand0', 2)
     mesh = fc.mesh
     print(mesh.elements.similarity)
 

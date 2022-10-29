@@ -84,15 +84,6 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
             clB = other.cochain.local[e]
             COCHAIN_LOCAL[e] = clA - clB
 
-        # optional 1: add the time_wise_function -----------------
-        # noinspection PyBroadException
-        try:
-            FB = self.TW.func.body - other.TW.func.body
-            result_form.TW.func.body = FB
-            result_form.TW.current_time = self.TW.current_time
-            result_form.TW.do.push_all_to_instant()
-        except:
-            pass
         #=========================================================
         result_form.cochain.local = COCHAIN_LOCAL
         return result_form
@@ -130,15 +121,6 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
             clB = other.cochain.local[e]
             COCHAIN_LOCAL[e] = clA + clB
 
-        # optional 1: add the time_wise_function -----------------
-        # noinspection PyBroadException
-        try:
-            FB = self.TW.func.body + other.TW.func.body
-            result_form.TW.func.body = FB
-            result_form.TW.current_time = self.TW.current_time
-            result_form.TW.do.push_all_to_instant()
-        except:
-            pass
         #=========================================================
         result_form.cochain.local = COCHAIN_LOCAL
         return result_form

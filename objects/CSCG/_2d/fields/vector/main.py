@@ -16,8 +16,8 @@ from types import FunctionType, MethodType
 # from BASE.elementwise_cache import EWC_ColumnVector
 from objects.CSCG._2d.fields.base import _2dCSCG_Continuous_FORM_BASE
 from functools import partial
-from screws.functions.time_plus_2d_space._0_ import _0t_
-from screws.functions.time_plus_2d_space.constant import CFGt as CFG_t_plus_2d
+from screws.functions.timePlus2dSpace._0_ import _0t_
+from screws.functions.timePlus2dSpace.constant import CFGt as CFG_t_plus_2d
 # from scipy import sparse as spspa
 from objects.CSCG._2d.fields.vector.do.main import _2dCSCG_VectorField_DO
 from objects.CSCG._2d.fields.vector.numerical.main import _2dCSCG_VectorField_Numerical

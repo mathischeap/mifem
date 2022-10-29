@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from screws.exceptions import LocalCochainShapeError
-from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_ColumnVector
+from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_ColumnVector
 from scipy.sparse import lil_matrix, csr_matrix, csc_matrix
-from tools.linear_algebra.data_structures.global_matrix.main import DistributedVector
+from tools.linearAlgebra.dataStructures.global_matrix.main import DistributedVector
 from scipy import sparse as spspa
 from screws.freeze.base import FrozenOnly
-from root.config.main import np, rAnk, mAster_rank, cOmm
+from root.config.main import np, RANK, MASTER_RANK, COMM
 from objects.CSCG.base.forms.standard.cochain.dofwise import CSCG_SF_Cochain_DofWise
 
 
@@ -66,15 +66,15 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
 
             RN_LI_dict[i] = rn + '=|=' + str(loc_ind)
 
-        RN_LI_dict = cOmm.gather(RN_LI_dict, root=mAster_rank)
-        if rAnk == mAster_rank:
+        RN_LI_dict = COMM.gather(RN_LI_dict, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
             RID = dict()
             for rid in RN_LI_dict:
                 RID.update(rid)
         del RN_LI_dict
 
         LOCAL = self.DO_gather_local_to_master()
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
 
             RW_LOCAL = dict()
 
@@ -124,9 +124,9 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
 
         else:
             # otherwise, we make a master dominating distributed vector.
-            GLOBE = cOmm.gather(globe, root=mAster_rank)
+            GLOBE = COMM.gather(globe, root=MASTER_RANK)
 
-            if rAnk == mAster_rank:
+            if RANK == MASTER_RANK:
                 measure = np.zeros(self._sf_.num.GLOBAL_dofs, dtype=int)
                 for G in GLOBE:
                     indices = G.indices
@@ -160,8 +160,8 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
                 VV = globe.V.T.toarray()[0]
             else:
                 V = globe.V
-                V = cOmm.gather(V, root=mAster_rank)
-                if rAnk == mAster_rank:
+                V = COMM.gather(V, root=MASTER_RANK)
+                if RANK == MASTER_RANK:
                     VV = np.empty((self._sf_.num.GLOBAL_dofs,))
                     for v in V:
                         indices = v.indices
@@ -169,8 +169,8 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
                         VV[indices] = data
             # distribute vector to individual cores ...
             local_range = self._sf_.numbering.gathering.local_range
-            local_range = cOmm.gather(local_range, root=mAster_rank)
-            if rAnk == mAster_rank:
+            local_range = COMM.gather(local_range, root=MASTER_RANK)
+            if RANK == MASTER_RANK:
                 TO_BE_SENT = list()
                 for lr in local_range:
                     if lr == tuple():
@@ -183,7 +183,7 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
                     TO_BE_SENT.append(to_be_sent)
             else:
                 TO_BE_SENT = None
-            TO_BE_SENT = cOmm.scatter(TO_BE_SENT, root=mAster_rank)
+            TO_BE_SENT = COMM.scatter(TO_BE_SENT, root=MASTER_RANK)
             # distribute to local cochain ...
             local = dict()
             GM = self._sf_.numbering.gathering
@@ -207,8 +207,8 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
 
     def DO_gather_local_to_master(self):
         """Do what the method name says."""
-        local = cOmm.gather(self.local, root=mAster_rank)
-        if rAnk == mAster_rank:
+        local = COMM.gather(self.local, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
             LOCAL = dict()
             for li in local:
                 if li is not None:

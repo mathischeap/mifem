@@ -25,7 +25,7 @@ class _3dCSCG_Discretize_BoundaryWise(FrozenOnly):
 
         nodes = list(np.meshgrid(*SELF.space.nodes, indexing='ij'))
         nodes = [nodes[i].ravel('F') for i in range(3)]
-        FUNC = SELF.BC.body
+        FUNC = SELF.BC.CF.___DO_evaluate_func_at_time___()
         RANGE_element_sides = SELF.mesh.boundaries.range_of_element_sides
         cochainLocal = dict()
         for bn in FUNC:

@@ -13,8 +13,8 @@ if './' not in sys.path: sys.path.append('./')
 from screws.freeze.base import FrozenOnly
 from objects.miUsGrid.triangular.mesh.elements.element.coordinate_transformation.main import miUsGrid_TriangularMesh_Element_CT
 from objects.miUsGrid.triangular.mesh.elements.element.visualize import miUsGrid_TriangularMesh_Element_Visualize
-from screws.functions._2d_space.distance import distance
-from screws.functions._2d_space.angles_of_triangle import angles_of_triangle
+from screws.functions._2dSpace.distance import distance
+from screws.functions._2dSpace.angles_of_triangle import angles_of_triangle
 
 class miUsGrid_TriangularMesh_Element(FrozenOnly):
     """"""
@@ -79,13 +79,34 @@ class miUsGrid_TriangularMesh_Element(FrozenOnly):
     def angles(self):
         """return the angles in degrees (0-180)."""
         return angles_of_triangle(*self.coordinates)
+        
+    
+    @property
+    def d1_d2_height(self):
+        """
+                             L
+                             /|\
+                            / | \
+                     D     /  |  \    U
+                          /   |h  \
+                         /    |    \
+                        /_____|_____\
+                           d1    d2
+                              R
+        Returns
+        -------
 
+        """
+        return  NotImplementedError()
+    
+        
+        
     @property
     def quality(self):
         """1: best, 0, worst.
 
-        A best triangle has three 60 degree angles.
-        A worst one has a 180 angle plus two 0 degree ones.
+        The best triangle has three 60 degree angles.
+        The worst one has a 180 angle plus two 0 degree ones.
         """
 
         diff = sum([abs(_ - 60) for _ in self.angles])

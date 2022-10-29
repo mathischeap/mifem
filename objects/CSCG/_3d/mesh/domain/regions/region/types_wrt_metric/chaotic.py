@@ -2,7 +2,7 @@
 from objects.CSCG._3d.mesh.domain.regions.region.types_wrt_metric.base import TypeWr2MetricBase
 
 import numpy as np
-from root.config.main import cOmm, rAnk
+from root.config.main import COMM, RANK
 from objects.CSCG._3d.mesh.elements.element.types_wrt_metric.chaotic import ChaoticElement
 from objects.CSCG._3d.mesh.trace.elements.element.types_wrt_metric.chaotic import  ChaoticTraceElement
 
@@ -25,11 +25,11 @@ class Chaotic(TypeWr2MetricBase):
     @property
     def mark(self):
         if self._mark_ is None:
-            if rAnk == 0:
+            if RANK == 0:
                 self._mark_ = 'chaotic:' + str(id(self))
             else:
                 self._mark_ = None
-            self._mark_ = cOmm.bcast(self._mark_, root=0)
+            self._mark_ = COMM.bcast(self._mark_, root=0)
         return self._mark_
 
     def ___CLASSIFY_ELEMENT_of_spacing___(self, spacing: tuple) -> ChaoticElement:

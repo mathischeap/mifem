@@ -10,7 +10,7 @@ if './' not in sys.path: sys.path.append('./')
 
 from importlib import import_module
 from screws.freeze.base import FrozenOnly
-from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
+from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
 
 
 
@@ -25,6 +25,7 @@ class miUs_Triangular_SF_Coboundary(FrozenOnly):
 
     @property
     def incidence_matrix(self):
+        """"""
         assert self._sf_.k < 2, "volume form has no incidence matrix."
         if self._incidenceMatrix_ is None:
             formName = self._sf_.__class__.__name__
@@ -84,9 +85,8 @@ class miUs_Triangular_SF_Coboundary(FrozenOnly):
 
         return self._incidenceMatrix_
 
-
-
     def ___PRIVATE_next_class___(self):
+        """"""
         assert self._sf_.k < 2, "volume form has no next prime space."
         k = self._sf_.k
         base_path = '.'.join(str(self.__class__).split(' ')[1][1:-2].split('.')[:-3]) + '.'
@@ -114,9 +114,8 @@ class miUs_Triangular_SF_Coboundary(FrozenOnly):
         return nextCochain
 
     def __call__(self):
-        """
-        When we call the coboundary object, we do the ``coboundary`` process; let ``self`` be a ``k``-form,
-        it returns a ``(k+1)``-form.
+        """When we call the coboundary object, we do the ``coboundary`` process; let ``self`` be a
+        ``k``-form, it returns a ``(k+1)``-form.
 
         :return: A new standard ``(k+1)``-form.
         :raise AssertionError: If ``self`` has no cochain.
@@ -129,6 +128,9 @@ class miUs_Triangular_SF_Coboundary(FrozenOnly):
         )
         nextFmInstance.cochain.local = self.cochain_local
         return nextFmInstance
+
+
+
 
 
 if __name__ == "__main__":

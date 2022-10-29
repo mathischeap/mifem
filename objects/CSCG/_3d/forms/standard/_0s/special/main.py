@@ -2,15 +2,15 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
-from tools.linear_algebra.elementwise_cache.objects.column_vector.main import EWC_ColumnVector
+from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
+from tools.linearAlgebra.elementwiseCache.objects.columnVector.main import EWC_ColumnVector
 
-from tools.linear_algebra.gathering.regular.matrix.main import Gathering_Matrix
-from tools.linear_algebra.gathering.vector import Gathering_Vector
+from tools.linearAlgebra.gathering.regular.matrix.main import Gathering_Matrix
+from tools.linearAlgebra.gathering.vector import Gathering_Vector
 
 from itertools import chain
 from screws.freeze.main import FrozenOnly
-from root.config.main import np, cOmm, MPI, rAnk, mAster_rank
+from root.config.main import np, COMM, MPI, RANK, MASTER_RANK
 from objects.CSCG._3d.mesh.node.elements.do.find.helpers.SOS_internal import _3dCSCG_InternalNodeSOS
 from objects.CSCG._3d.mesh.node.elements.do.find.helpers.SOS_boundary.corner import _3dCSCG_CornerNodeSOS
 
@@ -35,13 +35,13 @@ class _0Form_Special(FrozenOnly):
         sf = self._sf_
         mesh = sf.mesh
 
-        assert sf.TW.BC.body is not None, f'3dCSCG primal 0-sf has no TW.BC function.'
-        assert sf.BC.valid_boundaries is not None, f'3dCSCG primal 0-sf has no valid boundary.'
-        assert adt0.prime.TW.BC.body is not None, f'3dCSCG ad-0-trace has no TW.BC function.'
-        assert adt0.BC.valid_boundaries is not None, f'3dCSCG ad-0-trace has no valid boundary.'
+        assert sf.BC.CF is not None, f'3dCSCG primal 0-sf has no TW.BC function.'
+        assert sf.BC.boundaries is not None, f'3dCSCG primal 0-sf has no valid boundary.'
+        assert adt0.prime.BC.CF is not None, f'3dCSCG ad-0-trace has no TW.BC function.'
+        assert adt0.BC.boundaries is not None, f'3dCSCG ad-0-trace has no valid boundary.'
 
-        sf.TW.do.push_BC_to_instant(time)
-        adt0.prime.TW.do.push_BC_to_instant(time)
+        sf.BC.CF.current_time = time
+        adt0.prime.BC.CF.current_time = time
 
         T = adt0.matrices.trace
         D = EWC_SparseMatrix(mesh, (adt0.num.basis, adt0.num.basis))
@@ -55,8 +55,8 @@ class _0Form_Special(FrozenOnly):
         b.gathering_matrix = adt0
 
         #----- get boundaries and do a check --------------------------------------
-        Dirichlet_boundaries = adt0.BC.valid_boundaries
-        Neumann_boundaries = sf.BC.valid_boundaries
+        Dirichlet_boundaries = adt0.BC.boundaries
+        Neumann_boundaries = sf.BC.boundaries
 
         bns = mesh.boundaries.names
         SDb = set(Dirichlet_boundaries)
@@ -65,19 +65,19 @@ class _0Form_Special(FrozenOnly):
         assert SDb | SNb == set(bns), f"Dirichlet_boundaries union Neumann_boundaries is not full!"
         #-------- set Neumann boundary condition ---------------------------------------------------
 
-        sf.BC.valid_boundaries = Neumann_boundaries
-        adt0.BC.valid_boundaries = Neumann_boundaries
-        col_pc = sf.BC.partial_cochain
-        row_pd = adt0.BC.partial_dofs
-        T = T.adjust.identify_rows_according_to_two_CSCG_partial_dofs(row_pd, col_pc)
-        b = b.adjust.set_entries_according_to_CSCG_partial_cochains(row_pd, col_pc)
+        sf.BC.boundaries = Neumann_boundaries
+        adt0.BC.boundaries = Neumann_boundaries
+        col_pc = sf.BC.interpret
+        row_pd = adt0.BC.interpret
+        T = T.adjust.identify_rows_according_to(row_pd, col_pc)
+        b = b.adjust.set_entries_according_to(row_pd, col_pc)
 
         #-------- set Dirichlet boundary condition -------------------------------
-        adt0.BC.valid_boundaries = Dirichlet_boundaries
-        adt_pc = adt0.BC.partial_cochain
-        T = T.adjust.clear_rows_according_to_CSCG_partial_dofs(adt_pc)
-        D = D.adjust.identify_rows_according_to_CSCG_partial_dofs(adt_pc)
-        b = b.adjust.set_entries_according_to_CSCG_partial_cochains(adt_pc, adt_pc)
+        adt0.BC.boundaries = Dirichlet_boundaries
+        adt_pc = adt0.BC.interpret
+        T = T.adjust.clear_rows_according_to(adt_pc)
+        D = D.adjust.identify_rows_according_to(adt_pc)
+        b = b.adjust.set_entries_according_to(adt_pc, adt_pc)
 
         T, C = self._sf_.special.___PRIVATE_overcoming_hybrid_singularity___(
             T, D, C, adt0, e0, Dirichlet_boundaries=Dirichlet_boundaries)
@@ -170,7 +170,7 @@ class _0Form_Special(FrozenOnly):
             else:
                 skip = False
 
-            skip = cOmm.allreduce(skip, op=MPI.LOR)
+            skip = COMM.allreduce(skip, op=MPI.LOR)
 
             if skip:
 
@@ -282,9 +282,9 @@ class _0Form_Special(FrozenOnly):
 
             assert len(indptr) == start
 
-        numbered_edge_dof = cOmm.gather(numbered_edge_dof, root=mAster_rank)
+        numbered_edge_dof = COMM.gather(numbered_edge_dof, root=MASTER_RANK)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             NUMBER_EDGE_ELEMENTS = numbered_edge_dof[0]
             for nd in numbered_edge_dof[1:]:
                 for i in nd:
@@ -311,7 +311,7 @@ class _0Form_Special(FrozenOnly):
         else:
             NUMBER_EDGE_ELEMENTS = None
 
-        NUMBER_EDGE_ELEMENTS = cOmm.bcast(NUMBER_EDGE_ELEMENTS, root=mAster_rank)
+        NUMBER_EDGE_ELEMENTS = COMM.bcast(NUMBER_EDGE_ELEMENTS, root=MASTER_RANK)
 
         eGM = dict()
 
@@ -356,7 +356,7 @@ class _0Form_Special(FrozenOnly):
         newC = dict()
         newT = dict()
 
-        # if rAnk == mAster_rank:
+        # if RANK == MASTER_RANK:
         #     pbar = tqdm(total=mesh.node.elements.GLOBAL_num, desc='---Parsing-Hybridization-0')
 
         SKIP_e0_dofs = list() # {e0_dof_number: (edge_element, location), }
@@ -393,10 +393,10 @@ class _0Form_Special(FrozenOnly):
                 else:
                     N_e0_dof = -1
 
-                involved_t0_dofs = cOmm.allgather(involved_t0_dofs)
-                involved_e0_dofs = cOmm.allgather(involved_e0_dofs)
-                S_e0_dof = cOmm.allgather(S_e0_dof)
-                N_e0_dof = cOmm.allgather(N_e0_dof)
+                involved_t0_dofs = COMM.allgather(involved_t0_dofs)
+                involved_e0_dofs = COMM.allgather(involved_e0_dofs)
+                S_e0_dof = COMM.allgather(S_e0_dof)
+                N_e0_dof = COMM.allgather(N_e0_dof)
 
                 ___ = dict()
                 for _ in involved_t0_dofs:
@@ -828,10 +828,10 @@ class _0Form_Special(FrozenOnly):
             #     raise NotImplementedError(f"Cannot handle SOS: {SOS.__class__.__name__}")
 
         #     #============================================================================
-        #     if rAnk == mAster_rank:
+        #     if RANK == MASTER_RANK:
         #         pbar.update(1)
         # #=====================================================================================
-        # if rAnk == mAster_rank:
+        # if RANK == MASTER_RANK:
         #     pbar.close()
 
         for _ in T:

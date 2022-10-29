@@ -30,8 +30,8 @@ class _3dCSCG_0Trace_Discretize_StandardVector_Flux(FrozenOnly):
         nodes_BF = np.meshgrid(nx, ny, indexing='ij')
 
         if target == 'func':
-            assert SELF.func.body is not None, f"No func.body!"
-            fx, fy, fz = SELF.func.body
+            assert SELF.CF is not None, f"No func.body!"
+            fx, fy, fz = SELF.CF.___DO_evaluate_func_at_time___()
         else:
             raise NotImplementedError(f"Not applicable for target={target}.")
 

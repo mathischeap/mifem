@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import socket
-from root.config.main import rAnk, mAster_rank
+from root.config.main import RANK, MASTER_RANK
 
 
 def whether_internet_connected(domain_names=None):
@@ -10,7 +10,7 @@ def whether_internet_connected(domain_names=None):
     :return: ``True`` if we have internet connection.
     :rtype: bool
     """
-    assert rAnk == mAster_rank, "Should only call it in master core."
+    assert RANK == MASTER_RANK, "Should only call it in master core."
     if domain_names is None:  # we use following default domain names.
         domain_names = ["www.qq.com", "www.baidu.com", "www.google.com", "www.microsoft.com", "www.apple.com"]
     # _____ check domain_names ...

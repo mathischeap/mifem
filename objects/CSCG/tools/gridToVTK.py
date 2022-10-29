@@ -10,7 +10,7 @@ if './' not in sys.path: sys.path.append('./')
 import numpy as np
 from evtk import hl
 from screws.miscellaneous.mios import mkdir, cleandir
-from root.config.main import cOmm
+from root.config.main import COMM
 
 
 def gridToVTK(grid, objs, path):
@@ -62,7 +62,7 @@ def gridToVTK(grid, objs, path):
     df0 = DiscreteFields[0]
     regions = df0.regions # the local regions; data for these regions are stored locally in this core.
 
-    cOmm.barrier() # make sure the folder is really for all cores.
+    COMM.barrier() # make sure the folder is really for all cores.
     mkdir(path)
     cleandir(path)
 
@@ -84,7 +84,7 @@ def gridToVTK(grid, objs, path):
 
         var_names.append(name)
 
-    cOmm.barrier() # make sure the folder is really for all cores.
+    COMM.barrier() # make sure the folder is really for all cores.
     for i, rn in enumerate(regions):
         if i == 0:
             xyz = df0.coordinates[rn]
@@ -121,7 +121,7 @@ def gridToVTK(grid, objs, path):
                 pointData=new_VALs
             )
 
-        elif len(xyz) == 3:
+        elif len(xyz) == 3: # 3d CSCG mesh
 
             hl.gridToVTK(
                 f"./{path}/" + "region_" + rn[2:],

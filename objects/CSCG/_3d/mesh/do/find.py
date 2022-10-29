@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from root.config.main import sIze, np
+from root.config.main import SIZE, np
 from screws.freeze.main import FrozenOnly
 
 
@@ -80,13 +80,13 @@ class _3dCSCG_Mesh_DO_FIND(FrozenOnly):
         """
         DISTRI = self._mesh_._element_distribution_
         if isinstance(i, str): i = int(i)
-        if sIze <= 6 or not self._mesh_.___is_occupying_all_cores___:
-            for nC in range(sIze):
+        if SIZE <= 6 or not self._mesh_.___is_occupying_all_cores___:
+            for nC in range(SIZE):
                 if i in DISTRI[nC]: return nC
             raise Exception()
         midCore0 = 0
-        midCore1 = sIze // 2
-        midCore2 = sIze
+        midCore1 = SIZE // 2
+        midCore2 = SIZE
 
         while i not in DISTRI[midCore1] and midCore1 - midCore0 > 2 and midCore2 - midCore1 > 2:
             if i > max(DISTRI[midCore1]):

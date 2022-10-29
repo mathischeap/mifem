@@ -34,7 +34,7 @@ class IteratorMonitorDo(FrozenOnly):
         self._freeze_self_()
 
 
-    def ___PRIVATE_select_reasonable_amount_of_data___(self, max_num, last_num=1):
+    def ___Pr_select_reasonable_amount_of_data___(self, max_num, last_num=1):
         """
         To report RDF, we do not report all, we make a selection.
 
@@ -220,7 +220,7 @@ class IteratorMonitorDo(FrozenOnly):
             if not monitor._ever_do_graph_report_: monitor._ever_do_graph_report_ = True
 
             save_time = MyTimer.current_time()[1:-1]
-            indices = self.___PRIVATE_select_reasonable_amount_of_data___(1000, last_num=100)
+            indices = self.___Pr_select_reasonable_amount_of_data___(1000, last_num=100)
             RDF = monitor._iterator_.RDF.iloc[indices]
 
             matplotlib.use('Agg') # make sure we use the right backend.
@@ -585,7 +585,7 @@ class IteratorMonitorDo(FrozenOnly):
             # noinspection PyBroadException
             try:
                 html = monitor.summary_html
-                indices = self.___PRIVATE_select_reasonable_amount_of_data___(20, last_num=5)
+                indices = self.___Pr_select_reasonable_amount_of_data___(20, last_num=5)
                 RDF = monitor._iterator_.RDF.iloc[indices]
                 RDF.to_html('{}_temp_html.html'.format(
                     monitor._iterator_.standard_properties.name))

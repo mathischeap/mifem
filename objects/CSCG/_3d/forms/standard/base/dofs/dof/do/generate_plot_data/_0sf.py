@@ -2,7 +2,7 @@
 import numpy as np
 
 from screws.freeze.base import FrozenOnly
-from root.config.main import cOmm
+from root.config.main import COMM
 
 
 class GPD_0SF(FrozenOnly):
@@ -31,7 +31,7 @@ class GPD_0SF(FrozenOnly):
 
                 MESH_ELEMENTS.append(mesh_element)
 
-            MESH_ELEMENTS = cOmm.allgather(MESH_ELEMENTS)
+            MESH_ELEMENTS = COMM.allgather(MESH_ELEMENTS)
             ___ = set()
             for _ in MESH_ELEMENTS:
                 ___.update(_)

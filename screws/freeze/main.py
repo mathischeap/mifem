@@ -2,7 +2,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 import pickle
-from root.config.main import rAnk, mAster_rank
+from root.config.main import RANK, MASTER_RANK
 from screws.freeze.base import FrozenOnly
 from screws.freeze.standard_properties import StandardProperties
 
@@ -40,7 +40,7 @@ class FrozenClass(FrozenOnly):
         _2bs_ = dict()
         _2bs_['obj'] = self.__class__.__name__
         _2bs_['parameters'] = self.standard_properties.parameters
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             if do_save:
                 if filename[-3:] != '.mi': filename += '.mi'
                 assert filename.count('.') == 1, f"filename={filename} wrong."

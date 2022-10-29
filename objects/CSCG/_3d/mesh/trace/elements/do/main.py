@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import sys
 if './' not in sys.path: sys.path.append('./')
-from root.config.main import rAnk, mAster_rank, cOmm, np
+from root.config.main import RANK, MASTER_RANK, COMM, np
 from screws.freeze.main import FrozenOnly
 import matplotlib.pyplot as plt
 
-from screws.functions._3d_space.angle import angle_between_two_vectors
+from screws.functions._3dSpace.angle import angle_between_two_vectors
 from itertools import combinations
 
 from objects.CSCG._3d.mesh.trace.elements.do.find import _3dCSCG_Trace_Elements_Do_Find
@@ -41,14 +41,14 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
         SELF = self._elements_
 
         if i in SELF:
-            in_or_out = rAnk
+            in_or_out = RANK
             I_am_in = True
         else:
             in_or_out = -1
             I_am_in = False
 
-        who_are_in = cOmm.gather(in_or_out, root=mAster_rank)
-        if rAnk != mAster_rank:
+        who_are_in = COMM.gather(in_or_out, root=MASTER_RANK)
+        if RANK != MASTER_RANK:
             who_will_do_it = None
             in_how_many_cores = None
             the_other_core = None
@@ -63,23 +63,23 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
                         the_other_core = _
                     in_how_many_cores += 1
 
-        who_will_do_it = cOmm.bcast(who_will_do_it, root=mAster_rank)
-        in_how_many_cores = cOmm.bcast(in_how_many_cores, root=mAster_rank)
-        the_other_core = cOmm.bcast(the_other_core, root=mAster_rank)
+        who_will_do_it = COMM.bcast(who_will_do_it, root=MASTER_RANK)
+        in_how_many_cores = COMM.bcast(in_how_many_cores, root=MASTER_RANK)
+        the_other_core = COMM.bcast(the_other_core, root=MASTER_RANK)
 
         sent_to = recv_from = None
 
         if in_how_many_cores == 1:
-            if rAnk == who_will_do_it:
+            if RANK == who_will_do_it:
                 assert SELF[i].IS_shared_by_cores is False, "trivial check"
             else:
                 assert I_am_in is False, "trivial check"
         elif in_how_many_cores == 2:
-            if I_am_in and rAnk != who_will_do_it:
-                assert rAnk == the_other_core, "trivial check"
-                # print(rAnk, ': I am going to provide data to rAnk ', who_will_do_it)
+            if I_am_in and RANK != who_will_do_it:
+                assert RANK == the_other_core, "trivial check"
+                # print(RANK, ': I am going to provide data to RANK ', who_will_do_it)
                 sent_to = who_will_do_it
-            elif I_am_in and rAnk == who_will_do_it:
+            elif I_am_in and RANK == who_will_do_it:
                 recv_from = the_other_core
             else:
                 I_am_in = False
@@ -89,7 +89,7 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
         DATA2 = None
         r = s = cs = cr = uv_r = uv_s = None
         # prepare coordinate data first _____________________________________________
-        if rAnk == who_will_do_it or I_am_in:
+        if RANK == who_will_do_it or I_am_in:
             density = 5 + 4 * density_factor
             i0 = 1 + density_factor
             i1 = 2 * density_factor + 2
@@ -111,7 +111,7 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
 
         # Now let's prepare the data for the second subplot______________
         if in_how_many_cores == 1:
-            if rAnk == who_will_do_it:
+            if RANK == who_will_do_it:
                 if SELF[i].IS_on_mesh_boundary:
                     DATA2 = SELF[i].NON_CHARACTERISTIC_position # a string
                 else:
@@ -145,7 +145,7 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
             else:
                 pass
         else: # in_how_many_cores == 2
-            if rAnk == the_other_core:
+            if RANK == the_other_core:
                 element = SELF[i].CHARACTERISTIC_element
                 side = SELF[i].CHARACTERISTIC_side
                 tes = SELF.map[element]
@@ -173,15 +173,15 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
                             cr, cs, from_element=element, side=_side_)
                         DATA2[str(tei)+_side_] = [(X, Y, Z), (x, y, z),  _side_   ]
 
-                DATA2['rank'] = rAnk
-                cOmm.send(DATA2, dest=sent_to, tag=who_will_do_it)
-            elif rAnk == who_will_do_it:
-                DATA2 = cOmm.recv(source=recv_from, tag=who_will_do_it)
+                DATA2['rank'] = RANK
+                COMM.send(DATA2, dest=sent_to, tag=who_will_do_it)
+            elif RANK == who_will_do_it:
+                DATA2 = COMM.recv(source=recv_from, tag=who_will_do_it)
             else:
                 pass
 
         # let's do the plots ____________________________________________
-        if rAnk == who_will_do_it:
+        if RANK == who_will_do_it:
             element = SELF[i].CHARACTERISTIC_element
             side = SELF[i].CHARACTERISTIC_side
             tes = SELF.map[element]
@@ -230,11 +230,11 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
             ax.set_zlabel(r'$z$')
 
             if in_how_many_cores == 1 and isinstance(DATA2, str):
-                plt.title(f"in rank {rAnk}, on [{side}] of element {element}.")
+                plt.title(f"in rank {RANK}, on [{side}] of element {element}.")
             elif in_how_many_cores == 1 and isinstance(DATA2, dict):
-                plt.title(f"in rank {rAnk}, on [{side}] of characteristic element {element}.")
+                plt.title(f"in rank {RANK}, on [{side}] of characteristic element {element}.")
             elif in_how_many_cores == 2:
-                plt.title(f"in rank {rAnk}, on [{side}] of characteristic element {element}.")
+                plt.title(f"in rank {RANK}, on [{side}] of characteristic element {element}.")
             else:
                 raise Exception()
 
@@ -278,7 +278,7 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
             if in_how_many_cores == 1 and isinstance(DATA2, str):
                 plt.title(f"on mesh boundary: <{DATA2}>")
             elif in_how_many_cores == 1 and isinstance(DATA2, dict):
-                plt.title(f"in rank {rAnk}, on [{side}] of element {element}.")
+                plt.title(f"in rank {RANK}, on [{side}] of element {element}.")
             elif in_how_many_cores == 2:
                 plt.title(f"in rank {DATA2['rank']}, on [{side}] of characteristic element {element}.")
             else:

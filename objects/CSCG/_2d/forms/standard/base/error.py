@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from screws.freeze.base import FrozenOnly
 
-from root.config.main import np, cOmm, rAnk, mAster_rank
+from root.config.main import np, COMM, RANK, MASTER_RANK
 
 
 class _2dCSCG_Standard_Form_Error(FrozenOnly):
@@ -48,9 +48,9 @@ class _2dCSCG_Standard_Form_Error(FrozenOnly):
             else:
                 base_xyz = None
                 base_val = None
-            base_xyz = cOmm.gather(base_xyz, root=mAster_rank)
-            base_val = cOmm.gather(base_val, root=mAster_rank)
-            if rAnk == mAster_rank:
+            base_xyz = COMM.gather(base_xyz, root=MASTER_RANK)
+            base_val = COMM.gather(base_val, root=MASTER_RANK)
+            if RANK == MASTER_RANK:
                 for i, bi in enumerate(base_xyz):
                     if bi is not None:
                         break
@@ -66,7 +66,7 @@ class _2dCSCG_Standard_Form_Error(FrozenOnly):
                 # this add_to will be added to all reconstructed value.
             else:
                 pass
-            add_to = cOmm.bcast(add_to, root=mAster_rank)
+            add_to = COMM.bcast(add_to, root=MASTER_RANK)
         elif upon is False:
             pass
         else:
@@ -84,18 +84,19 @@ class _2dCSCG_Standard_Form_Error(FrozenOnly):
             element = self._sf_.mesh.elements[i]
             detJ = element.coordinate_transformation.Jacobian(xi, eta)
             LEIntermediate = np.sum(
-            [(v[i][m] - self._sf_.func.body[m](*xyz[i]))**n for m in range(OneOrThree)], axis=0
+            [(v[i][m] - self._sf_.CF.___DO_evaluate_func_at_time___()[m](*xyz[i]))**n
+             for m in range(OneOrThree)], axis=0
             )
             localError.append(np.sum(LEIntermediate * detJ * quad_weights))
 
         core_local = np.sum(localError)
-        core_local = cOmm.gather(core_local, root=mAster_rank)
+        core_local = COMM.gather(core_local, root=MASTER_RANK)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             globalError = np.sum(core_local) ** (1 / n)
         else:
             globalError = None
-        globalError = cOmm.bcast(globalError, root=mAster_rank)
+        globalError = COMM.bcast(globalError, root=MASTER_RANK)
 
         return globalError
 

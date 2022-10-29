@@ -15,8 +15,8 @@ from types import FunctionType, MethodType
 from objects.CSCG._2d.fields.base import _2dCSCG_Continuous_FORM_BASE
 from functools import partial
 import numpy as np
-from screws.functions.time_plus_2d_space._0_ import _0t_
-from screws.functions.time_plus_2d_space.constant import CFGt as CFG_t_plus_2d
+from screws.functions.timePlus2dSpace._0_ import _0t_
+from screws.functions.timePlus2dSpace.constant import CFGt as CFG_t_plus_2d
 from objects.CSCG._2d.fields.scalar.do.main import _2dCSCG_ScalarField_DO
 from objects.CSCG._2d.fields.scalar.numerical.main import _2dCSCG_ScalarField_Numerical
 from objects.CSCG._2d.fields.scalar.visualize.main import _2dCSCG_ScalarField_Visualize

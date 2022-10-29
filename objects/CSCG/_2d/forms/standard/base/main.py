@@ -17,6 +17,7 @@ from objects.CSCG._2d.forms.standard.base.matrices import _2dCSCG_Standard_Form_
 from objects.CSCG._2d.forms.standard.base.error import _2dCSCG_Standard_Form_Error
 from objects.CSCG._2d.forms.standard.base.operators.main import _2dCSCG_Standard_Form_Operators
 from objects.CSCG._2d.forms.standard.base.dofs.main import _2dCSCG_SF_dofs
+from objects.CSCG._2d.forms.standard.base.export.main import _2dCSCG_Standard_Form_Export
 
 from objects.CSCG.base.forms.standard.main import CSCG_Standard_Form
 from copy import deepcopy
@@ -55,6 +56,7 @@ class _2dCSCG_Standard_Form(CSCG_Standard_Form, _2dCSCG_FORM_BASE, ndim=2):
         self._operators_ = _2dCSCG_Standard_Form_Operators(self)
         self._DO_ = _2dCSCG_Standard_Form_DO(self)
         self._dofs_ = None
+        self._export_ = None
 
 
     @property
@@ -125,3 +127,9 @@ class _2dCSCG_Standard_Form(CSCG_Standard_Form, _2dCSCG_FORM_BASE, ndim=2):
         """
         return self.space.do.evaluate_form_basis_at_meshgrid(
             self.k, xi, eta, compute_xietasigma=compute_xietasigma)
+
+    @property
+    def export(self):
+        if self._export_ is None:
+            self._export_ = _2dCSCG_Standard_Form_Export(self)
+        return self._export_

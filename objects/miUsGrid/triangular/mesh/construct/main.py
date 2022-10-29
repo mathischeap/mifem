@@ -11,7 +11,7 @@ from screws.freeze.main import FrozenOnly
 import vtk
 # noinspection PyUnresolvedReferences
 from vtk.util.numpy_support import vtk_to_numpy
-from root.config.main import cOmm, mAster_rank, rAnk, sIze, np
+from root.config.main import COMM, MASTER_RANK, RANK, SIZE, np
 
 
 
@@ -31,18 +31,18 @@ class miUsGrid_TriangularMesh_Construct(FrozenOnly):
         ----------
         source
         """
-        cOmm.barrier()
+        COMM.barrier()
         if isinstance(source, str) and source[-4:] == '.vtu': # unstructured VTK file.
             self._cells_and_points_ = self.from_vtu_file(source)
         else:
             raise NotImplementedError(f"")
-        cOmm.barrier()
+        COMM.barrier()
 
         self._freeze_self_()
 
     def __call__(self, mesh):
         """We analyze the cells and points data."""
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             cells, points = self._cells_and_points_
             NUM_element = cells.shape[0]
 
@@ -126,12 +126,12 @@ class miUsGrid_TriangularMesh_Construct(FrozenOnly):
                         raise Exception()
 
             #------------------- distribute the cells to cores ------------------------------------1
-            distribution = [NUM_element // sIze + (1 if x < NUM_element % sIze else 0)
-                            for x in range(sIze)][::-1] # `i`th core will handle the amount of distribution[i] elements.
-            element_maps_DIS = [dict()  for _ in range(sIze)]
+            distribution = [NUM_element // SIZE + (1 if x < NUM_element % SIZE else 0)
+                            for x in range(SIZE)][::-1] # `i`th core will handle the amount of distribution[i] elements.
+            element_maps_DIS = [dict() for _ in range(SIZE)]
             LOCAL_ELEMENT_RANGES = list()
-            CELLS = [dict()  for _ in range(sIze)]
-            POINTS = [dict()  for _ in range(sIze)]
+            CELLS = [dict() for _ in range(SIZE)]
+            POINTS = [dict() for _ in range(SIZE)]
 
             num_points = len(points)
 
@@ -155,13 +155,13 @@ class miUsGrid_TriangularMesh_Construct(FrozenOnly):
             POINTS = None
             num_points = 0
 
-        CELLS = cOmm.scatter(CELLS, root=mAster_rank)
-        POINTS = cOmm.scatter(POINTS, root=mAster_rank)
-        element_maps = cOmm.scatter(element_maps_DIS, root=mAster_rank)
-        distribution = cOmm.bcast(LOCAL_ELEMENT_RANGES, root=mAster_rank)
-        LOCAL_ELEMENT_RANGES = distribution[rAnk]
+        CELLS = COMM.scatter(CELLS, root=MASTER_RANK)
+        POINTS = COMM.scatter(POINTS, root=MASTER_RANK)
+        element_maps = COMM.scatter(element_maps_DIS, root=MASTER_RANK)
+        distribution = COMM.bcast(LOCAL_ELEMENT_RANGES, root=MASTER_RANK)
+        LOCAL_ELEMENT_RANGES = distribution[RANK]
 
-        num_points = cOmm.bcast(num_points, root=mAster_rank)
+        num_points = COMM.bcast(num_points, root=MASTER_RANK)
 
         mesh._elements_._cells_ = CELLS
         mesh._elements_._points_ = POINTS
@@ -175,7 +175,7 @@ class miUsGrid_TriangularMesh_Construct(FrozenOnly):
     @staticmethod
     def from_vtu_file(source_file_name):
         """"""
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             # noinspection PyUnresolvedReferences
             reader = vtk.vtkXMLUnstructuredGridReader()
             reader.SetFileName(source_file_name)

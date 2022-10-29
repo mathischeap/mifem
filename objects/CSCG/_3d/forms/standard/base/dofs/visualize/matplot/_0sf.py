@@ -5,7 +5,7 @@ if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.main import FrozenOnly
 from screws.miscellaneous.matrix_simplify import rsmat
-from root.config.main import rAnk, mAster_rank, cOmm, np, MPI
+from root.config.main import RANK, MASTER_RANK, COMM, np, MPI
 
 import matplotlib.pyplot as plt
 import matplotlib
@@ -93,20 +93,20 @@ class _3dCSCG_S0F_DOFs_Matplot(FrozenOnly):
             on_mesh_boundary = None
             TraceElement_Data = dict()
 
-        positions = cOmm.allgather(positions)
-        on_mesh_boundary = cOmm.allgather(on_mesh_boundary)
+        positions = COMM.allgather(positions)
+        on_mesh_boundary = COMM.allgather(on_mesh_boundary)
         for _ in positions:
             if _ is not None:
                 positions = _
                 break
 
-        DATA = cOmm.gather(DATA, root=mAster_rank)
-        TraceElement_Data = cOmm.gather(TraceElement_Data, root=mAster_rank)
-        node_LOCATION = cOmm.gather(node_LOCATION, root=mAster_rank)
-        on_mesh_boundary = cOmm.reduce(on_mesh_boundary, root=mAster_rank, op=MPI.LOR)
+        DATA = COMM.gather(DATA, root=MASTER_RANK)
+        TraceElement_Data = COMM.gather(TraceElement_Data, root=MASTER_RANK)
+        node_LOCATION = COMM.gather(node_LOCATION, root=MASTER_RANK)
+        on_mesh_boundary = COMM.reduce(on_mesh_boundary, root=MASTER_RANK, op=MPI.LOR)
 
         nL = list()
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             ___ = dict()
             for data in DATA:
                 ___.update(data)
@@ -197,7 +197,7 @@ class _3dCSCG_S0F_DOFs_Matplot(FrozenOnly):
                 if dof is not None:
                     sf_DOFS.append(dof)
 
-        sf_DOFS = cOmm.allgather(sf_DOFS)
+        sf_DOFS = COMM.allgather(sf_DOFS)
 
         __ = set()
         for _ in sf_DOFS:
@@ -206,15 +206,15 @@ class _3dCSCG_S0F_DOFs_Matplot(FrozenOnly):
         sf_DOFS.sort()
 
         #------------------ find the coordinates of all sf dofs ---------------------------
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             ALL_sf_dofs_COO = dict()
         for sfd in sf_DOFS:
             dof = self._dofs_[sfd]
             COO = dof.do.generate_plot_data_from_element(None, zoom=zoom)['DOF_COO']
 
-            COO = cOmm.gather(COO, root=mAster_rank)
+            COO = COMM.gather(COO, root=MASTER_RANK)
 
-            if rAnk == mAster_rank:
+            if RANK == MASTER_RANK:
                 ___ = dict()
                 for __ in COO:
                     ___.update(__)
@@ -224,7 +224,7 @@ class _3dCSCG_S0F_DOFs_Matplot(FrozenOnly):
 
         #-------------------------------------------------------------------------------------------
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             for sfd in ALL_sf_dofs_COO:
                 all_positions = ALL_sf_dofs_COO[sfd]
                 for me in all_positions:
@@ -309,7 +309,7 @@ class _3dCSCG_S0F_DOFs_Matplot(FrozenOnly):
         else:
             N_xyz = None
 
-        N_xyz = cOmm.gather(N_xyz, root=mAster_rank)
+        N_xyz = COMM.gather(N_xyz, root=MASTER_RANK)
 
         #--------- bcast positions, on_mesh_boundary to all cores ----------------------------------------------
         if i in mesh.node.elements:
@@ -321,8 +321,8 @@ class _3dCSCG_S0F_DOFs_Matplot(FrozenOnly):
             positions = None
             on_mesh_boundary = False
 
-        positions = cOmm.allgather(positions)
-        on_mesh_boundary = cOmm.allgather(on_mesh_boundary)
+        positions = COMM.allgather(positions)
+        on_mesh_boundary = COMM.allgather(on_mesh_boundary)
 
         for _ in positions:
             if _ is not None:
@@ -342,7 +342,7 @@ class _3dCSCG_S0F_DOFs_Matplot(FrozenOnly):
                     MEF[mesh_element] = data
             else:
                 pass
-        MEF = cOmm.gather(MEF, root=mAster_rank)
+        MEF = COMM.gather(MEF, root=MASTER_RANK)
 
         # find all 0-standard-form dofs at this node element ---------------------------
         sf_DOFS = list()
@@ -354,7 +354,7 @@ class _3dCSCG_S0F_DOFs_Matplot(FrozenOnly):
                 if dof is not None:
                     sf_DOFS.append(dof)
 
-        sf_DOFS = cOmm.allgather(sf_DOFS)
+        sf_DOFS = COMM.allgather(sf_DOFS)
 
         __ = set()
         for _ in sf_DOFS:
@@ -372,7 +372,7 @@ class _3dCSCG_S0F_DOFs_Matplot(FrozenOnly):
                 if dof is not None:
                     tf_DOFS.extend(dof)
 
-        tf_DOFS = cOmm.allgather(tf_DOFS)
+        tf_DOFS = COMM.allgather(tf_DOFS)
 
         __ = set()
         for _ in tf_DOFS:
@@ -390,7 +390,7 @@ class _3dCSCG_S0F_DOFs_Matplot(FrozenOnly):
                 if dof is not None:
                     ef_DOFS.extend(dof)
 
-        ef_DOFS = cOmm.allgather(ef_DOFS)
+        ef_DOFS = COMM.allgather(ef_DOFS)
 
         __ = set()
         for _ in ef_DOFS:
@@ -399,15 +399,15 @@ class _3dCSCG_S0F_DOFs_Matplot(FrozenOnly):
         ef_DOFS.sort()
 
         #------------------ find the coordinates of all sf dofs ---------------------------
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             ALL_sf_dofs_COO = dict()
         for sfd in sf_DOFS:
             dof = sf.dofs[sfd]
             COO = dof.do.generate_plot_data_from_element(None, zoom=zoom)['DOF_COO']
 
-            COO = cOmm.gather(COO, root=mAster_rank)
+            COO = COMM.gather(COO, root=MASTER_RANK)
 
-            if rAnk == mAster_rank:
+            if RANK == MASTER_RANK:
                 ___ = dict()
                 for __ in COO:
                     ___.update(__)
@@ -475,8 +475,8 @@ class _3dCSCG_S0F_DOFs_Matplot(FrozenOnly):
                     for ele, ind in zip(*_):
                         assert D[ele][ind].nnz == 0
 
-        MATRIX = cOmm.gather(MATRIX, root=mAster_rank)
-        if rAnk == mAster_rank:
+        MATRIX = COMM.gather(MATRIX, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
 
             EMPTY_tf_dofs = list()
 
@@ -537,7 +537,7 @@ class _3dCSCG_S0F_DOFs_Matplot(FrozenOnly):
         else:
             EMPTY_tf_dofs = None
 
-        EMPTY_tf_dofs = cOmm.bcast(EMPTY_tf_dofs, root=mAster_rank)
+        EMPTY_tf_dofs = COMM.bcast(EMPTY_tf_dofs, root=MASTER_RANK)
 
         for tdf in EMPTY_tf_dofs:
             _ = tGM.do.find.elements_and_local_indices_of_dof(tdf)
@@ -546,7 +546,7 @@ class _3dCSCG_S0F_DOFs_Matplot(FrozenOnly):
                     assert D[ele][ind, ind] == 1
 
         #============ BELOW::: DO THE PLOT ====================================================
-        if rAnk != mAster_rank: return
+        if RANK != MASTER_RANK: return
         if checking_mode: return
 
         if saveto is not None: matplotlib.use('Agg')

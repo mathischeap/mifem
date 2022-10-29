@@ -71,8 +71,8 @@ class CSCG_Continuous_FORM_BASE(FiledBase):
                 else:
                     pass
 
-            _CMB_ = cOmm.gather(_CMB_, root=mAster_rank)
-            if rAnk == mAster_rank:
+            _CMB_ = COMM.gather(_CMB_, root=MASTER_RANK)
+            if RANK == MASTER_RANK:
                 self._CMB_ = set()
                 for __ in _CMB_:
                     self._CMB_.update(__)
@@ -80,7 +80,7 @@ class CSCG_Continuous_FORM_BASE(FiledBase):
             else:
                 self._CMB_ = None
 
-            self._CMB_ = cOmm.bcast(self._CMB_, root=mAster_rank)
+            self._CMB_ = COMM.bcast(self._CMB_, root=MASTER_RANK)
 
         else:
             raise NotImplementedError(f"Can not deal with {self.ftype} ftype.")

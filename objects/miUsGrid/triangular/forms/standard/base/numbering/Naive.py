@@ -8,9 +8,9 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 from screws.freeze.main import FrozenOnly
-from root.config.main import rAnk, mAster_rank, cOmm, np
-from tools.linear_algebra.gathering.vector import Gathering_Vector
-from tools.linear_algebra.gathering.regular.matrix.main import Gathering_Matrix
+from root.config.main import RANK, MASTER_RANK, COMM, np
+from tools.linearAlgebra.gathering.vector import Gathering_Vector
+from tools.linearAlgebra.gathering.regular.matrix.main import Gathering_Matrix
 
 class Naive(FrozenOnly):
     """"""
@@ -48,10 +48,10 @@ class Naive(FrozenOnly):
         """"""
         element_map = self._sf_.mesh.elements.map
         p = self._sf_.space.p
-        element_map = cOmm.gather(element_map, root=mAster_rank)
-        cells = cOmm.gather(self._sf_.mesh.elements.cells, root=mAster_rank)
+        element_map = COMM.gather(element_map, root=MASTER_RANK)
+        cells = COMM.gather(self._sf_.mesh.elements.cells, root=MASTER_RANK)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             ___ = dict()
             for em in element_map:
                 ___.update(em)
@@ -191,7 +191,7 @@ class Naive(FrozenOnly):
         else:
             numbering_distribution = None
 
-        numbering_distribution = cOmm.scatter(numbering_distribution, root=mAster_rank)
+        numbering_distribution = COMM.scatter(numbering_distribution, root=MASTER_RANK)
         GV_dict = dict()
         for c in numbering_distribution:
             full_vec = np.concatenate(([numbering_distribution[c][0,0],], numbering_distribution[c][:,1:].ravel('F')))
@@ -240,9 +240,9 @@ class Naive(FrozenOnly):
 
         element_map = self._sf_.mesh.elements.map
         p = self._sf_.space.p
-        element_map = cOmm.gather(element_map, root=mAster_rank)
+        element_map = COMM.gather(element_map, root=MASTER_RANK)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             ___ = dict()
             for em in element_map:
                 ___.update(em)
@@ -372,8 +372,8 @@ class Naive(FrozenOnly):
             DisDy = None
             DisDx = None
 
-        DisDy = cOmm.scatter(DisDy, root=mAster_rank)
-        DisDx = cOmm.scatter(DisDx, root=mAster_rank)
+        DisDy = COMM.scatter(DisDy, root=MASTER_RANK)
+        DisDx = COMM.scatter(DisDx, root=MASTER_RANK)
 
         GV_dict = dict()
         for c in self._sf_.mesh.elements.indices:
@@ -389,9 +389,9 @@ class Naive(FrozenOnly):
 
         element_map = self._sf_.mesh.elements.map
         p = self._sf_.space.p
-        element_map = cOmm.gather(element_map, root=mAster_rank)
+        element_map = COMM.gather(element_map, root=MASTER_RANK)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             ___ = dict()
             for em in element_map:
                 ___.update(em)
@@ -518,8 +518,8 @@ class Naive(FrozenOnly):
             DisDy = None
             DisDx = None
 
-        DisDx = cOmm.scatter(DisDx, root=mAster_rank)
-        DisDy = cOmm.scatter(DisDy, root=mAster_rank)
+        DisDx = COMM.scatter(DisDx, root=MASTER_RANK)
+        DisDy = COMM.scatter(DisDy, root=MASTER_RANK)
 
         GV_dict = dict()
         for c in self._sf_.mesh.elements.indices:

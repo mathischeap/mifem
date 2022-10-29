@@ -24,9 +24,9 @@ class _2dCSCG_S1Fo_Discretize(FrozenOnly):
         if target == 'func':
 
 
-            if self._sf_.TW.func.body.__class__.__name__ == '_2dCSCG_VectorField':
+            if self._sf_.CF.__class__.__name__ == '_2dCSCG_VectorField':
 
-                if self._sf_.func.ftype == 'standard':
+                if self._sf_.CF.ftype == 'standard':
                     return self._standard_vector_(
                         update_cochain=update_cochain, target='func', **kwargs)
                 else:
@@ -37,13 +37,15 @@ class _2dCSCG_S1Fo_Discretize(FrozenOnly):
 
 
         elif target == 'BC':
-
-            if self._sf_.BC.ftype == 'standard':
-                return self._standard_vector_(
-                    update_cochain=False, target='BC', **kwargs)
+            if self._sf_.BC.CF.__class__.__name__ == '_2dCSCG_VectorField':
+                if self._sf_.BC.CF.ftype == 'standard':
+                    return self._standard_vector_(
+                        update_cochain=False, target='BC', **kwargs)
+                else:
+                    raise NotImplementedError(f'2dCSCG 1-form can not (target BC) '
+                                              f'discretize {self._sf_.TW.BC.body.__class__}.')
             else:
-                raise NotImplementedError(f'2dCSCG 1-form can not (target BC) '
-                                          f'discretize {self._sf_.TW.BC.body.__class__}.')
+                raise NotImplementedError()
 
 
         else:

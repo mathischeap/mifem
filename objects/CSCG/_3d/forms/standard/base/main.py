@@ -10,9 +10,6 @@
 from objects.CSCG._3d.forms.base import _3dCSCG_FORM_BASE
 from objects.CSCG._3d.forms.standard.base.numbering.main import _3dCSCG_Standard_Form_Numbering
 from objects.CSCG._3d.forms.standard.base.export.main import _3dCSC_Standard_Form_Export
-from root.config.main import *
-from root.save import read
-from scipy.interpolate import NearestNDInterpolator
 from copy import deepcopy
 
 from objects.CSCG.base.forms.standard.main import CSCG_Standard_Form
@@ -159,70 +156,6 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
         return self.space.do.evaluate_form_basis_at_meshgrid(
             self.k, xi, eta, sigma, compute_xietasigma=compute_xietasigma)
 
-    def ___PRIVATE_do_resemble___(self, obj_or_filename, density=80000):
-        """
-        :param obj_or_filename:
-        :param density:
-        :return:
-        """
-        if isinstance(obj_or_filename, str):
-            of = read(obj_or_filename)
-        else:
-            of = obj_or_filename
-
-        assert self.mesh.domain == of.mesh.domain, "domain must be same."
-        assert self.__class__.__name__ == of.__class__.__name__
-        assert self.mesh.__class__.__name__ == of.mesh.__class__.__name__
-
-        if self.mesh == of.mesh and self.space == of.space:
-            # this is the simplest case, just copy the cochain.
-            self.cochain.local = of.cochain.local
-        else:
-            bp = int(np.ceil((density / self.mesh.elements.GLOBAL_num) ** (1/3)))
-            p = [bp + self.p[i] for i in range(3)]
-            gap = [1 / (p[i]+1) for i in range(3)]
-            r = np.linspace(-1 + gap[0], 1 - gap[0], p[0])
-            s = np.linspace(-1 + gap[1], 1 - gap[1], p[1])
-            t = np.linspace(-1 + gap[2], 1 - gap[2], p[2])
-            xyz, V = of.reconstruct(r, s, t, ravel=True)
-            LEN = 1 if self.k in (0, 3) else 3
-            xyz = cOmm.gather(xyz, root=mAster_rank)
-            V = cOmm.gather(V, root=mAster_rank)
-            if rAnk == mAster_rank:
-                XYZ = dict()
-                VVV = dict()
-                for i in range(len(xyz)):
-                    XYZ.update(xyz[i])
-                    VVV.update(V[i])
-                del xyz, V
-                X = list()
-                Y = list()
-                Z = list()
-                V = [list() for _ in range(LEN)]
-                for i in range(of.mesh.elements.GLOBAL_num):
-                    X.extend(XYZ[i][0])
-                    Y.extend(XYZ[i][1])
-                    Z.extend(XYZ[i][2])
-                    for j in range(LEN):
-                        V[j].extend(VVV[i][j])
-                del XYZ, VVV
-                for i in range(LEN):
-                    # noinspection PyTypeChecker
-                    V[i] = np.array(V[i])
-                X = np.array(X)
-                Y = np.array(Y)
-                Z = np.array(Z)
-                func = list()
-                for i in range(LEN):
-                    func.append(NearestNDInterpolator((X, Y, Z), V[i]))
-            else:
-                func = None
-            func = cOmm.bcast(func, root=mAster_rank)
-            self.func._body_ = func
-            # noinspection PyUnresolvedReferences
-            self.discretize._standard_()
-            # self.___PRIVATE_discretize_standard_ftype___()
-            self.func._body_ = None
 
     def ___PRIVATE_saving_info___(self):
         """"""

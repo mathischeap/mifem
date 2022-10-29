@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 from objects.CSCG._2d.mesh.domain.regions.region.types_wrt_metric.base import TypeWr2Metric
 
-from screws.functions._2d_space.angle import angle
-from screws.functions._2d_space.distance import distance
-from screws.functions._2d_space.check_if_two_lines_parallel import if_two_lines_parallel
+from screws.functions._2dSpace.angle import angle
+from screws.functions._2dSpace.distance import distance
+from screws.functions._2dSpace.check_if_two_lines_parallel import if_two_lines_parallel
 import numpy as np
 from objects.CSCG._2d.mesh.elements.element.types_wrt_metric.chaotic import ChaoticElement
 from objects.CSCG._2d.mesh.elements.element.types_wrt_metric.orthogonal import OrthogonalElement
 from objects.CSCG._2d.mesh.elements.element.types_wrt_metric.parallelogram import ParallelogramElement
 from typing import Union
-from root.config.main import rAnk, cOmm
+from root.config.main import RANK, COMM
 
 
 from objects.CSCG._2d.mesh.trace.elements.element.types_wrt_metric.chaotic import  ChaoticTraceElement
@@ -68,11 +68,11 @@ class Transfinite(TypeWr2Metric):
     def mark(self):
         if self._mark_ is None:
             if self._IS_chaotic_:
-                if rAnk == 0:
+                if RANK == 0:
                     self._mark_ = 'chaotic:' + str(id(self))
                 else:
                     self._mark_ = None
-                self._mark_ = cOmm.bcast(self._mark_, root=0)
+                self._mark_ = COMM.bcast(self._mark_, root=0)
             else:
                 if self._IS_orthogonal_or_parallelogram_ == 'orthogonal':
                     self._mark_ = 'orthogonal:UD{}_LR{}'.format(

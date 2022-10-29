@@ -110,8 +110,8 @@ class _3dCSCG_Trace_Numbering(FrozenOnly):
         boundary names and values are all (in all cores) dofs on the boundary indicated by the key.
         """
         LOCAL = self.boundary_dofs
-        bd = cOmm.gather(LOCAL, root=mAster_rank)
-        if rAnk == mAster_rank:
+        bd = COMM.gather(LOCAL, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
             mesh = self._tf_.mesh
             BD = dict()
             names = mesh.boundaries.names
@@ -126,7 +126,7 @@ class _3dCSCG_Trace_Numbering(FrozenOnly):
                 BD[name] = set(BD[name])
         else:
             BD = None
-        return cOmm.bcast(BD, root=mAster_rank)
+        return COMM.bcast(BD, root=MASTER_RANK)
 
     @property
     def GLOBAL_boundary_dofs_ravel(self):

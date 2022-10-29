@@ -13,11 +13,13 @@ import pandas as pd
 
 from tools.filer.csv.visualize.main import csvFilerVisualize
 from tools.filer.csv.do.main import csvFilerDo
+from root.config.main import SIZE
 
 
 class csvFiler(FrozenOnly):
     """We'd better do not use this class in parallel, although it works."""
     def __init__(self, csv_filename):
+        assert SIZE == 1, f"csvFiler better not work in parallel."
         assert isinstance(csv_filename, str), "csv filename must be a str."
         if csv_filename[-4:] != '.csv': csv_filename += '.csv'
         self._df_ = pd.read_csv(csv_filename, index_col=0)
@@ -28,10 +30,6 @@ class csvFiler(FrozenOnly):
     @property
     def df(self):
         return self._df_
-
-    @df.setter
-    def df(self, df):
-        self._df_ = df
 
     @property
     def columns(self):
@@ -50,7 +48,7 @@ class csvFiler(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python tools/filer/csv/main.py
+    # mpiexec -n 1 python tools/filer/csv/main.py
     import os
     current_dir = os.path.dirname(__file__)
     csv = csvFiler(current_dir + '\csv_test')

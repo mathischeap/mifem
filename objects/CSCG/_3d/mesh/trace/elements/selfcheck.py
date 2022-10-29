@@ -4,7 +4,7 @@
 from screws.warnings.trace_element import TraceElementWarning
 from screws.freeze.base import FrozenOnly
 import numpy as np
-from screws.functions._3d_space.angle import angle_between_two_vectors
+from screws.functions._3dSpace.angle import angle_between_two_vectors
 
 import warnings
 

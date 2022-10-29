@@ -2,7 +2,7 @@
 
 
 from screws.freeze.base import FrozenOnly
-from root.config.main import cOmm
+from root.config.main import COMM
 
 
 
@@ -87,10 +87,10 @@ class _3dCSCG_InternalNodeSOS(FrozenOnly):
         else:
             pass
 
-        TRACE = cOmm.allgather(TRACE)
-        EDGE = cOmm.allgather(EDGE)
-        S_edge = cOmm.allgather(S_edge)
-        N_edge = cOmm.allgather(N_edge)
+        TRACE = COMM.allgather(TRACE)
+        EDGE = COMM.allgather(EDGE)
+        S_edge = COMM.allgather(S_edge)
+        N_edge = COMM.allgather(N_edge)
 
         for _ in S_edge:
             if _ is not None:

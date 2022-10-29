@@ -9,8 +9,8 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.base import FrozenOnly
-from screws.matplot_wrappers.plot import plot, semilogy, loglog
-from root.config.main import rAnk, mAster_rank
+from screws.matplotWrappers.plot import plot, semilogy, loglog
+from root.config.main import RANK, MASTER_RANK
 
 class csvFilerVisualize(FrozenOnly):
     """"""
@@ -34,7 +34,7 @@ class csvFilerVisualize(FrozenOnly):
         -------
 
         """
-        if rAnk != mAster_rank: return
+        if RANK != MASTER_RANK: return
 
         if isinstance(column_x, str):
             assert column_x in self._filer_.columns, f"column_x = {column_x} is not valid."
@@ -70,7 +70,7 @@ class csvFilerVisualize(FrozenOnly):
         -------
 
         """
-        if rAnk != mAster_rank: return
+        if RANK != MASTER_RANK: return
 
         if isinstance(column_x, str):
             assert column_x in self._filer_.columns, f"column_x = {column_x} is not valid."
@@ -106,7 +106,7 @@ class csvFilerVisualize(FrozenOnly):
         -------
 
         """
-        if rAnk != mAster_rank: return
+        if RANK != MASTER_RANK: return
 
         if isinstance(column_x, str):
             assert column_x in self._filer_.columns, f"column_x = {column_x} is not valid."

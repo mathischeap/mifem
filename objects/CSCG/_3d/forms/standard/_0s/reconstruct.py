@@ -6,7 +6,7 @@ if './' not in sys.path: sys.path.append('./')
 
 import numpy as np
 from objects.CSCG._3d.forms.standard.base.reconstruct import _3dCSCG_SF_Reconstruct
-from objects.CSCG._3d.discrete_fields.scalar.main import _3dCSCG_DF_Scalar
+from objects.CSCG._3d.discreteDields.scalar.main import _3dCSCG_DF_Scalar
 
 
 class _3dCSCG_SF0_reconstruct(_3dCSCG_SF_Reconstruct):

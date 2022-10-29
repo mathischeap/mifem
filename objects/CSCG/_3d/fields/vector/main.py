@@ -12,10 +12,10 @@ if './' not in sys.path: sys.path.append('./')
 
 from root.config.main import *
 from types import FunctionType, MethodType
-from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_ColumnVector
+from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_ColumnVector
 from objects.CSCG._3d.fields.base import _3dCSCG_Continuous_FORM_BASE
 from functools import partial
-from screws.functions.time_plus_3d_space.constant import CFG
+from screws.functions.timePlus3dSpace.constant import CFG
 
 from importlib import import_module
 from objects.CSCG._3d.fields.vector.numerical.main import _3dCSCG_VectorField_Numerical
@@ -120,7 +120,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
             # we have received a dict whose keys are local trace elements, values are callable that returns, xyz and a vector.
             assert isinstance(func, dict), f"func for trace-element-wise vector must a dict."
             for i in func: # valid local trace elements
-                assert i in self.mesh.trace.elements, f"trace element #{i} is not in this core (#{rAnk})."
+                assert i in self.mesh.trace.elements, f"trace element #{i} is not in this core (#{RANK})."
                 # NOTE that we do not put the vector in a list or tuple, it should take (t, xi, eta, sigma) and then return xyz and the vector.
                 assert callable(func[i]), f"func[{i}] is not callable."
             self._func_ = func

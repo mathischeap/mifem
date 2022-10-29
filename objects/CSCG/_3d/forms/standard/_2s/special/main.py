@@ -7,8 +7,8 @@ if './' not in sys.path: sys.path.append('./')
 from objects.CSCG._3d.forms.standard._2s.special.vortex_detection import ___3dCSCG_2Form_Vortex_Detection___
 
 from screws.freeze.main import FrozenOnly
-from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
-from tools.linear_algebra.elementwise_cache.objects.column_vector.main import EWC_ColumnVector
+from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
+from tools.linearAlgebra.elementwiseCache.objects.columnVector.main import EWC_ColumnVector
 
 from objects.CSCG._3d.forms.standard._2s.special.helpers.cross_product_2__ip_2_2M0 import ___3dCSCG_2Form_CrossProduct_2__ip_2_2M0___
 from objects.CSCG._3d.forms.standard._2s.special.helpers.cross_product_2__ip_2 import ___3dCSCG_2Form_CrossProduct_2__ip_2___
@@ -86,13 +86,13 @@ class _2Form_Special(FrozenOnly):
         sf = self._sf_
         mesh = sf.mesh
 
-        assert sf.TW.BC.body is not None, f'3dCSCG primal 2-sf has no TW.BC function.'
-        assert sf.BC.valid_boundaries is not None, f'3dCSCG primal 2-sf has no valid boundary.'
-        assert adt2.prime.TW.BC.body is not None, f'3dCSCG ad-2-trace has no TW.BC function.'
-        assert adt2.BC.valid_boundaries is not None, f'3dCSCG ad-2-trace has no valid boundary.'
+        assert sf.BC.CF is not None, f'3dCSCG primal 2-sf has no TW.BC function.'
+        assert sf.BC.boundaries is not None, f'3dCSCG primal 2-sf has no valid boundary.'
+        assert adt2.prime.BC.CF is not None, f'3dCSCG ad-2-trace has no TW.BC function.'
+        assert adt2.BC.boundaries is not None, f'3dCSCG ad-2-trace has no valid boundary.'
 
-        sf.TW.do.push_BC_to_instant(time)
-        adt2.prime.TW.do.push_BC_to_instant(time)
+        sf.BC.CF.current_time = time
+        adt2.prime.BC.CF.current_time = time
 
         T = adt2.matrices.trace
         D = EWC_SparseMatrix(mesh, (adt2.num.basis, adt2.num.basis))
@@ -103,8 +103,8 @@ class _2Form_Special(FrozenOnly):
         b.gathering_matrix = adt2
 
         #----- get boundaries and do a check --------------------------------------
-        Dirichlet_boundaries = adt2.BC.valid_boundaries
-        Neumann_boundaries = sf.BC.valid_boundaries
+        Dirichlet_boundaries = adt2.BC.boundaries
+        Neumann_boundaries = sf.BC.boundaries
 
         bns = mesh.boundaries.names
         SDb = set(Dirichlet_boundaries)
@@ -113,19 +113,19 @@ class _2Form_Special(FrozenOnly):
         assert SDb | SNb == set(bns), f"Dirichlet_boundaries union Neumann_boundaries is not full!"
 
         #-------- set Neumann boundary condition ---------------------------------------------------
-        sf.BC.valid_boundaries = Neumann_boundaries
-        adt2.BC.valid_boundaries = Neumann_boundaries
-        col_pc = sf.BC.partial_cochain
-        row_pd = adt2.BC.partial_dofs
-        T = T.adjust.identify_rows_according_to_two_CSCG_partial_dofs(row_pd, col_pc)
-        b = b.adjust.set_entries_according_to_CSCG_partial_cochains(row_pd, col_pc)
+        sf.BC.boundaries = Neumann_boundaries
+        adt2.BC.boundaries = Neumann_boundaries
+        col_pc = sf.BC.interpret
+        row_pd = adt2.BC.interpret
+        T = T.adjust.identify_rows_according_to(row_pd, col_pc)
+        b = b.adjust.set_entries_according_to(row_pd, col_pc)
 
         #-------- set Dirichlet boundary condition -------------------------------
-        adt2.BC.valid_boundaries = Dirichlet_boundaries
-        adt_pc = adt2.BC.partial_cochain
-        D = D.adjust.identify_rows_according_to_CSCG_partial_dofs(adt_pc)
-        T = T.adjust.clear_rows_according_to_CSCG_partial_dofs(adt_pc)
-        b = b.adjust.set_entries_according_to_CSCG_partial_cochains(adt_pc, adt_pc)
+        adt2.BC.boundaries = Dirichlet_boundaries
+        adt_pc = adt2.BC.interpret
+        D = D.adjust.identify_rows_according_to(adt_pc)
+        T = T.adjust.clear_rows_according_to(adt_pc)
+        b = b.adjust.set_entries_according_to(adt_pc, adt_pc)
 
         #=====================================================================================
         return T, D, b

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from screws.freeze.base import FrozenOnly
-from root.config.main import caChe_factor
+from root.config.main import CACHE_FACTOR
 
 
 
@@ -52,7 +52,7 @@ class ElementsCTValuesCache(FrozenOnly):
                 JM = getattr(element.coordinate_transformation, self._CTT_)(*self._xi_eta_sigma_)
                 if type_wrt_metric in self._multi_elements_metric_ and \
                     type_wrt_metric not in self._cache_ and \
-                    self._multi_elements_metric_[type_wrt_metric] >= caChe_factor:
+                    self._multi_elements_metric_[type_wrt_metric] >= CACHE_FACTOR:
                     self._cache_[type_wrt_metric] = JM
                 return JM
         else:
@@ -74,7 +74,7 @@ class ElementsCTValuesCache(FrozenOnly):
                         *self._xi_eta_sigma_, self._intermediateData_[i])
                 if type_wrt_metric in self._multi_elements_metric_ and \
                     type_wrt_metric not in self._cache_ and \
-                    self._multi_elements_metric_[type_wrt_metric] >= caChe_factor:
+                    self._multi_elements_metric_[type_wrt_metric] >= CACHE_FACTOR:
                     # here we have very strict cache rule.
                     self._cache_[type_wrt_metric] = result
                 return result

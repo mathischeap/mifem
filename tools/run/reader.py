@@ -3,11 +3,8 @@
 Parallel runners.
 
 """
-
-
-
 from root.config.main import *
-from tools.deprecated.serial_runners.INSTANCES.matrix3d_input_runner import Matrix3dInputRunner
+from tools.legacy.serialRunners.INSTANCES.matrix3d_input_runner import Matrix3dInputRunner
 
 
 from tools.run.runners._3d_matrix_inputs.main import ParallelMatrix3dInputRunner
@@ -25,7 +22,7 @@ def RunnerDataReader(filename):
     :param filename: The name of the file to be read.
     :return: A instance of the correct runner class.
     """
-    if rAnk == mAster_rank:
+    if RANK == MASTER_RANK:
         with open(filename, 'r') as f:
             # so the header of a runner file must be like: <Runner>-<A particular runner classname>-<......>
             contents = f.readlines()
@@ -37,12 +34,12 @@ def RunnerDataReader(filename):
     else:
         runner_name = None
 
-    runner_name = cOmm.bcast(runner_name, root=mAster_rank)
+    runner_name = COMM.bcast(runner_name, root=MASTER_RANK)
 
     if runner_name == 'Matrix3dInputRunner':
         # Actually we read it with ``ParallelMatrix3dInputRunner``. Since the parallel version is extended from a serial
         # version, so something is old. And the way of reading is also special.
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             SR = Matrix3dInputRunner.readfile(filename)
         else:
             SR = None

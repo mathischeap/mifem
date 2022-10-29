@@ -6,7 +6,7 @@ import numpy as np
 from screws.decorators.classproperty.main import classproperty
 
 import random
-from root.config.main import rAnk, mAster_rank, cOmm
+from root.config.main import RANK, MASTER_RANK, COMM
 
 
 
@@ -60,7 +60,7 @@ class CrazyPeriodic(_3dDomainInputBase):
 
     @classproperty
     def random_parameters(cls):
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             rp = {'c': random.randint(0,3) * random.random() / 10,
                   'bounds': [(-random.random(), random.random()+0.5),
                              (-random.random(), random.random()+0.5),
@@ -69,4 +69,4 @@ class CrazyPeriodic(_3dDomainInputBase):
         else:
             rp = None
 
-        return cOmm.bcast(rp, root=mAster_rank)
+        return COMM.bcast(rp, root=MASTER_RANK)

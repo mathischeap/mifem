@@ -18,7 +18,7 @@ class SimpleIterator(Iterator):
     :param kwargs: These kwargs are those passed to the parent: `Iterator`.
     """
     def __init__(self, t0=0, dt=None, max_steps=None, max_time=None, **kwargs):
-        cHeck_same_in_all_cores(t0, dt, max_steps, max_time, kwargs)
+        CHECK_SAME_IN_ALL_CORES(t0, dt, max_steps, max_time, kwargs)
         self.___PRIVATE_parse_time_max_steps_max_time___(t0, dt, max_steps, max_time)
         super().__init__(**kwargs)
 

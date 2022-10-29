@@ -2,7 +2,7 @@
 from screws.quadrature import Quadrature
 import numpy as np
 from scipy.sparse import csc_matrix, bmat, lil_matrix
-from tools.linear_algebra.data_structures.global_matrix.main import GlobalVector
+from tools.linearAlgebra.dataStructures.global_matrix.main import GlobalVector
 
 
 # noinspection PyUnresolvedReferences

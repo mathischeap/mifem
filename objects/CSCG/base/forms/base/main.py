@@ -7,11 +7,9 @@
          TU Delft, Delft, Netherlands
 
 """
-from copy import deepcopy
+
 from screws.freeze.main import FrozenClass
 
-from objects.CSCG.base.forms.base.time_wise.main import CSCG_Form_TimeWise
-from objects.CSCG.base.forms.base.func import CSCG_Form_Func
 from objects.CSCG.base.forms.base.BC.main import CSCG_Form_BC
 
 
@@ -30,8 +28,8 @@ class CSCG_FORM_BASE(FrozenClass):
         self.standard_properties.___PRIVATE_add_tag___('CSCG_form')
         self.standard_properties.___PRIVATE_add_tag___('form')
 
-        self._TW_ = CSCG_Form_TimeWise(self) # TW has 1) func
-        self._func_ = CSCG_Form_Func(self)
+
+        self._CF_ = None
         self._BC_ = CSCG_Form_BC(self)
 
         self.___is_wrapped_in_ADF___ = False
@@ -61,14 +59,26 @@ class CSCG_FORM_BASE(FrozenClass):
         """Return the dimensions."""
         return self.___ndim___
 
-    # --------------- base properties ---------------------------------
-    @property
-    def TW(self):
-        return self._TW_
 
     @property
-    def func(self):
-        return self._func_
+    def CF(self):
+        """Continuous Form."""
+        return self._CF_
+
+    @CF.setter
+    def CF(self, CF):
+        self.___Pr_check_CF___(CF)
+        self._CF_ = CF
+
+    def ___Pr_check_CF___(self, CF):
+        raise NotImplementedError()
+
+    def ___Pr_check_BC_CF___(self, CF):
+        raise NotImplementedError()
+
+
+
+
 
     @property
     def BC(self):
@@ -89,22 +99,12 @@ class CSCG_FORM_BASE(FrozenClass):
 
         IMPORTANT:
         """
-        if self.TW.func.body is None:
-            ES_parameters = None
-        else:
-            if self.TW.func._ES_ is None:
-                ES_parameters = None
-            else:
-                ES_parameters = \
-                    [deepcopy(self.TW.func._ES_.standard_properties.parameters),
-                     self.TW.func._ES_variable_name_]
+
         # noinspection PyUnresolvedReferences
         RW_cochain_local = self.cochain.\
             ___PRIVATE_do_gather_to_master_and_make_them_region_wise_local_index_grouped___()
         # cochain_local will only be in master, in slaves, it is None.
-        return {'TW_current_time': self.TW.current_time, # to save a object, it must have current time.
-                'TW_func_ES_parameters': ES_parameters,
-                'region_wise_cochain_local': RW_cochain_local}
+        return {'region_wise_cochain_local': RW_cochain_local}
 
     @property
     def ___parameters___(self):

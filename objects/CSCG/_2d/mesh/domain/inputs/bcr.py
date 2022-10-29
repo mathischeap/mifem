@@ -2,7 +2,7 @@
 
 
 from objects.CSCG._2d.mesh.domain.inputs.base import DomainInputBase
-from screws.numerical._1d_space.derivative import NumericalDerivative_fx
+from screws.numerical._1dSpace.derivative import NumericalDerivative_fx
 
 import numpy as np
 

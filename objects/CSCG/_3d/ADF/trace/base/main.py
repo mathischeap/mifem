@@ -8,7 +8,7 @@ from objects.CSCG._3d.ADF.base import _3dCSCG_Algebra_DUAL_FORM_BASE
 
 from scipy import sparse as spspa
 
-from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
+from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
 
 from objects.CSCG._3d.ADF.trace.base.do import _3dCSCG_Algebra_DUAL_Trace_Form_DO
 from objects.CSCG._3d.ADF.trace.base.cochain.main import _3dCSCG_Algebra_DUAL_Trace_Form_Cochain

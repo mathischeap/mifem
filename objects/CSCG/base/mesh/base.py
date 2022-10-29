@@ -148,11 +148,11 @@ class CSCG_MESH_BASE(FrozenClass):
                 self._EDM_ = None # when Region_Elements_Distribution_Type is unknown, we use trivial element division.
 
             else:
-                if sIze == 1: # only one core, then there is nothing we can do.
+                if SIZE == 1: # only one core, then there is nothing we can do.
                     self._EDM_ = None
                 else:
                     if self._REDT_ == 'equal':
-                        if sIze <= self.domain.regions.num: # we always do this when we have many regions!
+                        if SIZE <= self.domain.regions.num: # we always do this when we have many regions!
                             EDM = 'cores_no_more_than_regions'
                         else:
                             EDM = 'SWV0'
@@ -161,6 +161,7 @@ class CSCG_MESH_BASE(FrozenClass):
                                                   f"Region_Elements_Distribution_Type: {self._REDT_}.")
 
                     self._EDM_ = EDM
+
         else:
             raise NotImplementedError(f"EDM = {EDM} not coded.")
 
@@ -198,17 +199,17 @@ class CSCG_MESH_BASE(FrozenClass):
 
             numOfTotalElements = self._num_total_elements_
 
-            if sIze == 1:
+            if SIZE == 1:
                 disDict[0] = numOfTotalElements
-            elif sIze == 2:
+            elif SIZE == 2:
                 baseNum = numOfTotalElements // 2
-                for i in range(sIze):
-                    if i == mAster_rank:
+                for i in range(SIZE):
+                    if i == MASTER_RANK:
                         disDict[i] = baseNum
                     else:
                         disDict[i] = numOfTotalElements - baseNum
             else:
-                numEleForMaster = numOfTotalElements // sIze
+                numEleForMaster = numOfTotalElements // SIZE
                 if numEleForMaster == 1:
                     pass
                 elif 5 >= numEleForMaster > 2:
@@ -216,31 +217,31 @@ class CSCG_MESH_BASE(FrozenClass):
                 else:
                     # change this factor to change the payload for master core.
                     numEleForMaster = int(master_core_load_factor * numEleForMaster)
-                disDict[mAster_rank] = numEleForMaster
-                if sEcretary_rank != mAster_rank:
-                    numEleForSecretary = (numOfTotalElements-numEleForMaster) // (sIze-1)
+                disDict[MASTER_RANK] = numEleForMaster
+                if SECRETARY_RANK != MASTER_RANK:
+                    numEleForSecretary = (numOfTotalElements-numEleForMaster) // (SIZE - 1)
                     if numEleForSecretary >= 7:
                         # change this factor to change the payload for secretary core.
                         numEleForSecretary = int(secretary_core_load_factor * numEleForSecretary)
-                    disDict[sEcretary_rank] = numEleForSecretary
+                    disDict[SECRETARY_RANK] = numEleForSecretary
                     num = numOfTotalElements - numEleForMaster - numEleForSecretary
-                    parts = sIze - 2
+                    parts = SIZE - 2
                 else:
                     num = numOfTotalElements - numEleForMaster
-                    parts = sIze - 1
+                    parts = SIZE - 1
                 eleDis = [num // parts + (1 if x < num % parts else 0) for x in range(parts)]
-                for i in range(sIze):
+                for i in range(SIZE):
                     if i not in disDict:
-                        assert i in sLave_ranks, "Error."
+                        assert i in SLAVE_RANKS, "Error."
                         disDict[i] = eleDis.pop(0)
                 assert eleDis == list(), "Error."
 
         elif EDM == 'chaotic':  # randomly distribute the elements (for testing purpose.)
-            if rAnk == mAster_rank:
+            if RANK == MASTER_RANK:
 
                 while 1:
                     DIS = list()
-                    for i in range(sIze):
+                    for i in range(SIZE):
 
                         _  = random.randint(0,100)
                         if _ <= 5:
@@ -260,33 +261,33 @@ class CSCG_MESH_BASE(FrozenClass):
                 numOfTotalElements = self._num_total_elements_
 
                 _dis_ = list()
-                for i in range(sIze):
+                for i in range(SIZE):
                     _dis_.append(int(numOfTotalElements * DIS[i]))
 
                 _dis_[-1] = numOfTotalElements - sum(_dis_[:-1])
 
                 assert sum(_dis_) == numOfTotalElements
 
-                for i in range(sIze):
+                for i in range(SIZE):
                     disDict[i] = _dis_[i]
 
             else:
                 pass
 
-            disDict = cOmm.bcast(disDict, root=mAster_rank)
+            disDict = COMM.bcast(disDict, root=MASTER_RANK)
 
 
         elif EDM == 'cores_no_more_than_regions': # few cores many regions cases.
-            assert sIze > 1, "When only have one core, we use EDM = None!"
-            assert nrs >= sIze, "a trivial check!"
+            assert SIZE > 1, "When only have one core, we use EDM = None!"
+            assert nrs >= SIZE, "a trivial check!"
 
             if self._REDT_ == 'equal':
-                if nrs % sIze == 0: # regions can be equally distributed to cores.
+                if nrs % SIZE == 0: # regions can be equally distributed to cores.
 
-                    regions_per_core = int(nrs / sIze) # each core will handle this many regions.
-                    assert regions_per_core * sIze == nrs
+                    regions_per_core = int(nrs / SIZE) # each core will handle this many regions.
+                    assert regions_per_core * SIZE == nrs
 
-                    for i in range(sIze):
+                    for i in range(SIZE):
                         dDi = 0
                         for j in range(regions_per_core):
                             m = j + i * regions_per_core
@@ -297,17 +298,17 @@ class CSCG_MESH_BASE(FrozenClass):
 
                 else:
 
-                    region_distribution = [nrs // sIze + (1 if x < nrs % sIze else 0) for x in range(sIze)][::-1]
+                    region_distribution = [nrs // SIZE + (1 if x < nrs % SIZE else 0) for x in range(SIZE)][::-1]
 
                     rns = list(self.domain.regions.names)[::-1]
 
                     core_regions_dict = dict()
-                    for i in range(sIze):
+                    for i in range(SIZE):
                         core_regions_dict[i] = list()
                         for j in range(region_distribution[i]):
                             core_regions_dict[i].append(rns.pop())
 
-                    for i in range(sIze):
+                    for i in range(SIZE):
                         disDict[i] = 0
                         cover_regions = core_regions_dict[i]
                         for cr in cover_regions:
@@ -318,15 +319,15 @@ class CSCG_MESH_BASE(FrozenClass):
                                           f"regions-wise element distribution.")
 
         elif EDM == 'SWV0': # smart way version 0; cores do not have elements from different regions.
-            assert sIze > 1, f"When only have one core, we use EDM = None!"
-            assert sIze >= nrs, f"EDM SWV0 only fits when Num of Cores is not lower than Mum of Regions, NCS={sIze} < {nrs}=NRS."
+            assert SIZE > 1, f"When only have one core, we use EDM = None!"
+            assert SIZE >= nrs, f"EDM SWV0 only fits when Num of Cores is not lower than Mum of Regions, NCS={SIZE} < {nrs}=NRS."
 
             self.___region_cores_dict___ = dict()
 
             if self._REDT_ == 'equal': # all regions have roughly same amount of elements.
-                if nrs == 1 or sIze % nrs == 0: # cores are equally distributed.
+                if nrs == 1 or SIZE % nrs == 0: # cores are equally distributed.
 
-                    cores_per_region = int(sIze / nrs)
+                    cores_per_region = int(SIZE / nrs)
 
                     for i in range(nrs):
                         rn = rns[i]
@@ -346,10 +347,10 @@ class CSCG_MESH_BASE(FrozenClass):
 
                 else:
 
-                    cores_distribution = [sIze // nrs + (1 if x < sIze % nrs else 0) for x in range(nrs)]
+                    cores_distribution = [SIZE // nrs + (1 if x < SIZE % nrs else 0) for x in range(nrs)]
 
                     region_cores_dict = dict()
-                    core_list = [_ for _ in range(sIze)][::-1]
+                    core_list = [_ for _ in range(SIZE)][::-1]
 
                     for i, rn in enumerate(rns):
                         region_cores_dict[rn] = list()
@@ -371,16 +372,16 @@ class CSCG_MESH_BASE(FrozenClass):
                                           f"regions-wise element distribution.")
 
 
-            master_elements = disDict[mAster_rank]
+            master_elements = disDict[MASTER_RANK]
             for rn in self.___region_cores_dict___:
-                if mAster_rank in self.___region_cores_dict___[rn]:
+                if MASTER_RANK in self.___region_cores_dict___[rn]:
 
                     if len(self.___region_cores_dict___[rn]) == 1:
                         pass
                     else:
                         slaves = list()
                         for i in self.___region_cores_dict___[rn]:
-                            if i != mAster_rank:
+                            if i != MASTER_RANK:
                                 slaves.append(i)
 
                         if master_elements <= 2:
@@ -400,23 +401,23 @@ class CSCG_MESH_BASE(FrozenClass):
                             for i, SLA in enumerate(slaves):
                                 disDict[SLA] += _[i]
 
-                            disDict[mAster_rank] = master_elements
+                            disDict[MASTER_RANK] = master_elements
 
                 else:
                     pass
 
-            secretary_elements = disDict[sEcretary_rank]
+            secretary_elements = disDict[SECRETARY_RANK]
             for rn in self.___region_cores_dict___:
-                if sEcretary_rank in self.___region_cores_dict___[rn]:
+                if SECRETARY_RANK in self.___region_cores_dict___[rn]:
 
                     if len(self.___region_cores_dict___[rn]) == 1:
                         pass
-                    elif len(self.___region_cores_dict___[rn]) == 2 and mAster_rank in self.___region_cores_dict___[rn]:
+                    elif len(self.___region_cores_dict___[rn]) == 2 and MASTER_RANK in self.___region_cores_dict___[rn]:
                         pass
                     else:
                         slaves = list()
                         for i in self.___region_cores_dict___[rn]:
-                            if i != mAster_rank and i != sEcretary_rank:
+                            if i != MASTER_RANK and i != SECRETARY_RANK:
                                 slaves.append(i)
 
                         if secretary_elements <= 2:
@@ -436,13 +437,13 @@ class CSCG_MESH_BASE(FrozenClass):
                             for i, SLA in enumerate(slaves):
                                 disDict[SLA] += _[i]
 
-                            disDict[sEcretary_rank] = secretary_elements
+                            disDict[SECRETARY_RANK] = secretary_elements
 
             assert self.___region_cores_dict___ != dict()
             core_pool = set()
             for rn in self.___region_cores_dict___:
                 core_pool.update(self.___region_cores_dict___[rn])
-            assert len(core_pool) == sIze
+            assert len(core_pool) == SIZE
 
 
 
@@ -472,15 +473,15 @@ class CSCG_MESH_BASE(FrozenClass):
 
         # do the things: Now, we must have disDict.
         assert isinstance(disDict, dict)
-        for i in range(sIze): assert i in disDict, f"disDict not full, miss distribution for core #{i}."
+        for i in range(SIZE): assert i in disDict, f"disDict not full, miss distribution for core #{i}."
 
         # now, we parse disDict to obtain  _num_local_elements_, _element_distribution_, _element_indices_
-        self._num_local_elements_ = disDict[rAnk]
+        self._num_local_elements_ = disDict[RANK]
         before_elements = 0
         self._element_distribution_ = dict()
-        for i in range(0, sIze):
+        for i in range(0, SIZE):
             self._element_distribution_[i] = range(before_elements, before_elements+disDict[i])
-            if i == rAnk:
+            if i == RANK:
                 self._element_indices_ = range(before_elements, before_elements+self._num_local_elements_)
             before_elements += disDict[i]
 
@@ -495,33 +496,33 @@ class CSCG_MESH_BASE(FrozenClass):
         assert hasattr(self, '_element_indices_')
         # Now do some more checks ...
         check_num_elements = 0
-        for r in range(sIze):
+        for r in range(SIZE):
             RANGE = self._element_distribution_[r]
             assert RANGE.start <= RANGE.stop, f"element_distribution in core {r} is wrong."
             check_num_elements += len(RANGE)
-            if r == rAnk:
-                assert self._num_local_elements_ == len(RANGE), f"element_distribution in core {rAnk} is wrong."
-                assert RANGE == self._element_indices_, f"element_indices in core {rAnk} is wrong."
+            if r == RANK:
+                assert self._num_local_elements_ == len(RANGE), f"element_distribution in core {RANK} is wrong."
+                assert RANGE == self._element_indices_, f"element_indices in core {RANK} is wrong."
         assert check_num_elements == self._num_total_elements_, f"element_distribution is wrong."
         # ......
-        assert self._element_indices_ == self._element_distribution_[rAnk]
+        assert self._element_indices_ == self._element_distribution_[RANK]
 
 
         # ! a check: we make sure that elements are distributed into cores in an increasing sequence (MUST BE). ------ !
-        for i in range(sIze):
-            if rAnk == i:
-                RANGE = self._element_distribution_[rAnk]
+        for i in range(SIZE):
+            if RANK == i:
+                RANGE = self._element_distribution_[RANK]
                 start, stop = RANGE.start, RANGE.stop
 
-                if rAnk > 0: # not the first core
-                    START = cOmm.recv(source=rAnk-1, tag=rAnk-1)
+                if RANK > 0: # not the first core
+                    START = COMM.recv(source=RANK - 1, tag=RANK - 1)
 
                     assert start == START
 
-                if rAnk < sIze-1: # not the last core
-                    cOmm.send(stop, dest=rAnk+1, tag=rAnk)
+                if RANK < SIZE-1: # not the last core
+                    COMM.send(stop, dest=RANK + 1, tag=RANK)
 
-        if rAnk == sIze - 1 and sIze > 1:
+        if RANK == SIZE - 1 and SIZE > 1:
             # noinspection PyUnboundLocalVariable
             assert stop == self._num_total_elements_
         # ! ... end check here ----------------------------------------------------------
@@ -555,8 +556,8 @@ class CSCG_MESH_BASE(FrozenClass):
                 if side_rn not in ___USEFUL_regions_and_boundaries___:
                     ___USEFUL_regions_and_boundaries___.append(side_rn)
 
-            if saFe_mode:
-                assert rAnk == self.DO.FIND_slave_of_element(i)
+            if SAFE_MODE:
+                assert RANK == self.DO.FIND_slave_of_element(i)
 
         for rg in self.domain.domain_input.periodic_boundaries_involved_regions:
             # we just put all regions have periodic boundaries into useful regions. Bad but simple.

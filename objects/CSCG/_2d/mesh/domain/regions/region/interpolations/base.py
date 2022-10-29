@@ -2,7 +2,7 @@
 import numpy as np
 from screws.freeze.main import FrozenOnly
 from screws.decorators.accepts import accepts
-from screws.numerical._2d_space.Jacobian_21 import NumericalJacobian_xy_22
+from screws.numerical._2dSpace.Jacobian_21 import NumericalJacobian_xy_22
 from pynverse import inversefunc
 
 class InterpolationBase(FrozenOnly):

@@ -8,7 +8,7 @@ import socket, os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from root.config.main import rAnk, mAster_rank
+from root.config.main import RANK, MASTER_RANK
 from screws.emails.html import SendAdminAnHTMLEmail
 from screws.internet.connected_or_not import whether_internet_connected
 from screws.internet.in_the_wall_or_not import whether_in_the_great_fire_wall
@@ -18,7 +18,7 @@ from screws.internet.in_the_wall_or_not import whether_in_the_great_fire_wall
 class SendAdminAnEmail(FrozenOnly):
     """Send emails to the library admin."""
     def __init__(self):
-        assert rAnk == mAster_rank, "Should only call it in master core."
+        assert RANK == MASTER_RANK, "Should only call it in master core."
         self._MESSAGE_ = None
         self._freeze_self_()
 
@@ -37,7 +37,7 @@ class SendAdminAnEmail(FrozenOnly):
 
     def __call__(self, message, subject=None):
         """By calling the object, we send the message."""
-        assert rAnk == mAster_rank, "Should only call it in master core."
+        assert RANK == MASTER_RANK, "Should only call it in master core."
         hostname = socket.gethostname()
 
         if hostname not in ('DT-YI-HT20', 'DESKTOP-SYSU-YiZhang'):
@@ -108,7 +108,7 @@ class SendAdminAnEmail(FrozenOnly):
 
 if __name__ == '__main__':
     # mpiexec -n 8 python SCREWS\emails\plain.py
-    if rAnk == mAster_rank:
+    if RANK == MASTER_RANK:
         message = '123test'
         code = SendAdminAnEmail()(message)
         print(code)

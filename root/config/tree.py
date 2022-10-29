@@ -1,11 +1,11 @@
-
+# -*- coding: utf-8 -*-
 from mpi4py import MPI
 cOmm = MPI.COMM_WORLD
 sIze: int = cOmm.Get_size()
 rAnk: int = cOmm.Get_rank()
 import numpy as np
 
-def tRee(factor=2):
+def TREE(factor=2):
     """We distribute our cores with a tree structure of branch ``factor``.
 
     :param int factor: (`default`: ``2``).

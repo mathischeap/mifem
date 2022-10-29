@@ -81,7 +81,7 @@ if __name__ == '__main__':
 
     t0 = FC('1-t')
 
-    from root.config.main import rAnk, mAster_rank, cOmm
+    from root.config.main import RANK, MASTER_RANK, COMM
 
     dofs = t0.dofs
     for i in dofs:
@@ -89,9 +89,9 @@ if __name__ == '__main__':
 
         tep = dof.trace_element_position
 
-        tep = cOmm.gather(tep, root=mAster_rank)
+        tep = COMM.gather(tep, root=MASTER_RANK)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             Tep = None
             for _ in tep:
                 if _ is not None:

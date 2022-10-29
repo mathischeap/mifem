@@ -2,7 +2,7 @@
 
 from importlib import import_module
 from objects.CSCG.base.forms.standard.coboundary import CSCG_Standard_Form_Coboundary_BASE
-from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
+from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
 
 
 

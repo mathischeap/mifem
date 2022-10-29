@@ -21,5 +21,5 @@ class miUs_Triangular_S1F_Error(miUs_Triangular_SF_Error):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python objects/miUsGrid/triangular/forms/standard/_1/base/error.py
     pass

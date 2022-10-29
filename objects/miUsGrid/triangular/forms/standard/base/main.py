@@ -36,6 +36,7 @@ class miUsTriangular_SF_Base(miUsTriangular_FormBase):
         self._BC_ = None
 
     def __repr__(self):
+        """"""
         return f"miUsTriangular_S{self.k}F_{self.name}@{id(self)}"
 
     @property
@@ -121,11 +122,12 @@ class miUsTriangular_SF_Base(miUsTriangular_FormBase):
         COCHAIN = dict()
         for i in self.mesh.elements:
             COCHAIN[i] = self.cochain.local[i] + other.cochain.local[i]
+
         shadow.cochain.local = COCHAIN
         return shadow
 
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python 
+    # mpiexec -n 4 python
     pass

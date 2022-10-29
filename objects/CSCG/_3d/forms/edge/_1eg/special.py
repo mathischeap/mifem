@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from screws.freeze.base import FrozenOnly
 import numpy as np
-from root.config.main import cOmm
+from root.config.main import COMM
 
 
 
@@ -155,7 +155,7 @@ class _3dCSCG_1EF_Special(FrozenOnly):
         else:
             xyz = None
 
-        XYZ = cOmm.allgather(xyz)
+        XYZ = COMM.allgather(xyz)
         xyz = list()
         for ___ in XYZ:
             if ___ is not None:

@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-from root.config.main import rAnk, mAster_rank
+from root.config.main import RANK, MASTER_RANK

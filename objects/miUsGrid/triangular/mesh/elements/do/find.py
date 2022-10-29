@@ -9,7 +9,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 from screws.freeze.base import FrozenOnly
-from root.config.main import sIze, np
+from root.config.main import SIZE, np
 
 
 class miUsGrid_TriangularMesh_Elements_DO_FIND(FrozenOnly):
@@ -24,14 +24,14 @@ class miUsGrid_TriangularMesh_Elements_DO_FIND(FrozenOnly):
     def rank_of_element(self, i: int) -> int:
         DISTRI = self._elements_.distributions
         if isinstance(i, str): i = int(i)
-        if sIze <= 4:
-            for nC in range(sIze):
+        if SIZE <= 4:
+            for nC in range(SIZE):
                 if i in DISTRI[nC]: return nC
             raise Exception()
 
         midCore0 = 0
-        midCore1 = sIze // 2
-        midCore2 = sIze
+        midCore1 = SIZE // 2
+        midCore2 = SIZE
         while i not in DISTRI[midCore1] and midCore1 - midCore0 > 2 and midCore2 - midCore1 > 2:
             if i > max(DISTRI[midCore1]):
                 midCore0 = midCore1

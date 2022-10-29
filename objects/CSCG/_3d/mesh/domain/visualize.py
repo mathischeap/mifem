@@ -34,7 +34,7 @@ class _3dCSCG_Domain_Visualize(FrozenOnly):
     #         according the regions type.
     #
     #     """
-    #     if rAnk != mAster_rank: return
+    #     if RANK != MASTER_RANK: return
     #     tp.session.connect()
     #     tp.new_layout()
     #     page = tp.active_page()
@@ -100,7 +100,7 @@ class _3dCSCG_Domain_Visualize(FrozenOnly):
         :return:
         """
         # we can do everything in the master core.
-        if rAnk != mAster_rank: return
+        if RANK != MASTER_RANK: return
 
         density = int(np.ceil(np.sqrt(density/(self._domain_.regions.num*6))))
         rrr = sss = np.linspace(0,1,density)

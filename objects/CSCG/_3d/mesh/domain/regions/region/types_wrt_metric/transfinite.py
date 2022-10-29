@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from root.config.main import cOmm, rAnk
+from root.config.main import COMM, RANK
 
 import numpy as np
 
@@ -72,11 +72,11 @@ class Transfinite(TypeWr2MetricBase):
     def mark(self):
         if self._mark_ is None:
             if self._IS_chaotic_:
-                if rAnk == 0:
+                if RANK == 0:
                     self._mark_ = 'chaotic:' + str(id(self))
                 else:
                     self._mark_ = None
-                self._mark_ = cOmm.bcast(self._mark_, root=0)
+                self._mark_ = COMM.bcast(self._mark_, root=0)
             else:
                 if self._IS_something_ == 'orthogonal':
                     self._mark_ = 'orthogonal:L{}_W{}_H{}'.format(

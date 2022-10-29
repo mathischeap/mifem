@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from screws.freeze.base import FrozenOnly
-from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
+from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
 from objects.CSCG._2d.forms.standard._0_form.inner.special.helpers.cross_product_1_i_1 import \
     ___2dCSCG_0_i_Form_CrossProduct_0_X_1__ip_1___
 

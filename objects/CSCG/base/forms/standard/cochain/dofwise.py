@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from screws.freeze.base import FrozenOnly
 import numpy as np
-from root.config.main import cOmm, rAnk, mAster_rank
+from root.config.main import COMM, RANK, MASTER_RANK
 
 
 
@@ -37,9 +37,9 @@ class CSCG_SF_Cochain_DofWise(FrozenOnly):
                 else:
                     np.testing.assert_almost_equal(cc, self._cochain_.local[e][ind])
 
-        CC = cOmm.gather(cc, root=mAster_rank)
+        CC = COMM.gather(cc, root=MASTER_RANK)
 
-        if rAnk == mAster_rank:
+        if RANK == MASTER_RANK:
             the_cc = None
             for cc in CC:
                 if cc is not None:
@@ -53,4 +53,4 @@ class CSCG_SF_Cochain_DofWise(FrozenOnly):
         else:
             the_cc = None
 
-        return cOmm.bcast(the_cc, root=mAster_rank)
+        return COMM.bcast(the_cc, root=MASTER_RANK)

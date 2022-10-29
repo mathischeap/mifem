@@ -10,26 +10,26 @@ if './' not in sys.path: sys.path.append('./')
 
 
 import random
-from root.config.main import rAnk, mAster_rank, cOmm
+from root.config.main import RANK, MASTER_RANK, COMM
 
 
 def randint(a, b):
     """"""
-    if rAnk == mAster_rank:
+    if RANK == MASTER_RANK:
         r = random.randint(a, b)
     else:
         r = None
-    return cOmm.bcast(r, root=mAster_rank)
+    return COMM.bcast(r, root=MASTER_RANK)
 
 
 
 
 def sample(population, k):
-    if rAnk == mAster_rank:
+    if RANK == MASTER_RANK:
         r = random.sample(population, k)
     else:
         r = None
-    return cOmm.bcast(r, root=mAster_rank)
+    return COMM.bcast(r, root=MASTER_RANK)
 
 
 

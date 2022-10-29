@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from mpi4py import MPI
 cOmm = MPI.COMM_WORLD
 sIze: int = cOmm.Get_size()
@@ -17,7 +17,7 @@ else:
 
 
 
-def cHeck_same_in_all_cores(*args):
+def CHECK_SAME_IN_ALL_CORES(*args):
     """
     check if some variables are the same in all cores.
 

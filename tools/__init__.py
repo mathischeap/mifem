@@ -8,7 +8,7 @@ from tools.run.reader import ParallelMatrix3dInputRunner, RunnerDataReader
 
 
 
-import tools.linear_algebra.__init__ as linalg
+import tools.linearAlgebra.__init__ as linalg
 
 
 

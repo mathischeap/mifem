@@ -3,7 +3,6 @@
 from objects.CSCG._3d.master import FormCaller as _3dCSCG_FormCaller
 from root.read.helpers._3dCSCG.space import ___restore__3dCSCG_Space___
 from root.read.helpers._3dCSCG.mesh import ___restore__3dCSCG_Mesh___
-from root.read.helpers._3dCSCG.exact_solution import ___restore__3dCSCG_ExactSolution___
 
 
 
@@ -25,42 +24,9 @@ def ___restore__3dCSCG_Form___(parameters, mesh_cache, space_cache):
 
 
     space = ___restore__3dCSCG_Space___(space_parameters, space_cache)
+    mesh = ___restore__3dCSCG_Mesh___(mesh_parameters, mesh_cache)
+    form = _3dCSCG_FormCaller(mesh, space)(ID, **kwargs)
 
-    TW_func_ES_parameters = parameters.pop('TW_func_ES_parameters')
-    TW_current_time = parameters.pop('TW_current_time')
-
-    assert len(parameters) == 0, "make sure all information are used."
-
-    if TW_func_ES_parameters is None:
-
-        mesh = ___restore__3dCSCG_Mesh___(mesh_parameters, mesh_cache)
-        form = _3dCSCG_FormCaller(mesh, space)(ID, **kwargs)
-
-    else:
-
-        ES_parameters = TW_func_ES_parameters[0]
-        ES_variable_name = TW_func_ES_parameters[1]
-        ES = ___restore__3dCSCG_ExactSolution___(ES_parameters, mesh_cache)
-
-
-
-
-        assert mesh_parameters == ES.mesh.standard_properties.parameters
-        mesh = ES.mesh
-        # OR use
-        # if mesh_parameters == ES.mesh.standard_properties.parameters:
-        #     mesh = ES.mesh
-        # else:
-        #     mesh = ___restore__3dCSCG_Mesh___(mesh_parameters, ___CACHE_3dCSCG_mesh___)
-
-
-
-
-
-        form = _3dCSCG_FormCaller(mesh, space)(ID, **kwargs)
-        form.TW.current_time = TW_current_time
-        form.TW.func.___DO_set_func_body_as___(ES, ES_variable_name)
-        form.TW.___DO_push_all_to_instant___()
 
     if ___COCHAIN_READ_VERSION___ == 0:
         if COCHAIN != dict():

@@ -11,7 +11,7 @@ if './' not in sys.path: sys.path.append('./')
 from screws.freeze.base import FrozenOnly
 from screws.quadrature import Quadrature
 from objects.miUsGrid.triangular.forms.standard._2.base.operators.helpers.inner import ___Operators_Inner___
-from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
+from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
 
 
 class miUs_Triangular_S2F_Operators(FrozenOnly):

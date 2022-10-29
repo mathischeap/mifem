@@ -78,13 +78,13 @@ class _2dCSCG_Mesh_Boundaries(FrozenOnly):
         names = set(names)
 
         # Now, gather names ...
-        names = cOmm.gather(names, root=mAster_rank)
-        if rAnk == mAster_rank:
+        names = COMM.gather(names, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
             NAMES = set()
             for _ in names:
                 NAMES.update(_)
             names = list(NAMES)
-        names = cOmm.bcast(names, root=mAster_rank)
+        names = COMM.bcast(names, root=MASTER_RANK)
         # ...
 
         for na in names:
@@ -188,5 +188,5 @@ if __name__ == "__main__":
     from objects.CSCG._2d.master import MeshGenerator
     mesh = MeshGenerator('crazy', bounds=((0,3),(0,3)))([2,3])
     mesh.boundaries.___PRIVATE_parse_boundaries___()
-    print(rAnk, mesh.boundaries.range_of_element_edges)
-    print(rAnk, mesh.boundaries.range_of_trace_elements)
+    print(RANK, mesh.boundaries.range_of_element_edges)
+    print(RANK, mesh.boundaries.range_of_trace_elements)

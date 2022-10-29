@@ -5,11 +5,11 @@ if './' not in sys.path: sys.path.append('./')
 from numpy import array
 from itertools import chain
 from screws.freeze.main import FrozenOnly
-from tools.linear_algebra.gathering.regular.matrix.main import Gathering_Matrix
-from tools.linear_algebra.gathering.vector import Gathering_Vector
+from tools.linearAlgebra.gathering.regular.matrix.main import Gathering_Matrix
+from tools.linearAlgebra.gathering.vector import Gathering_Vector
 
-from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
-from tools.linear_algebra.elementwise_cache.objects.column_vector.main import EWC_ColumnVector
+from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
+from tools.linearAlgebra.elementwiseCache.objects.columnVector.main import EWC_ColumnVector
 
 from objects.CSCG._3d.forms.standard._1s.special.vortex_detection import \
     ___3dCSCG_1Form_Vortex_Detection___
@@ -21,7 +21,7 @@ from objects.CSCG._3d.forms.standard._1s.special.helpers.cross_product_2__ip_2_2
     ___3dCSCG_1Form_CrossProduct_2__ip_2_2M0___
 from objects.CSCG._3d.forms.standard._1s.special.helpers.curl1_cross_product_1__ip_2 import \
     ___3dCSCG_curl1_CrossProduct_1__ip_2___
-from root.config.main import cOmm, MPI
+from root.config.main import COMM, MPI
 
 
 
@@ -111,13 +111,13 @@ class _1Form_Special(FrozenOnly):
         sf = self._sf_
         mesh = sf.mesh
 
-        assert sf.TW.BC.body is not None, f'3dCSCG primal 1-sf has no TW.BC function.'
-        assert sf.BC.valid_boundaries is not None, f'3dCSCG primal 1-sf has no valid boundary.'
-        assert adt1.prime.TW.BC.body is not None, f'3dCSCG ad-1-trace has no TW.BC function.'
-        assert adt1.BC.valid_boundaries is not None, f'3dCSCG ad-1-trace has no valid boundary.'
+        assert sf.BC.CF is not None, f'3dCSCG primal 1-sf has no TW.BC function.'
+        assert sf.BC.boundaries is not None, f'3dCSCG primal 1-sf has no valid boundary.'
+        assert adt1.prime.BC.CF is not None, f'3dCSCG ad-1-trace has no TW.BC function.'
+        assert adt1.BC.boundaries is not None, f'3dCSCG ad-1-trace has no valid boundary.'
 
-        sf.TW.do.push_BC_to_instant(time)
-        adt1.prime.TW.do.push_BC_to_instant(time)
+        sf.BC.CF.current_time = time
+        adt1.prime.BC.CF.current_time = time
 
         T = adt1.matrices.trace
         D = EWC_SparseMatrix(mesh, (adt1.num.basis, adt1.num.basis))
@@ -131,8 +131,8 @@ class _1Form_Special(FrozenOnly):
         b.gathering_matrix = adt1
 
         #----- get boundaries and do a check -------------------------------------------------------
-        Dirichlet_boundaries = adt1.BC.valid_boundaries
-        Neumann_boundaries = sf.BC.valid_boundaries
+        Dirichlet_boundaries = adt1.BC.boundaries
+        Neumann_boundaries = sf.BC.boundaries
 
         bns = mesh.boundaries.names
         SDb = set(Dirichlet_boundaries)
@@ -141,19 +141,19 @@ class _1Form_Special(FrozenOnly):
         assert SDb | SNb == set(bns), f"Dirichlet_boundaries union Neumann_boundaries is not full!"
         #-------- set Neumann boundary condition ---------------------------------------------------
 
-        sf.BC.valid_boundaries = Neumann_boundaries
-        adt1.BC.valid_boundaries = Neumann_boundaries
-        col_pc = sf.BC.partial_cochain
-        row_pd = adt1.BC.partial_dofs
-        T = T.adjust.identify_rows_according_to_two_CSCG_partial_dofs(row_pd, col_pc)
-        b = b.adjust.set_entries_according_to_CSCG_partial_cochains(row_pd, col_pc)
+        sf.BC.boundaries = Neumann_boundaries
+        adt1.BC.boundaries = Neumann_boundaries
+        col_pc = sf.BC.interpret
+        row_pd = adt1.BC.interpret
+        T = T.adjust.identify_rows_according_to(row_pd, col_pc)
+        b = b.adjust.set_entries_according_to(row_pd, col_pc)
 
         #-------- set Dirichlet boundary condition -------------------------------------------------
-        adt1.BC.valid_boundaries = Dirichlet_boundaries
-        adt_pc = adt1.BC.partial_cochain
-        D = D.adjust.identify_rows_according_to_CSCG_partial_dofs(adt_pc)
-        T = T.adjust.clear_rows_according_to_CSCG_partial_dofs(adt_pc)
-        b = b.adjust.set_entries_according_to_CSCG_partial_cochains(adt_pc, adt_pc)
+        adt1.BC.boundaries = Dirichlet_boundaries
+        adt_pc = adt1.BC.interpret
+        D = D.adjust.identify_rows_according_to(adt_pc)
+        T = T.adjust.clear_rows_according_to(adt_pc)
+        b = b.adjust.set_entries_according_to(adt_pc, adt_pc)
 
         #---------------- Send T, C for hybrid singularity overcoming ------------------------------
         T, C, SKIPPED_edge_elements = self.___PRIVATE_overcoming_hybrid_singularity___(
@@ -180,7 +180,7 @@ class _1Form_Special(FrozenOnly):
                 direction = meee.direction
                 SKD[e] = D_p_D[direction]
 
-        ___ = cOmm.allgather(SKD)
+        ___ = COMM.allgather(SKD)
         SKD = dict()
         for _ in ___: SKD.update(_)
 
@@ -296,7 +296,7 @@ class _1Form_Special(FrozenOnly):
             else:
                 skip = False
 
-            skip = cOmm.allreduce(skip, op=MPI.LOR)
+            skip = COMM.allreduce(skip, op=MPI.LOR)
 
             if skip:
 

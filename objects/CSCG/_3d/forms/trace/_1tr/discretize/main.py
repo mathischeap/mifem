@@ -34,10 +34,10 @@ class _3dCSCG_1Trace_Discretize(FrozenOnly):
 
         if target == 'func':
 
-            if SELF.TW.func.body.__class__.__name__ == '_3dCSCG_VectorField':
+            if SELF.CF.__class__.__name__ == '_3dCSCG_VectorField':
 
 
-                if SELF.func.ftype == 'standard':
+                if SELF.CF.ftype == 'standard':
 
                     if component == 'T_para':
 
@@ -55,7 +55,7 @@ class _3dCSCG_1Trace_Discretize(FrozenOnly):
                                         f"'T_para' (parallel trace) or 'T_perp' (perpendicular trace).")
 
 
-                elif SELF.func.ftype == 'trace-element-wise':
+                elif SELF.CF.ftype == 'trace-element-wise':
                     # we do not care this trace-element-wise vector is T_para or T_perp vector, we just discretize it to the trace.
                     return self._trace_element_wise_vector_(
                         update_cochain=update_cochain, target='func', **kwargs)
@@ -63,30 +63,30 @@ class _3dCSCG_1Trace_Discretize(FrozenOnly):
 
                 else:
                     raise Exception(f'3dCSCG 1-trace can not (target func) discretize '
-                                    f'_3dCSCG_VectorField of ftype {SELF.func.ftype}.')
+                                    f'_3dCSCG_VectorField of ftype {SELF.CF.ftype}.')
 
 
 
             else:
                 raise NotImplementedError(f'3dCSCG 1-trace can not (target func) '
-                                          f'discretize {SELF.TW.func.body.__class__}.')
+                                          f'discretize {SELF.CF.__class__}.')
 
         elif target == 'BC':
 
-            if SELF.TW.BC.body.__class__.__name__ == '_3dCSCG_VectorField':
+            if SELF.BC.CF.__class__.__name__ == '_3dCSCG_VectorField':
 
-                if SELF.BC.ftype == 'trace-element-wise':
+                if SELF.BC.CF.ftype == 'trace-element-wise':
                     # we do not care this trace-element-wise vector is T_para or T_perp vector, we just discretize it to the trace.
                     return self._trace_element_wise_vector_(
                         update_cochain=False, target='BC', **kwargs)
 
                 else:
                     raise Exception(f'3dCSCG 1-trace can not (target BC) discretize '
-                                    f'_3dCSCG_VectorField of ftype {SELF.func.ftype}.')
+                                    f'_3dCSCG_VectorField of ftype {SELF.BC.CF.ftype}.')
 
             else:
                 raise NotImplementedError(f'3dCSCG 1-trace can not (target BC) '
-                                          f'discretize {SELF.TW.func.body.__class__}.')
+                                          f'discretize {SELF.BC.CF__class__}.')
 
 
         else:

@@ -2,7 +2,7 @@
 
 from screws.freeze.main import FrozenOnly
 from importlib import import_module
-from screws.numerical.time_plus_3d_space.partial_derivative_as_functions import \
+from screws.numerical.timePlus3dSpace.partial_derivative_as_functions import \
     NumericalPartialDerivative_txyz_Functions
 
 

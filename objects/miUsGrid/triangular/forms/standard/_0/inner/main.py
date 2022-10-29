@@ -21,7 +21,7 @@ class miUsTriangular_S0F_Inner(miUsTriangular_S0F_Base):
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/miUsGrid/triangular/forms/standard/_0/inner/main.py
     import numpy as np
-    from root.config.main import rAnk
+    from root.config.main import RANK
     import matplotlib.pyplot as plt
     from objects.miUsGrid.triangular.fields.scalar.main import miUsGrid_Triangular_Scalar
     from objects.miUsGrid.triangular.__test__.Random.test_mesh import mesh
@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
         Error.append(error)
 
-    if rAnk == 0:
+    if RANK == 0:
         plt.rc('text', usetex=True)
         plt.rcParams['text.latex.preamble'] = r"\usepackage{amsmath}"
         figure = plt.figure(figsize=(5,4))

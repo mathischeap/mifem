@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from screws.freeze.main import FrozenOnly
-from tools.linear_algebra.elementwise_cache.objects.sparse_matrix.main import EWC_SparseMatrix
+from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
 
 
 
@@ -10,10 +10,10 @@ class CSCG_Trace_Form_Coboundary_BASE(FrozenOnly):
     def __init__(self, tf):
         self._tf_ = tf
         self._T_ = None
-        self.___PRIVATE_reset_cache___()
+        self.RESET_cache()
         self._freeze_self_()
 
-    def ___PRIVATE_reset_cache___(self):
+    def RESET_cache(self):
         pass
 
     @property
