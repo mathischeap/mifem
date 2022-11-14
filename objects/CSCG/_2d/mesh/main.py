@@ -16,7 +16,7 @@ from objects.CSCG._2d.mesh.do.main import _2dCSCG_Mesh_DO
 
 
 class _2dCSCG_Mesh(CSCG_MESH_BASE):
-    """The 3dCSCG mesh."""
+    """The 2dCSCG mesh."""
     def __init__(self, domain, element_layout=None, EDM=None):
         assert domain.ndim == 2, " <Mesh> "
         self._domain_ = domain

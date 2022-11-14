@@ -16,7 +16,7 @@ from screws.functions.timePlus2dSpace._0_ import _0t_
 from objects.miUsGrid.triangular.fields.vector.reconstruct.main import miUsGrid_Triangular_Vector_Reconstruct
 from objects.miUsGrid.triangular.fields.vector.do.main import miUsGrid_Triangular_Vector_Do
 from objects.miUsGrid.triangular.fields.vector.numerical.main import miUsGrid_Triangular_Vector_Numerical
-
+from objects.miUsGrid.triangular.fields.vector.export.main import miUsGrid_Triangular_Vector_Export
 
 class miUsGrid_Triangular_Vector(miUsGrid_TriangularFieldBase):
     """"""
@@ -40,7 +40,7 @@ class miUsGrid_Triangular_Vector(miUsGrid_TriangularFieldBase):
         self._reconstruct_ = miUsGrid_Triangular_Vector_Reconstruct(self)
         self._do_ = miUsGrid_Triangular_Vector_Do(self)
         self._numerical_ = miUsGrid_Triangular_Vector_Numerical(self)
-
+        self._export_ = None
         self._freeze_self_()
 
 
@@ -113,6 +113,11 @@ class miUsGrid_Triangular_Vector(miUsGrid_TriangularFieldBase):
     def numerical(self):
         return self._numerical_
 
+    @property
+    def export(self):
+        if self._export_ is None:
+            self._export_ = miUsGrid_Triangular_Vector_Export(self)
+        return self._export_
 
 
 if __name__ == "__main__":

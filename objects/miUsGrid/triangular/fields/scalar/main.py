@@ -18,6 +18,8 @@ from screws.functions.timePlus2dSpace._0_ import _0t_
 from objects.miUsGrid.triangular.fields.scalar.reconstruct.main import miUsGrid_Triangular_Scalar_Reconstruct
 from objects.miUsGrid.triangular.fields.scalar.do.main import miUsGrid_Triangular_Scalar_Do
 from objects.miUsGrid.triangular.fields.scalar.numerical.main import miUsGrid_Triangular_Scalar_Numerical
+from objects.miUsGrid.triangular.fields.scalar.export.main import miUsGrid_Triangular_Scalar_Export
+
 
 class miUsGrid_Triangular_Scalar(miUsGrid_TriangularFieldBase):
     """"""
@@ -41,6 +43,7 @@ class miUsGrid_Triangular_Scalar(miUsGrid_TriangularFieldBase):
         self._reconstruct_ = miUsGrid_Triangular_Scalar_Reconstruct(self)
         self._do_ = miUsGrid_Triangular_Scalar_Do(self)
         self._numerical_ = miUsGrid_Triangular_Scalar_Numerical(self)
+        self._export_ = None
         self._freeze_self_()
 
     def __repr__(self):
@@ -109,11 +112,17 @@ class miUsGrid_Triangular_Scalar(miUsGrid_TriangularFieldBase):
     def numerical(self):
         return self._numerical_
 
+    @property
+    def export(self):
+        if self._export_ is None:
+            self._export_ = miUsGrid_Triangular_Scalar_Export(self)
+        return self._export_
+
 
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/miUsGrid/triangular/fields/scalar/main.py
     def func(t, x, y): return t + x + y
-    from objects.miUsGrid.triangular.__test__.Random.test_mesh import mesh
+    from tests.objects.miUsGrid.triangular.randObj.rand_mesh import mesh
 
     s = miUsGrid_Triangular_Scalar(mesh, func)
     s.current_time = 0

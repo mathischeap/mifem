@@ -148,3 +148,12 @@ if __name__ == "__main__":
 
     # for i in GM:
     #     print(i, GM[i])
+
+    from screws.functions.timePlus2dSpace.wrappers.scalar import t2dScalar
+    def f0(t, x, y): return x + y + t
+    def f1(t, x, y): return x * y + t
+
+    s0 = t2dScalar(f0)
+    s1 = t2dScalar(f1)
+
+    print(s0.gradient)

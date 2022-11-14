@@ -46,6 +46,9 @@ class FiledBase(FrozenClass):
     def ndim(self):
         return self.mesh.ndim
 
+    @property
+    def name(self):
+        return self.standard_properties.name
 
 
     @property

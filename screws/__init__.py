@@ -11,3 +11,8 @@ from screws.miscellaneous.miprint import miprint
 from screws.miscellaneous.mirand import randint
 
 from screws.quadrature import Quadrature
+
+import screws.functions.timePlus2dSpace.wrappers.__init__ as ft2dw
+import screws.functions.timePlus3dSpace.wrappers.__init__ as ft3dw
+
+

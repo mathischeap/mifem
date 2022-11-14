@@ -171,7 +171,7 @@ if __name__ == "__main__":
     # mpiexec -n 4 python objects/miUsGrid/triangular/forms/standard/_1/inner/export/vtk/main.py
     from __init__ import miTri
 
-    fc = miTri.form('st16', 2)
+    fc = miTri.call('st16', 2)
 
     def p_func(t, x, y): return np.sin(2 * np.pi * x) * np.cos(2 * np.pi * y) + t
     def q_func(t, x, y): return np.cos(2 * np.pi * x) * np.sin(2 * np.pi * y) + t
