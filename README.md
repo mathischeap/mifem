@@ -16,7 +16,7 @@ Message Passing Interface (MPI) standard, the *mpi4py* package.
 To start up, please first check the installation of the dependent packages in *requirements.txt*. 
 Then you can direct to the dir where mifem library locates and run, for example,
 ```
-$ mpiexec -n 4 py __tests__/test_all.py
+$ mpiexec python tests/run.py
 ```
 This will do all the (>100) tests to fully validate the code in your machine.
 
