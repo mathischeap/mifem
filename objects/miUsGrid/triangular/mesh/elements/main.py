@@ -51,7 +51,7 @@ class miUsGrid_TriangularMesh_Elements(FrozenOnly):
 
     @property
     def range(self):
-        """The local cells numbers are exactly elements of this range."""
+        """The local cell numbers are exactly the elements in this range."""
         return self._range_
 
     @property

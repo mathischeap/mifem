@@ -39,7 +39,7 @@ if __name__ == '__main__':
     # mpiexec -n 4 python objects/miUsGrid/triangular/mesh/domain/main.py
 
     from __init__ import miTri
-    fc = miTri.form('st2', 2)
+    fc = miTri.call('st2', 2)
     mesh = fc.mesh
 
     print(mesh.domain.area)

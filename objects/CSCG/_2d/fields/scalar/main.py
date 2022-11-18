@@ -21,7 +21,6 @@ from objects.CSCG._2d.fields.scalar.do.main import _2dCSCG_ScalarField_DO
 from objects.CSCG._2d.fields.scalar.numerical.main import _2dCSCG_ScalarField_Numerical
 from objects.CSCG._2d.fields.scalar.visualize.main import _2dCSCG_ScalarField_Visualize
 
-
 from objects.CSCG._2d.fields.scalar.helpers.mul import _2dCSCG_ScaMulHelper1, _2dCSCG_ScaMulHelper
 from objects.CSCG._2d.fields.scalar.helpers.neg import _2dCSCG_ScalarNeg
 from objects.CSCG._2d.fields.scalar.helpers.sub import _2dCSCG_ScalarFieldSubHelper
@@ -291,7 +290,7 @@ class _2dCSCG_ScalarField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
                 raise NotImplementedError()
 
         else:
-            raise NotImplementedError(f"a 2d CSCG scalar field can not - a {other.__class__.__name__}")
+            raise NotImplementedError(f"a 2d CSCG scalar field cannot - a {other.__class__.__name__}")
 
 
     def __neg__(self):

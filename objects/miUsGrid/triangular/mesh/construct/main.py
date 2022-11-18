@@ -22,6 +22,32 @@ class miUsGrid_TriangularMesh_Construct(FrozenOnly):
 
     The three edges of a cell are: 0->1, 0->2, 2->1. This is very important.
 
+    consider 2-d a reference element:
+
+                --------------------------------> eta
+                |
+                |                 U
+                |        ------------------
+                |        |                |
+                |        |                |
+                |     L  |      (0,0)     | R
+                |        |                |
+                |        |                |
+                |        ------------------
+                |                D
+                |
+                v
+              xi
+
+    We will map the left edge (L) into the vertex 0.  So down edge (D) will be edge 0, upper edge (U)
+    will be edge 1, and right edge (R) will be edge 2, i.e.,
+
+        D -> edge 0
+        U -> edge 1
+        R -> edge 2
+
+    This also explains the topology of three vertices 0, 1, 2.
+
     """
 
     def __init__(self, source):

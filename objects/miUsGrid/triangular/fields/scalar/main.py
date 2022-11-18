@@ -44,6 +44,7 @@ class miUsGrid_Triangular_Scalar(miUsGrid_TriangularFieldBase):
         self._do_ = miUsGrid_Triangular_Scalar_Do(self)
         self._numerical_ = miUsGrid_Triangular_Scalar_Numerical(self)
         self._export_ = None
+
         self._freeze_self_()
 
     def __repr__(self):

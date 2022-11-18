@@ -77,13 +77,15 @@ class miUsGrid_TriangularMesh_Element(FrozenOnly):
 
     @property
     def angles(self):
-        """return the angles in degrees (0-180)."""
+        """return the angles in degrees (0-180).
+
+        Return three real numbers (a, b, c) referring to angles at vertices 0, 1, 2, respectively.
+        """
         return angles_of_triangle(*self.coordinates)
-        
-    
+
     @property
     def d1_d2_height(self):
-        """
+        """Return d1, d2 and height (h).
                              L
                              /|\
                             / | \
@@ -98,9 +100,7 @@ class miUsGrid_TriangularMesh_Element(FrozenOnly):
 
         """
         return  NotImplementedError()
-    
-        
-        
+
     @property
     def quality(self):
         """1: best, 0, worst.
@@ -110,7 +110,7 @@ class miUsGrid_TriangularMesh_Element(FrozenOnly):
         """
 
         diff = sum([abs(_ - 60) for _ in self.angles])
-        return  abs(1 - diff / 240)
+        return abs(1 - diff / 240)
 
     @property
     def coordinates_2d(self):
@@ -142,9 +142,11 @@ class miUsGrid_TriangularMesh_Element(FrozenOnly):
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/miUsGrid/triangular/mesh/elements/element/main.py
     from __init__ import miTri
-    fc = miTri.form('st2', 2)
+    fc = miTri.call('rand0', 2)
     mesh = fc.mesh
 
     for e in mesh.elements:
         element = mesh.elements[e]
-        print(element.area)
+        print(e, element.angles)
+
+    mesh.visualize()

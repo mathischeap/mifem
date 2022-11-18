@@ -125,4 +125,3 @@ class t3dScalar(FrozenOnly):
 
         else:
             raise NotImplementedError()
-

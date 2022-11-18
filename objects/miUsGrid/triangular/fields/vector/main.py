@@ -111,10 +111,12 @@ class miUsGrid_Triangular_Vector(miUsGrid_TriangularFieldBase):
 
     @property
     def numerical(self):
+        """"""
         return self._numerical_
 
     @property
     def export(self):
+        """"""
         if self._export_ is None:
             self._export_ = miUsGrid_Triangular_Vector_Export(self)
         return self._export_

@@ -62,7 +62,7 @@ class miUsTriangular_SF_Base(miUsTriangular_FormBase):
         """"""
         element_key = self.mesh.elements.___Pr_EWC_high_similarity_key_generator___(i)
         # noinspection PyUnresolvedReferences
-        tT = self.IDT.transition_types
+        tT = self.IDT.transition_types # only for 1-form. For 0- and 2-forms, use the key generator of mesh elements.
         if i in tT:
             return element_key + '-' + tT[i]
         else:

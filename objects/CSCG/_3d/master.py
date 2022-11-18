@@ -243,7 +243,6 @@ class FormCaller(FrozenOnly):
                         KWARGS[key] = kwargs[key]
                 # == ABOVE =========================================================================
 
-
                 FM = cls_body(prime, self._mesh_, self._space_, **KWARGS)
 
             else: # all other forms, like the standard forms, trace forms, edge forms, node forms and so on
@@ -307,33 +306,3 @@ if __name__ == "__main__":
     # es = ExactSolutionSelector(mesh)('TISE:sincos1', m=1e-68, E=1)
 
     es = ExactSolutionSelector(mesh)('MHD:sincos1')
-
-    # V = es.status.V(0,0,0,0)
-    # print(es.standard_properties.name)
-    # print(es.status.kinetic_energy(0))
-
-    # R = mesh.domain.regions['R:R']
-    #
-    # it = R.interpolation
-    #
-    # r = it.___inverse_mapping_r_x_s0t0___(0.5)
-    #
-    # print(r)
-    #
-    # mesh.visualize()
-    # mesh.visualize.matplot.connection()
-    # mesh.domain.visualize()
-    # mesh.domain.regions.visualize()
-    #
-    # print(mesh.domain.regions.map)
-    # print(mesh.domain.boundaries.names)
-
-    # print(MeshGenerator.___domain_input_statistic___())
-    # print(MeshGenerator.___domain_input_random_parameters___())
-
-    # regions = mesh.domain.regions
-    # for rn in regions:
-    #     region = regions[rn]
-    #
-    #     # if RANK == MASTER_RANK:
-    #     print(rn, region.IS.periodic_to_self)

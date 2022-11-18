@@ -6,7 +6,6 @@ Parallel runners.
 from root.config.main import *
 from tools.legacy.serialRunners.INSTANCES.matrix3d_input_runner import Matrix3dInputRunner
 
-
 from tools.run.runners._3d_matrix_inputs.main import ParallelMatrix3dInputRunner
 
 
