@@ -4,7 +4,7 @@
 
 from objects.CSCG._3d.mesh.domain.inputs.base import _3dDomainInputBase
 import numpy as np
-from screws.decorators.classproperty.main import classproperty
+from components.decorators.classproperty.main import classproperty
 
 
 

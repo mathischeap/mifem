@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-from screws.exceptions import LocalCochainShapeError
+from components.exceptions import LocalCochainShapeError
 from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_ColumnVector
 from scipy.sparse import lil_matrix, csr_matrix, csc_matrix
-from tools.linearAlgebra.dataStructures.global_matrix.main import DistributedVector
+from tools.linearAlgebra.dataStructures.globalMatrix.main import DistributedVector
 from scipy import sparse as spspa
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from root.config.main import np, RANK, MASTER_RANK, COMM
 from objects.CSCG.base.forms.standard.cochain.dofwise import CSCG_SF_Cochain_DofWise
 

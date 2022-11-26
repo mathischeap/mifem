@@ -8,8 +8,8 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
-from screws.quadrature import Quadrature
+from components.freeze.base import FrozenOnly
+from components.quadrature import Quadrature
 from objects.miUsGrid.triangular.forms.standard._1.outer.matrices.helpers.inner import ___MassMatrix_Inner___
 from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
 

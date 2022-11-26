@@ -15,8 +15,7 @@ from objects.miUsGrid.triangular.exactSolution.Stokes.base import Stokes
 
 # noinspection PyAbstractClass
 class Stokes_SinCos1(Stokes):
-    """
-    The sin cos test case 1.
+    """The sin-cos test case 1.
     """
     def __init__(self, mesh):
         super(Stokes_SinCos1, self).__init__(mesh)

@@ -4,7 +4,7 @@ We can export a form to multiple formats and data structures.
 
 
 """
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.forms.standard.base.export.field import _3dCSC_SF_Export_Field
 
 class _3dCSC_Standard_Form_Export(FrozenOnly):

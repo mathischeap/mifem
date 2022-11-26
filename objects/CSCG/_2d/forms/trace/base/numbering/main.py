@@ -7,7 +7,7 @@
          TU Delft, Delft, the Netherlands
 
 """
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from importlib import import_module
 from objects.CSCG._2d.forms.trace.base.numbering.visualize import _2dCSCG_Trace_Numbering_Visualize
 from objects.CSCG._2d.forms.trace.base.numbering.do.main import _2dCSCG_Trace_Numbering_DO

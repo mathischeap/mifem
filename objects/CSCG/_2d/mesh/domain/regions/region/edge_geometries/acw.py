@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from screws.functions._2dSpace.angle import angle
+from components.functions._2dSpace.angle import angle
 import numpy as np
 from objects.CSCG._2d.mesh.domain.regions.region.edge_geometries.base import EdgeGeometryBase
 

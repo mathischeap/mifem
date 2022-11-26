@@ -5,12 +5,12 @@ if './' not in sys.path: sys.path.append('./')
 import matplotlib.pyplot as plt
 import matplotlib
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from root.config.main import COMM, RANK, MASTER_RANK
-from screws.generators.counter import Counter
+from components.generators.counter import Counter
 import numpy as np
-from screws.miscellaneous.matrix_simplify import rsmat
-from screws.warnings.hybrid_singularity import HybridSingularityWarning
+from components.miscellaneous.matrix_simplify import rsmat
+from components.warnings.hybrid_singularity import HybridSingularityWarning
 import warnings
 
 

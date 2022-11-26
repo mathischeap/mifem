@@ -5,7 +5,7 @@
 @time: 8/11/2022 10:58 PM
 """
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 import numpy as np
 from scipy.sparse import csr_matrix
 

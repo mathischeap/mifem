@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from root.config.main import np, RANK, MASTER_RANK, COMM, SAFE_MODE
-from tools.linearAlgebra.dataStructures.global_matrix.main import DistributedVector
+from tools.linearAlgebra.dataStructures.globalMatrix.main import DistributedVector
 from scipy import sparse as spspa
-from screws.exceptions import LocalCochainShapeError
+from components.exceptions import LocalCochainShapeError
 from scipy.sparse import lil_matrix, csr_matrix, csc_matrix
 from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_ColumnVector
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 
 
 class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):

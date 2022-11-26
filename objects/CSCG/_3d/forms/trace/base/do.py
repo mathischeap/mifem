@@ -2,7 +2,7 @@
 
 
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 
 
@@ -30,9 +30,6 @@ class _3dCSCG_Trace_DO(FrozenOnly):
         """
         return self._tf_.space.do.evaluate_trace_basis_at_meshgrid(
             self._tf_.k, xi, eta, sigma, compute_xietasigma=compute_xietasigma)
-
-    def resemble(self, *args, **kwargs):
-        return self._tf_.___PRIVATE_do_resemble___(*args, **kwargs)
 
     def discretize(self, *args, **kwargs):
         return self._tf_.discretize(*args, **kwargs)

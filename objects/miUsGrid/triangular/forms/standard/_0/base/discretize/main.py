@@ -8,7 +8,7 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from objects.miUsGrid.triangular.forms.standard._0.base.discretize.scalar.standard import \
     miUsTriangular_S0F_Discretize_StandardScalar
 
@@ -33,8 +33,9 @@ class miUsTriangular_S0F_Discretize(FrozenOnly):
                 if self._sf_.CF.ftype == 'standard':
                     return self._standard_scalar_(**kwargs)
                 else:
-                    raise NotImplementedError(f"miUsTriangular_S0F cannot (target func) "
-                                              f"discretize miUsGrid_Triangular_Scalar of ftype={self._sf_.CF.ftype}")
+                    raise NotImplementedError(
+                        f"miUsTriangular_S0F cannot (target func) "
+                        f"discretize miUsGrid_Triangular_Scalar of ftype={self._sf_.CF.ftype}")
 
             else:
                 raise NotImplementedError(f'miUsTriangular_S0F can not (target func) '

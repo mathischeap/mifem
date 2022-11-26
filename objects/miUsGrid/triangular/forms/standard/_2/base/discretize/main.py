@@ -8,7 +8,7 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from objects.miUsGrid.triangular.forms.standard._2.base.discretize.scalar.standard import \
     miUsTriangular_S2F_Discretize_StandardScalar
 

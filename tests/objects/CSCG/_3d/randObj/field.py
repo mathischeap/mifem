@@ -16,7 +16,7 @@ from root.config.main import RANK, MASTER_RANK, np, COMM
 from objects.CSCG._3d.fields.scalar.main import _3dCSCG_ScalarField
 from objects.CSCG._3d.fields.vector.main import _3dCSCG_VectorField
 
-from screws.miscellaneous.randomString.digits import randomStringDigits
+from components.miscellaneous.randomString.digits import randomStringDigits
 
 def random_vector(mesh):
     """"""

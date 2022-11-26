@@ -8,13 +8,13 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 import numpy as np
 from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_ColumnVector
 from scipy.sparse import csr_matrix
 from root.config.main import RANK, MASTER_RANK, COMM
 from scipy.sparse import lil_matrix, csc_matrix
-from tools.linearAlgebra.dataStructures.global_matrix.main import DistributedVector
+from tools.linearAlgebra.dataStructures.globalMatrix.main import DistributedVector
 
 
 class miUsGrid_SF_CochainBase(FrozenOnly):

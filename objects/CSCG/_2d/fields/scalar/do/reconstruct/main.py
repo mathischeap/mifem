@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from objects.CSCG._2d.fields.scalar.do.reconstruct.mesh_element.standard import OnMeshElement_for_Standard
 
 class _2dCSCG_Scalr_Do_Reconstruct(FrozenOnly):

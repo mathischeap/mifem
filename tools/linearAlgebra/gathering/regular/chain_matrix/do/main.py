@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from screws.freeze.main import FrozenOnly
+
+from components.freeze.main import FrozenOnly
 
 from tools.linearAlgebra.gathering.regular.chain_matrix.do.find import ___Chain_Gathering_Matrix_FIND___
-
 
 
 class ___Chain_Gathering_Matrix_DO___(FrozenOnly):

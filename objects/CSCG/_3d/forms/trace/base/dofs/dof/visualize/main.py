@@ -2,7 +2,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.forms.trace.base.dofs.dof.visualize.matplot._0tr import _3dCSCG_0TF_DOF_Matplot
 from objects.CSCG._3d.forms.trace.base.dofs.dof.visualize.matplot._1tr import _3dCSCG_1TF_DOF_Matplot
 from objects.CSCG._3d.forms.trace.base.dofs.dof.visualize.matplot._2tr import _3dCSCG_2TF_DOF_Matplot

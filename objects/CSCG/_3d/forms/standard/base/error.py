@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from root.config.main import *
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.ADF.allocator import _3dCSCG_ADF_Allocator
 from importlib import import_module
 

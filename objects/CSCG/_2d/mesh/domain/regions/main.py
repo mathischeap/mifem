@@ -10,8 +10,8 @@ INTRO
 
 """
 import numpy as np
-from screws.freeze.main import FrozenOnly
-from screws.decorators.accepts import accepts
+from components.freeze.main import FrozenOnly
+from components.decorators.all import accepts
 
 from objects.CSCG._2d.mesh.domain.regions.visualize import _2dCSCG_Regions_Vis
 from objects.CSCG._2d.mesh.domain.regions.topology import _2dCSCG_Regions_Topology

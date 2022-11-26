@@ -7,7 +7,7 @@
 import sys
 
 if './' not in sys.path: sys.path.append('./')
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 import numpy as np
 
 from tools.linearAlgebra.elementwiseCache.objects.multiDimMatrix.do.main import MDM_Do

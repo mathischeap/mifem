@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.fields.scalar.do.reconstruct.main import _3dCSCG_Scalar_Do_Reconstruct
-from screws.quadrature import Quadrature
+from components.quadrature import Quadrature
 
 from root.config.main import COMM, MASTER_RANK, RANK
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 class ___LinearSystem_Customize___(FrozenOnly):
     """Used to define customizations to A and b simultaneously."""

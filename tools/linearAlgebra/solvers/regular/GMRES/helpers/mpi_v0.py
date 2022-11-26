@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from root.config.main import *
-from tools.linearAlgebra.dataStructures.global_matrix.main import LocallyFullVector
-from screws.exceptions import LinerSystemSolverDivergenceError
+from tools.linearAlgebra.dataStructures.globalMatrix.main import LocallyFullVector
+from components.exceptions import LinerSystemSolverDivergenceError
 from tools.linearAlgebra.solvers.regular.GMRES.helpers.components.stop_criterion import ___gmres_stop_criterion___
 from tools.linearAlgebra.solvers.regular.GMRES.helpers.components.residual_ploter import ___gmres_plot_residuals___
 
@@ -37,6 +37,7 @@ def ___mpi_v0_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
             3. (float) beta -- The residual.
             4. (int) ITER -- The number of outer iterations.
             5. (str) message
+
     """
 
     Time_start = MPI.Wtime()

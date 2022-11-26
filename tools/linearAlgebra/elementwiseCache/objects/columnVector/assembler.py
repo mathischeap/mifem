@@ -2,8 +2,8 @@
 import numpy as np
 from scipy.sparse import csc_matrix
 
-from screws.freeze.base import FrozenOnly
-from tools.linearAlgebra.dataStructures.global_matrix.main import GlobalVector
+from components.freeze.base import FrozenOnly
+from tools.linearAlgebra.dataStructures.globalMatrix.main import GlobalVector
 from root.config.main import ASSEMBLE_COST, COMM, MPI, RANK, MASTER_RANK
 
 

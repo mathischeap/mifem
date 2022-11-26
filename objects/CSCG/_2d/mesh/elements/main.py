@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 if './' not in sys.path: sys.path.append('./')
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 from objects.CSCG._2d.mesh.elements.coordinate_transformation.main import _2dCSCG_Mesh_Elements_CT
 from root.config.main import *

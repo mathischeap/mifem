@@ -8,8 +8,8 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
-from screws.quadrature import Quadrature
+from components.freeze.base import FrozenOnly
+from components.quadrature import Quadrature
 import numpy as np
 from scipy.sparse import csc_matrix
 

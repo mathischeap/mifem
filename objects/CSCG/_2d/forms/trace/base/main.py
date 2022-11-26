@@ -110,11 +110,3 @@ class _2dCSCG_Standard_Trace(CSCG_Trace_Form, _2dCSCG_FORM_BASE, ndim=2):
         return self.space.do.evaluate_trace_basis_at_meshgrid(
             self.k, xi, eta, compute_xietasigma=compute_xietasigma)
 
-    def ___PRIVATE_do_resemble___(self, obj_or_filename):
-        """
-
-        :param obj_or_filename:
-        :return:
-        """
-        raise NotImplementedError()
-

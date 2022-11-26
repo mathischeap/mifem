@@ -8,9 +8,9 @@ import numpy as np
 import sys
 
 if './' not in sys.path: sys.path.append('./')
-from screws.miscellaneous.miprint import miprint
-from screws.miscellaneous.mirand import randint
-from screws.miscellaneous.mios import remove
+from components.miscellaneous.miprint import miprint
+from components.miscellaneous.mirand import randint
+from components.miscellaneous.mios import remove
 from objects.CSCG.tools.__init__ import unstructuredGridToVTK
 from tests.objects.CSCG._3d.randObj.form_caller import random_FormCaller_of_total_load_around as rf
 from tests.objects.CSCG._2d.randObj.form_caller import random_FormCaller_of_total_load_around as rf2

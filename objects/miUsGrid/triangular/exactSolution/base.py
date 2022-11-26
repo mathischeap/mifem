@@ -8,7 +8,7 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 import random
 import numpy as np
 

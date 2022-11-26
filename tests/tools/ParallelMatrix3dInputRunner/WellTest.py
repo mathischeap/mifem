@@ -8,8 +8,8 @@ import os
 import sys
 
 if './' not in sys.path: sys.path.append('./')
-from screws.miscellaneous.miprint import miprint
-from screws.miscellaneous.mios import remove, isfile
+from components.miscellaneous.miprint import miprint
+from components.miscellaneous.mios import remove, isfile
 
 from tools.run.reader import ParallelMatrix3dInputRunner, RunnerDataReader
 from tests.tools.ParallelMatrix3dInputRunner.Poisson_solver import PoissonSolver

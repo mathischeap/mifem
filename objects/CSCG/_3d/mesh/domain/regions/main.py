@@ -7,7 +7,7 @@ A template for Region Class.
          TU Delft
 """
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.domain.regions.visualize.main import _3dCSCG_Regions_Visualize
 from objects.CSCG._3d.mesh.domain.regions.topology import _3dCSCG_Regions_Topology
 from objects.CSCG._3d.mesh.domain.regions.region.main import Region

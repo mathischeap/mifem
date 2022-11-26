@@ -21,13 +21,13 @@ from objects.miUsGrid.triangular.exactSolution.base import miUsTriangle_ExactSol
 
 from functools import partial
 
-from screws.numerical.timePlus2dSpace.partial_derivative_as_functions import \
+from components.numerical.timePlus2dSpace.partial_derivative_as_functions import \
     NumericalPartialDerivative_txy_Functions
 
 from objects.miUsGrid.triangular.fields.vector.main import miUsGrid_Triangular_Vector
 from objects.miUsGrid.triangular.fields.scalar.main import miUsGrid_Triangular_Scalar
 
-from screws.numerical._2dSpace.partial_derivative import NumericalPartialDerivative_xy
+from components.numerical._2dSpace.partial_derivative import NumericalPartialDerivative_xy
 
 class Stokes(miUsTriangle_ExactSolutionBase):
     """"""

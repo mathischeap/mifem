@@ -19,7 +19,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 from root.config.main import *
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 from objects.CSCG._3d.mesh.boundaries.boundary.main import _3dCSCG_Mesh_Boundary
 from objects.CSCG._3d.mesh.boundaries.visualize import _3dCSCG_MeshBoundaries_VIS

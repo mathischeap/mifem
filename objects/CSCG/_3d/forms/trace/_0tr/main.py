@@ -13,7 +13,7 @@ if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 from objects.CSCG._3d.forms.trace.base.main import _3dCSCG_Standard_Trace
 from objects.CSCG._3d.forms.trace._0tr.discretize.main import _3dCSCG_0Trace_Discretize
-from screws.quadrature import Quadrature
+from components.quadrature import Quadrature
 from objects.CSCG._3d.forms.trace._0tr.visualize import _3dCSCG_0Trace_Visualize
 
 class _3dCSCG_0Trace(_3dCSCG_Standard_Trace, ABC):

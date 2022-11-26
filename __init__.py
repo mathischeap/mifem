@@ -29,7 +29,7 @@ from root.save import save as save
 from root.read.main import read as read
 
 
-import screws.__init__ as screws
+import components.__init__ as components
 import tools.__init__ as tools
 
 
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     print(cscg2)
     print(cscg3)
     print(tools)
-    print(screws)
+    print(components)
     print(root)
     print(save)
     print(read)

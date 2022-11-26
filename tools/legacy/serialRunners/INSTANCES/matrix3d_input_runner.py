@@ -16,7 +16,7 @@ TU Delft
 import types
 from tqdm import tqdm
 from time import localtime, strftime, time, sleep
-from screws.miscellaneous.timer import initialize_3d_list
+from components.miscellaneous.timer import initialize_3d_list
 from tools.legacy.serialRunners._runner_ import Runner
 from tools.legacy.serialRunners.INSTANCES.COMPONENTS.m_tir_tabular import M_TIR_Tabulate
 from root.config.main import *

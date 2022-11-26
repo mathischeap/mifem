@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 
-from screws.quadrature import Quadrature
+from components.quadrature import Quadrature
 import numpy as np
 
 

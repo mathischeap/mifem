@@ -8,7 +8,7 @@
 
 """
 
-from screws.freeze.main import FrozenClass
+from components.freeze.main import FrozenClass
 
 from objects.CSCG.base.forms.base.BC.main import CSCG_Form_BC
 

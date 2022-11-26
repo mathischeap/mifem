@@ -8,7 +8,7 @@
 
 """
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from importlib import import_module
 from objects.CSCG._2d.forms.standard.base.numbering.visualize import _2dCSCG_Numbering_Visualize
 from objects.CSCG._2d.forms.standard.base.numbering.do.main import _2dCSCG_SF_numbering_do

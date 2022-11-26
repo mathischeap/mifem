@@ -2,7 +2,7 @@
 
 from root.config.main import *
 import matplotlib.pyplot as plt
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 
 class _2dCSCG_ScalarField_Visualize_matplot(FrozenOnly):

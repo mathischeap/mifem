@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 import numpy as np
 from itertools import chain
 

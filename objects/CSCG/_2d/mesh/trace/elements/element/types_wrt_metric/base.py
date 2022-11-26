@@ -4,7 +4,7 @@ The type classes for trace elements w.r.t. metric.
 
 """
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 
 

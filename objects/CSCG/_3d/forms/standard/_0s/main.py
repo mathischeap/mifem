@@ -107,31 +107,30 @@ if __name__ == '__main__':
     # mpiexec -n 6 python objects/CSCG/_3d/forms/standard/_0s/main.py
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
-    mesh = MeshGenerator('cuboid', region_layout=[3,3,3])([3,3,3])
-    space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3), ('Lobatto',3)])
+    mesh = MeshGenerator('crazy')([3,3,3])
+    space = SpaceInvoker('polynomials')([2,2,2])
     FC = FormCaller(mesh, space)
 
-    # es = ExactSolutionSelector(mesh)('icpsNS:sincosRD')
-
+    # # es = ExactSolutionSelector(mesh)('icpsNS:sincosRD')
+    #
     def p(t, x, y, z):
         return np.sin(2*np.pi*x) * np.sin(np.pi*y) * np.cos(2*np.pi*z) + t
-
-
-    for i in mesh.elements:
-        region = mesh.do.find.region_name_of_element(i)
-        assert region in mesh.elements.in_regions
+    #
+    #
+    # for i in mesh.elements:
+    #     region = mesh.do.find.region_name_of_element(i)
+    #     assert region in mesh.elements.in_regions
 
     scalar = FC('scalar', p)
 
     f0 = FC('0-f', is_hybrid=True)
-    f0.TW.func.do.set_func_body_as(scalar)
-    f0.TW.current_time = 0
-    f0.TW.do.push_all_to_instant()
+    f0.CF = scalar
+    f0.CF.current_time = 0
     f0.do.discretize()
 
 
     # print(mesh.boundaries.range_of_element_sides)
-    f0.visualize(x=0.9)
+    # f0.visualize(x=0.9)
 
     # print(f0.error.L())
     #

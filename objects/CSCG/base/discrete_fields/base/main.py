@@ -9,7 +9,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 import numpy as np
-from screws.freeze.main import FrozenClass
+from components.freeze.main import FrozenClass
 from root.config.main import COMM, RANK, MASTER_RANK
 
 

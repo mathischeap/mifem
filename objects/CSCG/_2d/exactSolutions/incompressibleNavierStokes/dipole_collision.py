@@ -23,7 +23,7 @@ from objects.CSCG._2d.fields.vector.main import _2dCSCG_VectorField
 
 
 class DipoleCollision(incompressibleNavierStokesBase):
-    """"""
+    """The 2d dipole collision case. See [H.J.H. Clercx et al., Computers & Fluids, 2006]"""
     def __init__(self, mesh, nu=1/625, x1=0, y1=0.1, x2=0, y2=-0.1, r0=0.1, we1=320, we2=-320):
         """
         (x1, y1) : center of the monopole 1

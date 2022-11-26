@@ -9,7 +9,7 @@ particular structure.
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.domain.regions.region.sub_geometry.perpendicular_slice import RegionPerpendicularSlice
 
 

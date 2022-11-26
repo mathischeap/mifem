@@ -9,8 +9,8 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 import numpy as np
 
-from screws.freeze.base import FrozenOnly
-from screws.miscellaneous.miprint import miprint
+from components.freeze.base import FrozenOnly
+from components.miscellaneous.miprint import miprint
 from __init__ import miTri
 
 from root.config.main import RANK, MASTER_RANK, COMM

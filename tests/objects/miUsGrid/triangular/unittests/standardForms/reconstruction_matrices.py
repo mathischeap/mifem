@@ -7,10 +7,10 @@
 import sys
 
 if './' not in sys.path: sys.path.append('./')
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
-from screws.miscellaneous.miprint import miprint
-from screws.miscellaneous.mirand import randint
+from components.miscellaneous.miprint import miprint
+from components.miscellaneous.mirand import randint
 import numpy as np
 from __init__ import miTri
 

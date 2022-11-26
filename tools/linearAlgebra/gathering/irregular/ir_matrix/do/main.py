@@ -8,7 +8,7 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from tools.linearAlgebra.gathering.irregular.ir_matrix.do.find import iR_Gathering_Matrix_DoFind
 
 class iR_Gathering_Matrix_DO(FrozenOnly):

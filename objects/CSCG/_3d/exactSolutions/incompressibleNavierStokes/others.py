@@ -6,10 +6,10 @@ from objects.CSCG._3d.exactSolutions.incompressibleNavierStokes.base import inco
 
 
 # noinspection PyAbstractClass
-class Closed_Unit_Cube_Disspation1(incompressible_NavierStokes_Base):
+class Closed_Unit_Cube_Dissipation1(incompressible_NavierStokes_Base):
     """A modified case that the solution along t is not linear."""
     def __init__(self, mesh, nu=1):
-        super(Closed_Unit_Cube_Disspation1, self).__init__(mesh, nu)
+        super(Closed_Unit_Cube_Dissipation1, self).__init__(mesh, nu)
         name = self.mesh.domain.domain_input.__class__.__name__
         bounds = self.mesh.domain.domain_input.bounds
         c = self.mesh.domain.domain_input.c

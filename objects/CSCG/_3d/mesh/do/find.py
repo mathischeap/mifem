@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from root.config.main import SIZE, np
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 
 

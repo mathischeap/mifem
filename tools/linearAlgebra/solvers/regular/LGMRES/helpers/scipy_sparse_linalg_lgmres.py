@@ -11,7 +11,7 @@ from root.config.main import COMM, RANK, MASTER_RANK, np, MPI
 from time import time
 
 from scipy.sparse import linalg as spspalinalg
-from tools.linearAlgebra.dataStructures.global_matrix.main import LocallyFullVector
+from tools.linearAlgebra.dataStructures.globalMatrix.main import LocallyFullVector
 
 
 
@@ -96,6 +96,7 @@ def ___sp_sp_linalg_lgmres___(A, b, x0, m=3, k=3, maxiter=20, tol=1e-3, atol=1e-
     else:
         pass
 
+    # noinspection PyUnboundLocalVariable
     COMM.Bcast([x, MPI.FLOAT], root=MASTER_RANK)
     info = COMM.bcast(info, root=MASTER_RANK)
     x = LocallyFullVector(x)

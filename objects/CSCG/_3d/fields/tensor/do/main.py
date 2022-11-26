@@ -1,7 +1,7 @@
 
 
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.fields.tensor.do.reconstruct.main import _3dCSCG_Tensor_Do_Reconstruct
 
 

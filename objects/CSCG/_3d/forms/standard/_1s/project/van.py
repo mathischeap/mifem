@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 
 class ___3dCSCG_1Form_Project_Van___(FrozenOnly):

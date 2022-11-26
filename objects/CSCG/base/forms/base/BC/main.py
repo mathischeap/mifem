@@ -3,7 +3,7 @@
 # from objects.CSCG.base.forms.base.BC.partial_cochain.partial_dofs.main import PartialDofs
 
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from objects.CSCG.base.forms.base.BC.interpret.main import CSCG_FORM_BC_Interpret
 
 

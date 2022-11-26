@@ -10,7 +10,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from importlib import import_module
 from objects.CSCG._3d.forms.standard.base.numbering.do.main import _3dCSCG_Standard_Form_Numbering_DO_
 

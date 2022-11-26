@@ -8,7 +8,7 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from objects.CSCG._3d.forms.standard._2s.main import _3dCSCG_2Form
 import numpy as np
 from scipy.sparse import csr_matrix

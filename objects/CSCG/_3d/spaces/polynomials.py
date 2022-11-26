@@ -8,7 +8,7 @@
 
 """
 from objects.CSCG._3d.spaces.base.main import _3dCSCG_Space_Base
-from screws.quadrature import Quadrature
+from components.quadrature import Quadrature
 from root.config.main import *
 
 from objects.CSCG.base.spaces._1d_basis.polynomials import _1dPolynomial

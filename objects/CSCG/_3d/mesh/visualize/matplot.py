@@ -4,7 +4,7 @@ if './' not in sys.path: sys.path.append('./')
 
 from root.config.main import *
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 import numpy as np
 import matplotlib.pyplot as plt
 

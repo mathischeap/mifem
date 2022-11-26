@@ -10,9 +10,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
-from root.save import read
-from scipy.interpolate import NearestNDInterpolator
-from screws.quadrature import Quadrature
+from components.quadrature import Quadrature
 from objects.CSCG._3d.forms.trace.base.main import _3dCSCG_Standard_Trace
 from objects.CSCG._3d.forms.trace._2tr.discretize.main import _3dCSCG_2Trace_Discretize
 from objects.CSCG._3d.forms.trace._2tr.visualize import _3dCSCG_2Trace_Visualize
@@ -181,79 +179,6 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
                 MD[i] = M
 
         return MD
-
-    def ___PRIVATE_do_resemble___(self, obj_or_filename):
-        """
-
-        :param obj_or_filename:
-        :return:
-        """
-        if isinstance(obj_or_filename, str):
-            ot = read(obj_or_filename)
-        else:
-            ot = obj_or_filename
-
-        assert ot.mesh.domain == self.mesh.domain, "domain must be same."
-        assert self.__class__.__name__ == ot.__class__.__name__
-        assert self.mesh.__class__.__name__ == ot.mesh.__class__.__name__
-
-        bp = int(np.ceil((20000 / self.mesh.elements.GLOBAL_num) ** (1/3)))
-        p = [bp + self.p[i] for i in range(3)]
-        gap = [1 / (p[i]+1) for i in range(3)]
-        r = np.linspace(-1 + gap[0], 1 - gap[0], p[0])
-        s = np.linspace(-1 + gap[1], 1 - gap[1], p[1])
-        t = np.linspace(-1 + gap[2], 1 - gap[2], p[2])
-        xyz, V = ot.reconstruct(r, s, t, ravel=True)
-
-        xyz = COMM.gather(xyz, root=MASTER_RANK)
-        V = COMM.gather(V, root=MASTER_RANK)
-
-        tep = dict()
-        for i in ot.mesh.trace.elements:
-            TEi = ot.mesh.trace.elements[i]
-            tep[i] = TEi.CHARACTERISTIC_side
-        tep = COMM.gather(tep, root=MASTER_RANK)
-
-        if RANK == MASTER_RANK:
-            XYZ, VVV, TEP = dict(), dict(), dict()
-            for i in range(len(xyz)):
-                XYZ.update(xyz[i])
-                VVV.update(V[i])
-                TEP.update(tep[i])
-            del xyz, V, tep
-            V_x, x_x, x_y, x_z, V_y, y_x, y_y, y_z, V_z, z_x, z_y, z_z = \
-                [np.array([]) for _ in range(12)]
-            I_func = dict()
-            for i in range(ot.mesh.trace.elements.GLOBAL_num):
-                ele_side = TEP[i]
-                if ele_side in 'NS':
-                    x_x = np.append(x_x, XYZ[i][0])
-                    x_y = np.append(x_y, XYZ[i][1])
-                    x_z = np.append(x_z, XYZ[i][2])
-                    V_x = np.append(V_x, VVV[i][0])
-                elif ele_side in 'WE':
-                    y_x = np.append(y_x, XYZ[i][0])
-                    y_y = np.append(y_y, XYZ[i][1])
-                    y_z = np.append(y_z, XYZ[i][2])
-                    V_y = np.append(V_y, VVV[i][0])
-                elif ele_side in 'BF':
-                    z_x = np.append(z_x, XYZ[i][0])
-                    z_y = np.append(z_y, XYZ[i][1])
-                    z_z = np.append(z_z, XYZ[i][2])
-                    V_z = np.append(V_z, VVV[i][0])
-                else:
-                    raise Exception()
-
-            I_func['NS'] = NearestNDInterpolator((x_x, x_y, x_z), V_x)
-            I_func['WE'] = NearestNDInterpolator((y_x, y_y, y_z), V_y)
-            I_func['BF'] = NearestNDInterpolator((z_x, z_y, z_z), V_z)
-        else:
-            I_func = None
-        I_func = COMM.bcast(I_func, root=MASTER_RANK)
-        func = (I_func['NS'], I_func['WE'], I_func['BF'])
-        self.func._body_ = func
-        self.discretize._standard_vector_()
-        self.func._body_ = None
 
 
 

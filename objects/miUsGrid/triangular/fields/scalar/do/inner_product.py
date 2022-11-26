@@ -7,7 +7,7 @@
 import sys
 
 if './' not in sys.path: sys.path.append('./')
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 from objects.CSCG._2d.fields.scalar.do.cross_product.helpers.helper2 import ___SF_CROSS_PRODUCT_HELPER_2___
 

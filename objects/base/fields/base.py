@@ -10,7 +10,8 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.main import FrozenClass
+from importlib import import_module
+from components.freeze.main import FrozenClass
 
 
 class FiledBase(FrozenClass):
@@ -19,6 +20,7 @@ class FiledBase(FrozenClass):
         self._mesh_ = mesh
         self._current_time_ = None
         self.___PRIVATE_set_vt_to___(valid_time)
+        self.standard_properties.___PRIVATE_add_tag___('field')
 
         self._func_ = None
         self._ftype_ = None
@@ -41,6 +43,65 @@ class FiledBase(FrozenClass):
     def ftype(self):
         """The function type: same in all cores!"""
         return self._ftype_
+
+
+    @property
+    def general_format(self):
+        """We convert the field into a general format (scalar, vector or so on) once it is possible."""
+        if self.ftype == 'standard': # when it is a standard field, we can do it of course.
+
+            # S_CLASS = getattr(import_module(), "t2dScalar")
+
+            tags = self.standard_properties.tags
+
+            if self.ndim == 2:
+                if "scalar_field" in tags:
+
+                    GFC = getattr(
+                        import_module("components.functions.timePlus2dSpace.wrappers.scalar"),
+                        "t2dScalar"
+                    )
+
+
+                elif "vector_field" in tags:
+
+                    GFC = getattr(
+                        import_module("components.functions.timePlus2dSpace.wrappers.vector"),
+                        "t2dVector"
+                    )
+
+                else:
+                    raise NotImplementedError(f"cannot find a proper general class.")
+
+                return GFC(*self.func)
+
+            elif self.ndim == 3:
+                if "scalar_field" in tags:
+
+                    GFC = getattr(
+                        import_module("components.functions.timePlus3dSpace.wrappers.scalar"),
+                        "t3dScalar"
+                    )
+
+
+                elif "vector_field" in tags:
+
+                    GFC = getattr(
+                        import_module("components.functions.timePlus3dSpace.wrappers.vector"),
+                        "t3dVector"
+                    )
+
+                else:
+                    raise NotImplementedError(f"cannot find a proper general class.")
+
+                return GFC(*self.func)
+
+            else:
+                raise NotImplementedError(f"not implemented for ndim = {self.ndim}.")
+
+        else:
+            raise Exception(f"field object of {self.ftype} type has no general format.")
+
 
     @property
     def ndim(self):

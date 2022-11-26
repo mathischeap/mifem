@@ -2,7 +2,7 @@
 """The class for the basis function of a dof (not dofs)."""
 
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 import numpy as np
 
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 
 class ____3dCSCG_ADTF_Cochain_Local____(FrozenOnly):

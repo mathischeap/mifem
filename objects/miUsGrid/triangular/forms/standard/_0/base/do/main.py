@@ -59,7 +59,7 @@ class miUs_Triangular_S0F_Do(miUs_Triangular_SF_Do):
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/miUsGrid/triangular/forms/standard/_0/base/do/main.py
     from __init__ import miTri
-    fc = miTri.form('st8', 2)
+    fc = miTri.call('st8', 2)
     w = fc('0-f-o')
     u = fc('1-f-o')
     e = fc('1-f-o')

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 import numpy as np
-from screws.exceptions import DimensionError
-from screws.decorators.accepts import accepts
+from components.exceptions import DimensionError
+from components.decorators.all import accepts
 
 
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from objects.CSCG._3d.forms.edge._0eg.discretize.standard_scalar import _3dCSCG_Edge0Form_Discretize_StandardScalar
 
 

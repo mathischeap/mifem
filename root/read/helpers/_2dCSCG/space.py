@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from objects.CSCG._2d.master import SpaceInvoker as _2dCSCG_SpaceInvoker
 

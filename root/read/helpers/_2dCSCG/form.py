@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from root.read.helpers._2dCSCG.mesh import ___restore__2dCSCG_Mesh___
 from root.read.helpers._2dCSCG.space import ___restore__2dCSCG_Space___

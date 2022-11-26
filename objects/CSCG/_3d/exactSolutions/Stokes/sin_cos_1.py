@@ -6,8 +6,7 @@ from objects.CSCG._3d.exactSolutions.Stokes.base import Stokes_Base
 
 # noinspection PyAbstractClass
 class Stokes_SinCos1(Stokes_Base):
-    """
-    The sin cos test case 1.
+    """The sin cos test case 1.
     """
     def __init__(self, mesh):
         super(Stokes_SinCos1, self).__init__(mesh)

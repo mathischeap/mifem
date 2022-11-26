@@ -4,7 +4,7 @@ Sub-geometries of an element. Like we can pick a point, a slice or a volume from
 
 """
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.elements.element.sub_geometry.helpers.perpendicular_slice import \
     ElementPerpendicularSlice
 

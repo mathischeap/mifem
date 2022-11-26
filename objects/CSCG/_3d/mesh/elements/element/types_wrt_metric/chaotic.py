@@ -12,5 +12,3 @@ class ChaoticElement(ElementTypeWr2MetricBase):
     def __init__(self):
         self._mark_ = id(self)
         self._freeze_self_()
-
-

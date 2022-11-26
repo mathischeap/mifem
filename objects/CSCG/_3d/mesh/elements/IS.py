@@ -10,7 +10,7 @@ INTRO
 """
 
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 
 
 

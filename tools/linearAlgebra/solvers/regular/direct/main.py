@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from tools.linearAlgebra.solvers.regular.base import ParallelSolverBase
-from screws.miscellaneous.timer import MyTimer
+from components.miscellaneous.timer import MyTimer
 from tools.linearAlgebra.solvers.regular.direct.helpers.scipy_sparse_linalg_v0 import ___scipy_sparse_linalg_v0___
 
 

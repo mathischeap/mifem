@@ -1,11 +1,5 @@
-
-
-
-
+# -*- coding: utf-8 -*-
 from objects.CSCG._3d.master import MeshGenerator as _3dCSCG_MeshGenerator
-
-
-
 
 
 def ___restore__3dCSCG_Mesh___(parameters, mesh_cache):

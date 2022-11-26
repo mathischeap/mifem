@@ -6,11 +6,11 @@ from objects.CSCG._2d.mesh.domain.regions.region.edge_geometries.allocator impor
 from objects.CSCG._2d.mesh.domain.regions.region.types_wrt_metric.allocator import TypeWr2MetricGiver
 from objects.CSCG._2d.mesh.domain.regions.region.IS import _2dCSCG_Region_IS
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 from objects.CSCG._2d.mesh.domain.regions.region.edges.main import Edges
 
-from screws.decorators.accepts import accepts
+from components.decorators.all import accepts
 
 from objects.CSCG._2d.mesh.domain.regions.region.inheriting.topology import RegionTopology
 import numpy as np

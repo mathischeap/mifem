@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from objects.CSCG._3d.forms.standard._0s.main import _3dCSCG_0Form
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 class ___3dCSCG_2Form_Project_To___(FrozenOnly):
     """A wrapper of all projection into methods"""

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from root.config.main import *
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 import socket
 import datetime
-from screws.miscellaneous.timer import MyTimer
+from components.miscellaneous.timer import MyTimer
 from time import time
 from tools.iterators.base.monitor.do import IteratorMonitorDo
 from tools.iterators.base.monitor.IS import IteratorMonitorIS
@@ -44,9 +44,7 @@ class IteratorMonitor(FrozenOnly):
         self._do_first_assessment_ = True
         self._do_first_assessment_counter_ = 0
         self._do_first_assessment_estimate_ = 0
-        self._do_first_email_warning_report_ = False
         self._do_first_graph_warning_report_ = False
-        self._ever_do_email_report_ = False
         self._ever_do_graph_report_ = False
         # to be updated after every iteration.
         self._computed_steps_ = 0
@@ -76,20 +74,16 @@ class IteratorMonitor(FrozenOnly):
         if factor == 0:
             self.___graph_report_time___ = 9999999
             self.___auto_save_time___    = 9999999
-            self.___email_report_time___ = 9999999
         else:
             self.___graph_report_time___ = (1 / factor) * self.___graph_report_default_time___
             self.___auto_save_time___ = (1 / factor) * self.___auto_save_default_time___
-            self.___email_report_time___ = (1 / factor) * self.___email_report_default_time___
 
         if self.___graph_report_time___ < 60: self.___graph_report_time___ = 60   # 最快60秒报告一次
         if self.___auto_save_time___ < 60: self.___auto_save_time___ = 60         # 最快60秒报告一次
-        if self.___email_report_time___ < 3600: self.___email_report_time___ = 3600 # 最快1小时报告一次
 
         self._factor_ = factor
         # even it is 0, the monitor still do the recording background, but no report.
         self.___last_graph_save_time___ = time()
-        self.___last_email_sent_time___ = time()
 
 
     def ___PRIVATE_set_auto_save_frequency___(self, AS):

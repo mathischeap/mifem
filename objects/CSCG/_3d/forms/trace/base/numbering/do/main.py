@@ -3,7 +3,7 @@
 
 
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.forms.trace.base.numbering.do.find import _3dCSCG_Trace_Numbering_DO_FIND
 
 

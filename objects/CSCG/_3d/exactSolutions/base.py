@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
-
-
 import numpy as np
 from root.config.main import COMM, MPI
-from screws.quadrature import Quadrature
-from screws.freeze.main import FrozenOnly
+from components.quadrature import Quadrature
+from components.freeze.main import FrozenOnly
 import random
 
 

@@ -7,7 +7,6 @@ from tools.iterators.base.main import Iterator
 
 
 
-
 class SimpleIterator(Iterator):
     """It is 'simple' because we take `dt` is constant!
 

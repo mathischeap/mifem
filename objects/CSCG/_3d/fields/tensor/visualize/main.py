@@ -2,7 +2,7 @@
 import sys
 if './' not in sys.path: sys.path.append('/')
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from root.config.main import *
 from objects.CSCG._3d.fields.tensor.visualize.matplot import _3dCSCG_TensorField_matplot_Visualize
 

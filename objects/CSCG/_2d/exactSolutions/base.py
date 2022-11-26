@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 import random
 import numpy as np
 from root.config.main import COMM, MPI
-from screws.quadrature import Quadrature
+from components.quadrature import Quadrature
 
 
 class Base(FrozenOnly):

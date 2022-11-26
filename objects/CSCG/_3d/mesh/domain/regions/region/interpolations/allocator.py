@@ -7,7 +7,7 @@ Created on Fri Dec 14 20:13:27 2018
 Aerodynamics, AE
 TU Delft
 """
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from importlib import import_module
 
 

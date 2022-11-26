@@ -6,7 +6,7 @@ from objects.CSCG._3d.mesh.elements.coordinate_transformation.quad_1d import _3d
 from objects.CSCG._3d.mesh.elements.coordinate_transformation.quad_3d import _3dCSCG_ECT_3d_QUAD
 from objects.CSCG._3d.mesh.elements.coordinate_transformation.helpers.value_cache import ElementsCTValuesCache
 from objects.CSCG._3d.mesh.elements.coordinate_transformation.vectorized import _3dCSCG_MeshElement_CT_VEC
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 
 

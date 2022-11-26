@@ -10,7 +10,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from tools.linearAlgebra.gathering.regular.chain_matrix.main import Gathering_Matrix, Gathering_Vector
 
 

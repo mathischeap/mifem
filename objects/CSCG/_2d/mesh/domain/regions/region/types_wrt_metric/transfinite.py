@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from objects.CSCG._2d.mesh.domain.regions.region.types_wrt_metric.base import TypeWr2Metric
 
-from screws.functions._2dSpace.angle import angle
-from screws.functions._2dSpace.distance import distance
-from screws.functions._2dSpace.check_if_two_lines_parallel import if_two_lines_parallel
+from components.functions._2dSpace.angle import angle
+from components.functions._2dSpace.distance import distance
+from components.functions._2dSpace.check_if_two_lines_parallel import if_two_lines_parallel
 import numpy as np
 from objects.CSCG._2d.mesh.elements.element.types_wrt_metric.chaotic import ChaoticElement
 from objects.CSCG._2d.mesh.elements.element.types_wrt_metric.orthogonal import OrthogonalElement

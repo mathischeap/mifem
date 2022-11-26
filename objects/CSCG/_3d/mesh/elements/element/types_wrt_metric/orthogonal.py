@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from screws.decorators.accepts import accepts
+from components.decorators.all import accepts
 from objects.CSCG._3d.mesh.elements.element.types_wrt_metric.base import ElementTypeWr2MetricBase
 
 

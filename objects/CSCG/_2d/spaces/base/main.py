@@ -7,7 +7,7 @@
          TU Delft, Delft, Netherlands
 
 """
-from screws.freeze.main import FrozenClass
+from components.freeze.main import FrozenClass
 from objects.CSCG._2d.spaces.base.num_basis import NumBasis
 from objects.CSCG._2d.spaces.base.local_numbering import LocalNumbering
 from objects.CSCG._2d.spaces.base.incidence_matrix import IncidenceMatrix

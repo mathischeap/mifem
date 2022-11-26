@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from scipy import sparse as spspa
-from root.config.main import RANK, MASTER_RANK, COMM, np, SECRETARY_RANK, MPI
+from root.config.main import RANK, MASTER_RANK, COMM, np, SECRETARY_RANK
 from tools.linearAlgebra.dataStructures.vectors.GLOBAL.adjust import ___GV_ADJUST___
 from tools.linearAlgebra.dataStructures.vectors.GLOBAL.do import GlobalVectorDo
 from tools.linearAlgebra.dataStructures.vectors.GLOBAL.IS import GlobalVectorIS
@@ -27,7 +26,7 @@ class GlobalVector(FrozenOnly):
             - None: (Cannot be in the master core) we will make an empty sparse matrix.
 
         """
-        #------ parse input V ------------------------------------------------------------
+        #------ parse input V -------------------------------------------
         if V.__class__.__name__ == 'ndarray':
             if np.ndim(V) == 1:
                 V = spspa.csr_matrix(V).T
@@ -60,7 +59,7 @@ class GlobalVector(FrozenOnly):
                 pass
 
         assert spspa.isspmatrix_csc(V) and V.shape[1] == 1, "V must be a csc_matrix of shape (x, 1)."
-        #--------------------------------------------------------------------------------------
+        #--------------------------------------------------------------------
 
         self._V_ = V
         SHAPE = COMM.gather(self.shape, root=SECRETARY_RANK)
@@ -114,21 +113,6 @@ class GlobalVector(FrozenOnly):
 
     def __rmul__(self, other):
         return GlobalVector(other*self.V)
-
-    def ___PRIVATE_resemble_row_distribution_of___(self, GM):
-        """
-        We let self's distribution resemble that of a GM.
-
-        :param GM:
-        :return:
-        """
-        assert GM.shape[0] == self.shape[0], f"shape[0] does not match."
-        already_match = set(self.V.indices) <= set(GM.nonempty_rows)
-        already_match = COMM.allreduce(already_match, op=MPI.LAND)
-        if already_match: # already match, just stop here.
-            return
-        else:
-            raise NotImplementedError(f"Not coded yet!")
 
     @property
     def adjust(self):

@@ -8,7 +8,7 @@ Created on Fri May  3 09:47:29 2019
 Aerodynamics, AE
 TU Delft
 """
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 
 class CoordinateTransformationSingleElementComputer(FrozenOnly):

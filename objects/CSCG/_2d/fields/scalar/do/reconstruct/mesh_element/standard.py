@@ -3,7 +3,7 @@
 """where = mesh_element"""
 
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 
 
 class OnMeshElement_for_Standard(FrozenOnly):

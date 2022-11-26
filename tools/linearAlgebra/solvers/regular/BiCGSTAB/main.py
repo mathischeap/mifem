@@ -7,11 +7,11 @@ Not working.
 """
 
 from tools.linearAlgebra.preconditioners.allocator import PreconditionerAllocator
-from screws.miscellaneous.timer import MyTimer
+from components.miscellaneous.timer import MyTimer
 from tools.linearAlgebra.solvers.regular.BiCGSTAB.helpers.mpi_v0 import ___mpi_v0_BiCGSTAB___
 
 from tools.linearAlgebra.solvers.regular.base import ParallelSolverBase
-from tools.linearAlgebra.dataStructures.vectors.locally_full.main import LocallyFullVector
+from tools.linearAlgebra.dataStructures.vectors.locallyFull.main import LocallyFullVector
 
 
 

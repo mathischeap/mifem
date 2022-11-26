@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.node.elements.element.coordinate_transformation import _3dCSCG_Node_Element_CT
 from objects.CSCG._3d.mesh.node.elements.element.IS import _3dCSCG_NodeElement_IS
 from objects.CSCG._3d.mesh.node.elements.element.helpers.parse_boundary_position_indicator import \

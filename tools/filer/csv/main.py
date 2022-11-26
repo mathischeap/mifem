@@ -8,7 +8,7 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 import pandas as pd
 
 from tools.filer.csv.visualize.main import csvFilerVisualize

@@ -6,7 +6,7 @@
 """
 import numpy as np
 from scipy.sparse import csc_matrix
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 
 class ___3dCSCG_1Form_CrossProduct_2__ip_2_2M0___(FrozenOnly):

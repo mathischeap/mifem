@@ -8,13 +8,13 @@ See paper:
 """
 
 from tools.linearAlgebra.preconditioners.allocator import PreconditionerAllocator
-from screws.miscellaneous.timer import MyTimer
+from components.miscellaneous.timer import MyTimer
 from root.config.main import RANK, MASTER_RANK
 from tools.linearAlgebra.solvers.regular.LGMRES.helpers.mpi_v0 import ___mpi_v0_LGMRES___
 from tools.linearAlgebra.solvers.regular.LGMRES.helpers.scipy_sparse_linalg_lgmres import ___sp_sp_linalg_lgmres___
 
 from tools.linearAlgebra.solvers.regular.base import ParallelSolverBase
-from tools.linearAlgebra.dataStructures.vectors.locally_full.main import LocallyFullVector
+from tools.linearAlgebra.dataStructures.vectors.locallyFull.main import LocallyFullVector
 
 
 class LGMRES(ParallelSolverBase):

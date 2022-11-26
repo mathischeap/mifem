@@ -1,7 +1,7 @@
 
 
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 
 
 class _3dCSCG_CornerNodeSOS(FrozenOnly):

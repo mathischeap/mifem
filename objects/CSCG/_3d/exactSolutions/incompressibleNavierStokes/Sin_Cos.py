@@ -15,10 +15,7 @@ from objects.CSCG._3d.fields.vector.main import _3dCSCG_VectorField
 
 # noinspection PyAbstractClass
 class SinCosRebholz_Conservation(incompressible_NavierStokes_Base):
-    """
-    The sin cos test case for the conservation, see Section 5.2 of paper:
-        [An Energy- and helicity-conserving finite element scheme for the Navier-Stokes
-         equations, Leo G. Rebholz, 2007]
+    """The sin cos test case for the conservation, see Section 5.2 of paper: [An Energy- and helicity-conserving finite element scheme for the Navier-Stokes equations, Leo G. Rebholz, 2007]
     """
     def __init__(self, mesh):
         super(SinCosRebholz_Conservation, self).__init__(mesh, 0)

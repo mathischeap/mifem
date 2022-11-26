@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._2d.mesh.elements.coordinate_transformation.helpers.value_cache import ElementsCTValuesCache
 from objects.CSCG._2d.mesh.elements.coordinate_transformation.quad_1d import _2dCSCG_ECT_1d_QUAD
 from objects.CSCG._2d.mesh.elements.coordinate_transformation.quad_2d import _2dCSCG_ECT_2d_QUAD

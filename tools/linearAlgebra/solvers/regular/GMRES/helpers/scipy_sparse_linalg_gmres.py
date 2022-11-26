@@ -11,7 +11,7 @@ from root.config.main import COMM, RANK, MASTER_RANK, np, MPI
 from time import time
 
 from scipy.sparse import linalg as spspalinalg
-from tools.linearAlgebra.dataStructures.global_matrix.main import LocallyFullVector
+from tools.linearAlgebra.dataStructures.globalMatrix.main import LocallyFullVector
 
 
 

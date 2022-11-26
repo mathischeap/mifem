@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 
 class _3dCSCG_MeshPerpendicularSlice(FrozenOnly):

@@ -1,10 +1,6 @@
-
-
-
+# -*- coding: utf-8 -*-
 
 from objects.CSCG._3d.master import SpaceInvoker as _3dCSCG_SpaceInvoker
-
-
 
 
 def ___restore__3dCSCG_Space___(parameters, space_cache):

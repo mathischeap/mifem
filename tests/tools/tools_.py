@@ -15,7 +15,7 @@ from time import sleep
 from scipy import sparse as spspa
 from tools.iterators.simple import SimpleIterator
 import random
-from tools.linearAlgebra.dataStructures.global_matrix.main import GlobalMatrix
+from tools.linearAlgebra.dataStructures.globalMatrix.main import GlobalMatrix
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 from objects.CSCG._2d.master import MeshGenerator as MeshGenerator2D
 from objects.CSCG._2d.master import SpaceInvoker as SpaceInvoker2D

@@ -4,7 +4,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.forms.standard.base.dofs.dof.visualize.matplot._0sf import \
     _3dCSCG_SF_DOF_VISUALIZE_matplot_0SF
 from objects.CSCG._3d.forms.standard.base.dofs.dof.visualize.matplot._1sf import \

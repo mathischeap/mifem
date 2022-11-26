@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from objects.CSCG._2d.mesh.domain.inputs.base import DomainInputBase
 import numpy as np
-from screws.decorators.classproperty.main import classproperty
+from components.decorators.classproperty.main import classproperty
 
 
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from root.config.main import *
 import matplotlib.pyplot as plt
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 
 class _3dCSCG_SF_DOF_VISUALIZE_matplot_2SF(FrozenOnly):

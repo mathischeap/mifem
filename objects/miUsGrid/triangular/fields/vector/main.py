@@ -11,7 +11,7 @@ from objects.miUsGrid.triangular.fields.base import miUsGrid_TriangularFieldBase
 
 from functools import partial
 from types import FunctionType, MethodType
-from screws.functions.timePlus2dSpace._0_ import _0t_
+from components.functions.timePlus2dSpace._0_ import _0t_
 
 from objects.miUsGrid.triangular.fields.vector.reconstruct.main import miUsGrid_Triangular_Vector_Reconstruct
 from objects.miUsGrid.triangular.fields.vector.do.main import miUsGrid_Triangular_Vector_Do
@@ -36,6 +36,8 @@ class miUsGrid_Triangular_Vector(miUsGrid_TriangularFieldBase):
 
         self.___PRIVATE_set_func___(func, ftype=ftype)
         self._previous_func_id_time_ = (None, None, None)
+        self.standard_properties.___PRIVATE_add_tag___('miUsTri_vector_field')
+        self.standard_properties.___PRIVATE_add_tag___('vector_field')
 
         self._reconstruct_ = miUsGrid_Triangular_Vector_Reconstruct(self)
         self._do_ = miUsGrid_Triangular_Vector_Do(self)

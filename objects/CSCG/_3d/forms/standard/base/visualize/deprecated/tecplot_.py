@@ -5,7 +5,7 @@
 from root.config.main import *
 import tecplot as tp
 from tecplot.constant import PlotType
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 
 

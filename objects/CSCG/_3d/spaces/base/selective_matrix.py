@@ -11,7 +11,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 import numpy as np
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from scipy.sparse import csr_matrix
 
 

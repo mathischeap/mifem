@@ -3,8 +3,8 @@
 import numpy as np
 from scipy.sparse import csr_matrix, csc_matrix
 from numpy import diff
-from screws.freeze.base import FrozenOnly
-from tools.linearAlgebra.dataStructures.global_matrix.main import GlobalMatrix
+from components.freeze.base import FrozenOnly
+from tools.linearAlgebra.dataStructures.globalMatrix.main import GlobalMatrix
 from root.config.main import ASSEMBLE_COST, COMM, MPI, RANK, MASTER_RANK
 
 

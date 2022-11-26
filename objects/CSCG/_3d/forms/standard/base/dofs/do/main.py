@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from objects.CSCG._3d.forms.standard.base.dofs.do.find import _3dCSCG_SF_dofs_FIND
 
 from objects.CSCG._3d.forms.standard.base.dofs.do.helpers._01f_hybrid_pairing_check_ import _01f_hybrid_pairing_check_

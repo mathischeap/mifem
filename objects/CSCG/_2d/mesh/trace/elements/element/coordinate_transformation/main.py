@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._2d.mesh.trace.elements.element.coordinate_transformation.constant import _2dCSCG_TE_CT_Constant
 
 class _2dCSCG_Trace_Element_CoordinateTransformation(FrozenOnly):

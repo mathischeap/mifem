@@ -10,7 +10,7 @@ INTRO
 """
 
 import numpy as np
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 
 
 class _3dCSCG_MeshElement_CT_VEC(FrozenOnly):

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-INTRO
+"""INTRO
 
 Yi Zhang (C)
 Created on Sat May  4 14:07:49 2019
@@ -10,7 +9,7 @@ TU Delft
 
 
 import numpy as np
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 
 

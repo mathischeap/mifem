@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 import numpy as np
 from tools.linearAlgebra.gathering.vector import Gathering_Vector
 from tools.linearAlgebra.gathering.regular.matrix.do.find import Gathering_Matrix_FIND

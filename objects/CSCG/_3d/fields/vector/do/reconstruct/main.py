@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from objects.CSCG._3d.fields.vector.do.reconstruct.mesh_element.standard import OnMeshElement_Standard
 from objects.CSCG._3d.fields.vector.do.reconstruct.trace_element.trace_element_wise import OnTraceElement_TraceElementWise
 from objects.CSCG._3d.fields.vector.do.reconstruct.trace_element.boundary_wise import OnTraceElement_BoundaryWise

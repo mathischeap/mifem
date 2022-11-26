@@ -9,13 +9,13 @@ if './' not in sys.path: sys.path.append('./')
 
 import numpy as np
 
-from __init__ import screws
+from __init__ import components
 from __init__ import cscg2
 
 
 def test_reconstruct_S0F_to_DV():
     """"""
-    screws.miprint("S0f [test_reconstruct_S0F_to_DV] ...... ", flush=True)
+    components.miprint("S0f [test_reconstruct_S0F_to_DV] ...... ", flush=True)
     mesh = cscg2.mesh('crazy', bounds=[(-1,1) for _ in range(2)])([8,9], EDM='debug')
     space = cscg2.space('polynomials')([6,5])
     FC = cscg2.form(mesh, space)
@@ -34,7 +34,7 @@ def test_reconstruct_S0F_to_DV():
     f2.do.discretize()
     L2norm_2 = f2.do.compute_Ln_energy(n=2)
 
-    Qn, Qw = screws.Quadrature([14,15]).quad
+    Qn, Qw = components.Quadrature([14, 15]).quad
 
     DS = f0.reconstruct.discrete_scalar(Qn)
     coordinates = DS.coordinates
@@ -53,7 +53,7 @@ def test_reconstruct_S0F_to_DV():
         L2_norm = np.einsum('ij, i, j ->', v0**2, *Qw, optimize='greedy')
         np.testing.assert_almost_equal(L2norm_2, L2_norm, decimal=5)
 
-    Qn, Qw = screws.Quadrature([5,6]).quad
+    Qn, Qw = components.Quadrature([5, 6]).quad
 
     DS = f0.reconstruct.discrete_scalar(Qn)
     coordinates = DS.coordinates
@@ -76,7 +76,7 @@ def test_reconstruct_S0F_to_DV():
 
 def test_reconstruct_oS1F_to_DV():
     """"""
-    screws.miprint("o1f [test_reconstruct_oS1F_to_DV] ...... ", flush=True)
+    components.miprint("o1f [test_reconstruct_oS1F_to_DV] ...... ", flush=True)
     mesh = cscg2.mesh('crazy', bounds=[(-1,1) for _ in range(2)])([7,8], EDM='debug')
     space = cscg2.space('polynomials')([5,4])
     FC = cscg2.form(mesh, space)
@@ -94,7 +94,7 @@ def test_reconstruct_oS1F_to_DV():
     v.do.discretize()
     L2norm_v = v.do.compute_Ln_energy(n=2)
 
-    Qn, Qw = screws.Quadrature([14,15]).quad
+    Qn, Qw = components.Quadrature([14, 15]).quad
     DV = u.reconstruct.discrete_vector(Qn)
     coordinates = DV.coordinates
     values = DV.values
@@ -112,7 +112,7 @@ def test_reconstruct_oS1F_to_DV():
         L2_norm = np.einsum('ij, i, j ->', v0**2 + v1**2, *Qw, optimize='greedy')
         np.testing.assert_almost_equal(L2norm_v, L2_norm, decimal=3)
 
-    Qn, Qw = screws.Quadrature([6, 7]).quad
+    Qn, Qw = components.Quadrature([6, 7]).quad
     DV_coarse = u.reconstruct.discrete_vector(Qn)
     coordinates = DV_coarse.coordinates
     values = DV_coarse.values

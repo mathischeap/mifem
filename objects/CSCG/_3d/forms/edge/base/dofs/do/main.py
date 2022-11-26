@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 
 
 from objects.CSCG._3d.forms.edge.base.dofs.do.find import _3dCSCG_EdgeDofs_DoFIND

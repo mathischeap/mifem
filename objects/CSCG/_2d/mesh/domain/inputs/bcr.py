@@ -2,11 +2,11 @@
 
 
 from objects.CSCG._2d.mesh.domain.inputs.base import DomainInputBase
-from screws.numerical._1dSpace.derivative import NumericalDerivative_fx
+from components.numerical._1dSpace.derivative import NumericalDerivative_fx
 
 import numpy as np
 
-from screws.decorators.classproperty.main import classproperty
+from components.decorators.classproperty.main import classproperty
 
 
 def X(t): return 5 * t

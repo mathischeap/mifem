@@ -10,7 +10,7 @@ INTRO
 
 """
 import numpy as np
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.legacy.coordinate_transformation.structuredMeshCTBase.MODULES.methods import CTMODMethods
 from objects.CSCG._3d.mesh.legacy.coordinate_transformation.structuredMeshCTBase.MODULES.generators import CTMODGenerators
 

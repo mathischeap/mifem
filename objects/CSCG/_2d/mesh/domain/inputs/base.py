@@ -11,10 +11,10 @@ INTRO
 """
 
 import inspect
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from typing import Dict, Union
 import numpy as np
-from screws.decorators.classproperty.main import classproperty
+from components.decorators.classproperty.main import classproperty
 
 
 

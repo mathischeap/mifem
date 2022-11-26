@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-from screws.quadrature import Quadrature
-from screws.freeze.base import FrozenOnly
+from components.quadrature import Quadrature
+from components.freeze.base import FrozenOnly
 from root.config.main import COMM, RANK, MASTER_RANK
 from objects.CSCG._2d.fields.scalar.do.reconstruct.main import _2dCSCG_Scalr_Do_Reconstruct
 from objects.CSCG._2d.fields.scalar.do.cross_product.main import _2dCSCG_SclarField_CrossProduct

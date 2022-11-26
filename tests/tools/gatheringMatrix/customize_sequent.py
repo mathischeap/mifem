@@ -8,8 +8,8 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
-from screws.miscellaneous.miprint import miprint
+from components.freeze.base import FrozenOnly
+from components.miscellaneous.miprint import miprint
 from tools.linearAlgebra.gathering.chain import GatheringMatrixChaining
 from __init__ import miTri, tools
 import numpy as np

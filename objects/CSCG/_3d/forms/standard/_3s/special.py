@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 class _3Form_Special(FrozenOnly):
     def __init__(self, _3sf):

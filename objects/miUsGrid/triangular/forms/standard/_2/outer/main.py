@@ -22,9 +22,8 @@ if __name__ == "__main__":
     # mpiexec -n 4 python objects/miUsGrid/triangular/forms/standard/_2/outer/main.py
     import numpy as np
     from objects.miUsGrid.triangular.fields.scalar.main import miUsGrid_Triangular_Scalar
-    from objects.miUsGrid.triangular.__test__.Random.test_mesh import mesh
+    from tests.objects.miUsGrid.triangular.randObj.rand_mesh import mesh
     from objects.miUsGrid.triangular.space.main import miUsGrid_TriangularFunctionSpace
-
 
     def func(t, x, y):
         return np.sin(2 * np.pi * x) * np.sin(2 * np.pi * y) + t
@@ -42,3 +41,5 @@ if __name__ == "__main__":
     scalar.current_time = 0
 
     f2.discretize()
+
+    mesh.visualize()

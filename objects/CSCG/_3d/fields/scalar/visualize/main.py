@@ -2,7 +2,7 @@
 import sys
 if './' not in sys.path: sys.path.append('/')
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from root.config.main import *
 from objects.CSCG._3d.fields.scalar.visualize.matplot import _3dCSCG_ScalarField_matplot_Visualize
 

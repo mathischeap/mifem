@@ -7,7 +7,7 @@
 import sys
 
 if './' not in sys.path: sys.path.append('./')
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG.base.ADF.base.BC.interpret.local import CSCG_AFORM_BC_Interpret_Local
 
 class CSCG_AFORM_BC_Interpret(FrozenOnly):

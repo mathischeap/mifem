@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from scipy import sparse as spspa
 from root.config.main import RANK, MASTER_RANK, COMM, np, SECRETARY_RANK
 from tools.linearAlgebra.dataStructures.vectors.distributed.do import DistributedVectorDo

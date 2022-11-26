@@ -17,7 +17,7 @@ CACHE_FACTOR = 2
 assert isinstance(CACHE_FACTOR, int) and CACHE_FACTOR >= 1
 
 SAFE_MODE = False
-"""If sAfeMode is on, we will run many more checks."""
+"""If SAFE_MODE is on, we will do many more checks."""
 
 import numpy as np
 from mpi4py import MPI
@@ -65,10 +65,10 @@ assert 0 <= MASTER_RANK < SIZE
 
 # sentry setting, we can only turn on sentry in the master core!
 if RANK == MASTER_RANK:
-    seNtry_on = False
-    """If sEntryOn is on, we will monitor the scheme with Sentry."""
+    SENTRY_ON = False
+    """If SENTRY_ON is True, we will monitor the scheme with Sentry."""
 else:
-    seNtry_on = False # NEVER turn on this one: because we only monitor it through the master!
+    SENTRY_ON = False # NEVER turn on this one because we only monitor it through the master!
 
 
 from root.config.tree import TREE

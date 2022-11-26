@@ -10,8 +10,8 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 from importlib import import_module
-from screws.freeze.main import FrozenOnly
-from screws.miscellaneous.timer import MyTimer
+from components.freeze.main import FrozenOnly
+from components.miscellaneous.timer import MyTimer
 from objects.CSCG._3d.mesh.domain.inputs.allocator import DomainInputAllocator
 from objects.CSCG._3d.mesh.domain.main import _3dCSCG_Domain
 from objects.CSCG._3d.mesh.main import _3dCSCG_Mesh
@@ -22,7 +22,6 @@ from objects.CSCG._3d.fields.allocator import _3dCSCG_Field_Allocator
 from objects.CSCG._3d.exactSolutions.allocator import _3dCSCG_ExactSolution_Allocator
 from copy import deepcopy
 from root.config.main import RANK, MASTER_RANK, COMM
-
 
 class MeshGenerator(FrozenOnly):
     def __init__(self, ID, **kwargs):
@@ -290,6 +289,27 @@ class ExactSolutionSelector(FrozenOnly):
 
         return ES
 
+    @classmethod
+    def listing(cls, printing=True, returning=False):
+        """For an allocator class, this list all the possibilities ONLY in the master core."""
+        if RANK != MASTER_RANK: return
+        included_allocators = [
+            _3dCSCG_ExactSolution_Allocator,
+        ]
+        listing = ''
+        for alc in included_allocators:
+            listing += alc.listing(printing=False, returning=True)
+
+        if printing:
+            print(listing)
+        else:
+            pass
+        if returning:
+            return listing
+        else:
+            pass
+
+
 
 
 
@@ -306,3 +326,5 @@ if __name__ == "__main__":
     # es = ExactSolutionSelector(mesh)('TISE:sincos1', m=1e-68, E=1)
 
     es = ExactSolutionSelector(mesh)('MHD:sincos1')
+
+    ExactSolutionSelector.listing()

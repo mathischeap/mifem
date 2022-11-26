@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from root.config.main import MASTER_RANK, RANK, COMM, np
 
 class GlobalVectorDo(FrozenOnly):
@@ -25,6 +25,3 @@ class GlobalVectorDo(FrozenOnly):
             # noinspection PyUnresolvedReferences
             v = np.sum(v).toarray()[:, 0]
         return v
-
-    def resemble_row_distribution_of(self, GM):
-        return self._v_.___PRIVATE_resemble_row_distribution_of___(GM)

@@ -108,7 +108,7 @@ passed_3dCSCG_tests += test_hybridization_trace2()
 passed_3dCSCG_tests += test_trace_and_selective_matrices()
 passed_3dCSCG_tests += test_reconstruct_DF()
 
-from screws.miscellaneous.mirand import randint
+from components.miscellaneous.mirand import randint
 a = randint(0, 3) # below tests are slow, we do not run them at every single time.
 if a == 1:
     passed_3dCSCG_tests += test_Stokes_MSEM_trivial_BC()

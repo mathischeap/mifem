@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from root.config.main import COMM, MPI
 
 

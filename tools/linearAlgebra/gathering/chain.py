@@ -8,10 +8,9 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from tools.linearAlgebra.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
 from tools.linearAlgebra.gathering.irregular.ir_chain_matrix.main import iR_Chain_Gathering_Matrix
-
 
 ___GLOBAL_CGM_CACHE___ = {'key': list(), 'cache': list()} # to cache global CGM.
 

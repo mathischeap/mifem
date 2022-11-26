@@ -5,8 +5,8 @@ if './' not in sys.path: sys.path.append('./')
 from root.config.main import RANK, MASTER_RANK, COMM
 import random
 from tests.objects.CSCG._3d.randObj.form_caller import random_FormCaller_of_total_load_around
-from screws.miscellaneous.mios import mkdir, remove, rmdir
-from screws.miscellaneous.randomString.digits import randomStringDigits
+from components.miscellaneous.mios import mkdir, remove, rmdir
+from components.miscellaneous.randomString.digits import randomStringDigits
 from tools.linearAlgebra.elementwiseCache.operators.bmat.main import bmat
 from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector

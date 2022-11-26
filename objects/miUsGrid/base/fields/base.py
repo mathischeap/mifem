@@ -15,6 +15,7 @@ class miUsGrid_FiledBase(FiledBase):
     def __init__(self, mesh, valid_time, name):
         super(miUsGrid_FiledBase, self).__init__(mesh, valid_time)
         self.standard_properties.name = name
+        self.standard_properties.___PRIVATE_add_tag___('miUs_scalar_field')
 
 
 if __name__ == "__main__":

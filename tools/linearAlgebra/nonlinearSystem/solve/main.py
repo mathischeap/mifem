@@ -7,7 +7,7 @@
 import sys
 
 if './' not in sys.path: sys.path.append('./')
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 from tools.linearAlgebra.nonlinearSystem.solve.NewtonRaphson.main import nLS_Solve_NewtonRaphson
 

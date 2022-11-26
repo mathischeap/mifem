@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 
 import numpy as np
 from root.config.main import RANK, MASTER_RANK, COMM, MPI

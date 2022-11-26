@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-from screws.quadrature import Quadrature
-from screws.freeze.base import FrozenOnly
+from components.quadrature import Quadrature
+from components.freeze.base import FrozenOnly
 from objects.CSCG._3d.mesh.elements.coordinate_transformation.helpers.value_cache import \
     ElementsCTValuesCache
 

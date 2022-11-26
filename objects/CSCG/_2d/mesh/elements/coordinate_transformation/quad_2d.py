@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from screws.quadrature import Quadrature
-from screws.freeze.main import FrozenOnly
+from components.quadrature import Quadrature
+from components.freeze.main import FrozenOnly
 from objects.CSCG._2d.mesh.elements.coordinate_transformation.helpers.value_cache import ElementsCTValuesCache
 import numpy as np
-from screws.decorators.accepts import memoize1
+from components.decorators.all import memoize1
 
 class _2dCSCG_ECT_2d_QUAD(FrozenOnly):
     def __init__(self, ect):

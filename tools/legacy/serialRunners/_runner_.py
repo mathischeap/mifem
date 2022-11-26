@@ -13,9 +13,9 @@ import socket
 import smtplib
 import pandas as pd
 from cryptography.fernet import Fernet
-from screws.freeze.main import FrozenClass
-from screws.miscellaneous.timer import MyTimer
-from screws.miscellaneous.timer import NumpyStyleDocstringReader
+from components.freeze.main import FrozenClass
+from components.miscellaneous.timer import MyTimer
+from components.miscellaneous.timer import NumpyStyleDocstringReader
 from tools.legacy.serialRunners.COMPONENTS.data.body import RunnerData
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText

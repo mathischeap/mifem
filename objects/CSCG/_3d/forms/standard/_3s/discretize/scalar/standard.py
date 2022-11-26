@@ -1,7 +1,7 @@
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 import numpy as np
 
-from screws.quadrature import Quadrature
+from components.quadrature import Quadrature
 
 
 class _3dCSCG_Discretize_Standard(FrozenOnly):

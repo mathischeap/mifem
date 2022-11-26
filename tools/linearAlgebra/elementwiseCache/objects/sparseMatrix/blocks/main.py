@@ -6,7 +6,7 @@ If we use bmat to form EWC_SparseMatrix. We can get some blocks of the EWC_Spars
 
 
 import numpy as np
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from tools.linearAlgebra.elementwiseCache.operators.bmat.main import bmat
 
 

@@ -12,9 +12,9 @@ from objects.CSCG._3d.exactSolutions.incompressibleNavierStokes.base import \
     incompressible_NavierStokes_Base
 
 class TGV1(incompressible_NavierStokes_Base):
-    """
-    This is a 3D Taylor-Green Vortex initial condition. And for `t != 0`, the
-    solution is not correct. So we can only use it as our initial condition.
+    """This is a 3D Taylor-Green Vortex initial condition.
+
+    And for `t != 0`, the solution is not correct. So we can only use it as our initial condition.
 
     See the case in  [Inviscid and Viscous Simulations of the Taylor-Green Vortex Flow Using a
     Modal Discontinuous Galerkin Approach] with L=1, V0=1.

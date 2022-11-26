@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 from root.config.main import COMM
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.domain.regions.main import Regions
 from objects.CSCG._3d.mesh.domain.regions.region.main import Region
 

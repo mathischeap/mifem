@@ -1,6 +1,6 @@
 """"""
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.domain.regions.visualize.matplot import _3dCSCG_Regions_Visualize_Matplot_
 
 

@@ -1,8 +1,8 @@
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 import numpy as np
-from screws.exceptions import DimensionError
-from screws.decorators.accepts import memoize1
+from components.exceptions import DimensionError
+from components.decorators.all import memoize1
 
 class _3dCSCG_space_do(FrozenOnly):
     """"""

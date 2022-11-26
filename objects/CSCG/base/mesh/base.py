@@ -2,9 +2,9 @@
 import random
 
 from root.config.main import *
-from screws.freeze.main import FrozenClass
-from screws.quadrature import Quadrature
-from screws.exceptions import ElementsLayoutError
+from components.freeze.main import FrozenClass
+from components.quadrature import Quadrature
+from components.exceptions import ElementsLayoutError
 
 # noinspection PyUnresolvedReferences
 class CSCG_MESH_BASE(FrozenClass):

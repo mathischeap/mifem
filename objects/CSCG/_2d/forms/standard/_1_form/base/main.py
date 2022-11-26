@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 from objects.CSCG._2d.forms.standard.base.main import _2dCSCG_Standard_Form
-from screws.quadrature import Quadrature
+from components.quadrature import Quadrature
 from objects.CSCG._2d.forms.standard._1_form.base.visualize.main import _2dCSCG_S1F_VIS
 
 

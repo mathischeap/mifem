@@ -16,7 +16,7 @@ import numpy as np
 
 from root.config.main import RANK, MASTER_RANK
 
-from screws.miscellaneous.mios import remove
+from components.miscellaneous.mios import remove
 from pyevtk.hl import unstructuredGridToVTK
 from objects.miUsGrid.triangular.mesh.main import miUsGrid_TriangularMesh
 

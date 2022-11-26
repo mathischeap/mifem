@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from screws.freeze.main import FrozenOnly
-from screws.decorators.accepts import memoize1
+from components.freeze.main import FrozenOnly
+from components.decorators.all import memoize1
 from objects.CSCG._2d.mesh.domain.regions.region.edges.edge.main import Edge
 
 class Edges(FrozenOnly):

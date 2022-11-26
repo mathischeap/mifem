@@ -1,10 +1,38 @@
 # -*- coding: utf-8 -*-
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
+from root.config.main import RANK, MASTER_RANK
 
-
+from importlib import import_module
 
 class _3dCSCG_ExactSolution_Allocator(FrozenOnly):
     """"""
+
+    @classmethod
+    def listing(cls, printing=True, returning=True):
+        """"""
+        if RANK != MASTER_RANK: return
+
+        listing = ''
+        names = cls.___exact_solution_name___()
+        paths = cls.___exact_solution_path___()
+        for ID in names:
+            CLASS = getattr(import_module(paths[ID]), names[ID])
+            doc = CLASS.__doc__
+            if doc is not None and doc != '':
+                doc = doc.split('\n')[0]
+                listing += ">>> " + ID + ' ~ ' + doc + '\n\n'
+            else:
+                listing += ">>> " + ID + '\n\n'
+
+        if printing:
+            print(listing)
+        else:
+            pass
+
+        if returning:
+            return listing
+        else:
+            pass
 
 
     @classmethod
@@ -19,7 +47,7 @@ class _3dCSCG_ExactSolution_Allocator(FrozenOnly):
                 'icpsNS:sincos_CCBF_C': 'SinCos_Conservation_Conservative_Body_Force_CONSTANT',
                 'icpsNS:sincosRD': 'SinCosRebholz_Dissipation',
                 'icpsNS:sincosMD': 'SinCos_Modified_Dissipation',
-                'icpsNS:CUCD1': 'Closed_Unit_Cube_Disspation1',
+                'icpsNS:CUCD1': 'Closed_Unit_Cube_Dissipation1',
                 'icpsNS:CBFx' : 'Constant_X_direction_body_force',
                 'icpsNS:still': 'Still',
 
@@ -31,6 +59,8 @@ class _3dCSCG_ExactSolution_Allocator(FrozenOnly):
 
                 'MHD:sincos1': "MHD_SinCos1",
                 'MHD:as1': "AS1",
+
+                'pH_grad_div:eigen1': 'Eigen1',
 
                 }
 
@@ -60,4 +90,6 @@ class _3dCSCG_ExactSolution_Allocator(FrozenOnly):
 
                 'MHD:sincos1': base_path + "incompressibleMHD.sin_cos",
                 'MHD:as1': base_path + "incompressibleMHD.analytic_solution_1",
+
+                'pH_grad_div:eigen1': base_path + "pH.linearGradDiv.eigen1",
                 }

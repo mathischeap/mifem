@@ -6,8 +6,7 @@ from objects.CSCG._3d.exactSolutions.timeIndependentSchrodingerEquation.base imp
 
 
 class TISE_SinCos1(TimeIndependentSchrodingerEquationBase):
-    """
-    The sin cos test case 1.
+    """The sin cos test case 1.
     """
     def __init__(self, mesh, m, E):
         super(TISE_SinCos1, self).__init__(mesh, m, E)

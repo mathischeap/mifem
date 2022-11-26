@@ -8,8 +8,8 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
-from screws.quadrature import Quadrature
+from components.freeze.base import FrozenOnly
+from components.quadrature import Quadrature
 from objects.miUsGrid.triangular.forms.standard._0.base.matrices.helpers.inner import ___MassMatrix_Inner___
 from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
 
@@ -35,7 +35,8 @@ class miUs_Triangular_S0F_Matrices(FrozenOnly):
         quad_weights_ravel = Quad.quad_ndim_ravel[-1]
         xi_eta, bf = self._sf_.do.evaluate_basis_at_meshgrid(*quad_nodes)
         DG = ___MassMatrix_Inner___(self._sf_, xi_eta, quad_weights_ravel, bf)
-        return EWC_SparseMatrix(self._sf_.mesh.elements, DG, self._sf_.mesh.elements.___Pr_EWC_cache_key___)
+        return EWC_SparseMatrix(self._sf_.mesh.elements, DG,
+                                self._sf_.mesh.elements.___Pr_EWC_cache_key___)
 
 
 

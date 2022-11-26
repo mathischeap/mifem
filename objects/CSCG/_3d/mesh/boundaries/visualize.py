@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 if './' not in sys.path: sys.path.append('./')
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from root.config.main import RANK, MASTER_RANK, np
 
 import matplotlib.pyplot as plt

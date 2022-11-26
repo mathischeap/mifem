@@ -8,7 +8,7 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 import numpy as np
 from objects.CSCG._2d.mesh.domain.regions.region.interpolations.transfinite.mapping import TransfiniteMapping
 

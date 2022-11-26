@@ -15,7 +15,7 @@ from types import FunctionType, MethodType
 from objects.CSCG._3d.fields.base import _3dCSCG_Continuous_FORM_BASE
 from functools import partial
 from root.config.main import *
-from screws.functions.timePlus3dSpace.constant import CFG
+from components.functions.timePlus3dSpace.constant import CFG
 
 from objects.CSCG._3d.fields.scalar.do.main import _3dCSCG_ScalarField_DO
 from objects.CSCG._3d.fields.scalar.numerical.main import _3dCSCG_ScalarField_Numerical
@@ -40,6 +40,7 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
             pass
         super().__init__(mesh, ftype, valid_time)
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_scalar_field')
+        self.standard_properties.___PRIVATE_add_tag___('scalar_field')
         self.standard_properties.name = name
         self.___PRIVATE_set_func___(func, ftype=ftype)
         self._previous_func_id_time_ = (None, None, None)

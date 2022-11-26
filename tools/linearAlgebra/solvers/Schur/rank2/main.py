@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from screws.miscellaneous.timer import MyTimer
+from components.miscellaneous.timer import MyTimer
 
 from tools.linearAlgebra.solvers.Schur.base import SchurSolverBase
 

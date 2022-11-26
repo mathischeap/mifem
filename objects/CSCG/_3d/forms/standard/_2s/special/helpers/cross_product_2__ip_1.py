@@ -12,7 +12,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 import numpy as np
 from scipy.sparse import csr_matrix
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 
 
 class ___3dCSCG_2Form_CrossProduct_2__ip_1___(FrozenOnly):

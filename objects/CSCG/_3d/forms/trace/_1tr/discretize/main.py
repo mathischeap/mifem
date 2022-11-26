@@ -3,7 +3,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from objects.CSCG._3d.forms.trace._1tr.discretize.vector.standard.T_perp import _3dCSCG_1Trace_Discretize_StandardVector_T_perp
 from objects.CSCG._3d.forms.trace._1tr.discretize.vector.standard.T_para import _3dCSCG_1Trace_Discretize_StandardVector_T_para
 from objects.CSCG._3d.forms.trace._1tr.discretize.vector.trace_element_wise import _3dCSCG_1Trace_Discretize_TraceElementWiseVector

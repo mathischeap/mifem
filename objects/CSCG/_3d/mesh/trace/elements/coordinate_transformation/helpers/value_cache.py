@@ -1,6 +1,6 @@
 
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from root.config.main import CACHE_FACTOR
 
 

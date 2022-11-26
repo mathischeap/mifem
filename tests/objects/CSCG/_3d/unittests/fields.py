@@ -8,7 +8,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 from root.config.main import *
-from screws.miscellaneous.timer import MyTimer
+from components.miscellaneous.timer import MyTimer
 import random
 from tests.objects.CSCG._3d.randObj.form_caller import random_FormCaller_of_total_load_around
 

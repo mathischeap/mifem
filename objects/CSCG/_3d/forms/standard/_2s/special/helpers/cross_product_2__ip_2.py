@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 from scipy.sparse import csr_matrix
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from tools.linearAlgebra.elementwiseCache.objects.multiDimMatrix.main import MultiDimMatrix
 
 

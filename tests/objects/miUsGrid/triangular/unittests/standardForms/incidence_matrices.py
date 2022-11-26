@@ -8,8 +8,8 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
-from screws.miscellaneous.miprint import miprint
+from components.freeze.base import FrozenOnly
+from components.miscellaneous.miprint import miprint
 import numpy as np
 
 from tests.objects.miUsGrid.triangular.randObj.test_mesh import mesh as tm

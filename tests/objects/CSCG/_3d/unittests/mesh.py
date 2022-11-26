@@ -5,8 +5,8 @@ Mesh related unittests.
 import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
-from screws.quadrature import Quadrature
-from screws.exceptions import ThreeDimensionalTransfiniteInterpolationError
+from components.quadrature import Quadrature
+from components.exceptions import ThreeDimensionalTransfiniteInterpolationError
 from objects.CSCG._3d.mesh.domain.inputs.allocator import DomainInputAllocator
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 import random

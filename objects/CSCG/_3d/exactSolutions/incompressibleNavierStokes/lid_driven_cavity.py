@@ -19,7 +19,7 @@ from objects.CSCG._3d.fields.vector.main import _3dCSCG_VectorField
 def _0_(t, x, y, z): return 0 * x
 
 class LidDrivenCavity(incompressible_NavierStokes_Base):
-    """"""
+    """The classic lid driven cavity case."""
 
     def __init__(self, mesh, nu=0.01, lid_velocity=1):
         """"""

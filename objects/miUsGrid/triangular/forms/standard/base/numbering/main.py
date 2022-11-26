@@ -7,7 +7,7 @@
 import sys
 
 if './' not in sys.path: sys.path.append('./')
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from importlib import import_module
 from objects.miUsGrid.triangular.forms.standard.base.numbering.do.main import miUsTriangle_Numbering_Do
 

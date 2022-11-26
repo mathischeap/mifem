@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from functools import lru_cache
-from screws.decorators.accepts import accepts
+from components.decorators.all import accepts
 import numpy as np
-
-
-
 
 class ___Chain_Gathering_Matrix_FIND___(FrozenOnly):
     """"""

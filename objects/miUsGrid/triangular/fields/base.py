@@ -15,6 +15,7 @@ class miUsGrid_TriangularFieldBase(miUsGrid_FiledBase):
     def __init__(self, mesh, valid_time, name):
         """"""
         super(miUsGrid_TriangularFieldBase, self).__init__(mesh, valid_time, name)
+        self.standard_properties.___PRIVATE_add_tag___('miUsTri_field')
 
 
 

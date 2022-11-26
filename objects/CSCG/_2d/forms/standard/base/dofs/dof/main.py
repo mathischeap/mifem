@@ -1,4 +1,4 @@
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 
 from objects.CSCG._2d.forms.standard.base.dofs.dof.visualize import _2dCSCG_SF_DOF_VIS
 

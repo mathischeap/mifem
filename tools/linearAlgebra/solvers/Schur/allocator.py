@@ -12,7 +12,7 @@ if './' not in sys.path: sys.path.append('./')
 from importlib import import_module
 
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 
 class SchurSolverDistributor(FrozenOnly):

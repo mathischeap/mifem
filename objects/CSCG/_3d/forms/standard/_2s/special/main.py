@@ -6,7 +6,7 @@ if './' not in sys.path: sys.path.append('./')
 
 from objects.CSCG._3d.forms.standard._2s.special.vortex_detection import ___3dCSCG_2Form_Vortex_Detection___
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
 from tools.linearAlgebra.elementwiseCache.objects.columnVector.main import EWC_ColumnVector
 

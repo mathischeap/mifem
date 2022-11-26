@@ -9,9 +9,9 @@ Aerodynamics, AE
 TU Delft
 """
 import numpy as np
-from screws.freeze.main import FrozenOnly
-from screws.decorators.accepts import accepts
-from screws.numerical._3dSpace.Jacobian_33 import NumericalJacobian_xyz_33, NumericalPartialDerivative_xyz
+from components.freeze.main import FrozenOnly
+from components.decorators.all import accepts
+from components.numerical._3dSpace.Jacobian_33 import NumericalJacobian_xyz_33, NumericalPartialDerivative_xyz
 from pynverse import inversefunc
 
 

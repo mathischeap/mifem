@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from objects.CSCG._3d.master import FormCaller as _3dCSCG_FormCaller
 from root.read.helpers._3dCSCG.space import ___restore__3dCSCG_Space___

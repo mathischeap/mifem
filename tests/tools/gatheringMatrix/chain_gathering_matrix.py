@@ -8,9 +8,9 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
-from screws.miscellaneous.miprint import miprint
-from screws.miscellaneous.mirand import sample
+from components.freeze.base import FrozenOnly
+from components.miscellaneous.miprint import miprint
+from components.miscellaneous.mirand import sample
 from tests.objects.CSCG._3d.randObj.form_caller import random_FormCaller_of_total_load_around as rf3
 from objects.miUsGrid.triangular.master import Call as miUsFc2
 

@@ -3,9 +3,9 @@
 
 """
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from importlib import import_module
-from screws.numerical.timePlus2dSpace.partial_derivative_as_functions import \
+from components.numerical.timePlus2dSpace.partial_derivative_as_functions import \
     NumericalPartialDerivative_txy_Functions
 from objects.CSCG._2d.fields.vector.numerical.helpers.rot import ___VECTOR_rot_HELPER___
 from objects.CSCG._2d.fields.vector.numerical.helpers.divergence import ___VECTOR_DIV_HELPER___

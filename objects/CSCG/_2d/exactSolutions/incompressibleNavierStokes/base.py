@@ -3,9 +3,9 @@
 
 
 from objects.CSCG._2d.exactSolutions.base import Base
-from screws.numerical.timePlus2dSpace.partial_derivative_as_functions import \
+from components.numerical.timePlus2dSpace.partial_derivative_as_functions import \
     NumericalPartialDerivative_txy_Functions
-from screws.numerical.timePlus2dSpace.partial_derivative import NumericalPartialDerivative_txy
+from components.numerical.timePlus2dSpace.partial_derivative import NumericalPartialDerivative_txy
 
 from objects.CSCG._2d.fields.vector.main import _2dCSCG_VectorField
 from objects.CSCG._2d.fields.scalar.main import _2dCSCG_ScalarField

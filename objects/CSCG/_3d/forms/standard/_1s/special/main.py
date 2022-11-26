@@ -4,7 +4,7 @@ if './' not in sys.path: sys.path.append('./')
 
 from numpy import array
 from itertools import chain
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from tools.linearAlgebra.gathering.regular.matrix.main import Gathering_Matrix
 from tools.linearAlgebra.gathering.vector import Gathering_Vector
 

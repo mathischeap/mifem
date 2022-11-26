@@ -5,7 +5,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.main import FrozenClass
+from components.freeze.main import FrozenClass
 from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_ColumnVector, EWC_SparseMatrix
 from tools.linearAlgebra.linearSystem.customize import ___LinearSystem_Customize___
 from tools.linearAlgebra.linearSystem.condition import ___LinearSystem_Condition___
@@ -71,7 +71,6 @@ class LinearSystem(FrozenClass):
         return self._visualize_
 
     # ------- properties ---------------------------------------------------------------------------
-
     @property
     def assembled(self):
         return self._A_.assembled, self._b_.assembled
@@ -134,7 +133,7 @@ if __name__ == '__main__':
     T2 = t2.matrices.trace
     BMAT = [[M2, E32.T, T2.T],
             [E32, None, None],
-            [T2, None, None]]
+            [T2,  None, None]]
     A = bmat(BMAT)
     SHAPE = A.shape
     assert SHAPE[0] == len(mesh.elements)

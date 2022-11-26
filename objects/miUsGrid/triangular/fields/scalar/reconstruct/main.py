@@ -8,7 +8,7 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from objects.miUsGrid.triangular.fields.scalar.reconstruct.mesh_element.standard import OnMeshElement_for_Standard
 
 class miUsGrid_Triangular_Scalar_Reconstruct(FrozenOnly):

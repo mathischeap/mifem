@@ -11,9 +11,9 @@ from tools.linearAlgebra.elementwiseCache.objects.columnVector.main import EWC_C
 from tools.linearAlgebra.elementwiseCache.operators.bmat.main import bmat
 from tools.linearAlgebra.elementwiseCache.operators.concatenate.main import concatenate
 from tools.linearAlgebra.linearSystem.main import LinearSystem
-from screws.generators.counter import Counter
+from components.generators.counter import Counter
 
-from screws.video.make_a_video_from_images_in_folder import make_a_video_from_images_in_folder
+from components.video.make_a_video_from_images_in_folder import make_a_video_from_images_in_folder
 
 
 def Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename):

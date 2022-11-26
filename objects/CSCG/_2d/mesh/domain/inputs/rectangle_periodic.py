@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from objects.CSCG._2d.mesh.domain.inputs.base import DomainInputBase
-from screws.decorators.classproperty.main import classproperty
+from components.decorators.classproperty.main import classproperty
 
 import random
 from root.config.main import RANK, MASTER_RANK, COMM

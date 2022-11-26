@@ -22,9 +22,9 @@ import matplotlib.pyplot as plt
 from typing import Dict, Union
 from root.config.main import RANK, MASTER_RANK, COMM, np, MPI, SIZE, SECRETARY_RANK
 from objects.CSCG.base.mesh.base import CSCG_MESH_BASE
-from screws.decorators.accepts import accepts, memoize5#, memoize2
-from screws.exceptions import ElementsLayoutError, ElementSidePairError
-from screws.miscellaneous.timer import break_list_into_parts
+from components.decorators.all import accepts, memoize5#, memoize2
+from components.exceptions import ElementsLayoutError, ElementSidePairError
+from components.miscellaneous.timer import break_list_into_parts
 from objects.CSCG._3d.mesh.elements.main import _3dCSCG_Mesh_Elements
 from objects.CSCG._3d.mesh.periodicSetting.main import _3dCSCG_PeriodicDomainSetting
 from objects.CSCG._3d.mesh.legacy.coordinate_transformation.transformer import \

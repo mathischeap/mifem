@@ -103,10 +103,3 @@ class _3dCSCG_Standard_Trace(CSCG_Trace_Form, _3dCSCG_FORM_BASE, ndim=3):
         if self._dofs_ is None:
             self._dofs_ = _3dCSCG_Trace_forms_DOFs(self)
         return self._dofs_
-
-    def ___PRIVATE_do_resemble___(self, obj_or_filename):
-        """
-        :param obj_or_filename:
-        :return:
-        """
-        raise NotImplementedError()

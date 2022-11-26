@@ -1,5 +1,5 @@
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from objects.CSCG._3d.forms.trace.base.dofs.do.find import _3dCSCG_TraceDofs_DoFind
 
 

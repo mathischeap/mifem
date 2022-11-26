@@ -6,12 +6,10 @@ if './' not in sys.path: sys.path.append('/')
 
 from objects.CSCG._2d.exactSolutions.Euler.base import EulerBase
 from numpy import tanh, sin, pi#, cosh
-from screws.miscellaneous.generalized_piecewise_function import genpiecewise
+from components.miscellaneous.generalized_piecewise_function import genpiecewise
 
 class ShearLayerRollup(EulerBase):
-    """
-    See Section 5.2 of MEEVC paper.
-
+    """The shear-layer-rollup case. See Section 5.2 of MEEVC paper.
     """
     def __init__(self, mesh,delta=pi/15, epsilon=0.05):
         self._delta_ = delta

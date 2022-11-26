@@ -1,7 +1,7 @@
 
 
 from objects.CSCG._3d.mesh.domain.inputs.base import _3dDomainInputBase
-from screws.decorators.classproperty.main import classproperty
+from components.decorators.classproperty.main import classproperty
 
 class Periodic_Square_Channel(_3dDomainInputBase):
     """A periodic square channel domain.

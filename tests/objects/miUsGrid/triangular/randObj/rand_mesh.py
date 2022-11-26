@@ -15,7 +15,7 @@ from objects.miUsGrid.triangular.mesh.main import miUsGrid_TriangularMesh
 from random import uniform
 import numpy as np
 from pyevtk.hl import unstructuredGridToVTK
-from screws.miscellaneous.mios import remove
+from components.miscellaneous.mios import remove
 
 COMM.barrier()
 base_path = str(__file__).split('rand_mesh')[0]
@@ -48,9 +48,20 @@ if RANK == MASTER_RANK:  # make sure only the master rank makes the vtu file.
     types = np.ones(12) * 5  # all triangles
     unstructuredGridToVTK(base_path + 'rand0', x, y, z, CON, offsets, types)
 
+
+# noinspection PyUnusedLocal
 def bUpper(x, y): return x == 0
+
+
+# noinspection PyUnusedLocal
 def bDown(x, y): return x == 1
+
+
+# noinspection PyUnusedLocal
 def bLeft(x, y): return y == 0
+
+
+# noinspection PyUnusedLocal
 def bRight(x, y): return y == 1
 
 boundaries = {'Upper': bUpper, 'Down': bDown, 'Left': bLeft, 'Right':bRight}

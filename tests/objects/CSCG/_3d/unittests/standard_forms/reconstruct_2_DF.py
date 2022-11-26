@@ -9,13 +9,13 @@ if './' not in sys.path: sys.path.append('./')
 
 import numpy as np
 
-from __init__ import screws
+from __init__ import components
 from __init__ import cscg3
 
 
 def test_reconstruct_DF():
     """"""
-    screws.miprint("3DF [test_reconstruct_DF] ...... ", flush=True)
+    components.miprint("3DF [test_reconstruct_DF] ...... ", flush=True)
     mesh = cscg3.mesh('crazy', bounds=[(-1,1) for _ in range(3)])([7,8,6], EDM='debug')
     space = cscg3.space('polynomials')([('Lobatto', 5), ('Lobatto', 4), ('Lobatto', 6)])
     FC = cscg3.form(mesh, space)
@@ -29,7 +29,7 @@ def test_reconstruct_DF():
     #---------------------------- standard 2 form ------------------------------------------------
     u = FC('2-f')
 
-    Qn, Qw = screws.Quadrature([14, 15, 16]).quad
+    Qn, Qw = components.Quadrature([14, 15, 16]).quad
     u.CF = vector
     u.CF.current_time = 1
     u.do.discretize()
@@ -43,7 +43,7 @@ def test_reconstruct_DF():
         L2_norm = np.einsum('ijk, i, j, k ->', v0**2 + v1**2 + v2**2, *Qw, optimize='greedy')
         np.testing.assert_almost_equal(L2norm_0, L2_norm, decimal=3)
 
-    Qn, Qw = screws.Quadrature([7, 5, 6]).quad
+    Qn, Qw = components.Quadrature([7, 5, 6]).quad
     DV_coarse = u.reconstruct.discrete_vector(Qn)
     coordinates = DV_coarse.coordinates
     values = DV_coarse.values
@@ -56,7 +56,7 @@ def test_reconstruct_DF():
     #---------------------------- standard 1 form ------------------------------------------------
     u = FC('1-f')
 
-    Qn, Qw = screws.Quadrature([14, 15, 16]).quad
+    Qn, Qw = components.Quadrature([14, 15, 16]).quad
     u.CF = vector
     u.CF.current_time = 1
     u.do.discretize()
@@ -70,7 +70,7 @@ def test_reconstruct_DF():
         L2_norm = np.einsum('ijk, i, j, k ->', v0**2 + v1**2 + v2**2, *Qw, optimize='greedy')
         np.testing.assert_almost_equal(L2norm_0, L2_norm, decimal=4)
 
-    Qn, Qw = screws.Quadrature([7, 5, 6]).quad
+    Qn, Qw = components.Quadrature([7, 5, 6]).quad
     DV_coarse = u.reconstruct.discrete_vector(Qn)
     coordinates = DV_coarse.coordinates
     values = DV_coarse.values
@@ -83,7 +83,7 @@ def test_reconstruct_DF():
     #------------- Standard 0-form --------------------------------------------------------------
     u = FC('0-f')
 
-    Qn, Qw = screws.Quadrature([14, 15, 16]).quad
+    Qn, Qw = components.Quadrature([14, 15, 16]).quad
     u.CF = scalar
     u.CF.current_time = 1
     u.do.discretize()
@@ -97,7 +97,7 @@ def test_reconstruct_DF():
         L2_norm = np.einsum('ijk, i, j, k ->', v0**2, *Qw, optimize='greedy')
         np.testing.assert_almost_equal(L2norm_0, L2_norm, decimal=4)
 
-    Qn, Qw = screws.Quadrature([7, 5, 6]).quad
+    Qn, Qw = components.Quadrature([7, 5, 6]).quad
     DV_coarse = u.reconstruct.discrete_field(Qn)
     coordinates = DV_coarse.coordinates
     values = DV_coarse.values
@@ -110,7 +110,7 @@ def test_reconstruct_DF():
     #------------- Standard 2-form --------------------------------------------------------------
     u = FC('3-f')
 
-    Qn, Qw = screws.Quadrature([14, 15, 16]).quad
+    Qn, Qw = components.Quadrature([14, 15, 16]).quad
     u.CF = scalar
     u.CF.current_time = 1
     u.do.discretize()
@@ -124,7 +124,7 @@ def test_reconstruct_DF():
         L2_norm = np.einsum('ijk, i, j, k ->', v0**2, *Qw, optimize='greedy')
         np.testing.assert_almost_equal(L2norm_0, L2_norm, decimal=3)
 
-    Qn, Qw = screws.Quadrature([7, 5, 6]).quad
+    Qn, Qw = components.Quadrature([7, 5, 6]).quad
     DV_coarse = u.reconstruct.discrete_field(Qn)
     coordinates = DV_coarse.coordinates
     values = DV_coarse.values

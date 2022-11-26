@@ -3,7 +3,7 @@
 
 
 from root.config.main import RANK, MASTER_RANK, COMM
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 import matplotlib.pyplot as plt
 from matplotlib import cm

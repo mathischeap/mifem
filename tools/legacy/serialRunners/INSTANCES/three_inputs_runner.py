@@ -16,7 +16,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from time import localtime, strftime, time
-from screws.decorators.accepts import accepts
+from components.decorators.all import accepts
 from tools.legacy.serialRunners._runner_ import Runner
 from tools.legacy.serialRunners.INSTANCES.COMPONENTS.tir_drw import TIR_DRW
 from tools.legacy.serialRunners.INSTANCES.COMPONENTS.m_tir_tabular import M_TIR_Tabulate

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-from screws.freeze.main import FrozenOnly
-from screws.decorators.accepts import accepts
-from screws.numerical._2dSpace.Jacobian_21 import NumericalJacobian_xy_22
+from components.freeze.main import FrozenOnly
+from components.decorators.all import accepts
+from components.numerical._2dSpace.Jacobian_21 import NumericalJacobian_xy_22
 from pynverse import inversefunc
 
 class InterpolationBase(FrozenOnly):

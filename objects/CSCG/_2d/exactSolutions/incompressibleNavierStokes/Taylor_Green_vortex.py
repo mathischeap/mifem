@@ -10,9 +10,7 @@ from numpy import sin, cos, exp, pi
 
 
 class TaylorGreenVortex(incompressibleNavierStokesBase):
-    """
-    See Section 5.1 of MEEVC paper.
-
+    """The 2d Taylor Green vortex case. See Section 5.1 of MEEVC paper.
     """
     def __init__(self, mesh, nu=0.01):
         """

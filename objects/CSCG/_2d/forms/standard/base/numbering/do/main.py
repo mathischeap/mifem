@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from objects.CSCG._2d.forms.standard.base.numbering.do.find import _2dCSCG_SF_numbering_do_find
 
 

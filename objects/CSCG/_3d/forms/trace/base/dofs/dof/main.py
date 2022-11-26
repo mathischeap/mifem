@@ -1,6 +1,6 @@
 
 from root.config.main import *
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.forms.trace.base.dofs.dof.basis_function import _3dCSCG_TF_DOF_BF
 
 from objects.CSCG._3d.forms.trace.base.dofs.dof.visualize.main import _3dCSCG_Trace_forms_DOF_VISUALIZE

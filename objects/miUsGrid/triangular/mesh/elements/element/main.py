@@ -10,11 +10,11 @@ import numpy as np
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from objects.miUsGrid.triangular.mesh.elements.element.coordinate_transformation.main import miUsGrid_TriangularMesh_Element_CT
 from objects.miUsGrid.triangular.mesh.elements.element.visualize import miUsGrid_TriangularMesh_Element_Visualize
-from screws.functions._2dSpace.distance import distance
-from screws.functions._2dSpace.angles_of_triangle import angles_of_triangle
+from components.functions._2dSpace.distance import distance
+from components.functions._2dSpace.angles_of_triangle import angles_of_triangle
 
 class miUsGrid_TriangularMesh_Element(FrozenOnly):
     """"""

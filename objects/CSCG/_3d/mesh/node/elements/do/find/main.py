@@ -2,7 +2,7 @@
 
 import sys
 if './' not in sys.path: sys.path.append('./')
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from root.config.main import COMM, MPI
 
 from objects.CSCG._3d.mesh.node.elements.do.find.helpers.SOS_internal import _3dCSCG_InternalNodeSOS

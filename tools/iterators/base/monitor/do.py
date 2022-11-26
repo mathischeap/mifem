@@ -1,17 +1,14 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-from screws.freeze.main import FrozenOnly
-import codecs
-from screws.emails.plain import SendAdminAnHTMLEmail, whether_internet_connected, SendAdminAnEmail
+from components.freeze.main import FrozenOnly
 import matplotlib, psutil, platform
 
 import matplotlib.pyplot as plt
 from matplotlib import cm
-import os
 from time import time, sleep
 import datetime
 import socket
-from screws.miscellaneous.timer import MyTimer
+from components.miscellaneous.timer import MyTimer
 
 
 class IteratorMonitorDo(FrozenOnly):
@@ -83,11 +80,10 @@ class IteratorMonitorDo(FrozenOnly):
                     monitor._do_first_assessment_counter_ += 1
                     monitor._do_first_assessment_estimate_ += monitor._estimated_remaining_time_
                     est = monitor._do_first_assessment_estimate_ / monitor._do_first_assessment_counter_
-                    if est > monitor.___email_report_time___:
-                        monitor._do_first_email_warning_report_ = True
+
                     if est > monitor.___graph_report_time___:
                         monitor._do_first_graph_warning_report_ = True
-                    if (monitor._do_first_email_warning_report_ and monitor._do_first_graph_warning_report_) or \
+                    if monitor._do_first_graph_warning_report_ or \
                         monitor._do_first_assessment_counter_ >= 5:
                         monitor._do_first_assessment_ = False
                         del monitor._do_first_assessment_counter_, monitor._do_first_assessment_estimate_
@@ -184,12 +180,6 @@ class IteratorMonitorDo(FrozenOnly):
     def ___PRIVATE_generate_open_graph_report___(self):
         """"""
         raise NotImplementedError()
-
-    def ___PRIVATE_generate_open_email_report___(self):
-        """"""
-        raise NotImplementedError()
-
-
 
 
     def generate_graph_report(self):
@@ -546,125 +536,6 @@ class IteratorMonitorDo(FrozenOnly):
             monitor.___last_graph_save_time___ = time()
         else:
             pass
-
-    def send_email_to_users(self):
-        """"""
-        if not whether_internet_connected(): return
-
-        hostname = socket.gethostname()
-        if hostname not in ('DT-YI-HT20', 'DESKTOP-SYSU-YiZhang'): return
-
-
-
-        monitor = self._monitor_
-
-        if monitor.IS.open: return self.___PRIVATE_generate_open_email_report___()
-
-
-
-
-        # last step save and has cost long enough
-        judge1 = (monitor._computed_steps_ == monitor._max_steps_ or monitor._iterator_.shut_down) and \
-                  (monitor._total_cost_ > monitor.___email_report_time___ or monitor._ever_do_email_report_)
-        # intermediate save: has cost a certain time, or it will cost long time, so we do a first report
-        judge2 = ((monitor._current_time_ - monitor.___last_email_sent_time___) > monitor.___email_report_time___) or \
-                 monitor._do_first_email_warning_report_
-        # to judge special iteration stop: shut down by the solver.
-        judge_sd = monitor._iterator_.shut_down
-
-        if monitor._do_first_email_warning_report_:
-            monitor._do_first_email_warning_report_ = False
-        else:
-            pass
-
-        if judge1 or judge2:
-
-            if not monitor._ever_do_email_report_: monitor._ever_do_email_report_ = True
-
-
-            # noinspection PyBroadException
-            try:
-                html = monitor.summary_html
-                indices = self.___Pr_select_reasonable_amount_of_data___(20, last_num=5)
-                RDF = monitor._iterator_.RDF.iloc[indices]
-                RDF.to_html('{}_temp_html.html'.format(
-                    monitor._iterator_.standard_properties.name))
-                rdf = codecs.open("{}_temp_html.html".format(
-                    monitor._iterator_.standard_properties.name), 'r')
-                html += rdf.read()
-                rdf.close()
-                os.remove("{}_temp_html.html".format(
-                    monitor._iterator_.standard_properties.name))
-                html += """
-                </body>
-                </html>
-                """
-                if judge1:
-                    subject = f'mifem.MPI Completion Report {monitor._computed_steps_}/{monitor._max_steps_}'
-                    header = f"""
-                    <html>
-                    <body>
-
-                    <h1 style="background-color:DarkGreen;"> mifem.MPI [{monitor._iterator_.__class__.__name__}] 
-                    HTML completion report {monitor._computed_steps_}/{monitor._max_steps_}</h1>"""
-                else:
-                    subject = f'mifem.MPI Processing Report {monitor._computed_steps_}/{monitor._max_steps_}'
-                    header = f"""
-                    <html>
-                    <body>
-
-                    <h1 style="background-color:DarkRed;"> mifem.MPI [{monitor._iterator_.__class__.__name__}]
-                    HTML processing report {monitor._computed_steps_}/{monitor._max_steps_}</h1>"""
-
-                if judge_sd:
-                    pass #May be we wanna some special sign when iteration terminated by the solver
-
-                html = header + html
-                recent_IGR = 'MPI_IGR_{}.png'.format(
-                    monitor._iterator_.standard_properties.name)
-
-                # noinspection PyBroadException
-                try: # in case attaching picture fail
-                    if os.path.isfile(recent_IGR):
-                        SendAdminAnHTMLEmail()(html, subject=subject, attachment_images=recent_IGR)
-                    else:
-                        SendAdminAnHTMLEmail()(html, subject=subject)
-                except:
-                    SendAdminAnHTMLEmail()(html, subject=subject)
-
-            except:  # somehow, the email sending is wrong, we then just ignore it.
-                # noinspection PyBroadException
-                try:
-                    message = "\n<{}> is running.\n".format(monitor._iterator_.standard_properties.name)
-                    message += "Iterations: {}/{}.\n".format(monitor._computed_steps_, monitor._max_steps_)
-                    message += "Total cost: {}.\n".format(MyTimer.seconds2dhmsm(monitor._total_cost_))
-                    message += "Each iteration costs: {}.\n".format(
-                        MyTimer.seconds2dhmsm(monitor._average_each_run_cost_))
-                    message += "Estimated remaining time: {}.\n\n".format(
-                        MyTimer.seconds2dhmsm(monitor._estimated_remaining_time_))
-                    message += "Start at :: {}.\n".format(monitor._str_started_time_)
-                    if monitor._estimated_remaining_time_ <= 0.1:
-                        EET = 'NOW'
-                    else:
-                        EET = str(monitor._estimated_end_time_)[:19]
-                    message += "E end at:: {}.\n\n".format(EET)
-
-                    for solver_message in monitor._iterator_.message:
-                        message += str(solver_message) + '\n'
-
-                    SendAdminAnEmail()(message)
-                except:
-                    # noinspection PyBroadException
-                    try:
-                        SendAdminAnEmail()("Iterations are running; sending message failed.")
-                    except:
-                        # all attempts failed.
-                        pass # we just pass, forget about the email report.
-
-            monitor.___last_email_sent_time___ = time()
-        else:
-            pass
-
 
     @staticmethod
     def ___DO_filter_extreme_time___(times):

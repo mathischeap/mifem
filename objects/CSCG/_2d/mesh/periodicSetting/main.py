@@ -9,7 +9,7 @@ coded for the MPI mesh.
          TU Delft, Delft, Netherlands
 
 """
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._2d.mesh.periodicSetting.periodic_boundary_pairs.regular.main import _2dCSCG_Regular_PBP
 
 

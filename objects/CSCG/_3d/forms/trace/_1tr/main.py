@@ -12,7 +12,7 @@ from abc import ABC
 if './' not in sys.path: sys.path.append('./')
 
 from root.config.main import np
-from screws.quadrature import Quadrature
+from components.quadrature import Quadrature
 from objects.CSCG._3d.forms.trace.base.main import _3dCSCG_Standard_Trace
 from scipy.sparse import csr_matrix, bmat
 from objects.CSCG._3d.forms.trace._1tr.discretize.main import _3dCSCG_1Trace_Discretize

@@ -9,7 +9,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 import numpy as np
 from evtk import hl
-from screws.miscellaneous.mios import mkdir, cleandir
+from components.miscellaneous.mios import mkdir, cleandir
 from root.config.main import COMM
 
 

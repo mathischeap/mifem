@@ -11,7 +11,7 @@ Aerodynamics, AE
 TU Delft
 """
 import pandas as pd
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 class DataStructure(FrozenOnly):
     """ """

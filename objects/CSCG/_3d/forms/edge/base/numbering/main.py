@@ -8,7 +8,7 @@
 
 """
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from importlib import import_module
 from objects.CSCG._3d.forms.edge.base.numbering.do import _3dCSCG_Edge_Numbering_DO
 

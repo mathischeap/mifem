@@ -10,13 +10,13 @@ if mifem_dir not in sys.path: sys.path.append(mifem_dir)
 
 from __init__ import tools as mt
 from tools.__init__ import linalg
-from __init__ import screws as ms
+from __init__ import components as mc
 from __init__ import cscg2
 from root.config.main import RANK, MASTER_RANK
 from numpy import pi
 import numpy as np
-from screws.miscellaneous.mios import rmdir, remove
-from screws.miscellaneous.miprint import miprint
+from components.miscellaneous.mios import rmdir, remove
+from components.miscellaneous.miprint import miprint
 
 def test_Regular_Newton_Raphson():
     """"""
@@ -40,8 +40,8 @@ def test_Regular_Newton_Raphson():
                         real_time_monitor=True,
                         name=iterator_name)
 
-    IC = ms.Counter()
-    ms.mkdir(image_folder)
+    IC = mc.Counter()
+    mc.mkdir(image_folder)
 
     mesh = cscg2.mesh('crazy_periodic',
                       bounds=[[0, 2 * pi], [0, 2 * pi]], c=c)(
@@ -161,7 +161,7 @@ def test_Regular_Newton_Raphson():
         output2 = data[-2][1:]
         np.testing.assert_array_almost_equal(output1, output2)
 
-    ms.make_a_video_from_images_in_folder(image_folder, duration=t, clean_images=True)
+    mc.make_a_video_from_images_in_folder(image_folder, duration=t, clean_images=True)
 
     remove('shear_layer_rollup_p1_NRR_test.csv')
     remove('MPI_IGR_shear-layer-rollup-p1_NRR_test.png')
@@ -173,5 +173,5 @@ def test_Regular_Newton_Raphson():
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python __tests__/unittests/nonlinear_solver/regular_Newton_Raphson.py
+    # mpiexec -n 4 python tests/tools/nonlinearSolver/regular_Newton_Raphson.py
     test_Regular_Newton_Raphson()

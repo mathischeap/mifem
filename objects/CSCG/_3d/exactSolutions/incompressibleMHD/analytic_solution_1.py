@@ -15,7 +15,7 @@ from objects.CSCG._3d.exactSolutions.incompressibleMHD.base import incompressibl
 
 
 class AS1(incompressible_MHD_Base):
-    """"""
+    """The first analytical solution."""
 
     def __init__(self, mesh, Re=1e4, Rm=1e4, c=1):
         """"""

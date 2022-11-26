@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*_
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from tools.linearAlgebra.solvers.Schur.allocator import SchurSolverDistributor
 from tools.linearAlgebra.solvers.regular.allocator import RegularSolverDistributor
 from tools.linearAlgebra.linearSystem.solve.helpers.routine_2b_run import RoutineToBeRun

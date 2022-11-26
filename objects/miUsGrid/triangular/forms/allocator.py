@@ -8,10 +8,33 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
+from root.config.main import RANK, MASTER_RANK
 
 class miUsGrid_FormsAllocator(FrozenOnly):
     """"""
+
+    @classmethod
+    def listing(cls, printing=True, returning=True):
+        """"""
+        if RANK != MASTER_RANK: return
+
+        listing = ''
+        names = cls.___form_name___()
+        paths = cls.___form_path___()
+        for ID in names:
+            assert ID in paths, f"ID={ID} finds no path."
+            listing += ">>> " + ID + ' ~ ' + names[ID] + '\n\n'
+
+        if printing:
+            print(listing)
+        else:
+            pass
+
+        if returning:
+            return listing
+        else:
+            pass
 
     @classmethod
     def ___form_name___(cls):
@@ -35,6 +58,8 @@ class miUsGrid_FormsAllocator(FrozenOnly):
                 '1-f-o': base_path + "standard._1.outer.main", # d on outer 1-form is div
                 '2-f-o': base_path + "standard._2.outer.main",
                 }
+
+
 
 if __name__ == "__main__":
     # mpiexec -n 4 python 

@@ -24,7 +24,7 @@ if __name__ == "__main__":
     from root.config.main import RANK
     import matplotlib.pyplot as plt
     from objects.miUsGrid.triangular.fields.scalar.main import miUsGrid_Triangular_Scalar
-    from objects.miUsGrid.triangular.__test__.Random.test_mesh import mesh
+    from tests.objects.miUsGrid.triangular.randObj.rand_mesh import mesh
     from objects.miUsGrid.triangular.space.main import miUsGrid_TriangularFunctionSpace
 
     P = [i for i in range(1,30)]

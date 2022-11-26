@@ -2,7 +2,7 @@
 
 import os
 import matplotlib.pyplot as plt
-from screws.miscellaneous.timer import MyTimer
+from components.miscellaneous.timer import MyTimer
 
 
 def ___gmres_plot_residuals___(residuals, solve_name, scheme_name):

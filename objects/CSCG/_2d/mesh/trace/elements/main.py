@@ -3,7 +3,7 @@
 
 from root.config.main import *
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._2d.mesh.trace.elements.element.main import _2dCSCG_Trace_Element
 
 

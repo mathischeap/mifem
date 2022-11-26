@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from root.config.main import *
-from tools.linearAlgebra.dataStructures.global_matrix.main import LocallyFullVector
-from screws.exceptions import LinerSystemSolverDivergenceError
+from tools.linearAlgebra.dataStructures.globalMatrix.main import LocallyFullVector
+from components.exceptions import LinerSystemSolverDivergenceError
 
 from tools.linearAlgebra.solvers.regular.GMRES.helpers.components.stop_criterion import ___gmres_stop_criterion___
 from tools.linearAlgebra.solvers.regular.GMRES.helpers.components.residual_ploter import ___gmres_plot_residuals___

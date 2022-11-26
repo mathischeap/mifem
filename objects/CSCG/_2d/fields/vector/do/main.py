@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from objects.CSCG._2d.fields.vector.do.reconstruct.main import _2dCSCG_Vector_Do_Reconstruct
 from objects.CSCG._2d.fields.vector.do.inner_product.main import _2CSCG_VectorField_InnerProduct
 
-from screws.quadrature import Quadrature
+from components.quadrature import Quadrature
 from root.config.main import RANK, MASTER_RANK, COMM, np
 
 class _2dCSCG_VectorField_DO(FrozenOnly):

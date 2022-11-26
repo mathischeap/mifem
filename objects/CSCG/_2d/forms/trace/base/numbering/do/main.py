@@ -8,7 +8,7 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from objects.CSCG._2d.forms.trace.base.numbering.do.find import _2dCSCG_Trace_Numbering_DO_FIND
 
 

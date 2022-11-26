@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 
-from screws.warnings.trace_element import TraceElementWarning
-from screws.freeze.base import FrozenOnly
+from components.warnings.trace_element import TraceElementWarning
+from components.freeze.base import FrozenOnly
 import numpy as np
-from screws.functions._3dSpace.angle import angle_between_two_vectors
+from components.functions._3dSpace.angle import angle_between_two_vectors
 
 import warnings
 

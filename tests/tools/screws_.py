@@ -3,19 +3,17 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 
-import random, time
-import os
+import random
 
-from screws.functions._3dSpace.scaling import ScalingFunc
-from screws.functions._3dSpace.opposite import Opposite
-from screws.functions._3dSpace.constant import CFG
-from screws.functions._3dSpace._0_ import _0_
-from screws.functions._3dSpace.Cartesian_spherical_coordinate_switcher import CartSphSwitcher
-from screws.functions._3dSpace.Cartesian_cylinder_coordinate_switcher import CartCylSwitcher
-from screws.numerical.timePlus3dSpace.partial_derivative_as_functions import NumericalPartialDerivative_txyz_Functions
-from screws.numerical.timePlus3dSpace.partial_derivative import NumericalPartialDerivative_txyz
-from screws.emails.plain import SendAdminAnEmail, SendAdminAnHTMLEmail
-from screws.miscellaneous.generalized_piecewise_function import genpiecewise
+from components.functions._3dSpace.scaling import ScalingFunc
+from components.functions._3dSpace.opposite import Opposite
+from components.functions._3dSpace.constant import CFG
+from components.functions._3dSpace._0_ import _0_
+from components.functions._3dSpace.Cartesian_spherical_coordinate_switcher import CartSphSwitcher
+from components.functions._3dSpace.Cartesian_cylinder_coordinate_switcher import CartCylSwitcher
+from components.numerical.timePlus3dSpace.partial_derivative_as_functions import NumericalPartialDerivative_txyz_Functions
+from components.numerical.timePlus3dSpace.partial_derivative import NumericalPartialDerivative_txyz
+from components.miscellaneous.generalized_piecewise_function import genpiecewise
 
 from functools import partial
 
@@ -59,90 +57,6 @@ def test_SCREWS_NO1_3d_functions():
     np.testing.assert_array_almost_equal(z, Z)
 
     return 1
-
-
-
-def test_SCREWS_NO2_sending_an_email_to_admin(force_to_do=False):
-    """ """
-    if RANK == MASTER_RANK:
-        print("-@- [test_SCREWS_NO2_sending_an_email_to_admin] ...... ", flush=True)
-
-        # noinspection PyBroadException
-        try:
-            ct = time.ctime()
-            ct_format = time.strptime(ct, '%a %b %d %H:%M:%S %Y')
-            ct_str = time.strftime("%Y %m %d %H %M %S", ct_format)
-            Y, M, D, H, _, _ = ct_str.split(' ')
-            Y, M, D, H, = int(Y), int(M), int(D), int(H)
-            Current_day = (Y - 1) * 365 * 24 + (M - 1) * 30 * 24 + D * 24 + H
-
-            absolute_path = os.path.dirname(__file__)
-
-            with open(absolute_path + '/auxiliaries/___private_developer_email_admin_1___.txt', 'r') as f:
-                plain_last_time_day = f.readline()
-                time_format = time.strptime(plain_last_time_day, '%a %b %d %H:%M:%S %Y')
-                time_str = time.strftime("%Y %m %d %H %M %S", time_format)
-                Y, M, D, H, _, _ = time_str.split(' ')
-                Y, M, D, H = int(Y), int(M), int(D), int(H)
-                plain_last_time_day = (Y - 1) * 365 * 24 + (M - 1) * 30 * 24 + D * 24 + H
-
-            with open(absolute_path + '/auxiliaries/___private_developer_email_admin_2___.txt', 'r') as f:
-                email_last_time_day = f.readline()
-                time_format = time.strptime(email_last_time_day, '%a %b %d %H:%M:%S %Y')
-                time_str = time.strftime("%Y %m %d %H %M %S", time_format)
-                Y, M, D, H, _, _ = time_str.split(' ')
-                Y, M, D, H = int(Y), int(M), int(D), int(H)
-                email_last_time_day = (Y - 1) * 365 * 24 + (M - 1) * 30 * 24 + D * 24 + H
-
-            D1 = Current_day-plain_last_time_day
-            D2 = Current_day-email_last_time_day
-
-            i = random.random()
-            if force_to_do or i > 0.98 or D1 > 24 * 14: # 2% chance to do this test or did not test for more than 14 days
-                text = 'A plain unittest message. You see this when a successful unittest just passes.'
-                code = SendAdminAnEmail()(text)
-                if code == 1:
-                    with open(absolute_path + '/auxiliaries/___private_developer_email_admin_1___.txt', 'w') as f:
-                        f.write(time.ctime())
-                    if force_to_do:
-                        print("   ~ Plain test email sent. (forced to do)", flush=True)
-                    elif i > 0.98:
-                        print("   ~ Plain test email sent. (2% chance)", flush=True)
-                    else:
-                        print("   ~ Plain test email sent. (It's time!)", flush=True)
-                elif code == 0:
-                    print("   ~ Plain test email sent failed. But it is OK, it is not an error.")
-                else:
-                    raise Exception(f"unknown plain email sending code {code}.")
-            else: # we do not do the test.
-                print("   ~ Plain email test skipped.", flush=True)
-
-            i = random.random()
-            if force_to_do or i > 0.98 or D2 > 24 * 7: # 2% chance to do this test or did not test for more than 7 days
-                text = 'A HTML unittest message. You see this when a successful unittest just passes.'
-                code = SendAdminAnHTMLEmail()(text)
-                if code == 1:
-                    with open(absolute_path + '/auxiliaries/___private_developer_email_admin_2___.txt', 'w') as f:
-                        f.write(time.ctime())
-                    if force_to_do:
-                        print("   ~ HTML test email sent. (forced to do)", flush=True)
-                    elif i > 0.98:
-                        print("   ~ HTML test email sent. (2% chance)", flush=True)
-                    else:
-                        print("   ~ HTML test email sent. (It's time!)", flush=True)
-                elif code == 0:
-                    print("   ~ HTML test email sent failed. But it is OK, it is not an error.")
-                else:
-                    raise Exception(f"unknown HTML email sending code {code}.")
-            else: # we do not do the test.
-                print("   ~ HTML email test skipped.", flush=True)
-
-        except:
-
-            pass
-
-    return 1
-
 
 
 def test_SCREWS_NO3_4d_functions():
@@ -226,4 +140,4 @@ def test_SCREWS_NO4_generalized_piecewise_function():
 if __name__ == '__main__':
     # mpiexec python __tests__\unittests\screws_.py
 
-    test_SCREWS_NO2_sending_an_email_to_admin()
+    test_SCREWS_NO4_generalized_piecewise_function()

@@ -3,7 +3,7 @@
 
 
 from objects.CSCG._3d.mesh.domain.inputs.base import _3dDomainInputBase
-from screws.decorators.classproperty.main import classproperty
+from components.decorators.classproperty.main import classproperty
 
 
 

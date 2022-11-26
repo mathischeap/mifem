@@ -8,8 +8,8 @@ The 2d Euler flows (incompressible, constant density, inviscid Navier-Stokes flo
 
 import numpy as np
 from objects.CSCG._2d.exactSolutions.base import Base
-from screws.numerical.timePlus2dSpace.partial_derivative import NumericalPartialDerivative_txy
-from screws.numerical.timePlus2dSpace.partial_derivative_as_functions import \
+from components.numerical.timePlus2dSpace.partial_derivative import NumericalPartialDerivative_txy
+from components.numerical.timePlus2dSpace.partial_derivative_as_functions import \
     NumericalPartialDerivative_txy_Functions
 
 from objects.CSCG._2d.fields.vector.main import _2dCSCG_VectorField

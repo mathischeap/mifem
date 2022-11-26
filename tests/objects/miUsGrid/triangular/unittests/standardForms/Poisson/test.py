@@ -10,9 +10,9 @@ if './' not in sys.path: sys.path.append('./')
 from __init__ import miTri, tools
 import numpy as np
 
-from screws.freeze.base import FrozenOnly
-from screws.miscellaneous.miprint import miprint
-from screws.miscellaneous.mios import remove, isfile
+from components.freeze.base import FrozenOnly
+from components.miscellaneous.miprint import miprint
+from components.miscellaneous.mios import remove, isfile
 from tools.run.reader import ParallelMatrix3dInputRunner
 
 import os

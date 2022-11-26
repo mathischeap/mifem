@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 from objects.CSCG._2d.mesh.trace.elements.element.IS import _2dCSCG_TraceElement_IS
 from objects.CSCG._2d.mesh.trace.elements.element.coordinate_transformation.main import \

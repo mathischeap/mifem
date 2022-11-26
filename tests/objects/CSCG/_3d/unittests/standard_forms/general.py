@@ -15,7 +15,7 @@ from root.config.main import *
 from scipy.sparse import linalg as spspalinalg
 
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
-from screws.exceptions import ThreeDimensionalTransfiniteInterpolationError
+from components.exceptions import ThreeDimensionalTransfiniteInterpolationError
 from tests.objects.CSCG._3d.randObj.form_caller import random_mesh_and_space_of_total_load_around
 from tests.objects.CSCG._3d.randObj.form_caller import random_FormCaller_of_total_load_around
 from tests.objects.CSCG._3d.randObj.field import random_vector

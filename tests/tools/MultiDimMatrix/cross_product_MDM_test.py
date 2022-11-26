@@ -13,7 +13,7 @@ if './' not in sys.path: sys.path.append('./')
 
 import numpy as np
 
-from screws.miscellaneous.miprint import miprint
+from components.miscellaneous.miprint import miprint
 
 from tests.objects.CSCG._2d.randObj.field import random_vector as rv2
 from tests.objects.CSCG._2d.randObj.field import random_scalar as rs2

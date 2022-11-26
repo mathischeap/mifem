@@ -15,7 +15,7 @@ from types import FunctionType, MethodType
 from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_ColumnVector
 from objects.CSCG._3d.fields.base import _3dCSCG_Continuous_FORM_BASE
 from functools import partial
-from screws.functions.timePlus3dSpace.constant import CFG
+from components.functions.timePlus3dSpace.constant import CFG
 
 from importlib import import_module
 from objects.CSCG._3d.fields.vector.numerical.main import _3dCSCG_VectorField_Numerical
@@ -44,6 +44,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
             pass
         super().__init__(mesh, ftype, valid_time)
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_vector_field')
+        self.standard_properties.___PRIVATE_add_tag___('vector_field')
         self.standard_properties.name = name
         self.___PRIVATE_set_func___(func, ftype=ftype)
         self._previous_func_id_time_ = (None, None, None)

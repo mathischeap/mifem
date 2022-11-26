@@ -7,7 +7,7 @@
 import sys
 
 if './' not in sys.path: sys.path.append('./')
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.miUsGrid.triangular.forms.standard._2.base.export.vtk.main import miUsTriangular_S2F_Export_VTK
 
 

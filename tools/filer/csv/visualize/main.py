@@ -8,8 +8,8 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
-from screws.matplotWrappers.plot import plot, semilogy, loglog
+from components.freeze.base import FrozenOnly
+from components.matplotWrappers.plot import plot, semilogy, loglog
 from root.config.main import RANK, MASTER_RANK
 
 class csvFilerVisualize(FrozenOnly):

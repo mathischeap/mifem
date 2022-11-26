@@ -2,7 +2,7 @@
 
 
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 
 
 from objects.CSCG.base.ADF.base.BC.interpret.main import CSCG_AFORM_BC_Interpret

@@ -4,7 +4,7 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/09/29 8:51 PM
 """
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 import numpy as np
 from scipy import sparse as spspa
 

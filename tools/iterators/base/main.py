@@ -3,9 +3,9 @@ import os
 import pandas as pd
 from tqdm import tqdm
 from time import time, sleep
-from screws.freeze.main import FrozenClass
-from screws.miscellaneous.timer import NumpyStyleDocstringReader
-from screws.miscellaneous.timer import randomStringDigits
+from components.freeze.main import FrozenClass
+from components.miscellaneous.timer import NumpyStyleDocstringReader
+from components.miscellaneous.timer import randomStringDigits
 import inspect, pickle, psutil
 
 from root.config.main import COMM, RANK, MASTER_RANK, ASSEMBLE_COST
@@ -82,6 +82,7 @@ class Iterator(FrozenClass):
     @dt.setter
     def dt(self,dt):
         assert dt > 0
+        # noinspection PyAttributeOutsideInit
         self._dt_ = dt
 
     @property
@@ -100,6 +101,7 @@ class Iterator(FrozenClass):
     @t.setter
     def t(self, t):
         assert t > self.t
+        # noinspection PyAttributeOutsideInit
         self._t_ = t
 
     @property
@@ -229,8 +231,10 @@ class Iterator(FrozenClass):
             self.___shut_down_reason___ = shut_down
             self._shut_down_ = 1
         else:
+            # noinspection PyAttributeOutsideInit
             self._shut_down_ = shut_down
             if shut_down:
+                # noinspection PyAttributeOutsideInit
                 self.___shut_down_reason___ = ''
 
         assert shut_down in (1, 0, True, False), "Now, shut_down must be 1, 0, True or False."
@@ -258,6 +262,7 @@ class Iterator(FrozenClass):
 
     @exit_code.setter
     def exit_code(self, exit_code):
+        # noinspection PyAttributeOutsideInit
         self._exit_code_ = exit_code
 
 
@@ -275,6 +280,7 @@ class Iterator(FrozenClass):
         for i, mi in enumerate(message):
             assert isinstance(mi, str), f"message must be tuple or list of str, " \
                                         f"now message[{i}]={mi} is not str"
+        # noinspection PyAttributeOutsideInit
         self._message_ = message
 
 
@@ -361,7 +367,6 @@ class Iterator(FrozenClass):
                     # update auto save
                     self.monitor.do.auto_save()
                     self.monitor.do.generate_graph_report()
-                    self.monitor.do.send_email_to_users()
 
                 # noinspection PyUnboundLocalVariable
                 pbar.update(1)
@@ -417,6 +422,7 @@ class Iterator(FrozenClass):
                     except:  # save it to a new file!
                         # noinspection PyBroadException
                         try: # may be the solver property is stopping the saving.
+                            # noinspection PyAttributeOutsideInit
                             self._solver_ = None
                             with open(filename+'.mitr', 'wb') as output:
                                 pickle.dump(self, output, pickle.HIGHEST_PROTOCOL)

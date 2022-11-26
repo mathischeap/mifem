@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
-from screws.freeze.main import FrozenOnly
-from screws.exceptions import ElementEdgePairError
+from components.freeze.main import FrozenOnly
+from components.exceptions import ElementEdgePairError
 from objects.CSCG._2d.mesh.do.find import _2dCSCG_Mesh_DO_FIND
 import random
 

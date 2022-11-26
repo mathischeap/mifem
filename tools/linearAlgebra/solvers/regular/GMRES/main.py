@@ -8,12 +8,12 @@ SIAM J. ScI. STAT. COMPUT., 1986]
 
 
 from tools.linearAlgebra.preconditioners.allocator import PreconditionerAllocator
-from screws.miscellaneous.timer import MyTimer
+from components.miscellaneous.timer import MyTimer
 
 from tools.linearAlgebra.solvers.regular.GMRES.helpers.mpi_v0 import ___mpi_v0_gmres___
 from tools.linearAlgebra.solvers.regular.GMRES.helpers.mpi_v1 import ___mpi_v1_gmres___
 from tools.linearAlgebra.solvers.regular.GMRES.helpers.scipy_sparse_linalg_gmres import ___sp_sp_linalg_gmres___
-from tools.linearAlgebra.dataStructures.vectors.locally_full.main import LocallyFullVector
+from tools.linearAlgebra.dataStructures.vectors.locallyFull.main import LocallyFullVector
 
 from tools.linearAlgebra.solvers.regular.base import ParallelSolverBase
 

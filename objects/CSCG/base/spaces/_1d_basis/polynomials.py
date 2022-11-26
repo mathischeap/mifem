@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import matplotlib.pyplot as plt
-from screws.freeze.main import FrozenOnly
-from screws.quadrature import Quadrature
+from components.freeze.main import FrozenOnly
+from components.quadrature import Quadrature
 from root.config.main import *
 
 

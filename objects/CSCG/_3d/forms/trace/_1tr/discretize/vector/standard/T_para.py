@@ -3,9 +3,9 @@ import sys
 if './' not in sys.path: sys.path.append('/')
 
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 import numpy as np
-from screws.quadrature import Quadrature
+from components.quadrature import Quadrature
 
 
 class _3dCSCG_1Trace_Discretize_StandardVector_T_para(FrozenOnly):

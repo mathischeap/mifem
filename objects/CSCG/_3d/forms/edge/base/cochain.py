@@ -6,8 +6,8 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 
-from screws.freeze.main import FrozenOnly
-from screws.exceptions import LocalCochainShapeError
+from components.freeze.main import FrozenOnly
+from components.exceptions import LocalCochainShapeError
 from root.config.main import *
 
 

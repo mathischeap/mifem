@@ -6,14 +6,13 @@
 """
 
 import sys
-
 if './' not in sys.path: sys.path.append('./')
 
-from root.config.main import COMM
+from root.config.main import COMM, RANK, MASTER_RANK
 from importlib import import_module
-from screws.freeze.base import FrozenOnly
-from screws.miscellaneous.timer import MyTimer
-from screws.miscellaneous.miprint import miprint
+from components.freeze.base import FrozenOnly
+from components.miscellaneous.timer import MyTimer
+from components.miscellaneous.miprint import miprint
 from objects.miUsGrid.triangular.mesh.main import miUsGrid_TriangularMesh
 from objects.miUsGrid.triangular.space.main import miUsGrid_TriangularFunctionSpace
 
@@ -32,7 +31,8 @@ from objects.miUsGrid.triangular.mesh.instances.realtime.allocator import miUsGr
 class Call(FrozenOnly):
     """"""
 
-    def __init__(self, mesh_source_or_ID, p, boundaries=None, show_info=False, **kwargs):
+    def __init__(self, mesh_source_or_ID, p,
+        boundaries=None, show_info=False, mesh_name='NoNameMesh', **kwargs):
         """
 
         Parameters
@@ -40,10 +40,11 @@ class Call(FrozenOnly):
         mesh_source_or_ID
         p
         boundaries
+        show_info
+        mesh_name
         kwargs :
             For generating real time mesh.
         """
-        mesh_name = 'NoNameMesh'
 
         if mesh_source_or_ID in miUsGrid_TriangularMeshAllocator.___mesh_path___():
             mesh_name = mesh_source_or_ID
@@ -100,20 +101,41 @@ class Call(FrozenOnly):
         elif ID in miUsGrid_FormsAllocator.___form_name___():
             form_classname = miUsGrid_FormsAllocator.___form_name___()[ID]
             form_classpath = miUsGrid_FormsAllocator.___form_path___()[ID]
-            return getattr(import_module(form_classpath), form_classname)(self.mesh, self.space,
-                                                                          *args, **kwargs)
+            return getattr(import_module(form_classpath), form_classname)(
+                self.mesh, self.space, *args, **kwargs)
 
         elif ID in miUsGrid_ExactSolutionAllocator.___es_name___():
             es_classname = miUsGrid_ExactSolutionAllocator.___es_name___()[ID]
             es_classpath = miUsGrid_ExactSolutionAllocator.___es_path___()[ID]
-
-            return getattr(import_module(es_classpath), es_classname)(self.mesh, *args, **kwargs)
+            return getattr(import_module(es_classpath), es_classname)(
+                self.mesh, *args, **kwargs)
 
         else:
             raise NotImplementedError(f"form id={ID} not implemented")
 
+    @classmethod
+    def listing(cls, printing=True, returning=False):
+        """For an allocator class, this list all the possibilities ONLY in the master core."""
+        if RANK != MASTER_RANK: return
+        included_allocators = [
+            miUsGrid_FormsAllocator,
+            miUsGrid_ExactSolutionAllocator,
+        ]
+        listing = '\n-------- miUsFields:\n' \
+                  '>>> scalar ~ miUsGrid_Triangular_Scalar\n\n' \
+                  '>>> vector ~ miUsGrid_Triangular_Vector\n\n'
+        for alc in included_allocators:
+            listing += '\n-------- ' + alc.__name__ + ':\n'
+            listing += alc.listing(printing=False, returning=True)
 
-
+        if printing:
+            print(listing)
+        else:
+            pass
+        if returning:
+            return listing
+        else:
+            pass
 
 
 
@@ -122,38 +144,4 @@ if __name__ == "__main__":
     # mpiexec -n 4 python objects/miUsGrid/triangular/master.py
     fc = Call('rand0', 2, show_info=True)
 
-    f0 = fc('0-f-i')
-    f1 = fc('1-f-i')
-
-    # fc.mesh.visualize()
-
-    gm0 = f0.numbering.gathering
-
-    # for i in gm0:
-    #     print(i, gm0[i].full_vector, flush=True)
-
-    gm1 = f1.numbering.gathering
-    # for i in gm1:
-    #     print(i, gm1[i].full_vector, flush=True)
-
-    # fc.mesh.visualize()
-
-    # print(gm0.local_dofs)
-
-    # from tools.linear_algebra.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
-    #
-    # GM = Chain_Gathering_Matrix([gm0, gm1], chain_method='sequent')
-    #
-    # print(GM.GLOBAL_num_dofs)
-
-    # for i in GM:
-    #     print(i, GM[i])
-
-    from screws.functions.timePlus2dSpace.wrappers.scalar import t2dScalar
-    def f0(t, x, y): return x + y + t
-    def f1(t, x, y): return x * y + t
-
-    s0 = t2dScalar(f0)
-    s1 = t2dScalar(f1)
-
-    print(s0.gradient)
+    fc.listing()

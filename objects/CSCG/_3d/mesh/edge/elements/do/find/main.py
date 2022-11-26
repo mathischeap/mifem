@@ -5,7 +5,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from root.config.main import COMM, MPI
 
 from objects.CSCG._3d.mesh.edge.elements.do.find.helpers.boundary_surrounding import \

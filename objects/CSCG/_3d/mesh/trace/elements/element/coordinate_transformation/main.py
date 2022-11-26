@@ -7,7 +7,7 @@
 
 import numpy as np
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.trace.elements.element.coordinate_transformation.constant import _3dTraceElement_CT_Constant
 
 

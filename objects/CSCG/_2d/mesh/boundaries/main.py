@@ -17,7 +17,7 @@ periodic boundaries. So ...
 import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 from objects.CSCG._2d.mesh.boundaries.visualize.main import _2dCSCG_Mesh_Boundaries_Visualize
 from objects.CSCG._2d.mesh.boundaries.boundary.main import _2dCSCG_Mesh_Boundary

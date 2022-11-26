@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from importlib import import_module
 from objects.CSCG._3d.fields.vector.do.cross_product.helpers.cp1 import ___VF_CROSS_PRODUCT_HELPER_1___
 

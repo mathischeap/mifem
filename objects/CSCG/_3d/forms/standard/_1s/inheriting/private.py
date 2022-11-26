@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from screws.quadrature import Quadrature
+from components.quadrature import Quadrature
 import numpy as np
 from scipy.sparse import csc_matrix, bmat, lil_matrix
-from tools.linearAlgebra.dataStructures.global_matrix.main import GlobalVector
+from tools.linearAlgebra.dataStructures.globalMatrix.main import GlobalVector
 
 
 # noinspection PyUnresolvedReferences

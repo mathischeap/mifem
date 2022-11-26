@@ -12,9 +12,9 @@ TU Delft
 """
 import numpy as np
 from tabulate import tabulate
-from screws.freeze.main import FrozenOnly
-from screws.decorators.accepts import accepts
-from screws.miscellaneous.timer import initialize_3d_list
+from components.freeze.main import FrozenOnly
+from components.decorators.all import accepts
+from components.miscellaneous.timer import initialize_3d_list
 
 class M_TIR_Tabulate(FrozenOnly):
     """ 

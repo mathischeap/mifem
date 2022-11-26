@@ -8,10 +8,10 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 
 from root.config.main import RANK, MASTER_RANK, COMM, np
-from screws.functions._3dSpace.angle import angle_between_two_vectors
+from components.functions._3dSpace.angle import angle_between_two_vectors
 
 class _3dCSCG_MeshBoundaryCT_constant(FrozenOnly):
     """"""

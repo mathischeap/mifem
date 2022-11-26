@@ -10,9 +10,9 @@ if './' not in sys.path: sys.path.append('./')
 
 import numpy as np
 from objects.miUsGrid.triangular.exactSolution.base import miUsTriangle_ExactSolutionBase
-from screws.numerical.timePlus2dSpace.partial_derivative_as_functions import \
+from components.numerical.timePlus2dSpace.partial_derivative_as_functions import \
     NumericalPartialDerivative_txy_Functions
-from screws.numerical.timePlus2dSpace.partial_derivative import NumericalPartialDerivative_txy
+from components.numerical.timePlus2dSpace.partial_derivative import NumericalPartialDerivative_txy
 
 from objects.miUsGrid.triangular.fields.vector.main import miUsGrid_Triangular_Vector
 from objects.miUsGrid.triangular.fields.scalar.main import miUsGrid_Triangular_Scalar

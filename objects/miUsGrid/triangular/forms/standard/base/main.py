@@ -109,7 +109,6 @@ class miUsTriangular_SF_Base(miUsTriangular_FormBase):
         COCHAIN = dict()
         for i in self.mesh.elements:
             COCHAIN[i] = self.cochain.local[i] - other.cochain.local[i]
-
         shadow.cochain.local = COCHAIN
         return shadow
 
@@ -122,7 +121,6 @@ class miUsTriangular_SF_Base(miUsTriangular_FormBase):
         COCHAIN = dict()
         for i in self.mesh.elements:
             COCHAIN[i] = self.cochain.local[i] + other.cochain.local[i]
-
         shadow.cochain.local = COCHAIN
         return shadow
 

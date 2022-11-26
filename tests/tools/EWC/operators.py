@@ -50,8 +50,8 @@ def test_LinearAlgebra_EWC_No1_Operators():
         ai = nu * M1[i].toarray() @ (E10[i].toarray() @ w.cochain.EWC[i].toarray())
         Ai = A[i].toarray()
         Bi = B[i].toarray()
-        np.testing.assert_array_almost_equal(Ai - ai, 0, decimal=4)
-        np.testing.assert_array_almost_equal(Bi - ai, 0, decimal=4)
+        np.testing.assert_array_almost_equal(Ai, ai, decimal=3)
+        np.testing.assert_array_almost_equal(Bi, ai, decimal=3)
 
     return 1
 

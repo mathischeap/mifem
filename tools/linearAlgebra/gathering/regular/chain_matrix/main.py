@@ -4,7 +4,7 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from root.config.main import *
 from scipy.sparse import lil_matrix
 
@@ -213,6 +213,7 @@ class Chain_Gathering_Matrix(FrozenOnly):
         """
         if self.___NUM___ == 1:
             return self.GMs[0][item].full_vector
+
         else:
             if self.chain_method == 'silly':
                 _ = [gm[item].full_vector+self._To_Be_Added_[i] for i, gm in enumerate(self._GMs_)]

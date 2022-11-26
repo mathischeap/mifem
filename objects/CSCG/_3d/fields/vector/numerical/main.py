@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from screws.numerical.timePlus3dSpace.partial_derivative_as_functions import NumericalPartialDerivative_txyz_Functions
-from screws.freeze.main import FrozenOnly
+from components.numerical.timePlus3dSpace.partial_derivative_as_functions import NumericalPartialDerivative_txyz_Functions
+from components.freeze.main import FrozenOnly
 from importlib import import_module
 
 

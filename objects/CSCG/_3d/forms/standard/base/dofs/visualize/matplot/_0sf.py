@@ -3,8 +3,8 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.main import FrozenOnly
-from screws.miscellaneous.matrix_simplify import rsmat
+from components.freeze.main import FrozenOnly
+from components.miscellaneous.matrix_simplify import rsmat
 from root.config.main import RANK, MASTER_RANK, COMM, np, MPI
 
 import matplotlib.pyplot as plt

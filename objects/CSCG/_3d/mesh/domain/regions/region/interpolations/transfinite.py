@@ -8,9 +8,9 @@ from root.config.main import *
 import random
 from objects.CSCG._3d.mesh.domain.regions.region.interpolations.base import InterpolationBase
 
-from screws.exceptions import ThreeDimensionalTransfiniteInterpolationError
+from components.exceptions import ThreeDimensionalTransfiniteInterpolationError
 
-from screws.numerical._2dSpace.Jacobian_21 import NumericalPartialDerivative_xy
+from components.numerical._2dSpace.Jacobian_21 import NumericalPartialDerivative_xy
 
 
 

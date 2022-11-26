@@ -9,7 +9,7 @@ from tools.linearAlgebra.gathering.regular.matrix.main import Gathering_Matrix
 from tools.linearAlgebra.gathering.vector import Gathering_Vector
 
 from itertools import chain
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from root.config.main import np, COMM, MPI, RANK, MASTER_RANK
 from objects.CSCG._3d.mesh.node.elements.do.find.helpers.SOS_internal import _3dCSCG_InternalNodeSOS
 from objects.CSCG._3d.mesh.node.elements.do.find.helpers.SOS_boundary.corner import _3dCSCG_CornerNodeSOS

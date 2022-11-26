@@ -8,7 +8,7 @@
 
 """
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.periodicSetting.periodic_boundary_pairs.regular.region_side_pair import \
     _3dCSCG_Regular_PBP_RegionSidePair
 

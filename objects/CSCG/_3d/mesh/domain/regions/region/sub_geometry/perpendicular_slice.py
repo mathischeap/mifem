@@ -1,6 +1,6 @@
 
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 class RegionPerpendicularSlice(FrozenOnly):
     """A perpendicular slice object in the regions.

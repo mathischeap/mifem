@@ -15,8 +15,8 @@ from types import FunctionType, MethodType
 from objects.CSCG._2d.fields.base import _2dCSCG_Continuous_FORM_BASE
 from functools import partial
 import numpy as np
-from screws.functions.timePlus2dSpace._0_ import _0t_
-from screws.functions.timePlus2dSpace.constant import CFGt as CFG_t_plus_2d
+from components.functions.timePlus2dSpace._0_ import _0t_
+from components.functions.timePlus2dSpace.constant import CFGt as CFG_t_plus_2d
 from objects.CSCG._2d.fields.scalar.do.main import _2dCSCG_ScalarField_DO
 from objects.CSCG._2d.fields.scalar.numerical.main import _2dCSCG_ScalarField_Numerical
 from objects.CSCG._2d.fields.scalar.visualize.main import _2dCSCG_ScalarField_Visualize
@@ -44,6 +44,7 @@ class _2dCSCG_ScalarField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
         #----------------------------------------------------------------------------------------1
         super().__init__(mesh, ftype, valid_time)
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_scalar_field')
+        self.standard_properties.___PRIVATE_add_tag___('scalar_field')
         self.standard_properties.name = name
         self.___PRIVATE_set_func___(func, ftype=ftype)
         self._previous_func_id_time_ = (None, None, None)

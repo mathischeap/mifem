@@ -2,7 +2,7 @@
 """"""
 
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from root.config.main import COMM, MPI, np
 from tools.linearAlgebra.gathering.irregular.ir_matrix.do.main import iR_Gathering_Matrix_DO
 

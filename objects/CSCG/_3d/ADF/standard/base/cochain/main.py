@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from root.config.main import *
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.ADF.standard.base.cochain.local import ____3dCSCG_ADSF_Cochain_Local____
 from scipy.sparse import csr_matrix, csc_matrix
 from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_ColumnVector

@@ -5,7 +5,7 @@ from root.config.main import *
 from objects.CSCG._2d.master import MeshGenerator
 from objects.CSCG._2d.mesh.domain.inputs.allocator import DomainInputFinder
 import random
-from screws.quadrature import Quadrature
+from components.quadrature import Quadrature
 
 
 

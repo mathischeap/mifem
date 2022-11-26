@@ -8,7 +8,7 @@ Aerodynamics, AE
 TU Delft
 """
 import numpy as np
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 class LocalNumbering(FrozenOnly):
     """ """

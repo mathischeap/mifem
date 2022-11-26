@@ -2,7 +2,7 @@
 
 from objects.CSCG._2d.mesh.domain.inputs.base import DomainInputBase
 import numpy as np
-from screws.decorators.classproperty.main import classproperty
+from components.decorators.classproperty.main import classproperty
 import random
 from root.config.main import COMM, RANK, MASTER_RANK
 

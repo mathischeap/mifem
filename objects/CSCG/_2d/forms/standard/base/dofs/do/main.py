@@ -1,4 +1,4 @@
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 
 from objects.CSCG._2d.forms.standard.base.dofs.do.find import _2dCSCG_SF_dofs_FIND
 

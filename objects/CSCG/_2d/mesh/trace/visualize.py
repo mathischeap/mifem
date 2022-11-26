@@ -2,7 +2,7 @@
 
 import matplotlib.pyplot as plt
 from matplotlib import cm
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from root.config.main import *
 
 

@@ -7,7 +7,7 @@
 import sys
 
 if './' not in sys.path: sys.path.append('./')
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from importlib import import_module
 
 from objects.CSCG._2d.fields.vector.do.inner_product.helpers.helper import VF2_IP_H

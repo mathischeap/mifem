@@ -9,7 +9,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 import numpy as np
 from root.config.main import RANK, SECRETARY_RANK, COMM
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib import cm

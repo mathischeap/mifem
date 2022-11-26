@@ -8,11 +8,11 @@ import os
 import sys
 
 if './' not in sys.path: sys.path.append('./')
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 import numpy as np
 
-from screws.miscellaneous.miprint import miprint
-from screws.miscellaneous.mios import remove, isfile
+from components.miscellaneous.miprint import miprint
+from components.miscellaneous.mios import remove, isfile
 from tools.run.reader import ParallelMatrix3dInputRunner
 from objects.miUsGrid.triangular.master import Call
 

@@ -10,7 +10,7 @@ This one actually is mainly used to test the LGMRES solver.
 
 from numpy import pi
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
-from tools.linearAlgebra.dataStructures.global_matrix.main import LocallyFullVector
+from tools.linearAlgebra.dataStructures.globalMatrix.main import LocallyFullVector
 from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_ColumnVector
 from tools.linearAlgebra.elementwiseCache.operators.concatenate.main import bmat, concatenate
 from tools.linearAlgebra.solvers.regular.allocator import RegularSolverDistributor
@@ -18,7 +18,7 @@ from tools.iterators.simple import SimpleIterator
 from time import time
 from root.config.main import *
 from root.save import save
-from screws.miscellaneous.timer import check_multiple_close, check_almost_in_range
+from components.miscellaneous.timer import check_multiple_close, check_almost_in_range
 
 
 

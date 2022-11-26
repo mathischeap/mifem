@@ -2,7 +2,7 @@
 
 import numpy as np
 from scipy.sparse import csc_matrix
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from tools.linearAlgebra.elementwiseCache.objects.multiDimMatrix.main import MultiDimMatrix
 
 

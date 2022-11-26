@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from root.config.main import RANK, MASTER_RANK, MPI, COMM
 
 class DistributedVectorIS(FrozenOnly):

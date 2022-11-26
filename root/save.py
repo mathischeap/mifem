@@ -4,7 +4,7 @@
 In this script, we DO NOT use the structure of naming files and folders of the mifem library.
 
 """
-from screws.miscellaneous.timer import check_filename_mi
+from components.miscellaneous.timer import check_filename_mi
 from root.config.main import MASTER_RANK, RANK, COMM
 import pickle
 from root.read.main import read

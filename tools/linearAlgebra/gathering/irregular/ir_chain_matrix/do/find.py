@@ -8,9 +8,9 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from functools import lru_cache
-from screws.decorators.accepts import accepts
+from components.decorators.all import accepts
 import numpy as np
 
 
@@ -48,12 +48,7 @@ class iR_CGM_DO_FIND(FrozenOnly):
         if not isinstance(m, int): m = int(m)
 
         if N is None:
-            if self._CGM_.mesh_type == 'mpRfT2': # if in a _3dCSCG mesh, of course, dofs can mostly be shared by 4 elements.
-                N = 4
-            elif self._CGM_.mesh_type == 'mpRfT3': # if in a _3dCSCG mesh, of course, dofs can mostly be shared by 8 elements.
-                N = 8
-            else:
-                pass
+            pass
         else:
             pass
 

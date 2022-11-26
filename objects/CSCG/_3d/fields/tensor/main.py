@@ -15,7 +15,7 @@ if './' not in sys.path: sys.path.append('./')
 import numpy as np
 from objects.CSCG._3d.fields.base import _3dCSCG_Continuous_FORM_BASE
 from types import FunctionType, MethodType
-from screws.functions.timePlus3dSpace.constant import CFG
+from components.functions.timePlus3dSpace.constant import CFG
 from functools import partial
 from objects.CSCG._3d.fields.tensor.do.main import _3dCSCG_TensorField_DO
 from objects.CSCG._3d.fields.tensor.numerical.main import _3dCSCG_TensorField_Numerical
@@ -40,6 +40,7 @@ class _3dCSCG_TensorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
             pass
         super().__init__(mesh, ftype, valid_time)
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_tensor_field')
+        self.standard_properties.___PRIVATE_add_tag___('tensor_field')
         self.standard_properties.name = name
 
         self.___PRIVATE_set_func___(func, ftype=ftype)

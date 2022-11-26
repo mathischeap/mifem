@@ -8,7 +8,7 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.main import FrozenClass
+from components.freeze.main import FrozenClass
 
 
 class miUsGrid_MeshBase(FrozenClass):

@@ -1,7 +1,7 @@
 
 
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 
 
 from objects.CSCG._3d.forms.trace.base.dofs.dof.do.generate_plot_data._0where import _3dCSCG_T0F_DOF_Where

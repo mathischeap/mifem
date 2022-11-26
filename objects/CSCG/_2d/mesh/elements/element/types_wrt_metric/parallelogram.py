@@ -4,7 +4,7 @@ import numpy as np
 from objects.CSCG._2d.mesh.elements.element.types_wrt_metric.base import ElementTypeWr2MetricBase
 # from objects.mpRfT._2d.mesh.cell.types_wrt_metric.parallelogram import mpRfT2_ParallelogramCell
 
-from screws.decorators.accepts import accepts
+from components.decorators.all import accepts
 # from objects.mpRfT._2d.mesh.segments.segment.types_wrt_metric.straight import mpRfT2_StraightSegment
 
 

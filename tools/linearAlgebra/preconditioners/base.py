@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
-"""
-A main body of all preconditioners.
-
+"""A main body of all preconditioners.
 """
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 
 

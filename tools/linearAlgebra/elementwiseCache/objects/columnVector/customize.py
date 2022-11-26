@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-# from screws.decorators.accepts import accepts
-from screws.freeze.main import FrozenOnly
+# from components.decorators.accepts import accepts
+from components.freeze.main import FrozenOnly
 from scipy import sparse as spspa
 import numpy as np
 from root.config.main import COMM, RANK, MASTER_RANK, SIZE

@@ -4,7 +4,7 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/09/21 2:14 PM
 """
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 
 
 class OnMeshElement_for_Standard(FrozenOnly):

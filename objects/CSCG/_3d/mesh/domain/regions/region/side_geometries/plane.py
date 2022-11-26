@@ -2,7 +2,7 @@
 
 from sympy import Point3D
 from sympy import Plane as sympyPlane
-from screws.decorators.accepts import memoize1
+from components.decorators.all import memoize1
 from objects.CSCG._3d.mesh.domain.regions.region.side_geometries.base import SideGeometryBase
 
 class Plane(SideGeometryBase):

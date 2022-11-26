@@ -5,7 +5,7 @@ Every dual form is built on a prime form. So, the most important property of a d
 prime of it.
 
 """
-from screws.freeze.main import FrozenClass
+from components.freeze.main import FrozenClass
 from root.config.main import *
 import pickle
 

@@ -3,8 +3,8 @@
 """
 
 from root.config.main import *
-from screws.freeze.main import FrozenOnly
-from screws.miscellaneous.timer import check_filename, check_no_splcharacter
+from components.freeze.main import FrozenOnly
+from components.miscellaneous.timer import check_filename, check_no_splcharacter
 from scipy.io import savemat
 
 

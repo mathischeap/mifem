@@ -9,7 +9,7 @@ INTRO
 
 """
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from importlib import import_module
 from objects.CSCG._3d.fields.vector.do.inner_product.helpers.ip1 import ___VF_INNER_PRODUCT_HELPER_1___
 

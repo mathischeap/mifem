@@ -3,7 +3,7 @@
 
 
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.domain.regions.region.sides.side.main import Side
 
 

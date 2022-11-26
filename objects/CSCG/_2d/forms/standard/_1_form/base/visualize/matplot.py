@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from root.config.main import np, SECRETARY_RANK, COMM, RANK
 import matplotlib
 import matplotlib.pyplot as plt

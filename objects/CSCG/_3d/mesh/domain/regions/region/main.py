@@ -2,10 +2,10 @@
 
 import numpy as np
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 
-from screws.quadrature import Quadrature
+from components.quadrature import Quadrature
 from objects.CSCG._3d.mesh.domain.regions.region.interpolations.allocator import InterpolationAllocator
 from objects.CSCG._3d.mesh.domain.regions.region.side_geometries.allocator import SideGeometryAllocator
 from objects.CSCG._3d.mesh.domain.regions.region.types_wrt_metric.allocator import TypeWr2MetricAllocator

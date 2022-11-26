@@ -21,10 +21,12 @@ class spiLU(Preconditioner):
 
     @property
     def drop_tol(self):
+        """(0,1), the lower, the more accurate, the slower."""
         return self._drop_tol_
 
     @property
     def fill_factor(self):
+        """[1,), the larger, the more accurate, the slower."""
         return self._fill_factor_
 
     @property

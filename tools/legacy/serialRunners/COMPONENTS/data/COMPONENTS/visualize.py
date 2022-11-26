@@ -9,8 +9,8 @@ Aerodynamics, AE
 TU Delft
 """
 import matplotlib.pyplot as plt
-from screws.miscellaneous.timer import MyTimer
-from screws.freeze.main import FrozenOnly
+from components.miscellaneous.timer import MyTimer
+from components.freeze.main import FrozenOnly
 from tools.legacy.serialRunners.COMPONENTS.data.COMPONENTS.MODULES.m_tir_visualize import M_TIR_Visualize
 
 

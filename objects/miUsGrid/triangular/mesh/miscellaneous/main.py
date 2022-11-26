@@ -7,7 +7,7 @@
 import sys
 
 if './' not in sys.path: sys.path.append('./')
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from root.config.main import COMM, RANK, MASTER_RANK
 import numpy as np
 
@@ -420,7 +420,9 @@ if __name__ == '__main__':
     # mpiexec -n 4 python objects/miUsGrid/triangular/mesh/miscellaneous/main.py
     from __init__ import miTri
 
-    fc = miTri.form('rand0', 2)
+    fc = miTri.call('rand0', 2)
     mesh = fc.mesh
 
     a = mesh.miscellaneous.triangle_and_quad_data(p=2)
+
+    print(a)

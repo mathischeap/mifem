@@ -7,7 +7,7 @@
          TU Delft, Delft, Netherlands
 
 """
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._2d.mesh.periodicSetting.periodic_boundary_pairs.regular.region_edge_pair import _2dCSCG_Regular_PBP_RegionEdgePair
 
 

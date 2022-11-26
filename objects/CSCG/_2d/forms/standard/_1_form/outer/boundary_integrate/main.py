@@ -8,7 +8,7 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from screws.freeze.base import FrozenOnly
+from components.freeze.base import FrozenOnly
 from tools.linearAlgebra.elementwiseCache.objects.columnVector.main import EWC_ColumnVector
 from objects.CSCG._2d.forms.standard._1_form.outer.boundary_integrate.helpers.ipVhelper import ipV_Helper
 

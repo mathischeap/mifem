@@ -12,7 +12,7 @@ from root.config.main import RANK, MASTER_RANK, np, COMM
 from objects.CSCG._2d.fields.scalar.main import _2dCSCG_ScalarField
 from objects.CSCG._2d.fields.vector.main import _2dCSCG_VectorField
 
-from screws.miscellaneous.randomString.digits import randomStringDigits
+from components.miscellaneous.randomString.digits import randomStringDigits
 
 def random_vector(mesh):
     """"""

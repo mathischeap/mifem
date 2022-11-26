@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from root.config.main import *
 from objects.CSCG.base.mesh.base import CSCG_MESH_BASE
-from screws.decorators.accepts import accepts, memoize5
-from screws.exceptions import ElementsLayoutError, ElementEdgePairError
+from components.decorators.all import accepts, memoize5
+from components.exceptions import ElementsLayoutError, ElementEdgePairError
 from typing import Dict, Union
 from objects.CSCG._2d.mesh.elements.main import _2dCSCG_Mesh_Elements
 from objects.CSCG._2d.mesh.trace.main import _2dCSCG_Trace

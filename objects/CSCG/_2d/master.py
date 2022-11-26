@@ -3,7 +3,7 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 from importlib import import_module
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from objects.CSCG._2d.mesh.domain.inputs.allocator import DomainInputFinder
 from objects.CSCG._2d.mesh.domain.main import _2dCSCG_Domain
 from objects.CSCG._2d.mesh.main import _2dCSCG_Mesh
@@ -16,7 +16,7 @@ from objects.CSCG._2d.fields.allocator import _2dCSCG_FieldsAllocator
 from objects.CSCG._2d.exactSolutions.allocator import _2dCSCG_ExactSolutionAllocator
 
 from copy import deepcopy
-from screws.miscellaneous.timer import MyTimer
+from components.miscellaneous.timer import MyTimer
 
 
 
@@ -210,15 +210,37 @@ class ExactSolutionSelector(FrozenOnly):
 
 
 
+    @classmethod
+    def listing(cls, printing=True, returning=False):
+        """For an allocator class, this lists all the possibilities ONLY in the master core."""
+        if RANK != MASTER_RANK: return
+        included_allocators = [
+            _2dCSCG_ExactSolutionAllocator,
+        ]
+        listing = ''
+        for alc in included_allocators:
+            listing += alc.listing(printing=False, returning=True)
+
+        if printing:
+            print(listing)
+        else:
+            pass
+        if returning:
+            return listing
+        else:
+            pass
+
 
 
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python objects\CSCG\_2d\master.py
+    # mpiexec -n 4 python objects/CSCG/_2d/master.py
     # import numpy as np
 
     # mesh = MeshGenerator('cic',)([14,14])
     # mesh = MeshGenerator('rectangle', p_UL=(-1,-1),region_layout=(3,5))([5,5], show_info=True)
     # mesh = MeshGenerator('rectangle_periodic', p_UL=(-1,-1),region_layout=(3,5))([5,5], show_info=True)
-    mesh = MeshGenerator('rectangle')([1,1], show_info=True)
+    # mesh = MeshGenerator('rectangle')([1,1], show_info=True)
+
+    ExactSolutionSelector.listing()

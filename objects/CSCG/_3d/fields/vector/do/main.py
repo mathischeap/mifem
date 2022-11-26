@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 
 from objects.CSCG._3d.fields.vector.do.reconstruct.main import _3dCSCG_Vector_Do_Reconstruct
 from objects.CSCG._3d.fields.vector.do.cross_product.main import _3dCSCG_Vector_Do_CP
 from objects.CSCG._3d.fields.vector.do.inner_product.main import _3dCSCG_Vector_Do_IP
 
-from screws.quadrature import Quadrature
+from components.quadrature import Quadrature
 from root.config.main import RANK, MASTER_RANK, np, COMM
 
 

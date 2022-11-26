@@ -12,9 +12,9 @@ from functools import lru_cache, partial
 from objects.CSCG._3d.exactSolutions.base import Base
 from objects.CSCG._3d.fields.vector.main import _3dCSCG_VectorField
 from objects.CSCG._3d.fields.scalar.main import _3dCSCG_ScalarField
-from screws.numerical._3dSpace.partial_derivative import NumericalPartialDerivative_xyz
-from screws.numerical.timePlus3dSpace.partial_derivative import NumericalPartialDerivative_txyz
-from screws.numerical.timePlus3dSpace.partial_derivative_as_functions import NumericalPartialDerivative_txyz_Functions
+from components.numerical._3dSpace.partial_derivative import NumericalPartialDerivative_xyz
+from components.numerical.timePlus3dSpace.partial_derivative import NumericalPartialDerivative_txyz
+from components.numerical.timePlus3dSpace.partial_derivative_as_functions import NumericalPartialDerivative_txyz_Functions
 import numpy as np
 
 

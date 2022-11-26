@@ -10,7 +10,7 @@ if './' not in sys.path: sys.path.append('./')
 
 from objects.CSCG.base.spaces._1d_basis.polynomials import _1dPolynomial
 
-from screws.freeze.main import FrozenClass
+from components.freeze.main import FrozenClass
 from objects.miUsGrid.triangular.space.num_basis import miUsGrid_TriangularFunctionSpace_NumBasis
 from objects.miUsGrid.triangular.space.num_basis_components import miUsGrid_TriangularFunctionSpace_NumBasisComponents
 from objects.miUsGrid.triangular.space.incidence_matrix import miUsGrid_TriangularFunctionSpace_IncidenceMatrix

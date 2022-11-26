@@ -20,5 +20,4 @@ $ mpiexec python tests/run.py
 ```
 This will do all the (>100) tests to fully validate the code in your machine.
 
-
 by Yi Zhang | www.mathischeap.com

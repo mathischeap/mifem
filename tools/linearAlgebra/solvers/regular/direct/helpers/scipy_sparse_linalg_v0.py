@@ -4,7 +4,7 @@
 from scipy.sparse import linalg as spspalinalg
 from time import time
 from root.config.main import COMM, RANK, MASTER_RANK, MPI
-from tools.linearAlgebra.dataStructures.global_matrix.main import LocallyFullVector
+from tools.linearAlgebra.dataStructures.globalMatrix.main import LocallyFullVector
 import numpy as np
 
 def ___scipy_sparse_linalg_v0___(A, b, COD=None):

@@ -8,7 +8,7 @@
 
 """
 
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from importlib import import_module
 from root.config.main import *
 

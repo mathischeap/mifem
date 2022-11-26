@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """"""
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 
 from objects.CSCG._3d.forms.standard.base.dofs.visualize.matplot._0sf import _3dCSCG_S0F_DOFs_Matplot
 from objects.CSCG._3d.forms.standard.base.dofs.visualize.matplot._1sf import _3dCSCG_S1F_DOFs_Matplot

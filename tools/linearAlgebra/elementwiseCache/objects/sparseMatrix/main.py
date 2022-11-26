@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import types
-from screws.freeze.main import FrozenOnly
+from components.freeze.main import FrozenOnly
 from scipy import sparse as spspa
 # from tools.linear_algebra.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
 # from tools.linear_algebra.gathering.irregular.ir_chain_matrix.main import iR_Chain_Gathering_Matrix

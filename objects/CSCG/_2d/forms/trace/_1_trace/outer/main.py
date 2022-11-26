@@ -59,14 +59,6 @@ class _2dCSCG_1Trace_Outer(_2dCSCG_1Trace):
         """
         raise NotImplementedError
 
-    def ___PRIVATE_do_resemble___(self, obj_or_filename):
-        """
-
-        :param obj_or_filename:
-        :return:
-        """
-        raise NotImplementedError()
-
 
 
 
