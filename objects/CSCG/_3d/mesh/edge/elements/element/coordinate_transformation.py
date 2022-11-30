@@ -24,7 +24,7 @@ class _3dCSCG_Edge_Element_CT(FrozenOnly):
         :param corner_edge: We compute it from this corner.
         :return:
         """
-        if self._ee_.IS.on_periodic_boundary:
+        if self._ee_.whether.on_periodic_boundary:
             assert from_element is not None, \
                 "to compute the physical position of an edge element on periodic " \
                 "boundary, we have to provide from which element you " \

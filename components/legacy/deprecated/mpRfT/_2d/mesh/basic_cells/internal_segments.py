@@ -60,16 +60,16 @@ class mpRfT2_Mesh_BasicCells_InternalSegments(FrozenOnly):
 
         UDLR = list()
 
-        if not cell.IS.attached_to_basic_cell_U_boundary:
+        if not cell.whether.attached_to_basic_cell_U_boundary:
             UDLR.append(mpRfT2_Segment(where, ox, ySignature))
 
-        if not cell.IS.attached_to_basic_cell_D_boundary:
+        if not cell.whether.attached_to_basic_cell_D_boundary:
             UDLR.append(mpRfT2_Segment(where, ex, ySignature))
 
-        if not cell.IS.attached_to_basic_cell_L_boundary:
+        if not cell.whether.attached_to_basic_cell_L_boundary:
             UDLR.append(mpRfT2_Segment(where, xSignature, oy))
 
-        if not cell.IS.attached_to_basic_cell_R_boundary:
+        if not cell.whether.attached_to_basic_cell_R_boundary:
             UDLR.append(mpRfT2_Segment(where, xSignature, ey))
 
         return UDLR
@@ -81,7 +81,7 @@ class mpRfT2_Mesh_BasicCells_InternalSegments(FrozenOnly):
         for i in base_cells: # go through all local lv0-cells
             lv0cell = base_cells[i]
             segments = list()
-            if lv0cell.IS.root:
+            if lv0cell.whether.root:
                 pass # no internal segments, so segments[i] = list()
             else:
                 sub_cells = dict() # keys are level + 1, values are indices

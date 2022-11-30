@@ -2,8 +2,8 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
-from tools.linearAlgebra.elementwiseCache.objects.columnVector.main import EWC_ColumnVector
+from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
+from tools.elementwiseCache.dataStructures.objects.columnVector.main import EWC_ColumnVector
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 from root.config.main import RANK, MASTER_RANK, COMM, np
 import random

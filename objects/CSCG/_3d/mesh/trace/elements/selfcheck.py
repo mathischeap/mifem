@@ -39,7 +39,7 @@ class _3dCSCG_Trace_Elements_SELFCHECK(FrozenOnly):
             s1 = te.CHARACTERISTIC_side
             E = [e1,]
             S = [s1,]
-            if not te.IS.on_mesh_boundary:
+            if not te.whether.on_mesh_boundary:
                 p2 = te.NON_CHARACTERISTIC_position
                 e2 = int(p2[:-1])
                 s2 = p2[-1]

@@ -94,6 +94,7 @@ class _2dCSCG_VectorField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
             self._func_ = func
 
         elif ftype == 'boundary-wise': # only valid (still as a vector) on mesh boundary (not domain boundary-wise)
+            # no need to cover all mesh boundaries.
             assert isinstance(func, dict), f"when ftype == 'boundary-wise', " \
                                            f"we must put functions in a dict whose " \
                                            f"keys are boundary names and values are" \

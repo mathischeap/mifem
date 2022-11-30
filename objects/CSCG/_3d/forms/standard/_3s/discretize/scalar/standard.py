@@ -52,7 +52,7 @@ class _3dCSCG_Discretize_Standard(FrozenOnly):
         else:
             xi, et, si, volume = self.___DISCRETIZE_STANDARD_CACHE___[1:]
         cochainLocal = dict()
-        f = SELF.CF.___DO_evaluate_func_at_time___()[0]
+        f = SELF.CF.do.evaluate_func_at_time()[0]
         JC = dict()
         for i in SELF.mesh.elements.indices:
             element = SELF.mesh.elements[i]

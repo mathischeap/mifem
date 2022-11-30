@@ -47,12 +47,12 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
         global_numbering = None
         # non-hybrid numbering ...
         mesh = self._mesh_
-        if mesh.domain.IS.periodic:
+        if mesh.domain.whether.periodic:
             if RANK == MASTER_RANK:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:
                     region = mesh.domain.regions[rn]
-                    if region.IS.periodic_to_self:
+                    if region.whether.periodic_to_self:
                         regionElementLayout = baseElementLayout[rn]
                         assert all(np.array(regionElementLayout) > 1), \
                             f" elements.layout[{rn}]={regionElementLayout} wrong," \

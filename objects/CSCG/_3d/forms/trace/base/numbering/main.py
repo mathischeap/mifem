@@ -44,26 +44,13 @@ class _3dCSCG_Trace_Numbering(FrozenOnly):
         self._numbering_parameters_ = {'scheme_name': self._scheme_name_}
         self._numbering_parameters_.update(self._parameters_)
         self._DO_ = _3dCSCG_Trace_Numbering_DO(self)
-        self.___PRIVATE_reset_cache___()
-        self._freeze_self_()
-
-    def ___PRIVATE_reset_cache___(self):
         self._local_ = None
         self._gathering_ = None
         self._trace_element_wise_ = None
         self._boundary_dofs_ = None
         self._local_num_dofs_ = None
         self._extra_ = None
-
-    def ___PRIVATE_do_numbering___(self):
-        self._gathering_, self._trace_element_wise_, self._local_num_dofs_, self._extra_ = \
-            getattr(self._numberer_, self._tf_.__class__.__name__)()
-
-    @property
-    def num_local_dofs(self):
-        if self._local_num_dofs_ is None:
-            self.___PRIVATE_do_numbering___()
-        return self._local_num_dofs_
+        self._freeze_self_()
 
     @property
     def local(self):
@@ -72,11 +59,37 @@ class _3dCSCG_Trace_Numbering(FrozenOnly):
             self._local_ = getattr(self._tf_.space.local_numbering, self._tf_.__class__.__name__)
         return self._local_
 
+
+    def ___PRIVATE_do_numbering___(self):
+        self._gathering_, self._trace_element_wise_, self._local_num_dofs_, self._extra_ = \
+            getattr(self._numberer_, self._tf_.__class__.__name__)()
+
     @property
     def gathering(self):
         if self._gathering_ is None:
             self.___PRIVATE_do_numbering___()
         return self._gathering_
+
+    @property
+    def trace_element_wise(self):
+        """(dict) Return a dictionary of trace-element-wise gathering vectors."""
+        if self._trace_element_wise_ is None:
+            self.___PRIVATE_do_numbering___()
+        return self._trace_element_wise_
+
+    @property
+    def num_local_dofs(self):
+        if self._local_num_dofs_ is None:
+            self.___PRIVATE_do_numbering___()
+        return self._local_num_dofs_
+
+    @property
+    def extra(self):
+        if self._extra_ is None:
+            self.___PRIVATE_do_numbering___()
+        return self._extra_
+
+
 
     @property
     def boundary_dofs(self):
@@ -105,7 +118,7 @@ class _3dCSCG_Trace_Numbering(FrozenOnly):
         return self._boundary_dofs_
 
     @property
-    def GLOBAL_boundary_dofs(self):
+    def global_boundary_dofs(self):
         """Return in all cores. Return a dict whose keys are mesh
         boundary names and values are all (in all cores) dofs on the boundary indicated by the key.
         """
@@ -129,26 +142,14 @@ class _3dCSCG_Trace_Numbering(FrozenOnly):
         return COMM.bcast(BD, root=MASTER_RANK)
 
     @property
-    def GLOBAL_boundary_dofs_ravel(self):
+    def global_boundary_dofs_ravel(self):
         """Regardless to boundary names; collection of all boundary dofs in one set."""
-        GLOBAL_boundary_dofs = self.GLOBAL_boundary_dofs
+        GLOBAL_boundary_dofs = self.global_boundary_dofs
         RAVEL = set()
         for bn in GLOBAL_boundary_dofs:
             RAVEL.update(GLOBAL_boundary_dofs[bn])
         return list(RAVEL)
 
-    @property
-    def extra(self):
-        if self._extra_ is None:
-            self.___PRIVATE_do_numbering___()
-        return self._extra_
-
-    @property
-    def trace_element_wise(self):
-        """(dict) Return a dictionary of trace-element-wise gathering vectors."""
-        if self._trace_element_wise_ is None:
-            self.___PRIVATE_do_numbering___()
-        return self._trace_element_wise_
 
 
     @property

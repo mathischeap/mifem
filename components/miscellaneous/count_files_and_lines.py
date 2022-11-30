@@ -61,6 +61,7 @@ def count_files_and_lines(start, files=0, lines=0, header=True, begin_start=None
                             reldir_of_thing = reldir_of_thing[:42] + '...'
 
                         files += 1
+
                         print('{:>5} |{:>8} |{:>10} | {:<20}'.format(int(files),
                                                                      newlines,
                                                                      lines,

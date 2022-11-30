@@ -139,7 +139,7 @@ class _3dCSCG_1Trace_Discretize_StandardVector_T_para(FrozenOnly):
 
         if target == 'func':
             assert SELF.CF is not None, f"No func.body!"
-            FUNC = SELF.CF.___DO_evaluate_func_at_time___()
+            FUNC = SELF.CF.do.evaluate_func_at_time()
         else:
             raise NotImplementedError(f"1Trace = discretize_VectorField_standard: "
                                       f"Not applicable for target={target}.")

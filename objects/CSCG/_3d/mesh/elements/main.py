@@ -9,7 +9,7 @@ from objects.CSCG._3d.mesh.elements.element.main import _3dCSCG_Mesh_Element
 from objects.CSCG._3d.mesh.elements.coordinate_transformation.main import _3dCSCG_Mesh_Elements_CT
 from objects.CSCG._3d.mesh.elements.do.main import _3dCSCG_Mesh_Elements_DO
 from objects.CSCG._3d.mesh.elements.visualize import _3dCSCG_MeshElements_VIS
-from objects.CSCG._3d.mesh.elements.IS import _3dCSCG_MeshElements_IS
+from objects.CSCG._3d.mesh.elements.whether import _3dCSCG_MeshElements_Whether
 
 
 class _3dCSCG_Mesh_Elements(FrozenOnly):
@@ -19,23 +19,17 @@ class _3dCSCG_Mesh_Elements(FrozenOnly):
         self._elements_ = dict()
         self._DO_ = None
         self._visualize_ = None
-        self._IS_ = None
+        self._whether_ = None
         self._ct_ = _3dCSCG_Mesh_Elements_CT(self)
         for i in self.indices:
             self._elements_[i] = _3dCSCG_Mesh_Element(self, i)
         self.___PRIVATE_parse_elements_type_wrt_metric___()
         self._quality_ = None
-        self.coordinate_transformation.RESET_cache()
-        self.RESET_cache()
         self._Statistic_ = None
         self._involved_mesh_boundaries_ = None
         self._rwPc_ = None
         self._freeze_self_()
 
-    def RESET_cache(self):
-        """"""
-        self._quality_ = None
-        self.coordinate_transformation.RESET_cache()
 
     def ___PRIVATE_parse_elements_type_wrt_metric___(self):
         counter: dict = dict()
@@ -98,7 +92,7 @@ class _3dCSCG_Mesh_Elements(FrozenOnly):
             AoBME = 0
             for i in self:
                 element = self[i]
-                if element.IS.internal:
+                if element.whether.internal:
                     AoIME += 1
                 else:
                     AoBME += 1
@@ -110,10 +104,10 @@ class _3dCSCG_Mesh_Elements(FrozenOnly):
         return self._Statistic_
 
     @property
-    def IS(self):
-        if self._IS_ is None:
-            self._IS_ = _3dCSCG_MeshElements_IS(self)
-        return self._IS_
+    def whether(self):
+        if self._whether_ is None:
+            self._whether_ = _3dCSCG_MeshElements_Whether(self)
+        return self._whether_
 
     @property
     def GLOBAL_num(self):

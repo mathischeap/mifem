@@ -242,10 +242,10 @@ class _3dCSCG_1Trace_Discretize_TraceElementWiseVector(FrozenOnly):
         #------- check func and get func --------------------------------------------------------------------
         if target == 'func':
             assert SELF.CF is not None, f"No func.body!"
-            TEW_func = SELF.CF.___DO_evaluate_func_at_time___()
+            TEW_func = SELF.CF.do.evaluate_func_at_time()
         elif target == 'BC':
             assert SELF.BC.CF is not None, f"No func.body!"
-            TEW_func = SELF.BC.CF.___DO_evaluate_func_at_time___()
+            TEW_func = SELF.BC.CF.do.evaluate_func_at_time()
         else:
             raise NotImplementedError(f"1Trace = discretize_VectorField_standard of ftype trace-element-wise "
                                       f"not applicable for target={target}.")

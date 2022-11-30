@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """"""
-from objects.CSCG.base.forms.standard.IS import CSCG_standard_form_IS
+from objects.CSCG.base.forms.standard.whether import CSCG_standard_form_Whether
 from objects.CSCG.base.forms.standard.num import CSCG_standard_form_NUM
 
 
@@ -8,7 +8,7 @@ from objects.CSCG.base.forms.standard.num import CSCG_standard_form_NUM
 class CSCG_Standard_Form:
     """"""
     def ___init___(self):
-        self._IS_ = CSCG_standard_form_IS(self)
+        self._whether_ = CSCG_standard_form_Whether(self)
         self._num_ = CSCG_standard_form_NUM(self)
 
     @property
@@ -16,8 +16,8 @@ class CSCG_Standard_Form:
         return self._orientation_
 
     @property
-    def IS(self):
-        return self._IS_
+    def whether(self):
+        return self._whether_
 
     @property
     def num(self):

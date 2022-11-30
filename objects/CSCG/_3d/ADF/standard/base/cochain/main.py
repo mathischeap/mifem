@@ -4,7 +4,7 @@ from root.config.main import *
 from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.ADF.standard.base.cochain.local import ____3dCSCG_ADSF_Cochain_Local____
 from scipy.sparse import csr_matrix, csc_matrix
-from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_ColumnVector
+from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_ColumnVector
 
 
 
@@ -81,16 +81,16 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Cochain(FrozenOnly):
         :return:
         """
         if globe.__class__.__name__ == 'DistributedVector':
-            assert globe.V.shape == (self._dsf_.num.GLOBAL_dofs, 1), "globe cochain shape wrong."
+            assert globe.V.shape == (self._dsf_.num.global_dofs, 1), "globe cochain shape wrong."
             # gather vector to master core ...
-            if globe.IS.master_dominating:
+            if globe.whether.master_dominating:
                 # no need to gather
                 VV = globe.V.T.toarray()[0]
             else:
                 V = globe.V
                 V = COMM.gather(V, root=MASTER_RANK)
                 if RANK == MASTER_RANK:
-                    VV = np.empty((self._dsf_.num.GLOBAL_dofs,))
+                    VV = np.empty((self._dsf_.num.global_dofs,))
                     for v in V:
                         indices = v.indices
                         data = v.data
@@ -107,7 +107,7 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Cochain(FrozenOnly):
                         # noinspection PyUnboundLocalVariable
                         to_be_sent = csc_matrix(
                             (VV[lr[0]:lr[1]], range(lr[0],lr[1]), [0, lr[1]-lr[0]]),
-                            shape=(self._dsf_.num.GLOBAL_dofs, 1))
+                            shape=(self._dsf_.num.global_dofs, 1))
                     TO_BE_SENT.append(to_be_sent)
             else:
                 TO_BE_SENT = None

@@ -34,9 +34,6 @@ class _1Form_BASE(_2dCSCG_Standard_Form):
             self.k, xi, eta, orientation=self.orientation, compute_xietasigma=compute_xietasigma)
 
 
-    def RESET_cache(self):
-        super().RESET_cache()
-
     def ___Pr_check_CF___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 2

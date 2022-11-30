@@ -12,7 +12,6 @@ from objects.CSCG._2d.spaces.base.num_basis import NumBasis
 from objects.CSCG._2d.spaces.base.local_numbering import LocalNumbering
 from objects.CSCG._2d.spaces.base.incidence_matrix import IncidenceMatrix
 from objects.CSCG._2d.spaces.base.trace_matrix import TraceMatrix
-from objects.CSCG._2d.spaces.base.do import _2dCSCG_space_do
 
 import numpy as np
 
@@ -36,7 +35,7 @@ class _2dCSCG_Space(FrozenClass):
         self._trace_matrix_ = TraceMatrix(self)
         self.___define_parameters___ = None
         self.standard_properties.stamp = '2dCSCG|structured|space'
-        self._DO_ = _2dCSCG_space_do(self)
+        self._DO_ = None
         self._GoN_ = None
         self._GoN_ravel_ = None
         self._freeze_self_()
@@ -153,21 +152,25 @@ class _2dCSCG_Space(FrozenClass):
 
     @property
     def p(self):
+        """the degrees along three-axes."""
         return self._p_
 
     @property
     def nodes(self):
+        """The 1-d nodes."""
         return self._nodes_
 
 
     @property
     def GoN(self):
+        """Grid of the nodes."""
         if self._GoN_ is None:
             self._GoN_ = np.meshgrid(*self.nodes, indexing='ij')
         return self._GoN_
 
     @property
     def GoN_ravel(self):
+        """Grid of the nodes and raveled!"""
         if self._GoN_ravel_ is None:
             self._GoN_ravel_ = [_.ravel('F') for _ in self.GoN]
         return self._GoN_ravel_
@@ -179,6 +182,3 @@ class _2dCSCG_Space(FrozenClass):
         raise NotImplementedError.
         """
         raise NotImplementedError()
-
-
-

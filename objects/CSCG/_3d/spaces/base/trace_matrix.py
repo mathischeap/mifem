@@ -139,3 +139,17 @@ class TraceMatrix(FrozenOnly):
             _gte_[sn] = np.arange(current_num, current_num + basis_on_sides[sn]).tolist()
             current_num += basis_on_sides[sn]
         return _gte_
+
+
+
+
+
+    @property
+    def _3dCSCG_0LocalTrace(self):
+        return self._3dCSCG_0Trace
+    @property
+    def _3dCSCG_1LocalTrace(self):
+        return self._3dCSCG_1Trace
+    @property
+    def _3dCSCG_2LocalTrace(self):
+        return self._3dCSCG_2Trace

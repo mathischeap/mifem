@@ -23,7 +23,7 @@ class ___3dCSCG_1Form_Project_To___(FrozenOnly):
         SPACE = space.__class__(op, None)
 
         f2 = _3dCSCG_2Form(mesh, SPACE,
-                           is_hybrid=self._sf_.IS.hybrid,
+                           is_hybrid=self._sf_.whether.hybrid,
                            orientation=self._sf_.orientation,
                            numbering_parameters=self._sf_.numbering._numbering_parameters_,
                            name='Projected_2form_of_'+self._sf_.standard_properties.name

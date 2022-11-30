@@ -9,8 +9,8 @@ import sys
 if './' not in sys.path: sys.path.append('/')
 
 from components.freeze.base import FrozenOnly
-from tools.linearAlgebra.gathering.vector import Gathering_Vector
-from tools.linearAlgebra.gathering.irregular.ir_matrix.main import iR_Gathering_Matrix
+from tools.elementwiseCache.gathering.vector import Gathering_Vector
+from tools.elementwiseCache.gathering.irregular.ir_matrix.main import iR_Gathering_Matrix
 from root.config.main import SIZE, RANK, COMM, np
 
 
@@ -38,7 +38,7 @@ class Naive(FrozenOnly):
 
     def ___Pr_no_para_routine___(self):
         """"""
-        assert self._f_.IS.hybrid, f"this routine only works for hybrid mpRfT2 standard-1-form."
+        assert self._f_.whether.hybrid, f"this routine only works for hybrid mpRfT2 standard-1-form."
         mesh = self._f_.mesh
         for rank in range(SIZE):
             if rank == RANK:

@@ -33,18 +33,18 @@ class _3dCSCG_Standard_Trace(CSCG_Trace_Form, _3dCSCG_FORM_BASE, ndim=3):
     :param str name:
     """
     def __init__(self, mesh, space, orientation, numbering_parameters, name):
-        super().__init__(mesh, space)
+        super(_3dCSCG_Standard_Trace, self).__init__(mesh, space, name)
         super(_3dCSCG_Standard_Trace, self).___init___()
 
         self._NUM_basis_, self._NUM_basis_components_, self._NUM_basis_onside_ = \
             getattr(self.space.num_basis, self.__class__.__name__)
         assert orientation in ('inner', 'outer'), " orientation needs to be 'inner' or 'outer'."
+
         self._orientation_ = orientation
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_trace_form')
-        self.standard_properties.name = name
         self._numbering_ = _3dCSCG_Trace_Numbering(self, numbering_parameters)
-
         self._cochain_ = None
+
         self._error_ = None
         self._matrices_ = None
         self._coboundary_ = None
@@ -53,10 +53,6 @@ class _3dCSCG_Standard_Trace(CSCG_Trace_Form, _3dCSCG_FORM_BASE, ndim=3):
 
     def __repr__(self):
         return f"3dCSCG>{self.k}TF>{self.standard_properties.name}:{id(self)}"
-
-    def RESET_cache(self):
-        self.cochain.RESET_cache()
-        self.coboundary.RESET_cache()
 
     @property
     def numbering(self):

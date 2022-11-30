@@ -9,7 +9,7 @@ from objects.CSCG._3d.ADF.base import _3dCSCG_Algebra_DUAL_FORM_BASE
 from objects.CSCG._3d.ADF.standard.base.do import _3dCSCG_Algebra_DUAL_Standard_Form_DO
 from objects.CSCG._3d.ADF.standard.base.cochain.main import _3dCSCG_Algebra_DUAL_Standard_Form_Cochain
 from objects.CSCG._3d.ADF.standard.base.coboundary import _3dCSCG_Algebra_DUAL_Standard_Form_Coboundary
-from objects.CSCG._3d.ADF.standard.base.IS import _3dCSCG_ADF_SF_IS
+from objects.CSCG._3d.ADF.standard.base.whether import _3dCSCG_ADF_SF_Whether
 from objects.CSCG._3d.ADF.standard.base.num import _3dCSCG_ADF_SF_NUM
 from objects.CSCG._3d.ADF.standard.base.error import _3dCSCG_ADF_SF_Error
 
@@ -30,12 +30,10 @@ class _3dCSCG_Algebra_DUAL_Standard_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
         self._DO_ = None
         self._cochain_ = None
         self._coboundary_ = None
-        self._IS_ = None
+        self._whether_ = None
         self._num_ = None
         self._error_ = None
 
-    def ___PRIVATE_reset_cache___(self):
-        """"""
 
     def ___PreFrozenChecker___(self):
         """This method will be run automatically before we freeze the object. This is very important because
@@ -44,8 +42,8 @@ class _3dCSCG_Algebra_DUAL_Standard_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
         assert self.prime.mesh == self.mesh, "Trivial check mesh."
         assert self.prime.space == self.space, "Trivial check space."
         assert self.prime.orientation == self.orientation, "Trivial check orientation."
-        assert self.prime.IS.hybrid is self.IS.hybrid, "prime must be hybrid form, now it is not."
-        assert self.prime.IS.volume_form is self.IS.volume_form, "Trivial check IS_volume_form."
+        assert self.prime.whether.hybrid is self.whether.hybrid, "prime must be hybrid form, now it is not."
+        assert self.prime.whether.volume_form is self.whether.volume_form, "Trivial check IS_volume_form."
 
     def ___PRIVATE_generate_mass_matrix___(self):
         """For algebra dual forms, this method will only be called once.
@@ -85,10 +83,10 @@ class _3dCSCG_Algebra_DUAL_Standard_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
         return self._coboundary_
 
     @property
-    def IS(self):
-        if self._IS_ is None:
-            self._IS_ = _3dCSCG_ADF_SF_IS(self)
-        return self._IS_
+    def whether(self):
+        if self._whether_ is None:
+            self._whether_ = _3dCSCG_ADF_SF_Whether(self)
+        return self._whether_
 
     @property
     def num(self):

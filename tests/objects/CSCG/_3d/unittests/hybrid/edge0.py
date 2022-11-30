@@ -6,8 +6,8 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config.main import RANK, MASTER_RANK, COMM
 import random
-from tools.linearAlgebra.elementwiseCache.operators.bmat.main import bmat
-from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
+from tools.elementwiseCache.dataStructures.operators.bmat.main import bmat
+from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
 

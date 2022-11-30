@@ -8,12 +8,12 @@ from objects.CSCG._3d.ADF.base import _3dCSCG_Algebra_DUAL_FORM_BASE
 
 from scipy import sparse as spspa
 
-from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
+from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
 
 from objects.CSCG._3d.ADF.trace.base.do import _3dCSCG_Algebra_DUAL_Trace_Form_DO
 from objects.CSCG._3d.ADF.trace.base.cochain.main import _3dCSCG_Algebra_DUAL_Trace_Form_Cochain
 from objects.CSCG._3d.ADF.trace.base.coboundary import _3dCSCG_Algebra_DUAL_Trace_Form_Coboundary
-from objects.CSCG._3d.ADF.trace.base.IS import _3dCSCG_ADT_TF_IS
+from objects.CSCG._3d.ADF.trace.base.whether import _3dCSCG_ADT_TF_Whether
 from objects.CSCG._3d.ADF.trace.base.num import _3dCSCG_ADF_T_NUM
 from objects.CSCG._3d.ADF.trace.base.matrices import _3dCSCG_ADT_TF_Matrices
 
@@ -32,13 +32,9 @@ class _3dCSCG_Algebra_DUAL_Trace_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
         self._DO_ = None
         self._cochain_ = None
         self._coboundary_ = None
-        self._IS_ = None
+        self._whether_ = None
         self._num_ = None
         self._matrices_ = None
-
-
-    def ___PRIVATE_reset_cache___(self):
-        """"""
 
     def ___PreFrozenChecker___(self):
         """This method will be run automatically before we freeze the object.
@@ -50,7 +46,7 @@ class _3dCSCG_Algebra_DUAL_Trace_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
         assert self.prime.mesh == self.mesh     , "Trivial check mesh."
         assert self.prime.space == self.space   , "Trivial check space."
         assert self.prime.orientation == self.orientation, "Trivial check orientation."
-        assert self.prime.IS.hybrid is self.IS.hybrid    , "prime must be a hybrid form, now it is not."
+        assert self.prime.whether.hybrid is self.whether.hybrid    , "prime must be a hybrid form, now it is not."
 
     def ___PRIVATE_generate_mass_matrix___(self):
         """For algebra dual forms, this method will only be called once.
@@ -104,7 +100,6 @@ class _3dCSCG_Algebra_DUAL_Trace_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
 
         return M, iM
 
-
     @property
     def do(self):
         if self._DO_ is None:
@@ -124,10 +119,10 @@ class _3dCSCG_Algebra_DUAL_Trace_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
         return self._coboundary_
 
     @property
-    def IS(self):
-        if self._IS_ is None:
-            self._IS_ = _3dCSCG_ADT_TF_IS(self)
-        return self._IS_
+    def whether(self):
+        if self._whether_ is None:
+            self._whether_ = _3dCSCG_ADT_TF_Whether(self)
+        return self._whether_
 
     @property
     def num(self):

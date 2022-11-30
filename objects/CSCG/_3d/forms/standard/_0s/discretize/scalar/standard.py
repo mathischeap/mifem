@@ -22,9 +22,9 @@ class _3dCSCG_Discretize_Standard(FrozenOnly):
         nodes = [nodes[i].ravel('F') for i in range(3)]
         cochainLocal = dict()
         if target == 'func':
-            FUNC = SELF.CF.___DO_evaluate_func_at_time___()[0]
+            FUNC = SELF.CF.do.evaluate_func_at_time()[0]
         elif target == 'BC':
-            FUNC = SELF.BC.CF.___DO_evaluate_func_at_time___()[0]
+            FUNC = SELF.BC.CF.do.evaluate_func_at_time()[0]
             assert update_cochain is False, \
                 f"When target is {target}, cannot update cochain!"
         else:

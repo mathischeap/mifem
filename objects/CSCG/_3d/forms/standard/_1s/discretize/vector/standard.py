@@ -60,9 +60,9 @@ class _3dCSCG_Discretize_Standard(FrozenOnly):
         JXC, JYC, JZC = dict(), dict(), dict()
 
         if target == 'func':
-            FUNC = SELF.CF.___DO_evaluate_func_at_time___()
+            FUNC = SELF.CF.do.evaluate_func_at_time()
         elif target == 'BC':
-            FUNC = SELF.BC.CF.___DO_evaluate_func_at_time___()
+            FUNC = SELF.BC.CF.do.evaluate_func_at_time()
             assert update_cochain is False, \
                 f"When target is {target}, cannot update cochain!"
         else:

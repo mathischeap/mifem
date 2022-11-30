@@ -2,11 +2,11 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
-from tools.linearAlgebra.elementwiseCache.objects.columnVector.main import EWC_ColumnVector
+from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
+from tools.elementwiseCache.dataStructures.objects.columnVector.main import EWC_ColumnVector
 
-from tools.linearAlgebra.gathering.regular.matrix.main import Gathering_Matrix
-from tools.linearAlgebra.gathering.vector import Gathering_Vector
+from tools.elementwiseCache.gathering.regular.matrix.main import Gathering_Matrix
+from tools.elementwiseCache.gathering.vector import Gathering_Vector
 
 from itertools import chain
 from components.freeze.main import FrozenOnly
@@ -103,7 +103,7 @@ class _0Form_Special(FrozenOnly):
         -------
 
         """
-        assert self._sf_.IS.hybrid, f"Only hybrid 1-form has this problem."
+        assert self._sf_.whether.hybrid, f"Only hybrid 1-form has this problem."
         assert T.__class__.__name__ == 'EWC_SparseMatrix'
         assert D.__class__.__name__ == 'EWC_SparseMatrix'
         assert C.__class__.__name__ == 'EWC_SparseMatrix'

@@ -2,7 +2,7 @@
 import numpy as np
 from scipy.sparse import csr_matrix
 from components.freeze.base import FrozenOnly
-from tools.linearAlgebra.elementwiseCache.objects.multiDimMatrix.main import MultiDimMatrix
+from tools.elementwiseCache.dataStructures.objects.multiDimMatrix.main import MultiDimMatrix
 
 
 class ___3dCSCG_2Form_CrossProduct_2__ip_2___(FrozenOnly):

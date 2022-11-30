@@ -10,9 +10,6 @@ class _2dCSCG_Standard_Form_DO(FrozenOnly):
         self._sf_ = sf
         self._freeze_self_()
 
-    def RESET_cache(self):
-        self._sf_.RESET_cache()
-
     def evaluate_basis_at_meshgrid(self, *args, **kwargs):
         return self._sf_.___PRIVATE_do_evaluate_basis_at_meshgrid___(*args, **kwargs)
 
@@ -83,7 +80,7 @@ class _2dCSCG_Standard_Form_DO(FrozenOnly):
                 et = et.ravel('F')
                 detJ = f.mesh.elements.coordinate_transformation.vectorized.Jacobian(xi, et)
 
-                if f.mesh.elements.IS.homogeneous_according_to_types_wrt_metric:
+                if f.mesh.elements.whether.homogeneous_according_to_types_wrt_metric:
 
                     total_energy = np.einsum('kw, w, w -> ',
                                              reconstruction,
@@ -141,7 +138,7 @@ class _2dCSCG_Standard_Form_DO(FrozenOnly):
         if len(self._sf_.mesh.elements) == 0:
             LOCAL = 0
 
-        elif self._sf_.mesh.elements.IS.homogeneous_according_to_types_wrt_metric:
+        elif self._sf_.mesh.elements.whether.homogeneous_according_to_types_wrt_metric:
             i = self._sf_.mesh.elements.indices[0]
             repM = M[i].toarray() # representative Mass matrix
             LOCAL = np.einsum('ij, ki, kj -> ',

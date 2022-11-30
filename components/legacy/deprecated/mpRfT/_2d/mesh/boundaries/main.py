@@ -47,9 +47,9 @@ class mpRfT2_Mesh_Boundaries(FrozenOnly):
                     for root_cells_index in basic_cell:
                         rc = self._mesh_[root_cells_index]
 
-                        if rc.IS.attached_to_basic_cell_boundary:
+                        if rc.whether.attached_to_basic_cell_boundary:
 
-                            if getattr(rc.IS, ATTR):
+                            if getattr(rc.whether, ATTR):
                                 rrc_bn.append((rc.__repr__(), edge))
                             else:
                                 pass

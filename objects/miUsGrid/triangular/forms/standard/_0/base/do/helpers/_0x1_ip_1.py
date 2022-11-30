@@ -4,7 +4,7 @@ from components.freeze.base import FrozenOnly
 import numpy as np
 from scipy.sparse import csr_matrix
 
-from tools.linearAlgebra.elementwiseCache.objects.multiDimMatrix.main import MultiDimMatrix
+from tools.elementwiseCache.dataStructures.objects.multiDimMatrix.main import MultiDimMatrix
 
 
 class ___0_x_1__ip__1___(FrozenOnly):

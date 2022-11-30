@@ -31,7 +31,7 @@ class _3dCSCG_MeshElement_CT_VEC(FrozenOnly):
         if len(self._elements_) == 0:
             return None
 
-        if self._elements_.IS.homogeneous_according_to_types_wrt_metric:
+        if self._elements_.whether.homogeneous_according_to_types_wrt_metric:
 
             i = self._elements_.indices[0]
             Jacobian = self._elements_[i].coordinate_transformation.Jacobian(xi, et, sg)
@@ -57,7 +57,7 @@ class _3dCSCG_MeshElement_CT_VEC(FrozenOnly):
         if len(self._elements_) == 0:
             return None
 
-        if self._elements_.IS.homogeneous_according_to_types_wrt_metric:
+        if self._elements_.whether.homogeneous_according_to_types_wrt_metric:
 
             i = self._elements_.indices[0]
             inverse_Jacobian = self._elements_[i].coordinate_transformation.inverse_Jacobian(xi, et, sg)

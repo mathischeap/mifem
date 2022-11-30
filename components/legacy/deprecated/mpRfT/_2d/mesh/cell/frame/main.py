@@ -19,7 +19,7 @@ class mpFfT2_CellFrame(FrozenOnly):
     """"""
     def __init__(self, cell):
         """"""
-        assert cell.IS.root, "Only root cell has frame."
+        assert cell.whether.root, "Only root cell has frame."
         self._cell_ = cell
         self._U = None
         self._D = None
@@ -71,7 +71,7 @@ class mpFfT2_CellFrame(FrozenOnly):
             else:
                 raise Exception()
 
-        atb = cell.IS.attached_to_basic_cell_boundary
+        atb = cell.whether.attached_to_basic_cell_boundary
 
         USG = dict()
         DSG = dict()
@@ -85,10 +85,10 @@ class mpFfT2_CellFrame(FrozenOnly):
         Ri_signature = SG_ci + 'y' + str(ey) + ':x' + xSignature
 
         if atb:
-            atUb = cell.IS.attached_to_basic_cell_U_boundary
-            atDb = cell.IS.attached_to_basic_cell_D_boundary
-            atLb = cell.IS.attached_to_basic_cell_L_boundary
-            atRb = cell.IS.attached_to_basic_cell_R_boundary
+            atUb = cell.whether.attached_to_basic_cell_U_boundary
+            atDb = cell.whether.attached_to_basic_cell_D_boundary
+            atLb = cell.whether.attached_to_basic_cell_L_boundary
+            atRb = cell.whether.attached_to_basic_cell_R_boundary
 
             Tmap = cell.mesh.basic_cells.trace_elements.map[i]
             bt0, bt1, bt2, bt3 = ['t'+str(_) for _ in Tmap]

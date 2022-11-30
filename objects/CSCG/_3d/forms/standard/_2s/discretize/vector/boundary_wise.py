@@ -102,7 +102,7 @@ class _3dCSCG_Discretize_BoundaryWise(FrozenOnly):
         xi_y, et_y, si_y, area_dzdx = self.___DISCRETIZE_STANDARD_CACHE___['Y']
         xi_z, et_z, si_z, area_dxdy = self.___DISCRETIZE_STANDARD_CACHE___['Z']
 
-        FUNC = SELF.BC.CF.___DO_evaluate_func_at_time___()
+        FUNC = SELF.BC.CF.do.evaluate_func_at_time()
 
         JXC, JYC, JZC = dict(), dict(), dict()
         RANGE_element_sides = SELF.mesh.boundaries.range_of_element_sides

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from components.freeze.main import FrozenOnly
-from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
+from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
 
 
 class _3dCSCG_Algebra_DUAL_Trace_Form_Coboundary(FrozenOnly):

@@ -37,7 +37,6 @@ class _2dCSCG_1Form_Inner(_1Form_BASE):
         self._special_ = _1Form_Inner_Special(self)
         self._discretize_ = _2dCSCG_S1Fi_Discretize(self)
         self._reconstruct_ = None
-        self.RESET_cache()
         self._freeze_self_()
 
     @property

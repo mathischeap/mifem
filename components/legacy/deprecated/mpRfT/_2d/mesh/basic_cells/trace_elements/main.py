@@ -103,26 +103,26 @@ class mpRfT2_Mesh_BasicCells_TraceElements(FrozenOnly):
             for j in cell:
                 sub_cell = mesh[j]
 
-                if sub_cell.IS.attached_to_basic_cell_boundary:
-                    if sub_cell.IS.attached_to_basic_cell_U_boundary:
+                if sub_cell.whether.attached_to_basic_cell_boundary:
+                    if sub_cell.whether.attached_to_basic_cell_U_boundary:
                         te = self[M[0]]
                         xSignature = None
                         ySignature = self.___Pr_segment_finder___(sub_cell, 'U')
                         _segments[te.i] += ([xSignature, ySignature],)
 
-                    if sub_cell.IS.attached_to_basic_cell_D_boundary:
+                    if sub_cell.whether.attached_to_basic_cell_D_boundary:
                         te = self[M[1]]
                         xSignature = None
                         ySignature = self.___Pr_segment_finder___(sub_cell, 'D')
                         _segments[te.i] += ([xSignature, ySignature],)
 
-                    if sub_cell.IS.attached_to_basic_cell_L_boundary:
+                    if sub_cell.whether.attached_to_basic_cell_L_boundary:
                         te = self[M[2]]
                         xSignature = self.___Pr_segment_finder___(sub_cell, 'L')
                         ySignature = None
                         _segments[te.i] += ([xSignature, ySignature],)
 
-                    if sub_cell.IS.attached_to_basic_cell_R_boundary:
+                    if sub_cell.whether.attached_to_basic_cell_R_boundary:
                         te = self[M[3]]
                         xSignature = self.___Pr_segment_finder___(sub_cell, 'R')
                         ySignature = None
@@ -142,7 +142,7 @@ class mpRfT2_Mesh_BasicCells_TraceElements(FrozenOnly):
         for i in Segments: #go through all local trace-elements (level-0-trace-elements)
             if len(Segments[i]) == 1: # these trace-element data may should be communicated.
                 te = self[i]._te_
-                if te.IS.shared_by_cores: # not on the mesh-boundary, then communicate it.
+                if te.whether.shared_by_cores: # not on the mesh-boundary, then communicate it.
                     sc = te.shared_with_core
                     ATAd[sc][i] = Segments[i][0]
 
@@ -158,7 +158,7 @@ class mpRfT2_Mesh_BasicCells_TraceElements(FrozenOnly):
             te = self[i]
             LEN = len(Segments[i])
             if LEN == 1:
-                assert te._te_.IS.on_mesh_boundary
+                assert te._te_.whether.on_mesh_boundary
                 # noinspection PyTypeChecker
                 Segments[i] = [mpRfT2_Segment(te, *_) for _ in Segments[i][0]]
             elif LEN == 2:

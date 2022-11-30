@@ -43,7 +43,7 @@ class Eigen1(pH_LinearGradDiv_Base):
         dft = om_t * (2 * cos(om_t * t + phi_t) - 3 * sin(om_t * t + phi_t))
         g_xyz = cos(om_x * x + phi_x) * sin(om_y * y + phi_y) * sin(om_z * z + phi_z)
 
-        return g_xyz * dft
+        return - g_xyz * dft
 
     def u(self, t, x, y, z):
         om_x, om_y, om_z = self._OM_

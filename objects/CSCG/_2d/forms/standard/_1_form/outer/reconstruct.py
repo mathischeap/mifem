@@ -58,8 +58,8 @@ class _2dCSCG_So1F_Reconstruct(_2dCSCG_SF_ReconstructBase):
                 u = np.einsum('ij, ki -> kj', basis[0], ArrX, optimize='greedy')
                 v = np.einsum('ij, ki -> kj', basis[1], ArrY, optimize='greedy')
 
-                if mesh.elements.IS.homogeneous_according_to_types_wrt_metric:
-                    if mesh.elements.IS.all_orthogonal:
+                if mesh.elements.whether.homogeneous_according_to_types_wrt_metric:
+                    if mesh.elements.whether.all_orthogonal:
                         vx = + np.einsum('kj, j -> kj', u, iJ[1][1], optimize='greedy')
                         vy = + np.einsum('kj, j -> kj', v, iJ[0][0], optimize='greedy')
                     else:
@@ -69,7 +69,7 @@ class _2dCSCG_So1F_Reconstruct(_2dCSCG_SF_ReconstructBase):
                              + np.einsum('kj, j -> kj', v, iJ[0][0], optimize='greedy')
 
                 else:
-                    if mesh.elements.IS.all_orthogonal:
+                    if mesh.elements.whether.all_orthogonal:
                         vx = + np.einsum('kj, kj -> kj', u, iJ[1][1], optimize='greedy')
                         vy = + np.einsum('kj, kj -> kj', v, iJ[0][0], optimize='greedy')
                     else:

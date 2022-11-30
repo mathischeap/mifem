@@ -37,7 +37,7 @@ class _3dCSCG_Trace_Element_CoordinateTransformation(FrozenOnly):
         :param parse_3_1d_eps: If `parse_ep` is True, then we have *ep is xi, eta, sigma, and they are all 1d,
             between [-1,1], we will pick up two from them according the side and do the mesh grid.
         """
-        if self._te_.IS.on_periodic_boundary:
+        if self._te_.whether.on_periodic_boundary:
             assert from_element is not None, \
                 "to compute the mapping of a trace element on periodic " \
                 "boundary, we have to provide from which element you " \
@@ -97,7 +97,8 @@ class _3dCSCG_Trace_Element_CoordinateTransformation(FrozenOnly):
         """
         i = self._te_.CHARACTERISTIC_element
         element_side = self._te_.CHARACTERISTIC_side
-        ep = self._te_._elements_.___generate_full_ep___(evaluation_points, element_side, parse_3_1d_eps=parse_3_1d_eps)
+        ep = self._te_._elements_.___generate_full_ep___(
+            evaluation_points, element_side, parse_3_1d_eps=parse_3_1d_eps)
         J = self._te_._mesh_.elements[i].coordinate_transformation.Jacobian_matrix(*ep)
         if element_side in 'NS':
             return ((J[0][1], J[0][2]),

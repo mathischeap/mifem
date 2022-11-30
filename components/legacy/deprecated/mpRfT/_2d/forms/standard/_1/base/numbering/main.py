@@ -53,7 +53,7 @@ class mpRfT2_S1F_Numbering(FrozenOnly):
 
     @property
     def GLOBAL_dofs(self):
-        return self.gathering.GLOBAL_num_dofs
+        return self.gathering.global_num_dofs
 
     @property
     def do(self):

@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Parallel runners.
-
+"""Parallel runners.
 """
 from root.config.main import *
 from tools.legacy.serialRunners.INSTANCES.matrix3d_input_runner import Matrix3dInputRunner

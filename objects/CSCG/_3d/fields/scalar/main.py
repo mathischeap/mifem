@@ -9,7 +9,7 @@ Continuous standard 3-form.
 
 """
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 
 from types import FunctionType, MethodType
 from objects.CSCG._3d.fields.base import _3dCSCG_Continuous_FORM_BASE
@@ -76,6 +76,7 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
             self._func_ = [func,]
 
         elif ftype == 'boundary-wise': # mesh boundary wise (not domain boundary-wise)
+            # no need to cover all mesh boundaries.
             assert isinstance(func, dict), f" when ftype == 'boundary-wise', " \
                                            f"we must put functions in a dict whose " \
                                            f"keys are boundary names and values are" \
@@ -83,6 +84,7 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
             self._func_ = dict()
             for bn in func:
+
                 assert bn in self.mesh.boundaries.names, \
                     f"func key: [{bn}] is not a valid boundary name " \
                     f"({self.mesh.boundaries.names})"
@@ -104,7 +106,7 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                 self._func_[bn] = [func_bn,]
                 # we always put a func representing a scalar in a list or tuple of shape (1,)
 
-        elif ftype == 'trace-element-wise':
+        elif ftype == 'trace-element-wise': # no need to cover all trace elements.
             # we have received a dict whose keys are local trace elements, values are callable that returns, xyz and a vector.
             assert isinstance(func, dict), f"func for trace-element-wise vector must a dict."
             for i in func: # valid local trace elements

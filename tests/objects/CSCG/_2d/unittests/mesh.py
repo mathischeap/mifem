@@ -472,10 +472,10 @@ def test_Mesh_NO4_mesh_trace_topology():
             else:
                 SD.extend([RANK, shared_with_core])
 
-            if e.IS.on_mesh_boundary:
+            if e.whether.on_mesh_boundary:
                 assert e.positions[1] in mesh.domain.boundaries.names
-            if e.IS.on_periodic_boundary:
-                assert not e.IS.on_mesh_boundary
+            if e.whether.on_periodic_boundary:
+                assert not e.whether.on_mesh_boundary
                 assert e.positions[1][0] in '0123456789'
 
         SD = COMM.gather(SD, root=SECRETARY_RANK)
@@ -495,23 +495,23 @@ def test_Mesh_NO4_mesh_trace_topology():
         assert e.positions ==('0D', '1U')
         assert e.CHARACTERISTIC_position in e.positions
         assert str(e.CHARACTERISTIC_element) + e.CHARACTERISTIC_edge == e.CHARACTERISTIC_position
-        assert e.IS.on_periodic_boundary is False
-        assert e.IS.on_mesh_boundary is False
+        assert e.whether.on_periodic_boundary is False
+        assert e.whether.on_mesh_boundary is False
     if 17 in MAP:
         assert MAP[17] == [43, 45, 40, 46]
         e = mesh.trace.elements[45]
         assert e.positions ==('17D', '21U')
         assert e.CHARACTERISTIC_position in e.positions
         assert str(e.CHARACTERISTIC_element) + e.CHARACTERISTIC_edge == e.CHARACTERISTIC_position
-        assert e.IS.on_periodic_boundary is False
-        assert e.IS.on_mesh_boundary is False
+        assert e.whether.on_periodic_boundary is False
+        assert e.whether.on_mesh_boundary is False
         e = mesh.trace.elements[46]
         assert e.positions ==('17R', 'Down')
         assert e.CHARACTERISTIC_position == '17R'
         assert e.CHARACTERISTIC_position in e.positions
         assert str(e.CHARACTERISTIC_element) + e.CHARACTERISTIC_edge == e.CHARACTERISTIC_position
-        assert e.IS.on_periodic_boundary is False
-        assert e.IS.on_mesh_boundary
+        assert e.whether.on_periodic_boundary is False
+        assert e.whether.on_mesh_boundary
     if 33 in MAP:
         assert MAP[33] == [81, 82, 76, 83]
         e = mesh.trace.elements[81]
@@ -519,8 +519,8 @@ def test_Mesh_NO4_mesh_trace_topology():
         assert e.CHARACTERISTIC_position == '33U'
         assert e.CHARACTERISTIC_position in e.positions
         assert str(e.CHARACTERISTIC_element) + e.CHARACTERISTIC_edge == e.CHARACTERISTIC_position
-        assert e.IS.on_periodic_boundary is False
-        assert e.IS.on_mesh_boundary
+        assert e.whether.on_periodic_boundary is False
+        assert e.whether.on_mesh_boundary
 
     if 27 in MAP: assert MAP[27] == [67, 68, 62, 69]
     if 28 in MAP: assert MAP[28] == [68, 70, 64, 71]

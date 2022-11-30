@@ -38,7 +38,7 @@ class _3dTraceElement_CT_Constant(FrozenOnly):
 
             te = self._te_
 
-            if te.IS.orthogonal:
+            if te.whether.orthogonal:
                 # it has a constant_unit_normal_vector
                 x = [0,]
                 y = [0,]
@@ -73,7 +73,7 @@ class _3dTraceElement_CT_Constant(FrozenOnly):
 
             te = self._te_
 
-            if te.IS.orthogonal:
+            if te.whether.orthogonal:
 
                 tMark = te.type_wrt_metric.mark
 

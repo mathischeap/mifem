@@ -29,5 +29,5 @@ class CSCG_trace_form_NUM(FrozenOnly):
         return self._tf_._NUM_basis_onside_
 
     @property
-    def GLOBAL_dofs(self):
-        return self._tf_.numbering.gathering.GLOBAL_num_dofs
+    def global_dofs(self):
+        return self._tf_.numbering.gathering.global_num_dofs

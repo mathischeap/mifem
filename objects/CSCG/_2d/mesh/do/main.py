@@ -13,9 +13,6 @@ class _2dCSCG_Mesh_DO(FrozenOnly):
         self._FIND_ = _2dCSCG_Mesh_DO_FIND(self)
         self._freeze_self_()
 
-    def reset_cache(self):
-        self._mesh_.RESET_cache()
-
     @staticmethod
     def parse_element_edge_pair(eP: str):
         """Element side pairs are also used for trace element keys."""

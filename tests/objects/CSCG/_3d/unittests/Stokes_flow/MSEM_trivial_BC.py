@@ -7,10 +7,10 @@ import sys
 if './' not in sys.path: sys.path.append('./')
 
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
-from tools.linearAlgebra.elementwiseCache.operators.concatenate.main import concatenate
-from tools.linearAlgebra.elementwiseCache.operators.bmat.main import bmat
-from tools.linearAlgebra.elementwiseCache.objects.columnVector.main import EWC_ColumnVector
-from tools.linearAlgebra.linearSystem.main import LinearSystem
+from tools.elementwiseCache.dataStructures.operators.concatenate.main import concatenate
+from tools.elementwiseCache.dataStructures.operators.bmat.main import bmat
+from tools.elementwiseCache.dataStructures.objects.columnVector.main import EWC_ColumnVector
+from tools.miLinearAlgebra.linearSystem.main import LinearSystem
 from root.config.main import RANK, MASTER_RANK
 
 

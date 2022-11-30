@@ -11,8 +11,8 @@ if './' not in sys.path: sys.path.append('/')
 import numpy as np
 from components.freeze.base import FrozenOnly
 from importlib import import_module
-from tools.linearAlgebra.gathering.vector import Gathering_Vector
-from tools.linearAlgebra.gathering.irregular.ir_matrix.main import iR_Gathering_Matrix
+from tools.elementwiseCache.gathering.vector import Gathering_Vector
+from tools.elementwiseCache.gathering.irregular.ir_matrix.main import iR_Gathering_Matrix
 from objects.mpRfT._2d.forms.segment.node.numbering.do.main import mpRfT2_NSgF_Numbering_DO
 from objects.mpRfT._2d.forms.segment.node.numbering.local import mpRfT2_NSgF_Numbering_Local
 
@@ -84,7 +84,7 @@ class mpRfT2_NSgF_Numbering(FrozenOnly):
 
     @property
     def GLOBAL_dofs(self):
-        return self.gathering.GLOBAL_num_dofs
+        return self.gathering.global_num_dofs
 
     @property
     def do(self):

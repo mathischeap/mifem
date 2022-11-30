@@ -26,12 +26,8 @@ class _2dCSCG_1Trace_Outer(_2dCSCG_1Trace):
         super().__init__(mesh, space, True, 'outer', numbering_parameters, name)
         self._k_ = 1
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_trace_1form')
-        self.RESET_cache()
         self._discretize_ = _2dCSCG_Outer0Trace_discretize(self)
         self._freeze_self_()
-
-    def RESET_cache(self):
-        super().RESET_cache()
 
     def ___PRIVATE_TW_FUNC_body_checker___(self, func_body):
         if func_body.__class__.__name__ == '_2dCSCG_ScalarField':

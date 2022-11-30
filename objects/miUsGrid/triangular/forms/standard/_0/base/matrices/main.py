@@ -11,7 +11,7 @@ if './' not in sys.path: sys.path.append('./')
 from components.freeze.base import FrozenOnly
 from components.quadrature import Quadrature
 from objects.miUsGrid.triangular.forms.standard._0.base.matrices.helpers.inner import ___MassMatrix_Inner___
-from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
+from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
 
 
 class miUs_Triangular_S0F_Matrices(FrozenOnly):

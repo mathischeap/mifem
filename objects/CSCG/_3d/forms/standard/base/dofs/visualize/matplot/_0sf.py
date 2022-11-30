@@ -39,7 +39,7 @@ class _3dCSCG_S0F_DOFs_Matplot(FrozenOnly):
         -------
 
         """
-        assert self._sf_.IS.hybrid, f"Visualize dofs around a node-element is only valid for " \
+        assert self._sf_.whether.hybrid, f"Visualize dofs around a node-element is only valid for " \
                                     f"HYBRID 0-standard-form."
 
         #----------- plot the trace-elements and mesh-elements around node-element #i --------
@@ -50,7 +50,7 @@ class _3dCSCG_S0F_DOFs_Matplot(FrozenOnly):
             node_LOCATION = list()
             TraceElement_Data = dict()
 
-            on_mesh_boundary = node.IS.on_mesh_boundary
+            on_mesh_boundary = node.whether.on_mesh_boundary
 
             TE_coordinates = (
                 [-1, 0, 0],
@@ -262,7 +262,7 @@ class _3dCSCG_S0F_DOFs_Matplot(FrozenOnly):
         -------
 
         """
-        assert self._sf_.IS.hybrid, f"the form is not hybrid, this method makes no sense."
+        assert self._sf_.whether.hybrid, f"the form is not hybrid, this method makes no sense."
 
         assert T.__class__.__name__ == 'EWC_SparseMatrix', f"T must be a trace matrix."
         assert C.__class__.__name__ == 'EWC_SparseMatrix', f"C must be a complement matrix."
@@ -288,7 +288,7 @@ class _3dCSCG_S0F_DOFs_Matplot(FrozenOnly):
         if i in mesh.node.elements:
             node_element = mesh.node.elements[i]
 
-            if node_element.IS.on_periodic_boundary:
+            if node_element.whether.on_periodic_boundary:
 
                 N_xyz = list()
                 positions = node_element.positions
@@ -315,7 +315,7 @@ class _3dCSCG_S0F_DOFs_Matplot(FrozenOnly):
         if i in mesh.node.elements:
             node_element = mesh.node.elements[i]
             positions = node_element.positions
-            on_mesh_boundary = node_element.IS.on_mesh_boundary
+            on_mesh_boundary = node_element.whether.on_mesh_boundary
 
         else:
             positions = None

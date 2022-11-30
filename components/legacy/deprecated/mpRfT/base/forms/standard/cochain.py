@@ -11,7 +11,7 @@ if './' not in sys.path: sys.path.append('/')
 import numpy as np
 from scipy.sparse import csr_matrix
 from components.freeze.base import FrozenOnly
-from tools.linearAlgebra.elementwiseCache.objects.columnVector.main import EWC_ColumnVector
+from tools.elementwiseCache.dataStructures.objects.columnVector.main import EWC_ColumnVector
 
 
 class mpRfT_SF_Cochain_Base(FrozenOnly):

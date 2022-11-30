@@ -20,9 +20,9 @@ from tests.objects.CSCG._3d.randObj.form_caller import random_mesh_and_space_of_
 from tests.objects.CSCG._3d.randObj.form_caller import random_FormCaller_of_total_load_around
 from tests.objects.CSCG._3d.randObj.field import random_vector
 
-from tools.linearAlgebra.linearSystem.main import LinearSystem
-from tools.linearAlgebra.elementwiseCache.operators.bmat.main import bmat
-from tools.linearAlgebra.elementwiseCache.operators.concatenate.main import concatenate
+from tools.miLinearAlgebra.linearSystem.main import LinearSystem
+from tools.elementwiseCache.dataStructures.operators.bmat.main import bmat
+from tools.elementwiseCache.dataStructures.operators.concatenate.main import concatenate
 
 
 

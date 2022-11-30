@@ -6,7 +6,7 @@ from components.freeze.main import FrozenOnly
 from objects.CSCG._2d.mesh.elements.coordinate_transformation.main import _2dCSCG_Mesh_Elements_CT
 from root.config.main import *
 from objects.CSCG._2d.mesh.elements.element.main import _2dCSCG_Mesh_Element
-from objects.CSCG._2d.mesh.elements.IS import _2dCSCG_MeshElements_IS
+from objects.CSCG._2d.mesh.elements.whether import _2dCSCG_MeshElements_Whether
 from objects.CSCG._2d.mesh.elements.visualize import _2dCSCG_MeshElements_VIS
 from objects.CSCG._2d.mesh.elements.do.main import _2dCSCG_Mesh_Elements_do
 
@@ -18,7 +18,7 @@ class _2dCSCG_Mesh_Elements(FrozenOnly):
     def __init__(self, mesh):
         self._mesh_ = mesh
         self._elements_ = dict()
-        self._IS_ = None
+        self._whether_ = None
         self._visualize_ = None
         self._do_ = None
         self._ct_ = _2dCSCG_Mesh_Elements_CT(self)
@@ -27,10 +27,6 @@ class _2dCSCG_Mesh_Elements(FrozenOnly):
         self.___PRIVATE_parse_elements_type_wrt_metric___()
         self._rwPc_ = None
         self._freeze_self_()
-
-    def RESET_cache(self):
-        """"""
-        self.coordinate_transformation.RESET_cache()
 
     def ___PRIVATE_parse_elements_type_wrt_metric___(self):
         counter: dict = dict()
@@ -77,10 +73,10 @@ class _2dCSCG_Mesh_Elements(FrozenOnly):
         return Statistic
 
     @property
-    def IS(self):
-        if self._IS_ is None:
-            self._IS_ = _2dCSCG_MeshElements_IS(self)
-        return self._IS_
+    def whether(self):
+        if self._whether_ is None:
+            self._whether_ = _2dCSCG_MeshElements_Whether(self)
+        return self._whether_
 
     @property
     def visualize(self):
@@ -217,4 +213,4 @@ if __name__ == '__main__':
     mesh = MeshGenerator('crazy', c=0., bounds=([0,1],[0,1]))([10,10])
     elements = mesh.elements
     S = elements.statistic
-    print(elements.IS.homogeneous_according_to_types_wrt_metric)
+    print(elements.whether.homogeneous_according_to_types_wrt_metric)

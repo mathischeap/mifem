@@ -33,17 +33,17 @@ class mpFfT2_CellFrame_Interfaces(FrozenOnly):
                 # these segments must form an interface
                 if_rp = 'IF>' + '|'.join(sgs_rp[1:])
                 IF = mesh.interfaces[if_rp]
-                assert not IF.IS.symmetric
+                assert not IF.whether.symmetric
             else:
                 sg_rp = sgs_rp[1]
                 if_rp = 'IF>' + sg_rp
 
                 if if_rp in mesh.interfaces:
                     IF = mesh.interfaces[if_rp]
-                    if IF.IS.on_mesh_boundary:
-                        assert not IF.IS.symmetric
+                    if IF.whether.on_mesh_boundary:
+                        assert not IF.whether.symmetric
                     else:
-                        assert IF.IS.symmetric
+                        assert IF.whether.symmetric
 
                 else:
                     # This edge is within a larger interface.

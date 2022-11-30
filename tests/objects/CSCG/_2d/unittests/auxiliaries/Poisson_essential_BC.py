@@ -56,19 +56,19 @@ def PoissonSolver1(c, Kx, Ky, Nx, Ny):
        n = t.matrices.trace
 
        e12m2 = e12 @ m2
-       a = tools.linalg.bmat((
+       a = tools.ewc.bmat((
               [m1, e12m2, -n.T],
               [e21, None, None],
               [n, None, None]))
        a.assembler.chain_method = 'sequent'
        a.gathering_matrices = ((u, p, t), (u, p, t))
-       b0 = tools.linalg.EWC_ColumnVector(u)
+       b0 = tools.ewc.vector(u)
        b1 = -f.cochain.EWC
-       b2 = tools.linalg.EWC_ColumnVector(t)
-       b = tools.linalg.concatenate([b0, b1, b2])
+       b2 = tools.ewc.vector(t)
+       b = tools.ewc.concatenate([b0, b1, b2])
        b.assembler.chain_method = 'sequent'
        b.gathering_matrix = (u, p, t)
-       ls = tools.linalg.LinearSystem(a, b)
+       ls = tools.milinalg.LinearSystem(a, b)
        a.customize.identify_global_rows_according_to(2, t.BC.interpret)
        results = ls.solve('direct')()[0]
        results.do.distributed_to(u, p, t, chain_method=b.gathering_matrix)

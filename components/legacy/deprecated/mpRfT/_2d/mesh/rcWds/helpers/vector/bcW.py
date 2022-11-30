@@ -36,7 +36,7 @@ class mpRfT2_Mesh_rcWds_Vector_bcW(FrozenOnly):
         """"""
         cell = self._vector_._mesh_[i]
         data = self._vector_._data_
-        if cell.IS.root:
+        if cell.whether.root:
             try:
                 return data[cell.__repr__()]
             except KeyError:

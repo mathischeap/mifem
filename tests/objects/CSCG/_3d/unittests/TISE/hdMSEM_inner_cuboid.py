@@ -14,10 +14,10 @@ from objects.CSCG._3d.__init__ import form as form3
 from objects.CSCG._3d.__init__ import exact_solution as es3
 
 from root.config.main import *
-from tools.linearAlgebra.elementwiseCache.objects.columnVector.main import EWC_ColumnVector
-from tools.linearAlgebra.elementwiseCache.operators.bmat.main import bmat
-from tools.linearAlgebra.elementwiseCache.operators.concatenate.main import concatenate
-from tools.linearAlgebra.linearSystem.main import LinearSystem
+from tools.elementwiseCache.dataStructures.objects.columnVector.main import EWC_ColumnVector
+from tools.elementwiseCache.dataStructures.operators.bmat.main import bmat
+from tools.elementwiseCache.dataStructures.operators.concatenate.main import concatenate
+from tools.miLinearAlgebra.linearSystem.main import LinearSystem
 
 from objects.CSCG.tools.distribute_local_cochain import distribute_local_cochain
 

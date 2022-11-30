@@ -47,7 +47,7 @@ class _3dCSCG_NodeMesh_Do(FrozenOnly):
             node_LOCATION = list()
             TraceElement_Data = dict()
 
-            on_mesh_boundary = node.IS.on_mesh_boundary
+            on_mesh_boundary = node.whether.on_mesh_boundary
 
             TE_coordinates = (
                 [-1, 0, 0],

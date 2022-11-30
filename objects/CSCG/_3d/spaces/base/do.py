@@ -12,6 +12,24 @@ class _3dCSCG_space_do(FrozenOnly):
         self.basises = space.basises
         self._freeze_self_()
 
+
+    def evaluate_quadrature(self, quad_degree, quad_type=None):
+        """
+
+        Parameters
+        ----------
+        quad_degree
+        quad_type
+
+        Returns
+        -------
+
+        """
+        return self._space_.___PRIVATE_do_evaluate_quadrature___(
+            quad_degree, quad_type=quad_type
+        )
+
+
     def evaluate_edge_basis_at_meshgrid(self, k, *domain):
         """ """
         assert 0 <= k <= self.ndim-1, " <Polynomials> : k={} is wrong.".format(k)
@@ -191,6 +209,7 @@ class _3dCSCG_space_do(FrozenOnly):
                             domain[i])
             else:
                 pass
+
         if self.ndim == 3:
 
             if compute_xietasigma:
@@ -233,10 +252,21 @@ class _3dCSCG_space_do(FrozenOnly):
                 _basis_['B'] = (np.kron(bf_et, bf_xi),)
             else:
                 raise DimensionError()
+
         else:
             raise DimensionError(
                 " <Polynomials> : evaluate_basis_functions for ndim={} not coded".format(self.ndim))
+
+        # noinspection PyUnresolvedReferences
         _basis_['S'] = _basis_['N']
+        # noinspection PyUnresolvedReferences
         _basis_['E'] = _basis_['W']
+        # noinspection PyUnresolvedReferences
         _basis_['F'] = _basis_['B']
+
         return _meshgrid_ravel_, _basis_
+
+
+    def evaluate_local_trace_basis_at_meshgrid(self, k, *domain, compute_xietasigma=True):
+        """"""
+        return self.evaluate_trace_basis_at_meshgrid(k, *domain, compute_xietasigma=compute_xietasigma)

@@ -6,8 +6,8 @@ if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 import random
 from objects.CSCG._3d.master import SpaceInvoker, FormCaller
-from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_ColumnVector
-from tools.linearAlgebra.elementwiseCache.operators.concatenate.main import concatenate
+from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_ColumnVector
+from tools.elementwiseCache.dataStructures.operators.concatenate.main import concatenate
 from scipy import sparse as spspa
 from tests.objects.CSCG._3d.randObj.mesh import random_mesh_of_elements_around as _3d_RANDOM_MESH_
 
@@ -66,7 +66,7 @@ def test_LinearAlgebra_EWC_No0_ColumnVector():
 
     #-------- tests of customize ------------------------------------------------------------------
     V = concatenate([v0, v1])
-    GLOBAL_num_dofs = V.gathering_matrix.GLOBAL_num_dofs
+    GLOBAL_num_dofs = V.gathering_matrix.global_num_dofs
     if RANK == MASTER_RANK:
         num_samples = random.randint(1,5)
         indices = random.sample(range(0, GLOBAL_num_dofs), num_samples)

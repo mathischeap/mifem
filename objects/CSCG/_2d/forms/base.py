@@ -22,11 +22,11 @@ class _2dCSCG_FORM_BASE(CSCG_FORM_BASE):
         super().__init_subclass__(ndim=ndim)
         cls.___ndim___ = ndim
 
-    def __init__(self, mesh, space):
+    def __init__(self, mesh, space, name):
         assert mesh.__class__.__name__ == '_2dCSCG_Mesh', "Need a 2dCSCG mesh."
         assert '2dCSCG|structured|space' in space.standard_properties.stamp, "Need a 2dCSCG space."
         assert mesh.ndim == space.ndim == 2
-        super().__init__(mesh, space)
+        super().__init__(mesh, space, name)
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_form')
         assert self.ndim == 2, "CHECK ndim"
 

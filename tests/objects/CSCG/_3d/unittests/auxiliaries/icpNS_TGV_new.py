@@ -8,10 +8,11 @@ mpiexec -n 12 python _3dCSCG\APP\contents\icpsNS\no_hybrid\TGV_new.py
 
 from numpy import pi
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
-from tools.linearAlgebra.dataStructures.globalMatrix.main import LocallyFullVector
-from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_ColumnVector
-from tools.linearAlgebra.elementwiseCache.operators.concatenate.main import bmat, concatenate
-from tools.linearAlgebra.solvers.regular.GMRES.main import GMRES
+from tools.miLinearAlgebra.dataStructures.vectors.locallyFull.main import LocallyFullVector
+from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_ColumnVector
+from tools.elementwiseCache.dataStructures.operators.concatenate.main import concatenate
+from tools.elementwiseCache.dataStructures.operators.bmat.main import bmat
+from tools.miLinearAlgebra.solvers.regular.GMRES.main import GMRES
 from tools.iterators.simple import SimpleIterator
 from time import time
 from root.config.main import *

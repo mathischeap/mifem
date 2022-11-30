@@ -4,6 +4,7 @@ from root.config.main import RANK, MASTER_RANK
 
 from importlib import import_module
 
+
 class _3dCSCG_ExactSolution_Allocator(FrozenOnly):
     """"""
 
@@ -20,9 +21,9 @@ class _3dCSCG_ExactSolution_Allocator(FrozenOnly):
             doc = CLASS.__doc__
             if doc is not None and doc != '':
                 doc = doc.split('\n')[0]
-                listing += ">>> " + ID + ' ~ ' + doc + '\n\n'
+                listing += ">>> " + ID + ' ~ ' + CLASS.__name__ + ' -> ' + doc + '\n\n'
             else:
-                listing += ">>> " + ID + '\n\n'
+                listing += ">>> " + ID + ' ~ ' + CLASS.__name__ + '\n\n'
 
         if printing:
             print(listing)

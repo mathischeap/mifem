@@ -19,9 +19,6 @@ class _2Form_BASE(_2dCSCG_Standard_Form):
     def visualize(self):
         return self._visualize_
 
-    def RESET_cache(self):
-        super().RESET_cache()
-
     def ___Pr_check_CF___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 2

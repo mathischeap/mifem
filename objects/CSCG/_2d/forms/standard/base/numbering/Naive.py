@@ -9,7 +9,7 @@
 """
 from root.config.main import *
 from components.freeze.main import FrozenOnly
-from tools.linearAlgebra.gathering.regular.chain_matrix.main import Gathering_Matrix, Gathering_Vector
+from tools.elementwiseCache.gathering.regular.chain_matrix.main import Gathering_Matrix, Gathering_Vector
 
 
 
@@ -135,7 +135,7 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         element_num = self._sf_.mesh.elements.num
         numOfBasis = self._sf_.num.basis
         extraInfo = None
-        if self._sf_.IS.hybrid:
+        if self._sf_.whether.hybrid:
             for i in self._sf_.mesh.elements:
                 gathering_matrix[i] = Gathering_Vector(i, range(i * numOfBasis, (i + 1) * numOfBasis))
             gathering_matrix = Gathering_Matrix(gathering_matrix, mesh_type='_2dCSCG')
@@ -145,12 +145,12 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         global_numbering = None
         # non-hybrid numbering ...
         mesh = self._sf_.mesh
-        if mesh.domain.IS.periodic:
+        if mesh.domain.whether.periodic:
             if RANK == MASTER_RANK:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:
                     region = mesh.domain.regions[rn]
-                    if region.IS.periodic_to_self:
+                    if region.whether.periodic_to_self:
                         regionElementLayout = baseElementLayout[rn]
                         assert all(np.array(regionElementLayout) > 1), \
                             f" elements.layout[{rn}]={regionElementLayout} wrong," \
@@ -257,7 +257,7 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         element_num = self._sf_.mesh.elements.num
         numOfBasis = self._sf_.num.basis
         extraInfo = None
-        if self._sf_.IS.hybrid:
+        if self._sf_.whether.hybrid:
             for i in self._sf_.mesh.elements:
                 gathering_matrix[i] = Gathering_Vector(i, range(i * numOfBasis, (i + 1) * numOfBasis))
             gathering_matrix = Gathering_Matrix(gathering_matrix, mesh_type='_2dCSCG')
@@ -267,12 +267,12 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         global_numbering = None
         # non-hybrid numbering ...
         mesh = self._sf_.mesh
-        if mesh.domain.IS.periodic:
+        if mesh.domain.whether.periodic:
             if RANK == MASTER_RANK:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:
                     region = mesh.domain.regions[rn]
-                    if region.IS.periodic_to_self:
+                    if region.whether.periodic_to_self:
                         regionElementLayout = baseElementLayout[rn]
                         assert all(np.array(regionElementLayout) > 1), \
                             f" elements.layout[{rn}]={regionElementLayout} wrong," \
@@ -397,7 +397,7 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         element_num = self._sf_.mesh.elements.num
         numOfBasis = self._sf_.num.basis
         extraInfo = None
-        if self._sf_.IS.hybrid:
+        if self._sf_.whether.hybrid:
             for i in self._sf_.mesh.elements:
                 gathering_matrix[i] = Gathering_Vector(i, range(i * numOfBasis, (i + 1) * numOfBasis))
             gathering_matrix = Gathering_Matrix(gathering_matrix, mesh_type='_2dCSCG')
@@ -407,12 +407,12 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         global_numbering = None
         # non-hybrid numbering ...
         mesh = self._sf_.mesh
-        if mesh.domain.IS.periodic:
+        if mesh.domain.whether.periodic:
             if RANK == MASTER_RANK:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:
                     region = mesh.domain.regions[rn]
-                    if region.IS.periodic_to_self:
+                    if region.whether.periodic_to_self:
                         regionElementLayout = baseElementLayout[rn]
                         assert all(np.array(regionElementLayout) > 1), \
                             f" elements.layout[{rn}]={regionElementLayout} wrong," \

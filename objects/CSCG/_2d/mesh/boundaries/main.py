@@ -38,14 +38,6 @@ class _2dCSCG_Mesh_Boundaries(FrozenOnly):
         self._RANGE_trace_elements_ = None
         self._freeze_self_()
 
-    def RESET_cache(self):
-        self._involved_elements_ = None
-        self._range_of_elements_ = None
-        self._boundaries_dict_ = dict()
-        self._names_ = None
-        self._RANGE_element_edges_ = None
-        self._RANGE_trace_elements_ = None
-
     def ___PRIVATE_parse_boundaries___(self):
         """We study the elements.map and trace.elements.map to get information we need."""
         names = list()

@@ -46,7 +46,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
         self.___define_parameters___ = None
         self.___TEST_MODE___ = False
 
-        self.do.reset_cache()
+        self.___element_global_numbering___ = None # clean it.
         self._freeze_self_()
 
     @accepts('self', (tuple, list, int, dict, 'NoneType'))
@@ -614,15 +614,6 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
 
     def __eq__(self, other):
         return self.standard_properties.parameters == other.standard_properties.parameters
-
-
-
-
-    def RESET_cache(self):
-        self.trace.RESET_cache()
-        self.elements.RESET_cache()
-        self.boundaries.RESET_cache()
-        self.___element_global_numbering___ = None
 
     @memoize5 # must use memoize
     def ___PRIVATE_do_find_region_name_and_local_indices_of_element___(self, i):

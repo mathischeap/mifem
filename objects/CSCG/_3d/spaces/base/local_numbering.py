@@ -362,6 +362,17 @@ class LocalNumbering(FrozenOnly):
 
 
 
+    @property
+    def _3dCSCG_0LocalTrace(self):
+        return self._3dCSCG_0Trace
+    @property
+    def _3dCSCG_1LocalTrace(self):
+        return self._3dCSCG_1Trace
+    @property
+    def _3dCSCG_2LocalTrace(self):
+        return self._3dCSCG_2Trace
+
+
 
 
 

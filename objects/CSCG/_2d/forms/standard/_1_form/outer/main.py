@@ -41,7 +41,6 @@ class _2dCSCG_1Form_Outer(_1Form_BASE):
         self._discretize_ = _2dCSCG_S1Fo_Discretize(self)
         self._reconstruct_ = None
         self._BI_ = _2dCSCG_Outer_S1Form_BI(self)
-        self.RESET_cache()
         self._freeze_self_()
 
     @property

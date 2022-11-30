@@ -25,7 +25,7 @@ class miUs_Triangular_SF_Num(FrozenOnly):
 
     @property
     def GLOBAL_dofs(self):
-        return self._sf_.numbering.gathering.GLOBAL_num_dofs
+        return self._sf_.numbering.gathering.global_num_dofs
 
 
 

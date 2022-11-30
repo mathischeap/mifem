@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from root.config.main import np, RANK, MASTER_RANK, COMM, SAFE_MODE
-from tools.linearAlgebra.dataStructures.globalMatrix.main import DistributedVector
+from tools.miLinearAlgebra.dataStructures.vectors.distributed.main import DistributedVector
 from scipy import sparse as spspa
 from components.exceptions import LocalCochainShapeError
 from scipy.sparse import lil_matrix, csr_matrix, csc_matrix
-from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_ColumnVector
+from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_ColumnVector
 from components.freeze.base import FrozenOnly
 
 
@@ -15,9 +15,6 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
         self._local_ = None
         self._local_TEW_ = None
         self._freeze_self_()
-
-    def RESET_cache(self):
-        self._local_TEW_ = None
 
     @property
     def EWC(self):
@@ -101,7 +98,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
         cannot make it a general`DistributedVector`; we can only make it a master dominating one.
         """
         GM = self._tf_.numbering.gathering
-        globe = lil_matrix((1, self._tf_.GLOBAL_num_dofs))
+        globe = lil_matrix((1, self._tf_.global_num_dofs))
         for i in GM: # go through all local elements
             globe[0, GM[i].full_vector] = self.local[i]
 
@@ -109,7 +106,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
         GLOBE = COMM.gather(globe, root=MASTER_RANK)
 
         if RANK == MASTER_RANK:
-            measure = np.zeros(self._tf_.GLOBAL_num_dofs, dtype=int)
+            measure = np.zeros(self._tf_.global_num_dofs, dtype=int)
             for G in GLOBE:
                 indices = G.indices
                 measure[indices] += 1
@@ -120,16 +117,16 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
             globe = csr_matrix(_____).T
 
         else:
-            globe = csc_matrix((self._tf_.GLOBAL_num_dofs, 1))
+            globe = csc_matrix((self._tf_.global_num_dofs, 1))
 
         GDV = DistributedVector(globe)
-        assert GDV.IS.master_dominating
+        assert GDV.whether.master_dominating
         return GDV
 
     @globe.setter
     def globe(self, globe):
         if globe.__class__.__name__ == 'DistributedVector':
-            assert globe.V.shape == (self._tf_.GLOBAL_num_dofs, 1), "globe cochain shape wrong."
+            assert globe.V.shape == (self._tf_.global_num_dofs, 1), "globe cochain shape wrong."
             # gather vector to master core ...
             if globe.IS_master_dominating:
                 # no need to gather
@@ -138,7 +135,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
                 V = globe.V
                 V = COMM.gather(V, root=MASTER_RANK)
                 if RANK == MASTER_RANK:
-                    VV = np.empty((self._tf_.GLOBAL_num_dofs,))
+                    VV = np.empty((self._tf_.global_num_dofs,))
                     for v in V:
                         indices = v.indices
                         data = v.data
@@ -155,7 +152,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
                         # noinspection PyUnboundLocalVariable
                         to_be_sent = spspa.csc_matrix(
                             (VV[lr[0]:lr[1]], range(lr[0],lr[1]), [0, lr[1]-lr[0]]),
-                            shape=(self._tf_.GLOBAL_num_dofs, 1))
+                            shape=(self._tf_.global_num_dofs, 1))
                     TO_BE_SENT.append(to_be_sent)
             else:
                 TO_BE_SENT = None
@@ -219,7 +216,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
         except AssertionError:
             raise LocalCochainShapeError()
 
-        self.RESET_cache()
+        self._local_TEW_ = None
         self._local_ = local
 
     #--DEPENDENT PROPERTIES (BRANCHES, must have the two switching methods): when set below, update local ------
@@ -254,7 +251,6 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
         except AssertionError:
             raise LocalCochainShapeError()
 
-        self.RESET_cache()
         self._local_TEW_ = local_TEW
         self.___local_TEW_2_local___()
 

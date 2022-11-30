@@ -5,9 +5,10 @@ if './' not in sys.path: sys.path.append('./')
 from root.config.main import *
 import random
 from scipy import sparse as spspa
-from tools.linearAlgebra.dataStructures.globalMatrix.main import GlobalVector, GlobalMatrix, LocallyFullVector
-from tools.linearAlgebra.solvers.regular.GMRES.main import GMRES
-from tools.linearAlgebra.solvers.regular.allocator import RegularSolverDistributor
+from tools.miLinearAlgebra.dataStructures.globalMatrix.main import GlobalVector, GlobalMatrix
+from tools.miLinearAlgebra.dataStructures.vectors.locallyFull.main import LocallyFullVector
+from tools.miLinearAlgebra.solvers.regular.GMRES.main import GMRES
+from tools.miLinearAlgebra.solvers.regular.allocator import RegularSolverDistributor
 
 
 def ___generate_A_b_of_Manguoglu_Paper___():
@@ -68,7 +69,7 @@ def ___generate_A_b_of_Manguoglu_Paper___():
                        (0   , 0, 0, 0, 0, 0, 0, 0.1, 0.6)]))
         np.testing.assert_array_almost_equal(V, np.array([1,1,1,1,1,1,1,1,1]))
 
-    if SIZE > 1: assert not A.IS.master_dominating, f"designed to be."
+    if SIZE > 1: assert not A.whether.master_dominating, f"designed to be."
 
     return A, b
 
@@ -341,7 +342,7 @@ def test_LinearSolver_No3_direct():
                                                        -0.11510028,
                                                         0.94048189,  0.36495389,  0.54018445,  1.57663592]))
 
-    assert A.IS.master_dominating # the COD=True has triggered this!
+    assert A.whether.master_dominating # the COD=True has triggered this!
     np.testing.assert_almost_equal(A.condition.condition_number, 85.3100212781)
 
     return 1

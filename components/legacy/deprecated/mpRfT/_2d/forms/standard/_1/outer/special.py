@@ -9,10 +9,8 @@ import sys
 if './' not in sys.path: sys.path.append('/')
 
 from components.freeze.base import FrozenOnly
-from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
-from scipy.sparse import csr_matrix
+from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
 
-import numpy as np
 
 class mpRfT2_So1F_Special(FrozenOnly):
     """"""

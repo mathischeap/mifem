@@ -36,15 +36,14 @@ class _2dCSCG_Standard_Form(CSCG_Standard_Form, _2dCSCG_FORM_BASE, ndim=2):
     :param name:
     """
     def __init__(self, mesh, space, is_hybrid, orientation, numbering_parameters, name):
-        super().__init__(mesh, space)
-        super().___init___()
+        super(_2dCSCG_Standard_Form, self).__init__(mesh, space, name)
+        super(_2dCSCG_Standard_Form, self).___init___()
         self._NUM_basis_, self._NUM_basis_components_ = \
             getattr(self.space.num_basis, self.__class__.__name__)
         assert isinstance(is_hybrid, bool), " isHybrid needs to be bool."
         assert orientation in ('inner', 'outer'), " orientation needs to be 'inner' or 'outer'."
         self._IS_hybrid_ = is_hybrid
         self._orientation_ = orientation
-        self.standard_properties.name = name
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_form')
         self.___ARGS___ = (is_hybrid, deepcopy(numbering_parameters), name)
 
@@ -105,10 +104,6 @@ class _2dCSCG_Standard_Form(CSCG_Standard_Form, _2dCSCG_FORM_BASE, ndim=2):
         if self._dofs_ is None:
             self._dofs_ = _2dCSCG_SF_dofs(self)
         return self._dofs_
-
-    def RESET_cache(self):
-        self.cochain.RESET_cache()
-        self.coboundary.RESET_cache()
 
     def ___PRIVATE_do_evaluate_basis_at_meshgrid___(self, xi, eta, compute_xietasigma=True):
         """

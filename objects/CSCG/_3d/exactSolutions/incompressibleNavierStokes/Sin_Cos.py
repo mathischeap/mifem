@@ -66,10 +66,11 @@ class SinCosRebholz_Conservation(incompressible_NavierStokes_Base):
 
 
 class SinCosRebholz_Dissipation(incompressible_NavierStokes_Base):
-    """
-    The sin cos test case for the conservation, see Section 5.3 of paper:
-        [An Energy- and helicity-conserving finite element scheme for the Navier-Stokes
-         equations, Leo G. Rebholz, 2007]
+    """The sin cos test case for the conservation。
+
+    see Section 5.3 of paper:
+    [An Energy- and helicity-conserving finite element scheme for the Navier-Stokes
+    equations, Leo G. Rebholz, 2007]
     """
     def __init__(self, es, nu=1):
         super(SinCosRebholz_Dissipation, self).__init__(es, nu)
@@ -253,10 +254,11 @@ class SinCos_Conservation_Conservative_Body_Force(incompressible_NavierStokes_Ba
 
 # noinspection PyAbstractClass
 class SinCos_Conservation_Conservative_Body_Force1(incompressible_NavierStokes_Base):
-    """
-    The sin cos test case for the conservation, see Section 5.2 of paper:
-        [An Energy- and helicity-conserving finite element scheme for the Navier-Stokes
-         equations, Leo G. Rebholz, 2007]
+    """The sin cos test case for the conservation。
+
+    see Section 5.2 of paper:
+    [An Energy- and helicity-conserving finite element scheme for the Navier-Stokes
+    equations, Leo G. Rebholz, 2007]
     """
     def __init__(self, es):
         super(SinCos_Conservation_Conservative_Body_Force1, self).__init__(es, 0)
@@ -308,10 +310,11 @@ class SinCos_Conservation_Conservative_Body_Force1(incompressible_NavierStokes_B
 
 # noinspection PyAbstractClass
 class SinCos_Conservation_Conservative_Body_Force_POLYNOMIALS(incompressible_NavierStokes_Base):
-    """
-    The sin cos test case for the conservation, see Section 5.2 of paper:
+    """The sin cos test case for the conservation.
+
+        see Section 5.2 of paper:
         [An Energy- and helicity-conserving finite element scheme for the Navier-Stokes
-         equations, Leo G. Rebholz, 2007]
+        equations, Leo G. Rebholz, 2007]
     """
     def __init__(self, es):
         super(SinCos_Conservation_Conservative_Body_Force_POLYNOMIALS, self).__init__(es, 0)
@@ -366,8 +369,9 @@ class SinCos_Conservation_Conservative_Body_Force_POLYNOMIALS(incompressible_Nav
 
 # noinspection PyAbstractClass
 class SinCos_Conservation_Conservative_Body_Force_CONSTANT(incompressible_NavierStokes_Base):
-    """
-    The sin cos test case for the conservation, see Section 5.2 of paper:
+    """The sin cos test case for the conservation.
+
+        see Section 5.2 of paper:
         [An Energy- and helicity-conserving finite element scheme for the Navier-Stokes
          equations, Leo G. Rebholz, 2007]
     """

@@ -88,7 +88,7 @@ class _3dCSCG_T1F_DOF_Where(FrozenOnly):
             LINES.append(xyz)
 
         # make sure that if a periodic trace element is always shown twice even it is only in one core.
-        if trace_element.IS.on_periodic_boundary and not trace_element.IS.shared_by_cores:
+        if trace_element.whether.on_periodic_boundary and not trace_element.whether.shared_by_cores:
             NCP = trace_element.NON_CHARACTERISTIC_position
             element= int(NCP[:-1])
             side = NCP[-1]

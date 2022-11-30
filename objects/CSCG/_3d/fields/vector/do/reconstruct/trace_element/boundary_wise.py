@@ -41,7 +41,7 @@ class OnTraceElement_BoundaryWise(FrozenOnly):
         for I in INDICES:
 
             te = SELF.mesh.trace.elements[I]
-            assert te.IS.on_mesh_boundary, f"must be the case because ftype == 'boundary-wise!"
+            assert te.whether.on_mesh_boundary, f"must be the case because ftype == 'boundary-wise!"
 
             # only accept 1d arrays
             xyz_i = te.coordinate_transformation.mapping(xi, eta, sigma, parse_3_1d_eps=True)

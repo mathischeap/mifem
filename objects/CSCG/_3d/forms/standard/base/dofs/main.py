@@ -73,7 +73,7 @@ class _3dCSCG_Standard_forms_DOFs(FrozenOnly):
 
     @property
     def GLOBAL_num(self):
-        return self._sf_.num.GLOBAL_dofs
+        return self._sf_.num.global_dofs
 
 
 

@@ -10,11 +10,11 @@ if './' not in sys.path: sys.path.append('./')
 
 from components.freeze.base import FrozenOnly
 import numpy as np
-from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_ColumnVector
+from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_ColumnVector
 from scipy.sparse import csr_matrix
 from root.config.main import RANK, MASTER_RANK, COMM
 from scipy.sparse import lil_matrix, csc_matrix
-from tools.linearAlgebra.dataStructures.globalMatrix.main import DistributedVector
+from tools.miLinearAlgebra.dataStructures.vectors.distributed.main import DistributedVector
 
 
 class miUsGrid_SF_CochainBase(FrozenOnly):
@@ -48,7 +48,7 @@ class miUsGrid_SF_CochainBase(FrozenOnly):
     def globe(self):
         """"""
         GM = self._sf_.numbering.gathering
-        globe = lil_matrix((1, self._sf_.num.GLOBAL_dofs))
+        globe = lil_matrix((1, self._sf_.num.global_dofs))
         for i in GM: # go through all local elements
             globe[0, GM[i].full_vector] = self.local[i]
         globe = globe.tocsr().T
@@ -62,7 +62,7 @@ class miUsGrid_SF_CochainBase(FrozenOnly):
             GLOBE = COMM.gather(globe, root=MASTER_RANK)
 
             if RANK == MASTER_RANK:
-                measure = np.zeros(self._sf_.num.GLOBAL_dofs, dtype=int)
+                measure = np.zeros(self._sf_.num.global_dofs, dtype=int)
                 for G in GLOBE:
                     indices = G.indices
                     measure[indices] += 1
@@ -73,10 +73,10 @@ class miUsGrid_SF_CochainBase(FrozenOnly):
                 globe = csr_matrix(_____).T
 
             else:
-                globe = csc_matrix((self._sf_.num.GLOBAL_dofs,1))
+                globe = csc_matrix((self._sf_.num.global_dofs, 1))
 
             GDV = DistributedVector(globe)
-            assert GDV.IS.master_dominating
+            assert GDV.whether.master_dominating
             return GDV
 
     @globe.setter
@@ -88,16 +88,16 @@ class miUsGrid_SF_CochainBase(FrozenOnly):
         :return:
         """
         if glb.__class__.__name__ == 'DistributedVector':
-            assert glb.V.shape == (self._sf_.num.GLOBAL_dofs, 1), "globe cochain shape wrong."
+            assert glb.V.shape == (self._sf_.num.global_dofs, 1), "globe cochain shape wrong."
             # gather vector to master core ...
-            if glb.IS.master_dominating:
+            if glb.whether.master_dominating:
                 # no need to gather
                 VV = glb.V.T.toarray()[0]
             else:
                 V = glb.V
                 V = COMM.gather(V, root=MASTER_RANK)
                 if RANK == MASTER_RANK:
-                    VV = np.empty((self._sf_.num.GLOBAL_dofs,))
+                    VV = np.empty((self._sf_.num.global_dofs,))
                     for v in V:
                         indices = v.indices
                         data = v.data
@@ -114,7 +114,7 @@ class miUsGrid_SF_CochainBase(FrozenOnly):
                         # noinspection PyUnboundLocalVariable
                         to_be_sent = csc_matrix(
                             (VV[lr[0]:lr[1]], range(lr[0],lr[1]), [0, lr[1]-lr[0]]),
-                            shape=(self._sf_.num.GLOBAL_dofs, 1))
+                            shape=(self._sf_.num.global_dofs, 1))
                     TO_BE_SENT.append(to_be_sent)
             else:
                 TO_BE_SENT = None

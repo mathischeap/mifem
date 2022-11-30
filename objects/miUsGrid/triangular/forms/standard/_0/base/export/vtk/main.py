@@ -80,6 +80,7 @@ class miUsTriangular_S0F_Export_VTK(FrozenOnly):
                 y[gathering[e,:]] = _y[global_indices]
                 _rc = Rc[e][0]
                 v[gathering[e,:]] = _rc[global_indices]
+                # do not change z to _rc !
 
             pointData = {
                 f'{self._sf_.name}': v
@@ -145,6 +146,7 @@ class miUsTriangular_S0F_Export_VTK(FrozenOnly):
                 y[gathering[e,:]] = _y[global_indices]
                 _rc = Rc[e][0]
                 v[gathering[e,:]] = _rc[global_indices]
+                # do not change z to _rc !
 
             pointData = {
                 f'{self._sf_.name}': v

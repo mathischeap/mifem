@@ -40,15 +40,11 @@ class _3dCSCG_3Form(_3dCSCG_S3F_Private, _3dCSCG_Standard_Form):
         self._k_ = 3
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_standard_3form')
         self._special_ = _3Form_Special(self)
-        self.RESET_cache()
         self._discretize_ = None
         self._reconstruct_ = None
         self._visualize_ = None
         self._DO_ = _3dCSCG_S3F_Do(self)
         self._freeze_self_()
-
-    def RESET_cache(self):
-        super().RESET_cache()
 
     def ___Pr_check_CF___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain

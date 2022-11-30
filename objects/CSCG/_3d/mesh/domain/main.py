@@ -2,10 +2,8 @@
 from objects.CSCG._3d.mesh.domain.base import _3dCSCG_DomainBase
 from objects.CSCG._3d.mesh.domain.visualize import _3dCSCG_Domain_Visualize
 from objects.CSCG._3d.mesh.domain.boundaries import _3dCSCG_Boundaries
-from objects.CSCG._3d.mesh.domain.IS import _3dCSCG_Domain_IS
+from objects.CSCG._3d.mesh.domain.whether import _3dCSCG_Domain_Whether
 from objects.CSCG._3d.mesh.domain.sub_geometry.main import _3dCSCG_DomainSubGeometry
-
-
 
 class _3dCSCG_Domain(_3dCSCG_DomainBase):
     """We have the whole ``_3dCSCG_Domain`` (all same) in all cores. This
@@ -20,7 +18,7 @@ class _3dCSCG_Domain(_3dCSCG_DomainBase):
         self._visualize_ = None
         self._boundaries_ = None
         self.___define_parameters___ = None
-        self._IS_ = _3dCSCG_Domain_IS(self)
+        self._whether_ = _3dCSCG_Domain_Whether(self)
         for rn in self.regions:
             self.regions[rn]._MAP_ = self._region_map_[rn]
         self._sub_geometry_ = None
@@ -98,8 +96,8 @@ class _3dCSCG_Domain(_3dCSCG_DomainBase):
         return self._regions_
 
     @property
-    def IS(self):
-        return self._IS_
+    def whether(self):
+        return self._whether_
 
     @property
     def sub_geometry(self):

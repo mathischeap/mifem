@@ -31,5 +31,5 @@ class CSCG_standard_form_NUM(FrozenOnly):
         return self._f_.numbering.num_local_dofs
 
     @property
-    def GLOBAL_dofs(self):
-        return self._f_.numbering.gathering.GLOBAL_num_dofs
+    def global_dofs(self):
+        return self._f_.numbering.gathering.global_num_dofs

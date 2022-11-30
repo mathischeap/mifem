@@ -33,17 +33,14 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
         self.___WE___ = 'WE'
         self.___BF___ = 'BF'
         self.___PRIVATE_generating_trace_elements___()
-        self.___PRIVATE_reset_cache___()
-        self._freeze_self_()
-
-
-    def ___PRIVATE_reset_cache___(self):
         self._type_amount_dict_ = None
         self._Q_ = None
         self._AvQ_ = None
         self._WorstQ_ = None
         self._BestQ_ = None
         self.___multi_elements_metric___ = None
+        self._freeze_self_()
+
 
 
     def ___PRIVATE_find_type_and_amount_numbered_before___(self):
@@ -88,7 +85,7 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
 
                 type_amount_dict[i] = POOL[i]
 
-                if not tei.IS.shared_by_cores:
+                if not tei.whether.shared_by_cores:
                     del POOL[i]
                 else:
                     CORE = tei.shared_with_core

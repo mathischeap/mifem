@@ -32,9 +32,6 @@ class _0Form_BASE(_2dCSCG_Standard_Form):
         assert func_body.ndim == self.ndim == 2
         raise Exception(f"2dCSCG 0form BC do not accept func {func_body.__class__}")
 
-    def RESET_cache(self):
-        super().RESET_cache()
-
     @property
     def discretize(self):
         return self._discretize_

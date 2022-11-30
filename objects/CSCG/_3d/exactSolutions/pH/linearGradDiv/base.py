@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 S is a scalar field, V is a vector field. And
-dV/dt = grad S
-dS/dt = div V
+dV/dt = - grad S
+dS/dt = - div V
 
 @author: Yi Zhang
 @contact: zhangyi_aero@hotmail.com
@@ -105,12 +105,12 @@ class pH_LinearGradDiv_Base(Base):
 
             t = float(t)
 
-            np.testing.assert_array_almost_equal(ut(t, x, y, z), px(t, x, y, z))
-            np.testing.assert_array_almost_equal(vt(t, x, y, z), py(t, x, y, z))
-            np.testing.assert_array_almost_equal(wt(t, x, y, z), pz(t, x, y, z))
+            np.testing.assert_array_almost_equal(ut(t, x, y, z), - px(t, x, y, z))
+            np.testing.assert_array_almost_equal(vt(t, x, y, z), - py(t, x, y, z))
+            np.testing.assert_array_almost_equal(wt(t, x, y, z), - pz(t, x, y, z))
 
             np.testing.assert_array_almost_equal(
-                pt(t, x, y, z),
+                - pt(t, x, y, z),
                 ux(t, x, y, z) + vy(t, x, y, z) + wz(t, x, y, z)
             )
 

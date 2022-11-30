@@ -1,6 +1,5 @@
 from components.freeze.base import FrozenOnly
 
-from objects.CSCG._3d.forms.standard._3s.discretize.scalar.boundary_wise import _3dCSCG_Discretize_BoundaryWise
 from objects.CSCG._3d.forms.standard._3s.discretize.scalar.standard import _3dCSCG_Discretize_Standard
 
 
@@ -8,7 +7,6 @@ class _3dCSCG_Discretize(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
         self._standard_ = _3dCSCG_Discretize_Standard(sf)
-        self._boundary_wise_ = _3dCSCG_Discretize_BoundaryWise(sf)
         self._freeze_self_()
 
     def __call__(self, update_cochain=True, target='func', **kwargs):

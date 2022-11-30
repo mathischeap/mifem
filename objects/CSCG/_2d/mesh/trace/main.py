@@ -13,9 +13,6 @@ class _2dCSCG_Trace(FrozenOnly):
         self._visualize_ = _2dCSCG_Trace_Visualize(self)
         self._freeze_self_()
 
-    def RESET_cache(self):
-        self.elements.RESET_cache()
-
     @property
     def elements(self):
         return self._elements_

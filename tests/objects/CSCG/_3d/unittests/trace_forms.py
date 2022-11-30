@@ -28,9 +28,9 @@ def test_trace_NO__general_tests():
     t2 = FC('2-t')
 
     # some tests ----------------------------------------------
-    assert t0.IS.hybrid
-    assert t1.IS.hybrid
-    assert t2.IS.hybrid
+    assert t0.whether.hybrid
+    assert t1.whether.hybrid
+    assert t2.whether.hybrid
 
     return 1
 

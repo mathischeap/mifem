@@ -9,7 +9,7 @@
 
 from root.config.main import *
 from components.freeze.main import FrozenOnly
-from tools.linearAlgebra.gathering.regular.chain_matrix.main import \
+from tools.elementwiseCache.gathering.regular.chain_matrix.main import \
     Gathering_Matrix, Gathering_Vector
 
 
@@ -35,7 +35,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
             return self._0Form_no_parameters()
         elif len(parameters) == 1 and 'SingleRegionSideCrack' in parameters:
             # have one regions side crack ...
-            assert not self._sf_.IS.hybrid, \
+            assert not self._sf_.whether.hybrid, \
                 "0-form can not be hybrid for single-regions-side-crack-numbering."
             return self._0Form_a_region_side_crack()
         else:
@@ -123,7 +123,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         element_num = self._sf_.mesh.elements.num
         numOfBasis = self._sf_.num.basis
         extraInfo = None
-        if self._sf_.IS.hybrid:
+        if self._sf_.whether.hybrid:
             for i in self._sf_.mesh.elements:
                 gathering_matrix[i] = Gathering_Vector(i, range(i * numOfBasis, (i + 1) * numOfBasis))
             gathering_matrix = Gathering_Matrix(gathering_matrix, mesh_type='_3dCSCG')
@@ -134,12 +134,12 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         # non-hybrid numbering ...
 
         mesh = self._sf_.mesh
-        if mesh.domain.IS.periodic:
+        if mesh.domain.whether.periodic:
             if RANK == MASTER_RANK:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:
                     region = mesh.domain.regions[rn]
-                    if region.IS.periodic_to_self:
+                    if region.whether.periodic_to_self:
                         regionElementLayout = baseElementLayout[rn]
                         assert all(np.array(regionElementLayout) > 1), \
                             f" elements.layout[{rn}]={regionElementLayout} wrong," \
@@ -270,7 +270,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         element_num = self._sf_.mesh.elements.num
         numOfBasis = self._sf_.num.basis
         extraInfo = None
-        if self._sf_.IS.hybrid:
+        if self._sf_.whether.hybrid:
             for i in self._sf_.mesh.elements:
                 gathering_matrix[i] = Gathering_Vector(i, range(i * numOfBasis, (i + 1) * numOfBasis))
             gathering_matrix = Gathering_Matrix(gathering_matrix, mesh_type='_3dCSCG')
@@ -280,12 +280,12 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         global_numbering = None
         # non-hybrid numbering ...
         mesh = self._sf_.mesh
-        if mesh.domain.IS.periodic:
+        if mesh.domain.whether.periodic:
             if RANK == MASTER_RANK:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:
                     region = mesh.domain.regions[rn]
-                    if region.IS.periodic_to_self:
+                    if region.whether.periodic_to_self:
                         regionElementLayout = baseElementLayout[rn]
                         assert all(np.array(regionElementLayout) > 1), \
                             f" elements.layout[{rn}]={regionElementLayout} wrong," \
@@ -445,7 +445,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         element_num = self._sf_.mesh.elements.num
         numOfBasis = self._sf_.num.basis
         extraInfo = None
-        if self._sf_.IS.hybrid:
+        if self._sf_.whether.hybrid:
             for i in self._sf_.mesh.elements:
                 gathering_matrix[i] = Gathering_Vector(i, range(i * numOfBasis, (i + 1) * numOfBasis))
             gathering_matrix = Gathering_Matrix(gathering_matrix, mesh_type='_3dCSCG')
@@ -455,12 +455,12 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         global_numbering = None
         # non-hybrid numbering ...
         mesh = self._sf_.mesh
-        if mesh.domain.IS.periodic:
+        if mesh.domain.whether.periodic:
             if RANK == MASTER_RANK:
                 baseElementLayout = mesh.elements.layout
                 for rn in baseElementLayout:
                     region = mesh.domain.regions[rn]
-                    if region.IS.periodic_to_self:
+                    if region.whether.periodic_to_self:
                         regionElementLayout = baseElementLayout[rn]
                         assert all(np.array(regionElementLayout) > 1), \
                             f" elements.layout[{rn}]={regionElementLayout} wrong," \
@@ -601,7 +601,7 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
                 else:
                     pass
 
-        GLOBAL_num_dofs = gathering_matrix.GLOBAL_num_dofs
+        GLOBAL_num_dofs = gathering_matrix.global_num_dofs
 
         ALL_DOFs_2b_updated = COMM.gather(DOFs_2b_updated, root=MASTER_RANK)
         if RANK == MASTER_RANK:

@@ -12,7 +12,7 @@ if './' not in sys.path: sys.path.append('./')
 
 from root.config.main import *
 from types import FunctionType, MethodType
-from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_ColumnVector
+from tools.elementwiseCache.dataStructures.objects.columnVector.main import EWC_ColumnVector
 from objects.CSCG._3d.fields.base import _3dCSCG_Continuous_FORM_BASE
 from functools import partial
 from components.functions.timePlus3dSpace.constant import CFG
@@ -86,6 +86,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
             self._func_ = _func_checked_
 
         elif ftype == 'boundary-wise': # only valid (still as a vector) on mesh boundary (not domain boundary-wise)
+            # no need to cover all mesh boundaries.
             assert isinstance(func, dict), f" when ftype == 'boundary-wise', " \
                                            f"we must put functions in a dict whose " \
                                            f"keys are boundary names and values are" \
@@ -117,7 +118,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
             self._func_ = func
 
-        elif ftype == 'trace-element-wise':
+        elif ftype == 'trace-element-wise': # no need to cover all trace elements.
             # we have received a dict whose keys are local trace elements, values are callable that returns, xyz and a vector.
             assert isinstance(func, dict), f"func for trace-element-wise vector must a dict."
             for i in func: # valid local trace elements

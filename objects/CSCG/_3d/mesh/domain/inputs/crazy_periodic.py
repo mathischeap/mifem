@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 
 from objects.CSCG._3d.mesh.domain.inputs.base import _3dDomainInputBase

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from components.freeze.main import FrozenOnly
-from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
+from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
 from objects.CSCG._3d.forms.standard.base.operators.helpers.inner import ___Operators_3dCSCG_sf_Inner___
 
 
@@ -22,7 +22,7 @@ class _3dCSCG_Standard_Form_Operators(FrozenOnly):
         data_generator = ___Operators_3dCSCG_sf_Inner___(self._sf_, other, quad_degree=quad_degree, quad_type=self._inner_quad_type_)
         # note that even all mesh elements are unique, we still cache the output because we may use it for multiple times.
 
-        if self._sf_.mesh.elements.IS.homogeneous_according_to_types_wrt_metric:
+        if self._sf_.mesh.elements.whether.homogeneous_according_to_types_wrt_metric:
             return EWC_SparseMatrix(self._sf_.mesh.elements, data_generator, 'constant')
         else:
             return EWC_SparseMatrix(self._sf_.mesh.elements, data_generator,

@@ -15,11 +15,11 @@ if './' not in sys.path: sys.path.append('./')
 from root.config.main import COMM, RANK, MASTER_RANK
 
 from objects.CSCG._3d.forms.standard._0s.main import _3dCSCG_0Form
-from objects.CSCG._3d.spaces.polynomials import _3dCSCG_PolynomialSpace
+from objects.CSCG._3d.spaces.polynomials.main import _3dCSCG_PolynomialSpace
 
 
 from objects.CSCG._2d.forms.standard._0_form.outer.main import _2dCSCG_0Form_Outer
-from objects.CSCG._2d.spaces.polynomials import _2dCSCG_PolynomialSpace
+from objects.CSCG._2d.spaces.polynomials.main import _2dCSCG_PolynomialSpace
 
 
 def unstructuredGridToVTK(grid, objs, filename):
@@ -123,7 +123,7 @@ def _2dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
     r0f = _2dCSCG_0Form_Outer(new_mesh, new_space, is_hybrid=False) # produce the reference 0-form 1
 
     GM = r0f.numbering.gathering #----- the gathering numbering, a key property we want to use ----1
-    Gnd = GM.GLOBAL_num_dofs # -------- this many 0-form dofs = this many nodes in the VTK --------1
+    Gnd = GM.global_num_dofs # -------- this many 0-form dofs = this many nodes in the VTK --------1
 
     total_num_cells = new_mesh.elements.GLOBAL_num
 
@@ -215,7 +215,7 @@ def _2dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
             for _ in range(var_dim[vn]):
                 VAR[vn][_][0, gv] = v[_][I_seq, J_seq]
 
-        if element.IS.orthogonal:
+        if element.whether.orthogonal:
             CONN[e, :] = gv
             cTypes[0, e] = 8 # VTK PIXEL
         else:
@@ -324,7 +324,7 @@ def _3dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
     r0f = _3dCSCG_0Form(new_mesh, new_space, is_hybrid=False) #-- produce the reference 0-form ----1
 
     GM = r0f.numbering.gathering #----- the gathering numbering, a key property we want to use ----1
-    Gnd = GM.GLOBAL_num_dofs # -------- this many 0-form dofs = this many nodes in the VTK --------1
+    Gnd = GM.global_num_dofs # -------- this many 0-form dofs = this many nodes in the VTK --------1
 
     total_num_cells = new_mesh.elements.GLOBAL_num
 
@@ -422,7 +422,7 @@ def _3dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
             for _ in range(var_dim[vn]):
                 VAR[vn][_][0, gv] = v[_][I_seq, J_seq, K_seq]
 
-        if element.IS.orthogonal:
+        if element.whether.orthogonal:
             CONN[e, :] = gv
             cTypes[0, e] = 11 # VTK Voxel
         else:
@@ -512,9 +512,9 @@ if __name__ == "__main__":
     space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3), ('Lobatto',3)])
     FC = FormCaller(mesh, space)
 
-    def u(t,x,y,z): return np.cos(2*np.pi*y)*np.cos(np.pi*z) + t
-    def v(t,x,y,z): return np.cos(np.pi*x)*np.cos(2*np.pi*z) + t
-    def w(t,x,y,z): return np.cos(np.pi*x)*np.cos(np.pi*y) + t
+    def u(t,x,y,z): return np.cos(2*np.pi*y)*np.cos(np.pi*z) + t + 0 * x
+    def v(t,x,y,z): return np.cos(np.pi*x)*np.cos(2*np.pi*z) + t + 0 * y
+    def w(t,x,y,z): return np.cos(np.pi*x)*np.cos(np.pi*y) + t + 0 * z
 
     def p(t,x,y,z): return np.sin(2*np.pi*x)*np.sin(np.pi*y)*np.sin(2*np.pi*z) + t
 

@@ -11,7 +11,7 @@
 from objects.CSCG._2d.mesh.domain.base import _2dCSCG_DomainBase
 from objects.CSCG._2d.mesh.domain.visualize import _2dCSCG_Domain_Visualize
 from objects.CSCG._2d.mesh.domain.boundaries.main import _2dCSCG_Domain_Boundaries
-from objects.CSCG._2d.mesh.domain.IS import _2dCSCG_Domain_IS
+from objects.CSCG._2d.mesh.domain.whether import _2dCSCG_Domain_Whether
 
 
 class _2dCSCG_Domain(_2dCSCG_DomainBase):
@@ -27,7 +27,7 @@ class _2dCSCG_Domain(_2dCSCG_DomainBase):
         self._visualize_ = _2dCSCG_Domain_Visualize(self) # will only do thing in master core.
         self._boundaries_ = _2dCSCG_Domain_Boundaries(self)
         self.___define_parameters___ = None
-        self._IS_ = _2dCSCG_Domain_IS(self)
+        self._whether_ = _2dCSCG_Domain_Whether(self)
         self._freeze_self_()
 
     @property
@@ -97,5 +97,5 @@ class _2dCSCG_Domain(_2dCSCG_DomainBase):
         return self._regions_
 
     @property
-    def IS(self):
-        return self._IS_
+    def whether(self):
+        return self._whether_

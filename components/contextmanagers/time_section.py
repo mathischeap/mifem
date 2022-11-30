@@ -1,15 +1,9 @@
 # -*- coding: utf-8 -*-
 """"""
 
-
-
-
 import contextlib
 from time import localtime, strftime, time
 from root.config.main import *
-
-
-
 
 
 @contextlib.contextmanager

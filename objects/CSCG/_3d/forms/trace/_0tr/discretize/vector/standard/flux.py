@@ -31,7 +31,7 @@ class _3dCSCG_0Trace_Discretize_StandardVector_Flux(FrozenOnly):
 
         if target == 'func':
             assert SELF.CF is not None, f"No func.body!"
-            fx, fy, fz = SELF.CF.___DO_evaluate_func_at_time___()
+            fx, fy, fz = SELF.CF.do.evaluate_func_at_time()
         else:
             raise NotImplementedError(f"Not applicable for target={target}.")
 

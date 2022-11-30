@@ -31,13 +31,9 @@ class _3dCSCG_0Trace(_3dCSCG_Standard_Trace, ABC):
         super().__init__(mesh, space, orientation, numbering_parameters, name)
         self._k_ = 0
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_trace_0form')
-        self.RESET_cache()
         self._discretize_ = _3dCSCG_0Trace_Discretize(self)
         self._visualize_ = None
         self._freeze_self_()
-
-    def RESET_cache(self):
-        super().RESET_cache()
 
     def ___Pr_check_CF___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain

@@ -30,18 +30,22 @@ class InterpolationAllocator(FrozenOnly):
     @classmethod
     def ___coded_interpolator___(cls):
         """ Update this whenever we code a new Interpolator. """
-        return {'crazy': 'Crazy',
-                'transfinite': 'Transfinite',
-                'bridge_arch_cracked': 'BridgeArchCracked',
-                'orthogonal': 'Orthogonal',
+        return {
+            'crazy': 'Crazy',
+            'transfinite': 'Transfinite',
+            'bridge_arch_cracked': 'BridgeArchCracked',
+            'orthogonal': 'Orthogonal',
+            'ct': 'CurvilinearTest',
         }
     
     @classmethod
     def ___interpolator_path___(cls):
         """ """
         base_path = '.'.join(str(cls).split(' ')[1][1:-2].split('.')[:-2]) + '.'
-        return {'crazy': base_path + 'crazy',
-                'transfinite': base_path + 'transfinite',
-                'bridge_arch_cracked': base_path + 'bridge_arch_cracked',
-                'orthogonal': base_path + 'orthogonal',
+        return {
+            'crazy': base_path + 'crazy',
+            'transfinite': base_path + 'transfinite',
+            'bridge_arch_cracked': base_path + 'bridge_arch_cracked',
+            'orthogonal': base_path + 'orthogonal',
+            'ct': base_path + 'ct',
         }

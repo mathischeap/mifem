@@ -38,16 +38,14 @@ class _3dCSCG_Mesh_Boundaries(FrozenOnly):
         self._mesh_ = mesh
         self._boundaries_dict_ = dict()
         self._visualize_ = None
-        self.RESET_cache()
-        self._range_of_region_sides_ = None
-        self._freeze_self_()
-
-    def RESET_cache(self):
         self._names_ = None
         self._RANGE_element_sides_ = None
         self._RANGE_trace_elements_ = None
         self._range_of_elements_ = None
         self._involved_elements_ = None
+        self._range_of_region_sides_ = None
+        self._freeze_self_()
+
 
     def ___PRIVATE_parse_boundaries___(self):
         """We study the elements.map and trace.elements.map to get information we need."""

@@ -6,7 +6,7 @@ import datetime
 from components.miscellaneous.timer import MyTimer
 from time import time
 from tools.iterators.base.monitor.do import IteratorMonitorDo
-from tools.iterators.base.monitor.IS import IteratorMonitorIS
+from tools.iterators.base.monitor.whether import IteratorMonitorWhether
 
 class IteratorMonitor(FrozenOnly):
     """The monitor class for the Iterator.
@@ -59,7 +59,7 @@ class IteratorMonitor(FrozenOnly):
         self._estimated_end_time_ = datetime.datetime.now()
         # ...
         self._do_ = IteratorMonitorDo(self)
-        self._IS_ = IteratorMonitorIS(self)
+        self._whether_ = IteratorMonitorWhether(self)
         self._freeze_self_()
 
     def ___PRIVATE_set_factor___(self, factor):
@@ -128,8 +128,8 @@ class IteratorMonitor(FrozenOnly):
         return self._RDF_filename_
 
     @property
-    def IS(self):
-        return self._IS_
+    def whether(self):
+        return self._whether_
 
     @property
     def summary_html(self):

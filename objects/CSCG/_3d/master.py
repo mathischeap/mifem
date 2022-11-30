@@ -86,6 +86,27 @@ class MeshGenerator(FrozenOnly):
         return DomainInputAllocator.___defined_DI___()
 
     @classmethod
+    def listing(cls, printing=True, returning=False):
+        """For an allocator class, this list all the possibilities ONLY in the master core."""
+        if RANK != MASTER_RANK: return
+        included_allocators = [
+            DomainInputAllocator,
+        ]
+        listing = ''
+
+        for alc in included_allocators:
+            listing += alc.listing(printing=False, returning=True)
+
+        if printing:
+            print(listing)
+        else:
+            pass
+        if returning:
+            return listing
+        else:
+            pass
+
+    @classmethod
     def ___domain_input_statistic___(cls):
         Statistic = dict()
         for diID in DomainInputAllocator.___defined_DI___():
@@ -203,7 +224,7 @@ class FormCaller(FrozenOnly):
                     else:
                         raise Exception(f"ID={ID} do not accept a single prime form instance as input.")
 
-                    assert prime.IS.hybrid, "prime must be hybrid."
+                    assert prime.whether.hybrid, "prime must be hybrid."
                     assert prime.mesh is self._mesh_ and prime.space is self._space_, \
                         "mesh, space do not match." # not just ==, but is!
 
@@ -309,22 +330,17 @@ class ExactSolutionSelector(FrozenOnly):
         else:
             pass
 
-
-
-
-
-
 if __name__ == "__main__":
     # mpiexec -n 8 python objects\CSCG\_3d\master.py
 
     # mesh = MeshGenerator('cuboid', region_layout=(3,3,3))([2,3,4], show_info=True)
     # mesh = MeshGenerator('bridge_arch_cracked')([2,2,2], EDM='SWV0', show_info=True)
-    mesh = MeshGenerator('crazy')([3, 3, 3], EDM='chaotic', show_info=True)
+    mesh = MeshGenerator('ct')([5, 5, 5], EDM='chaotic', show_info=True)
     # mesh = MeshGenerator('crazy_periodic')([3, 3, 3], EDM='chaotic', show_info=True)
     # mesh = MeshGenerator('cuboid_periodic', region_layout=(1,2,2))([2,3,4], show_info=True)
 
     # es = ExactSolutionSelector(mesh)('TISE:sincos1', m=1e-68, E=1)
 
-    es = ExactSolutionSelector(mesh)('MHD:sincos1')
+    # es = ExactSolutionSelector(mesh)('MHD:sincos1')
 
-    ExactSolutionSelector.listing()
+    mesh.visualize()

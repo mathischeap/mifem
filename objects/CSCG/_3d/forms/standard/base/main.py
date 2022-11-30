@@ -38,15 +38,14 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
     """
     def __init__(self, mesh, space, is_hybrid, orientation, numbering_parameters, name):
         """"""
-        super().__init__(mesh, space)
-        super().___init___()
+        super(_3dCSCG_Standard_Form, self).__init__(mesh, space, name)
+        super(_3dCSCG_Standard_Form, self).___init___()
         self._NUM_basis_, self._NUM_basis_components_ = \
             getattr(self.space.num_basis, self.__class__.__name__)
         assert isinstance(is_hybrid, bool), " isHybrid needs to be bool."
         assert orientation in ('inner', 'outer'), " orientation needs to be 'inner' or 'outer'."
         self._IS_hybrid_ = is_hybrid
         self._orientation_ = orientation
-        self.standard_properties.name = name
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_standard_form')
         self.___ARGS___ = (is_hybrid, orientation, deepcopy(numbering_parameters), name)
 
@@ -74,10 +73,6 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
 
     def __repr__(self):
         return f"3dCSCG>{self.k}SF>{self.standard_properties.name}:{id(self)}"
-
-    def RESET_cache(self):
-        self.cochain.RESET_cache()
-        self.coboundary.RESET_cache()
 
     @property
     def numbering(self):

@@ -7,7 +7,7 @@ if './' not in sys.path: sys.path.append('./')
 
 from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.edge.elements.element.coordinate_transformation import _3dCSCG_Edge_Element_CT
-from objects.CSCG._3d.mesh.edge.elements.element.IS import _3dCSCG_EdgeElement_IS
+from objects.CSCG._3d.mesh.edge.elements.element.whether import _3dCSCG_EdgeElement_Whether
 
 
 
@@ -23,7 +23,7 @@ class _3dCSCG_Edge_Element(FrozenOnly):
         self._cp_ = None
         self._ce_ = None
         self._cce_ = None
-        self._IS_ = None
+        self._whether_ = None
         self._freeze_self_()
 
     @property
@@ -63,10 +63,10 @@ class _3dCSCG_Edge_Element(FrozenOnly):
         return self._ct_
 
     @property
-    def IS(self):
-        if self._IS_ is None:
-            self._IS_ = _3dCSCG_EdgeElement_IS(self)
-        return self._IS_
+    def whether(self):
+        if self._whether_ is None:
+            self._whether_ = _3dCSCG_EdgeElement_Whether(self)
+        return self._whether_
 
     @property
     def shared_by_mesh_elements(self):
@@ -130,4 +130,4 @@ if __name__ == '__main__':
 
     for i in edges:
         edge = edges[i]
-        print(edge.i, edge.positions, edge.direction, edge.IS.on_mesh_boundary)
+        print(edge.i, edge.positions, edge.direction, edge.whether.on_mesh_boundary)

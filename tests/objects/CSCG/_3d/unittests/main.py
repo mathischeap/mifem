@@ -41,6 +41,9 @@ from tests.objects.CSCG._3d.unittests.Poisson.hdMSEM_inner import test_hdMSEM_Po
 from tests.objects.CSCG._3d.unittests.TISE.hdMSEM_inner import test_hdMSEM_Schrodinger_Inner
 from tests.objects.CSCG._3d.unittests.TISE.hdMSEM_inner_cuboid import test_hdMSEM_Schrodinger_Inner_Cuboid
 
+from tests.objects.CSCG._3d.unittests.local_trace_forms.reduction_and_reconstruction import Test_Reduction_and_Reconstruction_of_local_trace_forms
+from tests.objects.CSCG._3d.unittests.local_trace_forms.reconstruction_matrix_and_mass_matrix import Test_reconstruction_matrix_and_mass_matrix
+
 t_3dCSCG_start = MPI.Wtime()
 
 if RANK == MASTER_RANK: print(f"\n [_3dCSCG] tests start...\n")
@@ -107,6 +110,11 @@ passed_3dCSCG_tests += test_hybridization_of_standard_1_form()
 passed_3dCSCG_tests += test_hybridization_trace2()
 passed_3dCSCG_tests += test_trace_and_selective_matrices()
 passed_3dCSCG_tests += test_reconstruct_DF()
+
+passed_3dCSCG_tests += Test_Reduction_and_Reconstruction_of_local_trace_forms()()
+passed_3dCSCG_tests += Test_reconstruction_matrix_and_mass_matrix()()
+
+
 
 from components.miscellaneous.mirand import randint
 a = randint(0, 3) # below tests are slow, we do not run them at every single time.

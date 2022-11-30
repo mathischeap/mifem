@@ -9,7 +9,7 @@ mifem_dir = './' # the dir containing the mifem package
 if mifem_dir not in sys.path: sys.path.append(mifem_dir)
 
 from __init__ import tools as mt
-from tools.__init__ import linalg
+from tools.__init__ import milinalg
 from __init__ import components as mc
 from __init__ import cscg2
 from root.config.main import RANK, MASTER_RANK
@@ -100,7 +100,7 @@ def test_Regular_Newton_Raphson():
 
     f = [(1/dt) * M1 @ u - 0.25 * Cv, None, None]
 
-    nLS = linalg.NonLinearSystem([v, o, q], A, B, [u, w, P], f)
+    nLS = milinalg.NonLinearSystem([v, o, q], A, B, [u, w, P], f)
 
     nLS.customize.set_no_evaluation(-1)
 
@@ -130,7 +130,7 @@ def test_Regular_Newton_Raphson():
         message = list()
 
         #---- u, w @ tk -----------------------------------------------------------------------
-        x0 = linalg.LocallyFullVector((u, w, P))
+        x0 = milinalg.LocallyFullVector((u, w, P))
         # R = nLS.solve(x0, atol=1e-3, maxiter=5,
                       # LS_solver_para='GMRES', LS_solver_kwargs={'atol':1e-5})
         R = nLS.solve(x0, atol=1e-5, maxiter=5,

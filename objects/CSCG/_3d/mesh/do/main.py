@@ -12,9 +12,6 @@ class _3dCSCG_Mesh_DO(FrozenOnly):
         self._FIND_ = _3dCSCG_Mesh_DO_FIND(self)
         self._freeze_self_()
 
-    def reset_cache(self):
-        self._mesh_.___PRIVATE_reset_cache___()
-
     def parse_element_side_pair(self, eP):
         return self._mesh_.___PRIVATE_do_parse_element_side_pair___(eP)
 

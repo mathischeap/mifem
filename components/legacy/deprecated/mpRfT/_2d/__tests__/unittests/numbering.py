@@ -11,9 +11,9 @@ import numpy as np
 if './' not in sys.path: sys.path.append('/')
 from components.miscellaneous.miprint import miprint
 import components.miscellaneous.mirand as random
-from tools.linearAlgebra.gathering.irregular.ir_chain_matrix.main import iR_Chain_Gathering_Matrix
+from tools.elementwiseCache.gathering.irregular.ir_chain_matrix.main import iR_Chain_Gathering_Matrix
 from __init__ import rfT2
-from tools.linearAlgebra.elementwiseCache.operators.bmat.main import bmat
+from tools.elementwiseCache.dataStructures.operators.bmat.main import bmat
 
 def test_mpRfT2_ir_numbering():
     """"""
@@ -29,8 +29,8 @@ def test_mpRfT2_ir_numbering():
     gmt = nt.numbering.gathering
 
     GM = iR_Chain_Gathering_Matrix([gm2, gmt, gm1])
-    num_dofs_f2 = f2.num.GLOBAL_dofs
-    num_dofs_t = nt.num.GLOBAL_dofs
+    num_dofs_f2 = f2.num.global_dofs
+    num_dofs_t = nt.num.global_dofs
     assert not GM.___Pr_IS_regular___
 
     for rp in GM:
@@ -41,7 +41,7 @@ def test_mpRfT2_ir_numbering():
         gv = np.concatenate([gv2, gvt+num_dofs_f2, gv1+num_dofs_f2+num_dofs_t])
         np.testing.assert_array_equal(GV, gv)
 
-    NDfs = GM.GLOBAL_num_dofs
+    NDfs = GM.global_num_dofs
     dofs = random.sample(range(NDfs), int(NDfs/100))
     for dof in dofs:
         EI = GM.do.find.elements_and_local_indices_of_dof(dof)

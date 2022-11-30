@@ -1,7 +1,4 @@
-
-
-
-
+# -*- coding: utf-8 -*-
 from objects.CSCG._3d.mesh.domain.regions.region.interpolations.base import InterpolationBase
 
 from components.functions._2dSpace.geometrical_functions.straight_line import StraightLine
@@ -10,7 +7,6 @@ from components.functions._2dSpace.geometrical_functions.clockwise_arc import Ar
 from components.functions._2dSpace.transfinite import TransfiniteMapping
 
 import numpy as np
-
 
 class BridgeArchCracked(InterpolationBase):
     """ The BridgeArchCracked interpolation in 3D. """

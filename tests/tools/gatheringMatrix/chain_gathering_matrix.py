@@ -14,7 +14,7 @@ from components.miscellaneous.mirand import sample
 from tests.objects.CSCG._3d.randObj.form_caller import random_FormCaller_of_total_load_around as rf3
 from objects.miUsGrid.triangular.master import Call as miUsFc2
 
-from tools.linearAlgebra.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
+from tools.elementwiseCache.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
 
 class Test_ChainGM_sequent_chain_method(FrozenOnly):
     """"""
@@ -65,7 +65,7 @@ class Test_ChainGM_sequent_chain_method(FrozenOnly):
                     raise Exception(f"We should never reach this place.")
 
         #---- test find ----------------------------------------------------------------------------
-        GLOBAL_num_dofs = cgm.GLOBAL_num_dofs
+        GLOBAL_num_dofs = cgm.global_num_dofs
         sample_amount = int(GLOBAL_num_dofs/5)
         if sample_amount > 10: sample_amount = 10
         samples = sample(range(GLOBAL_num_dofs), sample_amount)
@@ -145,7 +145,7 @@ class Test_ChainGM_sequent_chain_method(FrozenOnly):
                     assert check_dict_f2[sep_numbering] == total_numbering
 
         #---- test find ----------------------------------------------------------------------------
-        GLOBAL_num_dofs = cgm.GLOBAL_num_dofs
+        GLOBAL_num_dofs = cgm.global_num_dofs
         sample_amount = int(GLOBAL_num_dofs/5)
         if sample_amount > 10: sample_amount = 10
         samples = sample(range(GLOBAL_num_dofs), sample_amount)

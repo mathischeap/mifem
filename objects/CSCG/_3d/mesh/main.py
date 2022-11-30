@@ -109,7 +109,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         self._sub_geometry_ = None
         self.___define_parameters___ = None
         self.___TEST_MODE___ = False
-        self.do.reset_cache()
+        self.___element_global_numbering___ = None
         self._freeze_self_()
 
 
@@ -1074,19 +1074,6 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
     def __eq__(self, other):
         return self.standard_properties.parameters == other.standard_properties.parameters
-
-
-
-
-    def ___PRIVATE_reset_cache___(self):
-        self.trace.___PRIVATE_reset_cache___()
-        if self.trace._elements_ is not None:
-            self.trace.elements.___PRIVATE_reset_cache___()
-        self.elements.RESET_cache()
-        self.boundaries.RESET_cache()
-        self.___element_global_numbering___ = None
-
-
 
 
     @staticmethod

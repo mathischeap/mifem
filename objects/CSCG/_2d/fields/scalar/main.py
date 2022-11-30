@@ -79,6 +79,7 @@ class _2dCSCG_ScalarField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
             self._func_ = [func,]
 
         elif ftype == 'boundary-wise': # mesh boundary wise (not domain boundary-wise)
+            # no need to cover all mesh boundaries.
             assert isinstance(func, dict), f" when ftype == 'boundary-wise', " \
                                            f"we must put functions in a dict whose " \
                                            f"keys are boundary names and values are" \

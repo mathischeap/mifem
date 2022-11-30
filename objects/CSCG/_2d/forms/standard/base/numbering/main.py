@@ -41,15 +41,12 @@ class _2dCSCG_Standard_Form_Numbering(FrozenOnly):
         self._numbering_parameters_.update(self._parameters_)
         self._visualize_ = _2dCSCG_Numbering_Visualize(sf)
         self._do_ = None
-        self.___PRIVATE_reset_cache___()
-        self._freeze_self_()
-
-    def ___PRIVATE_reset_cache___(self):
         self._local_ = None
         self._gathering_ = None
         self._boundary_dofs_ = None
         self._local_num_dofs_ = None
         self._extra_ = None
+        self._freeze_self_()
 
     def ___PRIVATE_do_numbering___(self):
         self._gathering_, self._local_num_dofs_, self._extra_ = \

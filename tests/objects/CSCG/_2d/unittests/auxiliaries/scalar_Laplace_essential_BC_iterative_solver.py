@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from tools.linearAlgebra.linearSystem.main import LinearSystem
+from tools.miLinearAlgebra.linearSystem.main import LinearSystem
 from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
-from tools.linearAlgebra.elementwiseCache.objects.columnVector.main import EWC_ColumnVector
-from tools.linearAlgebra.elementwiseCache.operators.bmat.main import bmat
-from tools.linearAlgebra.elementwiseCache.operators.concatenate.main import concatenate
+from tools.elementwiseCache.dataStructures.objects.columnVector.main import EWC_ColumnVector
+from tools.elementwiseCache.dataStructures.operators.bmat.main import bmat
+from tools.elementwiseCache.dataStructures.operators.concatenate.main import concatenate
 
 
 def scalar_Laplace_solver_iterative_solver(c, Kx, Ky, Nx, Ny):

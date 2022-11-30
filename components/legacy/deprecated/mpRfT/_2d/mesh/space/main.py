@@ -10,7 +10,7 @@ if './' not in sys.path: sys.path.append('/')
 
 from components.freeze.base import FrozenOnly
 
-from objects.CSCG._2d.spaces.polynomials import _2dCSCG_PolynomialSpace
+from objects.CSCG._2d.spaces.polynomials.polynomials import _2dCSCG_PolynomialSpace
 from objects.mpRfT._2d.mesh.space.do import mpRfT2_Mesh_Space_do
 from objects.mpRfT._2d.mesh.space.Gauss import mpRfT2_Mesh_Space_Gauss
 from objects.mpRfT._2d.mesh.space.Lobatto import mpRfT2_Mesh_Space_Lobatto

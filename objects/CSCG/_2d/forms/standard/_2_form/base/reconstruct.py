@@ -58,7 +58,7 @@ class _2dCSCG_S2F_Reconstruct(_2dCSCG_SF_ReconstructBase):
             det_iJ = mesh.elements.coordinate_transformation.vectorized.inverse_Jacobian(*xietasigma)
 
             if len(INDICES) > 0:
-                if mesh.elements.IS.homogeneous_according_to_types_wrt_metric:
+                if mesh.elements.whether.homogeneous_according_to_types_wrt_metric:
                     v = np.einsum('ij, ki, j -> kj', basis[0], f.cochain.array, det_iJ, optimize='greedy')
                 else:
                     v = np.einsum('ij, ki, kj -> kj', basis[0], f.cochain.array, det_iJ, optimize='greedy')

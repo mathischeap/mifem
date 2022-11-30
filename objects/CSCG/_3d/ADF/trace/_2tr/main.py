@@ -20,13 +20,7 @@ class _3dCSCG_T2_ADF(_3dCSCG_Algebra_DUAL_Trace_Form):
         super().__init__(3, mesh, space, prime, orientation, name)
         self._k_ = 2
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_standard_algebra_dual_2trace')
-        self.___PRIVATE_reset_cache___()
         self._freeze_self_()
-
-
-    def ___PRIVATE_reset_cache___(self):
-        """"""
-        super().___PRIVATE_reset_cache___()
 
 
 

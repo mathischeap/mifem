@@ -53,7 +53,7 @@ def test_GatheringMatrix_find():
         f.CF.current_time = rT
         f.discretize()
 
-        GLOBAL_num_dofs = f.num.GLOBAL_dofs
+        GLOBAL_num_dofs = f.num.global_dofs
         if RANK == MASTER_RANK:
             num_samples = random.randint(1, int(load/5))
             dofs = random.sample(range(GLOBAL_num_dofs), num_samples)

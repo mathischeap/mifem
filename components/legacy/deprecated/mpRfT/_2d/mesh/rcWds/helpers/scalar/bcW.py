@@ -36,7 +36,7 @@ class mpRfT2_Mesh_rcWds_Scalar_bcW(FrozenOnly):
         """"""
         cell = self._scalar_._mesh_[i]
         data = self._scalar_._data_
-        if cell.IS.root:
+        if cell.whether.root:
             try:
                 return data[cell.__repr__()][0]
             except KeyError:

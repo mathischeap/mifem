@@ -18,8 +18,13 @@ from pynverse import inversefunc
 class InterpolationBase(FrozenOnly):
     @accepts('self', 'Region')
     def __init__(self, region):
-        """
-        To initialize an interpolation, we take a regions as input.
+        """To initialize an interpolation, we take a regions as input.
+
+        With this class (and its children) we basically store the mapping and related
+        metric terms from the reference region [0,1] -> real regions.
+
+        For the mapping (and its relates), we need three inputs, i.e., r, s, t, they
+        should be of same shape, and all entries are in range [0, 1].
         
         Parameters
         ----------
@@ -71,43 +76,31 @@ class InterpolationBase(FrozenOnly):
 
         return r, s, t
 
+    def mapping_X(self, r, s, t):
+        raise NotImplementedError()
+
+    def mapping_Y(self, r, s, t):
+        raise NotImplementedError()
+
+    def mapping_Z(self, r, s, t):
+        raise NotImplementedError()
+
+
     def __call__(self, r, s, t):
         return self.mapping(r, s, t)
 
     def mapping(self, r, s, t):
-        raise NotImplementedError()
+        return self.mapping_X(r, s, t), self.mapping_Y(r, s, t), self.mapping_Z(r, s, t)
 
-
-
-
-    def mapping_X(self, r, s, t):
-        raise NotImplementedError()
     def ___mapping_Xr_s0t0___(self, r):
         """x = mapping_X(r, 0 , 0)"""
         return self.mapping_X(r, 0, 0)
-
-
-
-
-    def mapping_Y(self, r, s, t):
-        raise NotImplementedError()
     def ___mapping_Ys_r0t0___(self, s):
         """y = mapping_Y(0, s , 0)"""
         return self.mapping_Y(0, s, 0)
-
-
-
-
-    def mapping_Z(self, r, s, t):
-        raise NotImplementedError()
     def ___mapping_Zt_r0s0___(self, t):
         """z = mapping_Z(0, 0 , t)"""
         return self.mapping_Z(0, 0, t)
-
-
-
-
-
 
     def Jacobian_matrix(self, r, s, t):
         """ 
@@ -174,10 +167,6 @@ class InterpolationBase(FrozenOnly):
     def Jacobian_Zt(self, r, s, t):
         N31 = NumericalPartialDerivative_xyz(self.mapping_Z, r, s, t)
         return N31.scipy_partial('z')
-
-
-
-
 
 
     def ___inverse_mapping_r_x_s0t0___(self, x):

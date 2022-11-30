@@ -12,7 +12,7 @@ from objects.miUsGrid.triangular.forms.standard.base.cochain.main import miUs_Tr
 from objects.miUsGrid.triangular.forms.standard.base.num import miUs_Triangular_SF_Num
 from objects.miUsGrid.triangular.forms.standard.base.coboundary import miUs_Triangular_SF_Coboundary
 from objects.miUsGrid.triangular.forms.standard.base.numbering.main import miUs_Triangular_SF_Numbering
-from objects.miUsGrid.triangular.forms.standard.base.IS import miUs_Triangular_SF_IS
+from objects.miUsGrid.triangular.forms.standard.base.whether import miUs_Triangular_SF_whether
 from objects.miUsGrid.triangular.forms.standard.base.BC.main import miUsTriangle_SF_BC
 
 
@@ -32,7 +32,7 @@ class miUsTriangular_SF_Base(miUsTriangular_FormBase):
         self._num_ = miUs_Triangular_SF_Num(self)
         self._coboundary_ = miUs_Triangular_SF_Coboundary(self)
         self._numbering_ = miUs_Triangular_SF_Numbering(self)
-        self._IS_ = miUs_Triangular_SF_IS(self)
+        self._whether_ = miUs_Triangular_SF_whether(self)
         self._BC_ = None
 
     def __repr__(self):
@@ -90,8 +90,8 @@ class miUsTriangular_SF_Base(miUsTriangular_FormBase):
         return self._numbering_
 
     @property
-    def IS(self):
-        return self._IS_
+    def whether(self):
+        return self._whether_
 
     @property
     def BC(self):

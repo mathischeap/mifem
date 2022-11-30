@@ -58,7 +58,7 @@ class IteratorMonitorDo(FrozenOnly):
         monitor._current_time_ = time()
         monitor._total_cost_ = monitor._current_time_ - monitor._ft_start_time_
 
-        if self._monitor_.IS.open:
+        if self._monitor_.whether.open:
 
             raise NotImplementedError()
 
@@ -186,7 +186,7 @@ class IteratorMonitorDo(FrozenOnly):
         """"""
         monitor = self._monitor_
 
-        if monitor.IS.open: return self.___PRIVATE_generate_open_graph_report___()
+        if monitor.whether.open: return self.___PRIVATE_generate_open_graph_report___()
 
         # do A LAST REPORT BEFORE STOP:
         judge1 = \

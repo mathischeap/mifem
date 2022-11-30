@@ -15,10 +15,6 @@ class _2dCSCG_Mesh_Elements_CT(FrozenOnly):
         self._ctq_2d_ = _2dCSCG_ECT_2d_QUAD(self)
         self._freeze_self_()
 
-    def RESET_cache(self):
-        self._ctq_1d_ = _2dCSCG_ECT_1d_QUAD(self)
-        self._ctq_2d_ = _2dCSCG_ECT_2d_QUAD(self)
-
     @property
     def vectorized(self):
         if self._vectorized_ is None:

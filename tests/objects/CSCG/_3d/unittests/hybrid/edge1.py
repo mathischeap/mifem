@@ -7,8 +7,8 @@ import random
 from tests.objects.CSCG._3d.randObj.form_caller import random_FormCaller_of_total_load_around
 from components.miscellaneous.mios import mkdir, remove, rmdir
 from components.miscellaneous.randomString.digits import randomStringDigits
-from tools.linearAlgebra.elementwiseCache.operators.bmat.main import bmat
-from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
+from tools.elementwiseCache.dataStructures.operators.bmat.main import bmat
+from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
 
@@ -39,7 +39,7 @@ def test_hybridization_of_standard_1_form():
     Id = EWC_SparseMatrix(mesh, ('identity', f1.num.basis))
 
     mkdir(image_folder)
-    t1N = t1.prime.numbering.gathering.GLOBAL_num_dofs
+    t1N = t1.prime.numbering.gathering.global_num_dofs
     for i in range(t1N):
         f1.dofs.visualize.matplot.connection_through_trace_dof(
             i, T, C, t1, e1, checking_mode=True)
@@ -58,7 +58,7 @@ def test_hybridization_of_standard_1_form():
 
     #-------------- test 2 -------------------------------------------------------------------
     T, C = f1.special.___PRIVATE_overcoming_hybrid_singularity___(T, C)[:2]
-    e1N = e1.numbering.gathering.GLOBAL_num_dofs
+    e1N = e1.numbering.gathering.global_num_dofs
     for i in range(e1N):
         f1.dofs.visualize.matplot.connection_through_around_edge_dof(
             i, T, C, t1, e1, checking_mode=True)
@@ -114,7 +114,7 @@ def test_hybridization_of_standard_1_form():
     t1.BC.boundaries = Dirichlet_boundaries
 
     T, D, C, b = f1.special.hybrid_pairing(t1, e1)[:4]
-    e1N = e1.numbering.gathering.GLOBAL_num_dofs
+    e1N = e1.numbering.gathering.global_num_dofs
     for i in range(e1N):
         f1.dofs.visualize.matplot.connection_through_around_edge_dof(
             i, T, C, t1, e1, checking_mode=True)

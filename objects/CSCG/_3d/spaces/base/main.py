@@ -13,7 +13,6 @@ from objects.CSCG._3d.spaces.base.local_numbering import LocalNumbering
 from objects.CSCG._3d.spaces.base.incidence_matrix import IncidenceMatrix
 from objects.CSCG._3d.spaces.base.trace_matrix import TraceMatrix
 from objects.CSCG._3d.spaces.base.selective_matrix import SelectiveMatrix
-from objects.CSCG._3d.spaces.base.do import _3dCSCG_space_do
 
 from objects.CSCG._3d.spaces.base.visualize.main import _3dCSC_Space_Visualize
 
@@ -39,7 +38,7 @@ class _3dCSCG_Space_Base(FrozenClass):
         self.___define_parameters___ = None
         self.standard_properties.stamp = '3dCSCG|structured|space'
         self._visualize_ = None
-        self._DO_ = _3dCSCG_space_do(self)
+        self._DO_ = None
         self._freeze_self_()
 
     def __repr__(self):
@@ -57,6 +56,7 @@ class _3dCSCG_Space_Base(FrozenClass):
     def ___PRIVATE_generate_1D_basises___(self):
         """ """
         ndim = len(self._inputs_)
+        assert ndim == 3, f"must be"
         basises = ()
         p = ()
         nodes = ()

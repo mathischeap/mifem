@@ -9,8 +9,8 @@ import sys
 if './' not in sys.path: sys.path.append('/')
 
 from components.freeze.base import FrozenOnly
-from tools.linearAlgebra.gathering.vector import Gathering_Vector
-from tools.linearAlgebra.gathering.irregular.ir_matrix.main import iR_Gathering_Matrix
+from tools.elementwiseCache.gathering.vector import Gathering_Vector
+from tools.elementwiseCache.gathering.irregular.ir_matrix.main import iR_Gathering_Matrix
 from root.config.main import SIZE, RANK, COMM
 
 

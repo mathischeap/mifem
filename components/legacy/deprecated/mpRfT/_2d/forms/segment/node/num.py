@@ -36,7 +36,7 @@ class mpRfT2_NSgF_Num(FrozenOnly):
 
     @property
     def GLOBAL_dofs(self):
-        return self._t_.numbering.gathering.GLOBAL_num_dofs
+        return self._t_.numbering.gathering.global_num_dofs
 
 
 class ___Pr_Basis___(FrozenOnly):

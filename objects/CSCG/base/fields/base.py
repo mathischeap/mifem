@@ -64,7 +64,7 @@ class CSCG_Continuous_FORM_BASE(FiledBase):
             _CMB_ = list()
             for i in self.func: # valid local trace elements
                 te = self.mesh.trace.elements[i]
-                if te.IS.on_mesh_boundary:
+                if te.whether.on_mesh_boundary:
                     omb = te.on_mesh_boundary
                     if omb not in _CMB_:
                         _CMB_.append(omb)

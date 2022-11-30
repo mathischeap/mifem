@@ -6,9 +6,9 @@ from tests.objects.CSCG._2d.randObj.form_caller import random_FormCaller_of_tota
 from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller
 from scipy.sparse import linalg as spspalinalg
 import random
-from tools.linearAlgebra.linearSystem.main import LinearSystem
-from tools.linearAlgebra.elementwiseCache.operators.bmat.main import bmat
-from tools.linearAlgebra.elementwiseCache.operators.concatenate.main import concatenate
+from tools.miLinearAlgebra.linearSystem.main import LinearSystem
+from tools.elementwiseCache.dataStructures.operators.bmat.main import bmat
+from tools.elementwiseCache.dataStructures.operators.concatenate.main import concatenate
 
 
 

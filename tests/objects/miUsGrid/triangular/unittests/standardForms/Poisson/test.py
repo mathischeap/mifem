@@ -59,18 +59,18 @@ def __PoissonSolver1__(N, K, c):
        e12 = e21.T
 
        e12m2 = e12 @ m2
-       a = tools.linalg.bmat(([m1 , e12m2],
+       a = tools.ewc.bmat(([m1 , e12m2],
                               [e21, None ]))
 
        a.assembler.chain_method = 'sequent'
        a.gathering_matrices = ((u, p), (u, p))
 
-       b0 = tools.linalg.EWC_ColumnVector(fc.mesh.elements, u.num.basis)
+       b0 = tools.ewc.vector(fc.mesh.elements, u.num.basis)
        b1 = -f.cochain.EWC
-       b = tools.linalg.concatenate([b0, b1])
+       b = tools.ewc.concatenate([b0, b1])
        b.assembler.chain_method = 'sequent'
        b.gathering_matrix = (u, p)
-       ls = tools.linalg.LinearSystem(a, b)
+       ls = tools.milinalg.LinearSystem(a, b)
 
        results = ls.solve('direct')()[0]
        results.do.distributed_to(u, p, chain_method='sequent')

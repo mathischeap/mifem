@@ -4,7 +4,7 @@ from components.freeze.base import FrozenOnly
 import numpy as np
 from scipy.sparse import csc_matrix
 
-from tools.linearAlgebra.elementwiseCache.objects.multiDimMatrix.main import MultiDimMatrix
+from tools.elementwiseCache.dataStructures.objects.multiDimMatrix.main import MultiDimMatrix
 
 
 class ___2dCSCG_0_o_Form_CrossProduct_0_X_1__ip_1___(FrozenOnly):

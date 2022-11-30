@@ -160,3 +160,41 @@ class NumBasis(FrozenOnly):
         _basis_ = np.prod(self._FS_.p)
         _basis_components_ = (_basis_,)
         return _basis_, _basis_components_
+
+
+    @property
+    def _3dCSCG_0LocalTrace(self):
+        px, py, pz = self._FS_.p
+        px += 1
+        py += 1
+        pz += 1
+        return 2 * (px * py + py * pz + pz * px), {'N': py * pz,
+                                                   'S': py * pz,
+                                                   'W': px * pz,
+                                                   'E': px * pz,
+                                                   'B': px * py,
+                                                   'F': px * py}
+
+    @property
+    def _3dCSCG_2LocalTrace(self):
+        px, py, pz = self._FS_.p
+        return 2 * (px * py + py * pz + pz * px), {'N': py * pz,
+                                                   'S': py * pz,
+                                                   'W': px * pz,
+                                                   'E': px * pz,
+                                                   'B': px * py,
+                                                   'F': px * py}
+
+    @property
+    def _3dCSCG_1LocalTrace(self):
+        px, py, pz = self._FS_.p
+        num_x_face = (py + 1) * pz + (pz + 1) * py
+        num_y_face = (px + 1) * pz + (pz + 1) * px
+        num_z_face = (px + 1) * py + (py + 1) * px
+        return 2 * (num_x_face + num_y_face + num_z_face), \
+               {'N': num_x_face,
+                'S': num_x_face,
+                'W': num_y_face,
+                'E': num_y_face,
+                'B': num_z_face,
+                'F': num_z_face}

@@ -18,7 +18,7 @@ class _3dCSCG_Trace_forms_DOFs(FrozenOnly):
 
 
     def __iter__(self):
-        for i in range(self._GM_.GLOBAL_num_dofs):
+        for i in range(self._GM_.global_num_dofs):
             yield i
 
     def __contains__(self, i):
@@ -26,7 +26,7 @@ class _3dCSCG_Trace_forms_DOFs(FrozenOnly):
         if i % 1 != 0:
             return False
         else:
-            if 0 <= i < self._GM_.GLOBAL_num_dofs:
+            if 0 <= i < self._GM_.global_num_dofs:
                 return True
             else:
                 return False

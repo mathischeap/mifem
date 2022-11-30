@@ -10,7 +10,7 @@ if './' not in sys.path: sys.path.append('./')
 
 from importlib import import_module
 from components.freeze.base import FrozenOnly
-from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
+from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
 
 
 

@@ -60,7 +60,7 @@ class _3dCSCG_S1F_DOFs_Matplot(FrozenOnly):
         -------
 
         """
-        assert self._sf_.IS.hybrid, f"the form is not hybrid, this method makes no sense."
+        assert self._sf_.whether.hybrid, f"the form is not hybrid, this method makes no sense."
 
         assert T.__class__.__name__ == 'EWC_SparseMatrix', f"T must be a trace matrix."
         assert C.__class__.__name__ == 'EWC_SparseMatrix', f"C must be a complement matrix."
@@ -296,7 +296,7 @@ class _3dCSCG_S1F_DOFs_Matplot(FrozenOnly):
         ):
         """"""
         #----------- we first do some checks -------------------------------------------------------
-        assert self._sf_.IS.hybrid, f"the form is not hybrid, this method makes no sense."
+        assert self._sf_.whether.hybrid, f"the form is not hybrid, this method makes no sense."
 
         assert T.__class__.__name__ == 'EWC_SparseMatrix', f"T must be a trace matrix."
         assert C.__class__.__name__ == 'EWC_SparseMatrix', f"C must be a complement matrix."
@@ -647,5 +647,5 @@ if __name__ == '__main__':
     #         i, T, C, t1, e1)
 
     #
-    for i in range(t1.prime.numbering.gathering.GLOBAL_num_dofs):
+    for i in range(t1.prime.numbering.gathering.global_num_dofs):
         f1.dofs.visualize.matplot.connection_through_trace_dof(i, T, C, t1, e1, checking_mode=False)

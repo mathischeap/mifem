@@ -92,7 +92,7 @@ class _3dCSCG_2Trace_Discretize_BoundaryWiseVector(FrozenOnly):
 
 
         assert SELF.BC.CF is not None, f"No BC.body!"
-        FUNC = SELF.BC.CF.___DO_evaluate_func_at_time___()
+        FUNC = SELF.BC.CF.do.evaluate_func_at_time()
 
         RANGE_trace_elements = SELF.mesh.boundaries.range_of_trace_elements
 

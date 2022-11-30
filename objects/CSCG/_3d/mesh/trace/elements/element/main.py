@@ -11,7 +11,7 @@ from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.trace.elements.element.coordinate_transformation.main import \
     _3dCSCG_Trace_Element_CoordinateTransformation
 from objects.CSCG._3d.mesh.trace.elements.element.visualize import _3dCSCG_TraceElement_VIS
-from objects.CSCG._3d.mesh.trace.elements.element.IS import _3dCSCG_TraceElement_IS
+from objects.CSCG._3d.mesh.trace.elements.element.whether import _3dCSCG_TraceElement_Whether
 
 
 
@@ -47,7 +47,7 @@ class _3dCSCG_Trace_Element(FrozenOnly):
         if self._ondb_:
             assert self.NON_CHARACTERISTIC_position[0] not in '1234567890'
         self._ct_ = None
-        self._IS_ = None
+        self._whether_ = None
         self._visualize_ = None
         self._type_wrt_metric_ = None
         self._nd_ = None
@@ -77,10 +77,10 @@ class _3dCSCG_Trace_Element(FrozenOnly):
         return self._ct_
 
     @property
-    def IS(self):
-        if self._IS_ is None:
-            self._IS_ = _3dCSCG_TraceElement_IS(self)
-        return self._IS_
+    def whether(self):
+        if self._whether_ is None:
+            self._whether_ = _3dCSCG_TraceElement_Whether(self)
+        return self._whether_
 
     @property
     def visualize(self):
@@ -166,7 +166,7 @@ class _3dCSCG_Trace_Element(FrozenOnly):
     @property
     def shared_with_core(self):
         """None or an int. """
-        if self.IS.shared_by_cores:
+        if self.whether.shared_by_cores:
             if int(self._p1_[:-1]) in self._elements_._mesh_.elements:
                 CORE = self._elements_._mesh_.do.find.slave_of_element(int(self._p2_[:-1]))
             elif int(self._p2_[:-1]) in self._elements_._mesh_.elements:

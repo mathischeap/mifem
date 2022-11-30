@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 from components.exceptions import LocalCochainShapeError
-from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_ColumnVector
+from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_ColumnVector
 from scipy.sparse import lil_matrix, csr_matrix, csc_matrix
-from tools.linearAlgebra.dataStructures.globalMatrix.main import DistributedVector
-from scipy import sparse as spspa
+from tools.miLinearAlgebra.dataStructures.vectors.distributed.main import DistributedVector
 from components.freeze.base import FrozenOnly
 from root.config.main import np, RANK, MASTER_RANK, COMM
 from objects.CSCG.base.forms.standard.cochain.dofwise import CSCG_SF_Cochain_DofWise
@@ -17,11 +16,7 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
         self._sf_ = sf
         self._local_ = None
         self._dofwise_ = None
-        self.RESET_cache()
         self._freeze_self_()
-
-    def RESET_cache(self):
-        pass
 
     @property
     def dofwise(self):
@@ -54,6 +49,19 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
     def ___PRIVATE_local_call___(self, i):
         return csr_matrix(self.local[i]).T
 
+
+    def ___DO_gather_local_to_master___(self):
+        """Do what the method name says."""
+        local = COMM.gather(self.local, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
+            LOCAL = dict()
+            for li in local:
+                if li is not None:
+                    LOCAL.update(li)
+            return LOCAL
+
+
+
     def ___PRIVATE_do_gather_to_master_and_make_them_region_wise_local_index_grouped___(self):
         """make it regions-wise-element-local-indexed, thus we can save it and when read a form, we can always have the
         correct local cochain allocated even element numbering is different.
@@ -73,7 +81,7 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
                 RID.update(rid)
         del RN_LI_dict
 
-        LOCAL = self.DO_gather_local_to_master()
+        LOCAL = self.___DO_gather_local_to_master___()
         if RANK == MASTER_RANK:
 
             RW_LOCAL = dict()
@@ -113,12 +121,12 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
     @property
     def globe(self):
         GM = self._sf_.numbering.gathering
-        globe = lil_matrix((1, self._sf_.num.GLOBAL_dofs))
+        globe = lil_matrix((1, self._sf_.num.global_dofs))
         for i in GM: # go through all local elements
             globe[0, GM[i].full_vector] = self.local[i]
         globe = globe.tocsr().T
 
-        if self._sf_.IS.hybrid or (self._sf_.ndim == self._sf_.k):
+        if self._sf_.whether.hybrid or (self._sf_.ndim == self._sf_.k):
             # clearly, for volume form or hybrid form, we can make a distributed vector directly
             return DistributedVector(globe)
 
@@ -127,7 +135,7 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
             GLOBE = COMM.gather(globe, root=MASTER_RANK)
 
             if RANK == MASTER_RANK:
-                measure = np.zeros(self._sf_.num.GLOBAL_dofs, dtype=int)
+                measure = np.zeros(self._sf_.num.global_dofs, dtype=int)
                 for G in GLOBE:
                     indices = G.indices
                     measure[indices] += 1
@@ -138,10 +146,10 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
                 globe = csr_matrix(_____).T
 
             else:
-                globe = csc_matrix((self._sf_.num.GLOBAL_dofs,1))
+                globe = csc_matrix((self._sf_.num.global_dofs, 1))
 
             GDV = DistributedVector(globe)
-            assert GDV.IS.master_dominating
+            assert GDV.whether.master_dominating
             return GDV
 
     @globe.setter
@@ -153,16 +161,16 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
         :return:
         """
         if globe.__class__.__name__ == 'DistributedVector':
-            assert globe.V.shape == (self._sf_.num.GLOBAL_dofs, 1), "globe cochain shape wrong."
+            assert globe.V.shape == (self._sf_.num.global_dofs, 1), "globe cochain shape wrong."
             # gather vector to master core ...
-            if globe.IS.master_dominating:
+            if globe.whether.master_dominating:
                 # no need to gather
                 VV = globe.V.T.toarray()[0]
             else:
                 V = globe.V
                 V = COMM.gather(V, root=MASTER_RANK)
                 if RANK == MASTER_RANK:
-                    VV = np.empty((self._sf_.num.GLOBAL_dofs,))
+                    VV = np.empty((self._sf_.num.global_dofs,))
                     for v in V:
                         indices = v.indices
                         data = v.data
@@ -177,9 +185,9 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
                         to_be_sent = None
                     else:
                         # noinspection PyUnboundLocalVariable
-                        to_be_sent = spspa.csc_matrix(
+                        to_be_sent = csc_matrix(
                             (VV[lr[0]:lr[1]], range(lr[0],lr[1]), [0, lr[1]-lr[0]]),
-                            shape=(self._sf_.num.GLOBAL_dofs, 1))
+                            shape=(self._sf_.num.global_dofs, 1))
                     TO_BE_SENT.append(to_be_sent)
             else:
                 TO_BE_SENT = None
@@ -203,17 +211,6 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
 
         else:
             raise Exception(f"Can not set cochain from {globe}.")
-
-
-    def DO_gather_local_to_master(self):
-        """Do what the method name says."""
-        local = COMM.gather(self.local, root=MASTER_RANK)
-        if RANK == MASTER_RANK:
-            LOCAL = dict()
-            for li in local:
-                if li is not None:
-                    LOCAL.update(li)
-            return LOCAL
 
 
     def __getitem__(self, item):
@@ -259,7 +256,6 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
         except AssertionError:
             raise LocalCochainShapeError("Cannot set local cochain.")
 
-        self.RESET_cache()
         self._local_ = local
 
 

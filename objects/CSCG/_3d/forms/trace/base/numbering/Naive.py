@@ -8,7 +8,7 @@
 
 """
 from components.freeze.main import FrozenOnly
-from tools.linearAlgebra.gathering.regular.chain_matrix.main import Gathering_Matrix, Gathering_Vector
+from tools.elementwiseCache.gathering.regular.chain_matrix.main import Gathering_Matrix, Gathering_Vector
 
 
 

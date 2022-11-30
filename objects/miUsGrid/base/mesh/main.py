@@ -36,7 +36,7 @@ class miUsGrid_MeshBase(FrozenClass):
         self._visualize_ = None
         self._boundaries_ = None
         self._miscellaneous_ = None
-        self._IS_ = None
+        self._whether_ = None
         self._domain_ = None
         self._do_ = None
         self._freeze_self_()
@@ -73,8 +73,8 @@ class miUsGrid_MeshBase(FrozenClass):
         return self._miscellaneous_
 
     @property
-    def IS(self):
-        return self._IS_
+    def whether(self):
+        return self._whether_
 
     @property
     def domain(self):

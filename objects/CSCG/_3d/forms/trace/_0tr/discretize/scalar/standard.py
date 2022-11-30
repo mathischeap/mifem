@@ -31,10 +31,10 @@ class _3dCSCG_0Trace_Discretize_StandardScalar(FrozenOnly):
 
         if target == 'func':
             assert SELF.CF is not None, f"No func.body!"
-            _lf_ = SELF.CF.___DO_evaluate_func_at_time___()[0]
+            _lf_ = SELF.CF.do.evaluate_func_at_time()[0]
         elif target == 'BC':
             assert SELF.BC.CF is not None, f"No BC.body!"
-            _lf_ = SELF.BC.CF.___DO_evaluate_func_at_time___()[0]
+            _lf_ = SELF.BC.CF.do.evaluate_func_at_time()[0]
         else:
             raise NotImplementedError(f"Not applicable for target={target}.")
 

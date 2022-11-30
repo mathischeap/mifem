@@ -8,7 +8,7 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 
-from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
+from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
 from objects.miUsGrid.triangular.forms.standard.base.do import miUs_Triangular_SF_Do
 from objects.miUsGrid.triangular.forms.standard._0.base.do.helpers._0x1_ip_1 import ___0_x_1__ip__1___
 
@@ -36,7 +36,7 @@ class miUs_Triangular_S0F_Do(miUs_Triangular_SF_Do):
         -------
 
         """
-        assert u.IS.standard_form and e.IS.standard_form, f"u and e must be standard form."
+        assert u.whether.standard_form and e.whether.standard_form, f"u and e must be standard form."
         assert u.mesh == self._sf_.mesh, f"u.mesh does not match."
         assert e.mesh == self._sf_.mesh, f"e.mesh does not match."
 

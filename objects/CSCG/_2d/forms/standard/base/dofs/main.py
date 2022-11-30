@@ -54,4 +54,4 @@ class _2dCSCG_SF_dofs(FrozenOnly):
 
     @property
     def GLOBAL_num(self):
-        return self._sf_.num.GLOBAL_dofs
+        return self._sf_.num.global_dofs

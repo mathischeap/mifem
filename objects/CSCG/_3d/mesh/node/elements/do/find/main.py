@@ -32,7 +32,7 @@ class _3dCSCG_NodeMesh_DoFind(FrozenOnly):
         -------
 
         """
-        if i in self._elements_ and self._elements_[i].IS.on_mesh_boundary:
+        if i in self._elements_ and self._elements_[i].whether.on_mesh_boundary:
             omb = True
         else:
             omb = False

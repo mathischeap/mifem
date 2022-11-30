@@ -34,7 +34,7 @@ class _2dCSCG_Standard_Trace(CSCG_Trace_Form, _2dCSCG_FORM_BASE, ndim=2):
     :param str name:
     """
     def __init__(self, mesh, space, is_hybrid, orientation, numbering_parameters, name):
-        super().__init__(mesh, space)
+        super(_2dCSCG_Standard_Trace, self).__init__(mesh, space, name)
         super(_2dCSCG_Standard_Trace, self).___init___()
 
         self._NUM_basis_, self._NUM_basis_components_, self._NUM_basis_onside_ = \
@@ -45,7 +45,6 @@ class _2dCSCG_Standard_Trace(CSCG_Trace_Form, _2dCSCG_FORM_BASE, ndim=2):
         self._IS_hybrid_ = is_hybrid
         self._orientation_ = orientation
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_trace_form')
-        self.standard_properties.name = name
 
         self._numbering_ = _2dCSCG_Trace_Numbering(self, numbering_parameters)
         self._cochain_ = _2dCSCG_Trace_Cochain(self)
@@ -87,10 +86,6 @@ class _2dCSCG_Standard_Trace(CSCG_Trace_Form, _2dCSCG_FORM_BASE, ndim=2):
         """Group all methods."""
         return self._DO_
 
-
-    def RESET_cache(self):
-        self.cochain.RESET_cache()
-        self.coboundary.RESET_cache()
 
     def ___DO_evaluate_basis_at_meshgrid___(self, xi, eta, compute_xietasigma=True):
         """

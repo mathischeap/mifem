@@ -9,7 +9,7 @@ import numpy as np
 from objects.CSCG._3d.mesh.elements.element.sides.main import _3dCSCG_Mesh_Element_Sides
 from objects.CSCG._3d.mesh.elements.element.coordinate_transformation import _3dCSCG_Mesh_Element_CT
 from objects.CSCG._3d.mesh.elements.element.do import _3dCSCG_MeshElement_Do
-from objects.CSCG._3d.mesh.elements.element.IS import _3dCSCG_MeshElement_IS
+from objects.CSCG._3d.mesh.elements.element.whether import _3dCSCG_MeshElement_Whether
 
 class _3dCSCG_Mesh_Element(FrozenOnly):
     """The mesh element class"""
@@ -23,7 +23,7 @@ class _3dCSCG_Mesh_Element(FrozenOnly):
         self._sub_geometry_ = None
         self._sides_ = None
         self._do_ = None
-        self._IS_ = None
+        self._whether_ = None
         self._freeze_self_()
 
     @property
@@ -96,10 +96,10 @@ class _3dCSCG_Mesh_Element(FrozenOnly):
         return self._do_
 
     @property
-    def IS(self):
-        if self._IS_ is None:
-            self._IS_ = _3dCSCG_MeshElement_IS(self)
-        return self._IS_
+    def whether(self):
+        if self._whether_ is None:
+            self._whether_ = _3dCSCG_MeshElement_Whether(self)
+        return self._whether_
 
 
 

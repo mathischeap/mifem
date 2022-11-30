@@ -28,7 +28,7 @@ class _2dCSCG_MeshElements_CT_Vectorized(FrozenOnly):
         if len(self._elements_) == 0:
             return None
 
-        if self._elements_.IS.homogeneous_according_to_types_wrt_metric:
+        if self._elements_.whether.homogeneous_according_to_types_wrt_metric:
 
             i = self._elements_.indices[0]
             Jacobian_matrix = self._elements_[i].coordinate_transformation.Jacobian_matrix(xi, et)
@@ -60,7 +60,7 @@ class _2dCSCG_MeshElements_CT_Vectorized(FrozenOnly):
         if len(self._elements_) == 0:
             return None
 
-        if self._elements_.IS.homogeneous_according_to_types_wrt_metric:
+        if self._elements_.whether.homogeneous_according_to_types_wrt_metric:
 
             i = self._elements_.indices[0]
             Jacobian = self._elements_[i].coordinate_transformation.Jacobian(xi, et)
@@ -80,7 +80,7 @@ class _2dCSCG_MeshElements_CT_Vectorized(FrozenOnly):
         if len(self._elements_) == 0:
             return None
 
-        if self._elements_.IS.homogeneous_according_to_types_wrt_metric:
+        if self._elements_.whether.homogeneous_according_to_types_wrt_metric:
 
             i = self._elements_.indices[0]
             inverse_Jacobian_matrix = self._elements_[i].coordinate_transformation.inverse_Jacobian_matrix(xi, et)
@@ -111,7 +111,7 @@ class _2dCSCG_MeshElements_CT_Vectorized(FrozenOnly):
         if len(self._elements_) == 0:
             return None
 
-        if self._elements_.IS.homogeneous_according_to_types_wrt_metric:
+        if self._elements_.whether.homogeneous_according_to_types_wrt_metric:
 
             i = self._elements_.indices[0]
             inverse_Jacobian = self._elements_[i].coordinate_transformation.inverse_Jacobian(xi, et)

@@ -74,7 +74,7 @@ class S1F_BI_V_Helper(FrozenOnly):
         """for ith mesh element."""
         element = self.mesh.elements[i]
 
-        if element.IS.internal:
+        if element.whether.internal:
             return self.ZeroVec
 
         else:

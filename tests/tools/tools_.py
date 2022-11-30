@@ -15,16 +15,16 @@ from time import sleep
 from scipy import sparse as spspa
 from tools.iterators.simple import SimpleIterator
 import random
-from tools.linearAlgebra.dataStructures.globalMatrix.main import GlobalMatrix
+from tools.miLinearAlgebra.dataStructures.globalMatrix.main import GlobalMatrix
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 from objects.CSCG._2d.master import MeshGenerator as MeshGenerator2D
 from objects.CSCG._2d.master import SpaceInvoker as SpaceInvoker2D
 from objects.CSCG._2d.master import FormCaller as FormCaller2D
-from tools.linearAlgebra.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
-from tools.linearAlgebra.elementwiseCache.operators.concatenate.main import bmat, concatenate
-import tools.linearAlgebra.elementwiseCache.operators.concatenate.main as mif
-from tools.linearAlgebra.linearSystem.main import LinearSystem
-from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_ColumnVector
+from tools.elementwiseCache.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
+from tools.elementwiseCache.dataStructures.operators.concatenate.main import concatenate
+from tools.elementwiseCache.dataStructures.operators.bmat.main import bmat
+from tools.miLinearAlgebra.linearSystem.main import LinearSystem
+from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_ColumnVector
 from tools.run.reader import ParallelMatrix3dInputRunner, RunnerDataReader
 from tests.objects.CSCG._3d.randObj.form_caller import random_mesh_and_space_of_total_load_around
 
@@ -168,7 +168,7 @@ def test_TOOLS_NO7_linear_algebra_EWC_test():
         blocks = ([M2  , E21],
                   [None, M1 ])
 
-        BMAT = mif.bmat(blocks)
+        BMAT = bmat(blocks)
 
         for i in BMAT:
             bi = BMAT[i]
@@ -263,7 +263,7 @@ def ___generate_random_row_major_GM___(i, j, s=None):
     A[no_empty_rows,:] = _[no_empty_rows,:]
     A = A.tocsr()
     A = GlobalMatrix(A)
-    A.IS.regularly_distributed = 'row'
+    A.whether.regularly_distributed = 'row'
     A.___PRIVATE_self_regularity_checker___()
 
     return A
@@ -299,7 +299,7 @@ def ___generate_random_col_major_GM___(i, j, s=None):
     A[:,no_empty_cols] = _[:,no_empty_cols]
     A = A.tocsc()
     A = GlobalMatrix(A)
-    A.IS.regularly_distributed = 'column'
+    A.whether.regularly_distributed = 'column'
     A.___PRIVATE_self_regularity_checker___()
 
     return A
@@ -351,8 +351,8 @@ def test_TOOLS_NO9_test_Chained_Gathering_Matrix():
         assert CGM1 != CGM2
         assert CGM2 != CGM
 
-        NUM0 = GM0.GLOBAL_num_dofs
-        NUM1 = GM1.GLOBAL_num_dofs
+        NUM0 = GM0.global_num_dofs
+        NUM1 = GM1.global_num_dofs
         for i in CGM1:
             cgm = CGM1[i]
             gm0 = GM0[i].full_vector
@@ -361,7 +361,7 @@ def test_TOOLS_NO9_test_Chained_Gathering_Matrix():
             c_g_m = np.concatenate([gm0, gm1+NUM0, gm2+NUM0+NUM1])
             np.testing.assert_array_equal(cgm, c_g_m)
 
-        assert CGM2.GLOBAL_num_dofs == GM1.GLOBAL_num_dofs + GM2.GLOBAL_num_dofs + GM3.GLOBAL_num_dofs
+        assert CGM2.global_num_dofs == GM1.global_num_dofs + GM2.global_num_dofs + GM3.global_num_dofs
 
         CGM3 = Chain_Gathering_Matrix([GM0, GM1, GM2, GM3])
         CGM4 = Chain_Gathering_Matrix([GM0, GM0, GM2, GM3])
@@ -376,9 +376,9 @@ def test_TOOLS_NO9_test_Chained_Gathering_Matrix():
         assert CGM5.mesh_type == '_3dCSCG'
         assert CGM6.mesh_type == '_3dCSCG'
 
-        assert CGM6.GLOBAL_num_dofs == GM2.GLOBAL_num_dofs
-        assert CGM0.GLOBAL_num_dofs == 2 * GM1.GLOBAL_num_dofs
-        assert CGM4.GLOBAL_num_dofs == 2 * GM0.GLOBAL_num_dofs + GM2.GLOBAL_num_dofs + GM3.GLOBAL_num_dofs
+        assert CGM6.global_num_dofs == GM2.global_num_dofs
+        assert CGM0.global_num_dofs == 2 * GM1.global_num_dofs
+        assert CGM4.global_num_dofs == 2 * GM0.global_num_dofs + GM2.global_num_dofs + GM3.global_num_dofs
 
         if RANK == MASTER_RANK:
             COMM_CHECK = random.randint(3, 5)
@@ -392,7 +392,7 @@ def test_TOOLS_NO9_test_Chained_Gathering_Matrix():
 
         gnd_S = list()
         for gm in CGM.GMs:
-            gnd_S.append(gm.GLOBAL_num_dofs)
+            gnd_S.append(gm.global_num_dofs)
 
         for i in CGM:
             cgm = CGM[i]
@@ -404,7 +404,7 @@ def test_TOOLS_NO9_test_Chained_Gathering_Matrix():
             np.testing.assert_array_equal(cgm, c_g_m)
 
 
-        GND = CGM.GLOBAL_num_dofs
+        GND = CGM.global_num_dofs
 
         n = 0
 
@@ -475,8 +475,8 @@ def test_TOOLS_NO10_test_EWC_SparseMatrix_Customize():
         M3 = f3.matrices.mass
         E32 = f2.matrices.incidence
 
-        f2_GND = f2.num.GLOBAL_dofs
-        f3_GND = f3.num.GLOBAL_dofs
+        f2_GND = f2.num.global_dofs
+        f3_GND = f3.num.global_dofs
         GND = f2_GND + f3_GND
         BMAT = [[M3, E32],[E32.T, None]]
         SYSTEM = bmat(BMAT)
@@ -538,8 +538,8 @@ def test_TOOLS_NO10_test_EWC_SparseMatrix_Customize():
         M1 = f1.matrices.mass
         E10 = f0.matrices.incidence
 
-        f0_GND = f0.num.GLOBAL_dofs
-        f1_GND = f1.num.GLOBAL_dofs
+        f0_GND = f0.num.global_dofs
+        f1_GND = f1.num.global_dofs
         GND = f0_GND + f1_GND
         BMAT = [[M1, E10],[E10.T, None]]
         SYSTEM = bmat(BMAT)
@@ -835,8 +835,8 @@ def test_TOOLS_NO12_EWC_assembling_test():
 
 def ___brutal_force_EWC_matrix_assembling___(EWC, GM0, GM1):
     """Do the brutal force assembling."""
-    N0 = GM0.GLOBAL_num_dofs
-    N1 = GM1.GLOBAL_num_dofs
+    N0 = GM0.global_num_dofs
+    N1 = GM1.global_num_dofs
 
     AM = spspa.lil_matrix((N0, N1))
     for i in EWC:
@@ -851,7 +851,7 @@ def ___brutal_force_EWC_matrix_assembling___(EWC, GM0, GM1):
     return AM
 def ___brutal_force_EWC_vector_assembling___(EWC, GM):
     """Do the brutal force assembling."""
-    N = GM.GLOBAL_num_dofs
+    N = GM.global_num_dofs
 
     A = spspa.lil_matrix((N, 1))
     for i in EWC:
@@ -912,16 +912,16 @@ def test_TOOLS_NO13_EWC_Customize_CSCG_partial_dofs():
     SYSTEM = SYSTEM.assembled
     M = SYSTEM.do.gather_M_to_core()
 
-    Gbd = f0.numbering.GLOBAL_boundary_dofs
+    Gbd = f0.numbering.global_boundary_dofs
 
     if RANK == MASTER_RANK:
         bd = list()
         for bn in BNS[0]:
             bd.extend(Gbd[bn])
 
-        bd = np.array(bd) + f1.num.GLOBAL_dofs
+        bd = np.array(bd) + f1.num.global_dofs
 
-        for i in range(f1.num.GLOBAL_dofs + f0.num.GLOBAL_dofs):
+        for i in range(f1.num.global_dofs + f0.num.global_dofs):
             if i in bd:
                 assert M[i].nnz == 1, f"M[i].nnz={M[i].nnz}"
             else:
@@ -958,14 +958,14 @@ def test_TOOLS_NO13_EWC_Customize_CSCG_partial_dofs():
     SYSTEM = SYSTEM.assembled
     M = SYSTEM.do.gather_M_to_core()
 
-    Gbd_f2 = f2.numbering.GLOBAL_boundary_dofs
+    Gbd_f2 = f2.numbering.global_boundary_dofs
 
     if RANK == MASTER_RANK:
         bdf2 = list()
         for bn in BNS[2]:
             bdf2.extend(Gbd_f2[bn])
 
-        bdf2 = np.array(bdf2) + f3.num.GLOBAL_dofs
+        bdf2 = np.array(bdf2) + f3.num.global_dofs
 
         for i in bdf2:
             assert M[i].nnz == 1, f"M[i].nnz={M[i].nnz}"
@@ -1013,7 +1013,7 @@ def test_TOOLS_NO13_EWC_Customize_CSCG_partial_dofs():
             gt = AT2[e]
             gf = AF2[e]
 
-            gt = gt + f2.num.GLOBAL_dofs + f3.num.GLOBAL_dofs
+            gt = gt + f2.num.global_dofs + f3.num.global_dofs
 
             for i, j in zip(gt, gf):
                 assert M[i].nnz == 1 and M[i,j] == 1
@@ -1233,7 +1233,7 @@ def test_TOOLS_NO14_partial_cochain_with_3dCSCG_form_BC():
         ALL = list()
         for e in At2:
             ALL.extend(At2[e])
-        ALL = np.array(ALL) + f0.num.GLOBAL_dofs + f2.num.GLOBAL_dofs
+        ALL = np.array(ALL) + f0.num.global_dofs + f2.num.global_dofs
 
         for i, bi in enumerate(B):
             if i in ALL:
@@ -1258,7 +1258,7 @@ def test_TOOLS_NO14_partial_cochain_with_3dCSCG_form_BC():
     B = b.assembled
     B = B.do.gather_V_to_core()
     if RANK == MASTER_RANK:
-        ALL = ALL - f0.num.GLOBAL_dofs - f2.num.GLOBAL_dofs
+        ALL = ALL - f0.num.global_dofs - f2.num.global_dofs
         for i, bi in enumerate(B):
             if i in ALL:
                 assert bi == -2.1415
@@ -1355,15 +1355,15 @@ def test_TOOLS_NO15_linear_system_apply_BC():
 
     GM_t2 = t2.numbering.gathering
 
-    t2GBD = t2.numbering.GLOBAL_boundary_dofs
+    t2GBD = t2.numbering.global_boundary_dofs
     if RANK == MASTER_RANK:
 
 
         dofs_changed = list() # the rows that been changed in the global matrix.
         for bn in BNS:
             dofs_changed.extend(t2GBD[bn])
-        dofs_changed = np.array(dofs_changed) + f2.num.GLOBAL_dofs \
-                       + f3.num.GLOBAL_dofs
+        dofs_changed = np.array(dofs_changed) + f2.num.global_dofs \
+                       + f3.num.global_dofs
         for i in dofs_changed:
             assert aA[i].nnz == 1 and aA[i,i] == 1 and ab[i] != 0
 
@@ -1378,7 +1378,7 @@ def test_TOOLS_NO15_linear_system_apply_BC():
         ab_SUB = ab[NOT_changed]
         assert np.all(ab_SUB==0), f"not change places must be all zero!"
         aA_SUB = aA[NOT_changed,:]
-        aA_SUB = aA_SUB[f2.num.GLOBAL_dofs:, f2.num.GLOBAL_dofs:]
+        aA_SUB = aA_SUB[f2.num.global_dofs:, f2.num.global_dofs:]
         assert aA_SUB.nnz == 0, f"not change places must be all zero!"
 
 
@@ -1396,7 +1396,7 @@ def test_TOOLS_NO15_linear_system_apply_BC():
 
         for e in AT2:
             gt = AT2[e]
-            gt = gt + f2.num.GLOBAL_dofs + f3.num.GLOBAL_dofs
+            gt = gt + f2.num.global_dofs + f3.num.global_dofs
 
             for i in gt:
                 assert aA[i].nnz == 1 and aA[i,i] == 1 and ab[i] != 0
@@ -1416,7 +1416,7 @@ def test_TOOLS_NO15_linear_system_apply_BC():
         ab = ab[not_changed]
         assert np.all(ab==0), f"not change places must be all zero!"
         aA = aA[not_changed,:]
-        aA = aA[f2.num.GLOBAL_dofs:, f2.num.GLOBAL_dofs:]
+        aA = aA[f2.num.global_dofs:, f2.num.global_dofs:]
         assert aA.nnz == 0, f"not change places must be all zero!"
 
     t2.BC.CF = None
@@ -1440,14 +1440,14 @@ def test_TOOLS_NO15_linear_system_apply_BC():
         dofs_changed = list() # the rows that been changed in the global matrix.
         for bn in t2GBD: # all the boundary dofs.
             dofs_changed.extend(t2GBD[bn])
-        dofs_changed = np.array(dofs_changed) + f2.num.GLOBAL_dofs \
-                       + f3.num.GLOBAL_dofs
+        dofs_changed = np.array(dofs_changed) + f2.num.global_dofs \
+                       + f3.num.global_dofs
 
         dofs_changed_2 = list() # the rows that been changed in the global matrix in the second apply_strong_BC
         for bn in BNS_com: # all the boundary dofs.
             dofs_changed_2.extend(t2GBD[bn])
-        dofs_changed_2 = np.array(dofs_changed_2) + f2.num.GLOBAL_dofs \
-                       + f3.num.GLOBAL_dofs
+        dofs_changed_2 = np.array(dofs_changed_2) + f2.num.global_dofs \
+                       + f3.num.global_dofs
 
         for i in dofs_changed:
             assert aA[i].nnz == 1 and ab[i] != 0
@@ -1465,7 +1465,7 @@ def test_TOOLS_NO15_linear_system_apply_BC():
         ab_SUB = ab[NOT_changed]
         assert np.all(ab_SUB==0), f"not change places must be all zero!"
         aA_SUB = aA[NOT_changed,:]
-        aA_SUB = aA_SUB[f2.num.GLOBAL_dofs:, f2.num.GLOBAL_dofs:]
+        aA_SUB = aA_SUB[f2.num.global_dofs:, f2.num.global_dofs:]
         assert aA_SUB.nnz == 0, f"not change places must be all zero!"
 
         # noinspection PyUnboundLocalVariable
@@ -1490,7 +1490,7 @@ def test_TOOLS_NO15_linear_system_apply_BC():
         for e in AT2:
             gt = AT2[e]
             gf = AF2[e]
-            gt = gt + f2.num.GLOBAL_dofs + f3.num.GLOBAL_dofs
+            gt = gt + f2.num.global_dofs + f3.num.global_dofs
             for i, j in zip(gt, gf):
                 assert aA[i].nnz == 1 and aA[i,j] == 1 and ab[i] != 0
                 assert i not in NOT_changed, f"dof #{i} must be changed"

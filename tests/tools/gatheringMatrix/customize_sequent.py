@@ -10,7 +10,7 @@ if './' not in sys.path: sys.path.append('./')
 
 from components.freeze.base import FrozenOnly
 from components.miscellaneous.miprint import miprint
-from tools.linearAlgebra.gathering.chain import GatheringMatrixChaining
+from tools.elementwiseCache.gathering.chain import GatheringMatrixChaining
 from __init__ import miTri, tools
 import numpy as np
 from root.config.main import RANK, MASTER_RANK
@@ -64,7 +64,7 @@ class CustomizeSequent(FrozenOnly):
              [None, None, M1o , None],
              [None, None, None, M2  ])
 
-        A = tools.linalg.bmat(A)
+        A = tools.ewc.bmat(A)
         A.assembler.chain_method = 'sequent'
         A.gathering_matrices = (CGM, CGM)
 

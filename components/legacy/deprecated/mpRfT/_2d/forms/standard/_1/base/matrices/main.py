@@ -9,7 +9,7 @@ import sys
 if './' not in sys.path: sys.path.append('/')
 
 from components.freeze.base import FrozenOnly
-from tools.linearAlgebra.elementwiseCache.objects.sparseMatrix.main import EWC_SparseMatrix
+from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
 from objects.mpRfT._2d.forms.standard._1.base.matrices.helpers.inner_mass import InnerMassMatrixGenerator
 from objects.mpRfT._2d.forms.standard._1.base.matrices.helpers.outer_mass import OuterMassMatrixGenerator
 

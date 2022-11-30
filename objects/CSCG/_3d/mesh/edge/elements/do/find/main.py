@@ -99,7 +99,7 @@ class _3dCSCG_Edge_Elements_DO_FIND(FrozenOnly):
 
         """
         if i in self._elements_:
-            on_mesh_boundary = self._elements_[i].IS.on_mesh_boundary
+            on_mesh_boundary = self._elements_[i].whether.on_mesh_boundary
         else:
             on_mesh_boundary = False
 

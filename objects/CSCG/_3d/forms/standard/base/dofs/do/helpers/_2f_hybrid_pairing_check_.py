@@ -30,8 +30,8 @@ def _2f_hybrid_pairing_check_(sf, adt, T, D, b):
     Da = Da.do.gather_M_to_core()
     ba = ba.do.gather_V_to_core()
 
-    tGB_dofs = adt.prime.numbering.GLOBAL_boundary_dofs
-    sGB_dofs = sf.numbering.GLOBAL_boundary_dofs
+    tGB_dofs = adt.prime.numbering.global_boundary_dofs
+    sGB_dofs = sf.numbering.global_boundary_dofs
 
     if RANK == MASTER_RANK:
         Ta = Ta.tocsr() # just in case

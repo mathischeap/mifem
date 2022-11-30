@@ -104,10 +104,10 @@ class _3dCSCG_2Trace_Discretize_StandardVector(FrozenOnly):
 
         if target == 'func':
             assert SELF.CF is not None, f"No func.body!"
-            _lf0_, _lf1_, _lf2_ = SELF.CF.___DO_evaluate_func_at_time___()
+            _lf0_, _lf1_, _lf2_ = SELF.CF.do.evaluate_func_at_time()
         elif target == 'BC':
             assert SELF.BC.CF is not None, f"No BC.body!"
-            _lf0_, _lf1_, _lf2_ = SELF.BC.CF.___DO_evaluate_func_at_time___()
+            _lf0_, _lf1_, _lf2_ = SELF.BC.CF.do.evaluate_func_at_time()
         else:
             raise NotImplementedError(f"Not applicable for target={target}.")
 

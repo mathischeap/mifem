@@ -3,7 +3,7 @@
 
 from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.node.elements.element.coordinate_transformation import _3dCSCG_Node_Element_CT
-from objects.CSCG._3d.mesh.node.elements.element.IS import _3dCSCG_NodeElement_IS
+from objects.CSCG._3d.mesh.node.elements.element.whether import _3dCSCG_NodeElement_Whether
 from objects.CSCG._3d.mesh.node.elements.element.helpers.parse_boundary_position_indicator import \
     parse_boundary_position_indicator
 
@@ -19,7 +19,7 @@ class _3dCSCG_Node_Element(FrozenOnly):
         self._cp_ = None
         self._ce_ = None
         self._cc_ = None
-        self._IS_ = None
+        self._whether_ = None
         self._freeze_self_()
 
     @property
@@ -43,7 +43,7 @@ class _3dCSCG_Node_Element(FrozenOnly):
             Else, we will use function parse_boundary_position_indicator to parse the indicator.
 
         """
-        if not self.IS.on_mesh_boundary:
+        if not self.whether.on_mesh_boundary:
             return None
 
         # ----------- this node-element is no mesh-element -------------------------
@@ -59,10 +59,10 @@ class _3dCSCG_Node_Element(FrozenOnly):
         return self._ct_
 
     @property
-    def IS(self):
-        if self._IS_ is None:
-            self._IS_ = _3dCSCG_NodeElement_IS(self)
-        return self._IS_
+    def whether(self):
+        if self._whether_ is None:
+            self._whether_ = _3dCSCG_NodeElement_Whether(self)
+        return self._whether_
 
 
     @property

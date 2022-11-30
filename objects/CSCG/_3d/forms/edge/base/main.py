@@ -31,13 +31,13 @@ class _3dCSCG_Edge(_3dCSCG_FORM_BASE, ndim=3):
     :param str name:
     """
     def __init__(self, mesh, space, orientation, numbering_parameters, name):
-        super().__init__(mesh, space)
+        super().__init__(mesh, space, name)
         self._NUM_basis_, self._NUM_basis_components_ = \
             getattr(self.space.num_basis, self.__class__.__name__)
         assert orientation in ('inner', 'outer'), " orientation needs to be 'inner' or 'outer'."
         self._orientation_ = orientation
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_edge_form')
-        self.standard_properties.name = name
+
         self._numbering_ = _3dCSCG_Edge_Numbering(self, numbering_parameters)
 
         self._matrices_ = None
@@ -50,9 +50,6 @@ class _3dCSCG_Edge(_3dCSCG_FORM_BASE, ndim=3):
 
     def __repr__(self):
         return f"3dCSCG>{self.k}EdgeForm>{self.standard_properties.name}:{id(self)}"
-
-    def RESET_cache(self):
-        """"""
 
     @property
     def orientation(self):

@@ -43,11 +43,6 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
         self._numbering_parameters_ = {'scheme_name': self._scheme_name_}
         self._numbering_parameters_.update(self._parameters_)
         self._DO_ = _3dCSCG_Standard_Form_Numbering_DO_(self)
-        self.___PRIVATE_reset_cache___()
-        self._freeze_self_()
-
-    def ___PRIVATE_reset_cache___(self):
-        """"""
         self._local_ = None
         self._gathering_ = None
         self._boundary_dofs_ = None
@@ -56,6 +51,7 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
         self._localSideCache0_ = None
         self._localSideCache1_ = None
         self._localSideCache2_ = None
+        self._freeze_self_()
 
     def ___PRIVATE_do_numbering___(self):
         """"""
@@ -132,7 +128,7 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
         return self._boundary_dofs_
 
     @property
-    def GLOBAL_boundary_dofs(self):
+    def global_boundary_dofs(self):
         """"""
         LOCAL = self.boundary_dofs
         if self._sf_.k == 3:
@@ -161,9 +157,9 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
             return COMM.bcast(BD, root=MASTER_RANK)
 
     @property
-    def GLOBAL_boundary_dofs_ravel(self):
+    def global_boundary_dofs_ravel(self):
         """Regardless to boundary names; collection of all boundary dofs in one set."""
-        GLOBAL_boundary_dofs = self.GLOBAL_boundary_dofs
+        GLOBAL_boundary_dofs = self.global_boundary_dofs
         RAVEL = set()
         for bn in GLOBAL_boundary_dofs:
             RAVEL.update(GLOBAL_boundary_dofs[bn])
@@ -182,7 +178,7 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
         calling this property will be extremely expensive.
 
         """
-        if self._sf_.IS.hybrid is False: # for non-hybrid forms, no dofs are at the same location.
+        if self._sf_.whether.hybrid is False: # for non-hybrid forms, no dofs are at the same location.
             return list()
         else:
             if self._sf_.k == 3: # a volume form, return empty list
@@ -232,7 +228,7 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
         :param side_name:
         :return:
         """
-        assert self._sf_.num.basis == GM.GLOBAL_shape[1]
+        assert self._sf_.num.basis == GM.global_shape[1]
         if self._localSideCache0_ is None: self._localSideCache0_ = dict()
         if side_name not in self._localSideCache0_:
             if   side_name == 'N': indices = self.local[0][ 0, :, :]
@@ -253,7 +249,7 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
         :param side_name:
         :return:
         """
-        assert self._sf_.num.basis == GM.GLOBAL_shape[1]
+        assert self._sf_.num.basis == GM.global_shape[1]
         if self._localSideCache1_ is None: self._localSideCache1_ = dict()
         if side_name not in self._localSideCache1_:
             if   side_name == 'N':
@@ -288,7 +284,7 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
         :param side_name:
         :return:
         """
-        assert self._sf_.num.basis == GM.GLOBAL_shape[1]
+        assert self._sf_.num.basis == GM.global_shape[1]
         if self._localSideCache2_ is None: self._localSideCache2_ = dict()
         if side_name not in self._localSideCache2_:
             if   side_name == 'N': indices = self.local[0][ 0, :, :]

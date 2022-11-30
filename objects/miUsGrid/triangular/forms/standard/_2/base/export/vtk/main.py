@@ -80,6 +80,7 @@ class miUsTriangular_S2F_Export_VTK(FrozenOnly):
                 y[gathering[e,:]] = _y[global_indices]
                 _rc = Rc[e][0]
                 v[gathering[e,:]] = _rc[global_indices]
+                # do not change z to _rc !
 
             pointData = {
                 f'{self._sf_.name}': v
@@ -147,6 +148,7 @@ class miUsTriangular_S2F_Export_VTK(FrozenOnly):
                 y[gathering[e,:]] = _y[global_indices]
                 _rc = Rc[e][0]
                 v[gathering[e,:]] = _rc[global_indices]
+                # do not change z to _rc !
 
             pointData = {
                 f'{self._sf_.name}': v
@@ -164,7 +166,7 @@ class miUsTriangular_S2F_Export_VTK(FrozenOnly):
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/miUsGrid/triangular/forms/standard/_2/base/export/vtk/main.py
     from __init__ import miTri
-    fc = miTri.form('st32', 3)
+    fc = miTri.call('st32', 3)
 
     def p_func(t, x, y): return np.sin(2*np.pi*x) * np.cos(2*np.pi*y) + t
 

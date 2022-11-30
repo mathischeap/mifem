@@ -32,13 +32,8 @@ class _3dCSCG_0Edge(_3dCSCG_Edge, ABC):
         super().__init__(mesh, space, orientation, numbering_parameters, name)
         self._k_ = 0
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_edge_0form')
-        self.RESET_cache()
         self._discretize_ = _3dCSCG_Edge0Form_Discretize(self)
         self._freeze_self_()
-
-
-    def RESET_cache(self):
-        super().RESET_cache()
 
 
     def ___Pr_check_CF___(self, func_body):

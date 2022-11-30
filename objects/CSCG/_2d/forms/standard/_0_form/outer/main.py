@@ -32,7 +32,6 @@ class _2dCSCG_0Form_Outer(_0Form_BASE):
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_0form')
         self._special_ = _0Form_Outer_Special(self)
         self._BI_ = _2dCSCG_Outer_S0Form_BI(self)
-        self.RESET_cache()
         self._freeze_self_()
 
     @property

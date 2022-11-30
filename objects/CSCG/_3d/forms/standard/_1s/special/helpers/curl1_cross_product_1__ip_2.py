@@ -34,7 +34,7 @@ class ___3dCSCG_curl1_CrossProduct_1__ip_2___(FrozenOnly):
         assert u.k+1 == e.k == 2, " <___3dCSCG_curl1_CrossProduct_1__ip_2___> "
         assert u.mesh == e.mesh, "___3dCSCG_curl1_CrossProduct_1__ip_2___: Meshes do not match."
 
-        w = _3dCSCG_2Form(u.mesh, u.space, is_hybrid=u.IS.hybrid)
+        w = _3dCSCG_2Form(u.mesh, u.space, is_hybrid=u.whether.hybrid)
 
         if quad_degree is None:
             quad_degree = [int(np.max([u.dqp[i], e.dqp[i]])) * 2 for i in range(3)]

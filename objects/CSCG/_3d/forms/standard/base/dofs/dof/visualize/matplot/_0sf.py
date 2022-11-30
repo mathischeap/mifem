@@ -15,7 +15,7 @@ class _3dCSCG_SF_DOF_VISUALIZE_matplot_0SF(FrozenOnly):
 
     def __call__(self, *args, **kwargs):
         """We plot this dof of a standard 0-form."""
-        if self._sf_.IS.hybrid:
+        if self._sf_.whether.hybrid:
             return self.___PRIVATE_matplot_dof_k_form_IS_hybrid__(*args, **kwargs)
         else:
             return self.___PRIVATE_matplot_dof_0form_IS_NOT_hybrid__(*args, **kwargs)

@@ -49,7 +49,7 @@ class OnTraceElement_BoundaryWise(FrozenOnly):
         for I in INDICES:
 
             te = SELF.mesh.trace.elements[I]
-            assert te.IS.on_mesh_boundary, f"must be the case because ftype == 'boundary-wise!"
+            assert te.whether.on_mesh_boundary, f"must be the case because ftype == 'boundary-wise!"
 
 
             if te.normal_direction == 'UD':
