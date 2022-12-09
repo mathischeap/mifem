@@ -6,8 +6,7 @@
 """
 from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.forms.localTrace._2ltf.discretize.scalar.standard import _3dCSCG_2ltf_Discretize_Standard
-
-
+from objects.CSCG._3d.forms.localTrace._2ltf.discretize.scalar.boundary_wise import _3dCSCG_2LocalTrace_DiscretizeBoundaryWise
 
 class _3dCSCG_2LocalTrace_Discretize(FrozenOnly):
     """"""
@@ -16,6 +15,7 @@ class _3dCSCG_2LocalTrace_Discretize(FrozenOnly):
         """"""
         self._ltf_ = ltf
         self._standard_ = _3dCSCG_2ltf_Discretize_Standard(ltf)
+        self._boundary_wise_ = _3dCSCG_2LocalTrace_DiscretizeBoundaryWise(ltf)
         self._freeze_self_()
 
     def __call__(self, update_cochain=True, target='func'):
@@ -36,6 +36,8 @@ class _3dCSCG_2LocalTrace_Discretize(FrozenOnly):
             if SELF.CF.__class__.__name__ == '_3dCSCG_ScalarField':
                 if SELF.CF.ftype == 'standard':
                     return self._standard_(update_cochain=update_cochain, target='func')
+                elif SELF.CF.ftype == 'boundary-wise':
+                    return self._boundary_wise_(update_cochain=update_cochain, target='func')
                 else:
                     raise NotImplementedError(f"3dCSCG 2-ltf cannot (target func) discretize "
                                               f"_3dCSCG_ScalarField of ftype={SELF.CF.ftype}")
@@ -49,7 +51,8 @@ class _3dCSCG_2LocalTrace_Discretize(FrozenOnly):
                 if SELF.BC.CF.ftype == 'standard':
                     # always do not update cochain & and target always be "BC"
                     return self._standard_(update_cochain=False, target='BC')
-
+                elif SELF.BC.CF.ftype == 'boundary-wise':
+                    return self._boundary_wise_(update_cochain=False, target='BC')
                 else:
                     raise NotImplementedError(f"3dCSCG 2-ltf cannot (target BC) discretize "
                                               f"_3dCSCG_ScalarField of ftype={SELF.BC.CF.ftype}")

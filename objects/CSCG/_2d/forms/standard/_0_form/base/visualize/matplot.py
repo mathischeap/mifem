@@ -86,7 +86,7 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
         :param plot_type: {'contour', 'contourf'}
         :return:
         """
-        density = int(np.ceil(np.sqrt(density / self._mesh_.elements.GLOBAL_num)))
+        density = int(np.ceil(np.sqrt(density / self._mesh_.elements.global_num)))
 
         rs = list()
         for _ in range(self._sf_.ndim):

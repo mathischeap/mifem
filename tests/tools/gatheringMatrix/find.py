@@ -43,10 +43,10 @@ def test_GatheringMatrix_find():
     for rc in RC:
         FC = rc(load, exclude_periodic=True)
         if FC._mesh_.ndim == 2:
-            f = FC('0-f-o', is_hybrid=False, name='vorticity')
+            f = FC('0-f-o', hybrid=False, name='vorticity')
             scalar = FC('scalar', func2)
         else:
-            f = FC('0-f', is_hybrid=False, name='vorticity')
+            f = FC('0-f', hybrid=False, name='vorticity')
             scalar = FC('scalar', func3)
 
         f.CF = scalar

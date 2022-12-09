@@ -66,7 +66,7 @@ class Call(FrozenOnly):
             miprint(f"   Mesh name: {mesh_name}")
         self._mesh_ = miUsGrid_TriangularMesh(mesh_source_or_ID, boundaries, name=mesh_name)
         if show_info:
-            miprint(f"   Total elements: {self._mesh_.elements.num.GLOBAL_cells}")
+            miprint(f"   Total elements: {self._mesh_.elements.num.global_cells}")
         self._space_ = miUsGrid_TriangularFunctionSpace(p)
         if show_info:
             miprint(f"   Polynomial degree: {self._space_.p}")

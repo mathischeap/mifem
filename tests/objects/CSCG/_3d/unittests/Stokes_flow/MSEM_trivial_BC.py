@@ -26,10 +26,10 @@ def test_Stokes_MSEM_trivial_BC():
     FC = FormCaller(mesh, space)
     es = ExactSolutionSelector(mesh)('Stokes:sincos1')
 
-    w = FC('1-f', is_hybrid=False, name='vorticity')
-    u = FC('2-f', is_hybrid=False, name='velocity')
-    p = FC('3-f', is_hybrid=False, name='pressure')
-    f = FC('2-f', is_hybrid=False, name='body_force')
+    w = FC('1-f', hybrid=False, name='vorticity')
+    u = FC('2-f', hybrid=False, name='velocity')
+    p = FC('3-f', hybrid=False, name='pressure')
+    f = FC('2-f', hybrid=False, name='body_force')
 
     w.CF = es.vorticity
     u.CF = es.velocity

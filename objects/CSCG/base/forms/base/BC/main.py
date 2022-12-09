@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
-# from objects.CSCG.base.forms.base.BC.partial_cochain.main import PartialCochain
-# from objects.CSCG.base.forms.base.BC.partial_cochain.partial_dofs.main import PartialDofs
-
-
 from components.freeze.base import FrozenOnly
 from objects.CSCG.base.forms.base.BC.interpret.main import CSCG_FORM_BC_Interpret
-
 
 class CSCG_Form_BC(FrozenOnly):
     def __init__(self, f):
@@ -13,7 +8,7 @@ class CSCG_Form_BC(FrozenOnly):
         self._CF_ = None
         self._boundaries_ = None
         self._involved_element_parts_ = None
-        self._interpret_ = CSCG_FORM_BC_Interpret(f)
+        self._interpret_ = None
         self._freeze_self_()
 
     @property
@@ -27,6 +22,7 @@ class CSCG_Form_BC(FrozenOnly):
         else:
             self._f_.___Pr_check_BC_CF___(cf)
             self._CF_ = cf
+        self._interpret_ = None
 
     @property
     def boundaries(self):
@@ -46,9 +42,8 @@ class CSCG_Form_BC(FrozenOnly):
         for i, bn in enumerate(bns):
             assert bn in BNS, f"boundary names [{i}] = {bn} is not a valid boundary name."
         self.___Pr_parse_involved_element_parts___(bns)
-        self.interpret.RESET_cache() # reset current interpretations.
+        self._interpret_ = None
         self._boundaries_ = bns
-
 
     def ___Pr_parse_involved_element_parts___(self, bns):
         """"""
@@ -66,4 +61,6 @@ class CSCG_Form_BC(FrozenOnly):
 
     @property
     def interpret(self):
+        if self._interpret_ is None:
+            self._interpret_ = CSCG_FORM_BC_Interpret(self._f_)
         return self._interpret_

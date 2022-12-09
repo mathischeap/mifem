@@ -6,20 +6,16 @@
          TU Delft, Delft, Netherlands
 
 """
-
 from root.config.main import *
 from components.freeze.main import FrozenOnly
 from tools.elementwiseCache.gathering.regular.chain_matrix.main import \
     Gathering_Matrix, Gathering_Vector
-
-
 
 class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
         self._mesh_ = sf.mesh
         self._freeze_self_()
-
 
     def _3dCSCG_0Form(self):
         """Do the numbering if it is a standard 0-form.
@@ -87,7 +83,6 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
             raise NotImplementedError()
 
 
-
     def _3Form_no_parameters(self):
         """Do the numbering if it is a standard 3-form.
 
@@ -106,7 +101,6 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         gathering_matrix = Gathering_Matrix(gathering_matrix, mesh_type='_3dCSCG')
         numOfDofs = numOfBasis * element_num
         return gathering_matrix, numOfDofs, extraInfo
-
 
 
     def _2Form_no_parameters(self):
@@ -253,7 +247,6 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         elif toSide == 'B': numberingCache[toElement][2][ :, :, 0] = data
         elif toSide == 'F': numberingCache[toElement][2][ :, :,-1] = data
         else: raise Exception()
-
 
 
     def _1Form_no_parameters(self):
@@ -428,7 +421,6 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
             numberingCache[toElement][0][ :, :,-1] = data0
             numberingCache[toElement][1][ :, :,-1] = data1
         else: raise Exception()
-
 
 
     def _0Form_no_parameters(self):
@@ -640,13 +632,3 @@ class _3dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         numOfDofs = len(dofsPOOL)
 
         return new_gathering_matrix, numOfDofs, extraInfo
-
-
-
-
-
-
-
-if __name__ == '__main__':
-    #
-    pass

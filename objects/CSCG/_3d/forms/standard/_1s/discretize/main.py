@@ -4,7 +4,6 @@ from components.freeze.base import FrozenOnly
 from objects.CSCG._3d.forms.standard._1s.discretize.vector.boundary_wise import _3dCSCG_Discretize_BoundaryWise
 from objects.CSCG._3d.forms.standard._1s.discretize.vector.standard import _3dCSCG_Discretize_Standard
 
-
 class _3dCSCG_Discretize(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf

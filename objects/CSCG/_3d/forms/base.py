@@ -16,7 +16,6 @@ import numpy as np
 from functools import lru_cache
 from objects.CSCG.base.forms.base.main import CSCG_FORM_BASE
 
-
 # noinspection PyAbstractClass
 class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
     """
@@ -43,9 +42,6 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
             return self.p
         else:
             raise NotImplementedError()
-
-
-
 
     def __neg__(self):
         """"""
@@ -281,13 +277,6 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
             raise Exception()
 
         return X, Y, Z
-
-
-
-
-
-
-
 
 if __name__ == '__main__':
     # mpiexec -n 4 python _3dCSCG\forms\base.py

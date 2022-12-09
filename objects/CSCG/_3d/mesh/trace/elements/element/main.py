@@ -208,7 +208,7 @@ if __name__ == '__main__':
 
     # print(te0.IS_on_periodic_boundary)
 
-    for i in range(mesh.trace.elements.GLOBAL_num):
+    for i in range(mesh.trace.elements.global_num):
         if i in mesh.trace.elements:
             te = mesh.trace.elements[i]
 

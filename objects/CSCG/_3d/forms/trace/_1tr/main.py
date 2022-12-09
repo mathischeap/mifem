@@ -25,13 +25,14 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
 
     :param mesh:
     :param space:
+    :param hybrid:
     :param orientation:
     :param numbering_parameters:
     :param name:
     """
-    def __init__(self, mesh, space, orientation='outer',
+    def __init__(self, mesh, space, hybrid=True, orientation='outer',
         numbering_parameters='Naive', name='outer-oriented-1-trace-form'):
-        super().__init__(mesh, space, orientation, numbering_parameters, name)
+        super().__init__(mesh, space, hybrid, orientation, numbering_parameters, name)
         self._k_ = 1
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_trace_1form')
         self._discretize_ = _3dCSCG_1Trace_Discretize(self)
@@ -71,9 +72,8 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
         return self._discretize_
 
 
-    def reconstruct(self, xi, eta, sigma, ravel=False, i=None):
-        """
-        Do the reconstruction.
+    def reconstruct(self, xi, eta, sigma, ravel=False, trace_element_range=None):
+        """Do the reconstruction. The results are trace-element-wise.
 
         :param xi: A 1d iterable object of floats between -1 and 1.
         :param eta: A 1d iterable object of floats between -1 and 1.
@@ -82,18 +82,18 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
         :type xi: list, tuple, numpy.ndarray
         :type eta: list, tuple, numpy.ndarray
         :type sigma: list, tuple, numpy.ndarray
-        :param i: (`default`:``None``) Do the reconstruction for these
+        :param trace_element_range: (`default`:``None``) Do the reconstruction for these
             trace elements. if it is ``None``, then do it for all trace
             elements.
-        :type i: int, None, list, tuple
+        :type trace_element_range: int, None, list, tuple
         """
-        if i is None:
+        if trace_element_range is None:
             indices = self.mesh.trace.elements._elements_.keys()
         else:
-            if not isinstance(i, (list, tuple)):
-                indices = [i,]
+            if not isinstance(trace_element_range, (list, tuple)):
+                indices = [trace_element_range,]
             else:
-                indices = i
+                indices = trace_element_range
 
         px, py, pz = self.p
         # N, S trace element
@@ -247,23 +247,13 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
         return MD
 
 
-
-
-
-
-
-
-
-
-
-
 if __name__ == '__main__':
-    # mpiexec -n 5 python objects\CSCG\_3d\forms\trace\_1_trace\main.py
+    # mpiexec -n 5 python objects/CSCG/_3d/forms/trace/_1tr/main.py
 
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
-    mesh = MeshGenerator('crazy', c=0.0)([3,3,3])
-    space = SpaceInvoker('polynomials')([('Lobatto',4), ('Lobatto',4), ('Lobatto',4)])
+    mesh = MeshGenerator('ct', c=0.1)([3,3,2])
+    space = SpaceInvoker('polynomials')([('Lobatto',4), ('Lobatto',5), ('Lobatto',6)])
     FC = FormCaller(mesh, space)
 
     def u(t, x, y, z): return t + np.sin(2*np.pi*x) * np.cos(np.pi*y) * np.cos(2*np.pi*z)
@@ -274,11 +264,10 @@ if __name__ == '__main__':
     # def w(t, x, y, z): return 0.25 + 0*x
     V = FC('vector', (u,v,w))
 
-    t1 = FC('1-t')
+    t1 = FC('1-t', hybrid=False)
 
-    t1.TW.func.do.set_func_body_as(V)
-    t1.TW.current_time = 0
-    t1.TW.do.push_all_to_instant()
+    t1.CF = V
+    t1.CF.current_time = 0
 
     t1.discretize()
 

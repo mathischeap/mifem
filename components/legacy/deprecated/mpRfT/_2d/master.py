@@ -75,7 +75,7 @@ class MeshGenerator(FrozenOnly):
                 print( "   <cscg element_layout input>: {}...".format(str_element_layout[:40]))
             for rn in cscg.elements.layout:
                 print(f"   <cscg element_layout>: {rn} {cscg.elements.layout[rn]}")
-            print(f"   <total cscg base elements>: {cscg.elements.GLOBAL_num}", flush=True)
+            print(f"   <total cscg base elements>: {cscg.elements.global_num}", flush=True)
 
         #------- use the 2d cscg base mesh to make the 2d nCSCG RF2 mesh -----------------------
         mesh = mpRfT2_Mesh(cscg, dN, rfd)

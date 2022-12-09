@@ -76,7 +76,7 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Coboundary(FrozenOnly):
         next_prime_form_class = getattr(import_module(next_prime_form_Path), next_prime_form_Name)
         next_prime_form_Instance = next_prime_form_class(
             self._dsf_.mesh, self._dsf_.space,
-            is_hybrid = self._dsf_.prime.whether.hybrid,
+            hybrid = self._dsf_.prime.whether.hybrid,
             orientation = self._dsf_.orientation,
             numbering_parameters = self._dsf_.prime.numbering._numbering_parameters_,
             name = 'prime-of-dual_operator(' + self._dsf_.standard_properties.name + ')'

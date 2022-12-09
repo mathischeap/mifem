@@ -1,6 +1,4 @@
-
 # -*- coding: utf-8 -*-
-
 import sys
 if './' not in sys.path: sys.path.append('./')
 
@@ -15,14 +13,14 @@ class _3dCSCG_SF0_reconstruct(_3dCSCG_SF_Reconstruct):
         super(_3dCSCG_SF0_reconstruct, self).__init__(sf)
         self._freeze_self_()
 
-    def __call__(self, xi, eta, sigma, ravel=False, i=None, regions=None, vectorized=False, value_only=False):
+    def __call__(self, xi, eta, sigma, ravel=False, element_range=None, regions=None, vectorized=False, value_only=False):
         """
 
         :param xi:
         :param eta:
         :param sigma:
         :param ravel:
-        :param i:
+        :param element_range:
             In which elements we do the reconstruction?
         :param regions: Higher priority than input i.
         :param vectorized:
@@ -34,14 +32,14 @@ class _3dCSCG_SF0_reconstruct(_3dCSCG_SF_Reconstruct):
 
         xietasigma, basis = f.do.evaluate_basis_at_meshgrid(xi, eta, sigma)
 
-        # ---- parse INDICES ----------------------------------------------------------------------
+        # ---- parse INDICES -----------------------------------------------------------
         if regions is None:
-            if i is None:
+            if element_range is None:
                 INDICES = mesh.elements.indices
-            elif isinstance(i, int):
-                INDICES = [i, ]
+            elif isinstance(element_range, int):
+                INDICES = [element_range,]
             else:
-                raise Exception()
+                INDICES = element_range
         else:
             if regions == 'all':
                 regions = mesh.domain.regions
@@ -60,11 +58,12 @@ class _3dCSCG_SF0_reconstruct(_3dCSCG_SF_Reconstruct):
                 if ri in regions:
                     INDICES.append(i)
 
-        # ----------- vectorized reconstruction --------------------------------------------------
+        # ----------- vectorized reconstruction ----------------------------------------
         if vectorized:
 
-            assert INDICES == mesh.elements.indices, f"currently, vectorized computation only works" \
-                                                          f"for full reconstruction."
+            assert INDICES == mesh.elements.indices, \
+                f"currently, vectorized computation only works " \
+                f"for full reconstruction."
             if len(INDICES) > 0:
                 v = np.einsum('ij, ki -> kj', basis[0], f.cochain.array, optimize='greedy')
 
@@ -81,7 +80,7 @@ class _3dCSCG_SF0_reconstruct(_3dCSCG_SF_Reconstruct):
             else:
                 raise Exception()
 
-        #------- non-vectorized -------------------------------------------------------------------
+        #------- non-vectorized --------------------------------------------------------
         else:
 
             if value_only:
@@ -103,7 +102,6 @@ class _3dCSCG_SF0_reconstruct(_3dCSCG_SF_Reconstruct):
                         xyz[i] = [xyz[i][j].reshape(shape, order='F') for j in range(3)]
                         value[i] = [v.reshape(shape, order='F'),]
                 return xyz, value
-
 
     def discrete_scalar(self, grid):
         """We reconstruct this S2F as a 3d CSCG discrete vector in the `regions`.
@@ -158,8 +156,6 @@ class _3dCSCG_SF0_reconstruct(_3dCSCG_SF_Reconstruct):
 
         return _3dCSCG_DF_Scalar(mesh, XYZ, VAL, name=self._sf_.standard_properties.name,
                                  structured=True, grid=grid)
-
-
 
 if __name__ == '__main__':
     # mpiexec -n 5 python objects/CSCG/_3d/forms/standard/_0s/reconstruct.py

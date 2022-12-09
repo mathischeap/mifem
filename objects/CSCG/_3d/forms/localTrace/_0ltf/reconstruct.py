@@ -5,9 +5,9 @@
 @time: 11/27/2022 9:55 PM
 """
 from components.freeze.main import FrozenOnly
-
 import numpy as np
 from scipy.sparse import csr_matrix, bmat
+from components.assemblers import MatrixAssembler
 
 class _3dCSCG_0LocalTrace_Reconstruct(FrozenOnly):
     """"""
@@ -47,6 +47,7 @@ class _3dCSCG_0LocalTrace_Reconstruct(FrozenOnly):
         v = dict()
 
         Tmap = mesh.trace.elements.map
+
         for i in indices:
             if i in mesh.elements:
 
@@ -56,65 +57,78 @@ class _3dCSCG_0LocalTrace_Reconstruct(FrozenOnly):
                 for te_number, side in zip(tes, 'NSWEBF'):
                     te = mesh.trace.elements[te_number]
 
-                    xyz_i.append(
-                        te.coordinate_transformation.mapping(
-                            *xietasigma[side], from_element=i, side=side
-                        )
-                    )
+                    if i in self._ltf_.cochain.local:
+                        side_prime_cochain = \
+                            self._ltf_.cochain.___components_of_cochain_on_element_side___(
+                                i, side
+                            )
+                    else:
+                        if i in self._ltf_.cochain.local_ESW:
+                            esw_i = self._ltf_.cochain.local_ESW[i]
+                            if side in esw_i:
+                                side_prime_cochain = esw_i[side]
+                            else:
+                                side_prime_cochain = None
+                        else:
+                            side_prime_cochain = None
 
-                    side_prime_cochain = self._ltf_.cochain.___components_of_cochain_on_element_side___(
-                        i, side
-                    )
-
-                    v_i.append(
-                        np.einsum(
-                            'i, ij -> j',
-                            side_prime_cochain,
-                            pb[side][0],
-                            optimize='greedy'
+                    if side_prime_cochain is not None:
+                        xyz_i.append(
+                            te.coordinate_transformation.mapping(
+                                *xietasigma[side], from_element=i, side=side
+                            )
                         )
-                    )
+                        v_i.append(
+                            np.einsum(
+                                'i, ij -> j',
+                                side_prime_cochain,
+                                pb[side][0],
+                                optimize='greedy'
+                            )
+                        )
+
+                    else:
+                        xyz_i.append(None)
+                        v_i.append(None)
+
+                if all([_ is None for _ in v_i]):
+                    continue
+                else:
+                    pass
+
+                XYZ = dict()
+                V = dict()
 
                 if ravel:
-                    X, Y, Z = list(), list(), list()
-
-                    for xyz_ in xyz_i:
-                        x, y, z = xyz_
-                        X.append(x)
-                        Y.append(y)
-                        Z.append(z)
-
-                    xyz[i] = [
-                        np.concatenate(X),
-                        np.concatenate(Y),
-                        np.concatenate(Z)
-                    ]
-
-                    v[i] = [np.concatenate(v_i),]
+                    for j, side in enumerate('NSWEBF'):
+                        XYZ[side] = xyz_i[j]
+                        V[side] = [v_i[j],]
 
                 else:
-                    XYZ = dict()
-                    V = dict()
                     for j, side in enumerate('NSWEBF'):
                         xyz_ = xyz_i[j]
                         v_ = v_i[j]
-                        if side in 'NS':
-                            xyz_ = [xyz_[_].reshape((jj, kk), order='F') for _ in range(3)]
-                            v_ = [v_.reshape((jj, kk), order='F'),]
-                        elif side in 'WE':
-                            xyz_ = [xyz_[_].reshape((ii, kk), order='F') for _ in range(3)]
-                            v_ = [v_.reshape((ii, kk), order='F'), ]
-                        elif side in 'BF':
-                            xyz_ = [xyz_[_].reshape((ii, jj), order='F') for _ in range(3)]
-                            v_ = [v_.reshape((ii, jj), order='F'), ]
+
+                        if xyz_ is None:
+                            pass
                         else:
-                            raise Exception
+                            if side in 'NS':
+                                xyz_ = [xyz_[_].reshape((jj, kk), order='F') for _ in range(3)]
+                                v_ = [v_.reshape((jj, kk), order='F'),]
+                            elif side in 'WE':
+                                xyz_ = [xyz_[_].reshape((ii, kk), order='F') for _ in range(3)]
+                                v_ = [v_.reshape((ii, kk), order='F'), ]
+                            elif side in 'BF':
+                                xyz_ = [xyz_[_].reshape((ii, jj), order='F') for _ in range(3)]
+                                v_ = [v_.reshape((ii, jj), order='F'), ]
+                            else:
+                                raise Exception
 
                         XYZ[side] = xyz_
                         V[side] = v_
 
-                    xyz[i] = XYZ
-                    v[i] = V
+                xyz[i] = XYZ
+                v[i] = V
 
         return xyz, v
 
@@ -130,6 +144,11 @@ class _3dCSCG_0LocalTrace_Reconstruct(FrozenOnly):
 
         Returns
         -------
+        RD : dict
+            A dict contains mesh-element-wise reconstruction matrix.
+        RD : dict
+            A dict (keys are mesh-element-wise) of dictionaries which
+            are element-side-wise reconstruction matrix.
 
         """
         mesh = self._ltf_.mesh
@@ -147,19 +166,7 @@ class _3dCSCG_0LocalTrace_Reconstruct(FrozenOnly):
 
         M = list()
         for side in 'NSWEBF':
-            M.append(csr_matrix(pb[side][0].T))
-
-        rdi = bmat(
-            [
-                [M[0], None, None, None, None, None],
-                [None, M[1], None, None, None, None],
-                [None, None, M[2], None, None, None],
-                [None, None, None, M[3], None, None],
-                [None, None, None, None, M[4], None],
-                [None, None, None, None, None, M[5]],
-            ],
-            format='csr'
-        )
+            M.append(pb[side][0].T)
 
         rdi_sides = {
             'N': M[0],
@@ -169,6 +176,33 @@ class _3dCSCG_0LocalTrace_Reconstruct(FrozenOnly):
             'B': M[4],
             'F': M[5],
         }
+
+        if self._ltf_.whether.hybrid:
+
+            rdi = bmat(
+                [
+                    [csr_matrix(M[0]), None, None, None, None, None],
+                    [None, csr_matrix(M[1]), None, None, None, None],
+                    [None, None, csr_matrix(M[2]), None, None, None],
+                    [None, None, None, csr_matrix(M[3]), None, None],
+                    [None, None, None, None, csr_matrix(M[4]), None],
+                    [None, None, None, None, None, csr_matrix(M[5])],
+                ],
+                format='csr'
+            )
+        else:
+
+            GM0 = dict()
+            cn = 0
+
+            for side in 'NSWEBF':
+                shape0 = rdi_sides[side].shape[0]
+                GM0[side] = [_ for _ in range(cn, cn+shape0)]
+                cn += shape0
+
+            local_gathering = self._ltf_.numbering.local_gathering
+            _assembler_ = MatrixAssembler(GM0, local_gathering)
+            rdi = _assembler_(rdi_sides, 'add', format='csr')
 
         for i in indices:
             if i in mesh.elements:

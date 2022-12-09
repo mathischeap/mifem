@@ -24,14 +24,18 @@ class _3dCSCG_Trace_Numbering_DO_FIND(FrozenOnly):
         """
         numbering = self._numbering_
 
-        if numbering._tf_.k == 0:
-            return self.___PRIVATE_find_0Trace_local_dofs_on_element_side___(side_name)
-        if numbering._tf_.k == 1:
-            return self.___PRIVATE_find_1Trace_local_dofs_on_element_side___(side_name)
-        if numbering._tf_.k == 2:
-            return self.___PRIVATE_find_2Trace_local_dofs_on_element_side___(side_name)
+        if numbering._tf_.whether.hybrid:
+            if numbering._tf_.k == 0:
+                return self.___PRIVATE_find_0Trace_local_dofs_on_element_side___(side_name)
+            if numbering._tf_.k == 1:
+                return self.___PRIVATE_find_1Trace_local_dofs_on_element_side___(side_name)
+            if numbering._tf_.k == 2:
+                return self.___PRIVATE_find_2Trace_local_dofs_on_element_side___(side_name)
+            else:
+                raise NotImplementedError(f"not coded for {numbering._tf_.k}-trace-form.")
+
         else:
-            raise NotImplementedError(f"not coded for {numbering._tf_.k}-trace-form.")
+            return numbering.local_gathering[side_name]
 
     def ___PRIVATE_find_0Trace_local_dofs_on_element_side___(self, side_name):
         """

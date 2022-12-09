@@ -44,7 +44,7 @@ if __name__ == '__main__':
 
     # print(RANK, mesh.___local_periodic_element_sides___)
 
-    print(nodes.GLOBAL_num)
+    print(nodes.global_num)
 
     # for i in nodes:
     #     node = nodes[i]

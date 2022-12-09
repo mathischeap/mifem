@@ -22,13 +22,14 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
 
     :param mesh:
     :param space:
+    :param hybrid:
     :param orientation:
     :param numbering_parameters:
     :param name:
     """
-    def __init__(self, mesh, space, orientation='outer',
+    def __init__(self, mesh, space, hybrid=True, orientation='outer',
         numbering_parameters='Naive', name='outer-oriented-2-trace-form'):
-        super().__init__(mesh, space, orientation, numbering_parameters, name)
+        super().__init__(mesh, space, hybrid, orientation, numbering_parameters, name)
         self._k_ = 2
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_trace_2form')
         self._discretize_ = _3dCSCG_2Trace_Discretize(self)
@@ -73,9 +74,9 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
     def discretize(self):
         return self._discretize_
 
-    def reconstruct(self, xi, eta, sigma, ravel=False, i=None):
+    def reconstruct(self, xi, eta, sigma, ravel=False, trace_element_range=None):
         """
-        Do the reconstruction.
+        Do the reconstruction. The results are trace-element-wise.
 
         :param xi: A 1d iterable object of floats between -1 and 1.
         :param eta: A 1d iterable object of floats between -1 and 1.
@@ -84,18 +85,18 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
         :type xi: list, tuple, numpy.ndarray
         :type eta: list, tuple, numpy.ndarray
         :type sigma: list, tuple, numpy.ndarray
-        :param i: (`default`:``None``) Do the reconstruction for these
+        :param trace_element_range: (`default`:``None``) Do the reconstruction for these
             trace elements. if it is ``None``, then do it for all trace
             elements.
-        :type i: int, None, list, tuple
         """
-        if i is None:
+        if trace_element_range is None:
             indices = self.mesh.trace.elements._elements_.keys()
         else:
-            if not isinstance(i, (list, tuple)):
-                indices = [i,]
+            if not isinstance(trace_element_range, (list, tuple)):
+                indices = [trace_element_range,]
             else:
-                indices = i
+                indices = trace_element_range
+
         xietasigma, pb = self.do.evaluate_basis_at_meshgrid(xi, eta, sigma)
         ii, jj, kk = np.size(xi), np.size(eta), np.size(sigma)
         xyz = dict()
@@ -182,25 +183,20 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 5 python objects\CSCG\_3d\forms\trace\_2_trace\main.py
+    # mpiexec -n 5 python objects/CSCG/_3d/forms/trace/_2tr/main.py
 
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
-    mesh = MeshGenerator('crazy', c=0.0)([2,2,2])
-    space = SpaceInvoker('polynomials')([('Lobatto',5), ('Lobatto',5), ('Lobatto',5)])
+    mesh = MeshGenerator('ct', c=0.1)([2,2,2])
+    space = SpaceInvoker('polynomials')([('Lobatto',4), ('Lobatto',5), ('Lobatto',6)])
     FC = FormCaller(mesh, space)
 
     def p(t, x, y, z): return t + np.cos(2*np.pi*x) * np.cos(2*np.pi*y) * np.cos(2*np.pi*z)
     S = FC('scalar', p)
 
-    t2 = FC('2-t')
-    t2.TW.func.body = S
-    t2.TW.current_time = 0
-    t2.TW.do.push_all_to_instant()
+    t2 = FC('2-t', hybrid=False)
+    t2.CF = S
+    t2.CF.current_time = 0
     t2.discretize()
-
-    T = t2.matrices.trace
-    S = t2.matrices.selective
-    M = t2.matrices.mass
 
     t2.visualize()

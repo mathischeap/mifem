@@ -76,7 +76,7 @@ class MeshGenerator(FrozenOnly):
                 print( "   <element_layout input>: {}...".format(str_element_layout[:40]))
             for rn in mesh.elements.layout:
                 print(f"   <element_layout>: {rn} {mesh.elements.layout[rn]}")
-            print(f"   <total elements>: {mesh.elements.GLOBAL_num}", flush=True)
+            print(f"   <total elements>: {mesh.elements.global_num}", flush=True)
         COMM.barrier()  # for safety reason
 
         return mesh
@@ -244,7 +244,7 @@ class FormCaller(FrozenOnly):
 
                     if ID in ('0-adf', '1-adf', '2-adf', '3-adf'):
                         prime_class_ID = ID.split('-')[0] + '-f'
-                        prime = self(prime_class_ID, *args, **p_kwargs, is_hybrid=True)
+                        prime = self(prime_class_ID, *args, **p_kwargs, hybrid=True)
 
                     elif ID in ('0-adt', '1-adt', '2-adt'): # note that trace forms must be hybrid.
                         prime_class_ID = ID.split('-')[0] + '-t'

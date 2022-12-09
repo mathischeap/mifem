@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """Here we do tests for the mifem module."""
-
 import sys
 if './' not in sys.path: sys.path.append('./')
 import os
@@ -30,7 +29,6 @@ def w(t, x, y, z):
 
 def p_2d(t, x, y): return np.cos(2*np.pi*x) * np.cos(2*np.pi*y) + t/2
 
-
 def test_mifem_NO1_2dCSCG_save_read():
     """
     Unittests for the mesh.
@@ -44,7 +42,7 @@ def test_mifem_NO1_2dCSCG_save_read():
 
     scalar = FC('scalar', p_2d)
 
-    f0 = FC('0-f-i', is_hybrid=True)
+    f0 = FC('0-f-i', hybrid=True)
     f0.CF = scalar
     f0.CF.current_time = 0
     f0.discretize()
@@ -57,12 +55,12 @@ def test_mifem_NO1_2dCSCG_save_read():
     assert f0.mesh == F0.mesh
     assert f0.space == F0.space
 
-    f0i = FC('0-f-i', is_hybrid=False)
-    f1i = FC('1-f-i', is_hybrid=False)
-    f2i = FC('2-f-i', is_hybrid=True)
-    f0o = FC('0-f-o', is_hybrid=True)
-    f1o = FC('1-f-o', is_hybrid=True)
-    f2o = FC('2-f-o', is_hybrid=False)
+    f0i = FC('0-f-i', hybrid=False)
+    f1i = FC('1-f-i', hybrid=False)
+    f2i = FC('2-f-i', hybrid=True)
+    f0o = FC('0-f-o', hybrid=True)
+    f1o = FC('1-f-o', hybrid=True)
+    f2o = FC('2-f-o', hybrid=False)
     es = _2dCSCG_ExactSolutionSelector(mesh)('sL:sincos1')
 
     for f0, f1, f2 in zip([f0i, f0o], [f1i, f1o], [f2i, f2o]):
@@ -114,7 +112,6 @@ def test_mifem_NO1_2dCSCG_save_read():
         os.remove('_2dCSCG_f2i.mi')
         os.remove('f0f1f2i.mi')
     return 1
-
 
 def test_mifem_NO2_3dCSCG_save_read():
     if RANK == MASTER_RANK:
@@ -259,11 +256,6 @@ def test_mifem_NO2_3dCSCG_save_read():
     if RANK == MASTER_RANK: os.remove('Some_objects.mi')
 
     return 1
-
-
-
-
-
 
 if __name__ == '__main__':
     # mpiexec -n 5 python __tests__/unittests/mifem.py

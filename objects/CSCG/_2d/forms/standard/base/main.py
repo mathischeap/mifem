@@ -28,24 +28,24 @@ class _2dCSCG_Standard_Form(CSCG_Standard_Form, _2dCSCG_FORM_BASE, ndim=2):
 
     :param mesh:
     :param space:
-    :param is_hybrid:
+    :param hybrid:
     :param orientation:
     :param numbering_parameters: The parameters for the numbering. Including scheme name and other parameters.
         When it is a string, we use it as the scheme name, and it has not other parameters.
     :type numbering_parameters: dict, str
     :param name:
     """
-    def __init__(self, mesh, space, is_hybrid, orientation, numbering_parameters, name):
+    def __init__(self, mesh, space, hybrid, orientation, numbering_parameters, name):
         super(_2dCSCG_Standard_Form, self).__init__(mesh, space, name)
         super(_2dCSCG_Standard_Form, self).___init___()
         self._NUM_basis_, self._NUM_basis_components_ = \
             getattr(self.space.num_basis, self.__class__.__name__)
-        assert isinstance(is_hybrid, bool), " isHybrid needs to be bool."
+        assert isinstance(hybrid, bool), " isHybrid needs to be bool."
         assert orientation in ('inner', 'outer'), " orientation needs to be 'inner' or 'outer'."
-        self._IS_hybrid_ = is_hybrid
+        self._IS_hybrid_ = hybrid
         self._orientation_ = orientation
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_form')
-        self.___ARGS___ = (is_hybrid, deepcopy(numbering_parameters), name)
+        self.___ARGS___ = (hybrid, deepcopy(numbering_parameters), name)
 
         self._numbering_ = _2dCSCG_Standard_Form_Numbering(self, numbering_parameters)
         self._cochain_ = _2dCSCG_Standard_Form_Cochain(self)
@@ -60,10 +60,10 @@ class _2dCSCG_Standard_Form(CSCG_Standard_Form, _2dCSCG_FORM_BASE, ndim=2):
 
     @property
     def shadow(self):
-        is_hybrid, numbering_parameters, name = self.___ARGS___
+        hybrid, numbering_parameters, name = self.___ARGS___
         # noinspection PyArgumentList
         return self.__class__(self.mesh, self.space,
-                              is_hybrid=is_hybrid,
+                              hybrid=hybrid,
                               numbering_parameters=numbering_parameters,
                               name = 'shadow-of-' + name)
 

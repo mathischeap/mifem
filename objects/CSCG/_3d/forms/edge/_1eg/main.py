@@ -23,13 +23,14 @@ class _3dCSCG_1Edge(_3dCSCG_Edge, ABC):
 
     :param mesh:
     :param space:
+    :param hybrid:
     :param orientation:
     :param numbering_parameters:
     :param name:
     """
-    def __init__(self, mesh, space, orientation='outer',
+    def __init__(self, mesh, space, hybrid=True, orientation='outer',
         numbering_parameters='Naive', name='outer-oriented-1-edge-form'):
-        super().__init__(mesh, space, orientation, numbering_parameters, name)
+        super().__init__(mesh, space, hybrid, orientation, numbering_parameters, name)
         self._k_ = 1
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_edge_1form')
         self._discretize_ = _3dCSCG_Edge1Form_Discretize(self)

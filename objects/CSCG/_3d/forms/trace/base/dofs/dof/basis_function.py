@@ -1,15 +1,6 @@
+# -*- coding: utf-8 -*-
 """The class for the basis function of a trace dof (not dofs)."""
-
-
-
-
-
 from components.freeze.main import FrozenOnly
-
-
-
-
-
 
 class _3dCSCG_TF_DOF_BF(FrozenOnly):
     """"""

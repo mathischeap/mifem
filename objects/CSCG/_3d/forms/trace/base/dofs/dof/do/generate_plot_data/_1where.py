@@ -67,7 +67,6 @@ class _3dCSCG_T1F_DOF_Where(FrozenOnly):
                     side = trace_element.CHARACTERISTIC_side)
         )
 
-
         SPAN = np.linspace(-1, 1, density) * zoom
         ONES = np.ones(density) * zoom
         LINES = list()

@@ -4,7 +4,6 @@ Here we use the hdMSEM to solve the inner-orientated version of the time indepen
 equation. We do this to test the hybridization of 0-forms.
 
 """
-
 import sys
 if './' not in sys.path: sys.path.append('./')
 
@@ -20,8 +19,6 @@ from tools.elementwiseCache.dataStructures.operators.concatenate.main import con
 from tools.miLinearAlgebra.linearSystem.main import LinearSystem
 
 from objects.CSCG.tools.distribute_local_cochain import distribute_local_cochain
-
-
 
 def test_hdMSEM_Schrodinger_Inner():
     """"""
@@ -41,8 +38,8 @@ def test_hdMSEM_Schrodinger_Inner():
         if b not in u_boundaries:
             p_boundaries.append(b)
 
-    u = FC('1-f', is_hybrid = True)
-    p = FC('0-f', is_hybrid = True)
+    u = FC('1-f', hybrid = True)
+    p = FC('0-f', hybrid = True)
     t = FC('0-adt')
     e = FC('0-e')
 
@@ -107,11 +104,6 @@ def test_hdMSEM_Schrodinger_Inner():
     assert u_error_dH1 < 0.7
 
     return 1
-
-
-
-
-
 
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/_3d/__tests__/unittests/TISE/hdMSEM_inner.py

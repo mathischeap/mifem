@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
 
-
-
 from components.freeze.base import FrozenOnly
-
-
-
 
 class ___VECMUL___(FrozenOnly):
     def __init__(self, EWC_S, EWC_V):

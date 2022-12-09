@@ -46,9 +46,9 @@ def Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename
     FC = FormCaller(mesh, space)
     es = ExactSolutionSelector(mesh)("Euler:shear_layer_rollup")
 
-    w = FC('0-f-o', is_hybrid=False, name='vorticity')
-    u = FC('1-f-o', is_hybrid=False, name='velocity')
-    P = FC('2-f-o', is_hybrid=False, name='total pressure')
+    w = FC('0-f-o', hybrid=False, name='vorticity')
+    u = FC('1-f-o', hybrid=False, name='velocity')
+    P = FC('2-f-o', hybrid=False, name='total pressure')
 
     M0 = w.matrices.mass
     M1 = u.matrices.mass
@@ -89,7 +89,7 @@ def Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename
     LS.customize.identify_global_row(-1)
 
     result = LS.solve('direct')()
-    u_t0_half = FC('1-f-o', is_hybrid=False, name='velocity_t0_half')
+    u_t0_half = FC('1-f-o', hybrid=False, name='velocity_t0_half')
     result[0].do.distributed_to(u_t0_half, P)
 
     E01 = w.matrices.incidence.T

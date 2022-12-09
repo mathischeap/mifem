@@ -12,9 +12,9 @@ from objects.miUsGrid.triangular.forms.standard._0.base.main import miUsTriangul
 class miUsTriangular_S0F_Inner(miUsTriangular_S0F_Base):
     """"""
 
-    def __init__(self, mesh, space, name='Tri-is0f'):
+    def __init__(self, mesh, space, hybrid=False, name='Tri-is0f'):
         """"""
-        super(miUsTriangular_S0F_Inner, self).__init__(mesh, space, 'inner', name)
+        super(miUsTriangular_S0F_Inner, self).__init__(mesh, space, hybrid, 'inner', name)
         self._freeze_self_()
 
 
@@ -24,7 +24,7 @@ if __name__ == "__main__":
     from root.config.main import RANK
     import matplotlib.pyplot as plt
     from objects.miUsGrid.triangular.fields.scalar.main import miUsGrid_Triangular_Scalar
-    from objects.miUsGrid.triangular.__test__.Random.test_mesh import mesh
+    from tests.objects.miUsGrid.triangular.randObj.test_mesh import mesh
     from objects.miUsGrid.triangular.space.main import miUsGrid_TriangularFunctionSpace
 
     def func(t, x, y):

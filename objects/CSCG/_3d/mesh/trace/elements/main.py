@@ -78,8 +78,8 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
                 if i+1 in POOL:
                     assert np.all(POOL_i_p_1 == POOL[i+1])
                 else:
-                    if i == self.GLOBAL_num - 1:
-                        assert np.sum(POOL_i_p_1) == self.GLOBAL_num, "Something is wrong."
+                    if i == self.global_num - 1:
+                        assert np.sum(POOL_i_p_1) == self.global_num, "Something is wrong."
                     else:
                         POOL[i+1] = POOL_i_p_1
 
@@ -189,7 +189,7 @@ class _3dCSCG_Trace_Elements(FrozenOnly):
         return self.___multi_elements_metric___
 
     @property
-    def GLOBAL_num(self):
+    def global_num(self):
         """
         (int) The total number of trace elements across all cores.
 

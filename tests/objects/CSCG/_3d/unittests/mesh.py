@@ -57,11 +57,11 @@ def test_Mesh_NO1_mesh_general():
 
     # test method ___PRIVATE_do_find_slave_of_element___ ...
     mesh = MeshGenerator('crazy')([5, 4, 3], EDM='debug')
-    for i in range(mesh.elements.GLOBAL_num):
+    for i in range(mesh.elements.global_num):
         sn = mesh.do.find.slave_of_element(i)
         assert i in mesh._element_distribution_[sn]
     mesh = MeshGenerator('crazy')([1, 2, 1], EDM='debug')
-    for i in range(mesh.elements.GLOBAL_num):
+    for i in range(mesh.elements.global_num):
         sn = mesh.do.find.slave_of_element(i)
         assert i in mesh._element_distribution_[sn]
     return 1
@@ -1122,10 +1122,10 @@ def test_Mesh_NO6_transfinite():
         scalar = FC('scalar', p)
         vector = FC('vector', (u,v,w))
 
-        f0 = FC('0-f', is_hybrid=False)
-        f1 = FC('1-f', is_hybrid=False)
-        f2 = FC('2-f', is_hybrid=False)
-        f3 = FC('3-f', is_hybrid=False)
+        f0 = FC('0-f', hybrid=False)
+        f1 = FC('1-f', hybrid=False)
+        f2 = FC('2-f', hybrid=False)
+        f3 = FC('3-f', hybrid=False)
 
         f0.CF = scalar
         f0.CF.current_time = 0
@@ -1193,10 +1193,10 @@ def test_Mesh_NO8_Mesh_SubGeometry_perpendicular_slice_object():
     def p(t, x, y, z): return x + np.sin(2*np.pi*y)*np.sin(2*np.pi*z) + t/2
     scalar = FC('scalar', p)
     vector = FC('vector', (u,v,w))
-    f0 = FC('0-f', is_hybrid=False)
-    f1 = FC('1-f', is_hybrid=False)
-    f2 = FC('2-f', is_hybrid=False)
-    f3 = FC('3-f', is_hybrid=False)
+    f0 = FC('0-f', hybrid=False)
+    f1 = FC('1-f', hybrid=False)
+    f2 = FC('2-f', hybrid=False)
+    f3 = FC('3-f', hybrid=False)
     f0.CF = scalar
     f0.CF.current_time = 0
     f0.discretize()

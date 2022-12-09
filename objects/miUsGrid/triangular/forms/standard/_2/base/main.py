@@ -21,9 +21,9 @@ from objects.miUsGrid.triangular.forms.standard._2.base.export.main import miUsT
 class miUsTriangular_S2F_Base(miUsTriangular_SF_Base):
     """"""
 
-    def __init__(self, mesh, space, orientation, name):
+    def __init__(self, mesh, space, hybrid, orientation, name):
         """"""
-        super(miUsTriangular_S2F_Base, self).__init__(mesh, space, orientation, 2, name)
+        super(miUsTriangular_S2F_Base, self).__init__(mesh, space, hybrid, orientation, 2, name)
         self._discretize_ = miUsTriangular_S2F_Discretize(self)
         self._reconstruct_ = miUsTriangular_S2F_Reconstruct(self)
 
@@ -66,7 +66,7 @@ if __name__ == "__main__":
     # mpiexec -n 4 python objects/miUsGrid/triangular/forms/standard/_2/base/main.py
     from __init__ import miTri
 
-    fc = miTri.form('rand0', 3)
+    fc = miTri.call('rand0', 3)
 
     f2 = fc('2-f-i')
 

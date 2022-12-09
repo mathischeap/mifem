@@ -47,8 +47,8 @@ def test_hdMSEM_Poisson_Inner():
         if b not in u_boundaries:
             p_boundaries.append(b)
 
-    p = FC('0-f', is_hybrid = True)
-    u = FC('1-f', is_hybrid = True)
+    p = FC('0-f', hybrid = True)
+    u = FC('1-f', hybrid = True)
     t = FC('0-adt')
     e = FC('0-e')
     f = FC('0-adf')

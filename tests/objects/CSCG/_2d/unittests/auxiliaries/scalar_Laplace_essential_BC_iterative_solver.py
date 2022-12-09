@@ -27,9 +27,9 @@ def scalar_Laplace_solver_iterative_solver(c, Kx, Ky, Nx, Ny):
     FC = FormCaller(mesh, space)
     ES = ExactSolutionSelector(mesh)('sL:sincos1')
 
-    u = FC('1-f-o', is_hybrid=False)
-    p = FC('2-f-o', is_hybrid=False)
-    f = FC('2-f-o', is_hybrid=False)
+    u = FC('1-f-o', hybrid=False)
+    p = FC('2-f-o', hybrid=False)
+    f = FC('2-f-o', hybrid=False)
 
     B0 = EWC_ColumnVector(mesh, u.num.basis)
     B0.gathering_matrix = u

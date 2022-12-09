@@ -161,7 +161,7 @@ class Gathering_Matrix(FrozenOnly):
                     gv = self[i]
                     LOCAL_MIN.append(gv.___PRIVATE_find_min_label___())
                     LOCAL_MAX.append(gv.___PRIVATE_find_max_label___())
-                self._local_range_ = (np.min(LOCAL_MIN), np.max(LOCAL_MAX)+1)
+                self._local_range_ = (int(np.min(LOCAL_MIN)), int(np.max(LOCAL_MAX)+1))
         return self._local_range_
 
     @property

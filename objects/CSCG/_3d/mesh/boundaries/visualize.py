@@ -7,7 +7,6 @@ from root.config.main import RANK, MASTER_RANK, np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
-
 class _3dCSCG_MeshBoundaries_VIS(FrozenOnly):
     """"""
     def __init__(self, bds):
@@ -15,8 +14,6 @@ class _3dCSCG_MeshBoundaries_VIS(FrozenOnly):
         self._boundaries_ = bds
         self._mesh_ = bds._mesh_
         self._freeze_self_()
-
-
 
     def __call__(self, density=1000, aspect='equal',):
         """"""
@@ -145,10 +142,6 @@ class _3dCSCG_MeshBoundaries_VIS(FrozenOnly):
         fig.tight_layout()
         plt.show()
         plt.close(fig)
-
-
-
-
 
 if __name__ == "__main__":
     # mpiexec -n 6 python _3dCSCG\mesh\boundaries\visualize.py

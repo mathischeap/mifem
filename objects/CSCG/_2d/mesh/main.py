@@ -393,7 +393,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
         B = COMM.reduce(BOUNDARY, root=MASTER_RANK, op=MPI.SUM)
 
         if RANK == MASTER_RANK:
-            ALL_FACES = self.elements.GLOBAL_num * 4
+            ALL_FACES = self.elements.global_num * 4
             assert I + E + B == ALL_FACES, "Something is wrong."
             QUALITY = (I + B) / ALL_FACES
         else:

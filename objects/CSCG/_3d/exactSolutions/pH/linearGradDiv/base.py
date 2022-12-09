@@ -71,8 +71,6 @@ class pH_LinearGradDiv_Base(Base):
             )
         return self._VF_
 
-
-
     def ___PreFrozenChecker___(self):
         """We use this general method to do the check, in particular exact solution, we can define particular
         check method by override this method.

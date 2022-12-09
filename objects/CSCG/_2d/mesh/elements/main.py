@@ -10,9 +10,6 @@ from objects.CSCG._2d.mesh.elements.whether import _2dCSCG_MeshElements_Whether
 from objects.CSCG._2d.mesh.elements.visualize import _2dCSCG_MeshElements_VIS
 from objects.CSCG._2d.mesh.elements.do.main import _2dCSCG_Mesh_Elements_do
 
-
-
-
 class _2dCSCG_Mesh_Elements(FrozenOnly):
     """"""
     def __init__(self, mesh):
@@ -32,6 +29,7 @@ class _2dCSCG_Mesh_Elements(FrozenOnly):
         counter: dict = dict()
         self._multi_elements_metric_: dict = dict()
         self._num_local_orthogonal_elements_ = 0
+
         for i in self:
             ei = self[i]
             mki = ei.type_wrt_metric.mark
@@ -45,6 +43,7 @@ class _2dCSCG_Mesh_Elements(FrozenOnly):
                     self._multi_elements_metric_[mki] += 1
                 else:
                     self._multi_elements_metric_[mki] = 2
+
             else:
                 counter[mki] = i
 
@@ -85,7 +84,7 @@ class _2dCSCG_Mesh_Elements(FrozenOnly):
         return self._visualize_
 
     @property
-    def GLOBAL_num(self):
+    def global_num(self):
         """The total amount of mesh elements in all cores."""
         return self._mesh_._num_total_elements_
 

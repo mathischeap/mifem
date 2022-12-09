@@ -15,7 +15,7 @@ class _3dCSCG_SF2_reconstruct(_3dCSCG_SF_Reconstruct):
         self._freeze_self_()
 
     def __call__(self, xi, eta, sigma,
-                 ravel=False, i=None, regions=None,
+                 ravel=False, element_range=None, regions=None,
                  vectorized=False, value_only=False):
         """
         Do the reconstruction.
@@ -24,7 +24,7 @@ class _3dCSCG_SF2_reconstruct(_3dCSCG_SF_Reconstruct):
         :param eta:
         :param sigma:
         :param ravel:
-        :param i: The element we want to reconstruct in. When it is ``None``, we do the reconstruction for
+        :param element_range: The elements we want to reconstruct in. When it is ``None``, we do the reconstruction for
             all elements and store the results in one coordinate dictionary and one value dictionary.
         :param regions: Higher priority than input i.
         :param vectorized:
@@ -36,12 +36,12 @@ class _3dCSCG_SF2_reconstruct(_3dCSCG_SF_Reconstruct):
 
         #------ parse INDICES -------------------------------------------------------------
         if regions is None:
-            if i is None:
+            if element_range is None:
                 INDICES = mesh.elements.indices
-            elif isinstance(i, int):
-                INDICES = [i, ]
+            elif isinstance(element_range, int):
+                INDICES = [element_range,]
             else:
-                raise NotImplementedError()
+                INDICES = element_range
         else:
             if regions == 'all':
                 regions = mesh.domain.regions

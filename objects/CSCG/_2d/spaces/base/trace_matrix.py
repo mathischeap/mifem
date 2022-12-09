@@ -45,7 +45,7 @@ class TraceMatrix(FrozenOnly):
             T_[i] = T[m:m + nbt['UDLR'[i]], :]
             m += nbt['UDLR'[i]]
         Tn, Ts, Tw, Te = T_
-        return csc_matrix(T), {'U': Tn, 'D': Ts, 'L': Tw, 'R': Te}
+        return {True: csc_matrix(T),}, {'U': Tn, 'D': Ts, 'L': Tw, 'R': Te}
 
     @property
     def _2dCSCG_0Trace_Outer(self):
@@ -65,7 +65,8 @@ class TraceMatrix(FrozenOnly):
             T_[i] = T[m:m + nbt['UDLR'[i]], :]
             m += nbt['UDLR'[i]]
         Tn, Ts, Tw, Te = T_
-        return csc_matrix(T), {'U': Tn, 'D': Ts, 'L': Tw, 'R': Te}
+
+        return {True: csc_matrix(T),}, {'U': Tn, 'D': Ts, 'L': Tw, 'R': Te}
 
 
 
@@ -87,7 +88,10 @@ class TraceMatrix(FrozenOnly):
             T_[i] = T[m:m + nbt['UDLR'[i]], :]
             m += nbt['UDLR'[i]]
         Tn, Ts, Tw, Te = T_
-        return csc_matrix(T), {'U': Tn, 'D': Ts, 'L': Tw, 'R': Te}
+
+        Tr = csc_matrix(T)
+
+        return {True: Tr, False: Tr}, {'U': Tn, 'D': Ts, 'L': Tw, 'R': Te}
 
     @property
     def _2dCSCG_1Trace_Outer(self):
@@ -110,7 +114,10 @@ class TraceMatrix(FrozenOnly):
             m += nbt['UDLR'[i]]
 
         TU, TD, TL, TR = T_
-        return csc_matrix(T), {'U': TU, 'D': TD, 'L': TL, 'R': TR}
+
+        Tr = csc_matrix(T)
+
+        return {True: Tr, False: Tr}, {'U': TU, 'D': TD, 'L': TL, 'R': TR}
 
 
 

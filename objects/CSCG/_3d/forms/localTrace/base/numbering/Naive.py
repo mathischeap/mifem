@@ -49,10 +49,6 @@ class _3dCSCG_LocalTrace_Form_Numbering_Naive(FrozenOnly):
         numOfDofs = numOfBasis * element_num
         return gathering_matrix, numOfDofs, extraInfo
 
-
-
-
-
     def _3dCSCG_1LocalTrace(self):
         """Do the numbering if it is a local-trace-1-form:
         :class:`_3dCSCG.form.localTrace._1ltf._1LocalTrace`.
@@ -67,10 +63,6 @@ class _3dCSCG_LocalTrace_Form_Numbering_Naive(FrozenOnly):
             return self._no_parameter_numbering()
         else:
             raise NotImplementedError()
-
-
-
-
 
     def _3dCSCG_2LocalTrace(self):
         """Do the numbering if it is a local-trace-2-form:

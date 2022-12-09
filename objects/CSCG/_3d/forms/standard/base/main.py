@@ -29,25 +29,25 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
 
     :param mesh:
     :param space:
-    :param bool is_hybrid:
+    :param bool hybrid:
     :param str orientation: 'inner' or 'outer'.
     :param numbering_parameters: The parameters for the numbering. Including scheme name and other parameters.
         When it is a string, we use it as the scheme name, and it has not other parameters.
     :type numbering_parameters: dict, str
     :param str name:
     """
-    def __init__(self, mesh, space, is_hybrid, orientation, numbering_parameters, name):
+    def __init__(self, mesh, space, hybrid, orientation, numbering_parameters, name):
         """"""
         super(_3dCSCG_Standard_Form, self).__init__(mesh, space, name)
         super(_3dCSCG_Standard_Form, self).___init___()
         self._NUM_basis_, self._NUM_basis_components_ = \
             getattr(self.space.num_basis, self.__class__.__name__)
-        assert isinstance(is_hybrid, bool), " isHybrid needs to be bool."
+        assert isinstance(hybrid, bool), " isHybrid needs to be bool."
         assert orientation in ('inner', 'outer'), " orientation needs to be 'inner' or 'outer'."
-        self._IS_hybrid_ = is_hybrid
+        self._IS_hybrid_ = hybrid
         self._orientation_ = orientation
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_standard_form')
-        self.___ARGS___ = (is_hybrid, orientation, deepcopy(numbering_parameters), name)
+        self.___ARGS___ = (hybrid, orientation, deepcopy(numbering_parameters), name)
 
         self._numbering_ = _3dCSCG_Standard_Form_Numbering(self, numbering_parameters)
         self._cochain_ = None
@@ -60,13 +60,12 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
         self._export_ = None
         self._dofs_ = None
 
-
     @property
     def shadow(self):
         """A shadow is another me but without cochain."""
-        is_hybrid, orientation, numbering_parameters, name = self.___ARGS___
+        hybrid, orientation, numbering_parameters, name = self.___ARGS___
         return self.__class__(self.mesh, self.space,
-                              is_hybrid=is_hybrid,
+                              hybrid=hybrid,
                               orientation=orientation,
                               numbering_parameters=numbering_parameters,
                               name = 'shadow-of-' + name)
@@ -128,10 +127,6 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
             self._dofs_ = _3dCSCG_Standard_forms_DOFs(self)
         return self._dofs_
 
-
-
-
-
     def ___PRIVATE_do_evaluate_basis_at_meshgrid___(self, xi, eta, sigma, compute_xietasigma=True):
         """Evaluate the basis functions on ``meshgrid(xi, eta, sigma)``.
 
@@ -150,7 +145,6 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
         """
         return self.space.do.evaluate_form_basis_at_meshgrid(
             self.k, xi, eta, sigma, compute_xietasigma=compute_xietasigma)
-
 
     def ___PRIVATE_saving_info___(self):
         """"""

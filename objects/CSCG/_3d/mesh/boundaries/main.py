@@ -24,12 +24,6 @@ from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.boundaries.boundary.main import _3dCSCG_Mesh_Boundary
 from objects.CSCG._3d.mesh.boundaries.visualize import _3dCSCG_MeshBoundaries_VIS
 
-
-
-
-
-
-
 class _3dCSCG_Mesh_Boundaries(FrozenOnly):
     """"""
     def __init__(self, mesh):
@@ -207,11 +201,6 @@ class _3dCSCG_Mesh_Boundaries(FrozenOnly):
 
     def __len__(self):
         return len(self.names)
-
-
-
-
-
 
 if __name__ == "__main__":
     # mpiexec -n 6 python _3dCSCG\mesh\boundaries\main.py

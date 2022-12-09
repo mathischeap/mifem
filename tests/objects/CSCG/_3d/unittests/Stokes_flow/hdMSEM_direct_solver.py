@@ -32,10 +32,10 @@ def test_Stokes_hdMSEM():
     t_u_Boundaries = ['Back', 'North', 'South', ]
     w_Boundaries = ['Front', 'West', "East", ]
 
-    w = FC('1-f', is_hybrid=True, name='vorticity')
-    u = FC('2-f', is_hybrid=True, name='velocity')
+    w = FC('1-f', hybrid=True, name='vorticity')
+    u = FC('2-f', hybrid=True, name='velocity')
     p = FC('3-adf', name='pressure')
-    f = FC('2-f', is_hybrid=True, name='body_force')
+    f = FC('2-f', hybrid=True, name='body_force')
 
     t = FC('2-adt', name='pressure_trace')
     s = FC('1-adt', name='tangential_velocity')
@@ -117,8 +117,6 @@ def test_Stokes_hdMSEM():
     assert u_error_dH1 < 0.7
 
     return 1
-
-
 
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/_3d/__tests__/unittests/Stokes_flow/hdMSEM_direct_solver.py

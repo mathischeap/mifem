@@ -2,13 +2,10 @@
 import sys
 if './' not in sys.path: sys.path.append('./')
 
-
 from components.freeze.base import FrozenOnly
 from objects.CSCG._3d.forms.trace._1tr.discretize.vector.standard.T_perp import _3dCSCG_1Trace_Discretize_StandardVector_T_perp
 from objects.CSCG._3d.forms.trace._1tr.discretize.vector.standard.T_para import _3dCSCG_1Trace_Discretize_StandardVector_T_para
 from objects.CSCG._3d.forms.trace._1tr.discretize.vector.trace_element_wise import _3dCSCG_1Trace_Discretize_TraceElementWiseVector
-
-
 
 class _3dCSCG_1Trace_Discretize(FrozenOnly):
     """"""
@@ -31,11 +28,9 @@ class _3dCSCG_1Trace_Discretize(FrozenOnly):
         """
         SELF = self._tf_
 
-
         if target == 'func':
 
             if SELF.CF.__class__.__name__ == '_3dCSCG_VectorField':
-
 
                 if SELF.CF.ftype == 'standard':
 
@@ -54,18 +49,14 @@ class _3dCSCG_1Trace_Discretize(FrozenOnly):
                                         f"I cannot discretize component = {component}. It should be either"
                                         f"'T_para' (parallel trace) or 'T_perp' (perpendicular trace).")
 
-
                 elif SELF.CF.ftype == 'trace-element-wise':
                     # we do not care this trace-element-wise vector is T_para or T_perp vector, we just discretize it to the trace.
                     return self._trace_element_wise_vector_(
                         update_cochain=update_cochain, target='func', **kwargs)
 
-
                 else:
                     raise Exception(f'3dCSCG 1-trace can not (target func) discretize '
                                     f'_3dCSCG_VectorField of ftype {SELF.CF.ftype}.')
-
-
 
             else:
                 raise NotImplementedError(f'3dCSCG 1-trace can not (target func) '
@@ -87,7 +78,6 @@ class _3dCSCG_1Trace_Discretize(FrozenOnly):
             else:
                 raise NotImplementedError(f'3dCSCG 1-trace can not (target BC) '
                                           f'discretize {SELF.BC.CF__class__}.')
-
 
         else:
             raise NotImplementedError(f"target={target} not implemented "

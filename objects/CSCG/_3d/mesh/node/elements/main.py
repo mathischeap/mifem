@@ -151,13 +151,13 @@ class _3dCSCG_Node_Elements(FrozenOnly):
                 ___.update(mp)
                 assert len(___) == cur_len + add_len, "A trivial check."
             MAP = ___
-            assert len(MAP) == self._mesh_.elements.GLOBAL_num, "A trivial check."
+            assert len(MAP) == self._mesh_.elements.global_num, "A trivial check."
 
             LOC_DICT = dict()
             LOC_DICT_FULL = dict()
             ind_2_loc = ['NWB', 'SWB', 'NEB', 'SEB', 'NWF', 'SWF', 'NEF', 'SEF']
 
-            for i in range(self._mesh_.elements.GLOBAL_num):
+            for i in range(self._mesh_.elements.global_num):
                 mp_i = MAP[i]
                 for ind, node in enumerate(mp_i):
                     if node not in LOC_DICT: LOC_DICT[node] = list()
@@ -313,7 +313,7 @@ class _3dCSCG_Node_Elements(FrozenOnly):
         return LOCAL_NODES
 
     @property
-    def GLOBAL_num(self):
+    def global_num(self):
         """How many node elements in total (in all cores)?"""
         return self._GLOBAL_num_
 

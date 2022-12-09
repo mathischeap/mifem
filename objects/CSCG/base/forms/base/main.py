@@ -8,10 +8,7 @@
 
 """
 from objects.base.form.base import FormBase
-
 from objects.CSCG.base.forms.base.BC.main import CSCG_Form_BC
-
-
 
 class CSCG_FORM_BASE(FormBase):
     """"""
@@ -30,7 +27,6 @@ class CSCG_FORM_BASE(FormBase):
         self.___is_wrapped_in_ADF___ = False
 
     #------------------- fundamental --------------------------------
-
     @property
     def k(self):
         return self._k_
@@ -39,8 +35,6 @@ class CSCG_FORM_BASE(FormBase):
     def ndim(self):
         """Return the dimensions."""
         return self.___ndim___
-
-
 
     # ------ must have properties ------------------------------------
     @property

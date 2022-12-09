@@ -4,11 +4,7 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 11/28/2022 2:29 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
-
 
 class _3dCSCG_LocalTrace_Do(FrozenOnly):
     """"""
@@ -96,8 +92,3 @@ class _3dCSCG_LocalTrace_Do(FrozenOnly):
         return self._ltf_.reconstruct.___PrLT_make_reconstruction_matrix_on_grid___(
             xi, eta, sigma, element_range=element_range
         )
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

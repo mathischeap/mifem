@@ -2,7 +2,6 @@
 import socket
 from root.config.main import RANK, MASTER_RANK
 
-
 def whether_internet_connected(domain_names=None):
     """
     :param domain_names: (`default`:``None``) Domains that we use to check the internet connection.

@@ -39,7 +39,9 @@ class _3dCSCG_Edge_Matrices(FrozenOnly):
         if self._C_ is None:
 
             k = self._ef_.k
-            num_trace_basis = getattr(self._ef_.space.num_basis, f'_3dCSCG_{k}Trace')[0]
+            num_trace_basis = getattr(self._ef_.space.num_basis, f'_3dCSCG_{k}Trace')[0][
+                self._ef_.whether.hybrid
+            ]
             num_edge_basis = self._ef_.num.basis
             self._C_ = EWC_SparseMatrix(
                 self._ef_.mesh.elements, (num_trace_basis, num_edge_basis)

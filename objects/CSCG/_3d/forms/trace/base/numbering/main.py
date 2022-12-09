@@ -7,15 +7,12 @@
          TU Delft, Delft, Netherlands
 
 """
-
 from components.freeze.main import FrozenOnly
 from importlib import import_module
 from root.config.main import *
 
 
 from objects.CSCG._3d.forms.trace.base.numbering.do.main import _3dCSCG_Trace_Numbering_DO
-
-
 
 class _3dCSCG_Trace_Numbering(FrozenOnly):
     def __init__(self, tf, numbering_parameters):
@@ -44,6 +41,7 @@ class _3dCSCG_Trace_Numbering(FrozenOnly):
         self._numbering_parameters_ = {'scheme_name': self._scheme_name_}
         self._numbering_parameters_.update(self._parameters_)
         self._DO_ = _3dCSCG_Trace_Numbering_DO(self)
+        self._local_gathering_ = None
         self._local_ = None
         self._gathering_ = None
         self._trace_element_wise_ = None
@@ -53,12 +51,27 @@ class _3dCSCG_Trace_Numbering(FrozenOnly):
         self._freeze_self_()
 
     @property
+    def local_gathering(self):
+        """"""
+        if self._tf_.whether.hybrid:
+            raise Exception(f"hybrid trace form does not need local gathering matrix.")
+        else:
+            if self._local_gathering_ is None:
+                self._local_gathering_ = getattr(
+                    self._tf_.space.local_gathering, self._tf_.__class__.__name__
+                )
+            return self._local_gathering_
+
+    @property
     def local(self):
-        """The local numbering in mesh element."""
+        """The local numbering in mesh element.
+
+        We return a dict representing the mesh-element-side-wise local numbering. So in each side,
+        the numbering starts from 0. And this dict of course has 6 keys, each of 'NSWEBF'.
+        """
         if self._local_ is None:
             self._local_ = getattr(self._tf_.space.local_numbering, self._tf_.__class__.__name__)
         return self._local_
-
 
     def ___PRIVATE_do_numbering___(self):
         self._gathering_, self._trace_element_wise_, self._local_num_dofs_, self._extra_ = \
@@ -88,8 +101,6 @@ class _3dCSCG_Trace_Numbering(FrozenOnly):
         if self._extra_ is None:
             self.___PRIVATE_do_numbering___()
         return self._extra_
-
-
 
     @property
     def boundary_dofs(self):
@@ -150,9 +161,6 @@ class _3dCSCG_Trace_Numbering(FrozenOnly):
             RAVEL.update(GLOBAL_boundary_dofs[bn])
         return list(RAVEL)
 
-
-
     @property
     def do(self):
         return self._DO_
-

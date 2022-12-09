@@ -51,7 +51,7 @@ class _3dCSC_SF_Export_Field(FrozenOnly):
 
         rst = list()
         for i in range(3):
-            density = int((numOfSamples[i] / mesh.elements.GLOBAL_num) ** (1/3)) + 1
+            density = int((numOfSamples[i] / mesh.elements.global_num) ** (1 / 3)) + 1
             interval = 2 / density
             rst.append(np.linspace(-1 + interval/2, 1-interval/2, density))
 
@@ -59,13 +59,13 @@ class _3dCSC_SF_Export_Field(FrozenOnly):
 
         # Now, we gather xyz & v from all cores into Master Core, store in XYZ & V --- BELOW ---
         if RANK == MASTER_RANK:
-            X = [None for _ in range(mesh.elements.GLOBAL_num)]
-            Y = [None for _ in range(mesh.elements.GLOBAL_num)]
-            Z = [None for _ in range(mesh.elements.GLOBAL_num)]
-            Vx = [None for _ in range(mesh.elements.GLOBAL_num)]
+            X = [None for _ in range(mesh.elements.global_num)]
+            Y = [None for _ in range(mesh.elements.global_num)]
+            Z = [None for _ in range(mesh.elements.global_num)]
+            Vx = [None for _ in range(mesh.elements.global_num)]
             if self._sf_.k in (1, 2):
-                Vy = [None for _ in range(mesh.elements.GLOBAL_num)]
-                Vz = [None for _ in range(mesh.elements.GLOBAL_num)]
+                Vy = [None for _ in range(mesh.elements.global_num)]
+                Vz = [None for _ in range(mesh.elements.global_num)]
             for j in mesh.elements.indices:
                 X[j] = xyz[j][0]
                 Y[j] = xyz[j][1]

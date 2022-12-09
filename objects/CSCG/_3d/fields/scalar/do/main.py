@@ -61,4 +61,3 @@ class _3dCSCG_ScalarField_DO(FrozenOnly):
 
         else:
             raise NotImplementedError(f"")
-

@@ -4,11 +4,7 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 11/28/2022 10:12 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from objects.CSCG._3d.spaces.base.do import _3dCSCG_space_do
-
 
 class _3dCSCG_space_Polynomial_do(_3dCSCG_space_do):
     """"""
@@ -17,7 +13,6 @@ class _3dCSCG_space_Polynomial_do(_3dCSCG_space_do):
         """"""
         super(_3dCSCG_space_Polynomial_do, self).__init__(space)
         self._freeze_self_()
-
 
     def refine(self, p =(1, 1, 1)):
         """We return a new polynomial space of higher degree.
@@ -49,9 +44,3 @@ class _3dCSCG_space_Polynomial_do(_3dCSCG_space_do):
         )
 
         return self._space_.__class__(new_input, None)
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

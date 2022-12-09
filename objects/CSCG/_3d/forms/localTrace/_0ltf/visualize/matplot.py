@@ -44,7 +44,7 @@ class _3dCSCG_0LocalTrace_Visualize_Matplot(FrozenOnly):
 
         """
         mesh = self._ltf_.mesh
-        density = int(np.sqrt(density/mesh.trace.elements.GLOBAL_num)) + 1
+        density = int(np.sqrt(density / mesh.trace.elements.global_num)) + 1
         xi = eta = sigma = np.linspace(-1, 1, density)
 
         range_element_side = mesh.boundaries.range_of_element_sides

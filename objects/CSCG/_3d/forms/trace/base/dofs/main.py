@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 import sys
 if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
@@ -18,7 +18,7 @@ class _3dCSCG_Trace_forms_DOFs(FrozenOnly):
 
 
     def __iter__(self):
-        for i in range(self._GM_.global_num_dofs):
+        for i in range(int(self._GM_.global_num_dofs)):
             yield i
 
     def __contains__(self, i):

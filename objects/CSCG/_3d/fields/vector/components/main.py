@@ -49,6 +49,7 @@ class _3dCSCG_VectorField_Components(FrozenOnly):
 
             trace_element_wise_func = dict()
             for i in safe_copy.mesh.trace.elements: # the local trace element #i on mesh boundaries
+
                 trace_element_wise_func[i] = ___VECTOR_NORM_COMPONENT___(safe_copy, i)
 
             return vector_class(safe_copy.mesh, trace_element_wise_func,

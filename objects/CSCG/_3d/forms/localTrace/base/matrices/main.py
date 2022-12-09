@@ -28,32 +28,6 @@ class _3dCSCG_LocalTrace_Matrices(FrozenOnly):
             MM
         )
 
-    @property
-    def trace(self):
-        """Return the trace matrix."""
-        if self._T_ is None:
-            k = self._ltf_.k
-            formName = f'_3dCSCG_{int(k)}LocalTrace'
-            T = getattr(self._ltf_.space.trace_matrix, formName)[0]
-            self._T_ = \
-                EWC_SparseMatrix(self._ltf_.mesh.elements, T, 'constant')
-        return self._T_
-
-    @property
-    def selective(self):
-        """Return the selective (mesh-element -> trace element) matrix.
-
-        Like the trace matrix but without minus sign.
-        """
-        if self._S_ is None:
-            k = self._ltf_.k
-            formName = f'_3dCSCG_{int(k)}LocalTrace'
-            S = getattr(self._ltf_.space.selective_matrix, formName)[0]
-            self._S_ = \
-                EWC_SparseMatrix(self._ltf_.mesh.elements, S, 'constant')
-        return self._S_
-
-
 if __name__ == '__main__':
     # mpiexec -n 4 python 
     pass

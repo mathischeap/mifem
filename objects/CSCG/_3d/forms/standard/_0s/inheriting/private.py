@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-
 from scipy.sparse import csc_matrix
 import numpy as np
-
 
 # noinspection PyUnresolvedReferences
 class _3dCSCG_S0F_Private:

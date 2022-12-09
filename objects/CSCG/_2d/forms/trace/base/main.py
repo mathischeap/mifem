@@ -42,7 +42,7 @@ class _2dCSCG_Standard_Trace(CSCG_Trace_Form, _2dCSCG_FORM_BASE, ndim=2):
         assert isinstance(is_hybrid, bool), " isHybrid needs to be bool."
         assert is_hybrid, "Trace form can only be hybrid."
         assert orientation in ('inner', 'outer'), " orientation needs to be 'inner' or 'outer'."
-        self._IS_hybrid_ = is_hybrid
+        self._hybrid_ = is_hybrid
         self._orientation_ = orientation
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_trace_form')
 
@@ -104,4 +104,3 @@ class _2dCSCG_Standard_Trace(CSCG_Trace_Form, _2dCSCG_FORM_BASE, ndim=2):
         """
         return self.space.do.evaluate_trace_basis_at_meshgrid(
             self.k, xi, eta, compute_xietasigma=compute_xietasigma)
-

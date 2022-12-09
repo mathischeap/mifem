@@ -40,6 +40,7 @@ class _3dCSCG_LocalTrace_Numbering(FrozenOnly):
         self._numbering_parameters_ = {'scheme_name': self._scheme_name_}
         self._numbering_parameters_.update(self._parameters_)
         self._do_ = _3dCSCG_LocalTrace_Numbering_Do(self)
+        self._local_gathering_ = None
 
         self._local_ = None
 
@@ -50,6 +51,17 @@ class _3dCSCG_LocalTrace_Numbering(FrozenOnly):
         self._boundary_dofs_ = None
 
         self._freeze_self_()
+
+    @property
+    def local_gathering(self):
+        if self._ltf_.whether.hybrid:
+            raise Exception(f"hybrid local-trace-form does not need local gathering matrix.")
+        else:
+            if self._local_gathering_ is None:
+                self._local_gathering_ = getattr(
+                    self._ltf_.space.local_gathering, self._ltf_.__class__.__name__
+                )
+            return self._local_gathering_
 
     @property
     def do(self):

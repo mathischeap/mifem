@@ -103,9 +103,6 @@ class SpaMat_Customize(FrozenOnly):
 
         return RETURN
 
-
-
-
     def clear_global_row(self, r):
         """Make the #r row of the global matrix (assemble self to get the global matrix) to be all zero.
         To achieve this, we only adjust the local output of the call function.
@@ -147,8 +144,6 @@ class SpaMat_Customize(FrozenOnly):
         assert not self._spa_mat_.do.___locker___, f"the assembled matrix is locked!"
         assert not self._spa_mat_.do.___sparsity_locker___, f"the sparsity is locked!"
         raise NotImplementedError(f"{rs}")
-
-
 
     def set_assembled_M_ij_to(self, i, j, v):
         """Let M be the assembled matrix, we set M[i,j] = v.
@@ -279,8 +274,6 @@ class SpaMat_Customize(FrozenOnly):
         assert not self._spa_mat_.do.___sparsity_locker___, f"the sparsity is locked!"
 
         raise NotImplementedError(f'{rs}')
-
-
 
     def identify_global_rows_according_to(self, i, interpret, AS='local'):
         """

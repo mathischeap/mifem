@@ -40,7 +40,7 @@ def test_hybridization_trace2():
     def p_func(t, x, y, z): return 10 + t + x + y + z
     pressure = FC('scalar', p_func)
 
-    u = FC('2-f', is_hybrid=True, name='velocity')
+    u = FC('2-f', hybrid=True, name='velocity')
     t = FC('2-adt', name='pressure_trace')
 
     u.BC.CF = velocity

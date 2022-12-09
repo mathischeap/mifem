@@ -95,6 +95,7 @@ class miUsGrid_TriangularMesh_Elements(FrozenOnly):
 
     @property
     def num(self):
+        """All properties about the numbers."""
         return self._num_
 
     @property

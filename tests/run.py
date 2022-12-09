@@ -15,7 +15,6 @@ mpiexec -n 4 python tests/objects/CSCG/_3d/unittests/main.py
 mpiexec -n 4 python tests/objects/miUsGrid/triangular/unittests/main.py
 
 """
-
 import sys
 if './' not in sys.path: sys.path.append('./')
 
@@ -32,7 +31,6 @@ passed_GLOBAL_tests = 0           # do not comment this
 passed_miUSGridTriangle_tests = 0 # do not comment this
 
 t_global_start = MPI.Wtime()
-
 
 
 from tests.components.main import passed_components_tests # comment to skip these tests

@@ -18,26 +18,25 @@ from objects.CSCG._3d.forms.standard._0s.inheriting.private import _3dCSCG_S0F_P
 from objects.CSCG._3d.forms.standard._0s.visualize.main import _3dCSCG_S0F_VISUALIZE
 from objects.CSCG._3d.forms.standard._0s.do.main import _3dCSCG_S0F_Do
 
-
 class _3dCSCG_0Form(_3dCSCG_S0F_Private, _3dCSCG_Standard_Form):
     """
     Standard 0-form.
 
     :param mesh:
     :param space:
-    :param is_hybrid:
+    :param hybrid:
     :param orientation:
     :param numbering_parameters:
     :param name:
     """
-    def __init__(self, mesh, space, is_hybrid=True,
+    def __init__(self, mesh, space, hybrid=True,
         orientation='outer', numbering_parameters='Naive',  name=None):
         if name is None:
-            if is_hybrid:
+            if hybrid:
                 name = 'hybrid-' + orientation + '-oriented-0-form'
             else:
                 name = orientation + '-oriented-0-form'
-        super().__init__(mesh, space, is_hybrid, orientation, numbering_parameters, name)
+        super().__init__(mesh, space, hybrid, orientation, numbering_parameters, name)
         self._k_ = 0
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_standard_0form')
         self._special_ = _0Form_Special(self)
@@ -46,7 +45,6 @@ class _3dCSCG_0Form(_3dCSCG_S0F_Private, _3dCSCG_Standard_Form):
         self._visualize_ = None
         self._DO_ = _3dCSCG_S0F_Do(self)
         self._freeze_self_()
-
 
     def ___Pr_check_CF___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
@@ -90,16 +88,6 @@ class _3dCSCG_0Form(_3dCSCG_S0F_Private, _3dCSCG_Standard_Form):
             self._visualize_ = _3dCSCG_S0F_VISUALIZE(self)
         return self._visualize_
 
-
-
-
-
-
-
-
-
-
-
 if __name__ == '__main__':
     # mpiexec -n 6 python objects/CSCG/_3d/forms/standard/_0s/main.py
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
@@ -108,15 +96,8 @@ if __name__ == '__main__':
     space = SpaceInvoker('polynomials')([2,2,2])
     FC = FormCaller(mesh, space)
 
-    # # es = ExactSolutionSelector(mesh)('icpsNS:sincosRD')
-    #
     def p(t, x, y, z):
         return np.sin(2*np.pi*x) * np.sin(np.pi*y) * np.cos(2*np.pi*z) + t
-    #
-    #
-    # for i in mesh.elements:
-    #     region = mesh.do.find.region_name_of_element(i)
-    #     assert region in mesh.elements.in_regions
 
     scalar = FC('scalar', p)
 
@@ -124,26 +105,3 @@ if __name__ == '__main__':
     f0.CF = scalar
     f0.CF.current_time = 0
     f0.do.discretize()
-
-
-    # print(mesh.boundaries.range_of_element_sides)
-    # f0.visualize(x=0.9)
-
-    # print(f0.error.L())
-    #
-    # df0 = FC('0-adf')
-    # df0.prime.TW.func.do.set_func_body_as(scalar)
-    # df0.prime.TW.current_time = 0
-    # df0.prime.TW.do.push_all_to_instant()
-    # df0.prime.do.discretize()
-    # print(df0.prime.error.L())
-
-    # print(f0.___parameters___)
-
-    # regions = mesh.domain.regions['R:R']
-    # RS = regions.sub_geometry.make_a_perpendicular_slice_object_on(t=4.5/9)
-    # MS = mesh.sub_geometry.make_a_perpendicular_slice_object_on(RS)
-    # f0.visualize.matplot.perpendicular_slice(MS, saveto='')
-
-    # f0.export.field.to_file('t0f.mat')
-    # print(f0.matrices.trace)

@@ -28,7 +28,7 @@ def test_Space_NO1_basis_functions_mapping_test():
     i, j, k = el3, el2, el1
     space = SpaceInvoker('polynomials')([('Lobatto', i), ('Lobatto', j), ('Lobatto', k)])
     FC = FormCaller(mesh, space)
-    f2 = FC('2-f', is_hybrid=False)
+    f2 = FC('2-f', hybrid=False)
     t2 = FC('2-t')
 
     ii, jj, kk = random.randint(4, 5), random.randint(4,6), random.randint(4,7)

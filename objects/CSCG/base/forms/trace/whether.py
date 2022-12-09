@@ -10,8 +10,8 @@ class CSCG_trace_form_Whether(FrozenOnly):
 
     @property
     def hybrid(self):
-        """Trace form must be hybrid."""
-        return True
+        """A hybrid trace form or not."""
+        return self._tf_._hybrid_
 
     @property
     def inner_oriented(self):

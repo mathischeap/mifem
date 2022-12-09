@@ -101,13 +101,6 @@ class _3dCSCG_Mesh_Element(FrozenOnly):
             self._whether_ = _3dCSCG_MeshElement_Whether(self)
         return self._whether_
 
-
-
-
-
-
-
-
 if __name__ == '__main__':
     # mpiexec -n 5 python objects\CSCG\_3d\mesh\elements\element\main.py
     from objects.CSCG._3d.master import MeshGenerator

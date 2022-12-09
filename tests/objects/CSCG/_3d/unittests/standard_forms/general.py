@@ -42,10 +42,10 @@ def test_Form_NO1_discretization_and_reconstruction():
         FC = FormCaller(mesh, space)
         scalar = FC('scalar', p)
         vector = FC('vector', (u,v,w))
-        f0 = FC('0-f', is_hybrid=False)
-        f1 = FC('1-f', is_hybrid=False)
-        f2 = FC('2-f', is_hybrid=False)
-        f3 = FC('3-f', is_hybrid=False)
+        f0 = FC('0-f', hybrid=False)
+        f1 = FC('1-f', hybrid=False)
+        f2 = FC('2-f', hybrid=False)
+        f3 = FC('3-f', hybrid=False)
         f0.CF = scalar
         f0.CF.current_time = 0
         f0.discretize()
@@ -74,10 +74,10 @@ def test_Form_NO1_discretization_and_reconstruction():
     scalar = FC('scalar', p)
     vector = FC('vector', (u,v,w))
 
-    f0 = FC('0-f', is_hybrid=False)
-    f1 = FC('1-f', is_hybrid=False)
-    f2 = FC('2-f', is_hybrid=False)
-    f3 = FC('3-f', is_hybrid=False)
+    f0 = FC('0-f', hybrid=False)
+    f1 = FC('1-f', hybrid=False)
+    f2 = FC('2-f', hybrid=False)
+    f3 = FC('3-f', hybrid=False)
 
     f0.CF = scalar
     f0.CF.current_time = 0
@@ -117,10 +117,10 @@ def test_Form_NO1_discretization_and_reconstruction():
     f3.discretize()
     assert f3.error.L() < 0.003
 
-    f0 = FC('0-f', is_hybrid=True)
-    f1 = FC('1-f', is_hybrid=True)
-    f2 = FC('2-f', is_hybrid=True)
-    f3 = FC('3-f', is_hybrid=True)
+    f0 = FC('0-f', hybrid=True)
+    f1 = FC('1-f', hybrid=True)
+    f2 = FC('2-f', hybrid=True)
+    f3 = FC('3-f', hybrid=True)
 
     f0.CF = scalar
     f0.CF.current_time = 0
@@ -167,10 +167,10 @@ def test_Form_NO1_discretization_and_reconstruction():
 
     scalar = FC('scalar', p)
     vector = FC('vector', (u,v,w))
-    f0 = FC('0-f', is_hybrid=False)
-    f1 = FC('1-f', is_hybrid=False)
-    f2 = FC('2-f', is_hybrid=False)
-    f3 = FC('3-f', is_hybrid=False)
+    f0 = FC('0-f', hybrid=False)
+    f1 = FC('1-f', hybrid=False)
+    f2 = FC('2-f', hybrid=False)
+    f3 = FC('3-f', hybrid=False)
 
     f0.CF = scalar
     f0.CF.current_time = 0
@@ -196,10 +196,10 @@ def test_Form_NO1_discretization_and_reconstruction():
 
     scalar = FC('scalar', p)
     vector = FC('vector', (u,v,w))
-    f0 = FC('0-f', is_hybrid=False)
-    f1 = FC('1-f', is_hybrid=False)
-    f2 = FC('2-f', is_hybrid=False)
-    f3 = FC('3-f', is_hybrid=False)
+    f0 = FC('0-f', hybrid=False)
+    f1 = FC('1-f', hybrid=False)
+    f2 = FC('2-f', hybrid=False)
+    f3 = FC('3-f', hybrid=False)
 
     f0.CF = scalar
     f0.CF.current_time = 0
@@ -237,10 +237,10 @@ def test_Form_NO1a_discretization_and_reconstruction():
         FC = FormCaller(mesh, space)
         scalar = FC('scalar', p)
         vector = FC('vector', (u,v,w))
-        f0 = FC('0-f', is_hybrid=False)
-        f1 = FC('1-f', is_hybrid=False)
-        f2 = FC('2-f', is_hybrid=False)
-        f3 = FC('3-f', is_hybrid=False)
+        f0 = FC('0-f', hybrid=False)
+        f1 = FC('1-f', hybrid=False)
+        f2 = FC('2-f', hybrid=False)
+        f3 = FC('3-f', hybrid=False)
         f0.CF = scalar
         f0.CF.current_time = 0
         f0.discretize()
@@ -269,10 +269,10 @@ def test_Form_NO1a_discretization_and_reconstruction():
     scalar = FC('scalar', p)
     vector = FC('vector', (u,v,w))
 
-    f0 = FC('0-f', is_hybrid=False)
-    f1 = FC('1-f', is_hybrid=False)
-    f2 = FC('2-f', is_hybrid=False)
-    f3 = FC('3-f', is_hybrid=False)
+    f0 = FC('0-f', hybrid=False)
+    f1 = FC('1-f', hybrid=False)
+    f2 = FC('2-f', hybrid=False)
+    f3 = FC('3-f', hybrid=False)
 
     f0.CF = scalar
     f0.CF.current_time = 0
@@ -312,10 +312,10 @@ def test_Form_NO1a_discretization_and_reconstruction():
     f3.discretize()
     assert f3.error.L() < 0.003
 
-    f0 = FC('0-f', is_hybrid=True)
-    f1 = FC('1-f', is_hybrid=True)
-    f2 = FC('2-f', is_hybrid=True)
-    f3 = FC('3-f', is_hybrid=True)
+    f0 = FC('0-f', hybrid=True)
+    f1 = FC('1-f', hybrid=True)
+    f2 = FC('2-f', hybrid=True)
+    f3 = FC('3-f', hybrid=True)
 
     f0.CF = scalar
     f0.CF.current_time = 0
@@ -362,10 +362,10 @@ def test_Form_NO1a_discretization_and_reconstruction():
 
     scalar = FC('scalar', p)
     vector = FC('vector', (u,v,w))
-    f0 = FC('0-f', is_hybrid=False)
-    f1 = FC('1-f', is_hybrid=False)
-    f2 = FC('2-f', is_hybrid=False)
-    f3 = FC('3-f', is_hybrid=False)
+    f0 = FC('0-f', hybrid=False)
+    f1 = FC('1-f', hybrid=False)
+    f2 = FC('2-f', hybrid=False)
+    f3 = FC('3-f', hybrid=False)
 
     f0.CF = scalar
     f0.CF.current_time = 0
@@ -454,9 +454,9 @@ def test_Form_NO1b_trace_form_Rd_and_Rc():
     t1 = FC('1-t')
     t2 = FC('2-t')
 
-    f0 = FC('0-f', is_hybrid=True)
-    f1 = FC('1-f', is_hybrid=True)
-    f2 = FC('2-f', is_hybrid=True)
+    f0 = FC('0-f', hybrid=True)
+    f1 = FC('1-f', hybrid=True)
+    f2 = FC('2-f', hybrid=True)
 
     S0 = t0.matrices.selective
     S1 = t1.matrices.selective
@@ -515,10 +515,10 @@ def test_Form_NO2_mass_matrix():
     space = SpaceInvoker('polynomials')([('Lobatto', 2), ('Lobatto', 2), ('Lobatto', 2)])
     FC = FormCaller(mesh, space)
 
-    f0 = FC('0-f', is_hybrid=False)
-    f1 = FC('1-f', is_hybrid=False)
-    f2 = FC('2-f', is_hybrid=True)
-    f3 = FC('3-f', is_hybrid=True)
+    f0 = FC('0-f', hybrid=False)
+    f1 = FC('1-f', hybrid=False)
+    f2 = FC('2-f', hybrid=True)
+    f3 = FC('3-f', hybrid=True)
 
     f0.operators._inner_quad_type_ = 'Gauss'
     f1.operators._inner_quad_type_ = 'Gauss'
@@ -619,7 +619,7 @@ def test_Form_NO3_incidence_matrices():
     np.testing.assert_almost_equal(
         es.___Pr_compute_Ln_norm_of___('velocity', time=0, n=2), np.sqrt(3))
 
-    f0 = FC('0-f', is_hybrid=True)
+    f0 = FC('0-f', hybrid=True)
 
     f0.CF = es.pressure
     f0.CF.current_time = 0
@@ -659,7 +659,7 @@ def test_Form_NO3_incidence_matrices():
     assert L_inf < 1e-8
 
     # we test curl of vorticity for incompressible NS ----------- BELOW ------------------------------------------------
-    f1 = FC('1-f', is_hybrid=False)
+    f1 = FC('1-f', hybrid=False)
     f1.CF = es.vorticity
     f1.CF.current_time = 0
     f1.discretize()
@@ -673,7 +673,7 @@ def test_Form_NO3_incidence_matrices():
     FC = FormCaller(mesh, space)
     es = ExactSolutionSelector(mesh)('icpsNS:sincosRD')
 
-    f1 = FC('1-f', is_hybrid=True)
+    f1 = FC('1-f', hybrid=True)
     f1.CF = es.vorticity
     f1.CF.current_time = 0
     f1.discretize()
@@ -709,7 +709,7 @@ def test_Form_NO3_incidence_matrices():
     cV = V.numerical.curl
     dV = V.numerical.divergence
 
-    f0 = FC('0-f', is_hybrid=False)
+    f0 = FC('0-f', hybrid=False)
     f0.CF= S
     f0.CF.current_time = t
     f0.discretize()
@@ -718,7 +718,7 @@ def test_Form_NO3_incidence_matrices():
     f1.CF.current_time = t
     assert f1.error.L() < 0.0065
 
-    f1 = FC('1-f', is_hybrid=False)
+    f1 = FC('1-f', hybrid=False)
     f1.CF = V
     f1.CF.current_time = t
     f1.discretize()
@@ -727,7 +727,7 @@ def test_Form_NO3_incidence_matrices():
     f2.CF.current_time = t
     assert f2.error.L() < 0.002
 
-    f2 = FC('2-f', is_hybrid=False)
+    f2 = FC('2-f', hybrid=False)
     f2.CF = V
     f2.CF.current_time = t
     f2.discretize()
@@ -1115,10 +1115,10 @@ def test_Form_No7_with_other_element_numbering_AUTO():
     FC = FormCaller(mesh, space)
     scalar = FC('scalar', p)
     vector = FC('vector', (u,v,w))
-    f0 = FC('0-f', is_hybrid=False)
-    f1 = FC('1-f', is_hybrid=False)
-    f2 = FC('2-f', is_hybrid=False)
-    f3 = FC('3-f', is_hybrid=False)
+    f0 = FC('0-f', hybrid=False)
+    f1 = FC('1-f', hybrid=False)
+    f2 = FC('2-f', hybrid=False)
+    f3 = FC('3-f', hybrid=False)
     f0.CF = scalar
     f0.CF.current_time = t
     f0.discretize()
@@ -1140,10 +1140,10 @@ def test_Form_No7_with_other_element_numbering_AUTO():
     FC = FormCaller(MESH, space)
     scalar = FC('scalar', p)
     vector = FC('vector', (u,v,w))
-    f0 = FC('0-f', is_hybrid=False)
-    f1 = FC('1-f', is_hybrid=False)
-    f2 = FC('2-f', is_hybrid=False)
-    f3 = FC('3-f', is_hybrid=False)
+    f0 = FC('0-f', hybrid=False)
+    f1 = FC('1-f', hybrid=False)
+    f2 = FC('2-f', hybrid=False)
+    f3 = FC('3-f', hybrid=False)
     f0.CF = scalar
     f0.CF.current_time = t
     f0.discretize()
@@ -1181,7 +1181,7 @@ def test_Form_No10_standard_form_dofs():
     load = COMM.bcast(load, root=MASTER_RANK)
     FC = random_FormCaller_of_total_load_around(load)
 
-    f0 = FC('0-f', is_hybrid=False)
+    f0 = FC('0-f', hybrid=False)
     dofs = f0.dofs
     for i in dofs:
         assert i in dofs, f"must be the case"
@@ -1217,7 +1217,7 @@ def test_Form_No11_reconstruction_matrices():
     et = np.linspace(-1,1,6)
     sg = np.linspace(-1,1,5)
     #------------- 1-form ------------------------------
-    f = FC('1-f', is_hybrid=IH)
+    f = FC('1-f', hybrid=IH)
     f.CF = vector
     f.CF.current_time = 1
     f.discretize()
@@ -1232,7 +1232,7 @@ def test_Form_No11_reconstruction_matrices():
         np.testing.assert_almost_equal(np.max(np.abs(w - W)), 0)
 
     #------------- 2-form ------------------------------
-    f = FC('2-f', is_hybrid=IH)
+    f = FC('2-f', hybrid=IH)
     f.CF = vector
     f.CF.current_time = 2
     f.discretize()
@@ -1247,7 +1247,7 @@ def test_Form_No11_reconstruction_matrices():
         np.testing.assert_almost_equal(np.max(np.abs(w - W)), 0)
 
     #------------ 0-form ----------------------------------------------------
-    f = FC('0-f', is_hybrid=IH)
+    f = FC('0-f', hybrid=IH)
     f.CF = scalar
     f.CF.current_time = 3
     f.discretize()
@@ -1264,7 +1264,7 @@ def test_Form_No11_reconstruction_matrices():
     np.testing.assert_almost_equal(LnEnF, LnEnT, decimal=5)
 
     #------------ 3-form -------------------------------------------------------
-    f = FC('3-f', is_hybrid=IH)
+    f = FC('3-f', hybrid=IH)
     f.CF = scalar
     f.CF.current_time = 4
     f.discretize()
@@ -1296,8 +1296,8 @@ def test_Form_NO12_weak_curl():
     U = FC('vector', (u, v, w))
     curl_U = U.numerical.curl
 
-    w1 = FC('1-f', is_hybrid=False)  # w1 = curl (u2)
-    u2 = FC('2-f', is_hybrid=False)  # w1 = curl (u2)
+    w1 = FC('1-f', hybrid=False)  # w1 = curl (u2)
+    u2 = FC('2-f', hybrid=False)  # w1 = curl (u2)
 
     u2.CF = U
     u2.CF.current_time = 1
@@ -1332,8 +1332,8 @@ def test_Form_NO12_weak_curl():
     U = FC('vector', (u, v, w))
     curl_U = U.numerical.curl
 
-    w1 = FC('1-f', is_hybrid=False)  # w1 = curl (u2)
-    u2 = FC('2-f', is_hybrid=False)  # w1 = curl (u2)
+    w1 = FC('1-f', hybrid=False)  # w1 = curl (u2)
+    u2 = FC('2-f', hybrid=False)  # w1 = curl (u2)
 
     u2.CF = U
     u2.CF.current_time = 0

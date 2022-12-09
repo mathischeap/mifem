@@ -5,16 +5,11 @@
 Created on Sat Sep  1 23:58:01 2018
 Aerodynamics, AE
 TU Delft
-
 """
 import numpy as np
 from functools import partial
 from scipy.special import legendre, roots_legendre
 from components.freeze.base import FrozenOnly
-
-
-
-
 
 class Quadrature(FrozenOnly):
     """ Here we store the class for 1d-quadrature nodes and weights. """
@@ -184,8 +179,6 @@ class Quadrature(FrozenOnly):
         """
         nodes, weights = np.polynomial.chebyshev.chebgauss(p+1)
         return nodes[::-1], weights
-
-
 
     @staticmethod
     def ___PRIVATE_legendre_prime___(x, n):

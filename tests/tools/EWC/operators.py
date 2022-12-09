@@ -33,8 +33,8 @@ def test_LinearAlgebra_EWC_No1_Operators():
 
     scalar = FC('scalar', P)
 
-    w = FC('0-f-o', is_hybrid=False, name='vorticity')
-    u = FC('1-f-o', is_hybrid=False, name='velocity')
+    w = FC('0-f-o', hybrid=False, name='vorticity')
+    u = FC('1-f-o', hybrid=False, name='velocity')
 
     M1 = u.matrices.mass
     E10 = w.matrices.incidence

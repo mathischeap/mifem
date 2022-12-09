@@ -42,58 +42,78 @@ class _3dCSCG_2LocalTrace_Reconstruct(FrozenOnly):
 
         xietasigma, pb = self._ltf_.do.evaluate_basis_at_meshgrid(xi, eta, sigma)
         ii, jj, kk = np.size(xi), np.size(eta), np.size(sigma)
-        xyz = dict()
-        v = dict()
+        xyz : dict = dict()
+        v : dict = dict()
 
         Tmap = mesh.trace.elements.map
         for i in indices:
             if i in mesh.elements:
 
                 tes = Tmap[i]
-                xyz_i = list()
-                v_i = list()
+                xyz_i : list = list()
+                v_i : list = list()
+
                 for te_number, side in zip(tes, 'NSWEBF'):
                     te = mesh.trace.elements[te_number]
 
-                    xyz_i.append(
-                        te.coordinate_transformation.mapping(*xietasigma[side], from_element=i, side=side)
-                    )
-                    g = te.coordinate_transformation.metric(*xietasigma[side])
+                    if i in self._ltf_.cochain.local:
 
-                    side_prime_cochain = self._ltf_.cochain.___components_of_cochain_on_element_side___(
-                        i, side
-                    )
+                        side_prime_cochain = \
+                            self._ltf_.cochain.___components_of_cochain_on_element_side___(
+                                i, side
+                            )
 
-                    if side in 'NS':
-                        vi = np.einsum('i, j, ij -> j', side_prime_cochain, 1 / np.sqrt(g),
-                                       pb[side][0], optimize='greedy')
-                    elif side in 'WE':
-                        vi = np.einsum('i, j, ij -> j', side_prime_cochain, 1 / np.sqrt(g),
-                                       pb[side][0], optimize='greedy')
-                    elif side in 'BF':
-                        vi = np.einsum('i, j, ij -> j', side_prime_cochain, 1 / np.sqrt(g),
-                                       pb[side][0], optimize='greedy')
                     else:
-                        raise Exception()
 
-                    v_i.append(vi)
+                        if i in self._ltf_.cochain.local_ESW:
+                            esw_i = self._ltf_.cochain.local_ESW[i]
+                            if side in esw_i:
+                                side_prime_cochain = esw_i[side]
+                            else:
+                                side_prime_cochain = None
+                        else:
+                            side_prime_cochain = None
+
+                    if side_prime_cochain is not None:
+
+                        xyz_i.append(
+                            te.coordinate_transformation.mapping(
+                                *xietasigma[side], from_element=i, side=side
+                            )
+                        )
+                        g = te.coordinate_transformation.metric(*xietasigma[side])
+
+                        if side in 'NS':
+                            vi = np.einsum('i, j, ij -> j', side_prime_cochain, 1 / np.sqrt(g),
+                                           pb[side][0], optimize='greedy')
+                        elif side in 'WE':
+                            vi = np.einsum('i, j, ij -> j', side_prime_cochain, 1 / np.sqrt(g),
+                                           pb[side][0], optimize='greedy')
+                        elif side in 'BF':
+                            vi = np.einsum('i, j, ij -> j', side_prime_cochain, 1 / np.sqrt(g),
+                                           pb[side][0], optimize='greedy')
+                        else:
+                            raise Exception()
+
+                        v_i.append(vi)
+
+                    else:
+                        xyz_i.append(None)
+                        v_i.append(None)
+
+                if all([_ is None for _ in v_i]):
+                    continue
+                else:
+                    pass
+
+                XYZ = dict()
+                V = dict()
 
                 if ravel:
-                    X, Y, Z = list(), list(), list()
 
-                    for xyz_ in xyz_i:
-                        x, y, z = xyz_
-                        X.append(x)
-                        Y.append(y)
-                        Z.append(z)
-
-                    xyz[i] = [
-                        np.concatenate(X),
-                        np.concatenate(Y),
-                        np.concatenate(Z)
-                    ]
-
-                    v[i] = [np.concatenate(v_i),]
+                    for j, side in enumerate('NSWEBF'):
+                        XYZ[side] = xyz_i[j]
+                        V[side] = [v_i[j],]
 
                 else:
                     XYZ = dict()
@@ -101,23 +121,27 @@ class _3dCSCG_2LocalTrace_Reconstruct(FrozenOnly):
                     for j, side in enumerate('NSWEBF'):
                         xyz_ = xyz_i[j]
                         v_ = v_i[j]
-                        if side in 'NS':
-                            xyz_ = [xyz_[_].reshape((jj, kk), order='F') for _ in range(3)]
-                            v_ = [v_.reshape((jj, kk), order='F'),]
-                        elif side in 'WE':
-                            xyz_ = [xyz_[_].reshape((ii, kk), order='F') for _ in range(3)]
-                            v_ = [v_.reshape((ii, kk), order='F'), ]
-                        elif side in 'BF':
-                            xyz_ = [xyz_[_].reshape((ii, jj), order='F') for _ in range(3)]
-                            v_ = [v_.reshape((ii, jj), order='F'), ]
+
+                        if xyz_ is None:
+                            pass
                         else:
-                            raise Exception
+                            if side in 'NS':
+                                xyz_ = [xyz_[_].reshape((jj, kk), order='F') for _ in range(3)]
+                                v_ = [v_.reshape((jj, kk), order='F'),]
+                            elif side in 'WE':
+                                xyz_ = [xyz_[_].reshape((ii, kk), order='F') for _ in range(3)]
+                                v_ = [v_.reshape((ii, kk), order='F'), ]
+                            elif side in 'BF':
+                                xyz_ = [xyz_[_].reshape((ii, jj), order='F') for _ in range(3)]
+                                v_ = [v_.reshape((ii, jj), order='F'), ]
+                            else:
+                                raise Exception
 
                         XYZ[side] = xyz_
                         V[side] = v_
 
-                    xyz[i] = XYZ
-                    v[i] = V
+                xyz[i] = XYZ
+                v[i] = V
 
         return xyz, v
 
@@ -147,7 +171,7 @@ class _3dCSCG_2LocalTrace_Reconstruct(FrozenOnly):
         xietasigma, pb = self._ltf_.do.evaluate_basis_at_meshgrid(xi, et, sg)
         RD = dict()
         RD_sides = dict()
-        cacheDict = dict()
+        cacheDict : dict = dict()
 
         Tmap = mesh.trace.elements.map
         for i in indices:
@@ -180,16 +204,16 @@ class _3dCSCG_2LocalTrace_Reconstruct(FrozenOnly):
                         else:
                             raise Exception()
 
-                        M.append(csr_matrix(ms))
+                        M.append(ms)
 
                     RDi = bmat(
                         [
-                            [M[0], None, None, None, None, None],
-                            [None, M[1], None, None, None, None],
-                            [None, None, M[2], None, None, None],
-                            [None, None, None, M[3], None, None],
-                            [None, None, None, None, M[4], None],
-                            [None, None, None, None, None, M[5]],
+                            [csr_matrix(M[0]), None, None, None, None, None],
+                            [None, csr_matrix(M[1]), None, None, None, None],
+                            [None, None, csr_matrix(M[2]), None, None, None],
+                            [None, None, None, csr_matrix(M[3]), None, None],
+                            [None, None, None, None, csr_matrix(M[4]), None],
+                            [None, None, None, None, None, csr_matrix(M[5])],
                         ],
                         format='csr'
                     )

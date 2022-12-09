@@ -6,8 +6,6 @@ from root.config.main import *
 import random
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 from tests.objects.CSCG._3d.randObj.form_caller import random_FormCaller_of_total_load_around
-# from scipy.sparse import csc_matrix
-# from TOOLS.linear_algebra.data_structures import LocallyFullVector
 
 def test_trace_NO__general_tests():
     """"""
@@ -34,8 +32,6 @@ def test_trace_NO__general_tests():
 
     return 1
 
-
-
 def test_trace_NO0_trace_0_form_Rd_and_Rc():
     """"""
     if RANK == MASTER_RANK:
@@ -56,7 +52,7 @@ def test_trace_NO0_trace_0_form_Rd_and_Rc():
                np.sin(2*np.pi*y) * \
                np.sin(np.pi*z-0.125)**2 * (1.25 - np.sin(t/2))
     P = FC('scalar', pressure)
-    f0 = FC('0-f', is_hybrid=True)
+    f0 = FC('0-f', hybrid=True)
     t0 = FC('0-t')
     f0.CF = P
     f0.CF.current_time = t
@@ -87,8 +83,6 @@ def test_trace_NO0_trace_0_form_Rd_and_Rc():
 
     return 1
 
-
-
 def test_trace_NO1_trace_1_form_Rd_and_Rc():
     if RANK == MASTER_RANK:
         print("+1+ [test_trace_NO1_trace_1_form_Rd_and_Rc] ...... ", flush=True)
@@ -116,7 +110,7 @@ def test_trace_NO1_trace_1_form_Rd_and_Rc():
     t1.CF.current_time = t
     t1.discretize() # Using the default T_para discretization
 
-    f1 = FC('1-f', is_hybrid=True)
+    f1 = FC('1-f', hybrid=True)
     f1.CF = velocity
     f1.CF.current_time = t
     f1.discretize()  # default discretization, discrete a vector to a standard 1-form
@@ -172,8 +166,6 @@ def test_trace_NO1_trace_1_form_Rd_and_Rc():
 
     return 1
 
-
-
 def test_trace_NO2_trace_2_form_Rd_and_Rc():
     """"""
     if RANK == MASTER_RANK:
@@ -195,7 +187,7 @@ def test_trace_NO2_trace_2_form_Rd_and_Rc():
     def v(t, x, y, z): return np.sin(np.pi*x) + np.sin(np.pi*y) * np.sin(np.pi*z-0.125)**2 + t/2
     def w(t, x, y, z): return np.sin(np.pi*x) + np.cos(np.pi*y) * np.cos(np.pi*z-0.125)**2 + t
     vector = FC('vector', (u, v, w))
-    f2 = FC('2-f', is_hybrid=True)
+    f2 = FC('2-f', hybrid=True)
     t2 = FC('2-t')
     f2.CF = vector
     f2.CF.current_time = t
@@ -226,10 +218,6 @@ def test_trace_NO2_trace_2_form_Rd_and_Rc():
 
     return 1
 
-
-
-
-
 def test_trace_NO3_trace_matrices():
     """"""
     if RANK == MASTER_RANK:
@@ -244,7 +232,7 @@ def test_trace_NO3_trace_matrices():
 
     # Below we do a check for the assembled trace matrix for 2-trace-form---------------------------------
     t2 = FC('2-t')
-    f2 = FC('2-f', is_hybrid=True)
+    f2 = FC('2-f', hybrid=True)
 
     T2 = t2.matrices.trace
     T2.gathering_matrices = (t2, f2)
@@ -270,7 +258,7 @@ def test_trace_NO3_trace_matrices():
 
     # Below we do a check for the assembled trace matrix for 1-trace-form---------------------------------
     t1 = FC('1-t')
-    f1 = FC('1-f', is_hybrid=True)
+    f1 = FC('1-f', hybrid=True)
 
     T1 = t1.matrices.trace
     T1.gathering_matrices = (t1, f1)
@@ -306,7 +294,7 @@ def test_trace_NO3_trace_matrices():
 
     # Below we do a check for the assembled trace matrix for 0-trace-form---------------------------------
     t0 = FC('0-t')
-    f0 = FC('0-f', is_hybrid=True)
+    f0 = FC('0-f', hybrid=True)
 
     T0 = t0.matrices.trace
     T0.gathering_matrices = (t0, f0)
@@ -342,6 +330,55 @@ def test_trace_NO3_trace_matrices():
 
     return 1
 
+def test_trace_NO4_non_hybrid_trace_form_numbering():
+    """"""
+    if RANK == MASTER_RANK:
+        load = random.randint(100, 299)
+    else:
+        load= None
+    load = COMM.bcast(load, root=MASTER_RANK)
+    FC = random_FormCaller_of_total_load_around(load, exclude_periodic=False)
+    if RANK == MASTER_RANK:
+        print(f"+++ [test_trace_NO4_non_hybrid_trace_form_numbering] @load = {load} ...... ", flush=True)
+
+    t0 = FC('0-t', hybrid=False, numbering_parameters='Naive')
+    t1 = FC('1-t', hybrid=False)
+    t2 = FC('2-t', hybrid=False)
+
+    mesh = FC.mesh
+
+    TES = mesh.trace.elements
+    Tmap = TES.map
+
+    for t in (t0, t1, t2):
+
+        GM = t.numbering.gathering
+        TEW_numbering = dict()
+
+        for i in Tmap:
+            tes = Tmap[i]
+            for j, side in zip(tes, 'NSWEBF'):
+                local_dofs = t.numbering.do.find.local_dofs_on_element_side(side)
+
+                if j not in TEW_numbering:
+                    TEW_numbering[j] = GM[i][local_dofs]
+                    assert len(set(GM[i][local_dofs])) == GM[i][local_dofs].size
+                else:
+                    assert np.all(TEW_numbering[j] == GM[i][local_dofs])
+
+        TEW_numbering = COMM.gather(TEW_numbering, root=MASTER_RANK)
+        if RANK == MASTER_RANK:
+            CHECK = dict()
+            for tew_N in TEW_numbering:
+                for i in tew_N:
+                    if i in CHECK:
+                        assert np.all(CHECK[i] == tew_N[i])
+                    else:
+                        CHECK[i] = tew_N[i]
+
+    return 1
+
+
 
 
 
@@ -352,9 +389,10 @@ def test_trace_NO3_trace_matrices():
 
 
 if __name__ == '__main__':
-    # mpiexec -n 6 python _3dCSCG\TESTS\unittest_trace.py
+    # mpiexec -n 6 python tests/objects/CSCG/_3d/unittests/trace_forms.py
     # test_trace_NO__general_tests()
-    test_trace_NO0_trace_0_form_Rd_and_Rc()
-    test_trace_NO1_trace_1_form_Rd_and_Rc()
-    test_trace_NO2_trace_2_form_Rd_and_Rc()
+    # test_trace_NO0_trace_0_form_Rd_and_Rc()
+    # test_trace_NO1_trace_1_form_Rd_and_Rc()
+    # test_trace_NO2_trace_2_form_Rd_and_Rc()
     # test_trace_NO3_trace_matrices()
+    test_trace_NO4_non_hybrid_trace_form_numbering()

@@ -20,7 +20,7 @@ class miUsGrid_TriangularMesh_Elements_Num(FrozenOnly):
         self._freeze_self_()
 
     @property
-    def GLOBAL_cells(self):
+    def global_cells(self):
         """{int} The number of global cells (elements)."""
         return self._elements_.distributions[-1].stop
 
@@ -30,9 +30,9 @@ class miUsGrid_TriangularMesh_Elements_Num(FrozenOnly):
         return len(self._elements_.range)
 
     @property
-    def GLOBAL_elements(self):
+    def global_elements(self):
         """{int} The number of global cells (elements)."""
-        return self.GLOBAL_cells
+        return self.global_cells
 
     @property
     def elements(self):
@@ -40,7 +40,7 @@ class miUsGrid_TriangularMesh_Elements_Num(FrozenOnly):
         return self.cells
 
     @property
-    def GLOBAL_points(self):
+    def global_points(self):
         return self._elements_.__num_GLOBAL_points__
 
 

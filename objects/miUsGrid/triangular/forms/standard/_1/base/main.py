@@ -15,9 +15,9 @@ from objects.miUsGrid.triangular.forms.standard._1.base.error import miUs_Triang
 class miUsTriangular_S1F_Base(miUsTriangular_SF_Base):
     """"""
 
-    def __init__(self, mesh, space, orientation, name):
+    def __init__(self, mesh, space, hybrid, orientation, name):
         """"""
-        super(miUsTriangular_S1F_Base, self).__init__(mesh, space, orientation, 1, name)
+        super(miUsTriangular_S1F_Base, self).__init__(mesh, space, hybrid, orientation, 1, name)
         self._error_ = miUs_Triangular_S1F_Error(self)
         self._do_ = None
         self._matrices_ = None

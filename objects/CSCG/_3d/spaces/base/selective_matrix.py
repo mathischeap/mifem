@@ -149,7 +149,7 @@ class SelectiveMatrix(FrozenOnly):
     def _3dCSCG_0Trace(self):
         """ """
         PU = np.zeros((self._FS_.num_basis._3dCSCG_0Form[0],
-                       self._FS_.num_basis._3dCSCG_0Trace[0]), dtype=int)
+                       self._FS_.num_basis._3dCSCG_0Trace[0][True]), dtype=int)
         sln = self.___generate_gathering_hybrid_element___(
             self._FS_.num_basis._3dCSCG_0Trace[2])
         oln = self._FS_.local_numbering._3dCSCG_0Form[0]
@@ -167,8 +167,11 @@ class SelectiveMatrix(FrozenOnly):
             N_[i] = N[m:m + nbt['NSWEBF'[i]], :]
             m += nbt['NSWEBF'[i]]
         Nn, Ns, Nw, Ne, Nb, Nf = N_
-        return csr_matrix(N), {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne,
-                               'B': Nb, 'F': Nf}
+
+        S_hybrid = csr_matrix(N)
+        S_non_hybrid = None # to be implemented
+        return {True: S_hybrid, False: S_non_hybrid}, \
+               {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne, 'B': Nb, 'F': Nf}
 
     @property
     def _3dCSCG_1Trace(self):
@@ -205,13 +208,17 @@ class SelectiveMatrix(FrozenOnly):
         Nf[lnt['F'][1].ravel('F'), lnf_dy[:, :, -1].ravel('F')] = +1
         # ------------------------------------------------------------------------------
         N = np.vstack((Nn, Ns, Nw, Ne, Nb, Nf))
-        return csr_matrix(N), {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne, 'B': Nb, 'F': Nf}
+
+        S_hybrid = csr_matrix(N)
+        S_non_hybrid = None # to be implemented
+        return {True: S_hybrid, False: S_non_hybrid}, \
+               {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne, 'B': Nb, 'F': Nf}
 
     @property
     def _3dCSCG_2Trace(self):
         """ """
         PU = np.zeros((self._FS_.num_basis._3dCSCG_2Form[0],
-                       self._FS_.num_basis._3dCSCG_2Trace[0]), dtype=int)
+                       self._FS_.num_basis._3dCSCG_2Trace[0][True]), dtype=int)
         sln = self.___generate_gathering_hybrid_element___(
             self._FS_.num_basis._3dCSCG_2Trace[2])
         oln_NS, oln_WE, oln_BF = self._FS_.local_numbering._3dCSCG_2Form
@@ -229,8 +236,12 @@ class SelectiveMatrix(FrozenOnly):
             N_[i] = N[m:m + nbt['NSWEBF'[i]], :]
             m += nbt['NSWEBF'[i]]
         Nn, Ns, Nw, Ne, Nb, Nf = N_
-        return csr_matrix(N), {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne,
-                               'B': Nb, 'F': Nf}
+
+        S_hybrid = csr_matrix(N)
+        S_non_hybrid = csr_matrix(N)
+
+        return {True: S_hybrid, False: S_non_hybrid}, \
+               {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne, 'B': Nb, 'F': Nf}
 
     @staticmethod
     def ___generate_gathering_hybrid_element___(basis_on_sides):
@@ -245,18 +256,6 @@ class SelectiveMatrix(FrozenOnly):
             current_num += basis_on_sides[sn]
         return _gte_
 
-
-
-
-    @property
-    def _3dCSCG_0LocalTrace(self):
-        return self._3dCSCG_0Trace
-    @property
-    def _3dCSCG_1LocalTrace(self):
-        return self._3dCSCG_1Trace
-    @property
-    def _3dCSCG_2LocalTrace(self):
-        return self._3dCSCG_2Trace
 
 
 

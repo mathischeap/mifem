@@ -109,9 +109,9 @@ class Test_ChainGM_sequent_chain_method(FrozenOnly):
 
         #-------------------------------------------------------------------------------------------
         mesh = self.fc3.mesh
-        f0 = self.fc3('0-f', is_hybrid=False)
-        f1 = self.fc3('1-f', is_hybrid=False)
-        f2 = self.fc3('2-f', is_hybrid=False)
+        f0 = self.fc3('0-f', hybrid=False)
+        f1 = self.fc3('1-f', hybrid=False)
+        f2 = self.fc3('2-f', hybrid=False)
         gm0 = f0.numbering.gathering
         gm1 = f1.numbering.gathering
         gm2 = f2.numbering.gathering

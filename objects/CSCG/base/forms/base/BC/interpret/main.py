@@ -13,21 +13,33 @@ from objects.CSCG.base.forms.base.BC.interpret.local import CSCG_FORM_BC_Interpr
 class CSCG_FORM_BC_Interpret(FrozenOnly):
     """"""
 
-    def __init__(self, sf):
+    def __init__(self, f):
         """"""
-        self._sf_ = sf
-        self._mesh_ = sf.mesh
+        self._f_ = f
+        self._mesh_ = f.mesh
+        if f.BC.CF is not None:
+            self._ct_ = f.BC.CF._current_time_
+        else:
+            self._ct_ = None
         self._local_ = None
         self._freeze_self_()
-
-    def RESET_cache(self):
-        self._local_ = None
 
     @property
     def local(self):
         """We interpret the BC in local elements."""
+
         if self._local_ is None:
-            self._local_ = CSCG_FORM_BC_Interpret_Local(self._sf_)
+            # when there is not local interpret, we make it.
+            self._local_ = CSCG_FORM_BC_Interpret_Local(self._f_)
+
+        else:
+            # the local interpret is already there.
+            if self._f_.BC.CF._current_time_ != self._ct_:
+                # if current_time has been changed, we clean the cochains.
+                self._local_._cochains_ = None
+            else:
+                pass
+
         return self._local_
 
 

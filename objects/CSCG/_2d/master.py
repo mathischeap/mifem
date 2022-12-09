@@ -18,8 +18,6 @@ from objects.CSCG._2d.exactSolutions.allocator import _2dCSCG_ExactSolutionAlloc
 from copy import deepcopy
 from components.miscellaneous.timer import MyTimer
 
-
-
 class MeshGenerator(FrozenOnly):
     def __init__(self, ID, **kwargs):
         """Remember, **kwargs are parameters to customize the domain.
@@ -65,7 +63,7 @@ class MeshGenerator(FrozenOnly):
                 print( "   <element_layout input>: {}...".format(str_element_layout[:40]))
             for rn in mesh.elements.layout:
                 print(f"   <element_layout>: {rn} {mesh.elements.layout[rn]}")
-            print(f"   <total elements>: {mesh.elements.GLOBAL_num}", flush=True)
+            print(f"   <total elements>: {mesh.elements.global_num}", flush=True)
 
         COMM.barrier()  # for safety reason
 

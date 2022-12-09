@@ -8,7 +8,7 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path: sys.path.append('./')
 from objects.CSCG._2d.forms.trace._1_trace.base import _2dCSCG_1Trace
 from objects.CSCG._2d.forms.trace._1_trace.outer.discretize.main import _2dCSCG_Outer0Trace_discretize
 
@@ -22,8 +22,8 @@ class _2dCSCG_1Trace_Outer(_2dCSCG_1Trace):
     :param numbering_parameters:
     :param name:
     """
-    def __init__(self, mesh, space, numbering_parameters='Naive', name='outer-oriented-1-trace-form'):
-        super().__init__(mesh, space, True, 'outer', numbering_parameters, name)
+    def __init__(self, mesh, space, hybrid=True, numbering_parameters='Naive', name='outer-oriented-1-trace-form'):
+        super().__init__(mesh, space, hybrid, 'outer', numbering_parameters, name)
         self._k_ = 1
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_trace_1form')
         self._discretize_ = _2dCSCG_Outer0Trace_discretize(self)

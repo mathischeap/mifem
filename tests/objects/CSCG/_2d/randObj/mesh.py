@@ -208,6 +208,6 @@ def random_mesh_of_elements_around(elements_num,
 
     if RANK == MASTER_RANK:
         # noinspection PyUnboundLocalVariable
-        assert mesh.elements.GLOBAL_num == np.prod(FFF) * region_num
+        assert mesh.elements.global_num == np.prod(FFF) * region_num
 
     return mesh

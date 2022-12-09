@@ -12,9 +12,9 @@ from objects.miUsGrid.triangular.forms.standard._0.base.main import miUsTriangul
 class miUsTriangular_S0F_Outer(miUsTriangular_S0F_Base):
     """"""
 
-    def __init__(self, mesh, space, name='Tri-os0f'):
+    def __init__(self, mesh, space, hybrid=False, name='Tri-os0f'):
         """"""
-        super(miUsTriangular_S0F_Outer, self).__init__(mesh, space, 'outer', name)
+        super(miUsTriangular_S0F_Outer, self).__init__(mesh, space, hybrid, 'outer', name)
         self._freeze_self_()
 
 
@@ -26,7 +26,7 @@ if __name__ == "__main__":
     # mpiexec -n 4 python objects/miUsGrid/triangular/forms/standard/_0/outer/main.py
     import numpy as np
 
-    from objects.miUsGrid.triangular.__test__.Random.test_mesh import mesh
+    from tests.objects.miUsGrid.triangular.randObj.test_mesh import mesh
     from objects.miUsGrid.triangular.space.main import miUsGrid_TriangularFunctionSpace
     from objects.miUsGrid.triangular.fields.scalar.main import miUsGrid_Triangular_Scalar
 

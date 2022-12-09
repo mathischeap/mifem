@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 """
-
 from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.elements.element.sides.side.main import _3dCSCG_Mesh_Element_Side
-
-
 
 class _3dCSCG_Mesh_Element_Sides(FrozenOnly):
     """The mesh element sides class."""

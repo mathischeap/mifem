@@ -22,11 +22,13 @@ t_global_start = MPI.Wtime()
 
 from tests.components.ft2dw import test_functions_time_plus_2d_wrappers_AKA_ft2dw
 from tests.components.ft3dw import test_functions_time_plus_3d_wrappers_AKA_ft3dw
+from tests.components.assemblers import test_vector_assembler
 
 
 
 passed_components_tests += test_functions_time_plus_2d_wrappers_AKA_ft2dw()
 passed_components_tests += test_functions_time_plus_3d_wrappers_AKA_ft3dw()
+passed_components_tests += test_vector_assembler()
 
 
 

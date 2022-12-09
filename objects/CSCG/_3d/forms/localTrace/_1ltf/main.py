@@ -18,9 +18,9 @@ from scipy.sparse import csr_matrix, bmat
 class _3dCSCG_1LocalTrace(_3dCSCG_LocalTrace):
     """"""
 
-    def __init__(self, mesh, space, orientation='outer',
+    def __init__(self, mesh, space, hybrid=True, orientation='outer',
         numbering_parameters='Naive', name='outer-oriented-1-local-trace-form'):
-        super().__init__(mesh, space, orientation, numbering_parameters, name)
+        super().__init__(mesh, space, hybrid, orientation, numbering_parameters, name)
         self._k_ = 1
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_localtrace_1form')
         self._discretize_ = _3dCSCG_1LocalTrace_Discretize(self)
@@ -53,7 +53,7 @@ class _3dCSCG_1LocalTrace(_3dCSCG_LocalTrace):
                 f"3d CSCG 1-ltf BC cannot accommodate {func_body}.")
 
     def ___PrLT_mass_matrices___(self):
-        """This is a brutal force version."""
+        """This is a brutal force version for the mesh-element-wise mass matrix."""
         p = [self.dqp[i] + 1 for i in range(self.ndim)]
         quad_nodes, quad_weights = Quadrature(p, category='Gauss').quad
 
@@ -92,7 +92,7 @@ class _3dCSCG_1LocalTrace(_3dCSCG_LocalTrace):
                 M = list()
                 for j, side in zip(tes, 'NSWEBF'):
                     te = self.mesh.trace.elements[j]
-                    R = RSi[side].toarray()
+                    R = RSi[side] # array, if sparse, do toarray()
 
                     if side in 'NS':
                         g = te.coordinate_transformation.metric(xNS, yNS)
@@ -116,17 +116,20 @@ class _3dCSCG_1LocalTrace(_3dCSCG_LocalTrace):
                         )
                     )
 
-                M = bmat(
-                    (
-                        [M[0], None, None, None, None, None],
-                        [None, M[1], None, None, None, None],
-                        [None, None, M[2], None, None, None],
-                        [None, None, None, M[3], None, None],
-                        [None, None, None, None, M[4], None],
-                        [None, None, None, None, None, M[5]]
-                    ),
-                    format='csr'
-                )
+                if self.whether.hybrid:
+                    M = bmat(
+                        (
+                            [M[0], None, None, None, None, None],
+                            [None, M[1], None, None, None, None],
+                            [None, None, M[2], None, None, None],
+                            [None, None, None, M[3], None, None],
+                            [None, None, None, None, M[4], None],
+                            [None, None, None, None, None, M[5]]
+                        ),
+                        format='csr'
+                    )
+                else:
+                    raise NotImplementedError()
 
                 if isinstance(mark, str):
                     cacheDict[mark] = M

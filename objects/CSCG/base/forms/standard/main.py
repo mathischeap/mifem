@@ -3,7 +3,6 @@
 from objects.CSCG.base.forms.standard.whether import CSCG_standard_form_Whether
 from objects.CSCG.base.forms.standard.num import CSCG_standard_form_NUM
 
-
 # noinspection PyUnresolvedReferences
 class CSCG_Standard_Form:
     """"""

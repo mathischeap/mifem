@@ -40,9 +40,9 @@ def test_applying_strong_BC_for_Poisson_problem_NT():
         if b not in u_boundaries:
             p_boundaries.append(b)
 
-    u = FC('2-f', is_hybrid = True)
+    u = FC('2-f', hybrid = True)
     p = FC('3-adf')
-    f = FC('3-f', is_hybrid = True)
+    f = FC('3-f', hybrid = True)
     t = FC('2-adt')
 
     M2 = u.matrices.mass

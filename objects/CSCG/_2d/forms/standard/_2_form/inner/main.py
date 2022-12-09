@@ -18,13 +18,13 @@ class _2dCSCG_2Form_Inner(_2Form_BASE):
 
     :param mesh:
     :param space:
-    :param is_hybrid:
+    :param hybrid:
     :param numbering_parameters:
     :param name:
     """
-    def __init__(self, mesh, space, is_hybrid=True,
+    def __init__(self, mesh, space, hybrid=True,
         numbering_parameters='Naive',  name='inner-oriented-2-form'):
-        super().__init__(mesh, space, is_hybrid, 'inner', numbering_parameters, name)
+        super().__init__(mesh, space, hybrid, 'inner', numbering_parameters, name)
         super().__init_2form_base__()
         self._k_ = 2
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_inner_2form')

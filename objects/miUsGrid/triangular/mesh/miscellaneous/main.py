@@ -50,9 +50,9 @@ class miUsGrid_TriangularMesh_Miscellaneous(FrozenOnly):
 
                 current = 0
                 numbering = dict()
-                point_numbering = - np.ones(self._mesh_.elements.num.GLOBAL_points)
+                point_numbering = - np.ones(self._mesh_.elements.num.global_points)
 
-                for c in range(self._mesh_.elements.num.GLOBAL_cells):
+                for c in range(self._mesh_.elements.num.global_cells):
                     # we number all element by element according to the element number
                     numbering_c = - np.ones((p+1, p+1), dtype=int)
                     emp = element_map[c]
@@ -238,9 +238,9 @@ class miUsGrid_TriangularMesh_Miscellaneous(FrozenOnly):
 
                 current = 0
                 numbering = dict()
-                point_numbering = - np.ones(self._mesh_.elements.num.GLOBAL_points)
+                point_numbering = - np.ones(self._mesh_.elements.num.global_points)
 
-                for c in range(self._mesh_.elements.num.GLOBAL_cells):
+                for c in range(self._mesh_.elements.num.global_cells):
                     # we number all element by element according to the element number
                     numbering_c = - np.ones((p+1, p+1), dtype=int)
                     emp = element_map[c]

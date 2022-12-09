@@ -30,7 +30,6 @@ class _3dCSCG_Mesh_Elements(FrozenOnly):
         self._rwPc_ = None
         self._freeze_self_()
 
-
     def ___PRIVATE_parse_elements_type_wrt_metric___(self):
         counter: dict = dict()
         self._multi_elements_metric_: dict = dict()
@@ -110,7 +109,7 @@ class _3dCSCG_Mesh_Elements(FrozenOnly):
         return self._whether_
 
     @property
-    def GLOBAL_num(self):
+    def global_num(self):
         """The total number of elements in all cores."""
         return self._mesh_._num_total_elements_
 
@@ -154,8 +153,7 @@ class _3dCSCG_Mesh_Elements(FrozenOnly):
             self._rwPc_ = COMM.bcast(self._rwPc_, root=MASTER_RANK)
 
         return self._rwPc_
-    
-    
+
     @property
     def involved_mesh_boundaries(self):
         """{List[str]}: Return a list of mesh boundary names on which local mesh-elements has side.

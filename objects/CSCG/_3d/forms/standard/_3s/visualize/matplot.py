@@ -101,7 +101,7 @@ class _3dCSCG_S3F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
             else:
                 raise Exception()
 
-            xyz, val = self._sf_.reconstruct(xi, eta, sigma, ravel=False, i=eps._element_.i)
+            xyz, val = self._sf_.reconstruct(xi, eta, sigma, ravel=False, element_range=eps._element_.i)
             val = val[e]
             xyz = xyz[e]
 

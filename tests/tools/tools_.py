@@ -144,9 +144,9 @@ def test_TOOLS_NO7_linear_algebra_EWC_test():
         space = SpaceInvoker('polynomials')([('Lobatto', l), ('Lobatto', m), ('Lobatto', n)])
         FC = FormCaller(mesh, space)
 
-        f0 = FC('0-f', is_hybrid=False)
-        f1 = FC('1-f', is_hybrid=False)
-        f2 = FC('2-f', is_hybrid=False)
+        f0 = FC('0-f', hybrid=False)
+        f1 = FC('1-f', hybrid=False)
+        f2 = FC('2-f', hybrid=False)
 
         E10 = f0.matrices.incidence
         E21 = f1.matrices.incidence
@@ -329,10 +329,10 @@ def test_TOOLS_NO9_test_Chained_Gathering_Matrix():
         mesh = MeshGenerator(MID)([f'Lobatto:{i}', f'Lobatto:{j}', f'Lobatto:{k}'], EDM='debug')
         space = SpaceInvoker('polynomials')([('Lobatto', l), ('Lobatto', m), ('Lobatto', n)])
         FC = FormCaller(mesh, space)
-        f0 = FC('0-f', is_hybrid=False)
-        f1 = FC('1-f', is_hybrid=False)
-        f2 = FC('2-f', is_hybrid=False)
-        f3 = FC('3-f', is_hybrid=False)
+        f0 = FC('0-f', hybrid=False)
+        f1 = FC('1-f', hybrid=False)
+        f2 = FC('2-f', hybrid=False)
+        f3 = FC('3-f', hybrid=False)
 
         GM0 = f0.numbering.gathering
         GM1 = f1.numbering.gathering
@@ -469,8 +469,8 @@ def test_TOOLS_NO10_test_EWC_SparseMatrix_Customize():
         space = SpaceInvoker('polynomials')([('Lobatto', l), ('Lobatto', m), ('Lobatto', n)])
         FC = FormCaller(mesh, space)
 
-        f2 = FC('2-f', is_hybrid=ISH)
-        f3 = FC('3-f', is_hybrid=ISH)
+        f2 = FC('2-f', hybrid=ISH)
+        f3 = FC('3-f', hybrid=ISH)
 
         M3 = f3.matrices.mass
         E32 = f2.matrices.incidence
@@ -532,8 +532,8 @@ def test_TOOLS_NO10_test_EWC_SparseMatrix_Customize():
                 if RANK == MASTER_RANK:
                     assert M[jjj].nnz != 0
 
-        f0 = FC('0-f', is_hybrid=False)
-        f1 = FC('1-f', is_hybrid=False)
+        f0 = FC('0-f', hybrid=False)
+        f1 = FC('1-f', hybrid=False)
 
         M1 = f1.matrices.mass
         E10 = f0.matrices.incidence
@@ -743,10 +743,10 @@ def test_TOOLS_NO12_EWC_assembling_test():
     mesh = MeshGenerator('crazy', c=c)([el1, el2, el3])
     space = SpaceInvoker('polynomials')([('Lobatto', el3), ('Lobatto', el2), ('Lobatto', el1)])
     FC = FormCaller(mesh, space)
-    f0 = FC('0-f', is_hybrid=False)
-    f1 = FC('1-f', is_hybrid=False)
-    f2 = FC('2-f', is_hybrid=False)
-    f3 = FC('2-f', is_hybrid=False)
+    f0 = FC('0-f', hybrid=False)
+    f1 = FC('1-f', hybrid=False)
+    f2 = FC('2-f', hybrid=False)
+    f3 = FC('2-f', hybrid=False)
 
     M0 = f0.matrices.mass
     M1 = f1.matrices.mass
@@ -789,9 +789,9 @@ def test_TOOLS_NO12_EWC_assembling_test():
     mesh = MeshGenerator2D('crazy', c=c)([el1, el2])
     space = SpaceInvoker2D('polynomials')([('Lobatto', el3), ('Lobatto', el2)])
     FC = FormCaller2D(mesh, space)
-    f0 = FC('0-f-i', is_hybrid=False)
-    f1 = FC('1-f-i', is_hybrid=False)
-    f2 = FC('2-f-i', is_hybrid=False)
+    f0 = FC('0-f-i', hybrid=False)
+    f1 = FC('1-f-i', hybrid=False)
+    f2 = FC('2-f-i', hybrid=False)
     M0 = f0.matrices.mass
     M1 = f1.matrices.mass
     M2 = f2.matrices.mass
@@ -896,8 +896,8 @@ def test_TOOLS_NO13_EWC_Customize_CSCG_partial_dofs():
     BNS = COMM.bcast(BNS, root=MASTER_RANK)
 
     FC = FormCaller(mesh, space)
-    f0 = FC('0-f', is_hybrid=ISH)
-    f1 = FC('1-f', is_hybrid=ISH)
+    f0 = FC('0-f', hybrid=ISH)
+    f1 = FC('1-f', hybrid=ISH)
 
     f0.BC.boundaries = BNS[0]
 
@@ -943,8 +943,8 @@ def test_TOOLS_NO13_EWC_Customize_CSCG_partial_dofs():
     BNS = COMM.bcast(BNS, root=MASTER_RANK)
 
     FC = FormCaller(mesh, space)
-    f2 = FC('2-f', is_hybrid=ISH)
-    f3 = FC('3-f', is_hybrid=ISH)
+    f2 = FC('2-f', hybrid=ISH)
+    f3 = FC('3-f', hybrid=ISH)
 
     f2.BC.boundaries = BNS[2]
     pd2 = f2.BC.interpret
@@ -1102,7 +1102,7 @@ def test_TOOLS_NO14_partial_cochain_with_3dCSCG_form_BC():
     SV = FC('vector', [velocity_x, velocity_y, velocity_z])
 
     #----  with 3d CSCG 0-form ---------------------------------------------------------------------
-    f0 = FC('0-f', is_hybrid=ISH)
+    f0 = FC('0-f', hybrid=ISH)
     f0.BC.CF = BS
     BS.current_time = time
     f0.BC.boundaries = BNS
@@ -1136,7 +1136,7 @@ def test_TOOLS_NO14_partial_cochain_with_3dCSCG_form_BC():
         np.testing.assert_array_almost_equal(local_cochain, v_exact)
 
     #----  with 3d CSCG 2-form ---------------------------------------------------------------------
-    f2 = FC('2-f', is_hybrid=ISH)
+    f2 = FC('2-f', hybrid=ISH)
     f2.CF = SV
     SV.current_time = time
     f2.discretize()
@@ -1320,8 +1320,8 @@ def test_TOOLS_NO15_linear_system_apply_BC():
 
 
     # Poisson hybrid system ---------------------------------------------------------------------
-    f2 = FC('2-f', is_hybrid=True)
-    f3 = FC('3-f', is_hybrid=True)
+    f2 = FC('2-f', hybrid=True)
+    f3 = FC('3-f', hybrid=True)
     t2 = FC('2-t')
 
     M2 = f2.matrices.mass

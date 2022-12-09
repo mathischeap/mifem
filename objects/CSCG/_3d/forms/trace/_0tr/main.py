@@ -22,13 +22,14 @@ class _3dCSCG_0Trace(_3dCSCG_Standard_Trace, ABC):
 
     :param mesh:
     :param space:
+    :param hybrid:
     :param orientation:
     :param numbering_parameters:
     :param name:
     """
-    def __init__(self, mesh, space, orientation='outer',
+    def __init__(self, mesh, space, hybrid=True, orientation='outer',
         numbering_parameters='Naive', name='outer-oriented-0-trace-form'):
-        super().__init__(mesh, space, orientation, numbering_parameters, name)
+        super().__init__(mesh, space, hybrid, orientation, numbering_parameters, name)
         self._k_ = 0
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_trace_0form')
         self._discretize_ = _3dCSCG_0Trace_Discretize(self)
@@ -73,9 +74,8 @@ class _3dCSCG_0Trace(_3dCSCG_Standard_Trace, ABC):
     def discretize(self):
         return self._discretize_
 
-
-    def reconstruct(self, xi, eta, sigma, ravel=False, i=None):
-        """Do the reconstruction.
+    def reconstruct(self, xi, eta, sigma, ravel=False, trace_element_range=None):
+        """Do the reconstruction. The results are trace-element-wise.
 
         :param xi: A 1d iterable object of floats between -1 and 1.
         :param eta: A 1d iterable object of floats between -1 and 1.
@@ -84,19 +84,19 @@ class _3dCSCG_0Trace(_3dCSCG_Standard_Trace, ABC):
         :type xi: list, tuple, numpy.ndarray
         :type eta: list, tuple, numpy.ndarray
         :type sigma: list, tuple, numpy.ndarray
-        :param i: (`default`:``None``) Do the reconstruction for these
+        :param trace_element_range: (`default`:``None``) Do the reconstruction for these
             trace elements. if it is ``None``, then do it for all trace
             elements.
-        :type i: int, None, list, tuple
+        :type trace_element_range: int, None, list, tuple
         """
 
-        if i is None:
+        if trace_element_range is None:
             indices = self.mesh.trace.elements._elements_.keys()
         else:
-            if not isinstance(i, (list, tuple)):
-                indices = [i, ]
+            if not isinstance(trace_element_range, (list, tuple)):
+                indices = [trace_element_range,]
             else:
-                indices = i
+                indices = trace_element_range
 
         xietasigma, pb = self.do.evaluate_basis_at_meshgrid(xi, eta,sigma)
         ii, jj, kk = np.size(xi), np.size(eta), np.size(sigma)
@@ -131,9 +131,6 @@ class _3dCSCG_0Trace(_3dCSCG_Standard_Trace, ABC):
                     else:
                         raise Exception
         return xyz, v
-
-
-
 
     def ___PRIVATE_generate_TEW_mass_matrices___(self):
         """Generate the trace-element-wise mass matrices stored in a dict whose keys are
@@ -178,18 +175,13 @@ class _3dCSCG_0Trace(_3dCSCG_Standard_Trace, ABC):
 
         return MD
 
-
-
-
-
-
 if __name__ == '__main__':
-    # mpiexec -n 5 python _3dCSCG\forms\trace\_0_trace.py
+    # mpiexec -n 5 python objects/CSCG/_3d/forms/trace/_0tr/main.py
 
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('crazy', c=0.)([2,2,2])
-    space = SpaceInvoker('polynomials')([('Lobatto',5), ('Lobatto',5), ('Lobatto',5)])
+    mesh = MeshGenerator('crazy_periodic')([2,2,2])
+    space = SpaceInvoker('polynomials')([('Lobatto',5), ('Lobatto',6), ('Lobatto',4)])
     FC = FormCaller(mesh, space)
 
     from numpy import sin, pi, cos
@@ -197,23 +189,10 @@ if __name__ == '__main__':
     def flux_func(t, x, y, z):
         return cos(2*pi*x) * cos(2*pi*y) * cos(2*pi*z) + t
 
-    flux = FC('scalar', flux_func)
-    t0 = FC('0-t')
+    t0 = FC('2-t', hybrid=False)
 
-    # t0.TW.func.do.set_func_body_as(flux)
-    # t0.TW.current_time = 1
-    # t0.TW.do.push_all_to_instant()
-    # t0.discretize()
+    dofs = t0.dofs
+    for i in dofs:
+        dof = dofs[i]
 
-    def u(t, x, y, z): return t + np.cos(2*np.pi*x) * np.cos(np.pi*y) * np.cos(2*np.pi*z)
-    def v(t, x, y, z): return t + np.cos(2*np.pi*x) * np.cos(2*np.pi*y) * np.cos(np.pi*z)
-    def w(t, x, y, z): return t + np.cos(np.pi*x) * np.cos(2*np.pi*y) * np.cos(2*np.pi*z)
-    V = FC('vector', (u,v,w))
-
-    # t0.TW.func.do.set_func_body_as(V)
-    # t0.TW.current_time = 1
-    # t0.TW.do.push_all_to_instant()
-    # t0.discretize()
-    # t0.visualize()
-
-    M = t0.matrices.mass
+        print(i, dof.whether.on_periodic_boundary)

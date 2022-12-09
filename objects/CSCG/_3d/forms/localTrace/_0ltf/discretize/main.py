@@ -39,6 +39,9 @@ class _3dCSCG_0LocalTrace_Discretize(FrozenOnly):
             if SELF.CF.__class__.__name__ == '_3dCSCG_ScalarField':
                 if SELF.CF.ftype == 'standard':
                     return self._standard_(update_cochain=update_cochain, target='func')
+                elif SELF.CF.ftype == 'boundary-wise':
+                    return self._boundary_wise_(target='func')
+
                 else:
                     raise NotImplementedError(f"3dCSCG 0-ltf cannot (target func) discretize "
                                               f"_3dCSCG_ScalarField of ftype={SELF.CF.ftype}")
@@ -55,7 +58,7 @@ class _3dCSCG_0LocalTrace_Discretize(FrozenOnly):
 
                 elif SELF.BC.CF.ftype == "boundary-wise":
                     # we will always not update cochain & and always set target to be "BC"
-                    return self._boundary_wise_()
+                    return self._boundary_wise_(target='BC')
 
                 else:
                     raise NotImplementedError(f"3dCSCG 0-ltf cannot (target BC) discretize "

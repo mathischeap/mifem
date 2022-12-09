@@ -2,8 +2,6 @@
 import socket
 from root.config.main import RANK, MASTER_RANK
 
-
-
 def whether_in_the_great_fire_wall():
     """Return True if we are in the great cyber fire wall."""
     assert RANK == MASTER_RANK, "Should only call it in master core."

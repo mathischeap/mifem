@@ -49,7 +49,7 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
         """
         if RANK == MASTER_RANK:
 
-            density = int(np.ceil(density/self._mesh_.elements.GLOBAL_num))
+            density = int(np.ceil(density / self._mesh_.elements.global_num))
             max_element_layout = 0
             for rn in self._mesh_.domain.regions.names:
                 if np.max(self._mesh_.elements.layout[rn]) > max_element_layout:
@@ -367,7 +367,7 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
 
             # .. now, we attach the numbering of inner 1-form to the fig.
             is_hybrid = self._f_.IS_hybrid
-            for k in range(self._mesh_.elements.GLOBAL_num):  # go through all elements (kth)
+            for k in range(self._mesh_.elements.global_num):  # go through all elements (kth)
                 mpk_x = mapping_dx[k]
                 mpk_y = mapping_dy[k]
                 gtk = gathering[k]
@@ -459,7 +459,7 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
 
             # .. now, we attach the numbering of outer 1-form to the fig.
             is_hybrid = self._f_.IS_hybrid
-            for k in range(self._mesh_.elements.GLOBAL_num):  # go through all elements (kth)
+            for k in range(self._mesh_.elements.global_num):  # go through all elements (kth)
                 mpk_x = mapping_dx[k]
                 mpk_y = mapping_dy[k]
                 gtk = gathering[k]

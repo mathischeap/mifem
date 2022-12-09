@@ -57,24 +57,18 @@ class miUsTriangle_ExactSolutionBase(FrozenOnly):
 
     @property
     def current_time(self):
-        """Return a list of current times of the attributes."""
-        CT = list()
-        attr_names = dir(self)
-        for attr_name in attr_names:
-            if attr_name != 'current_time':
-                attr = getattr(self, attr_name)
-
-                if hasattr(attr, '_current_time_'):
-
-                    ct = attr._current_time_
-                    if ct is not None:
-                        CT.append(ct)
-
+        """Return a list of current_time of all valid properties.."""
+        ct = list()
+        for attr_name in self.__dict__:
+            attr = getattr(self, attr_name)
+            if hasattr(attr, '_current_time_'):
+                if attr._current_time_ is not None:
+                    ct.append(attr.current_time)
                 else:
                     pass
-
-        return CT
-
+            else:
+                pass
+        return ct
 
     @current_time.setter
     def current_time(self, ct):
@@ -83,7 +77,6 @@ class miUsTriangle_ExactSolutionBase(FrozenOnly):
         for attr_name in attr_names:
             if attr_name != 'current_time':
                 attr = getattr(self, attr_name)
-
 
                 if hasattr(attr, '_current_time_'):
 

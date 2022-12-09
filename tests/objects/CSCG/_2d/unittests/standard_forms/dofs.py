@@ -31,9 +31,9 @@ def test_standard_forms_DOFS():
     scalar = FC('scalar', P)
     vector = FC('vector', (P, Q))
 
-    F0 = [FC('0-f-o', is_hybrid=IH), FC('0-f-i', is_hybrid=IH)]
-    F1 = [FC('1-f-o', is_hybrid=IH), FC('1-f-i', is_hybrid=IH)]
-    F2 = [FC('2-f-o', is_hybrid=IH), FC('2-f-i', is_hybrid=IH)]
+    F0 = [FC('0-f-o', hybrid=IH), FC('0-f-i', hybrid=IH)]
+    F1 = [FC('1-f-o', hybrid=IH), FC('1-f-i', hybrid=IH)]
+    F2 = [FC('2-f-o', hybrid=IH), FC('2-f-i', hybrid=IH)]
 
     for f in F0:
         dof = f.dofs.do.find.dof_at_corner_of_region(region_name, 'RD')

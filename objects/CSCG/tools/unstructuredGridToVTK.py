@@ -120,12 +120,12 @@ def _2dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
 
     new_space = _2dCSCG_PolynomialSpace([1,1], None)   #-------------------- produce new space ----1
 
-    r0f = _2dCSCG_0Form_Outer(new_mesh, new_space, is_hybrid=False) # produce the reference 0-form 1
+    r0f = _2dCSCG_0Form_Outer(new_mesh, new_space, hybrid=False) # produce the reference 0-form 1
 
     GM = r0f.numbering.gathering #----- the gathering numbering, a key property we want to use ----1
     Gnd = GM.global_num_dofs # -------- this many 0-form dofs = this many nodes in the VTK --------1
 
-    total_num_cells = new_mesh.elements.GLOBAL_num
+    total_num_cells = new_mesh.elements.global_num
 
     #----- collect needed COO ---------------------------------------------------------------------1
     COO = df0.coordinates
@@ -321,12 +321,12 @@ def _3dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
 
     new_space = _3dCSCG_PolynomialSpace([1,1,1], None) #-------------------- produce new space ----1
 
-    r0f = _3dCSCG_0Form(new_mesh, new_space, is_hybrid=False) #-- produce the reference 0-form ----1
+    r0f = _3dCSCG_0Form(new_mesh, new_space, hybrid=False) #-- produce the reference 0-form ----1
 
     GM = r0f.numbering.gathering #----- the gathering numbering, a key property we want to use ----1
     Gnd = GM.global_num_dofs # -------- this many 0-form dofs = this many nodes in the VTK --------1
 
-    total_num_cells = new_mesh.elements.GLOBAL_num
+    total_num_cells = new_mesh.elements.global_num
 
     #----- collect needed COO ---------------------------------------------------------------------1
     COO = df0.coordinates

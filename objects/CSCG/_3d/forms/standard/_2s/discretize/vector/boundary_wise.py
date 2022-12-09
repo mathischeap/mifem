@@ -13,7 +13,7 @@ class _3dCSCG_Discretize_BoundaryWise(FrozenOnly):
 
     def __call__(self, quad_degree=None):
         """
-        'Boundary only local cochain' means we return a dict, its keys are mesh-element numbers,
+        'mesh-element-side-wise local cochain' means we return a dict, its keys are mesh-element numbers,
         its values are also dictionaries whose keys are mesh-element-side names, like 'N', 'S' and
         so on, and values are the mesh-element-side(trace-element)-wise local cochains. For example
         cochainLocal = {
@@ -218,8 +218,8 @@ class _3dCSCG_Discretize_BoundaryWise(FrozenOnly):
 
                 cochainLocal[i][side] = LOCAL_FULL_COCHAIN[local_dofs]
 
-        # 'Boundary only local cochain': provide cochain.local and only for local dofs on the element sides.
-        return 'Boundary only local cochain', cochainLocal
+        # 'mesh-element-side-wise local cochain': provide cochain.local and only for local dofs on the element sides.
+        return 'mesh-element-side-wise local cochain', cochainLocal
 
 
 

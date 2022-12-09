@@ -204,6 +204,6 @@ def random_mesh_of_elements_around(elements_num,
     mesh = MeshGenerator(mesh_name, **personal_parameters)(element_layout, EDM=EDM)
     if RANK == MASTER_RANK:
         # noinspection PyUnboundLocalVariable
-        assert mesh.elements.GLOBAL_num == np.prod(FFF) * region_num
+        assert mesh.elements.global_num == np.prod(FFF) * region_num
 
     return mesh

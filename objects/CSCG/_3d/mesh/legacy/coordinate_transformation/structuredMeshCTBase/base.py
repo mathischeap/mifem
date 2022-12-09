@@ -104,9 +104,9 @@ class CTBase(CTMODGenerators, CTMODMethods, FrozenOnly):
         if isinstance(element, int):
             return self.___compute_mapping_element_i___(evaluation_points, element)
         elif element is None:
-            xyz = [np.zeros((self._mesh_.elements.GLOBAL_num, *np.shape(evaluation_points[j]))) 
+            xyz = [np.zeros((self._mesh_.elements.global_num, *np.shape(evaluation_points[j])))
                         for j in range(self.ndim)]
-            for i in range(self._mesh_.elements.GLOBAL_num):
+            for i in range(self._mesh_.elements.global_num):
                 xyz_i = self.___compute_mapping_element_i___(evaluation_points, i)
                 for j in range(self.ndim): 
                     xyz[j][i] = xyz_i[j]
@@ -167,9 +167,9 @@ class CTBase(CTMODGenerators, CTMODMethods, FrozenOnly):
         if isinstance(element, int):
             return self.___compute_Jacobian_matrix_i___(evaluation_points, element)
         elif element is None:
-            XYZ_xietasigma = [[np.zeros((self._mesh_.elements.GLOBAL_num, *np.shape(evaluation_points[j]))) 
+            XYZ_xietasigma = [[np.zeros((self._mesh_.elements.global_num, *np.shape(evaluation_points[j])))
                                 for _ in range(self.ndim)] for j in range(self.ndim)]
-            for i in range(self._mesh_.elements.GLOBAL_num):
+            for i in range(self._mesh_.elements.global_num):
                 xyz_xietasigma = self.___compute_Jacobian_matrix_i___(evaluation_points, i)
                 for j in range(self.ndim): 
                     for l in range(self.ndim):

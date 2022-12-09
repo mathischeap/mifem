@@ -20,13 +20,13 @@ class miUsTriangular_iS1F_Reconstruct(FrozenOnly):
         self._freeze_self_()
 
 
-    def __call__(self, xi, eta, ravel=False, i=None, vectorized=False, value_only=False):
+    def __call__(self, xi, eta, ravel=False, element_range=None, vectorized=False, value_only=False):
         """
 
         :param xi:
         :param eta:
         :param ravel:
-        :param i: The elements in which we want to reconstruct.
+        :param element_range: The elements in which we want to reconstruct.
         :param vectorized: {bool} Do we vectorize the computation?
         :param value_only: {bool} Do we only compute the values, no xyz?
         :return:
@@ -39,13 +39,13 @@ class miUsTriangular_iS1F_Reconstruct(FrozenOnly):
         xietasigma, basis = f.do.evaluate_basis_at_meshgrid(xi, eta)
 
         #--- parse indices --------------------------------------------------
-        if i is None: # default, in all local mesh-elements.
+        if element_range is None: # default, in all local mesh-elements.
             INDICES = mesh.elements.indices
         else:
             if vectorized: vectorized = False
 
-            if isinstance(i ,int):
-                INDICES = [i, ]
+            if isinstance(element_range ,int):
+                INDICES = [element_range, ]
             else:
                 raise NotImplementedError()
 

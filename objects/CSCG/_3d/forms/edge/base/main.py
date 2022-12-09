@@ -16,6 +16,7 @@ from objects.CSCG._3d.forms.edge.base.error import _3dCSCG_Edge_Error
 from objects.CSCG._3d.forms.edge.base.do import _3dCSCG_Edge_DO
 from objects.CSCG._3d.forms.edge.base.num import _3dCSCG_EdgeForm_Num
 from objects.CSCG._3d.forms.edge.base.dofs.main import _3dCSCG_Edge_forms_DOFs
+from objects.CSCG._3d.forms.edge.base.whether import _3dCSCG_EdgeForm_Whether
 
 
 class _3dCSCG_Edge(_3dCSCG_FORM_BASE, ndim=3):
@@ -30,12 +31,15 @@ class _3dCSCG_Edge(_3dCSCG_FORM_BASE, ndim=3):
     :type numbering_parameters: dict, str
     :param str name:
     """
-    def __init__(self, mesh, space, orientation, numbering_parameters, name):
+    def __init__(self, mesh, space, hybrid, orientation, numbering_parameters, name):
         super().__init__(mesh, space, name)
         self._NUM_basis_, self._NUM_basis_components_ = \
             getattr(self.space.num_basis, self.__class__.__name__)
         assert orientation in ('inner', 'outer'), " orientation needs to be 'inner' or 'outer'."
         self._orientation_ = orientation
+        assert isinstance(hybrid, bool), f"hybrid must be bool."
+        self._hybrid_ = hybrid
+        self._whether_ = _3dCSCG_EdgeForm_Whether(self)
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_edge_form')
 
         self._numbering_ = _3dCSCG_Edge_Numbering(self, numbering_parameters)
@@ -54,6 +58,10 @@ class _3dCSCG_Edge(_3dCSCG_FORM_BASE, ndim=3):
     @property
     def orientation(self):
         return self._orientation_
+
+    @property
+    def whether(self):
+        return self._whether_
 
     @property
     def numbering(self):

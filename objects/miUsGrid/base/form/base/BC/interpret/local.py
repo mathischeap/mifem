@@ -11,37 +11,32 @@ if './' not in sys.path: sys.path.append('./')
 from components.freeze.base import FrozenOnly
 
 
-class miUsTriangle_SF_BC_Interpret_Local(FrozenOnly):
+class miUsGrid_Form_BC_Interpret_Local(FrozenOnly):
     """"""
 
-    def __init__(self, sf):
+    def __init__(self, f):
         """"""
-        self._sf_ = sf
-        self._mesh_ = sf.mesh
+        self._f_ = f
+        self._mesh_ = f.mesh
         self._cochains_ = None
         self.___Pr_parse_dofs___() # need no BC.CF
-        if self._sf_.BC.CF is not None:
-            self.___Pr_parse_cochains___()
-        else:
-            pass
-
+        self._cochains_ = None
         self._freeze_self_()
 
     def ___Pr_parse_dofs___(self):
         """Need no `BC.CF`"""
-        iEE = self._sf_.BC._involved_element_parts_
+        iEE = self._f_.BC._involved_element_parts_
         self._dofs_ = dict()
         for e_e in iEE:
             element, edge = e_e
-            dofs = self._sf_.numbering.do.find.local_dofs_on_element_edge(edge)
+            dofs = self._f_.numbering.do.find.local_dofs_on_element_edge(edge)
             if element not in self._dofs_:
                 self._dofs_[element] = list()
             self._dofs_[element].extend(dofs)
 
-
     def ___Pr_parse_cochains___(self):
         """Need `BC.CF`"""
-        indicator, local_cochain = self._sf_.discretize(target='BC')
+        indicator, local_cochain = self._f_.discretize(target='BC')
         self._cochains_ = dict()
         if indicator == 'locally full local cochain':
             dofs = self.dofs
@@ -55,12 +50,24 @@ class miUsTriangle_SF_BC_Interpret_Local(FrozenOnly):
         else:
             raise NotImplementedError()
 
+    def __iter__(self):
+        for e in self.dofs:
+            yield e
+
+    def __len__(self):
+        return len(self.dofs)
+
+    def __contains__(self, item):
+        return item in self.dofs
+
     @property
     def dofs(self):
         return self._dofs_
 
     @property
     def cochains(self):
+        if self._cochains_ is None:
+            self.___Pr_parse_cochains___()
         return self._cochains_
 
 

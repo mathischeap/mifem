@@ -1,18 +1,10 @@
 # -*- coding: utf-8 -*-
-
-
 import sys
 if './' not in sys.path: sys.path.append('./')
-
 
 from objects.CSCG._3d.forms.standard.base.reconstruct import _3dCSCG_SF_Reconstruct
 import numpy as np
 from objects.CSCG._3d.discreteDields.scalar.main import _3dCSCG_DF_Scalar
-
-
-
-
-
 
 class _3dCSCG_SF3_Reconstruct(_3dCSCG_SF_Reconstruct):
     """"""
@@ -20,8 +12,7 @@ class _3dCSCG_SF3_Reconstruct(_3dCSCG_SF_Reconstruct):
         super(_3dCSCG_SF3_Reconstruct, self).__init__(sf)
         self._freeze_self_()
 
-
-    def __call__(self, xi, eta, sigma, ravel=False, i=None, regions=None, vectorized=False, value_only=False):
+    def __call__(self, xi, eta, sigma, ravel=False, element_range=None, regions=None, vectorized=False, value_only=False):
         """
         Reconstruct the standard 3-form.
 
@@ -31,9 +22,9 @@ class _3dCSCG_SF3_Reconstruct(_3dCSCG_SF_Reconstruct):
         :param xi: A 1d iterable object of floats between -1 and 1.
         :param eta: A 1d iterable object of floats between -1 and 1.
         :param sigma: A 1d iterable object of floats between -1 and 1.
-        :param i: (`default`:``None``) Do the reconstruction for ``#i`` element. if it is ``None``,
+        :param element_range: (`default`:``None``) Do the reconstruction for ``#i`` element. if it is ``None``,
             then do it for all elements.
-        :type i: int, None
+        :type element_range: int, None
         :type xi: list, tuple, numpy.ndarray
         :type eta: list, tuple, numpy.ndarray
         :type sigma: list, tuple, numpy.ndarray
@@ -53,12 +44,12 @@ class _3dCSCG_SF3_Reconstruct(_3dCSCG_SF_Reconstruct):
 
         #----------- parse INDICES -----------------------------------------------------------------
         if regions is None:
-            if i is None:
+            if element_range is None:
                 INDICES = mesh.elements.indices
-            elif isinstance(i, int):
-                INDICES = [i, ]
+            elif isinstance(element_range, int):
+                INDICES = [element_range,]
             else:
-                raise Exception(f"i={i} is wrong.")
+                INDICES = element_range
         else:
             if regions == 'all':
                 regions = mesh.domain.regions
@@ -139,7 +130,6 @@ class _3dCSCG_SF3_Reconstruct(_3dCSCG_SF_Reconstruct):
                 return xyz, value
         #===========================================================================================
 
-
     def discrete_scalar(self, grid):
         """We reconstruct this S2F as a 3d CSCG discrete vector in the `regions`.
 
@@ -195,7 +185,6 @@ class _3dCSCG_SF3_Reconstruct(_3dCSCG_SF_Reconstruct):
 
         return _3dCSCG_DF_Scalar(mesh, XYZ, VAL, name=self._sf_.standard_properties.name,
                                  structured=True, grid=grid)
-
 
 if __name__ == '__main__':
     # mpiexec -n 5 python objects/CSCG/_3d/forms/standard/_3s/reconstruct.py

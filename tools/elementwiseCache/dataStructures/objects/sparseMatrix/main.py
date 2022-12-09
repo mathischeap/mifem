@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import types
+from root.config.main import MPI, COMM
 from components.freeze.main import FrozenOnly
 from scipy import sparse as spspa
 # from tools.linear_algebra.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
@@ -209,10 +210,11 @@ class EWC_SparseMatrix(FrozenOnly):
         self._adjust_ = None
         self._blocks_ = None
         self._condition_ = None
+        self._global_length_ = None
         self._freeze_self_()
 
     def __repr__(self):
-        return f'EWC_SpaMat:{id(self)}'
+        return f'EWC_SpaMat-{self.global_length}-{id(self)}'
 
     def ___PRIVATE_reset_cache___(self):
         self._cache_ = dict()
@@ -246,7 +248,6 @@ class EWC_SparseMatrix(FrozenOnly):
     def ___PRIVATE_dict_2_method_data_generator___(self, i):
         """When we get a dict as the data generator, we make wrap it with a method."""
         return self.___dict_DG___[i]
-
 
     @property
     def elements(self):
@@ -322,24 +323,10 @@ class EWC_SparseMatrix(FrozenOnly):
                     GatheringMatrixChaining(*gms)(chain_method=self.assembler.chain_method)
                 )
 
-                # if all([_.__class__.__name__ == 'iR_Gathering_Matrix' for _ in gms]):
-                #     FINAL_GMS.append(
-                #         iR_Chain_Gathering_Matrix(gms, chain_method=self.assembler.chain_method)
-                #     )
-                #
-                # elif all([_.__class__.__name__ == 'Gathering_Matrix' for _ in gms]):
-                #     FINAL_GMS.append(
-                #         Chain_Gathering_Matrix(gms, chain_method=self.assembler.chain_method)
-                #     )
-                #
-                # else:
-                #     raise Exception()
             else:
                 raise Exception()
 
         self._gathering_matrices_0_, self._gathering_matrices_1_ = FINAL_GMS
-
-
 
     @property
     def whether(self):
@@ -395,6 +382,13 @@ class EWC_SparseMatrix(FrozenOnly):
         :rtype GlobalMatrix:
         """
         return self.assembler()
+
+    @property
+    def global_length(self):
+        if self._global_length_ is None:
+            LEN = len(self)
+            self._global_length_ = COMM.allreduce(LEN, op=MPI.SUM)
+        return self._global_length_
 
     def __len__(self):
         return len(self._elements_)
@@ -470,8 +464,6 @@ class EWC_SparseMatrix(FrozenOnly):
     def bmat_shape(self):
         return self._bmat_shape_
 
-
-
     def __mul__(self, other):
         """
         multiply self with other int of float, a * 7.
@@ -538,16 +530,13 @@ class EWC_SparseMatrix(FrozenOnly):
             DKC = ___MATMUL___(self, other)
             return EWC_SparseMatrix(self._elements_, DKC.__DG_call__, DKC.__KG_call__)
 
-
         elif other.__class__.__name__ == 'EWC_ColumnVector':
             DKC = ___VECMUL___(self, other)
             return other.__class__(self._elements_, DKC.__DG_call__, DKC.__KG_call__)
 
-
         elif hasattr(other, 'standard_properties') and 'form' in other.standard_properties.tags:
             DKC = ___VECMUL___(self, other.cochain.EWC)
             return EWC_ColumnVector(self._elements_, DKC.__DG_call__, DKC.__KG_call__)
-
 
         else:
             raise NotImplementedError()

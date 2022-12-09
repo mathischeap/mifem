@@ -20,7 +20,6 @@ class _3dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
     def __call__(self, *args, **kwargs):
         return self.grid(*args, **kwargs)
 
-
     def grid(self, elements=None, density=10000, usetex=False,
         saveto = None, linewidth=0.6, aspect='equal', title=True):
         """We compute the grid from mesh element, so even for periodic boundaries, the grid will be full.
@@ -32,6 +31,7 @@ class _3dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         :param saveto:
         :param linewidth:
         :param aspect:
+        :param title:
         :return:
         """
         if elements is None:
@@ -46,7 +46,7 @@ class _3dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
                     ELE.append(i)
 
         density = int(np.ceil((
-            self._mesh_.ndim*density/self._mesh_.elements.GLOBAL_num
+            self._mesh_.ndim*density/self._mesh_.elements.global_num
                                )**(1/self._mesh_.ndim)))
         r = np.linspace(-1,1, density)
         O = np.ones(density)
@@ -162,7 +162,7 @@ class _3dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         :param aspect:
         :return:
         """
-        num_edges = self._mesh_.edge.elements.GLOBAL_num
+        num_edges = self._mesh_.edge.elements.global_num
         density = int(density / num_edges)
 
         if density <= 1: density = 2
@@ -212,10 +212,10 @@ class _3dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
                 ___.update(_)
             edges_coo = ___
 
-            assert len(nodes_coo) == nodes.GLOBAL_num, "safety check!"
-            assert len(nodes_omb) == nodes.GLOBAL_num, "safety check!"
-            assert len(nodes_opb) == nodes.GLOBAL_num, "safety check!"
-            assert len(edges_coo) == edges.GLOBAL_num, "safety check!"
+            assert len(nodes_coo) == nodes.global_num, "safety check!"
+            assert len(nodes_omb) == nodes.global_num, "safety check!"
+            assert len(nodes_opb) == nodes.global_num, "safety check!"
+            assert len(edges_coo) == edges.global_num, "safety check!"
 
         else:
             return
@@ -284,7 +284,7 @@ class _3dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 6 python _3dCSCG\mesh\visualize\matplot.py
+    # mpiexec -n 6 python objects/CSCG/_3d/mesh/visualize/matplot.py
     from objects.CSCG._3d.master import MeshGenerator
     elements = [3, 3, 3]
     mesh = MeshGenerator('bridge_arch_cracked')(elements)

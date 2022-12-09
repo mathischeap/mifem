@@ -40,7 +40,7 @@ class _3dCSCG_Edge_Error(FrozenOnly):
             if quad_density is not None:
                 assert isinstance(quad_density, (int, float)) and quad_density > 0, \
                     f"quad_density ={quad_density} must be int or float > 0."
-                NUM_elements = self._ef_.mesh.elements.GLOBAL_num
+                NUM_elements = self._ef_.mesh.elements.global_num
                 density_per_element = quad_density / NUM_elements
                 num_nodes = density_per_element**(1/3)
                 if num_nodes < 1: num_nodes = 3

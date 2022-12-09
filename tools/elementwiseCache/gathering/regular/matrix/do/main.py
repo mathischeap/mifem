@@ -4,7 +4,6 @@ import numpy as np
 from tools.elementwiseCache.gathering.vector import Gathering_Vector
 from tools.elementwiseCache.gathering.regular.matrix.do.find import Gathering_Matrix_FIND
 
-
 class Gathering_Matrix_DO(FrozenOnly):
     """"""
 

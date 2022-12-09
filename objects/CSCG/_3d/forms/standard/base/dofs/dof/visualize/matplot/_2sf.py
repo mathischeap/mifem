@@ -29,7 +29,7 @@ class _3dCSCG_SF_DOF_VISUALIZE_matplot_2SF(FrozenOnly):
         dofs = non_hybrid_form.dofs
         hy_i = self._dof_._i_
 
-        GPs = self._dof_.GLOBAL_positions
+        GPs = self._dof_.global_positions
         assert len(GPs) == 1, f"trivial check!"
 
         pos = GPs[0]
@@ -72,7 +72,7 @@ class _3dCSCG_SF_DOF_VISUALIZE_matplot_2SF(FrozenOnly):
         for E_I in positions:
             E, I = E_I
             EF[E] = self._sf_.___PRIVATE_element_grid_data_generator_1___(E, density=density)
-        GPs = self._dof_.GLOBAL_positions
+        GPs = self._dof_.global_positions
         Element_Frames = COMM.gather(EF, root=MASTER_RANK)
         if RANK == MASTER_RANK:
             # ------------ prepare figure -----------------------------------------------------------------

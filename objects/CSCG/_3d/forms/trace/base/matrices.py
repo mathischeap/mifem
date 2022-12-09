@@ -19,7 +19,11 @@ class _3dCSCG_Trace_Matrices(FrozenOnly):
         if self._T_ is None:
             k = self._tf_.k
             formName = f'_3dCSCG_{int(k)}Trace'
-            T = getattr(self._tf_.space.trace_matrix, formName)[0]
+            T = getattr(self._tf_.space.trace_matrix, formName)[0][self._tf_.whether.hybrid]
+            if T is None:
+                raise NotImplementedError()
+            else:
+                pass
             self._T_ = \
                 EWC_SparseMatrix(self._tf_.mesh.elements, T, 'constant')
         return self._T_
@@ -33,7 +37,11 @@ class _3dCSCG_Trace_Matrices(FrozenOnly):
         if self._S_ is None:
             k = self._tf_.k
             formName = f'_3dCSCG_{int(k)}Trace'
-            S = getattr(self._tf_.space.selective_matrix, formName)[0]
+            S = getattr(self._tf_.space.selective_matrix, formName)[0][self._tf_.whether.hybrid]
+            if S is None:
+                raise NotImplementedError()
+            else:
+                pass
             self._S_ = \
                 EWC_SparseMatrix(self._tf_.mesh.elements, S, 'constant')
         return self._S_

@@ -196,7 +196,7 @@ class LocalNumbering(FrozenOnly):
 
 
     def ___PRIVATE_find_MESH_ELEMENT_WISE_local_dofs_of_0Trace_edge___(
-        self, trace_face, trace_edge):
+        self, trace_face, trace_edge, hybrid=True):
         """We try to find the local dofs of 0-trace-form on the `trace_edge` of a trace-element on
         the  `trace_face` side of mesh-element.
 
@@ -204,81 +204,87 @@ class LocalNumbering(FrozenOnly):
         ----------
         trace_face
         trace_edge
+        hybrid:
+            If the trace form is hybrid?
 
         Returns
         -------
 
         """
-        TFE = trace_face + trace_edge
-        if TFE not in self._cache_T0_:
+        if hybrid:
+            TFE = trace_face + trace_edge
+            if TFE not in self._cache_T0_:
 
-            TEW_LN = self._3dCSCG_0Trace
+                TEW_LN = self._3dCSCG_0Trace
 
-            LN = TEW_LN[trace_face]
+                LN = TEW_LN[trace_face]
 
-            if trace_face in ('N', 'S'):
-                if trace_edge == 'W':
-                    TEW_dofs = LN[0][0,:]
-                elif trace_edge == 'E':
-                    TEW_dofs = LN[0][-1,:]
-                elif trace_edge == 'B':
-                    TEW_dofs = LN[0][:,0]
-                elif trace_edge == 'F':
-                    TEW_dofs = LN[0][:,-1]
+                if trace_face in ('N', 'S'):
+                    if trace_edge == 'W':
+                        TEW_dofs = LN[0][0,:]
+                    elif trace_edge == 'E':
+                        TEW_dofs = LN[0][-1,:]
+                    elif trace_edge == 'B':
+                        TEW_dofs = LN[0][:,0]
+                    elif trace_edge == 'F':
+                        TEW_dofs = LN[0][:,-1]
+                    else:
+                        raise Exception()
+
+                elif trace_face in ('W', 'E'):
+                    if trace_edge == 'N':
+                        TEW_dofs = LN[0][0,:]
+                    elif trace_edge == 'S':
+                        TEW_dofs = LN[0][-1,:]
+                    elif trace_edge == 'B':
+                        TEW_dofs = LN[0][:,0]
+                    elif trace_edge == 'F':
+                        TEW_dofs = LN[0][:,-1]
+                    else:
+                        raise Exception()
+
+                elif trace_face in ('B', 'F'):
+                    if trace_edge == 'N':
+                        TEW_dofs = LN[0][0,:]
+                    elif trace_edge == 'S':
+                        TEW_dofs = LN[0][-1,:]
+                    elif trace_edge == 'W':
+                        TEW_dofs = LN[0][:,0]
+                    elif trace_edge == 'E':
+                        TEW_dofs = LN[0][:,-1]
+                    else:
+                        raise Exception()
+
                 else:
                     raise Exception()
 
-            elif trace_face in ('W', 'E'):
-                if trace_edge == 'N':
-                    TEW_dofs = LN[0][0,:]
-                elif trace_edge == 'S':
-                    TEW_dofs = LN[0][-1,:]
-                elif trace_edge == 'B':
-                    TEW_dofs = LN[0][:,0]
-                elif trace_edge == 'F':
-                    TEW_dofs = LN[0][:,-1]
+                num_basis_onsides = self._FS_.num_basis._3dCSCG_0Trace[2]
+                num_basis_NS = num_basis_onsides['N']
+                num_basis_WE = num_basis_onsides['W']
+                num_basis_BF = num_basis_onsides['B']
+
+                if trace_face =='N':
+                    self._cache_T0_[TFE] = TEW_dofs
+                elif trace_face == 'S':
+                    self._cache_T0_[TFE] = TEW_dofs + num_basis_NS
+                elif trace_face == 'W':
+                    self._cache_T0_[TFE] = TEW_dofs + num_basis_NS * 2
+                elif trace_face == 'E':
+                    self._cache_T0_[TFE] = TEW_dofs + num_basis_NS * 2 + num_basis_WE
+                elif trace_face == 'B':
+                    self._cache_T0_[TFE] = TEW_dofs + num_basis_NS * 2 + num_basis_WE * 2
+                elif trace_face == 'F':
+                    self._cache_T0_[TFE] = TEW_dofs + num_basis_NS * 2 + num_basis_WE * 2 + num_basis_BF
                 else:
                     raise Exception()
 
-            elif trace_face in ('B', 'F'):
-                if trace_edge == 'N':
-                    TEW_dofs = LN[0][0,:]
-                elif trace_edge == 'S':
-                    TEW_dofs = LN[0][-1,:]
-                elif trace_edge == 'W':
-                    TEW_dofs = LN[0][:,0]
-                elif trace_edge == 'E':
-                    TEW_dofs = LN[0][:,-1]
-                else:
-                    raise Exception()
+            return self._cache_T0_[TFE]
 
-            else:
-                raise Exception()
-
-            num_basis_onsides = self._FS_.num_basis._3dCSCG_0Trace[2]
-            num_basis_NS = num_basis_onsides['N']
-            num_basis_WE = num_basis_onsides['W']
-            num_basis_BF = num_basis_onsides['B']
-
-            if trace_face =='N':
-                self._cache_T0_[TFE] = TEW_dofs
-            elif trace_face == 'S':
-                self._cache_T0_[TFE] = TEW_dofs + num_basis_NS
-            elif trace_face == 'W':
-                self._cache_T0_[TFE] = TEW_dofs + num_basis_NS * 2
-            elif trace_face == 'E':
-                self._cache_T0_[TFE] = TEW_dofs + num_basis_NS * 2 + num_basis_WE
-            elif trace_face == 'B':
-                self._cache_T0_[TFE] = TEW_dofs + num_basis_NS * 2 + num_basis_WE * 2
-            elif trace_face == 'F':
-                self._cache_T0_[TFE] = TEW_dofs + num_basis_NS * 2 + num_basis_WE * 2 + num_basis_BF
-            else:
-                raise Exception()
-
-        return self._cache_T0_[TFE]
+        else:
+            raise NotImplementedError()
 
     def ___PRIVATE_find_MESH_ELEMENT_WISE_local_dofs_of_1Trace_edge___(
-        self, trace_face, trace_edge):
+        self, trace_face, trace_edge, hybrid=True):
         """We try to find the local dofs of 1-trace-form on the `trace_edge` of a trace-element on
         the  `trace_face` side of mesh-element.
 
@@ -286,78 +292,84 @@ class LocalNumbering(FrozenOnly):
         ----------
         trace_face
         trace_edge
+        hybrid:
+            If the trace form is hybrid?
 
         Returns
         -------
 
         """
-        TFE = trace_face + trace_edge
-        if TFE not in self._cache_T1_:
+        if hybrid:
+            TFE = trace_face + trace_edge
+            if TFE not in self._cache_T1_:
 
-            TEW_LN = self._3dCSCG_1Trace
+                TEW_LN = self._3dCSCG_1Trace
 
-            LN = TEW_LN[trace_face]
+                LN = TEW_LN[trace_face]
 
-            if trace_face in ('N', 'S'):
-                if trace_edge == 'W':
-                    TEW_dofs = LN[1][0,:]
-                elif trace_edge == 'E':
-                    TEW_dofs = LN[1][-1,:]
-                elif trace_edge == 'B':
-                    TEW_dofs = LN[0][:,0]
-                elif trace_edge == 'F':
-                    TEW_dofs = LN[0][:,-1]
+                if trace_face in ('N', 'S'):
+                    if trace_edge == 'W':
+                        TEW_dofs = LN[1][0,:]
+                    elif trace_edge == 'E':
+                        TEW_dofs = LN[1][-1,:]
+                    elif trace_edge == 'B':
+                        TEW_dofs = LN[0][:,0]
+                    elif trace_edge == 'F':
+                        TEW_dofs = LN[0][:,-1]
+                    else:
+                        raise Exception()
+
+                elif trace_face in ('W', 'E'):
+                    if trace_edge == 'N':
+                        TEW_dofs = LN[1][0,:]
+                    elif trace_edge == 'S':
+                        TEW_dofs = LN[1][-1,:]
+                    elif trace_edge == 'B':
+                        TEW_dofs = LN[0][:,0]
+                    elif trace_edge == 'F':
+                        TEW_dofs = LN[0][:,-1]
+                    else:
+                        raise Exception()
+
+                elif trace_face in ('B', 'F'):
+                    if trace_edge == 'N':
+                        TEW_dofs = LN[1][0,:]
+                    elif trace_edge == 'S':
+                        TEW_dofs = LN[1][-1,:]
+                    elif trace_edge == 'W':
+                        TEW_dofs = LN[0][:,0]
+                    elif trace_edge == 'E':
+                        TEW_dofs = LN[0][:,-1]
+                    else:
+                        raise Exception()
+
                 else:
                     raise Exception()
 
-            elif trace_face in ('W', 'E'):
-                if trace_edge == 'N':
-                    TEW_dofs = LN[1][0,:]
-                elif trace_edge == 'S':
-                    TEW_dofs = LN[1][-1,:]
-                elif trace_edge == 'B':
-                    TEW_dofs = LN[0][:,0]
-                elif trace_edge == 'F':
-                    TEW_dofs = LN[0][:,-1]
+                num_basis_onsides = self._FS_.num_basis._3dCSCG_1Trace[2]
+                num_basis_NS = num_basis_onsides['N']
+                num_basis_WE = num_basis_onsides['W']
+                num_basis_BF = num_basis_onsides['B']
+
+                if trace_face =='N':
+                    self._cache_T1_[TFE] = TEW_dofs
+                elif trace_face == 'S':
+                    self._cache_T1_[TFE] = TEW_dofs + num_basis_NS
+                elif trace_face == 'W':
+                    self._cache_T1_[TFE] = TEW_dofs + num_basis_NS * 2
+                elif trace_face == 'E':
+                    self._cache_T1_[TFE] = TEW_dofs + num_basis_NS * 2 + num_basis_WE
+                elif trace_face == 'B':
+                    self._cache_T1_[TFE] = TEW_dofs + num_basis_NS * 2 + num_basis_WE * 2
+                elif trace_face == 'F':
+                    self._cache_T1_[TFE] = TEW_dofs + num_basis_NS * 2 + num_basis_WE * 2 + num_basis_BF
                 else:
                     raise Exception()
 
-            elif trace_face in ('B', 'F'):
-                if trace_edge == 'N':
-                    TEW_dofs = LN[1][0,:]
-                elif trace_edge == 'S':
-                    TEW_dofs = LN[1][-1,:]
-                elif trace_edge == 'W':
-                    TEW_dofs = LN[0][:,0]
-                elif trace_edge == 'E':
-                    TEW_dofs = LN[0][:,-1]
-                else:
-                    raise Exception()
+            return self._cache_T1_[TFE]
 
-            else:
-                raise Exception()
-
-            num_basis_onsides = self._FS_.num_basis._3dCSCG_1Trace[2]
-            num_basis_NS = num_basis_onsides['N']
-            num_basis_WE = num_basis_onsides['W']
-            num_basis_BF = num_basis_onsides['B']
-
-            if trace_face =='N':
-                self._cache_T1_[TFE] = TEW_dofs
-            elif trace_face == 'S':
-                self._cache_T1_[TFE] = TEW_dofs + num_basis_NS
-            elif trace_face == 'W':
-                self._cache_T1_[TFE] = TEW_dofs + num_basis_NS * 2
-            elif trace_face == 'E':
-                self._cache_T1_[TFE] = TEW_dofs + num_basis_NS * 2 + num_basis_WE
-            elif trace_face == 'B':
-                self._cache_T1_[TFE] = TEW_dofs + num_basis_NS * 2 + num_basis_WE * 2
-            elif trace_face == 'F':
-                self._cache_T1_[TFE] = TEW_dofs + num_basis_NS * 2 + num_basis_WE * 2 + num_basis_BF
-            else:
-                raise Exception()
-
-        return self._cache_T1_[TFE]
+        else:
+            raise NotImplementedError()
 
 
 

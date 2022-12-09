@@ -73,7 +73,7 @@ class _2dCSCG_DF_ScalarPortion(_2dCSCG_DF_PortionBase):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python objects/CSCG/_2d/discrete_fields/scalar/portion.py
+    # mpiexec -n 4 python objects/CSCG/_2d/discreteFields/scalar/portion.py
     from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
     mesh = MeshGenerator('crazy', c=0.0, bounds=([-1,1], [-1,1]))([5,5])
@@ -81,11 +81,10 @@ if __name__ == "__main__":
     space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3)])
     FC = FormCaller(mesh, space)
     ES = ExactSolutionSelector(mesh)('sL:sincos1')
-    f0 = FC('0-f-o', is_hybrid=True)
-    f0.TW.func.do.set_func_body_as(ES, 'potential')
+    f0 = FC('0-f-o', hybrid=False)
+    f0.CF = ES.potential
 
-    f0.TW.current_time = 0
-    f0.TW.do.push_all_to_instant()
+    f0.CF.current_time = 0
     f0.discretize()
 
     x = np.linspace(-1,1,200)

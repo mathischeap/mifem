@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from components.freeze.base import FrozenOnly
 
-
-
 class SpaMat_Adjust(FrozenOnly):
     """Unlike `Customize`, `Adjust` will make the changes in real time and make a new
     EWC_SparseMatrix afterwards.

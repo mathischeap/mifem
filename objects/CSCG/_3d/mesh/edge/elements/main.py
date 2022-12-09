@@ -31,15 +31,12 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
         self._local_EE_indices_sorted_.sort()
         self._elements_ = dict()
         self._do_ = None
+        self._type_amount_dict_ = None
         self._ct_ = _3dCSCG_Edge_Elements_CT(self)
-        self.___PRIVATE_reset_cache___()
         self.___NS___ = 'NS'
         self.___WE___ = 'WE'
         self.___BF___ = 'BF'
         self._freeze_self_()
-
-    def ___PRIVATE_reset_cache___(self):
-        self._type_amount_dict_ = None
 
     def ___PRIVATE_generating_edge_element_map___(self):
         """"""
@@ -256,8 +253,8 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
                 if i+1 in POOL:
                     assert np.all(POOL_i_p_1 == POOL[i+1])
                 else:
-                    if i == self.GLOBAL_num - 1:
-                        assert np.sum(POOL_i_p_1) == self.GLOBAL_num, "Something is wrong."
+                    if i == self.global_num - 1:
+                        assert np.sum(POOL_i_p_1) == self.global_num, "Something is wrong."
                     else:
                         POOL[i+1] = POOL_i_p_1
 
@@ -287,7 +284,7 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
         return self._type_amount_dict_
 
     @property
-    def GLOBAL_num(self):
+    def global_num(self):
         """How many edge elements in total (in all cores)?"""
         return self._GLOBAL_num_
 
@@ -311,13 +308,13 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
                 ___.update(mp)
                 assert len(___) == cur_len + add_len, "A trivial check."
             MAP = ___
-            assert len(MAP) == self._mesh_.elements.GLOBAL_num, "A trivial check."
+            assert len(MAP) == self._mesh_.elements.global_num, "A trivial check."
 
             LOC_DICT = dict()
             LOC_DICT_FULL = dict()
             ind_2_loc = ['WB', 'EB', 'WF', 'EF', 'NB', 'SB', 'NF', 'SF', 'NW', 'SW', 'NE', 'SE']
 
-            for i in range(self._mesh_.elements.GLOBAL_num):
+            for i in range(self._mesh_.elements.global_num):
                 mp_i = MAP[i]
                 for ind, edge in enumerate(mp_i):
                     if edge not in LOC_DICT: LOC_DICT[edge] = list()

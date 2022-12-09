@@ -12,8 +12,8 @@ from email.mime.text import MIMEText
 from components.miscellaneous.timer import MyTimer
 from root.config.main import RANK, MASTER_RANK
 from email.mime.multipart import MIMEMultipart
-from components.internet.in_the_wall_or_not import whether_in_the_great_fire_wall
-from components.internet.connected_or_not import whether_internet_connected
+from components.legacy.internet.in_the_wall_or_not import whether_in_the_great_fire_wall
+from components.legacy.internet.connected_or_not import whether_internet_connected
 
 
 

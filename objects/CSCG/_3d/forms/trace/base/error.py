@@ -41,7 +41,7 @@ class _3dCSCG_Trace_Error(FrozenOnly):
             if quad_density is not None:
                 assert isinstance(quad_density, (int, float)) and quad_density > 0, \
                     f"quad_density ={quad_density} must be int or float > 0."
-                NUM_elements = self._tf_.mesh.elements.GLOBAL_num
+                NUM_elements = self._tf_.mesh.elements.global_num
                 density_per_element = quad_density / NUM_elements
                 num_nodes = density_per_element**(1/3)
                 if num_nodes < 1: num_nodes = 3
@@ -69,9 +69,11 @@ class _3dCSCG_Trace_Error(FrozenOnly):
             localError = -1
             for i in self._tf_.mesh.trace.elements:
 
-                error_i = [np.max(np.abs(v[i][m] -
-                                         self._tf_.CF.___DO_evaluate_func_at_time___()[m](*xyz[i])))
-                           for m in range(OneOrTwo)]
+                error_i = [
+                    np.max(np.abs(v[i][m] -
+                    self._tf_.CF.___DO_evaluate_func_at_time___()[m](*xyz[i])))
+                    for m in range(OneOrTwo)
+                ]
                 error_i = max(error_i)
 
                 localError = error_i if error_i > localError else localError
@@ -84,6 +86,7 @@ class _3dCSCG_Trace_Error(FrozenOnly):
                 globalError = None
 
             globalError = COMM.bcast(globalError, root=MASTER_RANK)
+
         else:
             raise NotImplementedError(f"Not implemented for L^{n}-error of trace forms.")
 

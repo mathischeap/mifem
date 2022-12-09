@@ -81,19 +81,63 @@ class Test_Reduction_and_Reconstruction_of_local_trace_forms(FrozenOnly):
                 value = val[side][0]
                 assert np.max(np.abs(p(0, x, y, z) - value)) < 1e-3
 
-        R0 = ltf0.do.make_reconstruction_matrix_on_grid(xi, et, sg)[0]
-        R2 = ltf2.do.make_reconstruction_matrix_on_grid(xi, et, sg)[0]
+        R0 = ltf0.do.make_reconstruction_matrix_on_grid(xi, et, sg)[1]
+        R2 = ltf2.do.make_reconstruction_matrix_on_grid(xi, et, sg)[1]
 
-        ll0 = ltf0.cochain.local
-        ll2 = ltf2.cochain.local
+        ll0 = ltf0.cochain.local_ESW
+        ll2 = ltf2.cochain.local_ESW
 
         xyz0, v0 = ltf0.reconstruct(xi, et, sg, ravel=True)
         xyz2, v2 = ltf2.reconstruct(xi, et, sg, ravel=True)
+
         for i in R0:
-            V0 = R0[i] @ ll0[i]
-            np.testing.assert_array_almost_equal(v0[i][0], V0)
-            V2 = R2[i] @ ll2[i]
-            np.testing.assert_array_almost_equal(v2[i][0], V2)
+            for side in 'NSWEBF':
+
+                V = R0[i][side] @ ll0[i][side]
+
+                np.testing.assert_array_almost_equal(V, v0[i][side][0])
+
+                V = R2[i][side] @ ll2[i][side]
+
+                np.testing.assert_array_almost_equal(V, v2[i][side][0])
+
+        for ltf in (self.fc('0-lt', hybrid=False), self.fc('2-lt', hybrid=False)):
+
+            ltf.CF = scalar
+
+            ltf.discretize()
+
+            xi = list((np.random.rand(7)-0.5) * 2)
+            et = list((np.random.rand(7)-0.5) * 2)
+            sg = list((np.random.rand(7)-0.5) * 2)
+
+            xi.sort()
+            et.sort()
+            sg.sort()
+
+            R00, R0 = ltf.do.make_reconstruction_matrix_on_grid(xi, et, sg)
+
+            ll0 = ltf.cochain.local_ESW
+
+            v0 = ltf.reconstruct(xi, et, sg, ravel=True)[1]
+
+            for i in R0:
+                for side in 'NSWEBF':
+
+                    V = R0[i][side] @ ll0[i][side]
+
+                    np.testing.assert_array_almost_equal(V, v0[i][side][0])
+
+            ll0 = ltf.cochain.local
+
+            for i in R0:
+                V0 = R00[i] @ ll0[i]
+                _ = list()
+                for side in 'NSWEBF':
+                    _.append(v0[i][side][0])
+                _ = np.concatenate(_)
+
+                np.testing.assert_array_almost_equal(_, V0, decimal=6)
 
         return 1
 

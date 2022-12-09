@@ -12,7 +12,6 @@ from components.freeze.main import FrozenOnly
 from tools.elementwiseCache.dataStructures.objects.columnVector.main import EWC_ColumnVector
 from objects.CSCG._3d.forms.standard._1s.boundary_integration.helpers.V_helper import S1F_BI_V_Helper
 
-
 class _3dCSCG_S1F_BI(FrozenOnly):
     """"""
 
@@ -47,13 +46,6 @@ class _3dCSCG_S1F_BI(FrozenOnly):
 
         # no cache, vector.current_time may change
         return EWC_ColumnVector(self._s1f_.mesh, VDG, 'no_cache')
-
-
-
-
-
-
-
 
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/_3d/forms/standard/_1s/boundary_integration/main.py

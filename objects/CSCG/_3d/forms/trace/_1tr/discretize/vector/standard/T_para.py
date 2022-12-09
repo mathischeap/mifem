@@ -1,12 +1,10 @@
-
+# -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('/')
-
+if './' not in sys.path: sys.path.append('./')
 
 from components.freeze.base import FrozenOnly
 import numpy as np
 from components.quadrature import Quadrature
-
 
 class _3dCSCG_1Trace_Discretize_StandardVector_T_para(FrozenOnly):
     """"""
@@ -245,9 +243,6 @@ class _3dCSCG_1Trace_Discretize_StandardVector_T_para(FrozenOnly):
         if update_cochain: SELF.cochain.local_TEW = local_TEW
         # 'locally full local TEW cochain': provide cochain.local_TEW and for all dofs on the trace element.
         return 'locally full local TEW cochain', local_TEW
-
-
-
 
 
 if __name__ == '__main__':

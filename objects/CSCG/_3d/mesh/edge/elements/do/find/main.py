@@ -166,7 +166,7 @@ if __name__ == '__main__':
     # S = edges.do.find.objects_surrounding(1)
 
     # print(S.sequence)
-    for i in range(edges.GLOBAL_num):
+    for i in range(edges.global_num):
         S = edges.do.find.objects_surrounding(i)
         SOP = edges.do.find.hybrid_singularity_overcoming_setting(i)
         # print(SOP)

@@ -38,9 +38,6 @@ from objects.CSCG._3d.mesh.node.main import _3dCSCG_Node
 from objects.CSCG._3d.mesh.edge.main import _3dCSCG_Edge
 from objects.CSCG._3d.mesh.trace.main import _3dCSCG_Trace
 
-
-
-
 class _3dCSCG_Mesh(CSCG_MESH_BASE):
     """The 3dCSCG mesh."""
     def __init__(self, domain, element_layout=None, EDM=None):
@@ -64,7 +61,6 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                     (1): An positive int
                     (2): A 1-d array whose entries are all positive int or float.
                     (3): A string: special, we will parse this string then.
-
 
         :param EDM:
             Element-Distribution-Methods; it can be one of (None, 'debug', 'SWV0', 'chaotic')
@@ -111,8 +107,6 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         self.___TEST_MODE___ = False
         self.___element_global_numbering___ = None
         self._freeze_self_()
-
-
 
     @accepts('self', (tuple, list, int, dict, "NoneType"))
     def ___PRIVATE_parse_element_layout___(self, element_layout):
@@ -197,11 +191,6 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         _num_elements_in_region_ = np.prod(_element_layout_)
 
         return _element_layout_, _element_ratio_, _element_spacing_, _num_elements_in_region_
-
-
-
-
-
 
     def ___PRIVATE_generate_element_global_numbering___(self, number_what=None):
         """
@@ -515,10 +504,6 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
             raise Exception(f"element_distribution_method: '{EDM}' not coded for "
                             f"<generate_element_global_numbering>.")
 
-
-
-
-
         # check element global numbering ......
         current_num = 0
         for rn in rns:
@@ -541,10 +526,6 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
             current_num += self._num_elements_in_region_[rn]
 
-
-
-
-
         # return or save to self ...
         if number_what is None:
             self.___element_global_numbering___ = ___element_global_numbering___
@@ -555,33 +536,11 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         else:
             raise Exception()
 
-
-
     def ___PRIVATE_generate_element_global_numbering_for_region___(self, region_name):
         """generate element numbering for one regions."""
-        # rns = self.domain.regions.names
-        # current_num = 0
-        # for rn in rns:
-        #     if rn == region_name:
-        #         return np.arange(current_num, current_num + self._num_elements_in_region_[rn]).reshape(
-        #                 self._element_layout_[rn], order='F')
-        #     else:
-        #         pass
-        #     current_num += self._num_elements_in_region_[rn]
-
         return self.___PRIVATE_generate_element_global_numbering___(number_what=region_name)
 
     def ___PRIVATE_generate_ALL_element_global_numbering___(self):
-        # rns = self.domain.regions.names
-        # ALL_element_global_numbering = dict()
-        # current_num = 0
-        # for rn in rns:
-        #     ALL_element_global_numbering[rn] = \
-        #         np.arange(current_num, current_num + self._num_elements_in_region_[rn]).reshape(
-        #         self._element_layout_[rn], order='F')
-        #     current_num += self._num_elements_in_region_[rn]
-        # return ALL_element_global_numbering
-
         return self.___PRIVATE_generate_element_global_numbering___(number_what='all regions')
 
     def ___PRIVATE_element_division_and_numbering_quality___(self):
@@ -617,7 +576,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         B = COMM.reduce(BOUNDARY, root=MASTER_RANK, op=MPI.SUM)
 
         if RANK == MASTER_RANK:
-            ALL_FACES = self.elements.GLOBAL_num * 6
+            ALL_FACES = self.elements.global_num * 6
             assert I + E + B == ALL_FACES, "Something is wrong."
             QUALITY = (I + B) / ALL_FACES
         else:
@@ -672,9 +631,6 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
                 plt.show()
                 plt.close()
-
-
-
 
     def ___PRIVATE_optimize_element_distribution___(self):
         """After generating global element numbering, we can further do a optimization to further reduce the element
@@ -748,7 +704,6 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                                         num_ele_per_layer = int(B / layers)
                                         assert num_ele_per_layer * layers == B, "Something is wrong."
 
-
                                         if MASTER_RANK in _d2_[i]:
 
                                             OC = list()
@@ -796,7 +751,6 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                                                 else:
                                                     OC.append(c)
 
-
                                             if TO_OTHER == 0 or len(OC) == 0:
                                                 pass
                                             else:
@@ -811,11 +765,9 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                                                     else:
                                                         _d3_[j] += DIS_D.pop()
 
-
                                         for c, L in zip(_d2_[i], _d3_):
 
                                             NEW_DIS[c] = L * num_ele_per_layer
-
 
                 for c in self._element_distribution_:
                     if c not in NEW_DIS:
@@ -843,8 +795,6 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
         # has to do another check ...
         self.___PRIVATE_BASE_analyze_element_distribution___()
-
-
 
     def ___PRIVATE_fetch_side_element___(self, region_name, local_indices):
         """
@@ -1048,10 +998,6 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                     side_name = self.domain.regions(region_name)._side_index_to_name_(j)
                     self.___boundary_element_sides___[_em_i_[j]] += (str(i) + '-' + side_name,)
 
-
-
-
-
     @property
     def ___statistic___(self):
         """
@@ -1073,8 +1019,10 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         return self.___define_parameters___
 
     def __eq__(self, other):
-        return self.standard_properties.parameters == other.standard_properties.parameters
-
+        if self is other:
+            return True
+        else:
+            return self.standard_properties.parameters == other.standard_properties.parameters
 
     @staticmethod
     def ___PRIVATE_do_parse_element_side_pair___(eP: str):
@@ -1137,9 +1085,6 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
     @property
     def _element_global_numbering_(self):
         return self.___element_global_numbering___
-
-
-
 
     @property
     def do(self):

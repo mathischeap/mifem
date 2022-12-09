@@ -38,9 +38,9 @@ def test_MDM_sf_CrossProduct():
     v2 = rv2(fc2.mesh)
     V2 = rv2(fc2.mesh)
 
-    w = fc2('0-f-o', is_hybrid=False)
-    u = fc2('1-f-o', is_hybrid=False)
-    v = fc2('1-f-o', is_hybrid=False)
+    w = fc2('0-f-o', hybrid=False)
+    u = fc2('1-f-o', hybrid=False)
+    v = fc2('1-f-o', hybrid=False)
 
     w.CF = s2
     w.CF.current_time = 0
@@ -78,9 +78,9 @@ def test_MDM_sf_CrossProduct():
     V3 = rv3(fc3.mesh)
     s3 = rv3(fc3.mesh)
 
-    w = fc3('1-f', is_hybrid=False)
-    u = fc3('2-f', is_hybrid=False)
-    v = fc3('2-f', is_hybrid=False)
+    w = fc3('1-f', hybrid=False)
+    u = fc3('2-f', hybrid=False)
+    v = fc3('2-f', hybrid=False)
 
     w.CF = s3
     w.CF.current_time = 0

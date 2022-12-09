@@ -19,8 +19,6 @@ from objects.CSCG._3d.forms.trace.base.coboundary import _3dCSCG_Trace_Coboundar
 from objects.CSCG._3d.forms.trace.base.cochain import _3dCSCG_Trace_Cochain
 from objects.CSCG._3d.forms.trace.base.do import _3dCSCG_Trace_DO
 
-
-
 class _3dCSCG_Standard_Trace(CSCG_Trace_Form, _3dCSCG_FORM_BASE, ndim=3):
     """This is the parent of all 3d standard trace forms.
 
@@ -32,15 +30,18 @@ class _3dCSCG_Standard_Trace(CSCG_Trace_Form, _3dCSCG_FORM_BASE, ndim=3):
     :type numbering_parameters: dict, str
     :param str name:
     """
-    def __init__(self, mesh, space, orientation, numbering_parameters, name):
+    def __init__(self, mesh, space, hybrid : bool, orientation : str, numbering_parameters, name):
         super(_3dCSCG_Standard_Trace, self).__init__(mesh, space, name)
         super(_3dCSCG_Standard_Trace, self).___init___()
 
-        self._NUM_basis_, self._NUM_basis_components_, self._NUM_basis_onside_ = \
+        _NUM_basis_, self._NUM_basis_components_, self._NUM_basis_onside_ = \
             getattr(self.space.num_basis, self.__class__.__name__)
+        self._NUM_basis_ = _NUM_basis_[hybrid]
+
         assert orientation in ('inner', 'outer'), " orientation needs to be 'inner' or 'outer'."
 
         self._orientation_ = orientation
+        self._hybrid_ = hybrid
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_trace_form')
         self._numbering_ = _3dCSCG_Trace_Numbering(self, numbering_parameters)
         self._cochain_ = None

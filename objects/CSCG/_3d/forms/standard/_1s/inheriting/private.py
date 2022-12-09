@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
-from components.quadrature import Quadrature
 import numpy as np
-from scipy.sparse import csc_matrix, bmat, lil_matrix
-from tools.miLinearAlgebra.dataStructures.vectors.GLOBAL.main import GlobalVector
+from scipy.sparse import csc_matrix, bmat
 
 
 # noinspection PyUnresolvedReferences
 class _3dCSCG_S1F_Private:
-
 
     def ___PRIVATE_make_reconstruction_matrix_on_grid___(self, xi, et, sg, element_range=None):
         """Make the reconstruction matrices for all mesh elements. These matrices are stored in
@@ -107,9 +104,6 @@ class _3dCSCG_S1F_Private:
 
         return RM
 
-
-
-
     def ___PRIVATE_operator_inner___(self, other, i, xietasigma, quad_weights, bfSelf, bfOther):
         """Note that here we only return a local matrix."""
         element = self.mesh.elements[i]
@@ -202,7 +196,6 @@ class _3dCSCG_S1F_Private:
     #     for i in elements:
     #         if i in self.mesh.elements:
     #             ELEMENTS.append(i)
-    #
     #
     #     GV = lil_matrix((1, self.GLOBAL_num_dofs))
     #

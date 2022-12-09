@@ -46,7 +46,7 @@ class _2dCSCG_Trace_Numbering_Visualize(FrozenOnly):
         :return:
         """
         mesh = self._trace_._mesh_
-        density = int(np.ceil(density/self._trace_.elements.GLOBAL_num))
+        density = int(np.ceil(density / self._trace_.elements.global_num))
         if density > 100: density = 100
         if density < 10: density = 10
 

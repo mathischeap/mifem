@@ -28,7 +28,7 @@ def test_hybridization_of_standard_1_form():
     FC = random_FormCaller_of_total_load_around(load)
     mesh = FC.mesh
 
-    f1 = FC('1-f', is_hybrid=True)
+    f1 = FC('1-f', hybrid=True)
     t1 = FC('1-adt')
     e1 = FC('1-e')
 
@@ -101,7 +101,7 @@ def test_hybridization_of_standard_1_form():
     space = SpaceInvoker('polynomials')([4, 3, 2])
     FC = FormCaller(mesh, space)
 
-    f1 = FC('1-f', is_hybrid=True)
+    f1 = FC('1-f', hybrid=True)
     t1 = FC('1-adt')
     e1 = FC('1-e')
 

@@ -40,8 +40,8 @@ def test_LinearAlgebra_EWC_No0_ColumnVector():
 
     scalar = FC('scalar', p)
     vector = FC('vector', (u,v,w))
-    f0 = FC('0-f', is_hybrid=False)
-    f1 = FC('1-f', is_hybrid=False)
+    f0 = FC('0-f', hybrid=False)
+    f1 = FC('1-f', hybrid=False)
     f0.CF = scalar
     scalar.current_time = 0
     f0.discretize()

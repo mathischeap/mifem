@@ -50,6 +50,3 @@ class miUsGrid_ExactSolutionAllocator(FrozenOnly):
         return {'diNS : dipole collision': base_path + "dimensionlessIncompressibleNavierStokes.dipole_collision",
                 'Stokes : sin cos 1': base_path + "Stokes.sin_cos_1",
                 }
-
-
-

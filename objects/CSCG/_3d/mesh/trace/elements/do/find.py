@@ -3,7 +3,6 @@ from components.freeze.main import FrozenOnly
 
 from root.config.main import COMM
 
-
 class _3dCSCG_Trace_Elements_Do_Find(FrozenOnly):
     """We find some specific groups of elements."""
 
@@ -24,8 +23,6 @@ class _3dCSCG_Trace_Elements_Do_Find(FrozenOnly):
 
         """
         return self._elements_._mesh_.elements.do.find.trace_element_between_two_elements(i, j)
-
-
 
     def edge_elements_surrounding_element(self, i):
         """We try to find the four edge-elements surrounding trace element #`i`.
@@ -55,9 +52,10 @@ class _3dCSCG_Trace_Elements_Do_Find(FrozenOnly):
                 pos = _
                 break
 
+        edge_elements = self._elements_._mesh_.edge.elements # in case the edge elements were not made.
         CHARACTERISTIC_element, side_index = pos
         if CHARACTERISTIC_element in self._elements_._mesh_.elements:
-            edge_map = self._elements_._mesh_.edge.elements.map[CHARACTERISTIC_element]
+            edge_map = edge_elements.map[CHARACTERISTIC_element]
             Region = self._elements_._mesh_.domain.regions.Region
             indices_dict = Region._side_edge_local_numbering_dict_()
             indices = indices_dict[side_index]
@@ -76,8 +74,6 @@ class _3dCSCG_Trace_Elements_Do_Find(FrozenOnly):
                 break
 
         return edges
-
-
 
     def elements_attached_to_edge_element(self, i):
         """Find the at most 4 trace elements that are attached to the edge element #`i`.
@@ -108,8 +104,6 @@ class _3dCSCG_Trace_Elements_Do_Find(FrozenOnly):
 
         """
         return self._elements_._mesh_.node.elements.do.find.trace_elements_attached_to_element(i)
-
-
 
     def node_elements_of_element(self, i):
         """Return a list of the (four) node elements of trace element #i.
@@ -151,7 +145,6 @@ class _3dCSCG_Trace_Elements_Do_Find(FrozenOnly):
                     assert NE == _
 
         return NE
-
 
     def mesh_element_shared_by_elements(self, i, j):
         """Find the mesh element shared by the two trace elements #i, #j. And if they do not share
@@ -202,4 +195,3 @@ class _3dCSCG_Trace_Elements_Do_Find(FrozenOnly):
                 return ei # we find one shared mesh element, return!
 
         return None # return None as we do not find a shared mesh element
-

@@ -185,7 +185,7 @@ class _3dCSCG_Standard_Form_Numbering(FrozenOnly):
                 return list()
             else:
                 kwargs = self._sf_.___define_parameters___['kwargs']
-                kwargs['is_hybrid'] = False
+                kwargs['hybrid'] = False
                 non_hybrid_form = self._sf_.__class__(self._sf_.mesh, self._sf_.space, **kwargs)
                 NHF = non_hybrid_form.numbering.gathering
                 NHF = COMM.gather(NHF, root=MASTER_RANK)

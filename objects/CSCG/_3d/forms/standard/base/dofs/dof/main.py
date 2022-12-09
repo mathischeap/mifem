@@ -62,7 +62,7 @@ class _3dCSCG_Standard_forms_DOF(FrozenOnly):
         return self._local_positions_
 
     @property
-    def GLOBAL_positions(self):
+    def global_positions(self):
         """The "GLOBAL" positions of this dof.
 
         So if it is shared by multiple cores, we return all its positions.

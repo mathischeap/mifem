@@ -24,13 +24,17 @@ class _3dCSCG_LocalTrace_NUM(FrozenOnly):
     def basis(self):
         """"""
         if self._basis_ is None:
-            self._basis_= getattr(self._ltf_.space.num_basis, self._ltf_.__class__.__name__)[0]
+            self._basis_= getattr(
+                self._ltf_.space.num_basis, self._ltf_.__class__.__name__
+            )[0][self._ltf_.whether.hybrid]
         return self._basis_
 
     @property
     def basis_onside(self):
         if self._BON_ is None:
-            self._BON_ = getattr(self._ltf_.space.num_basis, self._ltf_.__class__.__name__)[1]
+            self._BON_ = getattr(
+                self._ltf_.space.num_basis, self._ltf_.__class__.__name__
+            )[1]
         return self._BON_
 
     @property

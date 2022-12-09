@@ -22,21 +22,31 @@ class _3dCSCG_2Trace_Visualize(FrozenOnly):
         """When this object is called, we call the default visualizing method: ``tecplot``."""
         return self.matplot(**kwargs)
 
-    def matplot(self, density=10000, i=None,
+    def matplot(self, density=10000, trace_element_range=None,
                          colormap='RdBu',
                          num_color_bar_ticks=5):
         """
 
         :param density:
-        :param i: Plot which trace elements?
+        :param trace_element_range: Plot which trace elements?
         :param colormap:
         :param num_color_bar_ticks:
         :return:
         """
         mesh = self._tf_.mesh
-        density = int(np.sqrt(density/mesh.trace.elements.GLOBAL_num)) + 1
+        density = int(np.sqrt(density / mesh.trace.elements.global_num)) + 1
         xi = eta = sigma = np.linspace(-1, 1, density)
-        xyz, v = self._tf_.reconstruct(xi, eta, sigma, i=i)
+
+        if trace_element_range is None:
+            # be default, we plot boundary trace elements
+            boundary_trace_elements = mesh.boundaries.range_of_trace_elements
+            trace_element_range = list()
+            for bn in boundary_trace_elements:
+                trace_element_range.extend(boundary_trace_elements[bn])
+        else:
+            pass
+
+        xyz, v = self._tf_.reconstruct(xi, eta, sigma, trace_element_range=trace_element_range)
         xyz = COMM.gather(xyz, root=MASTER_RANK)
         v = COMM.gather(v, root=MASTER_RANK)
         if RANK != MASTER_RANK: return

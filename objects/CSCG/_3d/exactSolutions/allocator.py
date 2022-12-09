@@ -4,7 +4,6 @@ from root.config.main import RANK, MASTER_RANK
 
 from importlib import import_module
 
-
 class _3dCSCG_ExactSolution_Allocator(FrozenOnly):
     """"""
 

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 """
 CONTINUOUS FORMS are special, they do not inherit the main class of form!
 

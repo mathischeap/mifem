@@ -62,7 +62,7 @@ class _3dCSCG_Edge_Cochain(FrozenOnly):
 
             RW_LOCAL = dict()
 
-            for i in range(self._ef_.mesh.elements.GLOBAL_num):
+            for i in range(self._ef_.mesh.elements.global_num):
                 assert i in LOCAL, "something is wrong."
                 # noinspection PyUnboundLocalVariable
                 assert i in RID, "something is wrong."

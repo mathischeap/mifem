@@ -17,10 +17,6 @@ from tests.objects.CSCG._3d.unittests.auxiliaries.icpsNS_TGV_LGMRES_solver impor
 import os
 
 
-
-
-
-
 def test_APP_NO2_icpsNS_no_hybrid_TGV():
     # warnings.filterwarnings("default")
     if RANK == MASTER_RANK:

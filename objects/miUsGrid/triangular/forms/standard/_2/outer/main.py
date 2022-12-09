@@ -12,9 +12,9 @@ from objects.miUsGrid.triangular.forms.standard._2.base.main import miUsTriangul
 class miUsTriangular_S2F_Outer(miUsTriangular_S2F_Base):
     """"""
 
-    def __init__(self, mesh, space, name='Tri-os2f'):
+    def __init__(self, mesh, space, hybrid=False, name='Tri-os2f'):
         """"""
-        super(miUsTriangular_S2F_Outer, self).__init__(mesh, space, 'outer', name)
+        super(miUsTriangular_S2F_Outer, self).__init__(mesh, space, hybrid, 'outer', name)
         self._freeze_self_()
 
 

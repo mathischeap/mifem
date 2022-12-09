@@ -5,26 +5,26 @@
 @time: 2022/09/20 2:36 PM
 """
 import sys
-
 if './' not in sys.path: sys.path.append('./')
+
 from objects.miUsGrid.triangular.forms.base.main import miUsTriangular_FormBase
 from objects.miUsGrid.triangular.forms.standard.base.cochain.main import miUs_Triangular_SF_Cochain
 from objects.miUsGrid.triangular.forms.standard.base.num import miUs_Triangular_SF_Num
 from objects.miUsGrid.triangular.forms.standard.base.coboundary import miUs_Triangular_SF_Coboundary
 from objects.miUsGrid.triangular.forms.standard.base.numbering.main import miUs_Triangular_SF_Numbering
 from objects.miUsGrid.triangular.forms.standard.base.whether import miUs_Triangular_SF_whether
-from objects.miUsGrid.triangular.forms.standard.base.BC.main import miUsTriangle_SF_BC
-
 
 class miUsTriangular_SF_Base(miUsTriangular_FormBase):
     """"""
 
-    def __init__(self, mesh, space, orientation, k, name):
+    def __init__(self, mesh, space, hybrid, orientation, k, name):
         """"""
         super(miUsTriangular_SF_Base, self).__init__(mesh, space, name)
         assert orientation in ('outer', 'inner'), f"orientation={orientation} invalid."
         self.standard_properties.___PRIVATE_add_tag___('miUsGrid_triangular_standard_form')
         self._orientation_ = orientation
+        assert isinstance(hybrid, bool), f"hybrid must be a bool."
+        self._hybrid_ = hybrid
         assert k in (0, 1, 2), f"{k}-form is invalid."
         self._k_ = k
 
@@ -33,7 +33,6 @@ class miUsTriangular_SF_Base(miUsTriangular_FormBase):
         self._coboundary_ = miUs_Triangular_SF_Coboundary(self)
         self._numbering_ = miUs_Triangular_SF_Numbering(self)
         self._whether_ = miUs_Triangular_SF_whether(self)
-        self._BC_ = None
 
     def __repr__(self):
         """"""
@@ -92,13 +91,6 @@ class miUsTriangular_SF_Base(miUsTriangular_FormBase):
     @property
     def whether(self):
         return self._whether_
-
-    @property
-    def BC(self):
-        if self._BC_ is None:
-            assert self.k != 2, f"I am a volume form."
-            self._BC_ = miUsTriangle_SF_BC(self)
-        return self._BC_
 
     def __sub__(self, other):
         """"""

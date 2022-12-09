@@ -22,7 +22,7 @@ class _3dCSCG_ScalarField_matplot_Visualize(FrozenOnly):
         num_color_bar_ticks=5):
         """"""
         mesh = self._f_.mesh
-        NUM = mesh.trace.elements.GLOBAL_num
+        NUM = mesh.trace.elements.global_num
         density = int((density/NUM)**0.5 + 1)
 
         x = y = z = np.linspace(-1, 1, density)

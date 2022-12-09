@@ -56,7 +56,7 @@ class _2dCSCG_ScalarField_Visualize_matplot(FrozenOnly):
         :param tick_size:
         :return:
         """
-        density = int(np.ceil(np.sqrt(density / self._mesh_.elements.GLOBAL_num)))
+        density = int(np.ceil(np.sqrt(density / self._mesh_.elements.global_num)))
         rs = [np.linspace(-1, 1, density) for _ in range(self._cf_.ndim)]
         rs = np.meshgrid(*rs, indexing='ij')
         xy, v = self._cf_.reconstruct(*rs, time=time)

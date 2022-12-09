@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('../')
+if './' not in sys.path: sys.path.append('./')
 
 import numpy as np
 from components.freeze.base import FrozenOnly

@@ -3,8 +3,6 @@
 from components.freeze.main import FrozenOnly
 from root.config.main import COMM
 
-
-
 class _3dCSCG_Mesh_Elements_DO_FIND(FrozenOnly):
     def __init__(self, elements):
         self._elements_ = elements
@@ -13,7 +11,6 @@ class _3dCSCG_Mesh_Elements_DO_FIND(FrozenOnly):
     def slave_of_element(self, i):
         """Find the core rank of mesh element #i."""
         return self._elements_._mesh_.do.find.slave_of_element(i)
-
 
     def element_at_region_corner(self, region_name, which_corner):
         """Return the mesh element numbering at the given corner of the domain region.
@@ -65,8 +62,6 @@ class _3dCSCG_Mesh_Elements_DO_FIND(FrozenOnly):
 
         return the_corner_element_numbering
 
-
-
     def trace_element_between_two_elements(self, i, j):
         """We try to find the trace element between mesh elements #`i` and #`j`.
 
@@ -108,8 +103,6 @@ class _3dCSCG_Mesh_Elements_DO_FIND(FrozenOnly):
                 T.append(t)
 
         return T
-
-
 
     def element_shared_by_trace_elements(self, i, j):
         """

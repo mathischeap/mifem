@@ -5,6 +5,7 @@
 @time: 2022/09/20 3:31 PM
 """
 from objects.base.form.base import FormBase
+from objects.miUsGrid.base.form.base.BC.main import miUsGrid_Form_BC
 
 class miUsGrid_FormBase(FormBase):
     """"""
@@ -18,12 +19,11 @@ class miUsGrid_FormBase(FormBase):
         self._reconstruct_ = None
         self._cochain_ = None
         self._num_ = None
+        self._BC_ = miUsGrid_Form_BC(self)
 
     @property
     def ndim(self):
         return self.mesh.ndim
-
-
 
     @property
     def reconstruct(self):

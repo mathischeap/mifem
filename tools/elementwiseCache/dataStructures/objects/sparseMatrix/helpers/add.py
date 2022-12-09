@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-
-
 from components.freeze.base import FrozenOnly
-
-
 
 class ___ADD___(FrozenOnly):
     def __init__(self, EWC1, EWC2):

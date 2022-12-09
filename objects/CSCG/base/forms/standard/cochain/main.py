@@ -1,21 +1,18 @@
 # -*- coding: utf-8 -*-
-from components.exceptions import LocalCochainShapeError
 from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_ColumnVector
 from scipy.sparse import lil_matrix, csr_matrix, csc_matrix
 from tools.miLinearAlgebra.dataStructures.vectors.distributed.main import DistributedVector
 from components.freeze.base import FrozenOnly
 from root.config.main import np, RANK, MASTER_RANK, COMM
 from objects.CSCG.base.forms.standard.cochain.dofwise import CSCG_SF_Cochain_DofWise
-
-
-
-
+from objects.CSCG.base.forms.standard.cochain.whether import CSCG_Standard_Form_Whether
 
 class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
         self._local_ = None
         self._dofwise_ = None
+        self._whether_ = None
         self._freeze_self_()
 
     @property
@@ -24,6 +21,12 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
         if self._dofwise_ is None:
             self._dofwise_ = CSCG_SF_Cochain_DofWise(self)
         return self._dofwise_
+
+    @property
+    def whether(self):
+        if self._whether_ is None:
+            self._whether_ = CSCG_Standard_Form_Whether(self._sf_)
+        return self._whether_
 
     @property
     def array(self):
@@ -45,10 +48,8 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
         ewc.gathering_matrix = self._sf_
         return ewc
 
-
     def ___PRIVATE_local_call___(self, i):
         return csr_matrix(self.local[i]).T
-
 
     def ___DO_gather_local_to_master___(self):
         """Do what the method name says."""
@@ -59,8 +60,6 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
                 if li is not None:
                     LOCAL.update(li)
             return LOCAL
-
-
 
     def ___PRIVATE_do_gather_to_master_and_make_them_region_wise_local_index_grouped___(self):
         """make it regions-wise-element-local-indexed, thus we can save it and when read a form, we can always have the
@@ -86,7 +85,7 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
 
             RW_LOCAL = dict()
 
-            for i in range(self._sf_.mesh.elements.GLOBAL_num):
+            for i in range(self._sf_.mesh.elements.global_num):
                 assert i in LOCAL, "something is wrong."
                 # noinspection PyUnboundLocalVariable
                 assert i in RID, "something is wrong."
@@ -95,7 +94,6 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
                 RW_LOCAL[rn_loc_ind] = LOCAL[i]
 
             return RW_LOCAL
-
 
     def ___PRIVATE_do_distribute_region_wise_local_index_grouped_cochain_to_local___(self, RW_LI_COCHAIN):
         """When we have the Region-wised local index grouped cochain, we can use this method to distribute it to local
@@ -114,12 +112,9 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
 
         self.local = LOC_COCHAIN
 
-
-
-
-
     @property
     def globe(self):
+        """Will raise error if cochain is not full."""
         GM = self._sf_.numbering.gathering
         globe = lil_matrix((1, self._sf_.num.global_dofs))
         for i in GM: # go through all local elements
@@ -212,7 +207,6 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
         else:
             raise Exception(f"Can not set cochain from {globe}.")
 
-
     def __getitem__(self, item):
         return self.local[item]
 
@@ -225,7 +219,6 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
 
     def __len__(self):
         return len(self.local)
-
 
     # ------------- DEPENDENT PROPERTIES (MAJOR): When set, clear BRANCHES by set _branches_ to None -------------------
     @property
@@ -242,25 +235,22 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
     def local(self, local):
         numOfElements = self._sf_.mesh.elements.num
         numOfBasis = self._sf_.num.basis
-        try:
-            assert isinstance(local, dict), \
-                f"local cochain needs to be a dict, now it is a {local.__class__.__name__}."
-            assert len(local) == numOfElements, \
-                "local cochain has to contain cochains for all local mesh elements."
-            for i, j in zip(self._sf_.mesh.elements.indices, local):
-                assert np.shape(local[i]) == (numOfBasis,), \
-                    f"local[{i}] shape = {np.shape(local[i])} wrong. " \
-                    f"It needs to be {(numOfBasis,)}."
-                assert i == j, f"mesh element index sequence is wrong."
 
-        except AssertionError:
-            raise LocalCochainShapeError("Cannot set local cochain.")
+        assert isinstance(local, dict), \
+            f"local cochain needs to be a dict, now it is a {local.__class__.__name__}."
+
+        if len(local) == numOfElements:
+            self.whether._full_ = True
+        else:
+            self.whether._full_ = False
+
+        for i in local:
+            assert np.shape(local[i]) == (numOfBasis,), \
+                f"local[{i}] shape = {np.shape(local[i])} wrong. " \
+                f"It needs to be {(numOfBasis,)}."
 
         self._local_ = local
 
-
     #--------------- DEPENDENT PROPERTIES (BRANCHES, must have the two switching methods): when set, update local ------
 
-
     #=================================== ABOVE =========================================================================
-

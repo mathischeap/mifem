@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from components.freeze.base import FrozenOnly
 
-
 class CSCG_Standard_Form_Coboundary_BASE(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
@@ -27,7 +26,7 @@ class CSCG_Standard_Form_Coboundary_BASE(FrozenOnly):
         nextFmClass = self.___PRIVATE_next_class___()
         nextFmInstance = nextFmClass(
             self._sf_.mesh, self._sf_.space,
-            is_hybrid = self._sf_.whether.hybrid,
+            hybrid = self._sf_.whether.hybrid,
             numbering_parameters = self._sf_.numbering._numbering_parameters_,
             name = 'd(' + self._sf_.standard_properties.name + ')'
         )

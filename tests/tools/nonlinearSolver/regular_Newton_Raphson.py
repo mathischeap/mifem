@@ -51,14 +51,14 @@ def test_Regular_Newton_Raphson():
     es = cscg2.exact_solution(mesh)("Euler:shear_layer_rollup", show_info=False)
 
     #----------- unknowns -----------------------------------------------------------------
-    u = FC('1-f-o', is_hybrid=False, name='velocity')
-    w = FC('0-f-o', is_hybrid=False, name='vorticity')
-    P = FC('2-f-o', is_hybrid=False, name='total pressure')
+    u = FC('1-f-o', hybrid=False, name='velocity')
+    w = FC('0-f-o', hybrid=False, name='vorticity')
+    P = FC('2-f-o', hybrid=False, name='total pressure')
 
     #--------- tests ----------------------------------------------------------------------
-    v = FC('1-f-o', is_hybrid=False, name='test-velocity')
-    o = FC('0-f-o', is_hybrid=False, name='test-vorticity')
-    q = FC('2-f-o', is_hybrid=False, name='test-total pressure')
+    v = FC('1-f-o', hybrid=False, name='test-velocity')
+    o = FC('0-f-o', hybrid=False, name='test-vorticity')
+    q = FC('2-f-o', hybrid=False, name='test-total pressure')
 
     M0 = w.matrices.mass
     M1 = u.matrices.mass

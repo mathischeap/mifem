@@ -1,3 +1,3 @@
-We use PETSc library to deal with algebraic parts.
+FUTURE: We use petsc & petsc4py to handle algebraic parts.
 
-This is an alternative of the miLinearAlgebra tool.
+This is supposed to be a much faster alternative of the miLinearAlgebra tool.

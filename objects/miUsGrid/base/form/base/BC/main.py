@@ -4,23 +4,20 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 10/4/2022 11:47 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
-from objects.miUsGrid.triangular.forms.standard.base.BC.interpret.main import miUsTriangle_SF_BC_Interpret
+from objects.miUsGrid.base.form.base.BC.interpret.main import miUsForm_Form_BC_Interpret
 
 
-class miUsTriangle_SF_BC(FrozenOnly):
+class miUsGrid_Form_BC(FrozenOnly):
     """"""
 
-    def __init__(self, sf):
+    def __init__(self, f):
         """"""
-        self._sf_ = sf
+        self._f_ = f
         self._CF_ = None
         self._boundaries_ = None
         self._involved_element_parts_ = None
-        self._interpret_ = miUsTriangle_SF_BC_Interpret(sf)
+        self._interpret_ = None
         self._freeze_self_()
 
     @property
@@ -29,8 +26,12 @@ class miUsTriangle_SF_BC(FrozenOnly):
 
     @CF.setter
     def CF(self, cf):
-        self._sf_.___Pr_check_BC_CF___(cf)
-        self._CF_ = cf
+        if cf is None:
+            self._CF_ = None
+        else:
+            self._f_.___Pr_check_BC_CF___(cf)
+            self._CF_ = cf
+            self._interpret_ = None
 
     @property
     def boundaries(self):
@@ -41,7 +42,7 @@ class miUsTriangle_SF_BC(FrozenOnly):
     def boundaries(self, bns):
         """"""
 
-        BNS = self._sf_.mesh.boundaries.names
+        BNS = self._f_.mesh.boundaries.names
         if isinstance(bns, str):
             bns = [bns,]
         else:
@@ -50,30 +51,22 @@ class miUsTriangle_SF_BC(FrozenOnly):
         for i, bn in enumerate(bns):
             assert bn in BNS, f"boundary names [{i}] = {bn} is not a valid boundary name."
         self.___Pr_parse_involved_element_parts___(bns)
-        self.interpret.RESET_cache() # reset current interpretations.
+        self._interpret_ = None # reset current interpretations.
         self._boundaries_ = bns
 
     def ___Pr_parse_involved_element_parts___(self, bns):
         """"""
-        RoE = self._sf_.mesh.boundaries.range_of_element_edge
+        if self._f_.ndim == 2:
+            RoE = self._f_.mesh.boundaries.range_of_element_edge
+        else:
+            raise NotImplementedError()
+
         self._involved_element_parts_ = list()
         for bn in bns:
             self._involved_element_parts_.extend(RoE[bn])
 
     @property
     def interpret(self):
+        if self._interpret_ is None:
+            self._interpret_ = miUsForm_Form_BC_Interpret(self._f_)
         return self._interpret_
-
-
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python objects/miUsGrid/triangular/forms/standard/base/BC/main.py
-    from __init__ import miTri
-    fc = miTri.form('rand0', 2)
-    f0 = fc('0-f-o')
-
-    f0.BC.boundaries = ['Upper', 'Left']
-
-    print(f0.BC.involved_element_edges)

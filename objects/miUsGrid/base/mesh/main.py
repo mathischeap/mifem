@@ -42,7 +42,7 @@ class miUsGrid_MeshBase(FrozenClass):
         self._freeze_self_()
 
     def __repr__(self):
-        return f"{self.__class__.__name__} of {self.elements.num.GLOBAL_cells} elements @{id(self)}"
+        return f"{self.__class__.__name__} of {self.elements.num.global_cells} elements @{id(self)}"
 
     def __eq__(self, other):
         """"""

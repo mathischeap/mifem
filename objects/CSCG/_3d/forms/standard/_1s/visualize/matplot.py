@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import matplotlib
 from objects.CSCG._3d.forms.standard.base.visualize.matplot import _3dCSCG_standard_form_Matplot
 
-
 class _3dCSCG_S1F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
     """"""
     def __init__(self, sf):
@@ -102,7 +101,7 @@ class _3dCSCG_S1F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
             else:
                 raise Exception()
 
-            xyz, val = self._sf_.reconstruct(xi, eta, sigma, ravel=False, i=eps._element_.i)
+            xyz, val = self._sf_.reconstruct(xi, eta, sigma, ravel=False, element_range=eps._element_.i)
             val = val[e]
             xyz = xyz[e]
 
@@ -182,7 +181,6 @@ class _3dCSCG_S1F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
                 levels = list()
                 for i, _ in enumerate(MIN):
                     levels.append(np.linspace(MIN[i], MAX[i], num_of_levels))
-
 
         # Now, we can do the plot ------------- BELOW --------------------------------------------
 
@@ -276,7 +274,3 @@ class _3dCSCG_S1F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
 
         else:
             return
-
-
-
-

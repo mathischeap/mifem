@@ -28,16 +28,16 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
     def _tecplot_3Form_(self, numOfSamples=60000, port=7600):
         """ """
         mesh = self._sf_.mesh
-        density = int(np.ceil((numOfSamples / mesh.elements.GLOBAL_num) ** (1/3)))
+        density = int(np.ceil((numOfSamples / mesh.elements.global_num) ** (1 / 3)))
         rst = [np.linspace(-1, 1, density) for _ in range(self._sf_.ndim)]
         xyz, v = self._sf_.reconstruct(*rst)
         # Now, we gather xyz & v from all cores into Master Core, store in XYZ & V ...
         X = Y = Z = V = 0
         if RANK == MASTER_RANK:
-            X = [None for _ in range(mesh.elements.GLOBAL_num)]
-            Y = [None for _ in range(mesh.elements.GLOBAL_num)]
-            Z = [None for _ in range(mesh.elements.GLOBAL_num)]
-            V = [None for _ in range(mesh.elements.GLOBAL_num)]
+            X = [None for _ in range(mesh.elements.global_num)]
+            Y = [None for _ in range(mesh.elements.global_num)]
+            Z = [None for _ in range(mesh.elements.global_num)]
+            V = [None for _ in range(mesh.elements.global_num)]
             for j in mesh.elements.indices:
                 X[j] = xyz[j][0]
                 Y[j] = xyz[j][1]
@@ -94,18 +94,18 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
 
     def _tecplot_2Form_(self, numOfSamples=50000, port=7600):
         mesh = self._sf_.mesh
-        density = int(np.ceil((numOfSamples / mesh.elements.GLOBAL_num) ** (1/3)))
+        density = int(np.ceil((numOfSamples / mesh.elements.global_num) ** (1 / 3)))
         rst = [np.linspace(-1, 1, density) for _ in range(self._sf_.ndim)]
         xyz, v = self._sf_.reconstruct(*rst)
         # Now, we gather xyz & v from all cores into Master Core, store in XYZ & V ...
         X = Y = Z = Vx= Vy = Vz = 0
         if RANK == MASTER_RANK:
-            X = [None for _ in range(mesh.elements.GLOBAL_num)]
-            Y = [None for _ in range(mesh.elements.GLOBAL_num)]
-            Z = [None for _ in range(mesh.elements.GLOBAL_num)]
-            Vx = [None for _ in range(mesh.elements.GLOBAL_num)]
-            Vy = [None for _ in range(mesh.elements.GLOBAL_num)]
-            Vz = [None for _ in range(mesh.elements.GLOBAL_num)]
+            X = [None for _ in range(mesh.elements.global_num)]
+            Y = [None for _ in range(mesh.elements.global_num)]
+            Z = [None for _ in range(mesh.elements.global_num)]
+            Vx = [None for _ in range(mesh.elements.global_num)]
+            Vy = [None for _ in range(mesh.elements.global_num)]
+            Vz = [None for _ in range(mesh.elements.global_num)]
             for j in mesh.elements.indices:
                 X[j] = xyz[j][0]
                 Y[j] = xyz[j][1]
@@ -170,18 +170,18 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
 
     def _tecplot_1Form_(self, numOfSamples=50000, port=7600):
         mesh = self._sf_.mesh
-        density = int(np.ceil((numOfSamples / mesh.elements.GLOBAL_num) ** (1/3)))
+        density = int(np.ceil((numOfSamples / mesh.elements.global_num) ** (1 / 3)))
         rst = [np.linspace(-1, 1, density) for _ in range(self._sf_.ndim)]
         xyz, v = self._sf_.reconstruct(*rst)
         # Now, we gather xyz & v from all cores into Master Core, store in XYZ & V ...
         X = Y = Z = Vx= Vy = Vz = 0
         if RANK == MASTER_RANK:
-            X = [None for _ in range(mesh.elements.GLOBAL_num)]
-            Y = [None for _ in range(mesh.elements.GLOBAL_num)]
-            Z = [None for _ in range(mesh.elements.GLOBAL_num)]
-            Vx = [None for _ in range(mesh.elements.GLOBAL_num)]
-            Vy = [None for _ in range(mesh.elements.GLOBAL_num)]
-            Vz = [None for _ in range(mesh.elements.GLOBAL_num)]
+            X = [None for _ in range(mesh.elements.global_num)]
+            Y = [None for _ in range(mesh.elements.global_num)]
+            Z = [None for _ in range(mesh.elements.global_num)]
+            Vx = [None for _ in range(mesh.elements.global_num)]
+            Vy = [None for _ in range(mesh.elements.global_num)]
+            Vz = [None for _ in range(mesh.elements.global_num)]
             for j in mesh.elements.indices:
                 X[j] = xyz[j][0]
                 Y[j] = xyz[j][1]
@@ -247,16 +247,16 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
     def _tecplot_0Form_(self, numOfSamples=60000, port=7600):
         """ """
         mesh = self._sf_.mesh
-        density = int(np.ceil((numOfSamples / mesh.elements.GLOBAL_num) ** (1/3)))
+        density = int(np.ceil((numOfSamples / mesh.elements.global_num) ** (1 / 3)))
         rst = [np.linspace(-1, 1, density) for _ in range(self._sf_.ndim)]
         xyz, v = self._sf_.reconstruct(*rst)
         # Now, we gather xyz & v from all cores into Master Core, store in XYZ & V ...
         X = Y = Z = V = 0
         if RANK == MASTER_RANK:
-            X = [None for _ in range(mesh.elements.GLOBAL_num)]
-            Y = [None for _ in range(mesh.elements.GLOBAL_num)]
-            Z = [None for _ in range(mesh.elements.GLOBAL_num)]
-            V = [None for _ in range(mesh.elements.GLOBAL_num)]
+            X = [None for _ in range(mesh.elements.global_num)]
+            Y = [None for _ in range(mesh.elements.global_num)]
+            Z = [None for _ in range(mesh.elements.global_num)]
+            V = [None for _ in range(mesh.elements.global_num)]
             for j in mesh.elements.indices:
                 X[j] = xyz[j][0]
                 Y[j] = xyz[j][1]
@@ -318,7 +318,7 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
         """
         assert self._sf_.k in (1,2), f"lambda_2 vortex valid for 1- and 2-forms only."
         mesh = self._sf_.mesh
-        density = int(np.ceil((numOfSamples / mesh.elements.GLOBAL_num) ** (1/3))) + 1
+        density = int(np.ceil((numOfSamples / mesh.elements.global_num) ** (1 / 3))) + 1
         rst = np.linspace(-1, 1, density)
         rst = 0.5 * (rst[1:] + rst[:-1])
         ___ = self._sf_.special.vortex_detection.Q_and_lambda2(rst, rst, rst)
@@ -327,10 +327,10 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
         # Now, we gather xyz & v from all cores into Master Core, store in XYZ & V ...
         X = Y = Z = V = 0
         if RANK == MASTER_RANK:
-            X = [None for _ in range(mesh.elements.GLOBAL_num)]
-            Y = [None for _ in range(mesh.elements.GLOBAL_num)]
-            Z = [None for _ in range(mesh.elements.GLOBAL_num)]
-            V = [None for _ in range(mesh.elements.GLOBAL_num)]
+            X = [None for _ in range(mesh.elements.global_num)]
+            Y = [None for _ in range(mesh.elements.global_num)]
+            Z = [None for _ in range(mesh.elements.global_num)]
+            V = [None for _ in range(mesh.elements.global_num)]
             for j in mesh.elements.indices:
                 X[j] = xyz[j][0]
                 Y[j] = xyz[j][1]
@@ -392,7 +392,7 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
         """
         assert self._sf_.k in (1,2), f"Q vortex valid for 1- and 2-forms only."
         mesh = self._sf_.mesh
-        density = int(np.ceil((numOfSamples / mesh.elements.GLOBAL_num) ** (1 / 3))) + 1
+        density = int(np.ceil((numOfSamples / mesh.elements.global_num) ** (1 / 3))) + 1
         rst = np.linspace(-1, 1, density)
         rst = 0.5 * (rst[1:] + rst[:-1])
         ___ = self._sf_.special.vortex_detection.Q_and_lambda2(rst, rst, rst)
@@ -401,10 +401,10 @@ class _3dCSCG_standard_form_Tecplot(FrozenOnly):
         # Now, we gather xyz & v from all cores into Master Core, store in XYZ & V ...
         X = Y = Z = V = 0
         if RANK == MASTER_RANK:
-            X = [None for _ in range(mesh.elements.GLOBAL_num)]
-            Y = [None for _ in range(mesh.elements.GLOBAL_num)]
-            Z = [None for _ in range(mesh.elements.GLOBAL_num)]
-            V = [None for _ in range(mesh.elements.GLOBAL_num)]
+            X = [None for _ in range(mesh.elements.global_num)]
+            Y = [None for _ in range(mesh.elements.global_num)]
+            Z = [None for _ in range(mesh.elements.global_num)]
+            V = [None for _ in range(mesh.elements.global_num)]
             for j in mesh.elements.indices:
                 X[j] = xyz[j][0]
                 Y[j] = xyz[j][1]

@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
-
-
 import sys
 if './' not in sys.path: sys.path.append('./')
-
 
 from root.config.main import np
 from objects.CSCG._3d.forms.standard.base.reconstruct import _3dCSCG_SF_Reconstruct
 from objects.CSCG._3d.discreteDields.vector.main import _3dCSCG_DF_Vector
-
 
 class _3dCSCG_SF1_reconstruct(_3dCSCG_SF_Reconstruct):
     """"""
@@ -16,18 +12,14 @@ class _3dCSCG_SF1_reconstruct(_3dCSCG_SF_Reconstruct):
         super(_3dCSCG_SF1_reconstruct, self).__init__(sf)
         self._freeze_self_()
 
-
-
-
-
-    def __call__(self, xi, eta, sigma, ravel=False, i=None, regions=None, vectorized=False, value_only=False):
+    def __call__(self, xi, eta, sigma, ravel=False, element_range=None, regions=None, vectorized=False, value_only=False):
         """
 
         :param xi:
         :param eta:
         :param sigma:
         :param ravel:
-        :param i:
+        :param element_range:
             In which elements we do the reconstruction?
         :param regions: Higher priority than input i.
         :param vectorized:
@@ -39,12 +31,12 @@ class _3dCSCG_SF1_reconstruct(_3dCSCG_SF_Reconstruct):
 
         #------ parse INDICES -------------------------------------------------------------
         if regions is None:
-            if i is None:
+            if element_range is None:
                 INDICES = mesh.elements.indices
-            elif isinstance(i, int):
-                INDICES = [i, ]
+            elif isinstance(element_range, int):
+                INDICES = [element_range,]
             else:
-                raise NotImplementedError()
+                INDICES = element_range
         else:
             if regions == 'all':
                 regions = mesh.domain.regions
@@ -101,7 +93,6 @@ class _3dCSCG_SF1_reconstruct(_3dCSCG_SF_Reconstruct):
                         # noinspection PyUnresolvedReferences
                         value[i] = [value[i][j].reshape(shape, order='F') for j in range(3)]
                 return xyz, value
-
 
     def discrete_vector(self, grid):
         """We reconstruct this S2F as a 3d CSCG discrete vector in the `regions`.
@@ -172,10 +163,6 @@ class _3dCSCG_SF1_reconstruct(_3dCSCG_SF_Reconstruct):
 
         return _3dCSCG_DF_Vector(mesh, XYZ, VAL, name=self._sf_.standard_properties.name,
                                  structured=True, grid=grid)
-
-
-
-
 
 if __name__ == '__main__':
     # mpiexec -n 5 python objects/CSCG/_3d/forms/standard/_1s/reconstruct.py

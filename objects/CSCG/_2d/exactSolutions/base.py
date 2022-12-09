@@ -11,6 +11,36 @@ class Base(FrozenOnly):
     def __init__(self, mesh):
         self._mesh_ = mesh
 
+    @property
+    def current_time(self):
+        """Return a list of current_time of all valid properties.."""
+        ct = list()
+        for attr_name in self.__dict__:
+            attr = getattr(self, attr_name)
+            if hasattr(attr, '_current_time_'):
+                if attr._current_time_ is not None:
+                    ct.append(attr.current_time)
+                else:
+                    pass
+            else:
+                pass
+        return ct
+
+    @current_time.setter
+    def current_time(self, ct):
+        """Set current time for all valid attributes."""
+        attr_names = dir(self)
+        for attr_name in attr_names:
+            if attr_name != 'current_time':
+                attr = getattr(self, attr_name)
+
+                if hasattr(attr, '_current_time_'):
+
+                    attr.current_time = ct
+
+                else:
+                    pass
+
     # ... valid time: override it to make the exact solution only valid at certain time. ...
     @property
     def valid_time(self):
@@ -69,7 +99,7 @@ class Base(FrozenOnly):
         if what.ftype == 'standard':
 
             if quad_degree is None:
-                quad_degree = int(np.ceil((100000 / self._mesh_.elements.GLOBAL_num) ** (1 / 2)))
+                quad_degree = int(np.ceil((100000 / self._mesh_.elements.global_num) ** (1 / 2)))
                 if quad_degree > 30: quad_degree = 30
                 quad_degree = (quad_degree, quad_degree)
 

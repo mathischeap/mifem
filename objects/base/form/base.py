@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 11/27/2022 10:36 AM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenClass
 
 
@@ -55,18 +52,9 @@ class FormBase(FrozenClass):
     def ___Pr_check_CF___(self, CF):
         raise NotImplementedError()
 
-
     @property
     def BC(self):
         return self._BC_
 
     def ___Pr_check_BC_CF___(self, CF):
         raise NotImplementedError()
-
-
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

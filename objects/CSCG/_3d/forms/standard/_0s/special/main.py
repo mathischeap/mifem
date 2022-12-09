@@ -157,7 +157,7 @@ class _0Form_Special(FrozenOnly):
 
         SKIPPED_edge_elements = list()
 
-        for i in range(mesh.edge.elements.GLOBAL_num):
+        for i in range(mesh.edge.elements.global_num):
 
             if i in mesh.edge.elements:
                 edge_element = mesh.edge.elements[i]
@@ -297,7 +297,7 @@ class _0Form_Special(FrozenOnly):
 
             #--- start numbering --------------------------------------------------
             start = 0
-            for i in range(mesh.edge.elements.GLOBAL_num):
+            for i in range(mesh.edge.elements.global_num):
                 Ni = NUMBER_EDGE_ELEMENTS[i]
                 if np.all(Ni == 0):
                     pass
@@ -360,7 +360,7 @@ class _0Form_Special(FrozenOnly):
         #     pbar = tqdm(total=mesh.node.elements.GLOBAL_num, desc='---Parsing-Hybridization-0')
 
         SKIP_e0_dofs = list() # {e0_dof_number: (edge_element, location), }
-        for i in range(mesh.node.elements.GLOBAL_num):
+        for i in range(mesh.node.elements.global_num):
 
             SOS = mesh.node.elements.do.find.hybrid_singularity_overcoming_setting(i)
 
@@ -910,7 +910,7 @@ if __name__ == '__main__':
 
     # f.dofs.visualize.matplot.connection_around_node_element(7, T, D, C, t, e, checking_mode=False)
 
-    for i in range(mesh.node.elements.GLOBAL_num):
+    for i in range(mesh.node.elements.global_num):
         f.dofs.visualize.matplot.connection_around_node_element(i, T, D, C, t, e, checking_mode=True)
 
     # for i in range(t1.prime.numbering.gathering.GLOBAL_num_dofs):

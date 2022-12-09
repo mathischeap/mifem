@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 11/28/2022 9:27 AM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
 from numpy import arange
 
@@ -33,24 +30,29 @@ class _3dCSCG_LocalTrace_Numbering_DoFind(FrozenOnly):
         """
         k = self._ltf_.k
 
-        if k not in self._localSideCache_ is None: self._localSideCache_[k] = dict()
+        if self._ltf_.whether.hybrid:
 
-        if side_name not in self._localSideCache_[k]:
-            NBO = self._ltf_.num.basis_onside
-            NS = NBO['N']
-            WE = NBO['W']
-            BF = NBO['B']
-            if   side_name == 'N': indices = [0, NS]
-            elif side_name == 'S': indices = [NS, 2*NS]
-            elif side_name == 'W': indices = [2*NS, 2*NS+WE]
-            elif side_name == 'E': indices = [2*NS+WE, 2*NS+2*WE]
-            elif side_name == 'B': indices = [2*NS+2*WE, 2*NS+2*WE+BF]
-            elif side_name == 'F': indices = [2*NS+2*WE+BF, 2*NS+2*WE+2*BF]
-            else: raise Exception()
-            self._localSideCache_[k][side_name] = indices
+            if k not in self._localSideCache_ is None: self._localSideCache_[k] = dict()
 
-        i0, i1 = self._localSideCache_[k][side_name]
-        return arange(i0, i1)
+            if side_name not in self._localSideCache_[k]:
+                NBO = self._ltf_.num.basis_onside
+                NS = NBO['N']
+                WE = NBO['W']
+                BF = NBO['B']
+                if   side_name == 'N': indices = [0, NS]
+                elif side_name == 'S': indices = [NS, 2*NS]
+                elif side_name == 'W': indices = [2*NS, 2*NS+WE]
+                elif side_name == 'E': indices = [2*NS+WE, 2*NS+2*WE]
+                elif side_name == 'B': indices = [2*NS+2*WE, 2*NS+2*WE+BF]
+                elif side_name == 'F': indices = [2*NS+2*WE+BF, 2*NS+2*WE+2*BF]
+                else: raise Exception()
+                self._localSideCache_[k][side_name] = indices
+
+            i0, i1 = self._localSideCache_[k][side_name]
+            return arange(i0, i1)
+
+        else:
+            return self._ltf_.numbering.local_gathering[side_name]
 
 
     def dofs_on_element_side(self, element, side_name, GM=None):
@@ -73,7 +75,11 @@ class _3dCSCG_LocalTrace_Numbering_DoFind(FrozenOnly):
 
         k = self._ltf_.k
 
-        return self.___Pr_find_ltf_dofs_on_element_side___(element, side_name, GM, k=k)
+        if self._ltf_.whether.hybrid:
+            return self.___Pr_find_ltf_dofs_on_element_side___(element, side_name, GM, k=k)
+        else:
+            local_indices = self._ltf_.numbering.local_gathering[side_name]
+            return GM[element].full_vector[local_indices]
 
 
     def ___Pr_find_ltf_dofs_on_element_side___(self, element, side_name, GM, k):
@@ -111,9 +117,3 @@ class _3dCSCG_LocalTrace_Numbering_DoFind(FrozenOnly):
         i0, i1 = self._localSideCache_[k][side_name]
 
         return GM[element].full_vector[i0:i1]
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

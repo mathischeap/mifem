@@ -10,7 +10,6 @@ from tools.elementwiseCache.gathering.irregular.ir_chain_matrix.main import iR_C
 
 ___GLOBAL_CGM_CACHE___ = {'key': list(), 'cache': list()} # to cache global CGM.
 
-
 class GatheringMatrixChaining(FrozenOnly):
     """"""
 

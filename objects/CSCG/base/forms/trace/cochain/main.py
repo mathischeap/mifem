@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-from root.config.main import np, RANK, MASTER_RANK, COMM, SAFE_MODE
+from root.config.main import np, RANK, MASTER_RANK, COMM
 from tools.miLinearAlgebra.dataStructures.vectors.distributed.main import DistributedVector
 from scipy import sparse as spspa
-from components.exceptions import LocalCochainShapeError
 from scipy.sparse import lil_matrix, csr_matrix, csc_matrix
 from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_ColumnVector
 from components.freeze.base import FrozenOnly
-
+from components.assemblers import VectorAssembler
+from objects.CSCG.base.forms.trace.cochain.whether import CSCG_cT_Cochain_Whether
 
 class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
     """"""
@@ -14,7 +14,18 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
         self._tf_ = tf
         self._local_ = None
         self._local_TEW_ = None
+        self._whether_ = None
+        if self._tf_.whether.hybrid:
+            pass
+        else:
+            self._assembler_ = VectorAssembler(self._tf_.numbering.local_gathering)
         self._freeze_self_()
+
+    @property
+    def whether(self):
+        if self._whether_ is None:
+            self._whether_ = CSCG_cT_Cochain_Whether(self._tf_)
+        return self._whether_
 
     @property
     def EWC(self):
@@ -44,6 +55,8 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
     def ___PRIVATE_do_gather_to_master_and_make_them_region_wise_local_index_grouped___(self):
         """make it regions-wise-element-local-indexed, thus we can save it and when read a form, we can always have the
         correct local cochain allocated even element numbering is different.
+
+        will raise error if cochain is not full.
         """
         assert self.local is not None, "I have no local cochain!"
 
@@ -65,7 +78,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
 
             RW_LOCAL = dict()
 
-            for i in range(self._tf_.mesh.elements.GLOBAL_num):
+            for i in range(self._tf_.mesh.elements.global_num):
                 assert i in LOCAL, "something is wrong."
                 # noinspection PyUnboundLocalVariable
                 assert i in RID, "something is wrong."
@@ -96,6 +109,8 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
     def globe(self):
         """Global cochain. As trace elements almost are always shared by cores, so we
         cannot make it a general`DistributedVector`; we can only make it a master dominating one.
+
+        Will raise error if cochain is not full.
         """
         GM = self._tf_.numbering.gathering
         globe = lil_matrix((1, self._tf_.global_num_dofs))
@@ -128,7 +143,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
         if globe.__class__.__name__ == 'DistributedVector':
             assert globe.V.shape == (self._tf_.global_num_dofs, 1), "globe cochain shape wrong."
             # gather vector to master core ...
-            if globe.IS_master_dominating:
+            if globe.whether.master_dominating:
                 # no need to gather
                 VV = globe.V.T.toarray()[0]
             else:
@@ -177,8 +192,6 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
         else:
             raise Exception(f"Can not set cochain from {globe}.")
 
-
-
     def __getitem__(self, item):
         return self.local[item]
 
@@ -208,13 +221,16 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
     def local(self, local):
         numOfElements = self._tf_.mesh.elements.num
         numOfBasis = self._tf_.num.basis
-        try:
-            assert isinstance(local, dict)
-            assert len(local) == numOfElements
-            for i in self._tf_.mesh.elements:
-                assert np.shape(local[i]) == (numOfBasis,)
-        except AssertionError:
-            raise LocalCochainShapeError()
+
+        assert isinstance(local, dict), f"please put local cochain in a dict."
+        if len(local) == numOfElements:
+            self.whether._full_ = True
+        else:
+            self.whether._full_ = False
+
+        for i in local:
+            assert np.shape(local[i]) == (numOfBasis,), \
+                f"local cochain of mesh-element #{i} is of wrong shape."
 
         self._local_TEW_ = None
         self._local_ = local
@@ -242,14 +258,14 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
         :return:
         """
         numOfBasis = self._tf_.num.basis_onside
-        try:
-            assert isinstance(local_TEW, dict)
-            for key in local_TEW:
-                te = self._tf_.mesh.trace.elements[key]
-                rs = te.CHARACTERISTIC_side
-                assert local_TEW[key].shape == (numOfBasis[rs],)
-        except AssertionError:
-            raise LocalCochainShapeError()
+
+        assert isinstance(local_TEW, dict), f"place put local cochain in a dict."
+
+        for key in local_TEW:
+            te = self._tf_.mesh.trace.elements[key]
+            rs = te.CHARACTERISTIC_side
+            assert local_TEW[key].shape == (numOfBasis[rs],), \
+                f"local_TEW of trace-element #{key} is of wrong shape."
 
         self._local_TEW_ = local_TEW
         self.___local_TEW_2_local___()
@@ -257,18 +273,51 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
     def ___local_TEW_2_local___(self):
         """"""
         MAP = self._tf_.mesh.trace.elements.map
-        if SAFE_MODE:
-            for i in MAP:
-                for key in MAP[i]:
-                    assert key in self._local_TEW_, "'local_TEW' is not full."
-        local = dict()
+        _full_ = True
+
         for i in MAP:
-            local[i] = list()
             for key in MAP[i]:
-                local[i].append(self._local_TEW_[key])
-            local[i] = np.concatenate(local[i])
-            assert local[i].shape == (self._tf_.num.basis,)
-        self._local_ = local
+                if key in self._local_TEW_:
+                    pass
+                else:
+                    _full_ = False
+                    break
+            if _full_ is False:
+                break
+            else:
+                pass
+
+        self.whether._full_ = _full_
+
+        local = dict()
+        sns = 'NSWEBF'
+        for i in MAP:
+            locally_full = True
+            for key in MAP[i]:
+                if key in self._local_TEW_:
+                    pass
+                else:
+                    locally_full = False
+                    break
+
+            if locally_full: # only locally full local-cochain will be passed to `local` property
+
+                if self._tf_.whether.hybrid:
+                    local[i] = list()
+                    for key in MAP[i]:
+                        local[i].append(self._local_TEW_[key])
+                    local[i] = np.concatenate(local[i])
+                else:
+                    local[i] = dict()
+                    for key, side in zip(MAP[i], sns):
+                        local[i][side] = self._local_TEW_[key]
+                    local[i] = self._assembler_(local[i], 'replace')
+
+                assert local[i].shape == (self._tf_.num.basis,)
+            else:
+                pass
+
+        self._local_ = local # do not send `to self.local`!
 
     def ___local_2_local_TEW___(self):
         return NotImplementedError()

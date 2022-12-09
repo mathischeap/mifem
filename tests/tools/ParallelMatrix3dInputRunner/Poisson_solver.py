@@ -38,9 +38,9 @@ def PoissonSolver(N, K, c, show_info=False):
        space = cscg2.space('polynomials')([('Lobatto', N), ('Lobatto', N)])
        fc = cscg2.form(mesh, space)
 
-       p = fc('2-f-o', name='potential', is_hybrid=True)
-       u = fc('1-f-o', name='velocity', is_hybrid=True)
-       f = fc('2-f-o', name='source', is_hybrid=True)
+       p = fc('2-f-o', name='potential', hybrid=True)
+       u = fc('1-f-o', name='velocity', hybrid=True)
+       f = fc('2-f-o', name='source', hybrid=True)
        t = fc('1-t-o', name='trace')
 
        t.BC.boundaries = pB

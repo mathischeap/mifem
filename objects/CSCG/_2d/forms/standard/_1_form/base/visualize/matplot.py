@@ -74,7 +74,7 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
         -------
 
         """
-        density = int(np.ceil(np.sqrt(density / self._mesh_.elements.GLOBAL_num)))
+        density = int(np.ceil(np.sqrt(density / self._mesh_.elements.global_num)))
 
         rs = list()
         for _ in range(self._sf_.ndim):
@@ -346,7 +346,7 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
         -------
 
         """
-        density = int(np.ceil(np.sqrt(density / self._mesh_.elements.GLOBAL_num)))
+        density = int(np.ceil(np.sqrt(density / self._mesh_.elements.global_num)))
 
         mesh = self._mesh_
 

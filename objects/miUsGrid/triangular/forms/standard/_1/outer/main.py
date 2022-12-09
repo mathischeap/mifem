@@ -20,9 +20,9 @@ from objects.miUsGrid.triangular.forms.standard._1.outer.export.main import miUs
 class miUsTriangular_S1F_Outer(miUsTriangular_S1F_Base):
     """"""
 
-    def __init__(self, mesh, space, name='Tri-os1f'):
+    def __init__(self, mesh, space, hybrid=False, name='Tri-os1f'):
         """"""
-        super(miUsTriangular_S1F_Outer, self).__init__(mesh, space, 'outer', name)
+        super(miUsTriangular_S1F_Outer, self).__init__(mesh, space, hybrid, 'outer', name)
 
         self._discretize_ = miUsTriangular_oS1F_Discretize(self)
         self._reconstruct_ = miUsTriangular_oS1F_Reconstruct(self)

@@ -7,7 +7,6 @@ from components.freeze.base import FrozenOnly
 from tools.miLinearAlgebra.dataStructures.globalMatrix.main import GlobalMatrix
 from root.config.main import ASSEMBLE_COST, COMM, MPI, RANK, MASTER_RANK
 
-
 class EWC_SparseMatrix_Assembler(FrozenOnly):
     """"""
     def __init__(self, MAT):

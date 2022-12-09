@@ -5,7 +5,6 @@
 @time: 2022/09/20 3:14 PM
 """
 import sys
-
 if './' not in sys.path: sys.path.append('./')
 from objects.miUsGrid.triangular.forms.standard.base.main import miUsTriangular_SF_Base
 
@@ -18,13 +17,12 @@ from objects.miUsGrid.triangular.forms.standard._0.base.error import miUs_Triang
 from objects.miUsGrid.triangular.forms.standard._0.base.export.main import miUsTriangular_S0F_Export
 from objects.miUsGrid.triangular.forms.standard._0.base.boundary_integrate.main import miUsGrid_S0F_BI
 
-
 class miUsTriangular_S0F_Base(miUsTriangular_SF_Base):
     """"""
 
-    def __init__(self, mesh, space, orientation, name):
+    def __init__(self, mesh, space, hybrid, orientation, name):
         """"""
-        super(miUsTriangular_S0F_Base, self).__init__(mesh, space, orientation, 0, name)
+        super(miUsTriangular_S0F_Base, self).__init__(mesh, space, hybrid, orientation, 0, name)
         self._discretize_ = miUsTriangular_S0F_Discretize(self)
         self._reconstruct_ = miUsTriangular_S0F_Reconstruct(self)
 

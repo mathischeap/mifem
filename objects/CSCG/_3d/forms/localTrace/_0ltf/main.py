@@ -14,13 +14,14 @@ from objects.CSCG._3d.forms.localTrace._0ltf.visualize.main import _3dCSCG_0Loca
 from components.quadrature import Quadrature
 import numpy as np
 from scipy.sparse import csr_matrix, bmat
+from components.assemblers import MatrixAssembler
 
 class _3dCSCG_0LocalTrace(_3dCSCG_LocalTrace):
     """"""
 
-    def __init__(self, mesh, space, orientation='outer',
+    def __init__(self, mesh, space, hybrid=True, orientation='outer',
         numbering_parameters='Naive', name='outer-oriented-0-local-trace-form'):
-        super().__init__(mesh, space, orientation, numbering_parameters, name)
+        super().__init__(mesh, space, hybrid, orientation, numbering_parameters, name)
         self._k_ = 0
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_localtrace_0form')
         self._discretize_ = _3dCSCG_0LocalTrace_Discretize(self)
@@ -33,7 +34,7 @@ class _3dCSCG_0LocalTrace(_3dCSCG_LocalTrace):
         assert func_body.ndim == self.ndim == 3
 
         if func_body.__class__.__name__ == '_3dCSCG_ScalarField':
-            assert func_body.ftype in ('standard',), \
+            assert func_body.ftype in ('standard', 'boundary-wise'), \
                 f"3dCSCG 0ltf FUNC does not accept func _3dCSCG_ScalarField of ftype {func_body.ftype}."
         else:
             raise Exception(f"3dCSCG 0ltf FUNC does not accept func {func_body.__class__}")
@@ -49,7 +50,7 @@ class _3dCSCG_0LocalTrace(_3dCSCG_LocalTrace):
             raise Exception(f"3dCSCG 0ltf BC does not accept func {func_body.__class__}")
 
     def ___PrLT_mass_matrices_brutal_force___(self):
-        """Should return the same mass matrices as ___PrLT_mass_matrices___"""
+        """Should return the same (mesh-element-wise) mass matrices as ___PrLT_mass_matrices___"""
         p = [self.dqp[i] + 1 for i in range(self.ndim)]
         quad_nodes, quad_weights = Quadrature(p, category='Gauss').quad
 
@@ -85,10 +86,10 @@ class _3dCSCG_0LocalTrace(_3dCSCG_LocalTrace):
             else:
                 tes = Tmap[i]
                 RSi = R_sides[i]
-                M = list()
+                M = dict()
                 for j, side in zip(tes, 'NSWEBF'):
                     te = self.mesh.trace.elements[j]
-                    R = RSi[side].toarray()
+                    R = RSi[side] # array, if sparse, do toarray()
 
                     if side in 'NS':
                         g = te.coordinate_transformation.metric(xNS, yNS)
@@ -102,27 +103,29 @@ class _3dCSCG_0LocalTrace(_3dCSCG_LocalTrace):
                     else:
                         raise Exception()
 
-                    M.append(
-                        csr_matrix(
-                            np.einsum(
-                                'vi, vj, v, v -> ij',
-                                R, R, np.sqrt(g), QW,
-                                optimize='optimal',
-                            )
-                        )
+                    M[side] = np.einsum(
+                        'vi, vj, v, v -> ij',
+                        R, R, np.sqrt(g), QW,
+                        optimize='optimal',
                     )
 
-                M = bmat(
-                    (
-                        [M[0], None, None, None, None, None],
-                        [None, M[1], None, None, None, None],
-                        [None, None, M[2], None, None, None],
-                        [None, None, None, M[3], None, None],
-                        [None, None, None, None, M[4], None],
-                        [None, None, None, None, None, M[5]]
-                    ),
-                    format='csr'
-                )
+                if self.whether.hybrid:
+                    M = bmat(
+                        (
+                            [csr_matrix(M['N']), None, None, None, None, None],
+                            [None, csr_matrix(M['S']), None, None, None, None],
+                            [None, None, csr_matrix(M['W']), None, None, None],
+                            [None, None, None, csr_matrix(M['E']), None, None],
+                            [None, None, None, None, csr_matrix(M['B']), None],
+                            [None, None, None, None, None, csr_matrix(M['F'])]
+                        ),
+                        format='csr'
+                    )
+
+                else:
+                    local_gathering = self.numbering.local_gathering
+                    assembler = MatrixAssembler(local_gathering, local_gathering)
+                    M = assembler(M, 'add', format='csr')
 
                 if isinstance(mark, str):
                     cacheDict[mark] = M
@@ -134,7 +137,7 @@ class _3dCSCG_0LocalTrace(_3dCSCG_LocalTrace):
         return MD
 
     def ___PrLT_mass_matrices___(self):
-        """"""
+        """Make the mesh-element-wise mass matrix."""
         p = [self.dqp[i] + 1 for i in range(self.ndim)]
         quad_nodes, quad_weights = Quadrature(p, category='Gauss').quad
 
@@ -158,7 +161,7 @@ class _3dCSCG_0LocalTrace(_3dCSCG_LocalTrace):
                 MD[i] = local_cache[mark]
             else:
                 TES = Tmap[i]
-                M = list()
+                M = dict()
                 for j, side in zip(TES, 'NSWEBF'):
                     te = self.mesh.trace.elements[j]
                     g = te.coordinate_transformation.metric(*xietasigma[side])
@@ -176,19 +179,24 @@ class _3dCSCG_0LocalTrace(_3dCSCG_LocalTrace):
                     else:
                         raise Exception()
 
-                    M.append(csr_matrix(M_))
+                    M[side] = M_
 
-                M = bmat(
-                    (
-                        [M[0], None, None, None, None, None],
-                        [None, M[1], None, None, None, None],
-                        [None, None, M[2], None, None, None],
-                        [None, None, None, M[3], None, None],
-                        [None, None, None, None, M[4], None],
-                        [None, None, None, None, None, M[5]]
-                    ),
-                    format='csr'
-                )
+                if self.whether.hybrid:
+                    M = bmat(
+                        (
+                            [csr_matrix(M['N']), None, None, None, None, None],
+                            [None, csr_matrix(M['S']), None, None, None, None],
+                            [None, None, csr_matrix(M['W']), None, None, None],
+                            [None, None, None, csr_matrix(M['E']), None, None],
+                            [None, None, None, None, csr_matrix(M['B']), None],
+                            [None, None, None, None, None, csr_matrix(M['F'])]
+                        ),
+                        format='csr'
+                    )
+                else:
+                    local_gathering = self.numbering.local_gathering
+                    assembler = MatrixAssembler(local_gathering, local_gathering)
+                    M = assembler(M, 'add', format='csr')
 
                 if isinstance(mark, str):
                     local_cache[mark] = M
@@ -199,30 +207,21 @@ class _3dCSCG_0LocalTrace(_3dCSCG_LocalTrace):
 
         return MD
 
-
-
-
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/_3d/forms/localTrace/_0ltf/main.py
 
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('ct', c=0.1)([3, 3, 3])
-    space = SpaceInvoker('polynomials')([4, 4, 4])
+    mesh = MeshGenerator('ct', c=0.1)([3, 4, 3])
+    space = SpaceInvoker('polynomials')([1, 1, 1])
     FC = FormCaller(mesh, space)
 
-    lt0 = FC('0-lt')
+    sf0 = FC('0-f', hybrid=True)
+    ltf0 = FC('0-lt', hybrid=False)
+    tf0 = FC('0-t', hybrid=False)
 
-    def p(t, x, y, z): return np.sin(2*np.pi*x) + t
-    scalar = FC('scalar', p)
-    lt0.CF = scalar
-    scalar.current_time = 0
-    lt0.discretize()
-    lt0.visualize()
+    def p(t, x, y, z): return np.sin(2*np.pi*x) + t + 0 * y * z
+    scalar = FC('scalar', {'North':p, 'South': p, 'West':p, 'East':p, 'Back':p, 'Front':p})
+    # scalar = FC('scalar', p)
 
-
-    # M = lt0.___PrLT_mass_matrices_brutal_force___()
-    # m = lt0.___Pr_mass_matrices___()
-
-    # m = lt0.___PrLT_mass_matrices_brutal_force___()
-    # M = lt0.___PrLT_mass_matrices___()
+    Tsf, Ttf = space.topological_connection(tf0, sf0, ltf0)

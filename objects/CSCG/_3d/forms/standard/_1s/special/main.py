@@ -283,7 +283,7 @@ class _1Form_Special(FrozenOnly):
 
         SKIPPED_edge_elements = list()
 
-        for i in range(mesh.edge.elements.GLOBAL_num):
+        for i in range(mesh.edge.elements.global_num):
 
             if i in mesh.edge.elements:
                 edge_element = mesh.edge.elements[i]

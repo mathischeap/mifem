@@ -23,7 +23,7 @@ def test_Naive_Numbering_NO1_0form():
     mesh = MeshGenerator('crazy_periodic')([2, 2, 2], EDM='debug')
     space = SpaceInvoker('polynomials')([('Lobatto', 2), ('Lobatto', 1), ('Lobatto', 2)])
     FC = FormCaller(mesh, space)
-    f0 = FC('0-f', is_hybrid=False, numbering_parameters='Naive')
+    f0 = FC('0-f', hybrid=False, numbering_parameters='Naive')
 
     benchmark = np.array(
         [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
@@ -50,7 +50,7 @@ def test_Naive_Numbering_NO2_1form():
     mesh = MeshGenerator('crazy_periodic')([2, 2, 2], EDM='debug')
     space = SpaceInvoker('polynomials')([('Lobatto', 2), ('Lobatto', 1), ('Lobatto', 2)])
     FC = FormCaller(mesh, space)
-    f1 = FC('1-f', is_hybrid=False, numbering_parameters='Naive')
+    f1 = FC('1-f', hybrid=False, numbering_parameters='Naive')
 
     benchmark = np.array(
         [[ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,
@@ -85,7 +85,7 @@ def test_Naive_Numbering_NO3_2form():
     space = SpaceInvoker('polynomials')([('Lobatto', 2), ('Lobatto', 1), ('Lobatto', 2)])
     FC = FormCaller(mesh, space)
 
-    f2 = FC('2-f', is_hybrid=False, numbering_parameters='Naive')
+    f2 = FC('2-f', hybrid=False, numbering_parameters='Naive')
     benchmark = np.array([
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
          17, 18, 19],
@@ -131,7 +131,7 @@ def test_Naive_Numbering_NO5_0trace():
     GM_TEW = COMM.gather(GM_TEW, root=MASTER_RANK)
     if RANK == MASTER_RANK:
         END = 0
-        for i in range(t0.mesh.trace.elements.GLOBAL_num):# go through all (global) trace elements
+        for i in range(t0.mesh.trace.elements.global_num):# go through all (global) trace elements
             for gm_core in GM_TEW:
                 if i in gm_core:
                     fv = gm_core[i].full_vector
@@ -170,7 +170,7 @@ def test_Naive_Numbering_NO6_1trace():
     GM_TEW = COMM.gather(GM_TEW, root=MASTER_RANK)
     if RANK == MASTER_RANK:
         END = 0
-        for i in range(t1.mesh.trace.elements.GLOBAL_num):# go through all (global) trace elements
+        for i in range(t1.mesh.trace.elements.global_num):# go through all (global) trace elements
             for gm_core in GM_TEW:
                 if i in gm_core:
                     fv = gm_core[i].full_vector

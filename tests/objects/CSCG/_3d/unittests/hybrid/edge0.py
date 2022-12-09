@@ -46,7 +46,7 @@ def test_hybridization_of_standard_0_form():
     FC = FormCaller(mesh, space)
     pressure = FC('scalar', pressure)
 
-    f = FC('0-f', is_hybrid=True)
+    f = FC('0-f', hybrid=True)
     t = FC('0-adt')
     e = FC('0-e')
 
@@ -60,7 +60,7 @@ def test_hybridization_of_standard_0_form():
 
     T, D, C, b, eGM = f.special.hybrid_pairing(t, e)
 
-    for i in range(mesh.node.elements.GLOBAL_num):
+    for i in range(mesh.node.elements.global_num):
         f.dofs.visualize.matplot.connection_around_node_element(i, T, D, C, t, e, checking_mode=True)
 
     Id = EWC_SparseMatrix(mesh, ('identity', f.num.basis))

@@ -4,10 +4,8 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 11/26/2022 2:45 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
+from components.assemblers import VectorAssembler
 
 from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_ColumnVector
 from scipy.sparse import csr_matrix, csc_matrix, lil_matrix
@@ -15,8 +13,7 @@ from root.config.main import RANK, MASTER_RANK, COMM
 import numpy as np
 from tools.miLinearAlgebra.dataStructures.vectors.distributed.main import DistributedVector
 
-from components.exceptions import LocalCochainShapeError
-
+from objects.CSCG.base.forms.localTrace.cochain.whether import CSCG_LocalTraceForm_Cochain_Whether
 
 class CSCG_LocalTrace_CochainBase(FrozenOnly):
     """"""
@@ -25,11 +22,19 @@ class CSCG_LocalTrace_CochainBase(FrozenOnly):
         """"""
         self._ltf_ = ltf
         self._local_ = None
+        self._local_ESW_ = None
+        self._whether_ = None
+        if self._ltf_.whether.hybrid:
+            pass
+        else:
+            self._assembler_ = VectorAssembler(self._ltf_.numbering.local_gathering)
         self._freeze_self_()
 
-    def RESET_cache(self):
-        """"""
-        pass
+    @property
+    def whether(self):
+        if self._whether_ is None:
+            self._whether_ = CSCG_LocalTraceForm_Cochain_Whether(self._ltf_)
+        return self._whether_
 
     @property
     def EWC(self):
@@ -43,17 +48,15 @@ class CSCG_LocalTrace_CochainBase(FrozenOnly):
         ewc.gathering_matrix = self._ltf_.numbering.gathering
         return ewc
 
-
     def ___PRIVATE_local_call___(self, i):
         return csr_matrix(self.local[i]).T
 
-
-
-
-
-
     @property
     def globe(self):
+        """We gather the local cochain to a global vector.
+
+        It will raise error if the cochain is not full.
+        """
         GM = self._ltf_.numbering.gathering
         globe = lil_matrix((1, self._ltf_.num.global_dofs))
         for i in GM: # go through all local elements
@@ -63,11 +66,9 @@ class CSCG_LocalTrace_CochainBase(FrozenOnly):
         # local trace is actually automatically hybrid. So it must can form a distributed vector.
         return DistributedVector(globe)
 
-
     @globe.setter
     def globe(self, globe):
-        """
-        This process is complex, but it makes sure that the distribution is correct for all cases.
+        """This process is complex, but it makes sure that the distribution is correct for all cases.
 
         :param globe:
         :return:
@@ -137,9 +138,6 @@ class CSCG_LocalTrace_CochainBase(FrozenOnly):
     def __len__(self):
         return len(self.local)
 
-
-
-
     # ------------- DEPENDENT PROPERTIES (MAJOR): When set, clear BRANCHES by set _branches_ to None -------------------
     @property
     def local(self):
@@ -155,30 +153,109 @@ class CSCG_LocalTrace_CochainBase(FrozenOnly):
     def local(self, local):
         numOfElements = self._ltf_.mesh.elements.num
         numOfBasis = self._ltf_.num.basis
-        try:
-            assert isinstance(local, dict), \
-                f"local cochain needs to be a dict, now it is a {local.__class__.__name__}."
-            assert len(local) == numOfElements, \
-                "local cochain has to contain cochains for all local mesh elements."
-            for i, j in zip(self._ltf_.mesh.elements.indices, local):
-                assert np.shape(local[i]) == (numOfBasis,), \
-                    f"local[{i}] shape = {np.shape(local[i])} wrong. " \
-                    f"It needs to be {(numOfBasis,)}."
-                assert i == j, f"mesh element index sequence is wrong."
 
-        except AssertionError:
-            raise LocalCochainShapeError("Cannot set local cochain.")
+        assert isinstance(local, dict), \
+            f"local cochain needs to be a dict, now it is a {local.__class__.__name__}."
+        if len(local) == numOfElements:
+            self.whether._full_ = True
+        else:
+            self.whether._full_ = False
 
-        self.RESET_cache()
+        for i in local:
+            assert np.shape(local[i]) == (numOfBasis,), \
+                f"local[{i}] shape = {np.shape(local[i])} is wrong. " \
+                f"It needs to be {(numOfBasis,)}."
+
+        self._local_ESW_ = None
         self._local_ = local
 
-
     #--------------- DEPENDENT PROPERTIES (BRANCHES, must have the two switching methods): when set, update local ------
+    @property
+    def local_ESW(self):
+        """
+        The mesh-element-side-wise cochain.
 
+        :return: A dict whose keys are mesh element numbers and values
+            are also dict whose keys are (a part of or all of) 'NSWEBF' and values are ravel cochain
+            on these mesh element sides.
 
-    #=================================== ABOVE =========================================================================
+            If a side name is not include for a particular mesh-element, it means wo do not the
+            cochain of this particular side.
 
+            So, if the side is included, it must be a 1-d array of correct shape.
 
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass
+        """
+        # this is important: do not use ``local_TEW`` or ``local``.
+        if self._local_ESW_ is None and self._local_ is not None:
+            self.___local_2_local_ESW___()
+        return self._local_ESW_
+
+    @local_ESW.setter
+    def local_ESW(self, local_ESW):
+        """
+        :param local_ESW:
+            The mesh-element-wise cochain to be sent to self.local_ESW. See `local_ESW` for the
+            regularity of this local_ESW.
+        :return:
+        """
+        numOfBasis = self._ltf_.num.basis_onside
+
+        assert isinstance(local_ESW, dict), f"place put local_ESW cochain in a dict."
+
+        for i in local_ESW:
+            assert i in self._ltf_.mesh.elements, f"element {i} is not found."
+
+            esw_i = local_ESW[i]
+
+            for side in esw_i:
+                assert esw_i[side].shape == (numOfBasis[side],), \
+                    f"local_ESW[{i}][{side}] is of wrong shape"
+
+        self._local_ESW_ = local_ESW
+        self.___local_ESW_2_local___()
+
+    def ___local_ESW_2_local___(self):
+        """"""
+        _full_ = True
+        for i in self._local_ESW_:
+            esw_i = self._local_ESW_[i]
+
+            if len(esw_i) != 6:
+                _full_ = False
+                break
+
+        self.whether._full_ = _full_
+
+        sns = 'NSWEBF'
+        local = dict()
+        for i in self._local_ESW_:
+            esw_i = self._local_ESW_[i]
+            if len(esw_i) != 6:
+                pass
+            else:
+
+                if self._ltf_.whether.hybrid:
+
+                    local[i] = list()
+
+                    for side in sns:
+                        local[i].append(esw_i[side])
+
+                    local[i] = np.concatenate(local[i])
+
+                else:
+                    local[i] = dict()
+
+                    for side in sns:
+                        local[i][side] = esw_i[side]
+
+                    local[i] = self._assembler_(local[i], 'replace')
+
+                assert local[i].shape == (self._ltf_.num.basis,)
+
+        self._local_ = local  # do not send `to self.local`!
+
+    def ___local_2_local_ESW___(self):
+        raise NotImplementedError()
+
+    #=================================== ABOVE ===============================

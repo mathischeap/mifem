@@ -87,7 +87,7 @@ class _3dCSCG_standard_form_Matplot(FrozenOnly):
             else:
                 raise Exception()
 
-            xyz, val = self._sf_.reconstruct(xi, eta, sigma, ravel=False, i=eps._element_.i)
+            xyz, val = self._sf_.reconstruct(xi, eta, sigma, ravel=False, element_range=eps._element_.i)
             val = val[e]
             xyz = xyz[e]
 

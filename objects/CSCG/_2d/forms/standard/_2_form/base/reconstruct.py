@@ -13,18 +13,18 @@ class _2dCSCG_S2F_Reconstruct(_2dCSCG_SF_ReconstructBase):
         self._freeze_self_()
 
 
-    def __call__(self, xi, eta, ravel=False, i=None, vectorized=False, value_only=False):
+    def __call__(self, xi, eta, ravel=False, element_range=None, vectorized=False, value_only=False):
         """
-        Reconstruct the standard 3-form.
+        Reconstruct the 2d standard 2-form.
 
         Given ``xi``, ``eta`` and ``sigma``, we reconstruct the 3-form on ``meshgrid(xi, eta, sigma)``
         in all elements.
 
         :param xi: A 1d iterable object of floats between -1 and 1.
         :param eta: A 1d iterable object of floats between -1 and 1.
-        :param i: (`default`:``None``) Do the reconstruction for ``#i`` element. if it is ``None``,
+        :param element_range: (`default`:``None``) Do the reconstruction for ``#i`` element. if it is ``None``,
             then do it for all elements.
-        :type i: int, None
+        :type element_range: int, None
         :type xi: list, tuple, numpy.ndarray
         :type eta: list, tuple, numpy.ndarray
         :param bool ravel: (`default`:``False``) If we return 1d data?
@@ -40,15 +40,16 @@ class _2dCSCG_S2F_Reconstruct(_2dCSCG_SF_ReconstructBase):
 
         xietasigma, basis = f.do.evaluate_basis_at_meshgrid(xi, eta)
         #--- parse indices --------------------------------------------------
-        if i is None: # default, in all local mesh-elements.
+        if element_range is None: # default, in all local mesh-elements.
             INDICES = mesh.elements.indices
         else:
             if vectorized: vectorized = False
 
-            if isinstance(i ,int):
-                INDICES = [i, ]
+            if isinstance(element_range, int):
+                INDICES = [element_range,]
             else:
                 raise NotImplementedError()
+
         #---- vectorized -----------------------------------------------
         if vectorized:
 

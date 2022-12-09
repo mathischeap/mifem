@@ -4,11 +4,11 @@ Here we put all unittests in mpi environment here.
 
 To run all 3d test, do
 
->> mpiexec python objects/CSCG/_3d/__tests__/unittests/main.py
+$ mpiexec python tests/objects/CSCG/_3d/unittests/main.py
 
 This calls all cores. To call particular number of cores, say ``3`` cores, do
 
->> mpiexec -n 3 python objects/CSCG/_3d/__tests__/unittests/main.py
+$ mpiexec -n 3 python tests/objects/CSCG/_3d/unittests/main.py
 
 It is always suggested testing the library multiple time with different numbers of cores.
 
@@ -101,6 +101,7 @@ passed_3dCSCG_tests += test_trace_NO0_trace_0_form_Rd_and_Rc()
 passed_3dCSCG_tests += test_trace_NO1_trace_1_form_Rd_and_Rc()
 passed_3dCSCG_tests += test_trace_NO2_trace_2_form_Rd_and_Rc()
 passed_3dCSCG_tests += test_trace_NO3_trace_matrices()
+passed_3dCSCG_tests += test_trace_NO4_non_hybrid_trace_form_numbering()
 
 passed_3dCSCG_tests += test_edge_forms_No0_save_read()
 passed_3dCSCG_tests += test_edge_forms_No1_0edge_Rd_and_Rc()

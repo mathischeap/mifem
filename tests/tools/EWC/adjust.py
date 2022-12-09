@@ -43,7 +43,7 @@ def test_EWC_adjust():
 
     velocity = FC('vector', (u, v, w))
 
-    f1 = FC('1-f', is_hybrid=True)
+    f1 = FC('1-f', hybrid=True)
     t1 = FC('1-adt')
 
     f1.BC.CF = velocity

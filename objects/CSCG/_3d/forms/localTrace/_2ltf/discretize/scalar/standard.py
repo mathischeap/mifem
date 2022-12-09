@@ -96,7 +96,7 @@ class _3dCSCG_2ltf_Discretize_Standard(FrozenOnly):
         Tmap = self._ltf_.mesh.trace.elements.map
         for ele in self._ltf_.mesh.elements:
             tes = Tmap[ele]
-            local_cochain_ele = list()
+            local_cochain_ele = list() if self._ltf_.whether.hybrid else dict()
             for key, ele_side in zip(tes, 'NSWEBF'):
                 te = self._ltf_.mesh.trace.elements[key]
 
@@ -104,37 +104,57 @@ class _3dCSCG_2ltf_Discretize_Standard(FrozenOnly):
                     qn0, qn1 = qn_NS_y, qn_NS_z
                     qw0, qw1 = quad_weights[1], quad_weights[2]
                     area = area_NS
-                    x, y, z = te.coordinate_transformation.mapping(qn0, qn1, from_element=ele, side=ele_side)
-                    g = te.coordinate_transformation.metric(qn0, qn1)
                 elif ele_side in 'WE':
                     qn0, qn1 = qn_WE_x, qn_WE_z
                     qw0, qw1 = quad_weights[0], quad_weights[2]
                     area = area_WE
-                    x, y, z = te.coordinate_transformation.mapping(qn0, qn1, from_element=ele, side=ele_side)
-                    g = te.coordinate_transformation.metric(qn0, qn1)
                 elif ele_side in 'BF':
                     qn0, qn1 = qn_BF_x, qn_BF_y
                     qw0, qw1 = quad_weights[0], quad_weights[1]
                     area = area_BF
-                    x, y, z = te.coordinate_transformation.mapping(qn0, qn1, from_element=ele, side=ele_side)
-                    g = te.coordinate_transformation.metric(qn0, qn1)
                 else:
                     raise Exception()
 
+                x, y, z = te.coordinate_transformation.mapping(
+                    qn0, qn1, from_element=ele, side=ele_side
+                )
                 f = FUNC(x, y, z)
-                sqrt_g = np.sqrt(g)
-                local_cochain_ele.append(np.einsum(
-                    'mij, i, j, m -> m',
-                    f * sqrt_g,
-                    qw0, qw1, area,
-                    optimize='greedy'
-                ))
+                sqrt_g = np.sqrt(
+                    te.coordinate_transformation.metric(qn0, qn1)
+                )
+                if self._ltf_.whether.hybrid:
+                    local_cochain_ele.append(np.einsum(
+                        'mij, i, j, m -> m',
+                        f * sqrt_g,
+                        qw0, qw1, area,
+                        optimize='greedy'
+                    ))
+                else:
+                    local_cochain_ele[ele_side] = np.einsum(
+                        'mij, i, j, m -> m',
+                        f * sqrt_g,
+                        qw0, qw1, area,
+                        optimize='greedy'
+                    )
 
-            cochainLocal[ele] = np.concatenate(local_cochain_ele)
+            if self._ltf_.whether.hybrid:
+                cochainLocal[ele] = np.concatenate(local_cochain_ele)
+            else:
+                cochainLocal[ele] = local_cochain_ele
 
         # isKronecker? ...
         if not self._ltf_.space.IS_Kronecker: raise NotImplementedError()
         # pass to cochain.local ...
-        if update_cochain: self._ltf_.cochain.local = cochainLocal
-        # ...
-        return 'locally full local cochain', cochainLocal
+
+        if self._ltf_.whether.hybrid:
+            if update_cochain:
+                self._ltf_.cochain.local = cochainLocal
+            else:
+                pass
+            return 'locally full local cochain', cochainLocal
+        else:
+            if update_cochain:
+                self._ltf_.cochain.local_ESW = cochainLocal
+            else:
+                pass
+            return 'mesh-element-side-wise local cochain', cochainLocal

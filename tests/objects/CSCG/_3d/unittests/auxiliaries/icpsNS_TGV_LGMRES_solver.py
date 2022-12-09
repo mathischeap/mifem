@@ -68,12 +68,12 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
     FC = FormCaller(mesh, space)
     Volume = mesh.domain.volume
     es = ExactSolutionSelector(mesh)('icpsNS:TGV1', nu=nu, L=L, V0=V0, show_info=show_info)
-    P0 = FC('0-f', is_hybrid=False, orientation='inner', name='inner-total-pressure')
-    u1 = FC('1-f', is_hybrid=False, orientation='inner', name='inner-velocity')
-    w2 = FC('2-f', is_hybrid=False, orientation='inner', name='inner-vorticity')
-    w1 = FC('1-f', is_hybrid=False, orientation='outer', name='outer-vorticity')
-    u2 = FC('2-f', is_hybrid=False, orientation='outer', name='outer-velocity')
-    P3 = FC('3-f', is_hybrid=False, orientation='outer', name='outer-total-pressure')
+    P0 = FC('0-f', hybrid=False, orientation='inner', name='inner-total-pressure')
+    u1 = FC('1-f', hybrid=False, orientation='inner', name='inner-velocity')
+    w2 = FC('2-f', hybrid=False, orientation='inner', name='inner-vorticity')
+    w1 = FC('1-f', hybrid=False, orientation='outer', name='outer-vorticity')
+    u2 = FC('2-f', hybrid=False, orientation='outer', name='outer-velocity')
+    P3 = FC('3-f', hybrid=False, orientation='outer', name='outer-total-pressure')
     u1.CF = es.velocity
     u2.CF = es.velocity
     w1.CF = es.vorticity

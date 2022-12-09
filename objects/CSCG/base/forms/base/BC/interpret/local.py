@@ -4,12 +4,7 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/10/13 9:19 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
-
 from components.freeze.base import FrozenOnly
-
 
 class CSCG_FORM_BC_Interpret_Local(FrozenOnly):
     """"""
@@ -20,10 +15,7 @@ class CSCG_FORM_BC_Interpret_Local(FrozenOnly):
         self._mesh_ = f.mesh
         self._cochains_ = None
         self.___Pr_parse_dofs___() # need no BC.CF
-        if self._f_.BC.CF is not None:
-            self.___Pr_parse_cochains___()
-        else:
-            pass
+        self._cochains_ = None
         self._freeze_self_()
 
     def ___Pr_parse_dofs___(self):
@@ -56,11 +48,13 @@ class CSCG_FORM_BC_Interpret_Local(FrozenOnly):
                 cochain = local_cochain[e]
                 if e not in self._cochains_:
                     self._cochains_[e] = list()
+                else:
+                    pass
 
                 self._cochains_[e].extend(cochain[dof])
 
-        elif indicator == 'Boundary only local cochain':
-            # only cochains for dofs on mesh element side (boundary of the mesh).
+        elif indicator == 'mesh-element-side-wise local cochain':
+            # will only look at cochains for dofs on mesh element side (boundary of the mesh).
             iEP = self._f_.BC._involved_element_parts_
 
             for e_p in iEP:
@@ -71,6 +65,8 @@ class CSCG_FORM_BC_Interpret_Local(FrozenOnly):
 
                 if e not in self._cochains_:
                     self._cochains_[e] = list()
+                else:
+                    pass
 
                 assert len(self.dofs[e]) > 0, f"empty for element #{e}"
 
@@ -94,6 +90,9 @@ class CSCG_FORM_BC_Interpret_Local(FrozenOnly):
 
                 if element not in self._cochains_:
                     self._cochains_[element] = list()
+                else:
+                    pass
+
                 index = side_index[part]
                 TE = TEM[element][index]
                 self._cochains_[element].extend(local_cochain[TE])
@@ -101,18 +100,22 @@ class CSCG_FORM_BC_Interpret_Local(FrozenOnly):
         else:
             raise NotImplementedError(f"{indicator}")
 
+    def __iter__(self):
+        for e in self.dofs:
+            yield e
+
+    def __len__(self):
+        return len(self.dofs)
+
+    def __contains__(self, item):
+        return item in self.dofs
+
     @property
     def dofs(self):
         return self._dofs_
 
     @property
     def cochains(self):
+        if self._cochains_ is None:
+            self.___Pr_parse_cochains___()
         return self._cochains_
-
-
-
-
-
-if __name__ == "__main__":
-    # mpiexec -n 4 python 
-    pass

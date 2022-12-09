@@ -4,10 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/09/21 4:22 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
-
 from components.freeze.base import FrozenOnly
 
 
@@ -26,10 +22,3 @@ class miUs_Triangular_SF_Num(FrozenOnly):
     @property
     def GLOBAL_dofs(self):
         return self._sf_.numbering.gathering.global_num_dofs
-
-
-
-
-if __name__ == "__main__":
-    # mpiexec -n 4 python objects/miUsGrid/triangular/forms/standard/base/num.py
-    pass

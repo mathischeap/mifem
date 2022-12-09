@@ -8,26 +8,34 @@ import sys
 
 if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
-from objects.miUsGrid.triangular.forms.standard.base.BC.interpret.local import miUsTriangle_SF_BC_Interpret_Local
+from objects.miUsGrid.base.form.base.BC.interpret.local import miUsGrid_Form_BC_Interpret_Local
 
-class miUsTriangle_SF_BC_Interpret(FrozenOnly):
+class miUsForm_Form_BC_Interpret(FrozenOnly):
     """"""
 
-    def __init__(self, sf):
+    def __init__(self, f):
         """"""
-        self._sf_ = sf
-        self._mesh_ = sf.mesh
+        self._f_ = f
+        self._mesh_ = f.mesh
+        if f.BC.CF is not None:
+            self._ct_ = f.BC.CF._current_time_
+        else:
+            self._ct_ = None
         self._local_ = None
         self._freeze_self_()
-
-    def RESET_cache(self):
-        self._local_ = None
 
     @property
     def local(self):
         """We interpret the BC in local elements."""
+
         if self._local_ is None:
-            self._local_ = miUsTriangle_SF_BC_Interpret_Local(self._sf_)
+            self._local_ = miUsGrid_Form_BC_Interpret_Local(self._f_)
+        else:
+            if self._f_.BC.CF._current_time_ != self._ct_:
+                self._local_._cochains_ = None
+            else:
+                pass
+
         return self._local_
 
 

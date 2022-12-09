@@ -20,28 +20,25 @@ from objects.CSCG._3d.forms.standard._1s.visualize.main import _3dCSCG_S1F_VISUA
 from objects.CSCG._3d.forms.standard._1s.boundary_integration.main import _3dCSCG_S1F_BI
 from objects.CSCG._3d.forms.standard._1s.do.main import _3dCSCG_S1F_Do
 
-
-
-
 class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form):
     """
     Standard 1-form.
 
     :param mesh:
     :param space:
-    :param is_hybrid:
+    :param hybrid:
     :param orientation:
     :param numbering_parameters:
     :param name:
     """
-    def __init__(self, mesh, space, is_hybrid=True,
+    def __init__(self, mesh, space, hybrid=True,
         orientation='outer', numbering_parameters='Naive',  name=None):
         if name is None:
-            if is_hybrid:
+            if hybrid:
                 name = 'hybrid-' + orientation + '-oriented-1-form'
             else:
                 name = orientation + '-oriented-1-form'
-        super().__init__(mesh, space, is_hybrid, orientation, numbering_parameters, name)
+        super().__init__(mesh, space, hybrid, orientation, numbering_parameters, name)
         self._k_ = 1
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_standard_1form')
         self._special_ = _1Form_Special(self)
@@ -59,9 +56,9 @@ class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form):
 
         if func_body.__class__.__name__ == '_3dCSCG_VectorField':
             assert func_body.ftype in ('standard',), \
-                f"3dCSCG 1form FUNC do not accept func _3dCSCG_VectorField of ftype {func_body.ftype}."
+                f"3dCSCG 1form FUNC does not accept func _3dCSCG_VectorField of ftype {func_body.ftype}."
         else:
-            raise Exception(f"3dCSCG 1form FUNC do not accept func {func_body.__class__}")
+            raise Exception(f"3dCSCG 1form FUNC does not accept func {func_body.__class__}")
 
     def ___Pr_check_BC_CF___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
@@ -69,12 +66,9 @@ class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form):
 
         if func_body.__class__.__name__ == '_3dCSCG_VectorField':
             assert func_body.ftype in ('standard',), \
-                f"3dCSCG 1form BC do not accept func _3dCSCG_VectorField of ftype {func_body.ftype}."
+                f"3dCSCG 1form BC does not accept func _3dCSCG_VectorField of ftype {func_body.ftype}."
         else:
-            raise Exception(f"3dCSCG 1form BC do not accept func {func_body.__class__}")
-
-
-
+            raise Exception(f"3dCSCG 1form BC does not accept func {func_body.__class__}")
 
     @property
     def special(self):
@@ -103,19 +97,12 @@ class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form):
             self._visualize_ = _3dCSCG_S1F_VISUALIZE(self)
         return self._visualize_
 
-
-
     @property
     def _BI_(self):
         """This properties should be accessed through `self.do.boundary_integrate`."""
         if self.__BI__ is None:
             self.__BI__ = _3dCSCG_S1F_BI(self)
         return self.__BI__
-
-
-
-
-
 
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/_3d/forms/standard/_1s/main.py
@@ -145,11 +132,3 @@ if __name__ == '__main__':
     E21.customize.identify_global_row(2)
     # E21a = E21.assembled
     print(E21.condition.condition_number)
-
-
-    # f1.TW.func.do.set_func_body_as(velocity)
-    # f1.TW.current_time = 0
-    # f1.TW.___DO_push_all_to_instant___()
-    # f1.discretize()
-    #
-    # f1.visualize(x=0.2)

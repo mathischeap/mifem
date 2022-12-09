@@ -24,7 +24,7 @@ class _3dCSCG_Algebra_DUAL_Trace_Form_Coboundary(FrozenOnly):
                 formName = '_3dCSCG_0Trace'
             else:
                 raise Exception()
-            T = getattr(self._dt_.space.trace_matrix, formName)[0]
+            T = getattr(self._dt_.space.trace_matrix, formName)[0][self._dt_.prime.whether.hybrid]
             self._T_ = \
                 EWC_SparseMatrix(self._dt_.mesh.elements, T, 'constant')
         return self._T_

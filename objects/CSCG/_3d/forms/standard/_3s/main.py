@@ -24,19 +24,19 @@ class _3dCSCG_3Form(_3dCSCG_S3F_Private, _3dCSCG_Standard_Form):
 
     :param mesh:
     :param space:
-    :param is_hybrid:
+    :param hybrid:
     :param orientation:
     :param numbering_parameters:
     :param name:
     """
-    def __init__(self, mesh, space, is_hybrid=True,
+    def __init__(self, mesh, space, hybrid=True,
         orientation='outer', numbering_parameters='Naive',  name=None):
         if name is None:
-            if is_hybrid:
+            if hybrid:
                 name = 'hybrid-' + orientation + '-oriented-3-form'
             else:
                 name = orientation + '-oriented-3-form'
-        super().__init__(mesh, space, is_hybrid, orientation, numbering_parameters, name)
+        super().__init__(mesh, space, hybrid, orientation, numbering_parameters, name)
         self._k_ = 3
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_standard_3form')
         self._special_ = _3Form_Special(self)

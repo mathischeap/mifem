@@ -2,7 +2,6 @@
 from components.freeze.base import FrozenOnly
 import numpy as np
 
-
 class _3dCSCG_0ltf_Discretize_Standard(FrozenOnly):
     def __init__(self, ltf):
         self._ltf_ = ltf
@@ -48,18 +47,41 @@ class _3dCSCG_0ltf_Discretize_Standard(FrozenOnly):
             xyz_F = self._ltf_.mesh.trace.elements[tes[5]].coordinate_transformation.mapping(
                 *nodes_BF, from_element=i, side='F', parse_3_1d_eps=False)
 
-            cochainLocal[i] = np.concatenate([
-                FUNC(*xyz_N),
-                FUNC(*xyz_S),
-                FUNC(*xyz_W),
-                FUNC(*xyz_E),
-                FUNC(*xyz_B),
-                FUNC(*xyz_F)
-            ])
+            if self._ltf_.whether.hybrid:
+                cochainLocal[i] = np.concatenate(
+                    (
+                        FUNC(*xyz_N),
+                        FUNC(*xyz_S),
+                        FUNC(*xyz_W),
+                        FUNC(*xyz_E),
+                        FUNC(*xyz_B),
+                        FUNC(*xyz_F),
+                    )
+                )
+            else:
+                cochainLocal[i] = {
+                    'N': FUNC(*xyz_N),
+                    'S': FUNC(*xyz_S),
+                    'W': FUNC(*xyz_W),
+                    'E': FUNC(*xyz_E),
+                    'B': FUNC(*xyz_B),
+                    'F': FUNC(*xyz_F),
+                }
 
         # isKronecker? ...
         if not self._ltf_.space.IS_Kronecker: raise NotImplementedError()
-        # pass to cochain.local ...
-        if update_cochain: self._ltf_.cochain.local = cochainLocal
-        # ...
-        return 'locally full local cochain', cochainLocal
+
+        if self._ltf_.whether.hybrid:
+            # pass to cochain.local ...
+            if update_cochain:
+                self._ltf_.cochain.local = cochainLocal
+            else:
+                pass
+            return 'locally full local cochain', cochainLocal
+        else:
+            # pass to cochain.local ...
+            if update_cochain:
+                self._ltf_.cochain.local_ESW = cochainLocal
+            else:
+                pass
+            return 'mesh-element-side-wise local cochain', cochainLocal

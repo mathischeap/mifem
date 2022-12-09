@@ -10,8 +10,6 @@ from tools.miLinearAlgebra.linearSystem.main import LinearSystem
 from tools.elementwiseCache.dataStructures.operators.bmat.main import bmat
 from tools.elementwiseCache.dataStructures.operators.concatenate.main import concatenate
 
-
-
 def test_Form_NO1_coboundary():
     """"""
     if RANK == MASTER_RANK:
@@ -56,7 +54,7 @@ def test_Form_NO1_coboundary():
     # inner outer ------------------------------------------------
     for t in T:
         # test inner -------------------------------------------
-        f0 = FC('0-f-i', is_hybrid=False)
+        f0 = FC('0-f-i', hybrid=False)
         f0.CF = sp
         f0.CF.current_time = t
         f0.discretize()
@@ -89,7 +87,7 @@ def test_Form_NO1_coboundary():
 
         # test outer -------------------------------------------
 
-        f0 = FC('0-f-o', is_hybrid=False)
+        f0 = FC('0-f-o', hybrid=False)
         f0.CF = sp
         f0.CF.current_time = t
         f0.discretize()
@@ -123,7 +121,6 @@ def test_Form_NO1_coboundary():
 
     return 1
 
-
 def test_Form_NO2_Naive_numbering():
     """"""
     if RANK == MASTER_RANK:
@@ -133,10 +130,10 @@ def test_Form_NO2_Naive_numbering():
     space = SpaceInvoker('polynomials')([('Lobatto', 2), ('Lobatto', 3)])
     FC = FormCaller(mesh, space)
 
-    f0 = FC('0-f-i', is_hybrid=True)
-    f1i = FC('1-f-i', is_hybrid=True)
-    f1o = FC('1-f-o', is_hybrid=True)
-    f2 = FC('2-f-i', is_hybrid=True)
+    f0 = FC('0-f-i', hybrid=True)
+    f1i = FC('1-f-i', hybrid=True)
+    f1o = FC('1-f-o', hybrid=True)
+    f2 = FC('2-f-i', hybrid=True)
 
     t1o = FC('1-t-o')
 
@@ -163,10 +160,10 @@ def test_Form_NO2_Naive_numbering():
         np.testing.assert_array_equal(T1O[4].full_vector,
             np.array([27,28,29,32,33,34,15,16,35,36]))
 
-    f0 = FC('0-f-i', is_hybrid=False)
-    f1i = FC('1-f-i', is_hybrid=False)
-    f1o = FC('1-f-o', is_hybrid=False)
-    f2 = FC('2-f-i', is_hybrid=False)
+    f0 = FC('0-f-i', hybrid=False)
+    f1i = FC('1-f-i', hybrid=False)
+    f1o = FC('1-f-o', hybrid=False)
+    f2 = FC('2-f-i', hybrid=False)
 
     G0 = f0.numbering.gathering
     G1I = f1i.numbering.gathering
@@ -200,7 +197,6 @@ def test_Form_NO2_Naive_numbering():
 
     return 1
 
-
 def test_Form_NO3_mass_matrices():
     """"""
     if RANK == MASTER_RANK:
@@ -210,10 +206,10 @@ def test_Form_NO3_mass_matrices():
     space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 2)])
     FC = FormCaller(mesh, space)
 
-    f0 = FC('0-f-i', is_hybrid=False)
-    f1i = FC('1-f-i', is_hybrid=False)
-    f1o = FC('1-f-o', is_hybrid=False)
-    f2 = FC('2-f-i', is_hybrid=False)
+    f0 = FC('0-f-i', hybrid=False)
+    f1i = FC('1-f-i', hybrid=False)
+    f1o = FC('1-f-o', hybrid=False)
+    f2 = FC('2-f-i', hybrid=False)
 
     f0.operators._inner_quad_type_ = 'Gauss'
     f1i.operators._inner_quad_type_ = 'Gauss'
@@ -286,7 +282,6 @@ def test_Form_NO3_mass_matrices():
 
     return 1
 
-
 def test_Form_NO4_Hodge():
     """"""
     if RANK == MASTER_RANK:
@@ -305,10 +300,10 @@ def test_Form_NO4_Hodge():
     vector = FC('vector', (P, Q))
     t = random.uniform(-1, 1)
 
-    f0 = FC('0-f-i', is_hybrid=False)
-    f1i = FC('1-f-i', is_hybrid=False)
-    f1o = FC('1-f-o', is_hybrid=False)
-    f2 = FC('2-f-i', is_hybrid=False)
+    f0 = FC('0-f-i', hybrid=False)
+    f1i = FC('1-f-i', hybrid=False)
+    f1o = FC('1-f-o', hybrid=False)
+    f2 = FC('2-f-i', hybrid=False)
 
     # ------- f0 f2 -------------------------
     f0.CF = scalar
@@ -383,9 +378,6 @@ def test_Form_NO4_Hodge():
     assert f1i_error < 0.006
     return 1
 
-
-
-
 def test_Form_NO5_cross_product():
     """"""
     if RANK == MASTER_RANK:
@@ -417,10 +409,10 @@ def test_Form_NO5_cross_product():
     vector2 = FC('vector', (a, b))
     scalar2 = FC('scalar', wva_wub)
 
-    w0 = FC('0-f-o', is_hybrid=IH)
-    u1 = FC('1-f-o', is_hybrid=IH)
-    e1 = FC('1-f-o', is_hybrid=IH)
-    R2 = FC('2-f-o', is_hybrid=IH)
+    w0 = FC('0-f-o', hybrid=IH)
+    u1 = FC('1-f-o', hybrid=IH)
+    e1 = FC('1-f-o', hybrid=IH)
+    R2 = FC('2-f-o', hybrid=IH)
 
     w0.CF = scalar1
     w0.CF.current_time = t
@@ -444,9 +436,6 @@ def test_Form_NO5_cross_product():
         np.testing.assert_almost_equal(result, 0)
 
     return 1
-
-
-
 
 def test_Form_NO6_reconstruction_matrices():
     """"""
@@ -472,8 +461,8 @@ def test_Form_NO6_reconstruction_matrices():
     xi = np.linspace(-1,1,11)
     eta = np.linspace(-1,1,9)
     #------------ outer 0-form -------------
-    f0o = FC('0-f-o', is_hybrid=IH)
-    f0i = FC('0-f-i', is_hybrid=IH)
+    f0o = FC('0-f-o', hybrid=IH)
+    f0i = FC('0-f-i', hybrid=IH)
     for f0 in (f0o, f0i):
         f0.CF = scalar
         f0.CF.current_time = rT
@@ -491,7 +480,7 @@ def test_Form_NO6_reconstruction_matrices():
         np.testing.assert_almost_equal(LnEnF, LnEnT, decimal=5)
 
     #---------- outer 1-form ---------------------
-    f1o = FC('1-f-o', is_hybrid=IH)
+    f1o = FC('1-f-o', hybrid=IH)
     f1o.CF = vector
     f1o.CF.current_time = rT
     f1o.discretize()
@@ -516,7 +505,7 @@ def test_Form_NO6_reconstruction_matrices():
 
     #------------- inner 1-form ------------------------------
     vector = FC('vector', (P, Q))
-    f1i = FC('1-f-i', is_hybrid=IH)
+    f1i = FC('1-f-i', hybrid=IH)
     f1i.CF = vector
     f1i.CF.current_time = rT
     f1i.discretize()
@@ -541,8 +530,8 @@ def test_Form_NO6_reconstruction_matrices():
 
 
     #------------ 2-form -------------
-    f2o = FC('2-f-o', is_hybrid=IH)
-    f2i = FC('2-f-i', is_hybrid=IH)
+    f2o = FC('2-f-o', hybrid=IH)
+    f2i = FC('2-f-i', hybrid=IH)
     for f2 in (f2o, f2i):
         f2.CF = scalar
         f2.CF.current_time = rT
@@ -564,8 +553,6 @@ def test_Form_NO6_reconstruction_matrices():
 
     return 1
 
-
-
 def test_Form_NO7_weak_curl():
     """"""
     if RANK == MASTER_RANK:
@@ -582,8 +569,8 @@ def test_Form_NO7_weak_curl():
     U = FC('vector', (u, v))
     rot_U = U.numerical.rot
 
-    w0 = FC('0-f-o', is_hybrid=False)  # w0 = curl (u1)
-    u1 = FC('1-f-o', is_hybrid=False)  # w0 = curl (u1)
+    w0 = FC('0-f-o', hybrid=False)  # w0 = curl (u1)
+    u1 = FC('1-f-o', hybrid=False)  # w0 = curl (u1)
 
     u1.CF = U
     u1.CF.current_time = 1
@@ -617,8 +604,8 @@ def test_Form_NO7_weak_curl():
     U = FC('vector', (u, v))
     rot_U = U.numerical.rot
 
-    w0 = FC('0-f-o', is_hybrid=False)  # w0 = curl (u1)
-    u1 = FC('1-f-o', is_hybrid=False)  # w0 = curl (u1)
+    w0 = FC('0-f-o', hybrid=False)  # w0 = curl (u1)
+    u1 = FC('1-f-o', hybrid=False)  # w0 = curl (u1)
 
     u1.CF = U
     u1.CF.current_time = 0
@@ -643,10 +630,7 @@ def test_Form_NO7_weak_curl():
 
     assert w0.error.L() < 0.0006, f"0-tangent velocity boundary condition test fails."
 
-
     return 1
-
-
 
 if __name__ == '__main__':
     # mpiexec -n 4 python objects\CSCG\_2d\__tests__\unittests\standard_forms\general.py

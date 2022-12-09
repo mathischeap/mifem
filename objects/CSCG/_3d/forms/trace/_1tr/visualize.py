@@ -1,16 +1,10 @@
 # -*- coding: utf-8 -*-
-
-
-
 from root.config.main import RANK, MASTER_RANK, COMM
 from components.freeze.main import FrozenOnly
 
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import numpy as np
-
-
-
 
 class _3dCSCG_1Trace_Visualize(FrozenOnly):
     """The visualization property/component of standard forms."""
@@ -19,17 +13,17 @@ class _3dCSCG_1Trace_Visualize(FrozenOnly):
         self._freeze_self_()
 
     def __call__(self, **kwargs):
-        """When this object is called, we call the default visualizing method: ``tecplot``."""
+        """When this object is called, we call the default visualizing method: ``matplot``."""
         return self.matplot(**kwargs)
 
-    def matplot(self, density=None, i=None,
+    def matplot(self, density=None, trace_element_range=None,
                          plot_type='contourf',
                          colormap='RdBu',
                          num_color_bar_ticks=5):
         """
 
         :param density:
-        :param i: Plot which trace elements?
+        :param trace_element_range: Plot which trace elements?
         :param plot_type: Plot type?
         :param colormap:
         :param num_color_bar_ticks:
@@ -45,9 +39,19 @@ class _3dCSCG_1Trace_Visualize(FrozenOnly):
         else:
             pass
         mesh = self._tf_.mesh
-        density = int(np.sqrt(density/mesh.trace.elements.GLOBAL_num)) + 1
+        density = int(np.sqrt(density / mesh.trace.elements.global_num)) + 1
         xi = eta = sigma = np.linspace(-1, 1, density)
-        xyz, v = self._tf_.reconstruct(xi, eta, sigma, i=i)
+
+        if trace_element_range is None:
+            # be default, we plot boundary trace elements
+            boundary_trace_elements = mesh.boundaries.range_of_trace_elements
+            trace_element_range = list()
+            for bn in boundary_trace_elements:
+                trace_element_range.extend(boundary_trace_elements[bn])
+        else:
+            pass
+
+        xyz, v = self._tf_.reconstruct(xi, eta, sigma, trace_element_range=trace_element_range)
         xyz = COMM.gather(xyz, root=MASTER_RANK)
         v = COMM.gather(v, root=MASTER_RANK)
         if RANK != MASTER_RANK: return

@@ -32,7 +32,7 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         """plot element division."""
         if RANK != MASTER_RANK: return
 
-        density = int(np.ceil(density/self._mesh_.elements.GLOBAL_num))
+        density = int(np.ceil(density / self._mesh_.elements.global_num))
         max_element_layout = 0
         for rn in self._mesh_.domain.regions.names:
             if np.max(self._mesh_.elements.layout[rn]) > max_element_layout:
@@ -277,7 +277,7 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         if RANK != MASTER_RANK: return
         if paper_version: return self.___PRIVATE_matplot_paper_version___()
 
-        density = int(np.ceil(density/self._mesh_.elements.GLOBAL_num))
+        density = int(np.ceil(density / self._mesh_.elements.global_num))
         max_element_layout = 0
         for rn in self._mesh_.domain.regions.names:
             if np.max(self._mesh_.elements.layout[rn]) > max_element_layout:

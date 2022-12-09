@@ -10,9 +10,12 @@
 from components.freeze.main import FrozenClass
 from objects.CSCG._3d.spaces.base.num_basis import NumBasis
 from objects.CSCG._3d.spaces.base.local_numbering import LocalNumbering
+from objects.CSCG._3d.spaces.base.internal_local_dofs import _3dCSCG_Internal_Local_Dofs
 from objects.CSCG._3d.spaces.base.incidence_matrix import IncidenceMatrix
 from objects.CSCG._3d.spaces.base.trace_matrix import TraceMatrix
 from objects.CSCG._3d.spaces.base.selective_matrix import SelectiveMatrix
+from objects.CSCG._3d.spaces.base.local_gathering import _3dCSCG_Space_LocalGathering
+from objects.CSCG._3d.spaces.base.topological_connection.main import _3dCSCG_SpaceTopologicalConnections
 
 from objects.CSCG._3d.spaces.base.visualize.main import _3dCSC_Space_Visualize
 
@@ -35,10 +38,13 @@ class _3dCSCG_Space_Base(FrozenClass):
         self._incidence_matrix_ = IncidenceMatrix(self)
         self._trace_matrix_ = TraceMatrix(self)
         self._selective_matrix_ = SelectiveMatrix(self)
+        self._local_gathering_ = None
         self.___define_parameters___ = None
         self.standard_properties.stamp = '3dCSCG|structured|space'
         self._visualize_ = None
         self._DO_ = None
+        self._TC_ = None
+        self._internal_local_dofs_ = None
         self._freeze_self_()
 
     def __repr__(self):
@@ -51,7 +57,11 @@ class _3dCSCG_Space_Base(FrozenClass):
         return self.___define_parameters___
 
     def __eq__(self, other):
-        return self.standard_properties.parameters == other.standard_properties.parameters
+        """"""
+        if self is other:
+            return True
+        else:
+            return self.standard_properties.parameters == other.standard_properties.parameters
 
     def ___PRIVATE_generate_1D_basises___(self):
         """ """
@@ -100,6 +110,24 @@ class _3dCSCG_Space_Base(FrozenClass):
     def selective_matrix(self):
         return self._selective_matrix_
 
+    @property
+    def local_gathering(self):
+        if self._local_gathering_ is None:
+            self._local_gathering_ = _3dCSCG_Space_LocalGathering(self)
+        return self._local_gathering_
+
+    @property
+    def topological_connection(self):
+        """"""
+        if self._TC_ is None:
+            self._TC_ = _3dCSCG_SpaceTopologicalConnections(self)
+        return self._TC_
+
+    @property
+    def internal_local_dofs(self):
+        if self._internal_local_dofs_ is None:
+            self._internal_local_dofs_ = _3dCSCG_Internal_Local_Dofs(self)
+        return self._internal_local_dofs_
 
     @property
     def category(self):
@@ -160,8 +188,6 @@ class _3dCSCG_Space_Base(FrozenClass):
     @property
     def nodes(self):
         return self._nodes_
-
-
 
     def ___PRIVATE_do_evaluate_quadrature___(self, quad_degree, quad_type=None):
         """

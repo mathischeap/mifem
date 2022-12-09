@@ -190,5 +190,5 @@ if __name__ == '__main__':
     # mesh = MeshGenerator('bridge_arch_cracked')(elements)
     nodes = mesh.node.elements
 
-    for i in range(mesh.node.elements.GLOBAL_num):
+    for i in range(mesh.node.elements.global_num):
         nodes.do.illustrate_element(i)
