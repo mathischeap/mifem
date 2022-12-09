@@ -34,11 +34,15 @@ class CSCG_FORM_BC_Interpret(FrozenOnly):
 
         else:
             # the local interpret is already there.
-            if self._f_.BC.CF._current_time_ != self._ct_:
-                # if current_time has been changed, we clean the cochains.
-                self._local_._cochains_ = None
-            else:
+            if self._f_.BC.CF is None:
                 pass
+
+            else:
+                if self._f_.BC.CF._current_time_ != self._ct_:
+                    # if current_time has been changed, we clean the cochains.
+                    self._local_._cochains_ = None
+                else:
+                    pass
 
         return self._local_
 

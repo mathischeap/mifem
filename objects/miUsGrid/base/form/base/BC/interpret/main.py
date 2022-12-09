@@ -31,10 +31,13 @@ class miUsForm_Form_BC_Interpret(FrozenOnly):
         if self._local_ is None:
             self._local_ = miUsGrid_Form_BC_Interpret_Local(self._f_)
         else:
-            if self._f_.BC.CF._current_time_ != self._ct_:
-                self._local_._cochains_ = None
-            else:
+            if self._f_.BC.CF is None:
                 pass
+            else:
+                if self._f_.BC.CF._current_time_ != self._ct_:
+                    self._local_._cochains_ = None
+                else:
+                    pass
 
         return self._local_
 
