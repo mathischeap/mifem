@@ -60,8 +60,8 @@ def test_APP_NO3_Euler_ShearLayerRollup_Direct_test():
         data = SI.RDF.to_numpy()
 
         np.testing.assert_array_almost_equal(data[-1,:],
-                np.array([1.00000000e+00, 2.00000000e-01, 4.23959684e+01, 1.68439419e+01,
-                          0.00000000e+00, 1.65772729e-14]),)
+                np.array([1.000000e+00, 2.000000e-01, 4.239597e+01, 1.684394e+01,
+                          1.776357e-15, 3.052409e-14]), decimal=5)
 
     return 1
 

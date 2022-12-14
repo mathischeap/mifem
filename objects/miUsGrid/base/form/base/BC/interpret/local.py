@@ -5,11 +5,14 @@
 @time: 2022/10/08 10:03 PM
 """
 import sys
-
 if './' not in sys.path: sys.path.append('./')
-
 from components.freeze.base import FrozenOnly
 
+# look, we only cache the dofs, not the cochains.
+___miUSGrid_global_BC_itp_Local_dofs_cache___ = {
+    'iEE_ID': -1,
+    'dofs': dict(),
+}
 
 class miUsGrid_Form_BC_Interpret_Local(FrozenOnly):
     """"""
@@ -20,24 +23,43 @@ class miUsGrid_Form_BC_Interpret_Local(FrozenOnly):
         self._mesh_ = f.mesh
         self._cochains_ = None
         self.___Pr_parse_dofs___() # need no BC.CF
-        self._cochains_ = None
+        if self._f_.BC.CF is not None:
+            self.___Pr_parse_cochains___()
+        else:
+            pass
         self._freeze_self_()
 
     def ___Pr_parse_dofs___(self):
         """Need no `BC.CF`"""
         iEE = self._f_.BC._involved_element_parts_
-        self._dofs_ = dict()
-        for e_e in iEE:
-            element, edge = e_e
-            dofs = self._f_.numbering.do.find.local_dofs_on_element_edge(edge)
-            if element not in self._dofs_:
-                self._dofs_[element] = list()
-            self._dofs_[element].extend(dofs)
+
+        if id(iEE) == ___miUSGrid_global_BC_itp_Local_dofs_cache___['iEE_ID']:
+            self._dofs_ = ___miUSGrid_global_BC_itp_Local_dofs_cache___['dofs']
+
+        else:
+            self._dofs_ = dict()
+            for e_e in iEE:
+                element, edge = e_e
+
+                if self._mesh_.ndim == 3:
+                    raise NotImplementedError()
+                elif  self._mesh_.ndim == 2:
+                    dofs = self._f_.numbering.do.find.local_dofs_on_element_edge(edge)
+                else:
+                    raise Exception()
+
+                if element not in self._dofs_:
+                    self._dofs_[element] = list()
+                self._dofs_[element].extend(dofs)
+
+            ___miUSGrid_global_BC_itp_Local_dofs_cache___['iEE_ID'] = id(iEE)
+            ___miUSGrid_global_BC_itp_Local_dofs_cache___['dofs'] = self._dofs_
 
     def ___Pr_parse_cochains___(self):
         """Need `BC.CF`"""
         indicator, local_cochain = self._f_.discretize(target='BC')
         self._cochains_ = dict()
+
         if indicator == 'locally full local cochain':
             dofs = self.dofs
             for e in dofs:
@@ -66,15 +88,10 @@ class miUsGrid_Form_BC_Interpret_Local(FrozenOnly):
 
     @property
     def cochains(self):
-        if self._cochains_ is None:
-            self.___Pr_parse_cochains___()
         return self._cochains_
 
-
-
-
 if __name__ == "__main__":
-    # mpiexec -n 4 python objects/miUsGrid/triangular/forms/standard/base/BC/interpret/local.py
+    # mpiexec -n 4 python objects/miUsGrid/base/form/base/BC/interpret/local.py
     u_norm_boundaries = ['Upper', 'Down', 'Left', 'Right']
     from __init__ import miTri
 

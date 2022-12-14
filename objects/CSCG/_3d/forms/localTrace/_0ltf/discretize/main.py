@@ -8,6 +8,7 @@ from components.freeze.main import FrozenOnly
 
 from objects.CSCG._3d.forms.localTrace._0ltf.discretize.scalar.boundary_wise import _3dCSCG_0ltf_Discretize_BoundaryWise
 from objects.CSCG._3d.forms.localTrace._0ltf.discretize.scalar.standard import _3dCSCG_0ltf_Discretize_Standard
+from objects.CSCG._3d.forms.localTrace._0ltf.discretize.scalar.trace_element_wise import _3dCSCG_0ltf_Discretize_TraceElementWise
 
 
 
@@ -19,6 +20,7 @@ class _3dCSCG_0LocalTrace_Discretize(FrozenOnly):
         self._ltf_ = ltf
         self._standard_ = _3dCSCG_0ltf_Discretize_Standard(ltf)
         self._boundary_wise_ = _3dCSCG_0ltf_Discretize_BoundaryWise(ltf)
+        self._trace_element_wise_ = _3dCSCG_0ltf_Discretize_TraceElementWise(ltf)
         self._freeze_self_()
 
     def __call__(self, update_cochain=True, target='func'):
@@ -59,6 +61,9 @@ class _3dCSCG_0LocalTrace_Discretize(FrozenOnly):
                 elif SELF.BC.CF.ftype == "boundary-wise":
                     # we will always not update cochain & and always set target to be "BC"
                     return self._boundary_wise_(target='BC')
+
+                elif SELF.BC.CF.ftype == "trace-element-wise":
+                    return self._trace_element_wise_(update_cochain=False, target='BC')
 
                 else:
                     raise NotImplementedError(f"3dCSCG 0-ltf cannot (target BC) discretize "

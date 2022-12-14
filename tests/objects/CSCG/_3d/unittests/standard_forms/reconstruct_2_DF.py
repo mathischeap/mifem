@@ -12,7 +12,6 @@ import numpy as np
 from __init__ import components
 from __init__ import cscg3
 
-
 def test_reconstruct_DF():
     """"""
     components.miprint("3DF [test_reconstruct_DF] ...... ", flush=True)
@@ -135,7 +134,6 @@ def test_reconstruct_DF():
         np.testing.assert_almost_equal(L2norm_0, L2_norm, decimal=2)
 
     return 1
-
 
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/CSCG/_3d/__tests__/unittests/standard_forms/reconstruct_2_DF.py

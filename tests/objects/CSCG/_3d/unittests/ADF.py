@@ -273,8 +273,8 @@ def test_ADF_NO3_coboundary():
     df1.prime.CF = V_curl
     df1.prime.CF.current_time = 0
 
-    assert df2.prime.error.L() < 0.004, f"something is wrong."
-    assert df1.prime.error.L() < 0.013, f"something is wrong."
+    assert df2.prime.error.L() < 0.004, f"{df2.prime.error.L()}! something is wrong."
+    assert df1.prime.error.L() < 0.02, f"{df1.prime.error.L()}! something is wrong."
 
     return 1
 
@@ -287,6 +287,6 @@ def test_ADF_NO3_coboundary():
 
 
 if __name__ == '__main__':
-    # mpiexec -n 6 python objects\CSCG\_3d\__tests__\unittests\ADF.py
+    # mpiexec -n 6 python tests/objects/CSCG/_3d/unittests/ADF.py
     # test_ADF_NO1_general_tests_standard_forms()
     test_ADF_NO3_coboundary()

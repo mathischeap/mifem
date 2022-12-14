@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
-
-
 import types
 from components.freeze.main import FrozenOnly
 from scipy import sparse as spspa
-# from tools.linear_algebra.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
-# from tools.linear_algebra.gathering.irregular.ir_chain_matrix.main import iR_Chain_Gathering_Matrix
-# from tools.miLinearAlgebra.dataStructures.globalMatrix.main import GlobalVector
 
 from tools.elementwiseCache.dataStructures.objects.columnVector.helpers.add import ___CV_ADD___
 from tools.elementwiseCache.dataStructures.objects.columnVector.helpers.neg import ___CV_NEG___
@@ -38,7 +33,6 @@ class EWC_ColumnVector(FrozenOnly):
 
         - EWC_ColumnVector(mesh, dict): the data are in a dict already.
 
-
     :param mesh_elements:
     :param data_generator:
     :param con_shape:
@@ -59,14 +53,16 @@ class EWC_ColumnVector(FrozenOnly):
             #------- we have a cscg form -------------------------------------------------
             if hasattr(mesh_elements, 'standard_properties') and \
                 'CSCG_form' in mesh_elements.standard_properties.tags:
-                data_generator = mesh_elements
-                mesh_elements = mesh_elements.mesh.elements
+                form = mesh_elements
+                data_generator = form
+                mesh_elements = form.mesh.elements
             #------- we have a cscg AD-form -------------------------------------------------
             elif hasattr(mesh_elements, 'prime') and \
                 hasattr(mesh_elements.prime, 'standard_properties') and \
                 'CSCG_form' in mesh_elements.prime.standard_properties.tags:
-                data_generator = mesh_elements.prime
-                mesh_elements = mesh_elements.mesh.elements
+                dual_form = mesh_elements
+                data_generator = dual_form.prime
+                mesh_elements = dual_form.mesh.elements
             else:
                 raise Exception()
 
@@ -401,7 +397,6 @@ class EWC_ColumnVector(FrozenOnly):
         if self.gathering_matrix is not None:
             RETURN.gathering_matrix = self.gathering_matrix
         return RETURN
-
 
     def ___PRIVATE_sum___(self, others):
         """self + all others."""

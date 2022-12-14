@@ -23,8 +23,8 @@ class TFQMR(ParallelSolverBase):
         ----------
         routine:
             {'auto', 'sp',}. They are:
-                'auto':
-                'sp': scipy sparse linalg gmres
+                'auto'-
+                'sp'- scipy sparse linalg gmres
         name
         """
         super().__init__(routine, name)

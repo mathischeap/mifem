@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from components.freeze.base import FrozenOnly
 
 import numpy as np
@@ -122,6 +121,7 @@ class Gathering_Matrix(FrozenOnly):
             self._GLOBAL_num_dofs_ = COMM.allreduce(LOCAL_MAX, op=MPI.MAX)
             assert self._GLOBAL_num_dofs_ >= 0
             self._GLOBAL_num_dofs_ += 1
+            self._GLOBAL_num_dofs_ = int(self._GLOBAL_num_dofs_)
         return self._GLOBAL_num_dofs_
 
     @property

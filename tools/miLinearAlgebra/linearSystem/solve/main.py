@@ -18,6 +18,16 @@ class ___LinearSystem_Solve___(FrozenOnly):
         """
         Assemble and solve self.
 
+        `solver_name` and `**kwargs` will be sent to solver distributor. And you have to
+        specify the parameters of the particular solver later on.
+
+        For example,
+            S = SL.solve('gmres', routine='auto', name='gmres-solver-1')
+
+        This will not solve for anything, it just invoke the direct solver. To do the solving,
+        we need to do
+            S(restart=100, maxiter=20, tol=1e-5, atol=1e-4, preconditioner='spiLU',)
+
         We first assemble self into a global system and then select the solver here! Note that
         we do not really do the solving here.
 

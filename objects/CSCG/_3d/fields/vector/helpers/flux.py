@@ -32,6 +32,7 @@ class ___VECTOR_FLUX___(object):
                                     i=i,
                                     ravel=False,
                                     where='trace-element')
+
             xyz = xyz[i]
             w = w[i]
             n = self._te_.coordinate_transformation.unit_normal_vector(xi, et, sg, parse_3_1d_eps=True)

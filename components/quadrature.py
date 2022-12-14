@@ -32,12 +32,15 @@ class Quadrature(FrozenOnly):
         assert all([pi >= 0 and pi % 1 == 0 for pi in p]), " <Quadrature> : p = {} is wrong.".format(p)
         self._p_ = p
         _category_ = [category for _ in range(self.ndim)] if isinstance(category, str) else category
-        assert all([ci in self.___PRIVATE_coded_quadrature___() for ci in _category_])
+        assert all([ci in self.___PRIVATE_coded_quadrature___() for ci in _category_]), \
+            f"quad category = {_category_} wrong"
         self._category_ = _category_
         self.___PRIVATE_check_p___()
         self._quad_ = None
         self._freeze_self_()
-        
+
+
+
     @classmethod
     def ___PRIVATE_coded_quadrature___(cls):
         """ 
@@ -272,12 +275,6 @@ class Quadrature(FrozenOnly):
         print('WARNING : Newton did not converge to machine precision \nRelative error : ',
               x[-1] - x[-2])
         return x[-1]
-
-
-
-
-
-
 
 
 

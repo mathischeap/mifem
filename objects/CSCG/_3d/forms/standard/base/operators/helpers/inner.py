@@ -15,8 +15,12 @@ class ___Operators_3dCSCG_sf_Inner___(FrozenOnly):
         self._of_ = of
         if quad_degree is None:
             quad_degree = [int(np.max([sf.dqp[i], of.dqp[i]])) for i in range(3)]
+        else:
+            pass
+
         quad_nodes, _, quad_weights = sf.space.___PRIVATE_do_evaluate_quadrature___(
             quad_degree, quad_type=quad_type)
+
         xietasigma, bfSelf = sf.do.evaluate_basis_at_meshgrid(*quad_nodes)
         if of is sf:
             bfOther = bfSelf

@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 11/28/2022 8:29 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
 from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
 
@@ -27,7 +24,3 @@ class _3dCSCG_LocalTrace_Matrices(FrozenOnly):
             self._ltf_.mesh,
             MM
         )
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

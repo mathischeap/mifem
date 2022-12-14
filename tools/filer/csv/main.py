@@ -43,10 +43,6 @@ class csvFiler(FrozenOnly):
     def do(self):
         return self._do_
 
-
-
-
-
 if __name__ == '__main__':
     # mpiexec -n 1 python tools/filer/csv/main.py
     import os
@@ -60,5 +56,3 @@ if __name__ == '__main__':
                         xlabel=r"$t$",
                         ylabel = r'$\mathcal{E}^h$',
                         )
-
-    # print(data.array)

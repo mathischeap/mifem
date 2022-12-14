@@ -3,28 +3,32 @@ from components.freeze.main import FrozenOnly
 from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
 from objects.CSCG._3d.forms.standard.base.operators.helpers.inner import ___Operators_3dCSCG_sf_Inner___
 
-
-
 class _3dCSCG_Standard_Form_Operators(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
         self._inner_quad_type_ = 'Gauss'
         self._freeze_self_()
 
-    def inner(self, other, quad_degree=None):
+    def inner(self, other, quad_degree=None, quad_type=None):
         """
         We do ``(self, other)``, and note that here we only return a matrix; we do not do the inner product
         which needs that both forms have cochain.
 
         :param other: The other form.
         :param quad_degree:
+        :param quad_type:
         """
-        data_generator = ___Operators_3dCSCG_sf_Inner___(self._sf_, other, quad_degree=quad_degree, quad_type=self._inner_quad_type_)
-        # note that even all mesh elements are unique, we still cache the output because we may use it for multiple times.
+        if quad_type is None:
+            quad_type = self._inner_quad_type_
+        else:
+            pass
+
+        data_generator = ___Operators_3dCSCG_sf_Inner___(self._sf_, other, quad_degree=quad_degree, quad_type=quad_type)
 
         if self._sf_.mesh.elements.whether.homogeneous_according_to_types_wrt_metric:
             return EWC_SparseMatrix(self._sf_.mesh.elements, data_generator, 'constant')
         else:
+            # note that even all mesh elements are unique, we still cache the output because we may use it for multiple times.
             return EWC_SparseMatrix(self._sf_.mesh.elements, data_generator,
                                     self._sf_.mesh.elements.___PRIVATE_elementwise_cache_metric_key___)
 

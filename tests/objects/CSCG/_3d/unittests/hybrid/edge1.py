@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import sys
 if './' not in sys.path: sys.path.append('./')
 from root.config.main import RANK, MASTER_RANK, COMM
@@ -10,9 +9,6 @@ from components.miscellaneous.randomString.digits import randomStringDigits
 from tools.elementwiseCache.dataStructures.operators.bmat.main import bmat
 from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
-
-
-
 
 def test_hybridization_of_standard_1_form():
     """"""
@@ -120,18 +116,6 @@ def test_hybridization_of_standard_1_form():
             i, T, C, t1, e1, checking_mode=True)
 
     return 1
-
-
-
-
-
-
-
-
-
-
-
-
 
 if __name__ == '__main__':
     # mpiexec -n 4 python objects\CSCG\_3d\__tests__\unittests\hybrid\edge1.py

@@ -54,7 +54,6 @@ class SpaMat_Customize(FrozenOnly):
 
             CUSi = self._customizations_[e] # customizations for the output of #e element.
 
-
             for cus in CUSi:
 
                 key, factors = cus # for example cus=('clr', 5) or ('salv', ([1,1],5))
@@ -117,7 +116,7 @@ class SpaMat_Customize(FrozenOnly):
         assert not self._spa_mat_.do.___sparsity_locker___, f"the sparsity is locked!"
 
         assert r % 1 == 0, f"r={r}({r.__class__.__name__}) is wrong."
-        if isinstance(r, float): r = int(r)
+        if not isinstance(r, int): r = int(r)
 
         rCGM = self._spa_mat_.gathering_matrices[0]
         assert rCGM is not None, "I have no row gathering_matrix!"
@@ -157,9 +156,9 @@ class SpaMat_Customize(FrozenOnly):
         assert not self._spa_mat_.do.___sparsity_locker___, f"the sparsity is locked!"
 
         assert i % 1 == 0, f"i={i}({i.__class__.__name__}) is wrong."
-        if isinstance(i, float): i = int(i)
+        if not isinstance(i, int): i = int(i)
         assert j % 1 == 0, f"j={j}({j.__class__.__name__}) is wrong."
-        if isinstance(j, float): j = int(j)
+        if not isinstance(j, int): j = int(j)
 
         rCGM, cCGM = self._spa_mat_.gathering_matrices
         assert rCGM is not None, "I have no row gathering_matrix!"
@@ -260,7 +259,8 @@ class SpaMat_Customize(FrozenOnly):
         assert not self._spa_mat_.do.___sparsity_locker___, f"the sparsity is locked!"
 
         assert r % 1 == 0, f"r={r}({r.__class__.__name__}) is wrong."
-        if isinstance(r, float): r = int(r)
+        if not isinstance(r, int): r = int(r)
+
         self.clear_global_row(r)
         self.set_assembled_M_ij_to(r, r, 1)
 
@@ -297,10 +297,11 @@ class SpaMat_Customize(FrozenOnly):
 
         assert bsp is not False and np.shape(bsp) == (2,), \
             "we can only use this to bmat EWC matrices to keep the block safe. " \
-            "if you want to apply it to a single EWC matrix, first wrap it in a list, then send it to bmat"
+            "if you want to apply it to a single EWC matrix, first wrap it in a " \
+            "list, then send it to bmat"
 
         assert i % 1 == 0, f"i={i}({i.__class__.__name__}) cannot be an index!"
-        if isinstance(i, float): i = int(i)
+        if not isinstance(i, int): i = int(i)
         assert 0 <= i < bsp[0], f"i={i} is beyond the shape of this " \
                                 f"EWC spare matrix of block shape ({bsp[0]},.)."
 
@@ -310,22 +311,25 @@ class SpaMat_Customize(FrozenOnly):
         if AS == 'local':
             LDF = interpret.local.dofs
 
-            GM = self._spa_mat_.gathering_matrices[0]
-            if GM.___Pr_IS_regular___:
-                LDR = GM.___Pr_regular__local_dofs_ranges___[i]
-                start = LDR.start
+            if len(LDF) == 0:
+                pass
             else:
-                raise NotImplementedError(f"Not implemented for irregular Gathering Matrix.")
+                GM = self._spa_mat_.gathering_matrices[0]
+                if GM.___Pr_IS_regular___:
+                    LDR = GM.___Pr_regular__local_dofs_ranges___[i]
+                    start = LDR.start
+                else:
+                    raise NotImplementedError(f"Not implemented for irregular Gathering Matrix.")
 
-            for e in LDF: # go through all locally involved mesh element numbers
-                assert e in self._spa_mat_
+                for e in LDF: # go through all locally involved mesh element numbers
+                    assert e in self._spa_mat_
 
-                if e not in self.___customizations___:
-                    self.___customizations___[e] = list()
+                    if e not in self.___customizations___:
+                        self.___customizations___[e] = list()
 
-                local_dofs = np.array(LDF[e], dtype=int) + start
+                    local_dofs = np.array(LDF[e], dtype=int) + start
 
-                self.___customizations___[e].append(('ilrs', local_dofs))
+                    self.___customizations___[e].append(('ilrs', local_dofs))
 
         else:
             raise Exception(f"Cannot identify global rows through"
@@ -356,7 +360,6 @@ class SpaMat_Customize(FrozenOnly):
         assert self._spa_mat_.elements._mesh_ == col_itp._mesh_, \
             "col PartialDofs elements != EWC elements."
 
-
         assert self._spa_mat_._gathering_matrices_0_ is not None, \
             f"We need row gathering matrix!"
         assert self._spa_mat_._gathering_matrices_1_ is not None, \
@@ -365,51 +368,56 @@ class SpaMat_Customize(FrozenOnly):
         bsp = self._spa_mat_.bmat_shape
         assert bsp is not False and np.shape(bsp) == (2,), \
             "we can only use this to bmat EWC matrices to keep the block safe. " \
-            "if you want to apply it to a single EWC matrix, first wrap it in a list, then send it to bmat"
-
+            "if you want to apply it to a single EWC matrix, first wrap it in " \
+            "a list, then send it to bmat"
 
         assert i % 1 == 0, f"i={i}({i.__class__.__name__}) cannot be an index!"
-        if isinstance(i, float): i = int(i)
+        if not isinstance(i, int): i = int(i)
         assert 0 <= i < bsp[0], f"i={i} is beyond the shape of this " \
                                 f"EWC spare matrix of block shape ({bsp[0]},.)."
 
         assert j % 1 == 0, f"j={j}({j.__class__.__name__}) cannot be an index!"
-        if isinstance(j, float): j = int(j)
+        if not isinstance(j, int): j = int(j)
         assert 0 <= j < bsp[1], f"j={j} is beyond the shape of this " \
                                 f"EWC spare matrix of block shape ({bsp[1]},.)."
 
         if AS == 'local':
 
-            GM = self._spa_mat_.gathering_matrices
-            if GM[0].___Pr_IS_regular___:
-                LDR_row = GM[0].___Pr_regular__local_dofs_ranges___[i]
-                start_row = LDR_row.start
-            else:
-                raise NotImplementedError(f"Not implemented for irregular Gathering Matrix.")
-
-            if GM[1].___Pr_IS_regular___:
-                LDR_col = GM[1].___Pr_regular__local_dofs_ranges___[j]
-                start_col = LDR_col.start
-            else:
-                raise NotImplementedError(f"Not implemented for irregular Gathering Matrix.")
-
             LDF_row = row_itp.local.dofs
             LDF_col = col_itp.local.dofs
+            assert len(LDF_col) == len(LDF_row), f"row_dofs and col_dofs dis-match in elements."
 
-            for e in LDF_row: # go through all locally involved mesh element numbers
-                assert e in self._spa_mat_ and e in LDF_col
+            if len(LDF_row) == 0:
+                pass
 
-                if e not in self.___customizations___:
-                    self.___customizations___[e] = list()
+            else:
+                GM = self._spa_mat_.gathering_matrices
+                if GM[0].___Pr_IS_regular___:
+                    LDR_row = GM[0].___Pr_regular__local_dofs_ranges___[i]
+                    start_row = LDR_row.start
+                else:
+                    raise NotImplementedError(f"Not implemented for irregular Gathering Matrix.")
 
-                ROW = LDF_row[e]
-                COL = LDF_col[e]
+                if GM[1].___Pr_IS_regular___:
+                    LDR_col = GM[1].___Pr_regular__local_dofs_ranges___[j]
+                    start_col = LDR_col.start
+                else:
+                    raise NotImplementedError(f"Not implemented for irregular Gathering Matrix.")
 
-                row_local_dofs = np.array(ROW, dtype=int) + start_row
-                col_local_dofs = np.array(COL, dtype=int) + start_col
+                for e in LDF_row: # go through all locally involved mesh element numbers
+                    assert e in self._spa_mat_ and e in LDF_col
 
-                self.___customizations___[e].append(
-                    ('ilrsac', (row_local_dofs, col_local_dofs)))
+                    if e not in self.___customizations___:
+                        self.___customizations___[e] = list()
+
+                    ROW = LDF_row[e]
+                    COL = LDF_col[e]
+
+                    row_local_dofs = np.array(ROW, dtype=int) + start_row
+                    col_local_dofs = np.array(COL, dtype=int) + start_col
+
+                    self.___customizations___[e].append(
+                        ('ilrsac', (row_local_dofs, col_local_dofs)))
 
         else:
             raise Exception(f"Cannot off-diagonally identify global rows through "

@@ -99,14 +99,14 @@ def test_hdMSEM_Schrodinger_Inner_Cuboid():
     du = FC('1-adf', u)
     u_error_dH1 = du.error.dH(t, ES.source_term)
 
-    assert p_error_L2 < 0.006
-    assert u_error_L2 < 0.17
-    assert u_error_dH1 < 0.7
+    assert p_error_L2 < 0.008, f"{p_error_L2}"
+    assert u_error_L2 < 0.18, f"{u_error_L2}"
+    assert u_error_dH1 < 0.9, f"{u_error_dH1}"
 
     return 1
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/CSCG/_3d/__tests__/unittests/TISE/hdMSEM_inner_cuboid.py
+    # mpiexec -n 4 python tests/objects/CSCG/_3d/unittests/TISE/hdMSEM_inner_cuboid.py
 
     # for _ in range(100):
     test_hdMSEM_Schrodinger_Inner_Cuboid()

@@ -338,7 +338,7 @@ class _3dCSCG_Trace_Form_Numbering_Naive(FrozenOnly):
 
                 all_local_dofs.update(_)
 
-            GM[i] = Gathering_Vector(i, assembler(GM_temp, 'replace'))
+            GM[i] = Gathering_Vector(i, assembler(GM_temp, 'replace', dtype=int))
 
         assert -1 not in all_local_dofs, f"internal dof found!"
         local_num_dofs = len(all_local_dofs)

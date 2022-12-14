@@ -13,7 +13,7 @@ from objects.CSCG._2d.forms.standard.base.numbering.main import _2dCSCG_Standard
 from objects.CSCG._2d.forms.standard.base.do import _2dCSCG_Standard_Form_DO
 from objects.CSCG._2d.forms.standard.base.cochain import _2dCSCG_Standard_Form_Cochain
 from objects.CSCG._2d.forms.standard.base.coboundary import _2dCSCG_Standard_Form_Coboundary
-from objects.CSCG._2d.forms.standard.base.matrices import _2dCSCG_Standard_Form_Matrices
+from objects.CSCG._2d.forms.standard.base.matrices.main import _2dCSCG_Standard_Form_Matrices
 from objects.CSCG._2d.forms.standard.base.error import _2dCSCG_Standard_Form_Error
 from objects.CSCG._2d.forms.standard.base.operators.main import _2dCSCG_Standard_Form_Operators
 from objects.CSCG._2d.forms.standard.base.dofs.main import _2dCSCG_SF_dofs

@@ -56,7 +56,12 @@ class Iterator(FrozenClass):
                                              monitor_factor,
                                              real_time_monitor)
             if name is None:
-                name ='Iterator-' + randomStringDigits(8) + '-' + str(id(self))[-5:]
+                if RDF_filename is None:
+                    name ='Iterator-' + randomStringDigits(8) + '-' + str(id(self))[-5:]
+                else:
+                    name = RDF_filename
+            else:
+                pass
         else:
             self._monitor_ = None
             name = None
@@ -205,9 +210,6 @@ class Iterator(FrozenClass):
         else:
             raise NotImplementedError(f'Can only read .csv file, now get .{FORMAT} file')
 
-
-
-
     @property
     def shut_down(self):
         """(bool) Return ``True`` if the iterator is shut_down.
@@ -252,9 +254,6 @@ class Iterator(FrozenClass):
             assert self.___shut_down_reason___ is None
         return self.___shut_down_reason___
 
-
-
-
     @property
     def exit_code(self):
         """Return the exit code of the solver for the last run."""
@@ -264,8 +263,6 @@ class Iterator(FrozenClass):
     def exit_code(self, exit_code):
         # noinspection PyAttributeOutsideInit
         self._exit_code_ = exit_code
-
-
 
     @property
     def message(self):
@@ -288,10 +285,7 @@ class Iterator(FrozenClass):
         """"""
         self.RDF.loc[self.running_step-1] = [self.t, self.dt] + list(outputs[3:])
 
-
-
     #-------------- core methods: run and read ------------------------------------------------
-
 
     def run(self):
         """To run the iterator.

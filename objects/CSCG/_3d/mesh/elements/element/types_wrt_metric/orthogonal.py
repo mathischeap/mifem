@@ -14,6 +14,9 @@ class OrthogonalElement(ElementTypeWr2MetricBase):
         self._LxLyLz_ = LxLyLz
 
         Lx, Ly, Lz = LxLyLz
+        Lx = round(Lx, 6)
+        Ly = round(Ly, 6)
+        Lz = round(Lz, 6)
 
         if Lx == Ly == Lz:
             self._mark_ = 'Orth.{}'.format('%.3f' % Lx)

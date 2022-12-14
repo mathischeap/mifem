@@ -78,9 +78,12 @@ class _3dCSCG_Trace_forms_DOF(FrozenOnly):
                         nd0, nd1 = nodes[0], nodes[1]
                     else:
                         raise Exception()
+
                     assert component == 0, f"trivial check."
+
                     xi = (nd0[i0] + nd0[i0+1]) / 2
                     et = (nd1[i1] + nd1[i1+1]) / 2
+
                     if TE.whether.on_periodic_boundary:
                         positions = TE.positions
                         for pos in positions:
@@ -103,6 +106,7 @@ class _3dCSCG_Trace_forms_DOF(FrozenOnly):
                     raise Exception()
 
                 assert xyz is not None, f"must have found at least one anchor."
+
             else:
                 xyz = None
 

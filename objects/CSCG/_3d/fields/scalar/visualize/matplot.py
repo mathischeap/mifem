@@ -79,5 +79,8 @@ class _3dCSCG_ScalarField_matplot_Visualize(FrozenOnly):
         #     labelpad=10, size=15)
         cb.ax.tick_params(labelsize=13.5)
 
+        ax.set_xlabel('x')
+        ax.set_ylabel('y')
+        ax.set_zlabel('z')
 
         plt.show()

@@ -77,14 +77,14 @@ def test_Stokes_MSEM_trivial_BC():
 
     # print(w_L2, u_L2, p_L2)
 
-    assert w_L2 < 0.4
-    assert u_L2 < 0.05
-    assert p_L2 < 0.03
+    assert w_L2 < 0.4, f"{w_L2}"
+    assert u_L2 < 0.06, f"{u_L2}"
+    assert p_L2 < 0.03, f"{p_L2}"
 
     return 1
 
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/CSCG/_3d/__tests__/unittests/Stokes_flow/MSEM_trivial_BC.py
+    # mpiexec -n 4 python tests/objects/CSCG/_3d/unittests/Stokes_flow/MSEM_trivial_BC.py
     test_Stokes_MSEM_trivial_BC()

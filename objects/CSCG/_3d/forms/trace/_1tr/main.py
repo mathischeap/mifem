@@ -182,7 +182,7 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
         """Generate the trace-element-wise mass matrices stored in a dict whose keys are trace-element numbers
         and values are the mass matrices in the corresponding trace-elements.
         """
-        p = [self.dqp[i]+2 for i in range(self.ndim)] # +2 for safety, the mass matrices of standard forms use dqp
+        p = [self.dqp[i] + 2 for i in range(self.ndim)] # +2 for safety, the mass matrices of standard forms use dqp
         quad_nodes, quad_weights = Quadrature(p, category='Gauss').quad
 
         qw = dict()
@@ -281,8 +281,3 @@ if __name__ == '__main__':
     # t1.visualize()
 
     # tM1 = t1.matrices.mass
-
-
-
-
-

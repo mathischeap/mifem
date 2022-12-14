@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
-
-
 from objects.CSCG._2d.spaces.base.main import _2dCSCG_Space
 from components.quadrature import Quadrature
 from root.config.main import *
 from objects.CSCG.base.spaces._1d_basis.polynomials import _1dPolynomial
 
 from objects.CSCG._2d.spaces.polynomials.do import _2dCSCG_space_Polynomial_Do
-
-
 
 class _2dCSCG_PolynomialSpace(_2dCSCG_Space):
     """"""
@@ -42,11 +38,3 @@ class _2dCSCG_PolynomialSpace(_2dCSCG_Space):
                                        quad_nodes, quad_weights, quad_weights_ravel]
 
         return self._quadrature_cache_[2:]
-
-
-
-
-
-if __name__ == "__main__":
-    pass
-

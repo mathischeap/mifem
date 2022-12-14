@@ -21,7 +21,6 @@ from root.config.main import MPI, RANK, MASTER_RANK, COMM
 
 t_start = MPI.Wtime()
 
-
 from tests.objects.miUsGrid.triangular.unittests.standardForms.incidence_matrices import \
     miUsGrid_Triangle_Incidence_matrices
 from tests.objects.miUsGrid.triangular.unittests.standardForms.convergence_test.test import \
@@ -36,7 +35,6 @@ from tests.objects.miUsGrid.triangular.unittests.standardForms.mass_matrices imp
     miUsGrid_Triangles_MassMatrices
 from tests.objects.miUsGrid.triangular.unittests.MSEM_Stokes_test import miUsTriangleTest_MSEM_STOKES
 
-
 passed_miUSGridTriangle_tests += miUsGrid_Triangle_Incidence_matrices()()
 passed_miUSGridTriangle_tests += miUsGrid_TriangleMesh_ConvergenceTest()()
 passed_miUSGridTriangle_tests += Test_dofs_topology_S1F()()
@@ -44,7 +42,6 @@ passed_miUSGridTriangle_tests += miUsGrid_Triangles_ReconstructionMatrices()()
 passed_miUSGridTriangle_tests += miUsGrid_Triangle_Poisson()()
 passed_miUSGridTriangle_tests += miUsGrid_Triangles_MassMatrices()()
 passed_miUSGridTriangle_tests += miUsTriangleTest_MSEM_STOKES()
-
 
 COMM.barrier()
 if RANK == MASTER_RANK:

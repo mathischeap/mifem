@@ -32,6 +32,7 @@ class LocallyFullVectorDo(FrozenOnly):
                 indices = 0
                 for form in args:
                     GLOBAL_dofs = form.num.global_dofs
+
                     # Below we make new locally full vector then distribute it.
                     form.cochain.globe = self._v_.__class__(
                         V[indices : indices + GLOBAL_dofs])

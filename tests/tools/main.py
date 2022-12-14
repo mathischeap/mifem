@@ -4,7 +4,7 @@ Here we put all unittests in mpi environment here.
 
 To run all test with given number of threads, do
 
->> mpiexec -n 6 python __tests__/unittests/main.py
+>> mpiexec -n 6 python tests/tools/main.py
 
 It is always suggested testing the library multiple time with different numbers of cores.
 
@@ -41,8 +41,6 @@ from tests.tools.VTK.unstructuredGridToVTK import TEST_save_CSCG_objects_to_unst
 from tests.tools.VTK.gridToVTK import TEST_save_CSCG_objects_to_structured_VTK_file
 
 from tests.tools.gatheringMatrix.customize_sequent import CustomizeSequent
-
-
 
 t_global_start = MPI.Wtime()
 
@@ -82,11 +80,11 @@ passed_GLOBAL_tests += test_applying_strong_BC_for_Poisson_problem_NT()
 passed_GLOBAL_tests += test_MDM_sf_CrossProduct()
 passed_GLOBAL_tests += test_Regular_Newton_Raphson()
 passed_GLOBAL_tests += WellTest_ParallelMatrix3dInputRunner()
+from tests.tools.ParallelMatrix3dInputRunner.csv_reader_test import test_csv_reader_passed
+passed_GLOBAL_tests += test_csv_reader_passed
 
 passed_GLOBAL_tests += TEST_save_CSCG_objects_to_structured_VTK_file()
 passed_GLOBAL_tests += TEST_save_CSCG_objects_to_unstructured_VTK_file()
-
-
 
 COMM.barrier()
 if RANK == MASTER_RANK:

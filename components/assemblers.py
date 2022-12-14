@@ -78,7 +78,7 @@ class VectorAssembler(FrozenOnly):
         return getattr(self, '___' + routine + "___")(TBA, mode, **kwargs)
 
 
-    def ___basic___(self, TBA, mode, scheme=1):
+    def ___basic___(self, TBA, mode, scheme=1, dtype=None):
         """"""
         if isinstance(self._gathering_, dict):
             assert isinstance(TBA, dict), f"data must be in a dict"
@@ -92,7 +92,10 @@ class VectorAssembler(FrozenOnly):
             GM = self._gathering_
             indices = self._indices_
 
-            output = np.zeros(self._num_dofs_)
+            if dtype is None:
+                output = np.zeros(self._num_dofs_)
+            else:
+                output = np.zeros(self._num_dofs_, dtype=dtype)
 
             if mode == 'replace':
                 for i in indices:

@@ -20,7 +20,17 @@ from tools.miLinearAlgebra.dataStructures.vectors.locallyFull.main import Locall
 class LGMRES(ParallelSolverBase):
     """"""
     def __init__(self, routine='auto', name=None):
-        """"""
+        """
+
+        Parameters
+        ----------
+        routine :
+            {'auto', '0', 'sp',}. They are:
+                'auto'-
+                '0'-
+                'sp'-
+        name
+        """
         super().__init__(routine, name)
 
 

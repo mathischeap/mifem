@@ -40,7 +40,6 @@ class _3dCSCG_Mesh_Boundaries(FrozenOnly):
         self._range_of_region_sides_ = None
         self._freeze_self_()
 
-
     def ___PRIVATE_parse_boundaries___(self):
         """We study the elements.map and trace.elements.map to get information we need."""
         names = list()
@@ -183,8 +182,6 @@ class _3dCSCG_Mesh_Boundaries(FrozenOnly):
                 RRS[bn] = BRS[bn]
         self._range_of_region_sides_ = RRS
         return self._range_of_region_sides_
-
-
 
     def __getitem__(self, bn):
         if bn not in self._boundaries_dict_:

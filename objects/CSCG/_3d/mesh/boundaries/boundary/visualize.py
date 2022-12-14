@@ -1,14 +1,10 @@
-
-
-
+# -*- coding: utf-8 -*-
 import sys
 if './' not in sys.path: sys.path.append('./')
 from components.freeze.base import FrozenOnly
 
 from root.config.main import RANK, MASTER_RANK, np
 import matplotlib.pyplot as plt
-
-
 
 class _3dCSCG_Mesh_Boundary_VIS(FrozenOnly):
     """"""
@@ -110,10 +106,6 @@ class _3dCSCG_Mesh_Boundary_VIS(FrozenOnly):
         fig.tight_layout()
         plt.show()
         plt.close(fig)
-
-
-
-
 
 if __name__ == "__main__":
     # mpiexec -n 6 python _3dCSCG\mesh\boundaries\boundary\visualize.py

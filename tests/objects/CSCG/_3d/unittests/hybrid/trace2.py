@@ -54,8 +54,6 @@ def test_hybridization_trace2():
 
     return 1
 
-
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/_3d/__tests__/unittests/hybrid/trace2.py
-
     test_hybridization_trace2()

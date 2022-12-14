@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+import sys
+if './' not in sys.path: sys.path.append('./')
 import matplotlib.pyplot as plt
 from components.freeze.main import FrozenOnly
 from components.quadrature import Quadrature
 from root.config.main import *
-
-
 
 class _1dPolynomial(FrozenOnly):
     """
@@ -86,7 +86,6 @@ class _1dPolynomial(FrozenOnly):
         """(int) Return ``1``."""
         return 1
 
-
     # must have methods ...
     def node_basis(self, x):
         """Return the lagrange polynomials."""
@@ -125,9 +124,6 @@ class _1dPolynomial(FrozenOnly):
             self._eb_cache_['x'] = x
             self._eb_cache_['cache'] = edge_poly
             return edge_poly
-
-
-
 
     @property
     def node_reference_mass_matrix(self):
@@ -191,9 +187,6 @@ class _1dPolynomial(FrozenOnly):
         nodal_derivative = self.__derivative_poly_nodes__(p, self.nodes)
         polynomials = self.lagrange_basis(x)
         return np.transpose(nodal_derivative) @ polynomials
-
-
-
 
     def plot_lagrange_basis(self, dual=False, plot_density=300, ylim_ratio=0.1,
         title=True, left=0.15, bottom=0.15,
@@ -392,18 +385,30 @@ class _1dPolynomial(FrozenOnly):
         plt.show()
         plt.close()
 
-
-
-
-
 if __name__ == "__main__":
+    # python objects/CSCG/base/spaces/_1d_basis/polynomials.py
     # p1 = _1dPolynomial('Lobatto',4)
     # p1.plot_lagrange_basis(dual=False, saveto='nodal.df', title=False, figsize=(6,4),tick_size=20, label_size=20)
     # p1.plot_edge_basis(dual=False, saveto='edge.df', title=False, figsize=(6,4), tick_size=20, label_size=20, fill_between=2)
 
     # p1 = _1dPolynomial(5)
-    p1 = _1dPolynomial('Lobatto', 3)
+    px = _1dPolynomial('Lobatto', 5)
+
+    quad = Quadrature(5, 'Gauss').quad
+
+    nodes, weights = quad
+    print(nodes)
+
+    # x = px.edge_basis(nodes)[1] ** 2
+    x = px.lagrange_basis(nodes)[1] * px.lagrange_basis(nodes)[2]
+    print(x)
+
+    print(sum(x*weights))
+
     # p1 = _1dPolynomial('Lobatto-4')
     # p1 = _1dPolynomial([-1,0,1])
-    p1.plot_lagrange_basis(dual=False, title=False, figsize=(6,4),tick_size=20, label_size=20, usetex=True)
-    p1.plot_edge_basis(dual=False, title=False, figsize=(6,4), tick_size=20, label_size=20, fill_between=2, usetex=True)
+
+
+
+    # p1.plot_lagrange_basis(dual=False, title=False, figsize=(6,4),tick_size=20, label_size=20, usetex=True)
+    # p1.plot_edge_basis(dual=False, title=False, figsize=(6,4), tick_size=20, label_size=20, fill_between=2, usetex=True)

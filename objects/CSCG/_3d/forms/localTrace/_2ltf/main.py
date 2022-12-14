@@ -53,8 +53,12 @@ class _3dCSCG_2LocalTrace(_3dCSCG_LocalTrace):
 
     def ___PrLT_mass_matrices_brutal_force___(self):
         """Should return the same (mesh-element-wise) mass matrices as ___PrLT_mass_matrices___"""
-        p = [self.dqp[i] + 1 for i in range(self.ndim)]
-        quad_nodes, quad_weights = Quadrature(p, category='Gauss').quad
+        if self.mesh.whether.orthogonal:
+            p = self.dqp
+            quad_nodes, quad_weights = Quadrature(p, category='Gauss').quad
+        else:
+            p = [self.dqp[i] + 1 for i in range(self.ndim)]
+            quad_nodes, quad_weights = Quadrature(p, category='Gauss').quad
 
         x, y = np.meshgrid(quad_nodes[1], quad_nodes[2], indexing='ij')
         xNS = x.ravel('F')
@@ -77,6 +81,11 @@ class _3dCSCG_2LocalTrace(_3dCSCG_LocalTrace):
         cacheDict = dict()
 
         Tmap = self.mesh.trace.elements.map
+        if self.whether.hybrid:
+            assembler = None
+        else:
+            local_gathering = self.numbering.local_gathering
+            assembler = MatrixAssembler(local_gathering, local_gathering)
         for i in self.mesh.elements:
 
             element = self.mesh.elements[i]
@@ -125,8 +134,6 @@ class _3dCSCG_2LocalTrace(_3dCSCG_LocalTrace):
                         format='csr'
                     )
                 else:
-                    local_gathering = self.numbering.local_gathering
-                    assembler = MatrixAssembler(local_gathering, local_gathering)
                     M = assembler(M, 'add', format='csr')
 
                 if isinstance(mark, str):
@@ -140,8 +147,12 @@ class _3dCSCG_2LocalTrace(_3dCSCG_LocalTrace):
 
     def ___PrLT_mass_matrices___(self):
         """Generate the mesh-element-wise mass matrix."""
-        p = [self.dqp[i] + 1 for i in range(self.ndim)]
-        quad_nodes, quad_weights = Quadrature(p, category='Gauss').quad
+        if self.mesh.whether.orthogonal:
+            p = self.dqp
+            quad_nodes, quad_weights = Quadrature(p, category='Gauss').quad
+        else:
+            p = [self.dqp[i] + 1 for i in range(self.ndim)]
+            quad_nodes, quad_weights = Quadrature(p, category='Gauss').quad
 
         qw = dict()
         qw['NS'] = np.kron(quad_weights[2], quad_weights[1])
@@ -155,6 +166,13 @@ class _3dCSCG_2LocalTrace(_3dCSCG_LocalTrace):
         MD = dict()
 
         Tmap = self.mesh.trace.elements.map
+
+        if self.whether.hybrid:
+            assembler = None
+        else:
+            local_gathering = self.numbering.local_gathering
+            assembler = MatrixAssembler(local_gathering, local_gathering)
+
         for i in self.mesh.elements:
 
             mark = self.mesh.elements[i].type_wrt_metric.mark
@@ -210,8 +228,6 @@ class _3dCSCG_2LocalTrace(_3dCSCG_LocalTrace):
                     )
 
                 else:
-                    local_gathering = self.numbering.local_gathering
-                    assembler = MatrixAssembler(local_gathering, local_gathering)
                     M = assembler(M, 'add', format='csr')
 
                 if isinstance(mark, str):

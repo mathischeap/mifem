@@ -39,7 +39,7 @@ class _3dCSCG_LocalTrace_Numbering(FrozenOnly):
         self._parameters_ = parameters
         self._numbering_parameters_ = {'scheme_name': self._scheme_name_}
         self._numbering_parameters_.update(self._parameters_)
-        self._do_ = _3dCSCG_LocalTrace_Numbering_Do(self)
+        self._do_ = _3dCSCG_LocalTrace_Numbering_Do(ltf)
         self._local_gathering_ = None
 
         self._local_ = None

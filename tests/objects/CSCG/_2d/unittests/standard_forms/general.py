@@ -211,11 +211,6 @@ def test_Form_NO3_mass_matrices():
     f1o = FC('1-f-o', hybrid=False)
     f2 = FC('2-f-i', hybrid=False)
 
-    f0.operators._inner_quad_type_ = 'Gauss'
-    f1i.operators._inner_quad_type_ = 'Gauss'
-    f1o.operators._inner_quad_type_ = 'Gauss'
-    f2.operators._inner_quad_type_ = 'Gauss'
-
     M0 = f0.matrices.mass
     M1I = f1i.matrices.mass
     M1O = f1o.matrices.mass
@@ -633,8 +628,8 @@ def test_Form_NO7_weak_curl():
     return 1
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects\CSCG\_2d\__tests__\unittests\standard_forms\general.py
+    # mpiexec -n 4 python tests/objects/CSCG/_2d/unittests/standard_forms/general.py
     # test_Form_NO5_cross_product()
     # test_Form_NO6_reconstruction_matrices()
     # test_Form_NO6_reconstruction_matrices()
-    test_Form_NO6_reconstruction_matrices()
+    test_Form_NO3_mass_matrices()

@@ -1,17 +1,8 @@
 # -*- coding: utf-8 -*-
 
-
-
 from components.freeze.base import FrozenOnly
 from objects.CSCG._2d.forms.standard.base.operators.helpers.inner import ___Operators_Inner___
 from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
-
-
-
-
-
-
-
 
 
 class _2dCSCG_Standard_Form_Operators(FrozenOnly):

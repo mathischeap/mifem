@@ -6,8 +6,6 @@ from scipy import sparse as spspa
 import numpy as np
 from root.config.main import COMM, RANK, MASTER_RANK, SIZE
 
-
-
 class SpaVec_Customize(FrozenOnly):
     def __init__(self, spa_vec):
         self._spa_vec_ = spa_vec
@@ -73,7 +71,6 @@ class SpaVec_Customize(FrozenOnly):
                         ind = indices.index(factors)
                         values[ind] = 0
 
-
                 elif key == 'slet':  # set local entry to
                     i, v = factors
 
@@ -83,7 +80,6 @@ class SpaVec_Customize(FrozenOnly):
                     else:
                         ind = indices.index(i)
                         values[ind] = v
-
 
                 elif key == 'slest':  # Set Local Entries To
                     I, V = factors

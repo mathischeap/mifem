@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 from components.freeze.main import FrozenOnly
 from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
-
-
-
-
+from objects.CSCG._3d.forms.standard.base.matrices.helpers.mass import MassMatrixHelper
 
 class _3dCSCG_Standard_Form_Matrices(FrozenOnly):
     def __init__(self, sf):
@@ -16,9 +13,25 @@ class _3dCSCG_Standard_Form_Matrices(FrozenOnly):
     @property
     def mass(self):
         """(Dict[int, scipy.sparse.csr_matrix]) The mass matrix."""
-        M = self._sf_.operators.inner(self._sf_)
-        # note that even all mesh elements are unique, we still cache the local mass matrices because we may use them for multiple times.
+        data_generator = MassMatrixHelper(self._sf_)
+
+        if self._sf_.mesh.elements.whether.homogeneous_according_to_types_wrt_metric:
+            M = EWC_SparseMatrix(
+                self._sf_.mesh.elements,
+                data_generator,
+                'constant',
+            )
+
+        else:
+            # note that even all mesh elements are unique, we still cache the output because we may use it for multiple times.
+            M = EWC_SparseMatrix(
+                self._sf_.mesh.elements,
+                data_generator,
+                self._sf_.mesh.elements.___PRIVATE_elementwise_cache_metric_key___,
+            )
+
         M.gathering_matrices = (self._sf_, self._sf_)
+
         return M
 
     @property

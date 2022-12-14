@@ -6,14 +6,12 @@
 """
 import os
 import sys
-
 if './' not in sys.path: sys.path.append('./')
 from components.miscellaneous.miprint import miprint
 from components.miscellaneous.mios import remove, isfile
 
 from tools.run.reader import ParallelMatrix3dInputRunner, RunnerDataReader
 from tests.tools.ParallelMatrix3dInputRunner.Poisson_solver import PoissonSolver
-
 
 def WellTest_ParallelMatrix3dInputRunner():
     """"""
@@ -31,7 +29,7 @@ def WellTest_ParallelMatrix3dInputRunner():
 
     if isfile(current_dir + '/WTP.txt'): remove(current_dir + '/WTP.txt')
     pr.iterate(Ns, Ks, cs, writeto=current_dir + '/WTP.txt', show_info=False, show_progress=False)
-    # PR = RunnerDataReader('WTP.txt')
+
     PR = RunnerDataReader(current_dir + '/WTP.txt')
     PR.visualize.quick('N', y='u_error_L2', saveto=current_dir + '/u_error_L2_quick.png')
     PR.visualize.quick('K', y='p_error_L2', saveto=current_dir + '/p_error_L2_quick.png')
@@ -63,7 +61,6 @@ def WellTest_ParallelMatrix3dInputRunner():
                  plot_order_triangle={0: {'tp': (0.02, -0.5), 'order': 1},
                                       1: {'tp': (0.02, 0.2), 'order': 3}},
                  saveto=current_dir + '/p_error_L2.png')
-
 
     Ns = [[1, 2, 3,],
           [1, 2, 3,]]
@@ -100,16 +97,6 @@ def WellTest_ParallelMatrix3dInputRunner():
 
     return 1
 
-
-
-
-
-
-
-
-
-
-
 if __name__ == "__main__":
-    # mpiexec -n 4 python tests/tools/Parallel_Matrix3dInput_Runner/WellTest.py
+    # mpiexec -n 4 python tests/tools/ParallelMatrix3dInputRunner/WellTest.py
     WellTest_ParallelMatrix3dInputRunner()

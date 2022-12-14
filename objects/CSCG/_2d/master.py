@@ -30,7 +30,6 @@ class MeshGenerator(FrozenOnly):
         self._kwargs_ = kwargs
         self._freeze_self_()
 
-
     def __call__(self, element_layout, EDM=None, show_info=False):
         if show_info and RANK == MASTER_RANK:
             print(f"---[2dCSCG]-[MESH]-{MyTimer.current_time()}-----")
@@ -100,9 +99,6 @@ class MeshGenerator(FrozenOnly):
         return random_parameters
 
 
-
-
-
 class SpaceInvoker(FrozenOnly):
     def __init__(self, ID):
         COMM.barrier()  # for safety reason
@@ -131,9 +127,6 @@ class SpaceInvoker(FrozenOnly):
         S.___define_parameters___ = sp
         COMM.barrier()  # for safety reason
         return S
-
-
-
 
 
 class FormCaller(FrozenOnly):
@@ -182,7 +175,6 @@ class FormCaller(FrozenOnly):
         return self._space_
 
 
-
 class ExactSolutionSelector(FrozenOnly):
     """We select an exact solution object with this class."""
     def __init__(self, mesh):
@@ -206,8 +198,6 @@ class ExactSolutionSelector(FrozenOnly):
 
         return ES
 
-
-
     @classmethod
     def listing(cls, printing=True, returning=False):
         """For an allocator class, this lists all the possibilities ONLY in the master core."""
@@ -227,9 +217,6 @@ class ExactSolutionSelector(FrozenOnly):
             return listing
         else:
             pass
-
-
-
 
 
 if __name__ == "__main__":

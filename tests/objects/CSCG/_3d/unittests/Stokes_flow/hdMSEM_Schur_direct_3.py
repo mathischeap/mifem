@@ -125,5 +125,5 @@ def test_Stokes_hdMSEM_Schur_Rank2Solver():
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/CSCG/_3d/__tests__/unittests/Stokes_flow/hdMSEM_Schur_direct_3.py
+    # mpiexec -n 4 python tests/objects/CSCG/_3d/unittests/Stokes_flow/hdMSEM_Schur_direct_3.py
     test_Stokes_hdMSEM_Schur_Rank2Solver()

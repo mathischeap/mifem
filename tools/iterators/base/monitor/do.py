@@ -10,7 +10,6 @@ import datetime
 import socket
 from components.miscellaneous.timer import MyTimer
 
-
 class IteratorMonitorDo(FrozenOnly):
     """"""
     def __init__(self, monitor):
@@ -29,7 +28,6 @@ class IteratorMonitorDo(FrozenOnly):
         # self._uname_ = platform.uname()
 
         self._freeze_self_()
-
 
     def ___Pr_select_reasonable_amount_of_data___(self, max_num, last_num=1):
         """
@@ -99,10 +97,6 @@ class IteratorMonitorDo(FrozenOnly):
                 # make sure we have correct _estimated_remaining_time_ when iterator is done
                 monitor._estimated_remaining_time_ = 0
                 monitor._estimated_end_time_ = datetime.datetime.now()
-
-
-
-
 
     # noinspection PyBroadException
     def auto_save(self):
@@ -177,16 +171,15 @@ class IteratorMonitorDo(FrozenOnly):
         else:
             pass
 
-    def ___PRIVATE_generate_open_graph_report___(self):
+    def ___Pr_generate_open_graph_report___(self):
         """"""
         raise NotImplementedError()
-
 
     def generate_graph_report(self):
         """"""
         monitor = self._monitor_
 
-        if monitor.whether.open: return self.___PRIVATE_generate_open_graph_report___()
+        if monitor.whether.open: return self.___Pr_generate_open_graph_report___()
 
         # do A LAST REPORT BEFORE STOP:
         judge1 = \
@@ -369,9 +362,13 @@ class IteratorMonitorDo(FrozenOnly):
                     ylabel_backgroundcolor = 'greenyellow'
                     face_color = 'snow'
                     itime = monitor._times_[indices]
-                    itime = self.___DO_filter_extreme_time___(itime) # extreme values are replaced by nan.
+                    itime = self.___Pr_filter_extreme_time___(itime) # extreme values are replaced by nan.
                     valid_time = itime[~np.isnan(itime)]
-                    max_time = np.max(valid_time)
+                    if len(valid_time) > 0:
+                        max_time = np.max(valid_time)
+                    else:
+                        max_time = 0.1
+
                     if max_time < 999:
                         ylabel = 't iteration (s)'
                         unit = 's'
@@ -510,11 +507,10 @@ class IteratorMonitorDo(FrozenOnly):
                 # ... further things.
                 if judge_sd:
                     pass # Maybe we wanna some special sign when iteration terminated by the solver
-
-                # ...
+                else:
+                    pass
 
             # .. subplots done ...
-
             super_title = "mifem.MPI ITERATIONS \n> {}/{} <".format(monitor._computed_steps_,monitor._max_steps_)
             st_fontsize = 100
 
@@ -527,9 +523,12 @@ class IteratorMonitorDo(FrozenOnly):
 
             # noinspection PyBroadException
             try: # in case saving fail
-                plt.savefig('MPI_IGR_{}.png'.format(
-                    monitor._iterator_.standard_properties.name), dpi=225,
-                    bbox_inches='tight', facecolor='honeydew')
+                plt.savefig(
+                    f'{monitor._iterator_.standard_properties.name}.png',
+                    dpi=225,
+                    bbox_inches='tight',
+                    facecolor='honeydew',
+                )
             except:
                 pass
             plt.close(fig)
@@ -538,7 +537,7 @@ class IteratorMonitorDo(FrozenOnly):
             pass
 
     @staticmethod
-    def ___DO_filter_extreme_time___(times):
+    def ___Pr_filter_extreme_time___(times):
         """
         We remove some extreme values to make the iteration time plot to be of higher resolution.
 
@@ -551,14 +550,19 @@ class IteratorMonitorDo(FrozenOnly):
         :return:
         """
         valid_time = times[~np.isnan(times)]
-        avrg = np.mean(valid_time)
-        maxt = np.max(valid_time)
 
-        if maxt > 2 * avrg and len(valid_time[valid_time>0.9*maxt]) == 1:
-            # there is only one huge value. This happens in some, for example, TGV cases.
-            TIME = np.nan_to_num(times)
-            max_ind = np.argwhere(TIME > 0.9*maxt)[:,0]
-            times[max_ind] = np.nan
+        if len(valid_time) > 0:
+            avrg = np.mean(valid_time)
+            maxt = np.max(valid_time)
+
+            if maxt > 2 * avrg and len(valid_time[valid_time>0.9*maxt]) == 1:
+                # there is only one huge value. This happens in some, for example, TGV cases.
+                TIME = np.nan_to_num(times)
+                max_ind = np.argwhere(TIME > 0.9*maxt)[:,0]
+                times[max_ind] = np.nan
+            else:
+                pass
+
         else:
             pass
 

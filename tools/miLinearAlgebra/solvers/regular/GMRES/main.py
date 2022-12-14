@@ -26,7 +26,7 @@ class GMRES(ParallelSolverBase):
         Parameters
         ----------
         routine:
-            {'auto', '0', '1'}. They are:
+            {'auto', '0', '1', 'sp'}. They are:
                 'auto':
                 '0': MPI version - 0
                 '1': MPI version - 1

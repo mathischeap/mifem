@@ -47,6 +47,7 @@ class csvFilerVisualize(FrozenOnly):
             elif isinstance(column_y, (list, tuple)):
                 X = list()
                 Y = list()
+                i = -1
                 for i, col_y in enumerate(column_y):
                     assert col_y in self._filer_.columns, f"column_y[{i}] = {col_y} is not valid."
                     X.append(x)
@@ -83,6 +84,7 @@ class csvFilerVisualize(FrozenOnly):
             elif isinstance(column_y, (list, tuple)):
                 X = list()
                 Y = list()
+                i = -1
                 for i, col_y in enumerate(column_y):
                     assert col_y in self._filer_.columns, f"column_y[{i}] = {col_y} is not valid."
                     X.append(x)
@@ -119,6 +121,7 @@ class csvFilerVisualize(FrozenOnly):
             elif isinstance(column_y, (list, tuple)):
                 X = list()
                 Y = list()
+                i = -1
                 for i, col_y in enumerate(column_y):
                     assert col_y in self._filer_.columns, f"column_y[{i}] = {col_y} is not valid."
                     X.append(x)

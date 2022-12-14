@@ -19,7 +19,7 @@ class Test_reconstruction_matrix_and_mass_matrix(FrozenOnly):
 
     def __init__(self):
         """"""
-        mesh = cscg3.mesh('crazy', c=0.0)([3, 4, 2])
+        mesh = cscg3.mesh('crazy', c=0.)([3, 4, 2])
         space = cscg3.space('polynomials')([2, 1, 3])
         self.fc = cscg3.form(mesh, space)
         miprint(">>> Test_reconstruction_matrix_and_mass_matrix ...", flush=True)

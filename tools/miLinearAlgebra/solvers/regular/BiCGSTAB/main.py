@@ -19,7 +19,16 @@ from tools.miLinearAlgebra.dataStructures.vectors.locallyFull.main import Locall
 class BiCGSTAB(ParallelSolverBase):
     """"""
     def __init__(self, routine='auto', name=None):
-        """"""
+        """
+
+        Parameters
+        ----------
+        routine
+            {'auto', '0',}. They are:
+                'auto'-
+                '0'-
+        name
+        """
         super().__init__(routine, name)
 
     def __call__(self, A, b, x0,

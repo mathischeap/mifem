@@ -119,5 +119,5 @@ def test_Stokes_hdMSEM():
     return 1
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/CSCG/_3d/__tests__/unittests/Stokes_flow/hdMSEM_direct_solver.py
+    # mpiexec -n 4 python tests/objects/CSCG/_3d/unittests/Stokes_flow/hdMSEM_direct_solver.py
     test_Stokes_hdMSEM()

@@ -15,11 +15,8 @@ from __init__ import miTri
 
 from root.config.main import RANK, MASTER_RANK, COMM
 
-
 def u_fun(t, x, y): return np.pi * np.exp(np.pi * x) * np.sin(np.pi * y) + 0 * t
 def v_fun(t, x, y): return np.pi * np.sin(np.pi * x) * np.cos(0.983*np.pi * y) + 0 * t
-
-
 
 class Test_dofs_topology_S1F(FrozenOnly):
     """"""
@@ -149,11 +146,6 @@ class Test_dofs_topology_S1F(FrozenOnly):
 
         return 1
 
-
-
-
-
-
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/miUsGrid/triangular/__test__/unittests/standard_forms/dofs_topology.py
+    # mpiexec -n 4 python tests/objects/miUsGrid/triangular/unittests/standardForms/dofs_topology.py
     Test_dofs_topology_S1F()()

@@ -4,10 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/08/26 2:33 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
-
 from components.freeze.base import FrozenOnly
 
 from root.config.main import RANK, MASTER_RANK, COMM, np
@@ -69,6 +65,7 @@ class _3dCSCG_MeshBoundaryCT_constant(FrozenOnly):
                     LOCAL_CV = None
 
                 else:
+                    cv = None
                     for cv in LOCAL_CV:
                         if cv is not None:
                             break
@@ -152,7 +149,3 @@ class _3dCSCG_MeshBoundaryCT_constant(FrozenOnly):
             self._constant_unit_normal_vector_ = Constant_unit_normal_vector_
 
         return self._constant_unit_normal_vector_
-
-if __name__ == "__main__":
-    # mpiexec -n 4 python 
-    pass

@@ -54,7 +54,7 @@ class _3dCSCG_1LocalTrace(_3dCSCG_LocalTrace):
 
     def ___PrLT_mass_matrices___(self):
         """This is a brutal force version for the mesh-element-wise mass matrix."""
-        p = [self.dqp[i] + 1 for i in range(self.ndim)]
+        p = self.dqp
         quad_nodes, quad_weights = Quadrature(p, category='Gauss').quad
 
         x, y = np.meshgrid(quad_nodes[1], quad_nodes[2], indexing='ij')

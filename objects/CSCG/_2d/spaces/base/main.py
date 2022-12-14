@@ -93,9 +93,6 @@ class _2dCSCG_Space(FrozenClass):
     def trace_matrix(self):
         return self._trace_matrix_
 
-
-
-
     @property
     def category(self):
         """

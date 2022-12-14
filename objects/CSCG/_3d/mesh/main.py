@@ -33,6 +33,7 @@ from objects.CSCG._3d.mesh.visualize.main import _3dCSCG_Mesh_Visualize
 from objects.CSCG._3d.mesh.boundaries.main import _3dCSCG_Mesh_Boundaries
 from objects.CSCG._3d.mesh.subGeometry.main import _3dCSCG_Mesh_SubGeometry
 from objects.CSCG._3d.mesh.do.main import _3dCSCG_Mesh_DO
+from objects.CSCG._3d.mesh.whether import _3dCSCG_Mesh_Whether
 
 from objects.CSCG._3d.mesh.node.main import _3dCSCG_Node
 from objects.CSCG._3d.mesh.edge.main import _3dCSCG_Edge
@@ -106,6 +107,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         self.___define_parameters___ = None
         self.___TEST_MODE___ = False
         self.___element_global_numbering___ = None
+        self._whether_ = None
         self._freeze_self_()
 
     @accepts('self', (tuple, list, int, dict, "NoneType"))
@@ -1151,3 +1153,9 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         the best, 0 the worst.
         """
         return self.trace.quality['average quality']
+
+    @property
+    def whether(self):
+        if self._whether_ is None:
+            self._whether_ = _3dCSCG_Mesh_Whether(self)
+        return self._whether_

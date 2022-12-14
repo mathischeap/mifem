@@ -9,7 +9,6 @@
 """
 import sys
 if './' not in sys.path: sys.path.append('./')
-from root.config.main import *
 from objects.CSCG._3d.forms.standard.base.main import _3dCSCG_Standard_Form
 from objects.CSCG._3d.forms.standard._0s.special.main import _0Form_Special
 from objects.CSCG._3d.forms.standard._0s.discretize.main import _3dCSCG_Discretize
@@ -92,16 +91,12 @@ if __name__ == '__main__':
     # mpiexec -n 6 python objects/CSCG/_3d/forms/standard/_0s/main.py
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
 
-    mesh = MeshGenerator('crazy')([3,3,3])
+    mesh = MeshGenerator('crazy', c=0.)([3,3,3])
     space = SpaceInvoker('polynomials')([2,2,2])
     FC = FormCaller(mesh, space)
 
-    def p(t, x, y, z):
-        return np.sin(2*np.pi*x) * np.sin(np.pi*y) * np.cos(2*np.pi*z) + t
+    f0 = FC('3-f', hybrid=True)
 
-    scalar = FC('scalar', p)
+    M = f0.matrices.mass
 
-    f0 = FC('0-f', is_hybrid=True)
-    f0.CF = scalar
-    f0.CF.current_time = 0
-    f0.do.discretize()
+    print(M.condition.pseudo_sparsity)

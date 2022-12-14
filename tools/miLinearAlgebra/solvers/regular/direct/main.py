@@ -7,9 +7,17 @@ from tools.miLinearAlgebra.solvers.regular.direct.helpers.scipy_sparse_linalg_v0
 class Direct(ParallelSolverBase):
     """"""
     def __init__(self, routine='auto', name=None):
-        """"""
-        super().__init__(routine, name)
+        """
 
+        Parameters
+        ----------
+        routine :
+            {'auto', '0',}. They are:
+                'auto'-
+                '0'-
+        name
+        """
+        super().__init__(routine, name)
 
     def __call__(self, A, b, COD=None,
         **kwargs

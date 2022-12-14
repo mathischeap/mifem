@@ -16,7 +16,7 @@ from objects.CSCG.base.forms.standard.main import CSCG_Standard_Form
 
 from objects.CSCG._3d.forms.standard.base.dofs.main import _3dCSCG_Standard_forms_DOFs
 from objects.CSCG._3d.forms.standard.base.operators.main import _3dCSCG_Standard_Form_Operators
-from objects.CSCG._3d.forms.standard.base.matrices import _3dCSCG_Standard_Form_Matrices
+from objects.CSCG._3d.forms.standard.base.matrices.main import _3dCSCG_Standard_Form_Matrices
 from objects.CSCG._3d.forms.standard.base.coboundary import _3dCSCG_Standard_Form_Coboundary
 from objects.CSCG._3d.forms.standard.base.error import _3dCSCG_Standard_Form_Error
 from objects.CSCG._3d.forms.standard.base.cochain.main import _3dCSCG_Standard_Form_Cochain

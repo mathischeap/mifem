@@ -52,6 +52,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
         self._visualize_ = _3dCSCG_VectorField_Visualize(self)
         self._numerical_ = None
         self._components_ = None
+        self.___flux_range___ = 'mesh-boundary'
         self._freeze_self_()
 
     def __repr__(self):
@@ -236,37 +237,53 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
     @property
     def flux(self):
-        """Return a _3dCSCG_ScalarField representing the flux scalar on all valid trace elements.
+        """Return a _3dCSCG_ScalarField representing the flux scalar on all boundary trace elements.
 
-        Let the self vector is u, then we return a scalar (u \dot n) where n is the positive unit norm vector.
+        Let the self vector is u, then we return a scalar (u \dot n) where n is the positive unit norm vector
+        of the trace-element (not the normal direction of the domain!, so this norm direction can point
+        the internal of the domain).
 
         When the self vector is of ftype
             - 'standard': we will make a ('trace-element-wise') scalar valid on all local trace elements.
 
         """
         if self.ftype == 'standard':
-            # we have a standard vector, we will make a flux scalar valid on all (locally in each core) trace elements.
 
-            safe_copy = _3dCSCG_VectorField(self.mesh,
-                                            self.func,
-                                            ftype=self.ftype,
-                                            valid_time=self.valid_time,
-                                            name=self.standard_properties.name
-                                            ) # we made a safe copy.
-            # this is very important as it decoupled the norm component and the vector. MUST do THIS!
+            if self.___flux_range___ == 'mesh-boundary':
+                # we have a standard vector, we will make a flux scalar valid on all (locally in each core) trace elements.
+
+                RTE = self.mesh.boundaries.range_of_trace_elements
+
+                range_of_trace_elements = list()
+
+                for bn in RTE:
+                    range_of_trace_elements.extend(RTE[bn])
+
+            else:
+                raise NotImplementedError(f"flux range={self.___flux_range___} not implemented.")
+
+            safe_copy = _3dCSCG_VectorField(
+                self.mesh,
+                self.func,
+                ftype=self.ftype,
+                valid_time=self.valid_time,
+                name='safe-copy-of-' + self.standard_properties.name
+            )  # we made a safe copy. this is very important as it decoupled the flux and the vector. MUST do THIS!
 
             trace_element_wise_func = dict()
-            for i in safe_copy.mesh.trace.elements: # the local trace element #i on mesh boundaries
+            for i in range_of_trace_elements:  # the local trace element #i on mesh boundaries
                 trace_element_wise_func[i] = ___VECTOR_FLUX___(safe_copy, i)
 
             base_path = '.'.join(str(self.__class__).split(' ')[1][1:-2].split('.')[:-3]) + '.'
 
             scalar_class = getattr(import_module(base_path + 'scalar.main'), '_3dCSCG_ScalarField')
-            return scalar_class(safe_copy.mesh, trace_element_wise_func,
-                                       ftype='trace-element-wise',
-                                       valid_time=safe_copy.valid_time,
-                                       name='flux-scalar-of-' + safe_copy.standard_properties.name
-                                       )
+            SCALAR = scalar_class(
+                safe_copy.mesh, trace_element_wise_func,
+                ftype='trace-element-wise',
+                valid_time=safe_copy.valid_time,
+                name='flux-scalar-of-' + safe_copy.standard_properties.name
+            )
+            return SCALAR
 
         else:
             raise NotImplementedError(f"`flux` scalar of a vector of "

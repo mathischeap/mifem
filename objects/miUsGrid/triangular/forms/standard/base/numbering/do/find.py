@@ -34,72 +34,16 @@ class miUsTriangle_Numbering_DoFind(FrozenOnly):
         -------
 
         """
-        if edge == 'D':
-            edge = 0
-        elif edge == 'U':
-            edge = 1
-        elif edge == 'R':
-            edge = 2
-        else:
-            assert edge in [0, 1, 2], f"edge={edge} wrong, be in 'DUR' or [0,1,2]."
 
         if self._sf_.k == 2:
             raise Exception(f"volume-form does not have dofs on element edge")
-
-        elif self._sf_.k == 1:
-
-            if self._sf_.__class__.__name__ == 'miUsTriangular_S1F_Outer':
-                dy, dx = getattr(self._sf_.space.local_numbering, self._sf_.__class__.__name__)
-
-                if edge == 1: # U edge
-                    local_dofs = dy[0, :]
-                elif edge == 0: # D edge
-                    local_dofs = dy[-1, :]
-                elif edge == 2: # edge
-                    local_dofs = dx[:, -1]
-                else:
-                    raise Exception()
-
-                full_vector = self._sf_.numbering.gathering[element].full_vector
-
-                return full_vector[local_dofs]
-
-            elif self._sf_.__class__.__name__ == 'miUsTriangular_S1F_Inner':
-                dx, dy = getattr(self._sf_.space.local_numbering, self._sf_.__class__.__name__)
-
-                if edge == 1: # U edge
-                    local_dofs = dy[0, :]
-                elif edge == 0: # D edge
-                    local_dofs = dy[-1, :]
-                elif edge == 2: # edge
-                    local_dofs = dx[:, -1]
-                else:
-                    raise Exception()
-
-                full_vector = self._sf_.numbering.gathering[element].full_vector
-
-                return full_vector[local_dofs]
-            else:
-                raise NotImplementedError()
-
-        elif self._sf_.k == 0:
-            Local_numbering = getattr(self._sf_.space.local_numbering, self._sf_.__class__.__name__)[0]
-
-            if edge == 1:
-                local_dofs = Local_numbering[0, :]
-            elif edge == 0:
-                local_dofs = Local_numbering[-1, :]
-            elif edge == 2:
-                local_dofs = Local_numbering[:, -1]
-            else:
-                raise Exception()
-
-            full_vector = self._sf_.numbering.gathering[element].full_vector
-
-            return full_vector[local_dofs]
-
         else:
-            raise Exception()
+            pass
+
+        local_dofs = self.local_dofs_on_element_edge(edge)
+        full_vector = self._sf_.numbering.gathering[element].full_vector
+
+        return full_vector[local_dofs]
 
 
     @lru_cache(maxsize=3)
@@ -115,6 +59,12 @@ class miUsTriangle_Numbering_DoFind(FrozenOnly):
         -------
 
         """
+
+        if self._sf_.k == 2:
+            raise Exception(f"volume-form does not have dofs on element edge")
+        else:
+            pass
+
         if edge == 'D':
             edge = 0
         elif edge == 'U':
@@ -124,10 +74,7 @@ class miUsTriangle_Numbering_DoFind(FrozenOnly):
         else:
             assert edge in [0, 1, 2], f"edge={edge} wrong, be in 'DUR' or [0,1,2]."
 
-        if self._sf_.k == 2:
-            raise Exception(f"volume-form does not have dofs on element edge")
-
-        elif self._sf_.k == 1:
+        if self._sf_.k == 1:
             if self._sf_.__class__.__name__ == 'miUsTriangular_S1F_Outer':
                 dy, dx = getattr(self._sf_.space.local_numbering, self._sf_.__class__.__name__)
 

@@ -17,7 +17,6 @@ class miUsGrid_Form_BC(FrozenOnly):
         self._CF_ = None
         self._boundaries_ = None
         self._involved_element_parts_ = None
-        self._interpret_ = None
         self._freeze_self_()
 
     @property
@@ -31,7 +30,6 @@ class miUsGrid_Form_BC(FrozenOnly):
         else:
             self._f_.___Pr_check_BC_CF___(cf)
             self._CF_ = cf
-            self._interpret_ = None
 
     @property
     def boundaries(self):
@@ -51,7 +49,6 @@ class miUsGrid_Form_BC(FrozenOnly):
         for i, bn in enumerate(bns):
             assert bn in BNS, f"boundary names [{i}] = {bn} is not a valid boundary name."
         self.___Pr_parse_involved_element_parts___(bns)
-        self._interpret_ = None # reset current interpretations.
         self._boundaries_ = bns
 
     def ___Pr_parse_involved_element_parts___(self, bns):
@@ -67,6 +64,5 @@ class miUsGrid_Form_BC(FrozenOnly):
 
     @property
     def interpret(self):
-        if self._interpret_ is None:
-            self._interpret_ = miUsForm_Form_BC_Interpret(self._f_)
-        return self._interpret_
+        """Use no cache, make it in real time. Remember to save it with a separate variable."""
+        return miUsForm_Form_BC_Interpret(self._f_)

@@ -6,6 +6,12 @@
 """
 from components.freeze.base import FrozenOnly
 
+# look, we only cache the dofs, not the cochains.
+___CSCG_global_BC_itp_Local_dofs_cache___ = {
+    'iEP_ID': -1,
+    'dofs': dict(),
+}
+
 class CSCG_FORM_BC_Interpret_Local(FrozenOnly):
     """"""
 
@@ -15,26 +21,38 @@ class CSCG_FORM_BC_Interpret_Local(FrozenOnly):
         self._mesh_ = f.mesh
         self._cochains_ = None
         self.___Pr_parse_dofs___() # need no BC.CF
-        self._cochains_ = None
+        if self._f_.BC.CF is not None:
+            self.___Pr_parse_cochains___()
+        else:
+            pass
         self._freeze_self_()
 
     def ___Pr_parse_dofs___(self):
         """Need no `BC.CF`"""
         iEP = self._f_.BC._involved_element_parts_
-        self._dofs_ = dict()
-        for e_p in iEP:
-            element, part = int(e_p[:-1]), e_p[-1]
-            if  self._mesh_.ndim == 3:
-                dofs = self._f_.numbering.do.\
-                    find.local_dofs_on_element_side(part)
-            elif self._mesh_.ndim == 2:
-                dofs = self._f_.numbering.do.\
-                    find.local_dofs_on_element_edge(part)
-            else:
-                raise Exception()
-            if element not in self._dofs_:
-                self._dofs_[element] = list()
-            self._dofs_[element].extend(dofs)
+
+        if id(iEP) == ___CSCG_global_BC_itp_Local_dofs_cache___['iEP_ID']:
+            self._dofs_ = ___CSCG_global_BC_itp_Local_dofs_cache___['dofs']
+
+        else:
+
+            self._dofs_ = dict()
+            for e_p in iEP:
+                element, part = int(e_p[:-1]), e_p[-1]
+                if  self._mesh_.ndim == 3:
+                    dofs = self._f_.numbering.do.\
+                        find.local_dofs_on_element_side(part)
+                elif self._mesh_.ndim == 2:
+                    dofs = self._f_.numbering.do.\
+                        find.local_dofs_on_element_edge(part)
+                else:
+                    raise Exception()
+                if element not in self._dofs_:
+                    self._dofs_[element] = list()
+                self._dofs_[element].extend(dofs)
+
+            ___CSCG_global_BC_itp_Local_dofs_cache___['iEP_ID'] = id(iEP)
+            ___CSCG_global_BC_itp_Local_dofs_cache___['dofs'] = self._dofs_
 
     def ___Pr_parse_cochains___(self):
         """Need `BC.CF`"""
@@ -71,7 +89,6 @@ class CSCG_FORM_BC_Interpret_Local(FrozenOnly):
                 assert len(self.dofs[e]) > 0, f"empty for element #{e}"
 
                 self._cochains_[e].extend(local_cochain[e][part])
-
 
         elif indicator == 'locally full local TEW cochain':
 
@@ -116,6 +133,4 @@ class CSCG_FORM_BC_Interpret_Local(FrozenOnly):
 
     @property
     def cochains(self):
-        if self._cochains_ is None:
-            self.___Pr_parse_cochains___()
         return self._cochains_

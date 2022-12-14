@@ -10,9 +10,9 @@ class OnTraceElement_Standard(FrozenOnly):
     def __call__(self, xi, eta, sigma, ravel, i):
         """
 
-        :param xi:
-        :param eta:
-        :param ravel:
+        :param xi: 1d, we only accept 1d xi, eta and sigma.
+        :param eta: 1d, we only accept 1d xi, eta and sigma.
+        :param ravel: 1d, we only accept 1d xi, eta and sigma.
         :param i:
             1) self.ftype == 'standard':
                 Do the reconstruction in mesh element #i. When it is None, it means all local mesh

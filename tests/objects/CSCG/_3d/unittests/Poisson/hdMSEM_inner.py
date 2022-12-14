@@ -109,15 +109,15 @@ def test_hdMSEM_Poisson_Inner():
 
     f_error_L2 = f.prime.error.L()
 
-    assert p_error_L2 < 0.005
-    assert u_error_L2 < 0.14
-    assert u_error_dH1 < 0.5
-    assert f_error_L2 < 0.5
+    assert p_error_L2 < 0.005, f"{p_error_L2}!"
+    assert u_error_L2 < 0.15, f"{u_error_L2}!"
+    assert u_error_dH1 < 0.5, f"{u_error_dH1}!"
+    assert f_error_L2 < 0.5, f"{f_error_L2}!"
 
     return 1
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/CSCG/_3d/__tests__/unittests/Poisson/hdMSEM_inner.py
+    # mpiexec -n 4 python tests/objects/CSCG/_3d/unittests/Poisson/hdMSEM_inner.py
 
     test_hdMSEM_Poisson_Inner()

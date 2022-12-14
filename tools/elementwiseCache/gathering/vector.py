@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
-
-
 from components.freeze.main import FrozenOnly
 import numpy as np
 from itertools import chain
-
-
 
 class Gathering_Vector(FrozenOnly):
     """A gathering vector stores the numbering of dofs in one element.
@@ -56,6 +52,9 @@ class Gathering_Vector(FrozenOnly):
                 self._full_vector_ = np.array([_ for _ in self])
             else:
                 raise Exception()
+
+            dtype = str(self._full_vector_.dtype)
+            assert dtype[:3] == 'int', f"gathering vector numbering must be integer."
 
         return self._full_vector_
 

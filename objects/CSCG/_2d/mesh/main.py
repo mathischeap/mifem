@@ -11,9 +11,7 @@ from objects.CSCG._2d.mesh.boundaries.main import _2dCSCG_Mesh_Boundaries
 from objects.CSCG._2d.mesh.periodicSetting.main import _2dCSCG_PeriodicDomainSetting
 from objects.CSCG._2d.mesh.legacy.coordinate_transformation import CoordinateTransformation
 from objects.CSCG._2d.mesh.do.main import _2dCSCG_Mesh_DO
-
-
-
+from objects.CSCG._2d.mesh.whether import _2dCSCG_Mesh_Whether
 
 class _2dCSCG_Mesh(CSCG_MESH_BASE):
     """The 2dCSCG mesh."""
@@ -47,6 +45,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
         self.___TEST_MODE___ = False
 
         self.___element_global_numbering___ = None # clean it.
+        self._whether_ = None
         self._freeze_self_()
 
     @accepts('self', (tuple, list, int, dict, 'NoneType'))
@@ -130,10 +129,6 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
         _element_spacing_ = tuple(_element_spacing_)
         _num_elements_in_region_ = np.prod(_element_layout_)
         return _element_layout_, _element_ratio_, _element_spacing_, _num_elements_in_region_
-
-
-
-
 
     def ___PRIVATE_generate_element_global_numbering___(self, number_what=None):
         """"""
@@ -403,9 +398,6 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
 
         return QUALITY, loc_qua
 
-
-
-
     def ___PRIVATE_optimize_element_distribution___(self):
         """After generating global element numbering, we can further do an optimization to further reduce the element
         edge shearing between cores. This will adjust a bit the element distribution in cores, but should not adjust
@@ -427,9 +419,6 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
 
         # has to do another check ...
         self.___PRIVATE_BASE_analyze_element_distribution___()
-
-
-
 
     def ___PRIVATE_generate_element_map___(self):
         """We now study the domain.regions.map to generate elements.map which will be the key property of a mesh,
@@ -539,10 +528,6 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
             _se_.append(_side_element_[side_name])
         return _se_
 
-
-
-
-
     def ___PRIVATE_initializing_periodic_setting___(self):
         """"""
         pBPs = self.domain.domain_input.periodic_boundary_pairs
@@ -589,9 +574,6 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
                 if _em_i_[j] in self.domain._boundary_names_:
                     side_name = self.domain.regions(region_name)._edge_index_to_name_(j)
                     self.___boundary_element_edges___[_em_i_[j]] += (str(i) + '-' + side_name,)
-
-
-
 
     @property
     def ___statistic___(self):
@@ -652,9 +634,6 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
     def _element_global_numbering_(self):
         return self.___element_global_numbering___
 
-
-
-
     @property
     def domain(self):
         return self._domain_
@@ -686,3 +665,9 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
     @property
     def boundaries(self):
         return self._boundaries_
+
+    @property
+    def whether(self):
+        if self._whether_ is None:
+            self._whether_ = _2dCSCG_Mesh_Whether(self)
+        return self._whether_
