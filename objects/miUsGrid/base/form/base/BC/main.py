@@ -17,6 +17,7 @@ class miUsGrid_Form_BC(FrozenOnly):
         self._CF_ = None
         self._boundaries_ = None
         self._involved_element_parts_ = None
+        self._interpret_ = miUsForm_Form_BC_Interpret(self._f_)
         self._freeze_self_()
 
     @property
@@ -64,5 +65,7 @@ class miUsGrid_Form_BC(FrozenOnly):
 
     @property
     def interpret(self):
-        """Use no cache, make it in real time. Remember to save it with a separate variable."""
-        return miUsForm_Form_BC_Interpret(self._f_)
+        """Use no cache in interpret, it will generate data in real time.
+        Remember to save its sub-properties with separate variables.
+        """
+        return self._interpret_

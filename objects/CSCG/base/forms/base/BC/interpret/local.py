@@ -20,6 +20,7 @@ class CSCG_FORM_BC_Interpret_Local(FrozenOnly):
         self._f_ = f
         self._mesh_ = f.mesh
         self._cochains_ = None
+        # both dofs and cochains will be initialized and will not follow the form.BC in real time.
         self.___Pr_parse_dofs___() # need no BC.CF
         if self._f_.BC.CF is not None:
             self.___Pr_parse_cochains___()

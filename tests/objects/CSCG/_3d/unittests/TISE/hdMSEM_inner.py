@@ -20,10 +20,10 @@ from tools.miLinearAlgebra.linearSystem.main import LinearSystem
 
 from objects.CSCG.tools.distribute_local_cochain import distribute_local_cochain
 
+
 def test_hdMSEM_Schrodinger_Inner():
     """"""
-    mesh = mesh3('crazy', c=0,
-        bounds=([0.125, 1.125],[0.125, 1.125],[0.125, 1.125]))([5, 3, 2], EDM=None)
+    mesh = mesh3('crazy', c=0, bounds=([0.125, 1.125], [0.125, 1.125], [0.125, 1.125]))([5, 3, 2], EDM=None)
     space = space3('polynomials')([('Lobatto', 2), ('Lobatto', 3), ('Lobatto', 4)])
     FC = form3(mesh, space)
     ES = es3(mesh)('TISE:sincos1', m=1e-68, E=1)
@@ -38,8 +38,8 @@ def test_hdMSEM_Schrodinger_Inner():
         if b not in u_boundaries:
             p_boundaries.append(b)
 
-    u = FC('1-f', hybrid = True)
-    p = FC('0-f', hybrid = True)
+    u = FC('1-f', hybrid=True)
+    p = FC('0-f', hybrid=True)
     t = FC('0-adt')
     e = FC('0-e')
 
@@ -51,6 +51,7 @@ def test_hdMSEM_Schrodinger_Inner():
     p.BC.CF.current_time = 0
     p.BC.boundaries = p_boundaries
 
+    ES.flux.___flux_range___ = 'all'
     t.prime.BC.CF = ES.flux.flux
     t.prime.BC.CF.current_time = 0
     t.BC.boundaries = u_boundaries

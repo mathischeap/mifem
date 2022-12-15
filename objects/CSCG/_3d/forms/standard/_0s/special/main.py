@@ -14,13 +14,10 @@ from root.config.main import np, COMM, MPI, RANK, MASTER_RANK
 from objects.CSCG._3d.mesh.node.elements.do.find.helpers.SOS_internal import _3dCSCG_InternalNodeSOS
 from objects.CSCG._3d.mesh.node.elements.do.find.helpers.SOS_boundary.corner import _3dCSCG_CornerNodeSOS
 
-
 # from tqdm import tqdm
 # from time import sleep
 # from objects.CSCG._3d.mesh.node.elements.do.find.helpers.SOS_boundary.corner_edge import _3dCSCG_CornerEdgeNodeSOS
 # from objects.CSCG._3d.mesh.node.elements.do.find.helpers.SOS_boundary.surface_middle import _3dCSCG_SurfaceMiddleNodeSOS
-
-
 
 
 class _0Form_Special(FrozenOnly):
@@ -54,7 +51,7 @@ class _0Form_Special(FrozenOnly):
         C.gathering_matrices = (adt0, e0)
         b.gathering_matrix = adt0
 
-        #----- get boundaries and do a check --------------------------------------
+        # ----- get boundaries and do a check --------------------------------------
         Dirichlet_boundaries = adt0.BC.boundaries
         Neumann_boundaries = sf.BC.boundaries
 
@@ -63,7 +60,7 @@ class _0Form_Special(FrozenOnly):
         SNb = set(Neumann_boundaries)
         assert SDb & SNb == set()   , f"Dirichlet_boundaries intersect Neumann_boundaries is not None."
         assert SDb | SNb == set(bns), f"Dirichlet_boundaries union Neumann_boundaries is not full!"
-        #-------- set Neumann boundary condition ---------------------------------------------------
+        # -------- set Neumann boundary condition ---------------------------------------------------
 
         sf.BC.boundaries = Neumann_boundaries
         adt0.BC.boundaries = Neumann_boundaries

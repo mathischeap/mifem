@@ -17,7 +17,6 @@ u = grad psi
 - (bh / 2m) div u + V(x,y,z) psi(x,y,z) - E psi(x,y,z) = 0
 
 """
-
 import numpy as np
 from scipy.constants import Planck, hbar
 from objects.CSCG._3d.exactSolutions.base import Base
@@ -27,8 +26,6 @@ from objects.CSCG._3d.fields.scalar.main import _3dCSCG_ScalarField
 from components.numerical.timePlus3dSpace.partial_derivative import NumericalPartialDerivative_txyz
 from components.numerical.timePlus3dSpace.partial_derivative_as_functions import \
     NumericalPartialDerivative_txyz_Functions
-
-
 
 class TimeIndependentSchrodingerEquationBase(Base):
     def __init__(self, mesh, m, E):

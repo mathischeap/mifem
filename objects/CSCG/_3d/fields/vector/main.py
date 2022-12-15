@@ -37,7 +37,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
     def __init__(self, mesh, func, ftype=None, valid_time=None, name='vector-field'):
         if ftype is None:
             if isinstance(func, dict):
-                ftype= 'boundary-wise'
+                ftype = 'boundary-wise'
             else:
                 ftype = 'standard'
         else:
@@ -159,7 +159,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                          partial(self.func[1], time), \
                          partial(self.func[2], time)
 
-            elif self.ftype  == 'boundary-wise':
+            elif self.ftype == 'boundary-wise':
 
                 RETURN = dict()
                 for bn in self.func:
@@ -167,7 +167,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                                   partial(self.func[bn][1], time),
                                   partial(self.func[bn][2], time)]
 
-            elif self.ftype  == 'trace-element-wise':
+            elif self.ftype == 'trace-element-wise':
                 RETURN = dict()
                 for i in self.func: # go through all valid trace elements
                     vi = self.func[i]
@@ -175,7 +175,6 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
             else:
                 raise Exception(f" do not understand funcType={self.ftype}")
-
 
             self._previous_func_id_time_ = (id(self.func), time, RETURN)
 
@@ -187,7 +186,6 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
     def reconstruct(self, *args, **kwargs):
         return self.do.reconstruct(*args, **kwargs)
-
 
     def ___PRIVATE_do_inner_product_with_space_of___(self, other, quad_degree=None):
         """
@@ -258,6 +256,9 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
                 for bn in RTE:
                     range_of_trace_elements.extend(RTE[bn])
+            elif self.___flux_range___ == 'all':
+
+                range_of_trace_elements = self.mesh.trace.elements
 
             else:
                 raise NotImplementedError(f"flux range={self.___flux_range___} not implemented.")
@@ -298,12 +299,13 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
             x1 = ___VECTOR_NEG_HELPER_1___(w1)
             x2 = ___VECTOR_NEG_HELPER_1___(w2)
 
-            neg_vector = _3dCSCG_VectorField(self.mesh,
-                 [x0, x1, x2],
-                 ftype='standard',
-                 valid_time=self.valid_time,
-                 name = '-' + self.standard_properties.name
-                                            )
+            neg_vector = _3dCSCG_VectorField(
+                self.mesh,
+                [x0, x1, x2],
+                ftype='standard',
+                valid_time=self.valid_time,
+                name='-' + self.standard_properties.name
+            )
             return neg_vector
 
         else:
@@ -322,12 +324,13 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                 x1 = ___VECTOR_SUB_HELPER_1___(w1, u1)
                 x2 = ___VECTOR_SUB_HELPER_1___(w2, u2)
 
-                sub_vector = _3dCSCG_VectorField(self.mesh,
-                     [x0, x1, x2],
-                     ftype='standard',
-                     valid_time=self.valid_time,
-                     name = self.standard_properties.name + '-' + other.standard_properties.name
-                                                )
+                sub_vector = _3dCSCG_VectorField(
+                    self.mesh,
+                    [x0, x1, x2],
+                    ftype='standard',
+                    valid_time=self.valid_time,
+                    name=self.standard_properties.name + '-' + other.standard_properties.name
+                )
                 return sub_vector
 
             else:
@@ -348,12 +351,13 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                 x1 = ___VECTOR_ADD_HELPER_1___(w1, u1)
                 x2 = ___VECTOR_ADD_HELPER_1___(w2, u2)
 
-                add_vector = _3dCSCG_VectorField(self.mesh,
-                     [x0, x1, x2],
-                     ftype='standard',
-                     valid_time=self.valid_time,
-                     name = self.standard_properties.name + '+' + other.standard_properties.name
-                                                )
+                add_vector = _3dCSCG_VectorField(
+                    self.mesh,
+                    [x0, x1, x2],
+                    ftype='standard',
+                    valid_time=self.valid_time,
+                    name=self.standard_properties.name + '+' + other.standard_properties.name
+                )
                 return add_vector
 
             else:
@@ -412,14 +416,12 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
             raise NotImplementedError()
 
 
-
-
 if __name__ == '__main__':
     # mpiexec -n 6 python objects/CSCG/_3d/fields/vector/main.py
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('crazy', c=0.)([1,1,1], show_info=True)
-    space = SpaceInvoker('polynomials')([('Lobatto',1), ('Lobatto',1), ('Lobatto',1)], show_info=True)
+    mesh = MeshGenerator('crazy', c=0.)([1, 1, 1], show_info=True)
+    space = SpaceInvoker('polynomials')([('Lobatto', 1), ('Lobatto', 1), ('Lobatto', 1)], show_info=True)
     FC = FormCaller(mesh, space)
 
     def velocity_x(t, x, y, z): return t + np.cos(2*np.pi*x) * np.sin(np.pi*y) * np.sin(np.pi*z)
@@ -428,15 +430,14 @@ if __name__ == '__main__':
 
     SV = FC('vector', [velocity_x, velocity_y, velocity_z])
 
-
     norm = SV.components.norm
-    norm.current_time=0
+    norm.current_time = 0
     norm.visualize()
 
     para = SV.components.T_para
-    para.current_time=0
+    para.current_time = 0
     para.visualize()
 
     perp = SV.components.T_perp
-    perp.current_time=0
+    perp.current_time = 0
     perp.visualize()

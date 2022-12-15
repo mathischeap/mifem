@@ -10,9 +10,7 @@ class SpaMat_Adjust(FrozenOnly):
         self._spa_mat_ = spa_mat
         self._freeze_self_()
 
-
-    def clear_rows_according_to(
-        self, itp, AS='local'):
+    def clear_rows_according_to(self, itp, AS='local'):
         """We will clear rows of the sparse matrix M locally, and set
         M[pds.dofs, :] = 0
 
@@ -54,17 +52,16 @@ class SpaMat_Adjust(FrozenOnly):
                 SPA_MAT[e] = self._spa_mat_[e]
 
         SPA_MAT = self._spa_mat_.__class__(
-            self._spa_mat_._elements_, SPA_MAT, cache_key_generator = 'no_cache')
+            self._spa_mat_._elements_, SPA_MAT, cache_key_generator='no_cache')
 
         if self._spa_mat_._gathering_matrices_0_ is not None and \
-            self._spa_mat_._gathering_matrices_1_ is not None:
+           self._spa_mat_._gathering_matrices_1_ is not None:
 
             SPA_MAT.gathering_matrices = self._spa_mat_.gathering_matrices
 
         return SPA_MAT
 
-    def identify_rows_according_to(
-        self, itp, col_itp=None, AS='local'):
+    def identify_rows_according_to(self, itp, col_itp=None, AS='local'):
         """We will identify rows of the sparse matrix M locally, and set
         M[pds.dofs, :] = 0; M[pds.dofs, pds.dofs] = 1
 
@@ -114,16 +111,15 @@ class SpaMat_Adjust(FrozenOnly):
                 SPA_MAT[e] = self._spa_mat_[e]
 
         SPA_MAT = self._spa_mat_.__class__(
-            self._spa_mat_._elements_, SPA_MAT, cache_key_generator = 'no_cache')
+            self._spa_mat_._elements_, SPA_MAT, cache_key_generator='no_cache')
 
         if self._spa_mat_._gathering_matrices_0_ is not None and \
-            self._spa_mat_._gathering_matrices_1_ is not None:
+           self._spa_mat_._gathering_matrices_1_ is not None:
             SPA_MAT.gathering_matrices = self._spa_mat_.gathering_matrices
 
         return SPA_MAT
 
-    def ___Pr_identify_rows_according_to___(
-        self, row_itp, col_itp, AS='local'):
+    def ___Pr_identify_rows_according_to___(self, row_itp, col_itp, AS='local'):
         """We will identify rows of the sparse matrix M locally, and set
         M[row_pds.dofs, :] = 0; M[row_pds.dofs, col_pds.dofs] = 1
 
@@ -175,11 +171,10 @@ class SpaMat_Adjust(FrozenOnly):
                 SPA_MAT[e] = self._spa_mat_[e]
 
         SPA_MAT = self._spa_mat_.__class__(
-            self._spa_mat_._elements_, SPA_MAT, cache_key_generator = 'no_cache')
+            self._spa_mat_._elements_, SPA_MAT, cache_key_generator='no_cache')
 
         if self._spa_mat_._gathering_matrices_0_ is not None and \
-            self._spa_mat_._gathering_matrices_1_ is not None:
+           self._spa_mat_._gathering_matrices_1_ is not None:
             SPA_MAT.gathering_matrices = self._spa_mat_.gathering_matrices
 
         return SPA_MAT
-

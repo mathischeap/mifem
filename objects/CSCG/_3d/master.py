@@ -49,7 +49,7 @@ class MeshGenerator(FrozenOnly):
             print(f"   <domain ID>: {self._ID_}")
             str_dp = str(self._kwargs_)
             if len(str_dp) > 40: str_dp = str_dp[:40] + '...'
-            print( "   <domain_parameters>: {}".format(str_dp))
+            print("   <domain_parameters>: {}".format(str_dp))
             print(f"   <EDM>: {EDM}", flush=True)
 
         COMM.barrier()  # for safety reason
@@ -71,9 +71,9 @@ class MeshGenerator(FrozenOnly):
         if show_info and RANK == MASTER_RANK:
             str_element_layout = str(element_layout)
             if len(str_element_layout) < 40:
-                print( "   <element_layout input>: {}".format(str_element_layout))
+                print("   <element_layout input>: {}".format(str_element_layout))
             else:
-                print( "   <element_layout input>: {}...".format(str_element_layout[:40]))
+                print("   <element_layout input>: {}...".format(str_element_layout[:40]))
             for rn in mesh.elements.layout:
                 print(f"   <element_layout>: {rn} {mesh.elements.layout[rn]}")
             print(f"   <total elements>: {mesh.elements.global_num}", flush=True)
@@ -88,7 +88,8 @@ class MeshGenerator(FrozenOnly):
     @classmethod
     def listing(cls, printing=True, returning=False):
         """For an allocator class, this list all the possibilities ONLY in the master core."""
-        if RANK != MASTER_RANK: return
+        if RANK != MASTER_RANK:
+            return
         included_allocators = [
             DomainInputAllocator,
         ]
@@ -200,7 +201,7 @@ class FormCaller(FrozenOnly):
                       ):
                 fp['type'] = '_3dCSCG_ADF'
                 # ---------------- make a dual from a prime ------------------------------------
-                if len(args) == 1: # if so, we get a prime form, we make dual form from it.
+                if len(args) == 1:  # if so, we get a prime form, we make dual form from it.
                     assert kwargs == dict(), \
                         f"when make algebraic dual standard form from prime form, " \
                         f"kwargs must be empty, now it is={kwargs}."
@@ -226,19 +227,19 @@ class FormCaller(FrozenOnly):
 
                     assert prime.whether.hybrid, "prime must be hybrid."
                     assert prime.mesh is self._mesh_ and prime.space is self._space_, \
-                        "mesh, space do not match." # not just ==, but is!
+                        "mesh, space do not match."  # not just ==, but is!
 
                     # if we made a dual from a prime, we still need to feed `orientation` and `name` to the dual class.
                     kwargs = dict()
                     kwargs['orientation'] = prime.orientation
                     kwargs['name'] = 'AD_' + prime.standard_properties.name
 
-                #--------- make the prime from the args and kwargs ---------------------------------
-                else: # we make the prime form from the args.
+                # --------- make the prime from the args and kwargs ---------------------------------
+                else:  # we make the prime form from the args.
                     p_kwargs = dict()
                     for kw in kwargs:
                         if kw == 'name':
-                            p_kwargs[kw] = 'PRIME_' +  kwargs[kw]
+                            p_kwargs[kw] = 'PRIME_' + kwargs[kw]
                         else:
                             p_kwargs[kw] = kwargs[kw]
 
@@ -246,7 +247,7 @@ class FormCaller(FrozenOnly):
                         prime_class_ID = ID.split('-')[0] + '-f'
                         prime = self(prime_class_ID, *args, **p_kwargs, hybrid=True)
 
-                    elif ID in ('0-adt', '1-adt', '2-adt'): # note that trace forms must be hybrid.
+                    elif ID in ('0-adt', '1-adt', '2-adt'):  # note that trace forms must be hybrid.
                         prime_class_ID = ID.split('-')[0] + '-t'
                         prime = self(prime_class_ID, *args, **p_kwargs)
 
@@ -255,8 +256,8 @@ class FormCaller(FrozenOnly):
 
                 # ---- remove `numbering_parameters` for dual class initialize -------------------
                 KWARGS = dict()
-                for key in kwargs: # we remove `numbering_parameters` form the kwargs because we don't need it
-                                   # form the initialization of the dual form.
+                for key in kwargs:  # we remove `numbering_parameters` form the kwargs because we don't need it form
+                    # the initialization of the dual form.
                     if key == 'numbering_parameters':
                         pass
                     else:
@@ -265,12 +266,12 @@ class FormCaller(FrozenOnly):
 
                 FM = cls_body(prime, self._mesh_, self._space_, **KWARGS)
 
-            else: # all other forms, like the standard forms, trace forms, edge forms, node forms and so on
+            else:  # all other forms, like the standard forms, trace forms, edge forms, node forms and so on
                 assert len(args) == 0, "all these forms do not take args, only take kwargs."
                 fp['type'] = '_3dCSCG_Form'
                 FM = cls_body(self._mesh_, self._space_, **kwargs)
 
-            #====================================================================================
+            # ====================================================================================
             FM.___define_parameters___ = fp
 
         COMM.barrier()  # for safety reason
@@ -313,7 +314,8 @@ class ExactSolutionSelector(FrozenOnly):
     @classmethod
     def listing(cls, printing=True, returning=False):
         """For an allocator class, this list all the possibilities ONLY in the master core."""
-        if RANK != MASTER_RANK: return
+        if RANK != MASTER_RANK:
+            return
         included_allocators = [
             _3dCSCG_ExactSolution_Allocator,
         ]
@@ -329,6 +331,7 @@ class ExactSolutionSelector(FrozenOnly):
             return listing
         else:
             pass
+
 
 if __name__ == "__main__":
     # mpiexec -n 8 python objects\CSCG\_3d\master.py

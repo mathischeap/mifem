@@ -19,7 +19,7 @@ class CSCG_AFORM_BC_Interpret_Local(FrozenOnly):
         self._adf_ = adf
         self._mesh_ = adf.mesh
         self._cochains_ = None
-        self.___Pr_parse_dofs___() # need no BC.CF
+        self.___Pr_parse_dofs___()  # need no BC.CF
         if self._adf_.BC.CF is not None:
             self.___Pr_parse_cochains___()
         else:
@@ -32,7 +32,7 @@ class CSCG_AFORM_BC_Interpret_Local(FrozenOnly):
         self._dofs_ = dict()
         for e_p in iEP:
             element, part = int(e_p[:-1]), e_p[-1]
-            if  self._mesh_.ndim == 3:
+            if self._mesh_.ndim == 3:
                 dofs = self._adf_.prime.numbering.do.\
                     find.local_dofs_on_element_side(part)
             elif self._mesh_.ndim == 2:
@@ -65,7 +65,7 @@ class CSCG_AFORM_BC_Interpret_Local(FrozenOnly):
         elif indicator == 'locally full local TEW cochain':
             
             iEP = self._adf_.BC._involved_element_parts_
-            t = self._adf_ # must be an adf trace form.
+            t = self._adf_  # must be an adf trace form.
             TEM = t.mesh.trace.elements.map
 
             MM_TEW = t.prime.___PRIVATE_generate_TEW_mass_matrices___()

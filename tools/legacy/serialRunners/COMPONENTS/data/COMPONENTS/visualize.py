@@ -13,9 +13,6 @@ from components.miscellaneous.timer import MyTimer
 from components.freeze.main import FrozenOnly
 from tools.legacy.serialRunners.COMPONENTS.data.COMPONENTS.MODULES.m_tir_visualize import M_TIR_Visualize
 
-
-
-
 class DFWVisualize(FrozenOnly):
     """
     A visualizer for DFW data. The data can be a `DFW` or a child of `DFW`. Normally

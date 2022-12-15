@@ -57,4 +57,5 @@ total_Tests = passed_2dCSCG_tests + \
 
 if RANK == MASTER_RANK:
     print("\n<{}> total tests passed; cost {:.3f} seconds.\n".format(
-        total_Tests, MPI.Wtime()-t_global_start))
+        total_Tests, MPI.Wtime()-t_global_start)
+    )

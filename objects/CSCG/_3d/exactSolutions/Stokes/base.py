@@ -8,11 +8,7 @@ curl w + grad p = f
 
 div u = 0
 
-
 """
-
-
-
 from functools import lru_cache, partial
 import numpy as np
 
@@ -22,9 +18,6 @@ from objects.CSCG._3d.fields.scalar.main import _3dCSCG_ScalarField
 from components.numerical._3dSpace.partial_derivative import NumericalPartialDerivative_xyz
 from components.numerical.timePlus3dSpace.partial_derivative_as_functions import \
     NumericalPartialDerivative_txyz_Functions
-
-
-
 
 class Stokes_Base(Base):
     """"""
