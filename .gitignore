@@ -51,10 +51,9 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 *___private_developer_*
-__contents__/
-__residuals__/
 .idea/
-__APP__/
+*.png
+*.pdf
 
 # Translations
 *.mo
