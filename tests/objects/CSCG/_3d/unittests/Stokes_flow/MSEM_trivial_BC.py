@@ -14,7 +14,6 @@ from tools.miLinearAlgebra.linearSystem.main import LinearSystem
 from root.config.main import RANK, MASTER_RANK
 
 
-
 def test_Stokes_MSEM_trivial_BC():
     if RANK == MASTER_RANK:
         print(f"STK [test_Stokes_MSEM_trivial_BC] ...", flush=True)
@@ -82,7 +81,6 @@ def test_Stokes_MSEM_trivial_BC():
     assert p_L2 < 0.03, f"{p_L2}"
 
     return 1
-
 
 
 if __name__ == '__main__':

@@ -22,7 +22,6 @@ from tools.elementwiseCache.dataStructures.operators.concatenate.main import con
 from tools.miLinearAlgebra.linearSystem.main import LinearSystem
 
 
-
 def test_hdMSEM_Poisson_Inner():
     """"""
     mesh = mesh3('crazy', c=0, bounds=([0.125, 1.125], [0.125, 1.125], [0.125, 1.125]))(
@@ -47,8 +46,8 @@ def test_hdMSEM_Poisson_Inner():
         if b not in u_boundaries:
             p_boundaries.append(b)
 
-    p = FC('0-f', hybrid = True)
-    u = FC('1-f', hybrid = True)
+    p = FC('0-f', hybrid=True)
+    u = FC('1-f', hybrid=True)
     t = FC('0-adt')
     e = FC('0-e')
     f = FC('0-adf')
@@ -57,6 +56,7 @@ def test_hdMSEM_Poisson_Inner():
     p.BC.CF.current_time = 0
     p.BC.boundaries = p_boundaries
 
+    ES.velocity.___flux_range___ = 'all'
     t.prime.BC.CF = ES.velocity.flux
     t.prime.BC.CF.current_time = 0
     t.BC.boundaries = u_boundaries

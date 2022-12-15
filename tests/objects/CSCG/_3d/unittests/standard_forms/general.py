@@ -38,7 +38,7 @@ def test_Form_NO1_discretization_and_reconstruction():
         space = SpaceInvoker('polynomials')([('Lobatto', 5), ('Lobatto', 5), ('Lobatto', 5)])
         FC = FormCaller(mesh, space)
         scalar = FC('scalar', p)
-        vector = FC('vector', (u,v,w))
+        vector = FC('vector', (u, v, w))
         f0 = FC('0-f', hybrid=False)
         f1 = FC('1-f', hybrid=False)
         f2 = FC('2-f', hybrid=False)
@@ -69,7 +69,7 @@ def test_Form_NO1_discretization_and_reconstruction():
     FC = FormCaller(mesh, space)
 
     scalar = FC('scalar', p)
-    vector = FC('vector', (u,v,w))
+    vector = FC('vector', (u, v, w))
 
     f0 = FC('0-f', hybrid=False)
     f1 = FC('1-f', hybrid=False)
@@ -157,13 +157,12 @@ def test_Form_NO1_discretization_and_reconstruction():
     f3.discretize()
     assert f3.error.L() < 0.003
 
-
-    mesh = MeshGenerator('bridge_arch_cracked',)([3,2,4], EDM='debug')
+    mesh = MeshGenerator('bridge_arch_cracked',)([3, 2, 4], EDM='debug')
     space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 4), ('Lobatto', 2)])
     FC = FormCaller(mesh, space)
 
     scalar = FC('scalar', p)
-    vector = FC('vector', (u,v,w))
+    vector = FC('vector', (u, v, w))
     f0 = FC('0-f', hybrid=False)
     f1 = FC('1-f', hybrid=False)
     f2 = FC('2-f', hybrid=False)
@@ -186,13 +185,12 @@ def test_Form_NO1_discretization_and_reconstruction():
     f3.discretize()
     assert f3.error.L() < 0.05
 
-
-    mesh = MeshGenerator('crazy', c=0.1)([5,5,5], EDM=None)
+    mesh = MeshGenerator('crazy', c=0.1)([5, 5, 5], EDM=None)
     space = SpaceInvoker('polynomials')([('Lobatto', 4), ('Lobatto', 4), ('Lobatto', 4)])
     FC = FormCaller(mesh, space)
 
     scalar = FC('scalar', p)
-    vector = FC('vector', (u,v,w))
+    vector = FC('vector', (u, v, w))
     f0 = FC('0-f', hybrid=False)
     f1 = FC('1-f', hybrid=False)
     f2 = FC('2-f', hybrid=False)
@@ -217,7 +215,6 @@ def test_Form_NO1_discretization_and_reconstruction():
 
     return 1
 
-
 def test_Form_NO1a_discretization_and_reconstruction():
     """"""
     if RANK == MASTER_RANK:
@@ -233,7 +230,7 @@ def test_Form_NO1a_discretization_and_reconstruction():
         space = SpaceInvoker('polynomials')([('Lobatto', 5), ('Lobatto', 5), ('Lobatto', 5)])
         FC = FormCaller(mesh, space)
         scalar = FC('scalar', p)
-        vector = FC('vector', (u,v,w))
+        vector = FC('vector', (u, v, w))
         f0 = FC('0-f', hybrid=False)
         f1 = FC('1-f', hybrid=False)
         f2 = FC('2-f', hybrid=False)
@@ -264,7 +261,7 @@ def test_Form_NO1a_discretization_and_reconstruction():
     FC = FormCaller(mesh, space)
 
     scalar = FC('scalar', p)
-    vector = FC('vector', (u,v,w))
+    vector = FC('vector', (u, v, w))
 
     f0 = FC('0-f', hybrid=False)
     f1 = FC('1-f', hybrid=False)
@@ -296,7 +293,7 @@ def test_Form_NO1a_discretization_and_reconstruction():
     f0.CF.current_time = 0
     f0.discretize()
     assert f0.error.L() < 0.0004
-    f1.CF= vector
+    f1.CF = vector
     f1.CF.current_time = 0
     f1.discretize()
     assert f1.error.L() < 0.004
@@ -352,13 +349,12 @@ def test_Form_NO1a_discretization_and_reconstruction():
     f3.discretize()
     assert f3.error.L() < 0.003
 
-
-    mesh = MeshGenerator('bridge_arch_cracked',)([3,2,4], EDM='chaotic')
+    mesh = MeshGenerator('bridge_arch_cracked',)([3, 2, 4], EDM='chaotic')
     space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 4), ('Lobatto', 2)])
     FC = FormCaller(mesh, space)
 
     scalar = FC('scalar', p)
-    vector = FC('vector', (u,v,w))
+    vector = FC('vector', (u, v, w))
     f0 = FC('0-f', hybrid=False)
     f1 = FC('1-f', hybrid=False)
     f2 = FC('2-f', hybrid=False)
@@ -412,7 +408,6 @@ def test_Form_NO1b_trace_form_Rd_and_Rc():
         v_exact = p(t, x, y, z)
         assert np.max(np.abs(v - v_exact)) < 1e-5 # must be accurate enough!
 
-
     # test 2-Trace form reconstruct...............
     t2 = FC('2-t')
     t2.CF = flux
@@ -430,18 +425,20 @@ def test_Form_NO1b_trace_form_Rd_and_Rc():
 
     def uuu(t, x, y, z):
         return 5*np.sin(0.89*np.pi*x) + 6*np.cos(np.pi*y) + 7*np.cos(np.pi*z-0.578)**2 + t*8.5
+
     def vvv(t, x, y, z):
         return 5*np.cos(2.21*np.pi*x) + 6*np.sin(np.pi*y) + 7*np.cos(np.pi*z-0.12)**2 + t*8
+
     def www(t, x, y, z):
         return 5*np.cos(np.pi*x) + 6*np.cos(np.pi*y) + 7*np.sin(np.pi*z-0.15)**2 + t*10
 
     if RANK == MASTER_RANK:
-        load = random.randint(500,1000)
+        load = random.randint(500, 1000)
         t = random.random()
     else:
         load, t = None, None
     load, t = COMM.bcast([load, t], root=MASTER_RANK)
-    mesh, space = random_mesh_and_space_of_total_load_around(load, exclude_periodic = True)
+    mesh, space = random_mesh_and_space_of_total_load_around(load, exclude_periodic=True)
 
     FC = FormCaller(mesh, space)
     flux = FC('scalar', p)
@@ -469,7 +466,7 @@ def test_Form_NO1b_trace_form_Rd_and_Rc():
     t0_local = t0.cochain.local
     f0_local = f0.cochain.local
     for i in t0_local:
-        A0 = t0_local[i] -  S0[i] @ f0_local[i]
+        A0 = t0_local[i] - S0[i] @ f0_local[i]
         np.testing.assert_array_almost_equal(A0, 0)
 
     # t1 & f1, discretization and selective matrix
@@ -482,7 +479,7 @@ def test_Form_NO1b_trace_form_Rd_and_Rc():
     t1_local = t1.cochain.local
     f1_local = f1.cochain.local
     for i in t1_local:
-        A1 = t1_local[i] -  S1[i] @ f1_local[i]
+        A1 = t1_local[i] - S1[i] @ f1_local[i]
         np.testing.assert_array_almost_equal(A1, 0)
 
     # t2 & f2, discretization and selective matrix
@@ -495,7 +492,7 @@ def test_Form_NO1b_trace_form_Rd_and_Rc():
     t2_local = t2.cochain.local
     f2_local = f2.cochain.local
     for i in t2_local:
-        A2 = t2_local[i] -  S2[i] @ f2_local[i]
+        A2 = t2_local[i] - S2[i] @ f2_local[i]
         np.testing.assert_array_almost_equal(A2, 0)
 
     return 1
@@ -522,7 +519,7 @@ def test_Form_NO2_mass_matrix():
         1.13207590e-04, -5.03123358e-05, -9.05682361e-05, -5.03123358e-05,
         2.20104383e-05,  1.95995397e-04,  1.13207590e-04, -5.03123358e-05,
         1.13207590e-04,  6.90036501e-05, -2.91740562e-05, -5.03123358e-05,
-       -2.91740562e-05,  1.19231437e-05, -9.05682361e-05, -5.03123358e-05,
+        -2.91740562e-05,  1.19231437e-05, -9.05682361e-05, -5.03123358e-05,
         2.20104383e-05, -5.03123358e-05, -2.91740562e-05,  1.19231437e-05,
         2.20104383e-05,  1.19231437e-05, -4.62962963e-06])
     benchmark1 = np.array([
@@ -552,17 +549,17 @@ def test_Form_NO2_mass_matrix():
         -1.14611365e-02, -9.53669458e-03, 2.90710672e-03, -3.26394743e-03])
     benchmark3 = np.array([
         78.35846174, -17.15884714, -17.15884714, 1.02217158,
-         -17.15884714, 1.02217158, 1.02217158, -0.86973663])
+        -17.15884714, 1.02217158, 1.02217158, -0.86973663])
 
     M0 = f0.matrices.mass
     M1 = f1.matrices.mass
     M2 = f2.matrices.mass
     M3 = f3.matrices.mass
     if 0 in mesh.elements:
-        np.testing.assert_array_almost_equal(M0[0].toarray()[0,:], benchmark0)
-        np.testing.assert_array_almost_equal(M1[0].toarray()[0,:], benchmark1)
-        np.testing.assert_array_almost_equal(M2[0].toarray()[0,:], benchmark2)
-        np.testing.assert_array_almost_equal(M3[0].toarray()[0,:], benchmark3)
+        np.testing.assert_array_almost_equal(M0[0].toarray()[0, :], benchmark0)
+        np.testing.assert_array_almost_equal(M1[0].toarray()[0, :], benchmark1)
+        np.testing.assert_array_almost_equal(M2[0].toarray()[0, :], benchmark2)
+        np.testing.assert_array_almost_equal(M3[0].toarray()[0, :], benchmark3)
 
     M0_3 = M0 * 3
     three_M1 = 3 * M1
@@ -571,12 +568,12 @@ def test_Form_NO2_mass_matrix():
     M13 = M1 / 3
     mM14 = - M1 / 4
     if 0 in mesh.elements:
-        np.testing.assert_array_almost_equal(M0_3[0].toarray()[0,:], 3*benchmark0)
-        np.testing.assert_array_almost_equal(three_M1[0].toarray()[0,:], 3*benchmark1)
-        np.testing.assert_array_almost_equal(MMM[0].toarray()[0,:], 3*benchmark2)
-        np.testing.assert_array_almost_equal(M3M5[0].toarray()[0,:], 7*benchmark3)
-        np.testing.assert_array_almost_equal(M13[0].toarray()[0,:], benchmark1/3)
-        np.testing.assert_array_almost_equal(mM14[0].toarray()[0,:], -0.25*benchmark1)
+        np.testing.assert_array_almost_equal(M0_3[0].toarray()[0, :], 3*benchmark0)
+        np.testing.assert_array_almost_equal(three_M1[0].toarray()[0, :], 3*benchmark1)
+        np.testing.assert_array_almost_equal(MMM[0].toarray()[0, :], 3*benchmark2)
+        np.testing.assert_array_almost_equal(M3M5[0].toarray()[0, :], 7*benchmark3)
+        np.testing.assert_array_almost_equal(M13[0].toarray()[0, :], benchmark1/3)
+        np.testing.assert_array_almost_equal(mM14[0].toarray()[0, :], -0.25*benchmark1)
 
     M2T = M2.T
     assert M2.gathering_matrices == (M2T.gathering_matrices[1], M2T.gathering_matrices[0])
@@ -584,12 +581,12 @@ def test_Form_NO2_mass_matrix():
     assert three_M1.gathering_matrices == M1.gathering_matrices == M13.gathering_matrices == mM14.gathering_matrices
 
     if 0 in mesh.elements:
-        np.testing.assert_array_almost_equal(M2[0].toarray()[:,0], benchmark2)
+        np.testing.assert_array_almost_equal(M2[0].toarray()[:, 0], benchmark2)
 
     mM2T = - M2.T
     assert mM2T.gathering_matrices == M2T.gathering_matrices
     if 0 in mesh.elements:
-        np.testing.assert_array_almost_equal(mM2T[0].toarray()[:,0], -benchmark2)
+        np.testing.assert_array_almost_equal(mM2T[0].toarray()[:, 0], -benchmark2)
 
     return 1
 
@@ -703,7 +700,7 @@ def test_Form_NO3_incidence_matrices():
     dV = V.numerical.divergence
 
     f0 = FC('0-f', hybrid=False)
-    f0.CF= S
+    f0.CF = S
     f0.CF.current_time = t
     f0.discretize()
     f1 = f0.coboundary()
@@ -835,7 +832,7 @@ def test_Form_NO5_cross_product_2():
     if RANK == MASTER_RANK:
         print("*** [test_Form_NO5_cross_product_2] ...... ", flush=True)
 
-    mesh = MeshGenerator('crazy', c=0.0, bounds=([0,1],[0,1],[0,1]))([4,3,5], EDM='debug')
+    mesh = MeshGenerator('crazy', c=0.0, bounds=([0, 1], [0, 1], [0, 1]))([4, 3, 5], EDM='debug')
     space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 4), ('Lobatto', 2)])
     fmCa = FormCaller(mesh, space)
 
@@ -897,7 +894,7 @@ def test_Form_NOx_cross_product_3():
     if RANK == MASTER_RANK:
         print("*** [test_Form_NOx_cross_product_3] ...... ", flush=True)
 
-    mesh = MeshGenerator('crazy', c=0.0, bounds=([0,1],[0,1],[0,1]))([10,10,10], EDM=None)
+    mesh = MeshGenerator('crazy', c=0.0, bounds=([0, 1], [0, 1], [0, 1]))([10, 10, 10], EDM=None)
     space = SpaceInvoker('polynomials')([('Lobatto', 2), ('Lobatto', 2), ('Lobatto', 2)])
     FC = FormCaller(mesh, space)
 
@@ -948,7 +945,6 @@ def test_Form_NOx_cross_product_3():
                            optimize='greedy')
         np.testing.assert_almost_equal(result, 0)
 
-
     x.cochain.local = _xcl
 
     x.CF = vx
@@ -964,8 +960,8 @@ def test_Form_NOx1_cross_product_4():
     if RANK == MASTER_RANK:
         print("*** [test_Form_NOx1_cross_product_4] ...... ", flush=True)
 
-    mesh = MeshGenerator('cuboid', region_layout=[2,2,2])([5,5,5])
-    space = SpaceInvoker('polynomials')([2,2,2])
+    mesh = MeshGenerator('cuboid', region_layout=[2, 2, 2])([5, 5, 5])
+    space = SpaceInvoker('polynomials')([2, 2, 2])
     FC = FormCaller(mesh, space)
 
     def u0(t, x, y, z): return np.sin(0.87*np.pi*x) * np.sin(2*y) * np.cos(0.55*np.pi*z) + t
@@ -995,7 +991,7 @@ def test_Form_NOx1_cross_product_4():
     E21 = U.matrices.incidence
 
     for i in mesh.elements:
-        v = CPV[i].toarray()[:,0]
+        v = CPV[i].toarray()[:, 0]
         Ecl[i] = invM @ v
 
         result = np.sum((E21[i] @ U.cochain.local[i]) * v)
@@ -1014,8 +1010,8 @@ def test_Form_NOx2_F_dot_G_times_H():
     if RANK == MASTER_RANK:
         print("*** [test_Form_NOx2_F_dot_G_times_H] ...... ", flush=True)
 
-    mesh = MeshGenerator('cuboid', region_layout=[2,2,2])([5,5,5])
-    space = SpaceInvoker('polynomials')([2,2,2])
+    mesh = MeshGenerator('cuboid', region_layout=[2, 2, 2])([5, 5, 5])
+    space = SpaceInvoker('polynomials')([2, 2, 2])
     FC = FormCaller(mesh, space)
     uV = random_vector(mesh)
     BV = random_vector(mesh)
@@ -1033,9 +1029,9 @@ def test_Form_NOx2_F_dot_G_times_H():
     uXB_dot_j.current_time = 0
     jXB_dot_u.current_time = 0
 
-    xi = np.random.rand(3,3,3)
-    et = np.random.rand(3,3,3)
-    sg = np.random.rand(3,3,3)
+    xi = np.random.rand(3, 3, 3)
+    et = np.random.rand(3, 3, 3)
+    sg = np.random.rand(3, 3, 3)
 
     N0 = uXB_dot_j.do.compute_Ln_norm(n=1)
     N1 = jXB_dot_u.do.compute_Ln_norm(n=1)
@@ -1067,7 +1063,6 @@ def test_Form_NOx2_F_dot_G_times_H():
     return 1
 
 
-
 def test_Form_No7_with_other_element_numbering_AUTO():
     if RANK == MASTER_RANK:
         print("*** [test_Form_No7_with_other_element_numbering---AUTO] ...... ", flush=True)
@@ -1078,24 +1073,24 @@ def test_Form_No7_with_other_element_numbering_AUTO():
     def p(t, x, y, z): return np.cos(np.pi*x) + np.sin(np.pi*y) * np.sin(np.pi*z-0.125)**2 + t/2
 
     if RANK == MASTER_RANK:
-        t = random.uniform(-100,100)
+        t = random.uniform(-100, 100)
     else:
         t = None
     t = COMM.bcast(t, root=MASTER_RANK)
 
     if RANK == MASTER_RANK:
-        i = random.randint(2,4)
-        j = random.randint(2,4)
-        k = random.randint(2,4)
+        i = random.randint(2, 4)
+        j = random.randint(2, 4)
+        k = random.randint(2, 4)
     else:
         i, j, k = None, None, None
     i, j, k = COMM.bcast([i, j, k], root=MASTER_RANK)
     space = SpaceInvoker('polynomials')([('Lobatto', i), ('Lobatto', j), ('Lobatto', k)])
 
     if RANK == MASTER_RANK:
-        i = random.randint(5,8)
-        j = random.randint(5,9)
-        k = random.randint(6,7)
+        i = random.randint(5, 8)
+        j = random.randint(5, 9)
+        k = random.randint(6, 7)
     else:
         i, j, k = None, None, None
     i, j, k = COMM.bcast([i, j, k], root=MASTER_RANK)
@@ -1107,7 +1102,7 @@ def test_Form_No7_with_other_element_numbering_AUTO():
 
     FC = FormCaller(mesh, space)
     scalar = FC('scalar', p)
-    vector = FC('vector', (u,v,w))
+    vector = FC('vector', (u, v, w))
     f0 = FC('0-f', hybrid=False)
     f1 = FC('1-f', hybrid=False)
     f2 = FC('2-f', hybrid=False)
@@ -1129,10 +1124,9 @@ def test_Form_No7_with_other_element_numbering_AUTO():
     f3.discretize()
     F3E = f3.error.L()
 
-
     FC = FormCaller(MESH, space)
     scalar = FC('scalar', p)
-    vector = FC('vector', (u,v,w))
+    vector = FC('vector', (u, v, w))
     f0 = FC('0-f', hybrid=False)
     f1 = FC('1-f', hybrid=False)
     f2 = FC('2-f', hybrid=False)
@@ -1166,9 +1160,8 @@ def test_Form_No10_standard_form_dofs():
     if RANK == MASTER_RANK:
         print("DOF [test_Form_No10_standard_form_dofs] ...... ", flush=True)
 
-
     if RANK == MASTER_RANK:
-        load = random.randint(100,499)
+        load = random.randint(100, 499)
     else:
         load = None
     load = COMM.bcast(load, root=MASTER_RANK)
@@ -1189,8 +1182,8 @@ def test_Form_No10_standard_form_dofs():
 def test_Form_No11_reconstruction_matrices():
     """"""
     if RANK == MASTER_RANK:
-        load = random.randint(100,200)
-        IH = [True, False][random.randint(0,1)]
+        load = random.randint(100, 200)
+        IH = [True, False][random.randint(0, 1)]
         print(f"~~~ [test_Form_No11_reconstruction_matrices] @ load= {load}... ", flush=True)
     else:
         load = None
@@ -1201,15 +1194,16 @@ def test_Form_No11_reconstruction_matrices():
     b = random.random()
     c = random.random()
     def P(t, x, y, z): return - 1.76*np.pi * np.sin(2.1*np.pi*x) * np.cos(1.11*np.pi*y) * np.sin(a * 2.12*np.pi*z) + t/2
-    def Q(t, x, y, z): return np.pi * np.cos(b * 3.52*np.pi*x) * np.sin(2*np.pi*y) * np.cos(1.31*np.pi*z)+ t
+    def Q(t, x, y, z): return np.pi * np.cos(b * 3.52*np.pi*x) * np.sin(2*np.pi*y) * np.cos(1.31*np.pi*z) + t
     def R(t, x, y, z): return 3.15 * np.pi * np.cos(4.52*np.pi*x) * np.sin(1.5*np.pi*y) + t + np.cos(c * 2.11*np.pi*z)
 
     scalar = FC('scalar', P)
     vector = FC('vector', (P, Q, R))
-    xi = np.linspace(-1,1,7)
-    et = np.linspace(-1,1,6)
-    sg = np.linspace(-1,1,5)
-    #------------- 1-form ------------------------------
+    xi = np.linspace(-1, 1, 7)
+    et = np.linspace(-1, 1, 6)
+    sg = np.linspace(-1, 1, 5)
+
+    # ------------ 1-form ------------------------------
     f = FC('1-f', hybrid=IH)
     f.CF = vector
     f.CF.current_time = 1
@@ -1224,7 +1218,7 @@ def test_Form_No11_reconstruction_matrices():
         np.testing.assert_almost_equal(np.max(np.abs(v - V)), 0)
         np.testing.assert_almost_equal(np.max(np.abs(w - W)), 0)
 
-    #------------- 2-form ------------------------------
+    # ------------ 2-form ------------------------------
     f = FC('2-f', hybrid=IH)
     f.CF = vector
     f.CF.current_time = 2
@@ -1239,7 +1233,7 @@ def test_Form_No11_reconstruction_matrices():
         np.testing.assert_almost_equal(np.max(np.abs(v - V)), 0)
         np.testing.assert_almost_equal(np.max(np.abs(w - W)), 0)
 
-    #------------ 0-form ----------------------------------------------------
+    # ------------ 0-form ----------------------------------------------------
     f = FC('0-f', hybrid=IH)
     f.CF = scalar
     f.CF.current_time = 3
@@ -1250,13 +1244,13 @@ def test_Form_No11_reconstruction_matrices():
     for _, i in enumerate(MR):
         r = MR[i] @ f.cochain.local[i]
         np.testing.assert_almost_equal(np.max(np.abs(r - R[i][0])), 0)
-        np.testing.assert_almost_equal(np.max(np.abs(r - RR[_,:])), 0)
+        np.testing.assert_almost_equal(np.max(np.abs(r - RR[_, :])), 0)
 
     LnEnF = f.do.compute_Ln_energy(vectorized=False)
     LnEnT = f.do.compute_Ln_energy(vectorized=True)
     np.testing.assert_almost_equal(LnEnF, LnEnT, decimal=5)
 
-    #------------ 3-form -------------------------------------------------------
+    # ------------ 3-form -------------------------------------------------------
     f = FC('3-f', hybrid=IH)
     f.CF = scalar
     f.CF.current_time = 4
@@ -1267,7 +1261,7 @@ def test_Form_No11_reconstruction_matrices():
     for _, i in enumerate(MR):
         r = MR[i] @ f.cochain.local[i]
         np.testing.assert_almost_equal(np.max(np.abs(r - R[i][0])), 0)
-        np.testing.assert_almost_equal(np.max(np.abs(r - RR[_,:])), 0)
+        np.testing.assert_almost_equal(np.max(np.abs(r - RR[_, :])), 0)
 
     return 1
 
@@ -1284,7 +1278,7 @@ def test_Form_NO12_weak_curl():
     def v(t, x, y, z): return np.cos(2*np.pi*x) * np.sin(2*np.pi*y) * np.cos(2*np.pi*z) + t*1.23
     def w(t, x, y, z): return np.sin(2*np.pi*x) * np.sin(2*np.pi*y) * np.cos(2*np.pi*z) + t/2.196
     mesh = MeshGenerator('crazy_periodic', c=0.0)([8, 10, 6], EDM=None)
-    space = SpaceInvoker('polynomials')([3,2,4])
+    space = SpaceInvoker('polynomials')([3, 2, 4])
     FC = FormCaller(mesh, space)
     U = FC('vector', (u, v, w))
     curl_U = U.numerical.curl
@@ -1300,8 +1294,8 @@ def test_Form_NO12_weak_curl():
 
     M2 = u2.matrices.mass
     E12 = w1.matrices.incidence.T
-    b = concatenate([E12 @ M2 @ u2.cochain.EWC,])
-    A = bmat(([M1,],))
+    b = concatenate([E12 @ M2 @ u2.cochain.EWC, ])
+    A = bmat(([M1, ], ))
 
     A.gathering_matrices = (w1, w1)
     b.gathering_matrix = w1
@@ -1320,7 +1314,7 @@ def test_Form_NO12_weak_curl():
     def v(t, x, y, z): return np.sin(2*np.pi*x) * np.cos(0.85*np.pi*y) * np.sin(2*np.pi*z) + t*1.23
     def w(t, x, y, z): return np.sin(2*np.pi*x) * np.sin(2*np.pi*y) * np.cos(1.3*np.pi*z) + t/2.196
     mesh = MeshGenerator('crazy', c=0.0)([8, 10, 6], EDM=None)
-    space = SpaceInvoker('polynomials')([3,2,4])
+    space = SpaceInvoker('polynomials')([3, 2, 4])
     FC = FormCaller(mesh, space)
     U = FC('vector', (u, v, w))
     curl_U = U.numerical.curl
@@ -1336,8 +1330,8 @@ def test_Form_NO12_weak_curl():
 
     M2 = u2.matrices.mass
     E12 = w1.matrices.incidence.T
-    b = concatenate([E12 @ M2 @ u2.cochain.EWC,])
-    A = bmat(([M1,],))
+    b = concatenate([E12 @ M2 @ u2.cochain.EWC, ])
+    A = bmat(([M1, ], ))
 
     A.gathering_matrices = (w1, w1)
     b.gathering_matrix = w1
@@ -1352,6 +1346,7 @@ def test_Form_NO12_weak_curl():
     assert w1.error.L() < 0.06, f"0 tangent velocity boundary condition test fails."
 
     return 1
+
 
 if __name__ == '__main__':
     # mpiexec -n 4 python tests/objects/CSCG/_3d/unittests/standard_forms/general.py

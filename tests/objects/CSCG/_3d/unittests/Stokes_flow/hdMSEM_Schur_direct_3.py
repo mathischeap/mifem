@@ -11,15 +11,15 @@ from root.config.main import RANK, MASTER_RANK
 from objects.CSCG.tools.distribute_local_cochain import distribute_local_cochain
 
 
-
 def test_Stokes_hdMSEM_Schur_Rank2Solver():
     if RANK == MASTER_RANK:
         print(f"STK [test_Stokes_hdMSEM_Schur_Rank2Solver] ...", flush=True)
 
     K = [4, 3, 2]
     N = [2, 3, 4]
-    mesh = MeshGenerator('crazy', c=0.0,
-        bounds=[(0.125, 1.125),(0.125, 1.125),(0.125, 1.125)])(
+    mesh = MeshGenerator(
+        'crazy', c=0.0,
+        bounds=[(0.125, 1.125), (0.125, 1.125), (0.125, 1.125)])(
         K, show_info=True)
 
     space = SpaceInvoker('polynomials')(N, show_info=True)
@@ -119,9 +119,6 @@ def test_Stokes_hdMSEM_Schur_Rank2Solver():
     assert u_error_dH1 < 0.7
 
     return 1
-
-
-
 
 
 if __name__ == '__main__':

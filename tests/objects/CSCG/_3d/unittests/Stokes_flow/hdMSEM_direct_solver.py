@@ -12,15 +12,20 @@ from tools.elementwiseCache.dataStructures.objects.columnVector.main import EWC_
 from tools.miLinearAlgebra.linearSystem.main import LinearSystem
 from root.config.main import RANK, MASTER_RANK
 
+
 def test_Stokes_hdMSEM():
     if RANK == MASTER_RANK:
         print(f"STK [test_Stokes_hdMSEM] ...", flush=True)
 
     K = [4, 3, 2]
     N = [2, 3, 4]
-    mesh = MeshGenerator('crazy', c=0.0,
-        bounds=[(0.125, 1.125),(0.125, 1.125),(0.125, 1.125)])(
-        K, show_info=True)
+    mesh = MeshGenerator(
+        'crazy',
+        c=0.0,
+        bounds=[(0.125, 1.125), (0.125, 1.125), (0.125, 1.125)],
+    )(
+        K, show_info=True
+    )
 
     space = SpaceInvoker('polynomials')(N, show_info=True)
     FC = FormCaller(mesh, space)
@@ -48,7 +53,6 @@ def test_Stokes_hdMSEM():
 
     T2T = t.matrices.trace.T
     T1T = s.matrices.trace.T
-
 
     w.BC.CF = es.vorticity
     w.BC.boundaries = w_Boundaries
@@ -117,6 +121,7 @@ def test_Stokes_hdMSEM():
     assert u_error_dH1 < 0.7
 
     return 1
+
 
 if __name__ == '__main__':
     # mpiexec -n 4 python tests/objects/CSCG/_3d/unittests/Stokes_flow/hdMSEM_direct_solver.py

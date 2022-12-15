@@ -20,9 +20,10 @@ from tools.miLinearAlgebra.linearSystem.main import LinearSystem
 
 from objects.CSCG.tools.distribute_local_cochain import distribute_local_cochain
 
+
 def test_hdMSEM_Schrodinger_Inner_Cuboid():
     """"""
-    mesh = mesh3('cuboid', region_layout=[3,2,2])([2, 3, 3], EDM=None)
+    mesh = mesh3('cuboid', region_layout=[3, 2, 2])([2, 3, 3], EDM=None)
     space = space3('polynomials')([('Lobatto', 2), ('Lobatto', 2), ('Lobatto', 2)])
     FC = form3(mesh, space)
     ES = es3(mesh)('TISE:sincos1', m=1e-66, E=1)
@@ -37,8 +38,8 @@ def test_hdMSEM_Schrodinger_Inner_Cuboid():
         if b not in u_boundaries:
             p_boundaries.append(b)
 
-    u = FC('1-f', hybrid = True)
-    p = FC('0-f', hybrid = True)
+    u = FC('1-f', hybrid=True)
+    p = FC('0-f', hybrid=True)
     t = FC('0-adt')
     e = FC('0-e')
 
@@ -51,6 +52,7 @@ def test_hdMSEM_Schrodinger_Inner_Cuboid():
     p.BC.CF.current_time = 0
     p.BC.boundaries = p_boundaries
 
+    ES.flux.___flux_range___ = 'all'
     t.prime.BC.CF = ES.flux.flux
     t.prime.BC.CF.current_time = 0
     t.BC.boundaries = u_boundaries
@@ -104,6 +106,7 @@ def test_hdMSEM_Schrodinger_Inner_Cuboid():
     assert u_error_dH1 < 0.9, f"{u_error_dH1}"
 
     return 1
+
 
 if __name__ == '__main__':
     # mpiexec -n 4 python tests/objects/CSCG/_3d/unittests/TISE/hdMSEM_inner_cuboid.py
