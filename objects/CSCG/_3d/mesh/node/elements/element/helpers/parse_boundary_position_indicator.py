@@ -1,6 +1,5 @@
 
 
-
 def parse_boundary_position_indicator(element):
     """
 
@@ -30,15 +29,15 @@ def parse_boundary_position_indicator(element):
         else:
             boundary_positions.append(pos)
 
-    if len(non_boundary_positions) == 1: # must be at the boundary corner of domain corner mesh-element
+    if len(non_boundary_positions) == 1:  # must be at the boundary corner of domain corner mesh-element
         # for example, the 8 corner node-elements of the crazy mesh.
         return 'corner|' + non_boundary_positions[0]
 
-    elif len(non_boundary_positions) == 2: # must be at the boundary corner-edge
+    elif len(non_boundary_positions) == 2:  # must be at the boundary corner-edge
         # for example, the node-elements at the 12 domain edges of the crazy mesh.
         return 'corner-edge|' + non_boundary_positions[0] + '.' + non_boundary_positions[1]
 
-    elif len(non_boundary_positions) == 4: # may be one of multiple cases.
+    elif len(non_boundary_positions) == 4:  # may be one of multiple cases.
         # the simplest situation is at a surface.
 
         set0 = set(non_boundary_positions[0][-3:])
@@ -48,7 +47,7 @@ def parse_boundary_position_indicator(element):
 
         SHARE = set0 & set1 & set2 & set3
 
-        if len(SHARE) == 1: # this node-element is at the middle of a boundary-surface.
+        if len(SHARE) == 1:  # this node-element is at the middle of a boundary-surface.
 
             norm_direction = list(SHARE)[0]
 

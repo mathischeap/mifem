@@ -15,8 +15,7 @@ class CSCG_Continuous_FORM_BASE(FiledBase):
         self.standard_properties.___PRIVATE_add_tag___('CSCG_field')
 
         assert ftype in ("standard", "boundary-wise", "trace-element-wise"), \
-            f"ftype={ftype} wrong." # allowed ftype.
-
+            f"ftype={ftype} wrong."   # allowed ftype.
 
     @property
     def ndim(self):
@@ -48,9 +47,10 @@ class CSCG_Continuous_FORM_BASE(FiledBase):
         So even some mesh boundaries is not included on the local mesh elements,
         we still return them with this property."""
 
-        if self._CMB_ is not None: return  self._CMB_
+        if self._CMB_ is not None:
+            return self._CMB_
 
-        AMBs = self.mesh.boundaries.names # All Mesh Boundaries
+        AMBs = self.mesh.boundaries.names  # All Mesh Boundaries
 
         if self.ftype == 'standard':
             self._CMB_ = AMBs
@@ -62,7 +62,7 @@ class CSCG_Continuous_FORM_BASE(FiledBase):
                 self._CMB_.append(bn)
         elif self.ftype == 'trace-element-wise':
             _CMB_ = list()
-            for i in self.func: # valid local trace elements
+            for i in self.func:  # valid local trace elements
                 te = self.mesh.trace.elements[i]
                 if te.whether.on_mesh_boundary:
                     omb = te.on_mesh_boundary
@@ -87,7 +87,7 @@ class CSCG_Continuous_FORM_BASE(FiledBase):
 
         return self._CMB_
 
-    #====================== BELOW: children must have these methods =======================
+    # ====================== BELOW: children must have these methods =======================
     def ___PRIVATE_set_func___(self, *args, **kwargs):
         raise NotImplementedError()
 

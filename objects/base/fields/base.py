@@ -6,10 +6,6 @@ A base of all fields
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/09/21 1:13 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
-
 from importlib import import_module
 from components.freeze.main import FrozenClass
 
@@ -48,7 +44,7 @@ class FiledBase(FrozenClass):
     @property
     def general_format(self):
         """We convert the field into a general format (scalar, vector or so on) once it is possible."""
-        if self.ftype == 'standard': # when it is a standard field, we can do it of course.
+        if self.ftype == 'standard':  # when it is a standard field, we can do it of course.
 
             # S_CLASS = getattr(import_module(), "t2dScalar")
 
@@ -133,11 +129,11 @@ class FiledBase(FrozenClass):
 
     @current_time.setter
     def current_time(self, current_time):
-        assert isinstance(current_time, (float,int))
+        assert isinstance(current_time, (float, int))
         self.___PRIVATE_check_ct_in_vt___(current_time)
         self._current_time_ = current_time
 
-    #----------- VALID TIME -----------------------------------------------------------------
+    # ---------- VALID TIME -----------------------------------------------------------------
     @property
     def valid_time(self):
         """``current time`` must be with in ``valid_time``.
@@ -191,9 +187,3 @@ class FiledBase(FrozenClass):
         else:
             raise Exception(f'current_time = {ct} ({ct.__class__.__name__}) '
                             f'(valid_time={self.valid_time}) is illegal.')
-
-
-
-if __name__ == "__main__":
-    # mpiexec -n 4 python 
-    pass

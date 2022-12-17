@@ -6,12 +6,8 @@ Created on Sat May  4 14:07:49 2019
 Aerodynamics, AE
 TU Delft
 """
-
-
 import numpy as np
 from components.freeze.main import FrozenOnly
-
-
 
 
 class NumBasis(FrozenOnly):
@@ -67,11 +63,12 @@ class NumBasis(FrozenOnly):
         _basis_hybrid_True_ = 2 * ((p[1]+1)*(p[2]+1)+(p[0]+1)*(p[2]+1)+(p[0]+1)*(p[1]+1))
 
         px, py, pz = p
-        _basis_hybrid_False_ = _basis_hybrid_True_ \
-                               - 8 * 2 \
-                               - (px - 1) * 4 \
-                               - (py - 1) * 4 \
-                               - (pz - 1) * 4
+        _basis_hybrid_False_ = \
+            _basis_hybrid_True_ \
+            - 8 * 2 \
+            - (px - 1) * 4 \
+            - (py - 1) * 4 \
+            - (pz - 1) * 4
 
         _basis_components_ = {'N': ((p[1]+1)*(p[2]+1),), 'S': ((p[1]+1)*(p[2]+1),),
                               'W': ((p[0]+1)*(p[2]+1),), 'E': ((p[0]+1)*(p[2]+1),),
@@ -91,15 +88,18 @@ class NumBasis(FrozenOnly):
     def _3dCSCG_1Trace(self):
         """ """
         p = self._FS_.p
-        _basis_hybrid_True_ = 2 * (p[1]*(p[2]+1) + (p[1]+1)*p[2] +
-                              p[0]*(p[2]+1) + (p[0]+1)*p[2] +
-                              p[0]*(p[1]+1) + (p[0]+1)*p[1])
+        _basis_hybrid_True_ = 2 * (
+            p[1]*(p[2]+1) + (p[1]+1)*p[2] +
+            p[0]*(p[2]+1) + (p[0]+1)*p[2] +
+            p[0]*(p[1]+1) + (p[0]+1)*p[1]
+        )
 
         px, py, pz = p
-        _basis_hybrid_False_ = _basis_hybrid_True_ \
-                               - px * 4 \
-                               - py * 4 \
-                               - pz * 4
+        _basis_hybrid_False_ = \
+            _basis_hybrid_True_ \
+            - px * 4 \
+            - py * 4 \
+            - pz * 4
 
         _basis_components_ = {'N': (p[1]*(p[2]+1), (p[1]+1)*p[2]), 
                               'S': (p[1]*(p[2]+1), (p[1]+1)*p[2]), 
@@ -217,9 +217,11 @@ class NumBasis(FrozenOnly):
             False: self._3dCSCG_1Trace[0][False],
         }
         return basis, \
-               {'N': num_x_face,
+            {
+                'N': num_x_face,
                 'S': num_x_face,
                 'W': num_y_face,
                 'E': num_y_face,
                 'B': num_z_face,
-                'F': num_z_face}
+                'F': num_z_face
+            }

@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-
-
 from root.config.main import COMM
 from itertools import combinations
-
 
 
 class OBJ_SurInternal_EdgeElement(object):
@@ -38,7 +35,7 @@ class OBJ_SurInternal_EdgeElement(object):
                 involved_mesh_elements = _
                 break
 
-        self._useful_ = False # this local core is useful for this connection.
+        self._useful_ = False  # this local core is useful for this connection.
         for m in involved_mesh_elements:
             if m in mesh.elements:
                 self._useful_ = True
@@ -51,11 +48,15 @@ class OBJ_SurInternal_EdgeElement(object):
         for com in COMs:
             T = mesh.elements.do.find.trace_element_between_two_elements(*com)
             LT = len(T)
+
+            t = None
+
             if LT == 2:
                 for t in T:
                     ees = mesh.trace.elements.do.find.edge_elements_surrounding_element(t)
                     if i in ees:
                         break
+
             elif LT == 1:
                 t = T[0]
             elif LT == 0:
@@ -66,15 +67,17 @@ class OBJ_SurInternal_EdgeElement(object):
             if t is not None:
                 Ts[t] = com
 
-        sequence = [involved_mesh_elements[0],]
+        sequence = [involved_mesh_elements[0], ]
 
         while len(Ts) > 0:
             start_point = sequence[-1]
 
+            te = None
             for te in Ts:
                 if start_point in Ts[te]:
                     break
 
+            assert te is not None, f"must have found a trace-element."
             sequence.append(te)
 
             p1, p2 = Ts[te]
@@ -91,7 +94,6 @@ class OBJ_SurInternal_EdgeElement(object):
 
         if self._useful_:
             self._sequence_ = sequence
-
 
     @property
     def sequence(self):
@@ -129,4 +131,3 @@ class OBJ_SurInternal_EdgeElement(object):
             return self._sequence_
         else:
             return None
-

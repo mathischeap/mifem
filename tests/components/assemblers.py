@@ -6,19 +6,21 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from root.config.main import RANK, MASTER_RANK
 from components.assemblers import VectorAssembler
 from components.distributors import VectorDistributor
 import numpy as np
+
 
 def test_vector_assembler():
     """"""
     if RANK == MASTER_RANK:
         print("ft2dw [test_vector_assembler] ...... ", flush=True)
 
-    ADD = np.array([2., 3., 3., 3., 2., 1., 1., 1., 1., 1.,])
-    REP = np.array([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.,])
+    ADD = np.array([2., 3., 3., 3., 2., 1., 1., 1., 1., 1.])
+    REP = np.array([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.])
 
     G = {1: [0, 1, 2],
          2: [1, 2, 3],
@@ -64,6 +66,7 @@ def test_vector_assembler():
         np.testing.assert_array_equal(d[i], Di)
 
     return 1
+
 
 if __name__ == '__main__':
     # mpiexec -n 4 python tests/components/assemblers.py

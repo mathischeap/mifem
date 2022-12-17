@@ -9,6 +9,7 @@ from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_
 from scipy.sparse import csr_matrix
 import numpy as np
 
+
 class _3dCSCG_SpaceTopologicalConnections(FrozenOnly):
     """"""
 

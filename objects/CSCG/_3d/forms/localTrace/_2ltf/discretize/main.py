@@ -8,6 +8,7 @@ from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.forms.localTrace._2ltf.discretize.scalar.standard import _3dCSCG_2ltf_Discretize_Standard
 from objects.CSCG._3d.forms.localTrace._2ltf.discretize.scalar.boundary_wise import _3dCSCG_2LocalTrace_DiscretizeBoundaryWise
 
+
 class _3dCSCG_2LocalTrace_Discretize(FrozenOnly):
     """"""
 
@@ -62,4 +63,3 @@ class _3dCSCG_2LocalTrace_Discretize(FrozenOnly):
                                           f'discretize {SELF.BC.CF.__class__}.')
         else:
             raise NotImplementedError(f"3dCSCG 2-ltf cannot discretize while targeting at {target}.")
-

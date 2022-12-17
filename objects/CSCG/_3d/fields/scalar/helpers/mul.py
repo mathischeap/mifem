@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 8/20/2022 5:51 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
 
@@ -29,7 +26,3 @@ class _3dCSCG_ScaMulHelper1(FrozenOnly):
 
     def __call__(self, t, x, y, z):
         return self._sfc_(t, x, y, z) * self._vfc_(t, x, y, z)
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

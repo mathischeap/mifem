@@ -7,6 +7,7 @@ from components.quadrature import Quadrature
 
 from root.config.main import COMM, MASTER_RANK, RANK
 
+
 class _3dCSCG_ScalarField_DO(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf

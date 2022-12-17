@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 from components.freeze.main import FrozenOnly
 
 
@@ -19,7 +12,6 @@ class SideCoordinateTransformation(FrozenOnly):
     @property
     def ndim(self):
         return 3
-
 
     def mapping(self, *evaluation_points):
         """"""

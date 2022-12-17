@@ -27,15 +27,16 @@ from components.numerical.timePlus3dSpace.partial_derivative import NumericalPar
 from components.numerical.timePlus3dSpace.partial_derivative_as_functions import \
     NumericalPartialDerivative_txyz_Functions
 
+
 class TimeIndependentSchrodingerEquationBase(Base):
     def __init__(self, mesh, m, E):
         super(TimeIndependentSchrodingerEquationBase, self).__init__(mesh)
 
-        self._m_ = m # mass
-        self._E_ = E # energy constant
+        self._m_ = m  # mass
+        self._E_ = E  # energy constant
 
-        self._h_ = Planck # Planck constant.
-        self._h_bar_ = hbar # reduced Planck constant.
+        self._h_ = Planck  # Planck constant.
+        self._h_bar_ = hbar  # reduced Planck constant.
 
         self._alpha_ = hbar ** 2 / (2 * m)
 
@@ -82,11 +83,13 @@ class TimeIndependentSchrodingerEquationBase(Base):
         if self._NPDf_p_ is None:
             self._NPDf_p_ = NumericalPartialDerivative_txyz_Functions(self.psi)
         return self._NPDf_p_('x')(t, x, y, z)
+
     def v(self, t, x, y, z):
         """phi_y"""
         if self._NPDf_p_ is None:
             self._NPDf_p_ = NumericalPartialDerivative_txyz_Functions(self.psi)
         return self._NPDf_p_('y')(t, x, y, z)
+
     def w(self, t, x, y, z):
         """phi_z"""
         if self._NPDf_p_ is None:
@@ -170,7 +173,8 @@ class TimeIndependentSchrodingerEquationBase(Base):
         TS = self.___PRIVATE_generate_random_valid_time_instances___()
         x, y, z = self._mesh_.do.generate_random_coordinates()
 
-        if len(x) == 0: return
+        if len(x) == 0:
+            return
 
         for t in TS:
             t = float(t)

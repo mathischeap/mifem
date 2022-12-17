@@ -29,16 +29,6 @@ class ElementTypeWr2MetricBase(FrozenOnly):
     def ___IS_2dCSCG_ElementTypeWr2Metric___(self):
         return True
 
-
-
-
-
-
-
-
-
-
-
     # def ___CLASSIFY_mpRfT2_CELL_of_origin_and_delta___(self, origin_and_delta):
     #     raise NotImplementedError(
     #         f"Please implement ___CLASSIFY_mpRfT2_CELL_of_origin_and_delta___ for "

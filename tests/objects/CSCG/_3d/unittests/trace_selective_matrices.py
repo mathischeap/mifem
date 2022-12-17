@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 import random
 from root.config.main import RANK, MASTER_RANK, np, COMM
 from scipy.sparse import csc_matrix
 
+
 def test_trace_and_selective_matrices():
     """"""
     if RANK == MASTER_RANK:
         print(f"T~S [test_trace_and_selective_matrices] ...... ", flush=True)
-        i, j, k = random.randint(1,4), random.randint(1,4), random.randint(1,4)
+        i, j, k = random.randint(1, 4), random.randint(1, 4), random.randint(1, 4)
     else:
         i, j, k = None, None, None
     i, j, k = COMM.bcast([i, j, k], root=MASTER_RANK)
@@ -59,7 +61,7 @@ def test_trace_and_selective_matrices():
         assert (S0[e] - SS0).nnz == 0
         assert (S1[e] - SS1).nnz == 0
         assert (S2[e] - SS2).nnz == 0
-        break # only test once as same in all mesh elements.
+        break  # only test once as same in all mesh elements.
 
     for e in T0:
         t = T0[e].tocsc()
@@ -71,7 +73,7 @@ def test_trace_and_selective_matrices():
         t = T2[e].tocsc()
         assert np.all(t.indices == SS2.indices)
         assert np.all(t.indptr == SS2.indptr)
-        break # only test once as same in all mesh elements.
+        break  # only test once as same in all mesh elements.
 
     return 1
 

@@ -5,6 +5,7 @@ from components.quadrature import Quadrature
 from components.freeze.main import FrozenOnly
 import random
 
+
 class Base(FrozenOnly):
     """
     A base (parent) for all exact solution classes.
@@ -71,12 +72,13 @@ class Base(FrozenOnly):
         """
         vt = self.valid_time
         if vt is None:
-            if amount is None: amount = random.randint(2, 5)
+            if amount is None:
+                amount = random.randint(2, 5)
             rTIs = np.random.rand(amount) * 10
         elif vt == 'valid_only_at_its_first_instant':
             rTIs = np.random.rand(1) * 10
         elif isinstance(vt, (int, float)):
-            rTIs = np.array([vt,])
+            rTIs = np.array([vt, ])
         else:
             raise NotImplementedError(f"valid_time = {vt} is not understandable!")
 
@@ -97,7 +99,8 @@ class Base(FrozenOnly):
         assert self._mesh_ is not None, " <MS> : to compute L2_norm, I need a mesh."
         if quad_degree is None:
             quad_degree = int(np.ceil((500000 / self._mesh_.elements.global_num) ** (1 / 3)))
-            if quad_degree > 20: quad_degree = 20
+            if quad_degree > 20:
+                quad_degree = 20
             quad_degree = (quad_degree, quad_degree, quad_degree)
 
         if what.ftype == 'standard':

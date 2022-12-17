@@ -5,19 +5,22 @@
 @time: 2022/08/29 12:27 PM
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 import numpy as np
 
 from __init__ import components
 from __init__ import cscg3
 
+
 def test_reconstruct_DF():
     """"""
     components.miprint("3DF [test_reconstruct_DF] ...... ", flush=True)
-    mesh = cscg3.mesh('crazy', bounds=[(-1,1) for _ in range(3)])([7,8,6], EDM='debug')
+    mesh = cscg3.mesh('crazy', bounds=[(-1, 1) for _ in range(3)])([7, 8, 6], EDM='debug')
     space = cscg3.space('polynomials')([('Lobatto', 5), ('Lobatto', 4), ('Lobatto', 6)])
     FC = cscg3.form(mesh, space)
+
     def U(t, x, y, z): return 2 * t * np.sin(np.pi * x) * np.cos(np.pi * y) * np.cos(np.pi * z)
     def V(t, x, y, z): return t * np.sin(2 * np.pi * x) * np.cos(np.pi * y) * np.sin(np.pi * z)
     def W(t, x, y, z): return t * np.sin(2 * np.pi * x) * np.sin(np.pi * y) * np.cos(np.pi * z)
@@ -25,7 +28,7 @@ def test_reconstruct_DF():
     vector = FC('vector', [U, V, W])
     scalar = FC('scalar', U)
 
-    #---------------------------- standard 2 form ------------------------------------------------
+    # --------------------------- standard 2 form ------------------------------------------------
     u = FC('2-f')
 
     Qn, Qw = components.Quadrature([14, 15, 16]).quad
@@ -52,7 +55,7 @@ def test_reconstruct_DF():
         L2_norm = np.einsum('ijk, i, j, k ->', v0**2 + v1**2 + v2**2, *Qw, optimize='greedy')
         np.testing.assert_almost_equal(L2norm_0, L2_norm, decimal=1)
 
-    #---------------------------- standard 1 form ------------------------------------------------
+    # --------------------------- standard 1 form ------------------------------------------------
     u = FC('1-f')
 
     Qn, Qw = components.Quadrature([14, 15, 16]).quad
@@ -79,7 +82,7 @@ def test_reconstruct_DF():
         L2_norm = np.einsum('ijk, i, j, k ->', v0**2 + v1**2 + v2**2, *Qw, optimize='greedy')
         np.testing.assert_almost_equal(L2norm_0, L2_norm, decimal=1)
 
-    #------------- Standard 0-form --------------------------------------------------------------
+    # ------------ Standard 0-form --------------------------------------------------------------
     u = FC('0-f')
 
     Qn, Qw = components.Quadrature([14, 15, 16]).quad
@@ -106,7 +109,7 @@ def test_reconstruct_DF():
         L2_norm = np.einsum('ijk, i, j, k ->', v0**2, *Qw, optimize='greedy')
         np.testing.assert_almost_equal(L2norm_0, L2_norm, decimal=2)
 
-    #------------- Standard 2-form --------------------------------------------------------------
+    # ----------- Standard 2-form --------------------------------------------------------------
     u = FC('3-f')
 
     Qn, Qw = components.Quadrature([14, 15, 16]).quad
@@ -134,6 +137,7 @@ def test_reconstruct_DF():
         np.testing.assert_almost_equal(L2norm_0, L2_norm, decimal=2)
 
     return 1
+
 
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/CSCG/_3d/__tests__/unittests/standard_forms/reconstruct_2_DF.py

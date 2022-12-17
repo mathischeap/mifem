@@ -2,12 +2,14 @@
 """
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.boundaries.boundary.visualize import _3dCSCG_Mesh_Boundary_VIS
 from objects.CSCG._3d.mesh.boundaries.boundary.IS import _3dCSCG_MeshBoundaryIs
 from objects.CSCG._3d.mesh.boundaries.boundary.coordinate_transformation.main import _3dCSCG_MeshBoundaryCT
+
 
 class _3dCSCG_Mesh_Boundary(FrozenOnly):
     def __init__(self, bdrs, name):
@@ -54,6 +56,7 @@ class _3dCSCG_Mesh_Boundary(FrozenOnly):
         if self._visualize_ is None:
             self._visualize_ = _3dCSCG_Mesh_Boundary_VIS(self)
         return self._visualize_
+
 
 if __name__ == '__main__':
     # mpiexec -n 8 python _3dCSCG\mesh\boundaries\boundary\main.py

@@ -9,6 +9,7 @@ from components.freeze.base import FrozenOnly
 from root.config.main import RANK, MASTER_RANK, COMM, np
 from components.functions._3dSpace.angle import angle_between_two_vectors
 
+
 class _3dCSCG_MeshBoundaryCT_constant(FrozenOnly):
     """"""
 
@@ -24,7 +25,7 @@ class _3dCSCG_MeshBoundaryCT_constant(FrozenOnly):
         number), otherwise, we return None.
 
         """
-        if self._constant_unit_normal_vector_ is True: # DO NOT USE NONE FOR THIS ONE.
+        if self._constant_unit_normal_vector_ is True:  # DO NOT USE NONE FOR THIS ONE.
 
             boundary = self._boundary_
 
@@ -91,7 +92,7 @@ class _3dCSCG_MeshBoundaryCT_constant(FrozenOnly):
                              "W": [_00_, np.array([-0.75, -1]), _00_],
                              "E": [_00_, np.array([0.75, 1]), _00_],
                              "B": [_00_, _00_, np.array([-0.75, -1])],
-                             "F": [_00_, _00_, np.array([0.75, 1])],}
+                             "F": [_00_, _00_, np.array([0.75, 1])], }
                 As = list()
                 for e_sd in element_sides:
                     e = int(e_sd[:-1])
@@ -101,7 +102,7 @@ class _3dCSCG_MeshBoundaryCT_constant(FrozenOnly):
 
                     element = boundary.mesh.elements[e]
 
-                    eCT =element.coordinate_transformation
+                    eCT = element.coordinate_transformation
                     x, y, z = eCT.mapping(*xyz)
                     x = x[1] - x[0]
                     y = y[1] - y[0]
@@ -141,10 +142,10 @@ class _3dCSCG_MeshBoundaryCT_constant(FrozenOnly):
                     Constant_unit_normal_vector_ = None
                 elif change:
                     a, b, c = Constant_unit_normal_vector_
-                    Constant_unit_normal_vector_= (-a, -b, -c)
+                    Constant_unit_normal_vector_ = (-a, -b, -c)
                 else:
                     pass
-            #============================================================================================
+            # ===========================================================================================
 
             self._constant_unit_normal_vector_ = Constant_unit_normal_vector_
 

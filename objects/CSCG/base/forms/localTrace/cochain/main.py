@@ -15,6 +15,7 @@ from tools.miLinearAlgebra.dataStructures.vectors.distributed.main import Distri
 
 from objects.CSCG.base.forms.localTrace.cochain.whether import CSCG_LocalTraceForm_Cochain_Whether
 
+
 class CSCG_LocalTrace_CochainBase(FrozenOnly):
     """"""
 
@@ -59,7 +60,7 @@ class CSCG_LocalTrace_CochainBase(FrozenOnly):
         """
         GM = self._ltf_.numbering.gathering
         globe = lil_matrix((1, self._ltf_.num.global_dofs))
-        for i in GM: # go through all local elements
+        for i in GM:  # go through all local elements
             globe[0, GM[i].full_vector] = self.local[i]
         globe = globe.tocsr().T
 
@@ -99,7 +100,7 @@ class CSCG_LocalTrace_CochainBase(FrozenOnly):
                     else:
                         # noinspection PyUnboundLocalVariable
                         to_be_sent = csc_matrix(
-                            (VV[lr[0]:lr[1]], range(lr[0],lr[1]), [0, lr[1]-lr[0]]),
+                            (VV[lr[0]:lr[1]], range(lr[0], lr[1]), [0, lr[1]-lr[0]]),
                             shape=(self._ltf_.num.global_dofs, 1))
                     TO_BE_SENT.append(to_be_sent)
             else:
@@ -108,13 +109,13 @@ class CSCG_LocalTrace_CochainBase(FrozenOnly):
             # distribute to local cochain ...
             local = dict()
             GM = self._ltf_.numbering.gathering
-            for i in GM: # go through all local elements
+            for i in GM:  # go through all local elements
                 idx = GM[i].full_vector
                 local[i] = TO_BE_SENT[idx].toarray().ravel()
             self.local = local
 
         elif globe.__class__.__name__ == 'LocallyFullVector':
-            V = globe.V # V already be 1-d array.
+            V = globe.V  # V already be 1-d array.
             local = dict()
             GM = self._ltf_.numbering.gathering
             for i in GM:  # go through all local elements
@@ -169,7 +170,7 @@ class CSCG_LocalTrace_CochainBase(FrozenOnly):
         self._local_ESW_ = None
         self._local_ = local
 
-    #--------------- DEPENDENT PROPERTIES (BRANCHES, must have the two switching methods): when set, update local ------
+    # -------------- DEPENDENT PROPERTIES (BRANCHES, must have the two switching methods): when set, update local ------
     @property
     def local_ESW(self):
         """
@@ -258,4 +259,4 @@ class CSCG_LocalTrace_CochainBase(FrozenOnly):
     def ___local_2_local_ESW___(self):
         raise NotImplementedError()
 
-    #=================================== ABOVE ===============================
+    # ================================== ABOVE ===============================

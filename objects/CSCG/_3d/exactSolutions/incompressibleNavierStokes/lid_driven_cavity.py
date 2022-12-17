@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 
 from objects.CSCG._3d.exactSolutions.incompressibleNavierStokes.base import \
@@ -18,6 +19,7 @@ from objects.CSCG._3d.fields.vector.main import _3dCSCG_VectorField
 # noinspection PyUnusedLocal
 def _0_(t, x, y, z): return 0 * x
 
+
 class LidDrivenCavity(incompressible_NavierStokes_Base):
     """The classic lid driven cavity case."""
 
@@ -26,9 +28,9 @@ class LidDrivenCavity(incompressible_NavierStokes_Base):
         self._lid_velocity_ = lid_velocity
         super(LidDrivenCavity, self).__init__(mesh, nu)
 
-
     # noinspection PyUnusedLocal
-    def _V_(self, t, x, y, z): return self._lid_velocity_ + 0 * x
+    def _V_(self, t, x, y, z):
+        return self._lid_velocity_ + 0 * x
 
     @property
     def lid_velocity(self):

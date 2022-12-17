@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path:
+    sys.path.append('/')
 
 from components.freeze.main import FrozenOnly
 import os
@@ -14,8 +14,6 @@ from root.config.main import RANK, MASTER_RANK
 from email.mime.multipart import MIMEMultipart
 from components.legacy.internet.in_the_wall_or_not import whether_in_the_great_fire_wall
 from components.legacy.internet.connected_or_not import whether_internet_connected
-
-
 
 
 class SendAdminAnHTMLEmail(FrozenOnly):
@@ -121,7 +119,8 @@ class SendAdminAnHTMLEmail(FrozenOnly):
                        <em> <font color="cyan">mifem</font> </em> <br>
                        Hosted at: <font color="blue">https://github.com/mathischeap/mifem</font> <br>
                        Contact: <font color="blue">zhangyi_aero@hotmail.com or zhangyi55@mail.sysu.edu.cn</font> <br>
-                       Email composed at <font color="Crimson">{MyTimer.current_time()[1:-1]}</font> from host: < {local_machine_name} @ {local_IP} > <br>
+                       Email composed at <font color="Crimson">{MyTimer.current_time()[1:-1]}</font> 
+                       from host: < {local_machine_name} @ {local_IP} > <br>
                        KEY-CODE: {self._key_code_}
                     </p>
                   </body>

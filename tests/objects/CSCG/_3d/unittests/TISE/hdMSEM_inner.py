@@ -5,7 +5,8 @@ equation. We do this to test the hybridization of 0-forms.
 
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from objects.CSCG._3d.__init__ import mesh as mesh3
 from objects.CSCG._3d.__init__ import space as space3
@@ -56,7 +57,7 @@ def test_hdMSEM_Schrodinger_Inner():
     t.prime.BC.CF.current_time = 0
     t.BC.boundaries = u_boundaries
 
-    I = u.matrices.identity
+    _I = u.matrices.identity
     E10 = p.matrices.incidence
     E01 = E10.T
     M0 = p.matrices.mass
@@ -64,10 +65,10 @@ def test_hdMSEM_Schrodinger_Inner():
     T0T = t.matrices.trace.T
     T, D, C, b2, eGM = p.special.hybrid_pairing(t, e)
 
-    A = bmat([(        I,             -E10, None, None),
+    A = bmat([(_I, -E10, None, None),
               (-E01 @ M1, ((E-V)/alpha)*M0,  T0T, None),
-              (     None,                T,    D,    C),
-              (     None,             None,  C.T, None)])
+              (None, T, D, C),
+              (None, None, C.T, None)])
 
     A.gathering_matrices = [(u, p, t, eGM), (u, p, t, eGM)]
 
@@ -105,6 +106,7 @@ def test_hdMSEM_Schrodinger_Inner():
     assert u_error_dH1 < 0.9, f"{u_error_dH1}"
 
     return 1
+
 
 if __name__ == '__main__':
     # mpiexec -n 4 python tests/objects/CSCG/_3d/unittests/TISE/hdMSEM_inner.py

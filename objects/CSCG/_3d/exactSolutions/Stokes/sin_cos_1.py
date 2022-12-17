@@ -3,7 +3,6 @@ from numpy import sin, pi, cos
 from objects.CSCG._3d.exactSolutions.Stokes.base import Stokes_Base
 
 
-
 # noinspection PyAbstractClass
 class Stokes_SinCos1(Stokes_Base):
     """The sin cos test case 1.
@@ -22,7 +21,9 @@ class Stokes_SinCos1(Stokes_Base):
 
     def u(self, t, x, y, z):
         return cos(2*pi*x) * sin(2*pi*y) * sin(2*pi*z)
+
     def v(self, t, x, y, z):
         return sin(2*pi*x) * cos(2*pi*y) * sin(2*pi*z)
+
     def w(self, t, x, y, z):
         return - 2 * sin(2*pi*x) * sin(2*pi*y) * cos(2*pi*z)

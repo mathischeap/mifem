@@ -6,10 +6,12 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
-from components.numerical.timePlus3dSpace.partial_derivative_as_functions import NumericalPartialDerivative_txyz_Functions
+from components.numerical.timePlus3dSpace.partial_derivative_as_functions import \
+    NumericalPartialDerivative_txyz_Functions
 
 from importlib import import_module
 
@@ -28,7 +30,7 @@ class t3dScalar(FrozenOnly):
     def __init__(self, s):
         """"""
         self._s_ = s
-        self.__NPD__= None
+        self.__NPD__ = None
         self._freeze_self_()
 
     def __call__(self, t, x, y, z):
@@ -53,6 +55,7 @@ class t3dScalar(FrozenOnly):
 
         else:
             raise NotImplementedError()
+
     @property
     def ndim(self):
         return 3
@@ -80,8 +83,6 @@ class t3dScalar(FrozenOnly):
         V_CLASS = getattr(import_module(base_path + "vector"), "t3dVector")
 
         return V_CLASS(px, py, pz)
-
-
 
     def convection_by(self, u):
         """We compute (u cdot nabla) of self.

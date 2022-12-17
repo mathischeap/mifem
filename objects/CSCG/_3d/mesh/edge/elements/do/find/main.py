@@ -3,7 +3,8 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.main import FrozenOnly
 from root.config.main import COMM, MPI
@@ -36,7 +37,6 @@ class _3dCSCG_Edge_Elements_DO_FIND(FrozenOnly):
         """
         return self._mesh_.trace.elements.do.find.edge_elements_surrounding_element(i)
 
-
     def trace_elements_attached_to_element(self, i):
         """Find the (at least 4, at most 5) trace elements that are attached to the edge element #`i`.
 
@@ -55,7 +55,7 @@ class _3dCSCG_Edge_Elements_DO_FIND(FrozenOnly):
             trace_elements = list()
 
             for pos in positions:
-                if pos[:-2].isnumeric(): # this is a mesh element position
+                if pos[:-2].isnumeric():  # this is a mesh element position
                     mesh_element = int(pos[:-2])
                     sides = pos[-2:]
 
@@ -81,7 +81,8 @@ class _3dCSCG_Edge_Elements_DO_FIND(FrozenOnly):
             if te is not None:
                 TE.update(te)
 
-        assert 2 <= len(TE) <= 5, f"At least two trace-elements, at most 4, attached to a edge-element."
+        assert 2 <= len(TE) <= 5, \
+            f"At least two trace-elements, at most 4, attached to a edge-element."
 
         return list(TE)
 
@@ -105,11 +106,10 @@ class _3dCSCG_Edge_Elements_DO_FIND(FrozenOnly):
 
         on_mesh_boundary = COMM.allreduce(on_mesh_boundary, op=MPI.LOR)
 
-        if on_mesh_boundary: # on mesh boundary
+        if on_mesh_boundary:  # on mesh boundary
             return OBJ_SurBoundary_EdgeElement(self._mesh_, i)
         else:
             return OBJ_SurInternal_EdgeElement(self._mesh_, i)
-
 
     def hybrid_singularity_overcoming_setting(self, i):
         """We return a pair for overcoming the hybrid singularity for edge element #`i`.
@@ -124,11 +124,10 @@ class _3dCSCG_Edge_Elements_DO_FIND(FrozenOnly):
 
         """
         if i in self._elements_ and \
-            int(self._elements_[i].positions[0][:-2]) in self._mesh_.elements:
+           int(self._elements_[i].positions[0][:-2]) in self._mesh_.elements:
             return _3dCSCG_Edge_SOS(self._mesh_, i)
         else:
             return None
-
 
     def elements_attached_to_node_element(self, i):
         """Find the edge elements that are attached to a node element #`i`.
@@ -148,17 +147,12 @@ class _3dCSCG_Edge_Elements_DO_FIND(FrozenOnly):
         return self._mesh_.node.elements.do.find.edge_elements_attached_to_element(i)
 
 
-
-
-
-
-
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects\CSCG\_3d\mesh\edge\elements\do\find\main.py
+    # mpiexec -n 4 python objects/CSCG/_3d/mesh/edge/elements/do/find/main.py
 
     from objects.CSCG._3d.master import MeshGenerator
     elements = [2, 2, 2]
-    mesh = MeshGenerator('crazy', c=0.0, bounds=([0,3], [0,3], [0,3]))(elements)
+    mesh = MeshGenerator('crazy', c=0.0, bounds=([0, 3], [0, 3], [0, 3]))(elements)
     # mesh = MeshGenerator('bridge_arch_cracked')(elements)
     edges = mesh.edge.elements
 

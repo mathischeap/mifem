@@ -13,15 +13,14 @@ from objects.CSCG._3d.mesh.domain.regions.topology import _3dCSCG_Regions_Topolo
 from objects.CSCG._3d.mesh.domain.regions.region.main import Region
 
 
-
-
 class Regions(FrozenOnly):
     """A branch of regions that forms a domain. """
     def __init__(self, domain, regions):
         self._domain_ = domain
         self._regions_ = regions
         self._topology_ = None
-        for key in regions: assert regions[key].__class__.__name__ == 'Region'
+        for key in regions:
+            assert regions[key].__class__.__name__ == 'Region'
         self._orthogonality_ = None
         self._visualize_ = None
         self._freeze_self_()

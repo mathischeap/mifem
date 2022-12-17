@@ -2,8 +2,6 @@
 from components.freeze.base import FrozenOnly
 
 
-
-
 class CSCG_standard_form_NUM(FrozenOnly):
     """"""
     def __init__(self, f):

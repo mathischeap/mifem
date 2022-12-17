@@ -8,7 +8,10 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+from abc import ABC
+
+if './' not in sys.path:
+    sys.path.append('./')
 
 from objects.CSCG._3d.forms.standard._1s.discretize.main import _3dCSCG_Discretize
 from objects.CSCG._3d.forms.standard.base.main import _3dCSCG_Standard_Form
@@ -20,7 +23,7 @@ from objects.CSCG._3d.forms.standard._1s.visualize.main import _3dCSCG_S1F_VISUA
 from objects.CSCG._3d.forms.standard._1s.boundary_integration.main import _3dCSCG_S1F_BI
 from objects.CSCG._3d.forms.standard._1s.do.main import _3dCSCG_S1F_Do
 
-class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form):
+class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form, ABC):
     """
     Standard 1-form.
 
@@ -31,8 +34,10 @@ class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form):
     :param numbering_parameters:
     :param name:
     """
-    def __init__(self, mesh, space, hybrid=True,
-        orientation='outer', numbering_parameters='Naive',  name=None):
+    def __init__(
+        self, mesh, space, hybrid=True,
+        orientation='outer', numbering_parameters='Naive',  name=None
+    ):
         if name is None:
             if hybrid:
                 name = 'hybrid-' + orientation + '-oriented-1-form'
@@ -104,12 +109,13 @@ class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form):
             self.__BI__ = _3dCSCG_S1F_BI(self)
         return self.__BI__
 
+
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/_3d/forms/standard/_1s/main.py
-    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('cuboid_periodic', region_layout=[2,2,2])([2,2,2])
-    space = SpaceInvoker('polynomials')([1,1,1])
+    mesh = MeshGenerator('cuboid_periodic', region_layout=[2, 2, 2])([2, 2, 2])
+    space = SpaceInvoker('polynomials')([1, 1, 1])
     FC = FormCaller(mesh, space)
 
     # def u(t,x,y,z): return np.sin(np.pi*x)*np.cos(2*np.pi*y)*np.cos(np.pi*z) + t

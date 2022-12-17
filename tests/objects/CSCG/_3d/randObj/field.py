@@ -9,7 +9,8 @@ INTRO
 
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 import random
 
 from root.config.main import RANK, MASTER_RANK, np, COMM
@@ -18,23 +19,25 @@ from objects.CSCG._3d.fields.vector.main import _3dCSCG_VectorField
 
 from components.miscellaneous.randomString.digits import randomStringDigits
 
+
 def random_vector(mesh):
     """"""
     if RANK == MASTER_RANK:
-        a, b, c, d, e, f, g, h, i, j, k, l = [random.uniform(0.5, 1) for _ in range(12)]
+        a, b, c, d, e, f, g, h, i, j, k, L = [random.uniform(0.5, 1) for _ in range(12)]
         name = randomStringDigits(8)
     else:
-        a, b, c, d, e, f, g, h, i, j, k, l = [None for _ in range(12)]
+        a, b, c, d, e, f, g, h, i, j, k, L = [None for _ in range(12)]
         name = None
 
-    a, b, c, d, e, f, g, h, i, j, k, l = COMM.bcast([a, b, c, d, e, f, g, h, i, j, k, l], root=MASTER_RANK)
+    a, b, c, d, e, f, g, h, i, j, k, L = COMM.bcast([a, b, c, d, e, f, g, h, i, j, k, L], root=MASTER_RANK)
     name = COMM.bcast(name, root=MASTER_RANK)
 
-    def u0(t, x, y, z): return np.sin(a*np.pi*x) * np.sin(b*np.pi*y) * np.cos(c*np.pi*z) + j*t
-    def u1(t, x, y, z): return np.cos(d*np.pi*x) * np.sin(e*np.pi*y) * np.sin(f*np.pi*z) + k*t
-    def u2(t, x, y, z): return np.sin(g*np.pi*x) * np.cos(h*np.pi*y) * np.sin(i*np.pi*z) + l*t
+    def u0(t, x, y, z): return np.sin(a*np.pi*x) * np.sin(b*np.pi*y) * np.cos(c*np.pi*z) + j * t
+    def u1(t, x, y, z): return np.cos(d*np.pi*x) * np.sin(e*np.pi*y) * np.sin(f*np.pi*z) + k * t
+    def u2(t, x, y, z): return np.sin(g*np.pi*x) * np.cos(h*np.pi*y) * np.sin(i*np.pi*z) + L * t
 
     return _3dCSCG_VectorField(mesh, (u0, u1, u2), name=name)
+
 
 def random_scalar(mesh):
     """"""
@@ -48,12 +51,9 @@ def random_scalar(mesh):
     a, b, c, d = COMM.bcast([a, b, c, d], root=MASTER_RANK)
     name = COMM.bcast(name, root=MASTER_RANK)
 
-    def p(t, x, y, z): return np.sin(a*np.pi*x) * np.sin(b*np.pi*y) * np.sin(d*np.pi*z)+ c*t
+    def p(t, x, y, z): return np.sin(a*np.pi*x) * np.sin(b*np.pi*y) * np.sin(d*np.pi*z) + c*t
 
     return _3dCSCG_ScalarField(mesh, p, name=name)
-
-
-
 
 
 if __name__ == '__main__':

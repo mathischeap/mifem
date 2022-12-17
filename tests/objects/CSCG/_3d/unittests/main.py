@@ -15,7 +15,8 @@ It is always suggested testing the library multiple time with different numbers 
 """
 
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 passed_3dCSCG_tests = 0
 
 from tests.objects.CSCG._3d.unittests.standard_forms.general import *
@@ -39,14 +40,18 @@ from tests.objects.CSCG._3d.unittests.Stokes_flow.hdMSEM_Schur_direct_3 import t
 from tests.objects.CSCG._3d.unittests.Poisson.hdMSEM_inner import test_hdMSEM_Poisson_Inner
 
 from tests.objects.CSCG._3d.unittests.TISE.hdMSEM_inner import test_hdMSEM_Schrodinger_Inner
-from tests.objects.CSCG._3d.unittests.TISE.hdMSEM_inner_cuboid import test_hdMSEM_Schrodinger_Inner_Cuboid
+from tests.objects.CSCG._3d.unittests.TISE.hdMSEM_inner_cuboid import \
+    test_hdMSEM_Schrodinger_Inner_Cuboid
 
-from tests.objects.CSCG._3d.unittests.local_trace_forms.reduction_and_reconstruction import Test_Reduction_and_Reconstruction_of_local_trace_forms
-from tests.objects.CSCG._3d.unittests.local_trace_forms.reconstruction_matrix_and_mass_matrix import Test_reconstruction_matrix_and_mass_matrix
+from tests.objects.CSCG._3d.unittests.local_trace_forms.reduction_and_reconstruction import \
+    Test_Reduction_and_Reconstruction_of_local_trace_forms
+from tests.objects.CSCG._3d.unittests.local_trace_forms.reconstruction_matrix_and_mass_matrix import \
+    Test_reconstruction_matrix_and_mass_matrix
 
 t_3dCSCG_start = MPI.Wtime()
 
-if RANK == MASTER_RANK: print(f"\n [_3dCSCG] tests start...\n")
+if RANK == MASTER_RANK:
+    print(f"\n [_3dCSCG] tests start...\n")
 
 passed_3dCSCG_tests += test_ADF_NO1_general_tests_standard_forms()
 passed_3dCSCG_tests += test_ADF_NO2_general_tests_trace_forms()
@@ -116,9 +121,8 @@ passed_3dCSCG_tests += Test_Reduction_and_Reconstruction_of_local_trace_forms()(
 passed_3dCSCG_tests += Test_reconstruction_matrix_and_mass_matrix()()
 
 
-
 from components.miscellaneous.mirand import randint
-a = randint(0, 3) # below tests are slow, we do not run them at every single time.
+a = randint(0, 3)  # below tests are slow, we do not run them at every single time.
 if a == 1:
     passed_3dCSCG_tests += test_Stokes_MSEM_trivial_BC()
     passed_3dCSCG_tests += test_Stokes_hdMSEM()

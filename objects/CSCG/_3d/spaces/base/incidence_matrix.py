@@ -12,8 +12,6 @@ from components.freeze.main import FrozenOnly
 from scipy.sparse import csr_matrix
 
 
-
-
 class IncidenceMatrix(FrozenOnly):
     """ 
     Clearly, the incidence matrix of a form only depends on the local numbering and the basis function degree. We have
@@ -40,22 +38,22 @@ class IncidenceMatrix(FrozenOnly):
         for k in range(K):
             for j in range(J):
                 for i in range(I):
-                    E[dn[0][i,j,k], sn[0][i,j,k]]   = -1   # North
-                    E[dn[0][i,j,k], sn[0][i+1,j,k]] = +1   # South
+                    E[dn[0][i, j, k], sn[0][i, j, k]] = -1   # North
+                    E[dn[0][i, j, k], sn[0][i+1, j, k]] = +1   # South
         
         I, J, K = np.shape(dn[1])
         for k in range(K):
             for j in range(J):
                 for i in range(I):
-                    E[dn[1][i,j,k], sn[0][i,j,k]]   = -1    # West
-                    E[dn[1][i,j,k], sn[0][i,j+1,k]] = +1    # East
+                    E[dn[1][i, j, k], sn[0][i, j, k]] = -1    # West
+                    E[dn[1][i, j, k], sn[0][i, j+1, k]] = +1    # East
         
         I, J, K = np.shape(dn[2])
         for k in range(K):
             for j in range(J):
                 for i in range(I):
-                    E[dn[2][i,j,k], sn[0][i,j,k]]   = -1    # Back
-                    E[dn[2][i,j,k], sn[0][i,j,k+1]] = +1    # Front
+                    E[dn[2][i, j, k], sn[0][i, j, k]] = -1    # Back
+                    E[dn[2][i, j, k], sn[0][i, j, k+1]] = +1    # Front
         
         return csr_matrix(E)
     
@@ -72,28 +70,28 @@ class IncidenceMatrix(FrozenOnly):
         for k in range(K):
             for j in range(J):
                 for i in range(I):
-                    E[dn[0][i,j,k], sn[1][i,j,k  ]] = +1   # Back
-                    E[dn[0][i,j,k], sn[1][i,j,k+1]] = -1   # Front
-                    E[dn[0][i,j,k], sn[2][i,j  ,k]] = -1   # West
-                    E[dn[0][i,j,k], sn[2][i,j+1,k]] = +1   # East
+                    E[dn[0][i, j, k], sn[1][i, j, k]] = +1   # Back
+                    E[dn[0][i, j, k], sn[1][i, j, k+1]] = -1   # Front
+                    E[dn[0][i, j, k], sn[2][i, j, k]] = -1   # West
+                    E[dn[0][i, j, k], sn[2][i, j+1, k]] = +1   # East
         
         I, J, K = np.shape(dn[1])
         for k in range(K):
             for j in range(J):
                 for i in range(I):
-                    E[dn[1][i,j,k], sn[0][i,j,k  ]] = -1    # Back
-                    E[dn[1][i,j,k], sn[0][i,j,k+1]] = +1    # Front
-                    E[dn[1][i,j,k], sn[2][i  ,j,k]] = +1    # North
-                    E[dn[1][i,j,k], sn[2][i+1,j,k]] = -1    # South
+                    E[dn[1][i, j, k], sn[0][i, j, k]] = -1    # Back
+                    E[dn[1][i, j, k], sn[0][i, j, k+1]] = +1    # Front
+                    E[dn[1][i, j, k], sn[2][i, j, k]] = +1    # North
+                    E[dn[1][i, j, k], sn[2][i+1, j, k]] = -1    # South
         
         I, J, K = np.shape(dn[2])
         for k in range(K):
             for j in range(J):
                 for i in range(I):
-                    E[dn[2][i,j,k], sn[0][i,j  ,k]] = +1    # West
-                    E[dn[2][i,j,k], sn[0][i,j+1,k]] = -1    # East
-                    E[dn[2][i,j,k], sn[1][i  ,j,k]] = -1    # North
-                    E[dn[2][i,j,k], sn[1][i+1,j,k]] = +1    # South
+                    E[dn[2][i, j, k], sn[0][i, j, k]] = +1    # West
+                    E[dn[2][i, j, k], sn[0][i, j+1, k]] = -1    # East
+                    E[dn[2][i, j, k], sn[1][i, j, k]] = -1    # North
+                    E[dn[2][i, j, k], sn[1][i+1, j, k]] = +1    # South
 
         return csr_matrix(E)
     
@@ -110,10 +108,10 @@ class IncidenceMatrix(FrozenOnly):
         for k in range(K):
             for j in range(J):
                 for i in range(I):
-                    E[dn[0][i,j,k], sn[0][i  ,j,k]] = -1 # North
-                    E[dn[0][i,j,k], sn[0][i+1,j,k]] = +1 # South
-                    E[dn[0][i,j,k], sn[1][i,j  ,k]] = -1 # West
-                    E[dn[0][i,j,k], sn[1][i,j+1,k]] = +1 # East
-                    E[dn[0][i,j,k], sn[2][i,j,k  ]] = -1 # Back
-                    E[dn[0][i,j,k], sn[2][i,j,k+1]] = +1 # Front
+                    E[dn[0][i, j, k], sn[0][i, j, k]] = -1  # North
+                    E[dn[0][i, j, k], sn[0][i+1, j, k]] = +1  # South
+                    E[dn[0][i, j, k], sn[1][i, j, k]] = -1  # West
+                    E[dn[0][i, j, k], sn[1][i, j+1, k]] = +1  # East
+                    E[dn[0][i, j, k], sn[2][i, j, k]] = -1  # Back
+                    E[dn[0][i, j, k], sn[2][i, j, k+1]] = +1  # Front
         return csr_matrix(E)

@@ -6,13 +6,15 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
 from components.miscellaneous.miprint import miprint
 
 from __init__ import cscg3
 import numpy as np
+
 
 class Test_reconstruction_matrix_and_mass_matrix(FrozenOnly):
     """"""
@@ -64,6 +66,7 @@ class Test_reconstruction_matrix_and_mass_matrix(FrozenOnly):
             np.testing.assert_array_almost_equal(m.toarray(), M.toarray())
 
         return 1
+
 
 if __name__ == '__main__':
     # mpiexec -n 4 python tests/objects/CSCG/_3d/unittests/local_trace_forms/reconstruction_matrix_and_mass_matrix.py

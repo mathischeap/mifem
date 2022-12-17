@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from components.freeze.base import FrozenOnly
 
 from root.config.main import RANK, MASTER_RANK, np, SECRETARY_RANK
 import matplotlib.pyplot as plt
+
 
 class _3dCSCG_MeshElements_VIS(FrozenOnly):
     """"""
@@ -25,7 +27,7 @@ class _3dCSCG_MeshElements_VIS(FrozenOnly):
         density = int(np.ceil(np.sqrt(density/(domain.regions.num*6))))
         if density <= 2: density = 3
 
-        rrr = sss = np.linspace(0,1,density)
+        rrr = sss = np.linspace(0, 1, density)
         rrr, sss = np.meshgrid(rrr, sss, indexing='ij')
         regions = domain.regions
         fig = plt.figure(figsize=(12, 8))
@@ -35,11 +37,11 @@ class _3dCSCG_MeshElements_VIS(FrozenOnly):
         ax.yaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
         ax.zaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
         # make the grid lines transparent
-        ax.xaxis._axinfo["grid"]['color'] =  (1,1,1,0)
-        ax.yaxis._axinfo["grid"]['color'] =  (1,1,1,0)
-        ax.zaxis._axinfo["grid"]['color'] =  (1,1,1,0)
+        ax.xaxis._axinfo["grid"]['color'] = (1, 1, 1, 0)
+        ax.yaxis._axinfo["grid"]['color'] = (1, 1, 1, 0)
+        ax.zaxis._axinfo["grid"]['color'] = (1, 1, 1, 0)
 
-        #-------- plot the computational domain --------------------------------
+        # ------- plot the computational domain --------------------------------
         x_lim, y_lim, z_lim = [list() for _ in range(3)]
         for rn in domain.regions:
             region = domain.regions[rn]
@@ -61,14 +63,14 @@ class _3dCSCG_MeshElements_VIS(FrozenOnly):
                     z_lim.append(np.min(z))
 
                 if is_boundary:
-                    ax.plot_surface(*xyz, color=(1,1,1,0.3))
+                    ax.plot_surface(*xyz, color=(1, 1, 1, 0.3))
 
         if aspect == 'equal':
             ax.set_box_aspect((np.ptp(x_lim), np.ptp(y_lim), np.ptp(z_lim)))
 
         # ----- plot all local mesh elements -------------------------------------
         ELE = self._elements_.indices
-        r = np.linspace(-1,1, density)
+        r = np.linspace(-1, 1, density)
         O = np.ones(density)
         WB = (r, -1*O, -1*O)
         EB = (r, +1*O, -1*O)
@@ -121,14 +123,11 @@ class _3dCSCG_MeshElements_VIS(FrozenOnly):
         plt.close(fig)
 
 
-
-
 if __name__ == '__main__':
     # mpiexec -n 3 python objects\CSCG\_3d\mesh\elements\visualize.py
     from objects.CSCG._3d.master import MeshGenerator
     elements = [3, 3, 3]
     # mesh = MeshGenerator('crazy', c=0.0, bounds=([0,1], [0,1], [0,1]))(elements)
     mesh = MeshGenerator('bridge_arch_cracked')(elements)
-
 
     mesh.elements.visualize()

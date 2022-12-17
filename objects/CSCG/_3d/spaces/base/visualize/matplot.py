@@ -3,10 +3,6 @@
 from components.freeze.main import FrozenOnly
 
 
-
-
-
-
 class _3dCSC_Space_Visualize_Matplot(FrozenOnly):
     """"""
     def __init__(self, space):

@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-
-
 from components.freeze.main import FrozenOnly
 
 
@@ -73,4 +71,3 @@ class _2dCSCG_Regular_PBP_RegionEdgePair(FrozenOnly):
             else:
                 CES.append(str(numbering2) + '-' + sn2 + '|' + sn1 + '-' + str(numbering1))
         return CES
-

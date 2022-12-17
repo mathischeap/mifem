@@ -11,6 +11,7 @@ import numpy as np
 from components.freeze.main import FrozenOnly
 from scipy.sparse import csr_matrix
 
+
 class TraceMatrix(FrozenOnly):
     """ 
     This is the trace matrix.
@@ -51,23 +52,23 @@ class TraceMatrix(FrozenOnly):
         )
         sln = self.___generate_gathering_hybrid_element___(self._FS_.num_basis._3dCSCG_0Trace[2])
         oln = self._FS_.local_numbering._3dCSCG_0Form[0]
-        PU[oln[ 0, :, :].ravel('F'), sln['N']] = -1 # North
-        PU[oln[-1, :, :].ravel('F'), sln['S']] = +1 # South
-        PU[oln[ :, 0, :].ravel('F'), sln['W']] = -1 # West
-        PU[oln[ :,-1, :].ravel('F'), sln['E']] = +1 # East
-        PU[oln[ :, :, 0].ravel('F'), sln['B']] = -1 # Back
-        PU[oln[ :, :,-1].ravel('F'), sln['F']] = +1 # Front
+        PU[oln[0, :, :].ravel('F'), sln['N']] = -1  # North
+        PU[oln[-1, :, :].ravel('F'), sln['S']] = +1  # South
+        PU[oln[:, 0, :].ravel('F'), sln['W']] = -1  # West
+        PU[oln[:, -1, :].ravel('F'), sln['E']] = +1  # East
+        PU[oln[:, :, 0].ravel('F'), sln['B']] = -1  # Back
+        PU[oln[:, :, -1].ravel('F'), sln['F']] = +1  # Front
         N = PU.T
         nbt = self._FS_.num_basis._3dCSCG_0Trace[2]
         N_ = [None, None, None, None, None, None]
-        m=0
+        m = 0
         for i in range(6):
             N_[i] = N[m:m+nbt['NSWEBF'[i]], :]
             m += nbt['NSWEBF'[i]]
         Nn, Ns, Nw, Ne, Nb, Nf = N_
 
         T_hybrid = csr_matrix(N)
-        T_non_hybrid = None # to be implemented
+        T_non_hybrid = None   # to be implemented
         return {True: T_hybrid, False: T_non_hybrid}, \
                {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne, 'B': Nb, 'F': Nf}
     
@@ -80,35 +81,35 @@ class TraceMatrix(FrozenOnly):
         nbf = self._FS_.num_basis._3dCSCG_1Form[0]
         # To see why we have following +,-, see the figure: IMG_20190501_170517.jpg in
         # folder .\bin\miscellaneous
-        #_____ North __________________________________________________________________
+        # ____ North __________________________________________________________________
         Nn = np.zeros((nbt['N'], nbf), dtype=int)
-        Nn[lnt['N'][0].ravel('F'), lnf_dy[0, :, :].ravel('F')] = -1 #
-        Nn[lnt['N'][1].ravel('F'), lnf_dz[0, :, :].ravel('F')] = -1 #
-        #_____ South __________________________________________________________________
+        Nn[lnt['N'][0].ravel('F'), lnf_dy[0, :, :].ravel('F')] = -1  #
+        Nn[lnt['N'][1].ravel('F'), lnf_dz[0, :, :].ravel('F')] = -1  #
+        # ____ South __________________________________________________________________
         Ns = np.zeros((nbt['S'], nbf), dtype=int)
         Ns[lnt['S'][0].ravel('F'), lnf_dy[-1, :, :].ravel('F')] = +1
         Ns[lnt['S'][1].ravel('F'), lnf_dz[-1, :, :].ravel('F')] = +1
-        #_____ West ___________________________________________________________________
+        # ____ West ___________________________________________________________________
         Nw = np.zeros((nbt['W'], nbf), dtype=int)
         Nw[lnt['W'][0].ravel('F'), lnf_dx[:, 0, :].ravel('F')] = -1
         Nw[lnt['W'][1].ravel('F'), lnf_dz[:, 0, :].ravel('F')] = -1
-        #_____ East ___________________________________________________________________
+        # ____ East ___________________________________________________________________
         Ne = np.zeros((nbt['E'], nbf), dtype=int)
         Ne[lnt['E'][0].ravel('F'), lnf_dx[:, -1, :].ravel('F')] = +1
         Ne[lnt['E'][1].ravel('F'), lnf_dz[:, -1, :].ravel('F')] = +1
-        #_____ Back ___________________________________________________________________
+        # ____ Back ___________________________________________________________________
         Nb = np.zeros((nbt['B'], nbf), dtype=int)
         Nb[lnt['B'][0].ravel('F'), lnf_dx[:, :, 0].ravel('F')] = -1
         Nb[lnt['B'][1].ravel('F'), lnf_dy[:, :, 0].ravel('F')] = -1
-        #_____ Front __________________________________________________________________
+        # ____ Front __________________________________________________________________
         Nf = np.zeros((nbt['F'], nbf), dtype=int)
         Nf[lnt['F'][0].ravel('F'), lnf_dx[:, :, -1].ravel('F')] = +1
         Nf[lnt['F'][1].ravel('F'), lnf_dy[:, :, -1].ravel('F')] = +1
-        #------------------------------------------------------------------------------
+        # -----------------------------------------------------------------------------
         N = np.vstack((Nn, Ns, Nw, Ne, Nb, Nf))
 
         T_hybrid = csr_matrix(N)
-        T_non_hybrid = None # to be implemented
+        T_non_hybrid = None  # to be implemented
 
         return {True: T_hybrid, False: T_non_hybrid}, \
                {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne, 'B': Nb, 'F': Nf}
@@ -125,16 +126,16 @@ class TraceMatrix(FrozenOnly):
         )
         sln = self.___generate_gathering_hybrid_element___(self._FS_.num_basis._3dCSCG_2Trace[2])
         oln_NS, oln_WE, oln_BF = self._FS_.local_numbering._3dCSCG_2Form
-        PU[oln_NS[ 0, :, :].ravel('F'), sln['N']] = -1 # North
-        PU[oln_NS[-1, :, :].ravel('F'), sln['S']] = +1 # South
-        PU[oln_WE[ :, 0, :].ravel('F'), sln['W']] = -1 # West
-        PU[oln_WE[ :,-1, :].ravel('F'), sln['E']] = +1 # East
-        PU[oln_BF[ :, :, 0].ravel('F'), sln['B']] = -1 # Back
-        PU[oln_BF[ :, :,-1].ravel('F'), sln['F']] = +1 # Front
+        PU[oln_NS[0, :, :].ravel('F'), sln['N']] = -1  # North
+        PU[oln_NS[-1, :, :].ravel('F'), sln['S']] = +1  # South
+        PU[oln_WE[:, 0, :].ravel('F'), sln['W']] = -1  # West
+        PU[oln_WE[:, -1, :].ravel('F'), sln['E']] = +1  # East
+        PU[oln_BF[:, :, 0].ravel('F'), sln['B']] = -1  # Back
+        PU[oln_BF[:, :, -1].ravel('F'), sln['F']] = +1  # Front
         N = PU.T
         nbt = self._FS_.num_basis._3dCSCG_2Trace[2]
         N_ = [None, None, None, None, None, None]
-        m=0
+        m = 0
         for i in range(6):
             N_[i] = N[m:m+nbt['NSWEBF'[i]], :]
             m += nbt['NSWEBF'[i]]

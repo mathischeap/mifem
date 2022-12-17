@@ -8,6 +8,7 @@ from components.functions._2dSpace.transfinite import TransfiniteMapping
 
 import numpy as np
 
+
 class BridgeArchCracked(InterpolationBase):
     """ The BridgeArchCracked interpolation in 3D. """
 
@@ -21,7 +22,7 @@ class BridgeArchCracked(InterpolationBase):
 
         """
         super().__init__(region)
-        l = region._domain_input_.l
+        L = region._domain_input_.L
         self._w_ = region._domain_input_.w
         h = region._domain_input_.h
         c = region._domain_input_.center
@@ -30,15 +31,15 @@ class BridgeArchCracked(InterpolationBase):
         self._rdr_ = (beta - d) / beta
         self._dr_ = d / beta
         gamma0, dgamma0 = StraightLine((0, 0), (h, 0))()
-        gamma1, dgamma1 = ArcClockWise(c, (h, 0), (beta, l / 2))()
-        gamma2, dgamma2 = StraightLine((0, l / 2), (beta, l / 2))()
-        gamma3, dgamma3 = StraightLine((0, 0), (0, l / 2))()
+        gamma1, dgamma1 = ArcClockWise(c, (h, 0), (beta, L / 2))()
+        gamma2, dgamma2 = StraightLine((0, L / 2), (beta, L / 2))()
+        gamma3, dgamma3 = StraightLine((0, 0), (0, L / 2))()
         self._TFM2D_L_ = TransfiniteMapping((gamma0, gamma1, gamma2, gamma3),
                                             dgamma=(dgamma0, dgamma1, dgamma2, dgamma3))
-        gamma0, dgamma0 = StraightLine((0, l / 2), (beta, l / 2))()
-        gamma1, dgamma1 = ArcClockWise(c, (beta, l / 2), (h, l))()
-        gamma2, dgamma2 = StraightLine((0, l), (h, l))()
-        gamma3, dgamma3 = StraightLine((0, l / 2), (0, l))()
+        gamma0, dgamma0 = StraightLine((0, L / 2), (beta, L / 2))()
+        gamma1, dgamma1 = ArcClockWise(c, (beta, L / 2), (h, L))()
+        gamma2, dgamma2 = StraightLine((0, L), (h, L))()
+        gamma3, dgamma3 = StraightLine((0, L / 2), (0, L))()
         self._TFM2D_R_ = TransfiniteMapping((gamma0, gamma1, gamma2, gamma3),
                                             dgamma=(dgamma0, dgamma1, dgamma2, dgamma3))
         self._freeze_self_()
@@ -196,6 +197,7 @@ class BridgeArchCracked(InterpolationBase):
         else:
             raise Exception()
         return yr
+
     def Jacobian_Ys(self, r, s, t):
         r, s, t = self.___check_rst___(r, s, t)
         if self._region_.name == 'R:R_left_up':
@@ -209,6 +211,7 @@ class BridgeArchCracked(InterpolationBase):
         else:
             raise Exception()
         return ys
+
     def Jacobian_Yt(self, r, s, t):
         r, s, t = self.___check_rst___(r, s, t)
         zeros_shape = np.shape(r)
@@ -229,11 +232,13 @@ class BridgeArchCracked(InterpolationBase):
         zeros_shape = np.shape(r)
         zr = np.zeros(zeros_shape)
         return zr
+
     def Jacobian_Zs(self, r, s, t):
         r, s, t = self.___check_rst___(r, s, t)
         zeros_shape = np.shape(r)
         zs = np.zeros(zeros_shape)
         return zs
+
     def Jacobian_Zt(self, r, s, t):
         r, s, t = self.___check_rst___(r, s, t)
         zeros_shape = np.shape(r)

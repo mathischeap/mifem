@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 import numpy as np
 from evtk import hl
 from components.miscellaneous.mios import mkdir, cleandir
@@ -43,7 +44,7 @@ def gridToVTK(grid, objs, path):
 
     """
     if not isinstance(objs, (list, tuple)):
-        objs = [objs,]
+        objs = [objs, ]
     else:
         pass
     for i, obj in enumerate(objs):
@@ -55,18 +56,18 @@ def gridToVTK(grid, objs, path):
             assert mesh == obj.mesh, f"mesh of {i}th obj does not match that of 0th obj."
 
     DiscreteFields = list()
-    for obj in  objs:
+    for obj in objs:
         df = obj.reconstruct.discrete_field(grid)
         DiscreteFields.append(df)
 
     df0 = DiscreteFields[0]
-    regions = df0.regions # the local regions; data for these regions are stored locally in this core.
+    regions = df0.regions  # the local regions; data for these regions are stored locally in this core.
 
-    COMM.barrier() # make sure the folder is really for all cores.
+    COMM.barrier()  # make sure the folder is really for all cores.
     mkdir(path)
     cleandir(path)
 
-    #------ variable names ------------------------------------------------------------------------1
+    # ----- variable names ------------------------------------------------------------------------1
     var_names = list()
     for i, obj in enumerate(objs):
         if hasattr(obj, 'name'):
@@ -84,7 +85,7 @@ def gridToVTK(grid, objs, path):
 
         var_names.append(name)
 
-    COMM.barrier() # make sure the folder is really for all cores.
+    COMM.barrier()  # make sure the folder is really for all cores.
     for i, rn in enumerate(regions):
         if i == 0:
             xyz = df0.coordinates[rn]
@@ -97,20 +98,20 @@ def gridToVTK(grid, objs, path):
                 VALs[var_names[j]] = tuple(df.values[rn])
 
         # noinspection PyUnboundLocalVariable
-        if len(xyz) == 2: # we are in a 2d CSCG mesh ------
+        if len(xyz) == 2:  # we are in a 2d CSCG mesh ------
             x, y = xyz
-            x = x[:,:,np.newaxis]
-            y = y[:,:,np.newaxis]
+            x = x[:, :, np.newaxis]
+            y = y[:, :, np.newaxis]
             z = np.zeros_like(x)
 
-            new_VALs = dict()
+            new_VALs: dict[list] = dict()
             for vn in VALs:
                 if VALs[vn].__class__.__name__ == 'ndarray':
-                    new_VALs[vn] = VALs[vn][:,:,np.newaxis]
+                    new_VALs[vn] = VALs[vn][:, :, np.newaxis]
                 else:
                     new_VALs[vn] = list()
                     for data in VALs[vn]:
-                        new_VALs[vn].append(data[:,:,np.newaxis])
+                        new_VALs[vn].append(data[:, :, np.newaxis])
                     new_VALs[vn].append(np.zeros_like(new_VALs[vn][0]))
                     # noinspection PyUnresolvedReferences
                     new_VALs[vn] = tuple(new_VALs[vn])
@@ -121,7 +122,7 @@ def gridToVTK(grid, objs, path):
                 pointData=new_VALs
             )
 
-        elif len(xyz) == 3: # 3d CSCG mesh
+        elif len(xyz) == 3:  # 3d CSCG mesh
 
             hl.gridToVTK(
                 f"./{path}/" + "region_" + rn[2:],
@@ -138,45 +139,51 @@ if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/tools/gridToVTK.py
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('crazy', c=0.1)([3,3,3])
+    mesh = MeshGenerator('crazy', c=0.1)([3, 3, 3])
 
-    space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3), ('Lobatto',3)])
+    space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 3), ('Lobatto', 3)])
     FC = FormCaller(mesh, space)
 
-    def u(t,x,y,z): return np.sin(np.pi*x)*np.cos(2*np.pi*y)*np.cos(np.pi*z) + t
-    def v(t,x,y,z): return np.cos(np.pi*x)*np.sin(np.pi*y)*np.cos(2*np.pi*z) + t
-    def w(t,x,y,z): return np.cos(np.pi*x)*np.cos(np.pi*y)*np.sin(2*np.pi*z) + t
+    def u(t, x, y, z):
+        return np.sin(np.pi*x)*np.cos(2*np.pi*y)*np.cos(np.pi*z) + t
 
-    def p(t,x,y,z): return np.sin(2*np.pi*x)*np.sin(np.pi*y)*np.sin(2*np.pi*z) + t
+    def v(t, x, y, z):
+        return np.cos(np.pi*x)*np.sin(np.pi*y)*np.cos(2*np.pi*z) + t
+
+    def w(t, x, y, z):
+        return np.cos(np.pi*x)*np.cos(np.pi*y)*np.sin(2*np.pi*z) + t
+
+    def p(t, x, y, z):
+        return np.sin(2*np.pi*x)*np.sin(np.pi*y)*np.sin(2*np.pi*z) + t
 
     scalar = FC('scalar', p)
-    velocity = FC('vector', (u,v,w))
+    velocity = FC('vector', (u, v, w))
     U = FC('scalar', u)
     V = FC('scalar', v)
     W = FC('scalar', w)
 
-    f0 = FC('0-f', is_hybrid=False, name='pressure')
+    f0 = FC('0-f', hybrid=False, name='pressure')
     f0.TW.func.do.set_func_body_as(scalar)
     f0.TW.current_time = 0
     f0.TW.___DO_push_all_to_instant___()
     f0.discretize()
-    f1 = FC('1-f', is_hybrid=False, name='vorticity')
+    f1 = FC('1-f', hybrid=False, name='vorticity')
     f1.TW.func.do.set_func_body_as(velocity)
     f1.TW.current_time = 0
     f1.TW.___DO_push_all_to_instant___()
     f1.discretize()
-    f2 = FC('2-f', is_hybrid=False, name='velocity')
+    f2 = FC('2-f', hybrid=False, name='velocity')
     f2.TW.func.do.set_func_body_as(velocity)
     f2.TW.current_time = 0
     f2.TW.___DO_push_all_to_instant___()
     f2.discretize()
-    f3 = FC('3-f', is_hybrid=False, name='total pressure')
+    f3 = FC('3-f', hybrid=False, name='total pressure')
     f3.TW.func.do.set_func_body_as(scalar)
     f3.TW.current_time = 0
     f3.TW.___DO_push_all_to_instant___()
     f3.discretize()
 
-    grid = [np.linspace(-1,1,10), np.linspace(-1,1,10), np.linspace(-1,1,10)]
+    grid = [np.linspace(-1, 1, 10), np.linspace(-1, 1, 10), np.linspace(-1, 1, 10)]
 
     gridToVTK(grid, [f0, f1, f2, f3], 'gridToVTK_test')
 

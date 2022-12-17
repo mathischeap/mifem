@@ -29,7 +29,8 @@ class DomainInputAllocator(FrozenOnly):
     @classmethod
     def listing(cls, printing=True, returning=True):
         """"""
-        if RANK != MASTER_RANK: return
+        if RANK != MASTER_RANK:
+            return
 
         listing = ''
         names = cls.___defined_DI___()
@@ -68,7 +69,7 @@ class DomainInputAllocator(FrozenOnly):
             'LDC': "Lid_Driven_Cavity",
             'cuboid': "Cuboid",
             'cuboid_periodic': "CuboidPeriodic",
-            'ct' : 'CurvilinearTestMesh',
+            'ct': 'CurvilinearTestMesh',
         }
         return _dict_
 

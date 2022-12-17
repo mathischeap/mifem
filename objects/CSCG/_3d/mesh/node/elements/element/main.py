@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-
-
 from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.node.elements.element.coordinate_transformation import _3dCSCG_Node_Element_CT
 from objects.CSCG._3d.mesh.node.elements.element.whether import _3dCSCG_NodeElement_Whether
@@ -64,7 +62,6 @@ class _3dCSCG_Node_Element(FrozenOnly):
             self._whether_ = _3dCSCG_NodeElement_Whether(self)
         return self._whether_
 
-
     @property
     def shared_by_mesh_elements(self):
         return self._elements_._shared_by_elements_[self._i_]
@@ -73,14 +70,13 @@ class _3dCSCG_Node_Element(FrozenOnly):
     def on_mesh_boundaries(self):
         return self._elements_._on_mesh_boundaries_[self._i_]
 
-
     @property
     def CHARACTERISTIC_position(self):
         """The position we mainly locate this node element."""
         if self._cp_ is None:
 
             for pos in self.positions:
-                element, corner = pos[:-3], pos[-3:] # before reach boundary names, we must have found it. So no worries.
+                element, corner = pos[:-3], pos[-3:]  # before reach boundary names, we must have found it. no worries.
                 element = int(element)
                 if element in self._elements_._MAP_:
                     self._cp_ = pos
@@ -88,20 +84,25 @@ class _3dCSCG_Node_Element(FrozenOnly):
                     self._cc_ = corner
                     break
         return self._cp_
+
     @property
     def CHARACTERISTIC_element(self):
         """We mainly consider this node element is a corner of this mesh
-        element."""
+        element.
+        """
         if self._ce_ is None:
             _ = self.CHARACTERISTIC_position
         return self._ce_
+
     @property
     def CHARACTERISTIC_corner(self):
         """We mainly consider this node element is such a corner of the
-        CHARACTERISTIC_element."""
+        CHARACTERISTIC_element.
+        """
         if self._cc_ is None:
             _ = self.CHARACTERISTIC_position
         return self._cc_
+
     @property
     def CHARACTERISTIC_region(self):
         """We mainly consider this node element is in this region."""

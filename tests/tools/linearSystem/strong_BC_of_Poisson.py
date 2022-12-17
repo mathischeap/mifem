@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 import random
 
 from objects.CSCG._2d.__init__ import mesh as mesh2
@@ -22,15 +23,15 @@ from tools.miLinearAlgebra.linearSystem.main import LinearSystem
 
 def test_applying_strong_BC_for_Poisson_problem():
     """"""
-    #---------- 2d test --------------------------------------------
-    mesh = mesh2('rectangle', region_layout=(2,2))([4, 5], EDM=None)
+    # --------- 2d test --------------------------------------------
+    mesh = mesh2('rectangle', region_layout=(2, 2))([4, 5], EDM=None)
     space = space2('polynomials')([('Lobatto', 4), ('Lobatto', 3)])
     FC = form2(mesh, space)
     ES = es2(mesh)('sL:sincos1')
 
     all_boundaries = mesh.boundaries.names
     if RANK == MASTER_RANK:
-        rn = random.randint(0,3)
+        rn = random.randint(0, 3)
         boundaries = random.sample(all_boundaries, rn)
         print(f"SBC [Applying_strong_BC_for_Poisson] MSEM@2d {boundaries}. ", flush=True)
     else:
@@ -55,8 +56,8 @@ def test_applying_strong_BC_for_Poisson_problem():
     E12 = E21.T
     E12M2 = E12 @ M2
 
-    A = bmat(([M1 , E12M2],
-              [E21, None ]))
+    A = bmat(([M1, E12M2],
+              [E21, None]))
     A.gathering_matrices = ((u, p), (u, p))
     b = concatenate([B0, B1])
     LS = LinearSystem(A, b)
@@ -79,15 +80,15 @@ def test_applying_strong_BC_for_Poisson_problem():
 
     assert u_error_L2 < 0.003 and p_error_L2 < 0.0004
 
-    #---------- 3d test --------------------------------------------
-    mesh = mesh3('crazy', c=0)([5,4,3], EDM=None)
+    # --------- 3d test --------------------------------------------
+    mesh = mesh3('crazy', c=0)([5, 4, 3], EDM=None)
     space = space3('polynomials')([('Lobatto', 2), ('Lobatto', 3), ('Lobatto', 4)])
     FC = form3(mesh, space)
     ES = es3(mesh)('Poisson:sincos1')
 
     all_boundaries = mesh.boundaries.names
     if RANK == MASTER_RANK:
-        rn = random.randint(1,5)
+        rn = random.randint(1, 5)
         boundaries = random.sample(all_boundaries, rn)
         print(f"    [Applying_strong_BC_for_Poisson] MSEM@3d {boundaries}. ", flush=True)
     else:
@@ -111,8 +112,8 @@ def test_applying_strong_BC_for_Poisson_problem():
     E23 = E32.T
     E23M3 = E23 @ M3
 
-    A = bmat(([  M2, E23M3],
-              [-E32, None ]))
+    A = bmat(([ M2, E23M3],
+              [-E32, None]))
     A.gathering_matrices = ((u, p), (u, p))
     b = concatenate([B0, B1])
     LS = LinearSystem(A, b)
@@ -144,9 +145,9 @@ def test_applying_strong_BC_for_Poisson_problem():
         if b not in u_boundaries:
             p_boundaries.append(b)
 
-    u = FC('2-f', hybrid = True)
+    u = FC('2-f', hybrid=True)
     p = FC('3-adf')
-    f = FC('3-f', hybrid = True)
+    f = FC('3-f', hybrid=True)
     t = FC('2-adt')
 
     M2 = u.matrices.mass
@@ -154,9 +155,9 @@ def test_applying_strong_BC_for_Poisson_problem():
     E23 = E32.T
     T = t.coboundary.trace_matrix
 
-    A = bmat(([  M2, E23 , -T.T],
+    A = bmat(([M2, E23, -T.T],
               [-E32, None, None],
-              [ T  , None, None]))
+              [T, None, None]))
     A.gathering_matrices = ((u, p, t), (u, p, t))
 
     B0 = EWC_ColumnVector(mesh, u)
@@ -208,11 +209,6 @@ def test_applying_strong_BC_for_Poisson_problem():
     return 1
 
 
-
-
-
-
 if __name__ == '__main__':
-    # mpiexec -n 4 python __tests__/unittests/linear_system/strong_BC_of_Poisson.py
-
+    # mpiexec -n 4 python tests/tools/linearSystem/strong_BC_of_Poisson.p
     test_applying_strong_BC_for_Poisson_problem()

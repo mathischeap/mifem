@@ -6,10 +6,10 @@ from components.freeze.main import FrozenClass
 from components.quadrature import Quadrature
 from components.exceptions import ElementsLayoutError
 
+
 # noinspection PyUnresolvedReferences
 class CSCG_MESH_BASE(FrozenClass):
     """"""
-
 
     def __repr__(self):
         """"""
@@ -74,7 +74,6 @@ class CSCG_MESH_BASE(FrozenClass):
 
         return _el_
 
-
     def ___PRIVATE_BASE_get_region_elements_distribution_type___(self):
         """REDT: region_elements_distribution_type
 
@@ -94,7 +93,8 @@ class CSCG_MESH_BASE(FrozenClass):
         NT_TE = self._num_total_elements_
         assert sum(list(NE_IR.values())) == NT_TE, "elements regions-wise distribution is wrong."
         region_wise_ratio: Dict[str] = dict()
-        for rn in NE_IR: region_wise_ratio[rn] = NE_IR[rn] / NT_TE
+        for rn in NE_IR:
+            region_wise_ratio[rn] = NE_IR[rn] / NT_TE
         sf = 1 / len(rns)
         # self._region_wise_element_ratio_ = region_wise_ratio
         self._region_relative_size_: Dict[str] = dict()
@@ -111,17 +111,13 @@ class CSCG_MESH_BASE(FrozenClass):
         minF = np.min(FACTOR)
 
         # -------------------------------------------------------------------------------------------
-
         if 0.8 < minF and maxF < 1.2:
-            self._REDT_ = 'equal' # REDT: region_elements_distribution_type
+            self._REDT_ = 'equal'  # REDT: region_elements_distribution_type
         else:
             self._REDT_ = 'unknown'  # REDT: region_elements_distribution_type
 
         if self.domain.regions.num == 1:
             assert self._REDT_ == 'equal', "This must be the case when #regions == 1."
-
-
-
 
     def ___PRIVATE_BASE_decide_EDM___(self, EDM):
         """
@@ -135,24 +131,24 @@ class CSCG_MESH_BASE(FrozenClass):
         """
         customized_methods = ('debug', 'SWV0', 'chaotic')
 
-        if EDM in customized_methods: # we strongly use the method.
+        if EDM in customized_methods:  # we strongly use the method.
 
             if EDM == 'debug':
                 EDM = None
 
             self._EDM_ = EDM
 
-        elif EDM is None: # we try to find a proper one.
+        elif EDM is None:  # we try to find a proper one.
 
             if self._REDT_ == 'unknown':
-                self._EDM_ = None # when Region_Elements_Distribution_Type is unknown, we use trivial element division.
+                self._EDM_ = None  # when Region_Elements_Distribution_Type is unknown, we use trivial element division.
 
             else:
-                if SIZE == 1: # only one core, then there is nothing we can do.
+                if SIZE == 1:  # only one core, then there is nothing we can do.
                     self._EDM_ = None
                 else:
                     if self._REDT_ == 'equal':
-                        if SIZE <= self.domain.regions.num: # we always do this when we have many regions!
+                        if SIZE <= self.domain.regions.num:  # we always do this when we have many regions!
                             EDM = 'cores_no_more_than_regions'
                         else:
                             EDM = 'SWV0'
@@ -165,9 +161,6 @@ class CSCG_MESH_BASE(FrozenClass):
         else:
             raise NotImplementedError(f"EDM = {EDM} not coded.")
 
-
-
-
     def ___PRIVATE_BASE_parse_element_distribution_method___(self):
         """
         With this method, we must define properties:
@@ -179,11 +172,11 @@ class CSCG_MESH_BASE(FrozenClass):
         EDM = self._EDM_
 
         master_core_load_factor = 0.75  # change this factor to change the load of master core.
-        secretary_core_load_factor = 0.9 # change this factor to change the load of secretary core.
+        secretary_core_load_factor = 0.9  # change this factor to change the load of secretary core.
         # master_core_load_factor to be the larger, master core will be more busy.
         assert 0.1 <= master_core_load_factor <= 0.95, "master_core_load_factor need be in [0.1,0.95]"
         # secretary_core_load_factor to be the larger, secretary core will be more busy.
-        assert master_core_load_factor < secretary_core_load_factor <=1, \
+        assert master_core_load_factor < secretary_core_load_factor <= 1, \
             f"secretary_core_load_factor need be in [master_core_load_factor({master_core_load_factor}),1]"
 
         self.___MC_LF___ = master_core_load_factor
@@ -195,7 +188,7 @@ class CSCG_MESH_BASE(FrozenClass):
         disDict = dict()  # keys are core numbers, and values are #elements in this core.
 
         # with this if-else, we have to give the disDict,
-        if EDM is None: # default method
+        if EDM is None:  # default method
 
             numOfTotalElements = self._num_total_elements_
 
@@ -243,7 +236,7 @@ class CSCG_MESH_BASE(FrozenClass):
                     DIS = list()
                     for i in range(SIZE):
 
-                        _  = random.randint(0,100)
+                        _ = random.randint(0, 100)
                         if _ <= 5:
                             _ = 0
 
@@ -276,15 +269,14 @@ class CSCG_MESH_BASE(FrozenClass):
 
             disDict = COMM.bcast(disDict, root=MASTER_RANK)
 
-
-        elif EDM == 'cores_no_more_than_regions': # few cores many regions cases.
+        elif EDM == 'cores_no_more_than_regions':  # few cores many regions cases.
             assert SIZE > 1, "When only have one core, we use EDM = None!"
             assert nrs >= SIZE, "a trivial check!"
 
             if self._REDT_ == 'equal':
-                if nrs % SIZE == 0: # regions can be equally distributed to cores.
+                if nrs % SIZE == 0:  # regions can be equally distributed to cores.
 
-                    regions_per_core = int(nrs / SIZE) # each core will handle this many regions.
+                    regions_per_core = int(nrs / SIZE)  # each core will handle this many regions.
                     assert regions_per_core * SIZE == nrs
 
                     for i in range(SIZE):
@@ -318,14 +310,15 @@ class CSCG_MESH_BASE(FrozenClass):
                 raise NotImplementedError(f"EDM: 'cores_no_more_than_regions' can not handle type: '{self._REDT_}' "
                                           f"regions-wise element distribution.")
 
-        elif EDM == 'SWV0': # smart way version 0; cores do not have elements from different regions.
+        elif EDM == 'SWV0':  # smart way version 0; cores do not have elements from different regions.
             assert SIZE > 1, f"When only have one core, we use EDM = None!"
-            assert SIZE >= nrs, f"EDM SWV0 only fits when Num of Cores is not lower than Mum of Regions, NCS={SIZE} < {nrs}=NRS."
+            assert SIZE >= nrs, f"EDM SWV0 only fits when Num of Cores is not lower than Mum of Regions, " \
+                                f"NCS={SIZE} < {nrs}=NRS."
 
             self.___region_cores_dict___ = dict()
 
-            if self._REDT_ == 'equal': # all regions have roughly same amount of elements.
-                if nrs == 1 or SIZE % nrs == 0: # cores are equally distributed.
+            if self._REDT_ == 'equal':  # all regions have roughly same amount of elements.
+                if nrs == 1 or SIZE % nrs == 0:  # cores are equally distributed.
 
                     cores_per_region = int(SIZE / nrs)
 
@@ -396,7 +389,8 @@ class CSCG_MESH_BASE(FrozenClass):
                                 master_elements = _
 
                             parts = len(slaves)
-                            _ = [give_to_slaves // parts + (1 if x < give_to_slaves % parts else 0) for x in range(parts)]
+                            _ = [give_to_slaves // parts + (1 if x < give_to_slaves % parts else 0)
+                                 for x in range(parts)]
 
                             for i, SLA in enumerate(slaves):
                                 disDict[SLA] += _[i]
@@ -432,7 +426,8 @@ class CSCG_MESH_BASE(FrozenClass):
                                 secretary_elements = _
 
                             parts = len(slaves)
-                            _ = [give_to_slaves // parts + (1 if x < give_to_slaves % parts else 0) for x in range(parts)]
+                            _ = [give_to_slaves // parts + (1 if x < give_to_slaves % parts else 0)
+                                 for x in range(parts)]
 
                             for i, SLA in enumerate(slaves):
                                 disDict[SLA] += _[i]
@@ -445,35 +440,20 @@ class CSCG_MESH_BASE(FrozenClass):
                 core_pool.update(self.___region_cores_dict___[rn])
             assert len(core_pool) == SIZE
 
-
-
-
-        #---- IF new EDM added we must add `elif` below to make disDict for this new EDM !!!!!!
-
-
-
-
-
-
-
-
-
-
-
+        # ---- IF new EDM added we must add `elif` below to make disDict for this new EDM !!!!!!
         else:
             raise Exception(f"element_distribution_method: '{EDM}' not coded for "
                             f"<parse_element_distribution_method>.")
-
 
         # must not define _num_local_elements_, _element_distribution_, _element_indices_ yet
         assert not hasattr(self, '_num_local_elements_')
         assert not hasattr(self, '_element_distribution_')
         assert not hasattr(self, '_element_indices_')
 
-
         # do the things: Now, we must have disDict.
         assert isinstance(disDict, dict)
-        for i in range(SIZE): assert i in disDict, f"disDict not full, miss distribution for core #{i}."
+        for i in range(SIZE):
+            assert i in disDict, f"disDict not full, miss distribution for core #{i}."
 
         # now, we parse disDict to obtain  _num_local_elements_, _element_distribution_, _element_indices_
         self._num_local_elements_ = disDict[RANK]
@@ -484,9 +464,6 @@ class CSCG_MESH_BASE(FrozenClass):
             if i == RANK:
                 self._element_indices_ = range(before_elements, before_elements+self._num_local_elements_)
             before_elements += disDict[i]
-
-
-
 
     def ___PRIVATE_BASE_analyze_element_distribution___(self):
         """"""
@@ -507,26 +484,24 @@ class CSCG_MESH_BASE(FrozenClass):
         # ......
         assert self._element_indices_ == self._element_distribution_[RANK]
 
-
         # ! a check: we make sure that elements are distributed into cores in an increasing sequence (MUST BE). ------ !
         for i in range(SIZE):
             if RANK == i:
                 RANGE = self._element_distribution_[RANK]
                 start, stop = RANGE.start, RANGE.stop
 
-                if RANK > 0: # not the first core
+                if RANK > 0:  # not the first core
                     START = COMM.recv(source=RANK - 1, tag=RANK - 1)
 
                     assert start == START
 
-                if RANK < SIZE-1: # not the last core
+                if RANK < SIZE-1:  # not the last core
                     COMM.send(stop, dest=RANK + 1, tag=RANK)
 
         if RANK == SIZE - 1 and SIZE > 1:
             # noinspection PyUnboundLocalVariable
             assert stop == self._num_total_elements_
         # ! ... end check here ----------------------------------------------------------
-
 
         ___is_occupying_all_cores___ = \
             all([len(self._element_distribution_[c]) for c in self._element_distribution_])
@@ -536,9 +511,6 @@ class CSCG_MESH_BASE(FrozenClass):
             self.___is_occupying_all_cores___ = ___is_occupying_all_cores___
         else:
             assert self.___is_occupying_all_cores___ == ___is_occupying_all_cores___, "Can not change this property."
-
-
-
 
         ___USEFUL_regions_and_boundaries___ = list()
         _elements_in_regions_ = list()
@@ -564,9 +536,6 @@ class CSCG_MESH_BASE(FrozenClass):
             if rg not in ___USEFUL_regions_and_boundaries___:
                 ___USEFUL_regions_and_boundaries___.append(rg)
 
-
-
-
         if not hasattr(self, '___USEFUL_regions_and_boundaries___'):
             # this core will need to know element numbering in these regions
             self.___USEFUL_regions_and_boundaries___ = ___USEFUL_regions_and_boundaries___
@@ -574,10 +543,9 @@ class CSCG_MESH_BASE(FrozenClass):
             assert self.___USEFUL_regions_and_boundaries___ == ___USEFUL_regions_and_boundaries___, \
                 "Cannot change this property"
 
-
-
         if not hasattr(self, '_elements_in_regions_'):
             # this core's elements are in this region (or these regions)
             self._elements_in_regions_ = _elements_in_regions_
         else:
-            assert self._elements_in_regions_ == _elements_in_regions_, "Can not change this property"
+            assert self._elements_in_regions_ == _elements_in_regions_, \
+                "Can not change this property"

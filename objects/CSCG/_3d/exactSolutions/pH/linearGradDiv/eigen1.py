@@ -7,9 +7,9 @@
 import sys
 from numpy import sqrt, sin, cos
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from objects.CSCG._3d.exactSolutions.pH.linearGradDiv.base import pH_LinearGradDiv_Base
-
 
 
 class Eigen1(pH_LinearGradDiv_Base):
@@ -19,8 +19,8 @@ class Eigen1(pH_LinearGradDiv_Base):
     def __init__(self, mesh, OM=(1, 1, 1), PHI=(0, 0, 0, 0)):
         """"""
         self._OM_ = OM    # om_x, om_y, om_z
-        self._PHI_ = PHI  # phi_x, phi_y, phi_z, phi_t
-        super(Eigen1, self).__init__(mesh) # freeze and check here!
+        self._PHI_ = PHI   # phi_x, phi_y, phi_z, phi_t
+        super(Eigen1, self).__init__(mesh)  # freeze and check here!
 
     def p(self, t, x, y, z):
         """Translated from Andrea's Firedrake codes.
@@ -74,9 +74,6 @@ class Eigen1(pH_LinearGradDiv_Base):
         dg_xyz_z = om_z * cos(om_x * x + phi_x) * sin(om_y * y + phi_y) * cos(om_z * z + phi_z)
 
         return dg_xyz_z * ft
-
-
-
 
 
 if __name__ == '__main__':

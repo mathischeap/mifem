@@ -4,10 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/09/02 1:59 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
-
 from objects.CSCG._3d.discreteDields.base.main import _3dCSCG_DiscreteField
 
 
@@ -20,9 +16,3 @@ class _3dCSCG_DF_Scalar(_3dCSCG_DiscreteField):
         super(_3dCSCG_DF_Scalar, self).__init__(mesh, coordinates, values, name,
                                                 structured=structured, grid=grid)
         assert self.vdim == 1, f"vdim must be 1, now it is {self.vdim}."
-
-
-
-if __name__ == "__main__":
-    # mpiexec -n 4 python 
-    pass

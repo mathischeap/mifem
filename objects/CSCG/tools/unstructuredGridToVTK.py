@@ -10,7 +10,8 @@ import numpy as np
 from evtk import hl
 # from pyevtk.vtk import VtkVoxel, VtkHexahedron # the 11th and 12th type of unstructured VTK cell.
 from scipy.sparse import lil_matrix
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from root.config.main import COMM, RANK, MASTER_RANK
 
@@ -50,7 +51,7 @@ def unstructuredGridToVTK(grid, objs, filename):
 
     """
     if not isinstance(objs, (list, tuple)):
-        objs = [objs,]
+        objs = [objs, ]
     else:
         pass
     for i, obj in enumerate(objs):
@@ -72,7 +73,7 @@ def unstructuredGridToVTK(grid, objs, filename):
             for rn in xyz:
                 for j, axis in enumerate(xyz[rn]):
                     np.testing.assert_array_almost_equal(axis, _xyz[rn][j], decimal=8)
-            df._coordinates_ = None # clean COO as we only need it in df[0]
+            df._coordinates_ = None  # clean COO as we only need it in df[0]
         DiscreteFields.append(df)
     del _xyz
 
@@ -102,7 +103,7 @@ def _2dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
     -------
 
     """
-    #------ get element_layout for the new reference mesh -----------------------------------------1
+    # ----- get element_layout for the new reference mesh -----------------------------------------1
     df0 = dfs[0]
     GRID = COMM.gather(df0.grid, root=MASTER_RANK)
     if RANK == MASTER_RANK:
@@ -116,18 +117,18 @@ def _2dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
         element_layout[rn] = [
             np.diff(_) for _ in GRID[rn]
         ]
-    new_mesh = mesh.__class__(mesh.domain, element_layout=element_layout) #-- produce new mesh ----1
+    new_mesh = mesh.__class__(mesh.domain, element_layout=element_layout)  # - produce new mesh ----1
 
-    new_space = _2dCSCG_PolynomialSpace([1,1], None)   #-------------------- produce new space ----1
+    new_space = _2dCSCG_PolynomialSpace([1, 1], None)   # ------------------- produce new space ----1
 
-    r0f = _2dCSCG_0Form_Outer(new_mesh, new_space, hybrid=False) # produce the reference 0-form 1
+    r0f = _2dCSCG_0Form_Outer(new_mesh, new_space, hybrid=False)  # produce the reference 0-form 1
 
-    GM = r0f.numbering.gathering #----- the gathering numbering, a key property we want to use ----1
-    Gnd = GM.global_num_dofs # -------- this many 0-form dofs = this many nodes in the VTK --------1
+    GM = r0f.numbering.gathering  # ---- the gathering numbering, a key property we want to use ----1
+    Gnd = GM.global_num_dofs  # -------- this many 0-form dofs = this many nodes in the VTK --------1
 
     total_num_cells = new_mesh.elements.global_num
 
-    #----- collect needed COO ---------------------------------------------------------------------1
+    # ---- collect needed COO ---------------------------------------------------------------------1
     COO = df0.coordinates
     in_regions = new_mesh.elements.in_regions
 
@@ -139,9 +140,9 @@ def _2dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
                 need_COO[bn] = ac[bn]
     COO = need_COO
     del ALL_COO
-    df0._coordinates_ = None # clean
+    df0._coordinates_ = None  # clean
 
-    #------ variable names ------------------------------------------------------------------------1
+    # ----- variable names ------------------------------------------------------------------------1
     var_names = list()
     for i, obj in enumerate(objs):
         if hasattr(obj, 'name'):
@@ -159,7 +160,7 @@ def _2dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
 
         var_names.append(name)
 
-    #------ collect values ------------------------------------------------------------------------1
+    # ----- collect values ------------------------------------------------------------------------1
 
     var_dim = dict()
     ALL_needed_VAL = dict()
@@ -178,7 +179,7 @@ def _2dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
         ALL_needed_VAL[name] = need_VAL
         var_dim[name] = df.vdim
 
-    #----------------------------- lets make the VTK ----------------------------------------------1
+    # ---------------------------- lets make the VTK ----------------------------------------------1
     X, Y = lil_matrix((1, Gnd)), lil_matrix((1, Gnd))
 
     VAR = dict()
@@ -191,10 +192,10 @@ def _2dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
     cTypes = lil_matrix((1, total_num_cells), dtype=int)
 
     swift_matrix = np.array([
-        [1, 0, 0, 0], # 0 <- 0
-        [0, 1, 0, 0], # 1 <- 1
-        [0, 0, 0, 1], # 2 <- 3
-        [0, 0, 1, 0], # 3 <- 2
+        [1, 0, 0, 0],  # 0 <- 0
+        [0, 1, 0, 0],  # 1 <- 1
+        [0, 0, 0, 1],  # 2 <- 3
+        [0, 0, 1, 0],  # 3 <- 2
     ])
 
     for e in new_mesh.elements:
@@ -217,10 +218,10 @@ def _2dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
 
         if element.whether.orthogonal:
             CONN[e, :] = gv
-            cTypes[0, e] = 8 # VTK PIXEL
+            cTypes[0, e] = 8  # VTK PIXEL
         else:
             CONN[e, :] = swift_matrix @ gv
-            cTypes[0, e] = 9 # VTK _QUAD
+            cTypes[0, e] = 9  # VTK _QUAD
 
     del ALL_needed_VAL, COO
 
@@ -245,7 +246,7 @@ def _2dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
             indices = y_.indices
             _y[indices] = data
 
-        V = dict()
+        V: dict[list] = dict()
         for vn in var_names:
             V[vn] = list()
             for _ in range(var_dim[vn]):
@@ -260,25 +261,26 @@ def _2dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
                     V[vn][_][indices] = data
 
         # noinspection PyUnresolvedReferences
-        CONN  = np.sum(CONN, axis=0).toarray().ravel('C')
+        CONN = np.sum(CONN, axis=0).toarray().ravel('C')
         offsets = np.linspace(4, CONN.size, total_num_cells)
 
         # noinspection PyUnresolvedReferences
-        cTypes  = np.sum(cTypes, axis=0).toarray().ravel()
+        cTypes = np.sum(cTypes, axis=0).toarray().ravel()
 
         for vn in V:
-            if  len(V[vn]) == 1:
+            if len(V[vn]) == 1:
                 # noinspection PyUnresolvedReferences
                 V[vn] = V[vn][0]
             else:
                 V[vn].append(np.zeros_like(V[vn][0]))
                 # noinspection PyUnresolvedReferences
-                V[vn] = tuple(V[vn]) # do not use list
+                V[vn] = tuple(V[vn])  # do not use list
 
-        full_save_path = hl.unstructuredGridToVTK(filename, _x, _y, np.zeros_like(_x),
-                                 connectivity=CONN, offsets=offsets, cell_types=cTypes,
-                                 pointData=V
-                                 )
+        full_save_path = hl.unstructuredGridToVTK(
+            filename, _x, _y, np.zeros_like(_x),
+            connectivity=CONN, offsets=offsets, cell_types=cTypes,
+            pointData=V
+        )
 
     else:
         full_save_path = None
@@ -303,7 +305,7 @@ def _3dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
     -------
 
     """
-    #------ get element_layout for the new reference mesh -----------------------------------------1
+    # ----- get element_layout for the new reference mesh -----------------------------------------1
     df0 = dfs[0]
     GRID = COMM.gather(df0.grid, root=MASTER_RANK)
     if RANK == MASTER_RANK:
@@ -317,18 +319,18 @@ def _3dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
         element_layout[rn] = [
             np.diff(_) for _ in GRID[rn]
         ]
-    new_mesh = mesh.__class__(mesh.domain, element_layout=element_layout) #-- produce new mesh ----1
+    new_mesh = mesh.__class__(mesh.domain, element_layout=element_layout)  # - produce new mesh ----1
 
-    new_space = _3dCSCG_PolynomialSpace([1,1,1], None) #-------------------- produce new space ----1
+    new_space = _3dCSCG_PolynomialSpace([1, 1, 1], None)  # ------------------- produce new space ----1
 
-    r0f = _3dCSCG_0Form(new_mesh, new_space, hybrid=False) #-- produce the reference 0-form ----1
+    r0f = _3dCSCG_0Form(new_mesh, new_space, hybrid=False)  # - produce the reference 0-form ----1
 
-    GM = r0f.numbering.gathering #----- the gathering numbering, a key property we want to use ----1
-    Gnd = GM.global_num_dofs # -------- this many 0-form dofs = this many nodes in the VTK --------1
+    GM = r0f.numbering.gathering  # ---- the gathering numbering, a key property we want to use ----1
+    Gnd = GM.global_num_dofs  # -------- this many 0-form dofs = this many nodes in the VTK --------1
 
     total_num_cells = new_mesh.elements.global_num
 
-    #----- collect needed COO ---------------------------------------------------------------------1
+    # ---- collect needed COO ---------------------------------------------------------------------1
     COO = df0.coordinates
     in_regions = new_mesh.elements.in_regions
 
@@ -340,9 +342,9 @@ def _3dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
                 need_COO[bn] = ac[bn]
     COO = need_COO
     del ALL_COO
-    df0._coordinates_ = None # clean
+    df0._coordinates_ = None  # clean
 
-    #------ variable names ------------------------------------------------------------------------1
+    # ----- variable names ------------------------------------------------------------------------1
     var_names = list()
     for i, obj in enumerate(objs):
         if hasattr(obj, 'name'):
@@ -360,7 +362,7 @@ def _3dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
 
         var_names.append(name)
 
-    #------ collect values ------------------------------------------------------------------------1
+    # ----- collect values ------------------------------------------------------------------------1
 
     var_dim = dict()
     ALL_needed_VAL = dict()
@@ -379,7 +381,7 @@ def _3dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
         ALL_needed_VAL[name] = need_VAL
         var_dim[name] = df.vdim
 
-    #----------------------------- lets make the VTK ----------------------------------------------1
+    # ---------------------------- lets make the VTK ----------------------------------------------1
     X, Y, Z = lil_matrix((1, Gnd)), lil_matrix((1, Gnd)), lil_matrix((1, Gnd))
 
     VAR = dict()
@@ -392,14 +394,14 @@ def _3dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
     cTypes = lil_matrix((1, total_num_cells), dtype=int)
 
     swift_matrix = np.array([
-        [1, 0, 0, 0, 0, 0, 0, 0], # 0 <- 0
-        [0, 1, 0, 0, 0, 0, 0, 0], # 1 <- 1
-        [0, 0, 0, 1, 0, 0, 0, 0], # 2 <- 3
-        [0, 0, 1, 0, 0, 0, 0, 0], # 3 <- 2
-        [0, 0, 0, 0, 1, 0, 0, 0], # 4 <- 4
-        [0, 0, 0, 0, 0, 1, 0, 0], # 5 <- 5
-        [0, 0, 0, 0, 0, 0, 0, 1], # 6 <- 7
-        [0, 0, 0, 0, 0, 0, 1, 0], # 7 <- 6
+        [1, 0, 0, 0, 0, 0, 0, 0],  # 0 <- 0
+        [0, 1, 0, 0, 0, 0, 0, 0],  # 1 <- 1
+        [0, 0, 0, 1, 0, 0, 0, 0],  # 2 <- 3
+        [0, 0, 1, 0, 0, 0, 0, 0],  # 3 <- 2
+        [0, 0, 0, 0, 1, 0, 0, 0],  # 4 <- 4
+        [0, 0, 0, 0, 0, 1, 0, 0],  # 5 <- 5
+        [0, 0, 0, 0, 0, 0, 0, 1],  # 6 <- 7
+        [0, 0, 0, 0, 0, 0, 1, 0],  # 7 <- 6
     ])
 
     for e in new_mesh.elements:
@@ -424,10 +426,10 @@ def _3dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
 
         if element.whether.orthogonal:
             CONN[e, :] = gv
-            cTypes[0, e] = 11 # VTK Voxel
+            cTypes[0, e] = 11  # VTK Voxel
         else:
             CONN[e, :] = swift_matrix @ gv
-            cTypes[0, e] = 12 # VTK Hexahedron
+            cTypes[0, e] = 12  # VTK Hexahedron
 
     del ALL_needed_VAL, COO
 
@@ -474,23 +476,24 @@ def _3dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
                     V[vn][_][indices] = data
 
         # noinspection PyUnresolvedReferences
-        CONN  = np.sum(CONN, axis=0).toarray().ravel('C')
+        CONN = np.sum(CONN, axis=0).toarray().ravel('C')
         offsets = np.linspace(8, CONN.size, total_num_cells)
 
         # noinspection PyUnresolvedReferences
-        cTypes  = np.sum(cTypes, axis=0).toarray().ravel()
+        cTypes = np.sum(cTypes, axis=0).toarray().ravel()
 
         for vn in V:
-            if  len(V[vn]) == 1:
+            if len(V[vn]) == 1:
                 # noinspection PyUnresolvedReferences
                 V[vn] = V[vn][0]
             else:
                 # noinspection PyUnresolvedReferences
-                V[vn] = tuple(V[vn]) # do not use list
-        full_save_path = hl.unstructuredGridToVTK(filename, _x, _y, _z,
-                                 connectivity=CONN, offsets=offsets, cell_types=cTypes,
-                                 pointData=V
-                                 )
+                V[vn] = tuple(V[vn])  # do not use list
+        full_save_path = hl.unstructuredGridToVTK(
+            filename, _x, _y, _z,
+            connectivity=CONN, offsets=offsets, cell_types=cTypes,
+            pointData=V
+        )
 
     else:
         full_save_path = None
@@ -503,43 +506,45 @@ if __name__ == "__main__":
     # mpiexec -n 4 python objects/CSCG/tools/unstructuredGridToVTK.py
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('bridge_arch_cracked')([8,8,8])
+    mesh = MeshGenerator('bridge_arch_cracked')([8, 8, 8])
     # mesh = MeshGenerator('crazy', c=0.)([10,10,10])
     # for rn in mesh.domain.regions:
     #     region = mesh.domain.regions[rn]
     #     print(region.IS.orthogonal)
 
-    space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3), ('Lobatto',3)])
+    space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 3), ('Lobatto', 3)])
     FC = FormCaller(mesh, space)
 
-    def u(t,x,y,z): return np.cos(2*np.pi*y)*np.cos(np.pi*z) + t + 0 * x
-    def v(t,x,y,z): return np.cos(np.pi*x)*np.cos(2*np.pi*z) + t + 0 * y
-    def w(t,x,y,z): return np.cos(np.pi*x)*np.cos(np.pi*y) + t + 0 * z
+    def u(t, x, y, z): return np.cos(2*np.pi*y)*np.cos(np.pi*z) + t + 0 * x
 
-    def p(t,x,y,z): return np.sin(2*np.pi*x)*np.sin(np.pi*y)*np.sin(2*np.pi*z) + t
+    def v(t, x, y, z): return np.cos(np.pi*x)*np.cos(2*np.pi*z) + t + 0 * y
+
+    def w(t, x, y, z): return np.cos(np.pi*x)*np.cos(np.pi*y) + t + 0 * z
+
+    def p(t, x, y, z): return np.sin(2*np.pi*x)*np.sin(np.pi*y)*np.sin(2*np.pi*z) + t
 
     scalar = FC('scalar', p)
-    vector = FC('vector', (u,v,w))
+    vector = FC('vector', (u, v, w))
 
-    f0 = FC('0-f', is_hybrid=False, name='pressure')
+    f0 = FC('0-f', hybrid=False, name='pressure')
     f0.CF = scalar
     f0.CF.current_time = 0
     f0.discretize()
 
-    f1 = FC('1-f', is_hybrid=False, name='vorticity')
+    f1 = FC('1-f', hybrid=False, name='vorticity')
     f1.CF = vector
     f1.CF.current_time = 0
     f1.discretize()
 
-    f2 = FC('2-f', is_hybrid=False, name='velocity')
+    f2 = FC('2-f', hybrid=False, name='velocity')
     f2.CF = vector
     f2.discretize()
 
-    f3 = FC('3-f', is_hybrid=False, name='total pressure')
+    f3 = FC('3-f', hybrid=False, name='total pressure')
     f3.CF = scalar
     f3.discretize()
 
-    grid = [np.linspace(-1,1,15), np.linspace(-1,1,15), np.linspace(-1,1,15)]
+    grid = [np.linspace(-1, 1, 15), np.linspace(-1, 1, 15), np.linspace(-1, 1, 15)]
 
     unstructuredGridToVTK(grid, [f0, f2], 'unstructuredGridToVTK_test')
 

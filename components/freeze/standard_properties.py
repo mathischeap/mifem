@@ -48,7 +48,6 @@ class StandardProperties(FrozenOnly):
             # noinspection PyAttributeOutsideInit
             self.___signature___ = signature
 
-
     @property
     def mark(self):
         """
@@ -62,7 +61,6 @@ class StandardProperties(FrozenOnly):
     def mark(self, mark):
         self.___mark___ = mark
 
-
     @property
     def stamp(self):
         """
@@ -75,7 +73,6 @@ class StandardProperties(FrozenOnly):
     @stamp.setter
     def stamp(self, stamp):
         self.___stamp___ = stamp
-
 
     @property
     def parameters(self):

@@ -12,6 +12,7 @@ from root.config.main import RANK, SIZE, COMM, MPI, MASTER_RANK
 from components.freeze.main import FrozenOnly
 from tools.elementwiseCache.gathering.regular.chain_matrix.main import Gathering_Matrix, Gathering_Vector
 
+
 class _3dCSCG_Trace_Form_Numbering_Naive(FrozenOnly):
     """"""
 
@@ -50,7 +51,7 @@ class _3dCSCG_Trace_Form_Numbering_Naive(FrozenOnly):
             4. (None,...) -- Extra numbering information.
         """
         GM = dict()
-        GM_TEW : dict = dict()
+        GM_TEW: dict = dict()
         local_num_dofs = 0
         extraInfo = None
 
@@ -116,7 +117,7 @@ class _3dCSCG_Trace_Form_Numbering_Naive(FrozenOnly):
             4. (None,...) -- Extra numbering information.
         """
         GM = dict()
-        GM_TEW : dict = dict()
+        GM_TEW: dict = dict()
         local_num_dofs = 0
         extraInfo = None
 
@@ -129,7 +130,7 @@ class _3dCSCG_Trace_Form_Numbering_Naive(FrozenOnly):
             for i in self._mesh_.trace.elements:
                 t_e_i = self._mesh_.trace.elements[i]
                 am_NS, am_WE, am_BF = type_amount_dict[i]
-                start_num = am_NS * NBO[0] + am_WE * NBO[1] +  am_BF * NBO[2]
+                start_num = am_NS * NBO[0] + am_WE * NBO[1] + am_BF * NBO[2]
                 GM_TEW[i] = range(start_num, start_num + num_basis_onside[t_e_i.CHARACTERISTIC_side])
                 local_num_dofs += num_basis_onside[t_e_i.CHARACTERISTIC_side]
 
@@ -193,7 +194,7 @@ class _3dCSCG_Trace_Form_Numbering_Naive(FrozenOnly):
             for i in self._mesh_.trace.elements:
                 t_e_i = self._mesh_.trace.elements[i]
                 am_NS, am_WE, am_BF = type_amount_dict[i]
-                start_num = am_NS * NBO[0] + am_WE * NBO[1] +  am_BF * NBO[2]
+                start_num = am_NS * NBO[0] + am_WE * NBO[1] + am_BF * NBO[2]
                 GM_TEW[i] = range(start_num, start_num + num_basis_onside[t_e_i.CHARACTERISTIC_side])
                 local_num_dofs += num_basis_onside[t_e_i.CHARACTERISTIC_side]
 
@@ -270,7 +271,7 @@ class _3dCSCG_Trace_Form_Numbering_Naive(FrozenOnly):
 
                 surface_global_dofs = GV[surface_local_dofs]
 
-                surface_global_dofs = surface_global_dofs[surface_global_dofs>number2]
+                surface_global_dofs = surface_global_dofs[surface_global_dofs > number2]
 
                 LEN = len(surface_global_dofs)
                 if LEN == 0:
@@ -293,7 +294,7 @@ class _3dCSCG_Trace_Form_Numbering_Naive(FrozenOnly):
 
                     surface_global_dofs = GV[surface_local_dofs]
 
-                    surface_global_dofs = surface_global_dofs[surface_global_dofs>number2]
+                    surface_global_dofs = surface_global_dofs[surface_global_dofs > number2]
 
                     LEN = len(surface_global_dofs)
                     if LEN == 0:

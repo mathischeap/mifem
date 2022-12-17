@@ -11,7 +11,8 @@ In the mesh.boundaries class, the periodic boundaries will not be shown.
 """
 
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from root.config.main import *
 from components.freeze.main import FrozenOnly
@@ -83,28 +84,28 @@ class _3dCSCG_Boundaries(FrozenOnly):
             ToF = True
             # for test reasons we
             NUM = self._domain_.regions.num
-            if NUM == 1: # only one region, then must be a Regular:one-region-corner-interface
+            if NUM == 1:  # only one region, then must be a Regular:one-region-corner-interface
                 pass
             else:
                 MAP = self._domain_.regions.map
 
                 for rn in MAP:
-                    for i, s in enumerate('NSWEBF'): # go through all regions sides
+                    for i, s in enumerate('NSWEBF'):  # go through all regions sides
                         what_here = MAP[rn][i]
                         if what_here in self.names:
                             if s in 'NS':
-                                check_directions = [2,3,4,5]
+                                check_directions = [2, 3, 4, 5]
                             elif s in 'WE':
-                                check_directions = [0,1,4,5]
+                                check_directions = [0, 1, 4, 5]
                             elif s in 'BF':
-                                check_directions = [0,1,2,3]
+                                check_directions = [0, 1, 2, 3]
                             else:
                                 raise Exception()
 
                             for cd in check_directions:
                                 what_is_at_this_side = MAP[rn][cd]
                                 if what_is_at_this_side in self.names:
-                                    pass # OK, remain True
+                                    pass  # OK, remain True
                                 else:
                                     assert what_is_at_this_side[:2] == 'R:', "trivial check."
 
@@ -112,14 +113,16 @@ class _3dCSCG_Boundaries(FrozenOnly):
                                     if what_side_connected == what_here:
                                         pass
                                     else:
-                                        ToF = False # only this is happening, we stop.
+                                        ToF = False  # only this is happening, we stop.
                                         break
 
-                        else: # internal regions side, skip it.
+                        else:  # internal regions side, skip it.
                             assert what_here[:2] == 'R:', "trivial check."
 
-                        if ToF is False: break
-                    if ToF is False: break
+                        if ToF is False:
+                            break
+                    if ToF is False:
+                        break
         else:
             ToF = None
 

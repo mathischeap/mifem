@@ -1,11 +1,6 @@
-
-
-
-
 from components.freeze.base import FrozenOnly
-
-
 from objects.CSCG.base.ADF.base.BC.interpret.main import CSCG_AFORM_BC_Interpret
+
 
 class CSCG_ADForm_BC(FrozenOnly):
     """"""
@@ -32,14 +27,14 @@ class CSCG_ADForm_BC(FrozenOnly):
 
         BNS = self._adf_.mesh.boundaries.names
         if isinstance(bns, str):
-            bns = [bns,]
+            bns = [bns, ]
         else:
             pass
         assert isinstance(bns, (list, tuple)), f"pls put boundary names into a list or tuple."
         for i, bn in enumerate(bns):
             assert bn in BNS, f"boundary names [{i}] = {bn} is not a valid boundary name."
         self.___Pr_parse_involved_element_parts___(bns)
-        self.interpret.RESET_cache() # reset current interpretations.
+        self.interpret.RESET_cache()  # reset current interpretations.
         self._boundaries_ = bns
 
 

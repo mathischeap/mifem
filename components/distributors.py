@@ -4,12 +4,10 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 12/2/2022 4:37 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
 from components.assemblers import ___Pr_gathering_matrix_checker___
+
 
 class VectorDistributor(FrozenOnly):
     """A distributor does the opposite as an assembler."""
@@ -66,7 +64,3 @@ class VectorDistributor(FrozenOnly):
         else:
             raise NotImplementedError(f"scheme {scheme} is not implement for "
                                       f"distributor routine: basic.")
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

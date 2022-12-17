@@ -9,7 +9,8 @@ Continuous standard 3-form.
 
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from types import FunctionType, MethodType
 from objects.CSCG._3d.fields.base import _3dCSCG_Continuous_FORM_BASE
@@ -33,7 +34,7 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
     def __init__(self, mesh, func, ftype=None, valid_time=None, name='scalar-field'):
         if ftype is None:
             if isinstance(func, dict):
-                ftype= 'boundary-wise'
+                ftype = 'boundary-wise'
             else:
                 ftype = 'standard'
         else:
@@ -68,14 +69,14 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                 assert func.__code__.co_argcount >= 5
             elif isinstance(func, (int, float)):
                 func = CFG(func)()
-            elif callable(func): # any other callable objects, we do not do check anymore.
+            elif callable(func):  # any other callable objects, we do not do check anymore.
                 pass
             else:
                 raise Exception()
 
-            self._func_ = [func,]
+            self._func_ = [func, ]
 
-        elif ftype == 'boundary-wise': # mesh boundary wise (not domain boundary-wise)
+        elif ftype == 'boundary-wise':  # mesh boundary wise (not domain boundary-wise)
             # no need to cover all mesh boundaries.
             assert isinstance(func, dict), f" when ftype == 'boundary-wise', " \
                                            f"we must put functions in a dict whose " \
@@ -103,15 +104,17 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
                     raise Exception()
 
-                self._func_[bn] = [func_bn,]
+                self._func_[bn] = [func_bn, ]
                 # we always put a func representing a scalar in a list or tuple of shape (1,)
 
-        elif ftype == 'trace-element-wise': # no need to cover all trace elements.
-            # we have received a dict whose keys are local trace elements, values are callable that returns, xyz and a vector.
+        elif ftype == 'trace-element-wise':  # no need to cover all trace elements.
+            # we have received a dict whose keys are local trace elements,
+            # values are callable that returns, xyz and a vector.
             assert isinstance(func, dict), f"func for trace-element-wise vector must a dict."
-            for i in func: # valid local trace elements
+            for i in func:  # valid local trace elements
                 assert i in self.mesh.trace.elements, f"trace element #{i} is not in this core (#{RANK})."
-                # NOTE that we do not put the vector in a list or tuple, it should take (t, xi, eta, sigma) and then return xyz and the vector.
+                # NOTE that we do not put the vector in a list or tuple,
+                # it should take (t, xi, eta, sigma) and then return xyz and the vector.
                 assert callable(func[i]), f"func[{i}] is not callable."
             self._func_ = func
 
@@ -140,19 +143,19 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
 
             if self.ftype == 'standard':
-                RETURN = [partial(self.func[0], time),]
+                RETURN = [partial(self.func[0], time), ]
 
-            elif self.ftype  == 'boundary-wise':
+            elif self.ftype == 'boundary-wise':
 
                 RETURN = dict()
                 for bn in self.func:
-                    RETURN[bn] = [partial(self.func[bn][0], time),]
+                    RETURN[bn] = [partial(self.func[bn][0], time), ]
 
-            elif self.ftype  == 'trace-element-wise':
+            elif self.ftype == 'trace-element-wise':
                 RETURN = dict()
-                for i in self.func: # go through all valid trace elements
+                for i in self.func:  # go through all valid trace elements
                     vi = self.func[i]
-                    RETURN[i] = partial(vi, time) # We can see that for each trace-element, it is a single function
+                    RETURN[i] = partial(vi, time)  # We can see that for each trace-element, it is a single function
 
             else:
                 raise Exception(f" Do not understand funcType={self.ftype}")
@@ -189,12 +192,13 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
             x0 = ___SCALAR_NEG_HELPER_1___(w0)
 
-            neg_vector = _3dCSCG_ScalarField(self.mesh,
-                 x0,
-                 ftype='standard',
-                 valid_time=self.valid_time,
-                 name = '-' + self.standard_properties.name
-                                            )
+            neg_vector = _3dCSCG_ScalarField(
+                self.mesh,
+                x0,
+                ftype='standard',
+                valid_time=self.valid_time,
+                name='-' + self.standard_properties.name
+            )
             return neg_vector
 
         else:
@@ -211,12 +215,13 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
                 x0 = ___SCALAR_SUB_HELPER_1___(w0, u0)
 
-                sub_vector = _3dCSCG_ScalarField(self.mesh,
-                     x0,
-                     ftype='standard',
-                     valid_time=self.valid_time,
-                     name = self.standard_properties.name + '-' + other.standard_properties.name
-                                                )
+                sub_vector = _3dCSCG_ScalarField(
+                    self.mesh,
+                    x0,
+                    ftype='standard',
+                    valid_time=self.valid_time,
+                    name=self.standard_properties.name + '-' + other.standard_properties.name
+                )
                 return sub_vector
 
             else:
@@ -235,12 +240,13 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
                 x0 = ___SCALAR_ADD_HELPER_1___(w0, u0)
 
-                add_vector = _3dCSCG_ScalarField(self.mesh,
-                     x0,
-                     ftype='standard',
-                     valid_time=self.valid_time,
-                     name = self.standard_properties.name + '+' + other.standard_properties.name
-                                                )
+                add_vector = _3dCSCG_ScalarField(
+                    self.mesh,
+                    x0,
+                    ftype='standard',
+                    valid_time=self.valid_time,
+                    name=self.standard_properties.name + '+' + other.standard_properties.name
+                )
                 return add_vector
 
             else:
@@ -279,12 +285,13 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                 x1 = _3dCSCG_ScaMulHelper1(sfunc, vf1)
                 x2 = _3dCSCG_ScaMulHelper1(sfunc, vf2)
 
-                mul_vector = other.__class__(self.mesh,
-                                 [x0, x1, x2],
-                                 ftype='standard',
-                                 valid_time=self.valid_time,
-                                 name=self.standard_properties.name + '*' + other.standard_properties.name
-                                 )
+                mul_vector = other.__class__(
+                    self.mesh,
+                    [x0, x1, x2],
+                    ftype='standard',
+                    valid_time=self.valid_time,
+                    name=self.standard_properties.name + '*' + other.standard_properties.name
+                )
                 return mul_vector
 
             else:
@@ -321,12 +328,13 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                 x1 = _3dCSCG_ScaMulHelper1(sfunc, vf1)
                 x2 = _3dCSCG_ScaMulHelper1(sfunc, vf2)
 
-                mul_vector = other.__class__(self.mesh,
-                                 [x0, x1, x2],
-                                 ftype='standard',
-                                 valid_time=self.valid_time,
-                                 name=other.standard_properties.name + '*' + self.standard_properties.name
-                                 )
+                mul_vector = other.__class__(
+                    self.mesh,
+                    [x0, x1, x2],
+                    ftype='standard',
+                    valid_time=self.valid_time,
+                    name=other.standard_properties.name + '*' + self.standard_properties.name
+                )
                 return mul_vector
 
             else:
@@ -336,26 +344,20 @@ class _3dCSCG_ScalarField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
             raise NotImplementedError()
 
 
-
-
-
-
-
-
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\fields\scalar\main.py
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('crazy', c=0.)([1,1,2], show_info=True)
-    space = SpaceInvoker('polynomials')([('Lobatto',1), ('Lobatto',1), ('Lobatto',1)], show_info=True)
+    mesh = MeshGenerator('crazy', c=0.)([1, 1, 2], show_info=True)
+    space = SpaceInvoker('polynomials')([('Lobatto', 1), ('Lobatto', 1), ('Lobatto', 1)], show_info=True)
     FC = FormCaller(mesh, space)
 
     def p(t, x, y, z): return t + np.cos(np.pi*x) * np.cos(2*np.pi*y) * np.cos(3*np.pi*z)
     SS = FC('scalar', p)
-    BS = FC('scalar', {'North': p, 'West':p})
+    BS = FC('scalar', {'North': p, 'West': p})
 
 
     GV = SS.numerical.gradient
 
-    BS.current_time=0
+    BS.current_time = 0
     BS.visualize()

@@ -16,11 +16,11 @@ from root.read.helpers._3dCSCG.ADF import ___restore__3dCSCG_Algebra_DUAL_Form__
 
 from root.read.helpers.chain import chain
 
-___CACHE_2dCSCG_mesh___ = list() # we only cache the last (ONE) mesh
-___CACHE_2dCSCG_space___ = list() # we only cache the last (ONE) space
+___CACHE_2dCSCG_mesh___ = list()  # we only cache the last (ONE) mesh
+___CACHE_2dCSCG_space___ = list()  # we only cache the last (ONE) space
 
-___CACHE_3dCSCG_mesh___ = list() # we only cache the last (ONE) mesh
-___CACHE_3dCSCG_space___ = list() # we only cache the last (ONE) space
+___CACHE_3dCSCG_mesh___ = list()  # we only cache the last (ONE) mesh
+___CACHE_3dCSCG_space___ = list()  # we only cache the last (ONE) space
 
 
 def read(filename, read_individuals=None):
@@ -37,9 +37,8 @@ def read(filename, read_individuals=None):
     """
     OBJ = CHAINING(chain, filename)
 
-    if isinstance(OBJ,  list): # multiple saving objects: must be a list.
-        if isinstance(OBJ[-1], tuple): # multiple saving objects with saving info:
-                                       # saving info must be in a tuple.
+    if isinstance(OBJ,  list):  # multiple saving objects: must be a list.
+        if isinstance(OBJ[-1], tuple):  # multiple saving objects with saving info: saving info must be in a tuple.
             save_info_tuple = OBJ[-1]
             OBJ = OBJ[:-1]
 
@@ -48,8 +47,8 @@ def read(filename, read_individuals=None):
                 # saving info for every obj must be None or a dict.
         else:
             pass
-    elif isinstance(OBJ, dict): # single saving object: must be a dict.
-        OBJ = [OBJ,]
+    elif isinstance(OBJ, dict):  # single saving object: must be a dict.
+        OBJ = [OBJ, ]
     else:
         raise Exception()
 
@@ -59,7 +58,7 @@ def read(filename, read_individuals=None):
         read_individuals = [1 for _ in range(LEN)]
     else:
         if isinstance(read_individuals, (bool, int, float)):
-            read_individuals = [read_individuals,]
+            read_individuals = [read_individuals, ]
 
         assert isinstance(read_individuals, (list, tuple)), \
             f"read_individuals ({read_individuals.__class__.__name__}) need to be a list or tuple."
@@ -113,7 +112,7 @@ def read(filename, read_individuals=None):
                                                               ___CACHE_3dCSCG_mesh___,
                                                               ___CACHE_3dCSCG_space___)
 
-            #----------- 2d CSCG objects -----------------------------------------------------
+            # ---------- 2d CSCG objects -----------------------------------------------------
             elif obj_name == '_2dCSCG_Mesh':
                 obj = ___restore__2dCSCG_Mesh___(obj_para, ___CACHE_2dCSCG_mesh___)
 
@@ -142,7 +141,8 @@ def read(filename, read_individuals=None):
 
         objs += (obj,)
         COMM.barrier()
-        OBJ[i] = None # clean memory.
+        OBJ[i] = None  # clean memory.
 
-    if len(objs) == 1: objs = objs[0]
+    if len(objs) == 1:
+        objs = objs[0]
     return objs

@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 import matplotlib.pyplot as plt
 from components.freeze.main import FrozenOnly
 from components.quadrature import Quadrature
 from root.config.main import *
+
 
 class _1dPolynomial(FrozenOnly):
     """
@@ -30,7 +32,7 @@ class _1dPolynomial(FrozenOnly):
             category = 'Lobatto'
 
         if p is None and isinstance(category, str) and \
-            '-' in category and category.count('-') == 1:
+           '-' in category and category.count('-') == 1:
             category, p = category.split('-')
             p = int(p)
 
@@ -60,8 +62,8 @@ class _1dPolynomial(FrozenOnly):
         self._nodes_ = nodes
         self._p_ = np.size(self.nodes) - 1
         self._isKronecker_ = True
-        self._Lb_cache_ = {'x':-100, 'cache':np.array([])}
-        self._eb_cache_ = {'x':-100, 'cache':np.array([])}
+        self._Lb_cache_ = {'x': -100, 'cache': np.array([])}
+        self._eb_cache_ = {'x': -100, 'cache': np.array([])}
         self._freeze_self_()
 
     @property
@@ -112,7 +114,7 @@ class _1dPolynomial(FrozenOnly):
     def edge_basis(self, x):
         """Return the edge polynomials evaluated at ``x``."""
         if x.__class__.__name__ == 'ndarray' and np.shape(x) == np.shape(self._eb_cache_['x']) and \
-            np.all(self._eb_cache_['x'] == x):
+           np.all(self._eb_cache_['x'] == x):
             return self._eb_cache_['cache']
         else:
             p = np.size(self.nodes) - 1
@@ -189,10 +191,11 @@ class _1dPolynomial(FrozenOnly):
         return np.transpose(nodal_derivative) @ polynomials
 
     def plot_lagrange_basis(self, dual=False, plot_density=300, ylim_ratio=0.1,
-        title=True, left=0.15, bottom=0.15,
-        minor_tick_length=5, major_tick_length=10, tick_pad=7,
-        tick_size=15, label_size=15, title_size=15,
-        linewidth=1.2, saveto=None, figsize=(6, 4), usetex=True):
+                            title=True, left=0.15, bottom=0.15,
+                            minor_tick_length=5, major_tick_length=10, tick_pad=7,
+                            tick_size=15, label_size=15, title_size=15,
+                            linewidth=1.2, saveto=None, figsize=(6, 4), usetex=True
+                            ):
         """
         Plot the lagrange basis functions in reference 1d domain ``[-1,1]``.
 
@@ -216,7 +219,8 @@ class _1dPolynomial(FrozenOnly):
         if RANK != MASTER_RANK:
             return
         plt.rc('text', usetex=usetex)
-        if usetex: plt.rcParams['text.latex.preamble'] = r"\usepackage{amsmath}"
+        if usetex:
+            plt.rcParams['text.latex.preamble'] = r"\usepackage{amsmath}"
         x = np.linspace(-1, 1, plot_density)
         basis = self.lagrange_basis(x=x)
         if dual:
@@ -262,16 +266,19 @@ class _1dPolynomial(FrozenOnly):
             plt.ylabel(r"$\widetilde{l}^{i}(\xi)$", fontsize=label_size)
         else:
             plt.ylabel(r"$l^{i}(\xi)$", fontsize=label_size)
-        if saveto is not None: plt.savefig(saveto, bbox_inches='tight')
+        if saveto is not None:
+            plt.savefig(saveto, bbox_inches='tight')
         plt.show()
         plt.close()
 
 
-    def plot_edge_basis(self, dual=False, plot_density=300, ylim_ratio=0.1,
-        title=True, left=0.15, bottom=0.15, fill_between=1,
-        minor_tick_length=5, major_tick_length=10, tick_pad=7,
-        tick_size=15, label_size=15, title_size=15,
-        linewidth=1.2, saveto=None, figsize=(6, 4), usetex=True):
+    def plot_edge_basis(
+            self, dual=False, plot_density=300, ylim_ratio=0.1,
+            title=True, left=0.15, bottom=0.15, fill_between=1,
+            minor_tick_length=5, major_tick_length=10, tick_pad=7,
+            tick_size=15, label_size=15, title_size=15,
+            linewidth=1.2, saveto=None, figsize=(6, 4), usetex=True
+    ):
         """
         Plot the lagrange edge functions in reference 1d domain ``[-1,1]``.
         Parameter ``fill_between`` is used to config the filling of the area over which the
@@ -298,7 +305,8 @@ class _1dPolynomial(FrozenOnly):
         if RANK != MASTER_RANK:
             return
         plt.rc('text', usetex=usetex)
-        if usetex: plt.rcParams['text.latex.preamble'] = r"\usepackage{amsmath}"
+        if usetex:
+            plt.rcParams['text.latex.preamble'] = r"\usepackage{amsmath}"
         # _____ preparing the x ________________________________________________________
         x = np.linspace(-1, 1, plot_density)
         x = np.concatenate((x, self.nodes))
@@ -316,7 +324,8 @@ class _1dPolynomial(FrozenOnly):
         bmx = np.max(basis)
         bmi = np.min(basis)
         interval = bmx - bmi
-        if interval == 0: interval = 0.1
+        if interval == 0:
+            interval = 0.1
         ylim = [bmi - interval * ylim_ratio, bmx + interval * ylim_ratio]
         # ___________ do THE PLOT ______________________________________________________
         plt.figure(figsize=figsize)
@@ -381,15 +390,18 @@ class _1dPolynomial(FrozenOnly):
                 raise Exception(' <Polynomials1D> : fill_between={} wrong.'.format(fill_between))
             # --------------------------------------------------------------------------
         # ------------------------------------------------------------------------------
-        if saveto is not None: plt.savefig(saveto, bbox_inches='tight')
+        if saveto is not None:
+            plt.savefig(saveto, bbox_inches='tight')
         plt.show()
         plt.close()
 
+
 if __name__ == "__main__":
     # python objects/CSCG/base/spaces/_1d_basis/polynomials.py
-    # p1 = _1dPolynomial('Lobatto',4)
+    p1 = _1dPolynomial('Lobatto', 4)
     # p1.plot_lagrange_basis(dual=False, saveto='nodal.df', title=False, figsize=(6,4),tick_size=20, label_size=20)
-    # p1.plot_edge_basis(dual=False, saveto='edge.df', title=False, figsize=(6,4), tick_size=20, label_size=20, fill_between=2)
+    p1.plot_edge_basis(dual=False, saveto='edge.df',
+                       title=False, figsize=(6, 4), tick_size=20, label_size=20, fill_between=2)
 
     # p1 = _1dPolynomial(5)
     px = _1dPolynomial('Lobatto', 5)
@@ -407,8 +419,3 @@ if __name__ == "__main__":
 
     # p1 = _1dPolynomial('Lobatto-4')
     # p1 = _1dPolynomial([-1,0,1])
-
-
-
-    # p1.plot_lagrange_basis(dual=False, title=False, figsize=(6,4),tick_size=20, label_size=20, usetex=True)
-    # p1.plot_edge_basis(dual=False, title=False, figsize=(6,4), tick_size=20, label_size=20, fill_between=2, usetex=True)

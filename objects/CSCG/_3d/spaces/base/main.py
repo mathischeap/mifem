@@ -28,7 +28,8 @@ class _3dCSCG_Space_Base(FrozenClass):
         `ndim` to be None or 3!
         """
         assert ndim is None or ndim == 3, f"ndim={ndim} must be None or 3."
-        if ndim is not None: inputs = [inputs for _ in range(ndim)]
+        if ndim is not None:
+            inputs = [inputs for _ in range(ndim)]
         self._inputs_ = inputs
         self._category_ = None
         self.___PRIVATE_generate_1D_basises___()

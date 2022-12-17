@@ -43,7 +43,6 @@ class Poisson_Base(Base):
 
         self._freeze_self_()
 
-
     # to be overridden (must) ...
 
     def phi(self, t, x, y, z):
@@ -54,17 +53,18 @@ class Poisson_Base(Base):
         if self._NPDf_p_ is None:
             self._NPDf_p_ = NumericalPartialDerivative_txyz_Functions(self.phi)
         return self._NPDf_p_('x')(t, x, y, z)
+
     def v(self, t, x, y, z):
         """phi_y"""
         if self._NPDf_p_ is None:
             self._NPDf_p_ = NumericalPartialDerivative_txyz_Functions(self.phi)
         return self._NPDf_p_('y')(t, x, y, z)
+
     def w(self, t, x, y, z):
         """phi_z"""
         if self._NPDf_p_ is None:
             self._NPDf_p_ = NumericalPartialDerivative_txyz_Functions(self.phi)
         return self._NPDf_p_('z')(t, x, y, z)
-
 
     def u_x(self, t, x, y, z):
         if self._NPDf_px_ is None:
@@ -81,10 +81,8 @@ class Poisson_Base(Base):
             self._NPDf_pz_ = NumericalPartialDerivative_txyz_Functions(self.w)
         return self._NPDf_pz_('z')(t, x, y, z)
 
-
     def f(self, t, x, y, z):
         return - self.u_x(t, x, y, z) - self.v_y(t, x, y, z) - self.w_z(t, x, y, z)
-
 
     @property
     def potential(self):
@@ -95,7 +93,6 @@ class Poisson_Base(Base):
                 valid_time=self.valid_time,
                 name='potential')
         return self._potential_
-
 
     @property
     def velocity(self):
@@ -117,25 +114,24 @@ class Poisson_Base(Base):
                  name='source_term')
         return self._source_term_
 
-
-
     @property
     def kinetic_energy_distribution(self):
         """A scalar field of the kinetic energy distribution."""
         if self._kineticEnergyDistribution_ is None:
-            self._kineticEnergyDistribution_ =_3dCSCG_ScalarField(
+            self._kineticEnergyDistribution_ = _3dCSCG_ScalarField(
                 self.mesh,
                 self.___kinetic_energy_distribution___,
                 valid_time=self.valid_time,
                 name='kinetic_energy_distribution')
         return self._kineticEnergyDistribution_
+
     def ___kinetic_energy_distribution___(self, t, x, y, z):
         return 0.5 * (self.u(t, x, y, z)**2 + self.v(t, x, y, z)**2 + self.w(t, x, y, z)**2)
+
     @lru_cache(maxsize=8)
     def kinetic_energy(self, t):
         """Kinetic energy at time `t`."""
         return self.___Pr_compute_Ln_norm_of___('kinetic_energy_distribution', time=t, n=1)
-
 
     def ___PreFrozenChecker___(self):
         """
@@ -145,7 +141,8 @@ class Poisson_Base(Base):
         TS = self.___PRIVATE_generate_random_valid_time_instances___()
         x, y, z = self._mesh_.do.generate_random_coordinates()
 
-        if len(x) == 0: return
+        if len(x) == 0:
+            return
 
         for t in TS:
 

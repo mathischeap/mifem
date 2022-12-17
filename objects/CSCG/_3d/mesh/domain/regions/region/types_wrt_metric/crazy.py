@@ -9,7 +9,6 @@ from objects.CSCG._3d.mesh.trace.elements.element.types_wrt_metric.orthogonal im
 from typing import Union
 
 
-
 class Crazy(TypeWr2MetricBase):
     """The crazy regions is the regions the crazy mesh uses."""
     def __init__(self, region):
@@ -31,7 +30,7 @@ class Crazy(TypeWr2MetricBase):
         return self._mark_
 
     def ___CLASSIFY_ELEMENT_of_spacing___(self, spacing: tuple) -> Union[ChaoticElement, OrthogonalElement]:
-        assert np.shape(spacing) == (3,2), "I need a spacing of shape (3,2) to represent an element in a regions."
+        assert np.shape(spacing) == (3, 2), "I need a spacing of shape (3,2) to represent an element in a regions."
         assert all([0 <= spacing[i][0] < spacing[i][1] <= 1 for i in range(3)]), f"spacing={spacing} is wrong."
         if self._c_ == 0:
             LxLyLz = [(spacing[i][1] - spacing[i][0]) * self._Lxyz_[i] for i in range(3)]
@@ -40,7 +39,9 @@ class Crazy(TypeWr2MetricBase):
             return ChaoticElement()
 
 
-    def ___CLASSIFY_TRACE_ELEMENT_of_spacing___(self, trace_spacing: tuple) -> Union[ChaoticTraceElement, OrthogonalTraceElement]:
+    def ___CLASSIFY_TRACE_ELEMENT_of_spacing___(
+            self, trace_spacing: tuple
+    ) -> Union[ChaoticTraceElement, OrthogonalTraceElement]:
         """
 
         :param trace_spacing: the trace_spacing representing a trace element.

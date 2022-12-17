@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 from typing import Dict, Union
 from root.config.main import RANK, MASTER_RANK, COMM, np, MPI, SIZE, SECRETARY_RANK
 from objects.CSCG.base.mesh.base import CSCG_MESH_BASE
-from components.decorators.all import accepts, memoize5#, memoize2
+from components.decorators.all import accepts, memoize5   # memoize2
 from components.exceptions import ElementsLayoutError, ElementSidePairError
 from components.miscellaneous.timer import break_list_into_parts
 from objects.CSCG._3d.mesh.elements.main import _3dCSCG_Mesh_Elements
@@ -38,6 +38,7 @@ from objects.CSCG._3d.mesh.whether import _3dCSCG_Mesh_Whether
 from objects.CSCG._3d.mesh.node.main import _3dCSCG_Node
 from objects.CSCG._3d.mesh.edge.main import _3dCSCG_Edge
 from objects.CSCG._3d.mesh.trace.main import _3dCSCG_Trace
+
 
 class _3dCSCG_Mesh(CSCG_MESH_BASE):
     """The 3dCSCG mesh."""
@@ -76,7 +77,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         """
         assert domain.ndim == 3, " <Mesh> "
         self._domain_ = domain
-        COMM.barrier() # for safety reason
+        COMM.barrier()  # for safety reason
 
         self.___chaotic_EGN_cache___ = dict()
 
@@ -96,7 +97,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         self.___PRIVATE_modify_elements_map_wr2_periodic_setting___()
         self.___PRIVATE_generate_boundary_element_sides___()
 
-        self.___DEPRECATED_ct___ = ___DCT___(self) # only for test purpose
+        self.___DEPRECATED_ct___ = ___DCT___(self)  # only for test purpose
         self._elements_ = _3dCSCG_Mesh_Elements(self)
         self._trace_ = None
         self._edge_ = None
@@ -128,7 +129,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         self._num_elements_in_region_: Dict[str] = dict()
         for rn in rns:
             self._element_layout_[rn], self._element_ratio_[rn], \
-            self._element_spacing_[rn], self._num_elements_in_region_[rn] = \
+                self._element_spacing_[rn], self._num_elements_in_region_[rn] = \
                 self.___PRIVATE_parse_element_layout_each_region___(EL[rn])
         self._num_total_elements_ = 0
         self._num_elements_accumulation_: Dict = dict()
@@ -210,7 +211,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         elif number_what == 'all regions':
             DO_number_what = rns
         elif isinstance(number_what, str) and number_what in rns:
-            DO_number_what = [number_what,]
+            DO_number_what = [number_what, ]
         else:
             raise Exception()
 
@@ -254,9 +255,10 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                     pass
                 current_num += self._num_elements_in_region_[rn]
 
-        elif EDM == 'SWV0': # smart way version 0; cores do not contain elements from different regions.
+        elif EDM == 'SWV0':  # smart way version 0; cores do not contain elements from different regions.
 
-            self.___SWV0_para___ = dict() # once this method will need optimization, we initialize a variable like this.
+            self.___SWV0_para___ = dict()  # once this method will need optimization,
+            # we initialize a variable like this.
 
             current_num = 0
 
@@ -290,9 +292,9 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
                     else:
 
-                        if NCR < 4: # number of core in this regions is 2 or 3.
-                            I, J, K = self._element_layout_[rn]
-                            A = [I, J, K]
+                        if NCR < 4:  # number of core in this regions is 2 or 3.
+                            _I, J, K = self._element_layout_[rn]
+                            A = [_I, J, K]
                             A.sort()
                             _E_ = np.arange(current_num,
                                             current_num + self._num_elements_in_region_[rn]).reshape(A, order='F')
@@ -303,7 +305,8 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                             start = current_num
                             end = current_num + self._num_elements_in_region_[rn]
 
-                            #!-Once we use _element_distribution_, _element_indices_, or _num_local_elements_, wo do this
+                            # !-Once we use _element_distribution_, _element_indices_, or
+                            # _num_local_elements_, wo do this
                             if rn in self.___character_num_elements___:
                                 # to make sure that after optimization, character_num_elements does not change
                                 character_num_elements = self.___character_num_elements___[rn]
@@ -314,16 +317,17 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                                     character_num_elements.append(len(self._element_distribution_[core]))
                                 character_num_elements = int(np.mean(character_num_elements))
 
-                                if character_num_elements <= 0: character_num_elements = 1
+                                if character_num_elements <= 0:
+                                    character_num_elements = 1
 
                                 assert character_num_elements <= self._num_elements_in_region_[rn]
 
                                 self.___character_num_elements___[rn] = character_num_elements
 
-                            #!------------------------------------------------------------------------------------------!
+                            # !--------------------------------------------------------!
 
 
-                            I, J, K = self._element_layout_[rn] # to determine which scheme to do the numbering.
+                            _I, J, K = self._element_layout_[rn]  # to determine which scheme to do the numbering.
 
                             if character_num_elements <= 3:
 
@@ -331,83 +335,88 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                                                 current_num + self._num_elements_in_region_[rn]).reshape(
                                                 self._element_layout_[rn], order='F')
 
-                            elif I == J == K:
+                            elif _I == J == K:
                                 # prepare the memory.
                                 _E_ = np.empty(self._element_layout_[rn], dtype=int)
 
                                 # same amount elements along all directions
-                                for i in range(1, I+2):
+                                for i in range(1, _I + 2):
                                     if i**3 > character_num_elements:
                                         break
                                 # noinspection PyUnboundLocalVariable
                                 i -= 1
-                                if i == 0: i = 1
+                                if i == 0:
+                                    i = 1
 
                                 if character_num_elements >= 4 and i < 2:
                                     i = 2
 
-                                if i > I: i = I
+                                if i > _I:
+                                    i = _I
                                 # we will number in small block of i*i elements at x-y plain. And go along z-direction.
 
-                                B = I // i # can have B blocks along x and y.
-                                R = I % i  # will have R elements resting along x and y.
+                                B = _I // i  # can have B blocks along x and y.
+                                R = _I % i  # will have R elements resting along x and y.
 
                                 N = start
 
-                                self.___SWV0_para___[rn] = [I,]
+                                self.___SWV0_para___[rn] = [_I, ]
                                 for n in range(B):
                                     if n != B-1:
                                         for m in range(B):
                                             if m != B-1:
-                                                PLUS = i * i * I
-                                                pylon = np.arange(N, N + PLUS).reshape((i, i, I), order='F')
+                                                PLUS = i * i * _I
+                                                pylon = np.arange(N, N + PLUS).reshape((i, i, _I), order='F')
                                                 N += PLUS
-                                                _E_[m*i:(m+1)*i, n*i:(n+1)*i, : ] = pylon
+                                                _E_[m*i:(m+1)*i, n*i:(n+1)*i, :] = pylon
                                                 self.___SWV0_para___[rn].append(PLUS)
 
                                             else:
-                                                PLUS = (i+R) * i * I
-                                                pylon = np.arange(N, N + PLUS).reshape((i+R, i, I), order='F')
+                                                PLUS = (i+R) * i * _I
+                                                pylon = np.arange(N, N + PLUS).reshape((i + R, i, _I), order='F')
                                                 N += PLUS
-                                                _E_[m*i:, n*i:(n+1)*i, : ] = pylon
+                                                _E_[m*i:, n*i:(n+1)*i, :] = pylon
                                                 self.___SWV0_para___[rn].append(PLUS)
 
                                     else:
                                         for m in range(B):
                                             if m != B-1:
-                                                PLUS = i * (i+R) * I
-                                                pylon = np.arange(N, N + PLUS).reshape((i, i+R, I), order='F')
+                                                PLUS = i * (i+R) * _I
+                                                pylon = np.arange(N, N + PLUS).reshape((i, i + R, _I), order='F')
                                                 N += PLUS
-                                                _E_[m*i:(m+1)*i, n*i:, : ] = pylon
+                                                _E_[m*i:(m+1)*i, n*i:, :] = pylon
                                                 self.___SWV0_para___[rn].append(PLUS)
 
                                             else:
-                                                PLUS = (i+R) * (i+R) * I
-                                                pylon = np.arange(N, N + PLUS).reshape((i+R, i+R, I), order='F')
+                                                PLUS = (i+R) * (i+R) * _I
+                                                pylon = np.arange(N, N + PLUS).reshape((i + R, i + R, _I), order='F')
                                                 N += PLUS
-                                                _E_[m*i:, n*i:, : ] = pylon
+                                                _E_[m*i:, n*i:, :] = pylon
                                                 self.___SWV0_para___[rn].append(PLUS)
 
                                 assert N == end, "must be like this!"
 
-                            else: # we end up with a situation we do not know how to do a proper numbering.
+                            else:  # we end up with a situation we do not know how to do a proper numbering.
 
-                                A = [I, J, K]
+                                A = [_I, J, K]
                                 A.sort()
                                 A0, A1, A2 = A
 
-                                if A2 / A1 >= NCR * 0.75: # on A2, we have a lot more elements, so we block the regions along A2
+                                if A2 / A1 >= NCR * 0.75:  # on A2, we have a lot more elements,
+                                    # so we block the regions along A2
 
                                     _E_ = np.arange(current_num,
-                                                    current_num + self._num_elements_in_region_[rn]).reshape(A, order='F')
+                                                    current_num + self._num_elements_in_region_[rn]
+                                                    ).reshape(A, order='F')
 
-                                else: # we now define a general numbering rule.
+                                else:  # we now define a general numbering rule.
 
-                                    CNE = character_num_elements  # we use this number to decide how to divide the regions.
+                                    CNE = character_num_elements  # we use this number to decide how divide the regions.
 
-                                    if A0 * A1 * A0 <= CNE: # A0 * A1 is significantly low.
+                                    if A0 * A1 * A0 <= CNE:  # A0 * A1 is significantly low.
                                         _E_ = np.arange(current_num,
-                                                        current_num + self._num_elements_in_region_[rn]).reshape(A, order='F')
+                                                        current_num + self._num_elements_in_region_[rn]
+                                                        ).reshape(A, order='F')
                                     else:
 
                                         _E_ = np.empty([A0, A1, A2], dtype=int)
@@ -423,20 +432,22 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                                         Y = 1 if Y == 0 else Y
 
                                         if CNE > 4 and A0 >= 2 and A1 >= 2:
-                                            if X < 2: X = 2
-                                            if Y < 2: Y = 2
+                                            if X < 2:
+                                                X = 2
+                                            if Y < 2:
+                                                Y = 2
 
                                         X = A0 if X > A0 else X
                                         Y = A1 if Y > A1 else Y
 
-                                        B0 = A0 // X # can have B0 blocks along A0
+                                        B0 = A0 // X  # can have B0 blocks along A0
                                         R0 = A0 % X  # will have R0 elements resting A0
-                                        B1 = A1 // Y # can have B1 blocks along A1
+                                        B1 = A1 // Y  # can have B1 blocks along A1
                                         R1 = A1 % Y  # will have R1 elements resting A1
 
                                         N = start
 
-                                        self.___SWV0_para___[rn] = [A2,]
+                                        self.___SWV0_para___[rn] = [A2, ]
                                         for n in range(B1):
                                             if n != B1 - 1:
                                                 for m in range(B0):
@@ -449,7 +460,8 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
                                                     else:
                                                         PLUS = (X + R0) * Y * A2
-                                                        pylon = np.arange(N, N + PLUS).reshape((X + R0, Y, A2), order='F')
+                                                        pylon = np.arange(N, N + PLUS).reshape((X + R0, Y, A2),
+                                                                                               order='F')
                                                         N += PLUS
                                                         _E_[m * X:, n * Y:(n + 1) * Y, :] = pylon
                                                         self.___SWV0_para___[rn].append(PLUS)
@@ -458,14 +470,16 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                                                 for m in range(B0):
                                                     if m != B0 - 1:
                                                         PLUS = X * (Y + R1) * A2
-                                                        pylon = np.arange(N, N + PLUS).reshape((X, Y + R1, A2), order='F')
+                                                        pylon = np.arange(N, N + PLUS).reshape((X, Y + R1, A2),
+                                                                                               order='F')
                                                         N += PLUS
                                                         _E_[m * X:(m + 1) * X, n * Y:, :] = pylon
                                                         self.___SWV0_para___[rn].append(PLUS)
 
                                                     else:
                                                         PLUS = (X + R0) * (Y + R1) * A2
-                                                        pylon = np.arange(N, N + PLUS).reshape((X + R0, Y + R1, A2), order='F')
+                                                        pylon = np.arange(N, N + PLUS).reshape((X + R0, Y + R1, A2),
+                                                                                               order='F')
                                                         N += PLUS
                                                         _E_[m * X:, n * Y:, :] = pylon
                                                         self.___SWV0_para___[rn].append(PLUS)
@@ -474,8 +488,8 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
                         # A general scheme to transpose _E_ into EGN ...
 
-                        ESP = _E_.shape                 # shape of _E_
-                        DSP = self._element_layout_[rn] # designed shape
+                        ESP = _E_.shape                  # shape of _E_
+                        DSP = self._element_layout_[rn]  # designed shape
 
                         E0, E1, E2 = ESP
 
@@ -497,7 +511,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                     # give EGN to dict: ___element_global_numbering___ if this region is numbered.
                     ___element_global_numbering___[rn] = EGN
 
-                else: # this regions is not numbered, lets pass.
+                else:  # this regions is not numbered, lets pass.
                     pass
 
                 current_num += self._num_elements_in_region_[rn]
@@ -515,8 +529,10 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                 assert egn_rn.__class__.__name__ == 'ndarray' and np.ndim(egn_rn) == 3, "must be a 3-d array."
                 assert np.min(egn_rn) == current_num and \
                        np.max(egn_rn) == current_num + self._num_elements_in_region_[rn] - 1, \
-                       f'Element numbering range in regions {rn} is wrong. Cross regions, the overall numbering must be increasing.'
-                # this means within a regions, the element numbering can be anything, but overall, it has to be increasing through rns.
+                       f'Element numbering range in regions {rn} is wrong. Cross regions, ' \
+                       f'the overall numbering must be increasing.'
+                # this means within a regions, the element numbering can be anything,
+                # but overall, it has to be increasing through rns.
 
                 A = np.shape(egn_rn)
                 assert A == self._element_layout_[rn], f"___element_global_numbering___[{rn}] shape wrong!"
@@ -553,7 +569,8 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                 1. The overall quality (of the whole mesh across all cores.) 1 is best, 0 is worst.
                 2. The local quality of this core.
         """
-        if SIZE == 1: return 1, 1
+        if SIZE == 1:
+            return 1, 1
 
         INTERNAL = 0
         EXTERNAL = 0
@@ -573,14 +590,14 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
         loc_qua = (INTERNAL + BOUNDARY) / (self.elements.num * 6)
 
-        I = COMM.reduce(INTERNAL, root=MASTER_RANK, op=MPI.SUM)
+        _I = COMM.reduce(INTERNAL, root=MASTER_RANK, op=MPI.SUM)
         E = COMM.reduce(EXTERNAL, root=MASTER_RANK, op=MPI.SUM)
         B = COMM.reduce(BOUNDARY, root=MASTER_RANK, op=MPI.SUM)
 
         if RANK == MASTER_RANK:
             ALL_FACES = self.elements.global_num * 6
-            assert I + E + B == ALL_FACES, "Something is wrong."
-            QUALITY = (I + B) / ALL_FACES
+            assert _I + E + B == ALL_FACES, "Something is wrong."
+            QUALITY = (_I + B) / ALL_FACES
         else:
             QUALITY = None
 
@@ -593,7 +610,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
         :return:
         """
-        local_elements = dict() # keys are regions name, values are indices of local elements
+        local_elements = dict()  # keys are regions name, values are indices of local elements
         for i in self.elements:
             rn, lid = self.___PRIVATE_do_find_region_name_and_local_indices_of_element___(i)
             if rn not in local_elements:
@@ -646,7 +663,8 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
             JUST_PASS = self.___SWV0_para___ == dict()
             JUST_PASS = COMM.allreduce(JUST_PASS, op=MPI.LAND)
 
-            if JUST_PASS: return
+            if JUST_PASS:
+                return
 
             # we first merge all ___SWV0_para___ to master ...
             _PA_ = COMM.gather(self.___SWV0_para___, root=MASTER_RANK)
@@ -666,7 +684,8 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
                     if rn in PARA:
                         Loc_Cor = self.___region_cores_dict___[rn]
-                        for c in Loc_Cor: assert c not in NEW_DIS, "Safety checker."
+                        for c in Loc_Cor:
+                            assert c not in NEW_DIS, "Safety checker."
                         loc_Par = PARA[rn]
                         layers = loc_Par[0]
                         blocks = loc_Par[1:]
@@ -685,7 +704,8 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                                 for i, c in enumerate(Loc_Cor):
                                     NEW_DIS[c] = blocks[i]
                             else:
-                                _d1_ = [num_LocCor // num_blocks + (1 if x < num_LocCor % num_blocks else 0) for x in range(num_blocks)]
+                                _d1_ = [num_LocCor // num_blocks + (1 if x < num_LocCor % num_blocks else 0)
+                                        for x in range(num_blocks)]
 
                                 ___DO___ = True
 
@@ -701,7 +721,8 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
                                     for i, B in enumerate(blocks):
 
-                                        _d3_ = [layers // _d1_[i] + (1 if x < layers % _d1_[i] else 0) for x in range(_d1_[i])][::-1]
+                                        _d3_ = [layers // _d1_[i] + (1 if x < layers % _d1_[i] else 0)
+                                                for x in range(_d1_[i])][::-1]
 
                                         num_ele_per_layer = int(B / layers)
                                         assert num_ele_per_layer * layers == B, "Something is wrong."
@@ -727,7 +748,8 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                                                 pass
                                             else:
                                                 NOC = len(OC)
-                                                DIS_D = [TO_OTHER // NOC + (1 if x < TO_OTHER % NOC else 0) for x in range(NOC)]
+                                                DIS_D = [TO_OTHER // NOC + (1 if x < TO_OTHER % NOC else 0)
+                                                         for x in range(NOC)]
 
                                                 for j, c in enumerate(_d2_[i]):
                                                     if c == MASTER_RANK:
@@ -757,7 +779,8 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
                                                 pass
                                             else:
                                                 NOC = len(OC)
-                                                DIS_D = [TO_OTHER // NOC + (1 if x < TO_OTHER % NOC else 0) for x in range(NOC)]
+                                                DIS_D = [TO_OTHER // NOC + (1 if x < TO_OTHER % NOC else 0)
+                                                         for x in range(NOC)]
 
                                                 for j, c in enumerate(_d2_[i]):
                                                     if c == SECRETARY_RANK:
@@ -777,7 +800,8 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
                 # do the things: Now, we must have disDict ...
                 assert isinstance(NEW_DIS, dict)
-                for i in range(SIZE): assert i in NEW_DIS, f"NEW_DIS not full, miss distribution for core #{i}."
+                for i in range(SIZE):
+                    assert i in NEW_DIS, f"NEW_DIS not full, miss distribution for core #{i}."
                 ED = dict()
                 before_elements = 0
                 for i in range(SIZE):
@@ -792,7 +816,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
             self._element_indices_ = self._element_distribution_[RANK]
             self._num_local_elements_ = len(self._element_indices_)
 
-        else: # no need to optimize ...
+        else:  # no need to optimize ...
             return
 
         # has to do another check ...
@@ -936,8 +960,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
 
         self.___involved_regions___ = RP
 
-
-        if len(self._element_indices_) == 0: # to make sure we initialized the memoize cache.
+        if len(self._element_indices_) == 0:  # to make sure we initialized the memoize cache.
             self.___PRIVATE_do_find_region_name_and_local_indices_of_element___(-1)
 
     def ___PRIVATE_initializing_periodic_setting___(self):
@@ -953,7 +976,8 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
     def ___PRIVATE_modify_elements_map_wr2_periodic_setting___(self):
         """"""
         ___USEFUL_periodicElementSidePairs___ = self.___PRIVATE_initializing_periodic_setting___()
-        self.___useful_periodic_element_side_pairs___ = list() # will be used for example when generating trace elements
+        self.___useful_periodic_element_side_pairs___ = list()
+        # will be used for example when generating trace elements
 
         self.___local_periodic_element_sides___ = list()
         self.___local_periodic_elements___ = list()
@@ -1051,10 +1075,12 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         else:
             raise Exception('elementSidePair format wrong!')
 
-    @memoize5 # must use memoize
+    @memoize5  # must use memoize
     def ___PRIVATE_do_find_region_name_and_local_indices_of_element___(self, i):
         """ Find the regions and the local numbering of ith element. """
-        if i == -1: return None # to make sure we initialized the memoize cache.
+        if i == -1:
+            return None  # to make sure we initialized the memoize cache.
+
         region_name = None
         for num_elements_accumulation in self._num_elements_accumulation_:
             if i < num_elements_accumulation:

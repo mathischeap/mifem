@@ -2,12 +2,14 @@
 """['NWB', 'SWB', 'NEB', 'SEB', 'NWF', 'SWF', 'NEF', 'SEF']"""
 
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from root.config.main import *
 from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.node.elements.element.main import _3dCSCG_Node_Element
 from objects.CSCG._3d.mesh.node.elements.do.main import _3dCSCG_NodeMesh_Do
+
 
 class _3dCSCG_Node_Elements(FrozenOnly):
     """['NWB', 'SWB', 'NEB', 'SEB', 'NWF', 'SWF', 'NEF', 'SEF']"""
@@ -51,8 +53,8 @@ class _3dCSCG_Node_Elements(FrozenOnly):
             numberingCache = dict()
             numOfBasis = 8
             currentNumber = 0
-            other_side_name = 'SNEWFB' # not an error, this is other side name.
-            sidePairDict = {'N':'S', 'S':'N', 'W':'E', 'E':'W', 'B':'F', 'F':'B'}
+            other_side_name = 'SNEWFB'  # not an error, this is other side name.
+            sidePairDict = {'N': 'S', 'S': 'N', 'W': 'E', 'E': 'W', 'B': 'F', 'F': 'B'}
             for i in range(SIZE):
                 if i == MASTER_RANK:
                     element_map = mesh.elements.map
@@ -76,7 +78,7 @@ class _3dCSCG_Node_Elements(FrozenOnly):
                             currentNumber += howManyNotNumbered
 
                     for j, EMki in enumerate(element_map[k]):
-                        if isinstance(EMki, str): # on domain boundary
+                        if isinstance(EMki, str):  # on domain boundary
                             pass
                         else:
                             otherElement = EMki
@@ -88,12 +90,14 @@ class _3dCSCG_Node_Elements(FrozenOnly):
                                     k, sidePairDict[otherSide], otherElement, otherSide, numberingCache
                                 )
                 toBeSentAway = dict()
-                for k in element_indices: toBeSentAway[k] = numberingCache[k]
+                for k in element_indices:
+                    toBeSentAway[k] = numberingCache[k]
                 if i == MASTER_RANK:
                     global_numbering = toBeSentAway
                 else:
                     COMM.send(toBeSentAway, dest=i, tag=i)
-                for k in element_indices: del numberingCache[k]
+                for k in element_indices:
+                    del numberingCache[k]
 
         MAX = list()
         for i in self._mesh_.elements:
@@ -116,22 +120,37 @@ class _3dCSCG_Node_Elements(FrozenOnly):
 
     @staticmethod
     def ___PRIVATE_for_0Form_pass_element_side_numbering_from_to___(
-        fromElement, fromSide, toElement, toSide, numberingCache):
-        if fromSide == 'N'  : data = numberingCache[fromElement][0 , :, :]
-        elif fromSide == 'S': data = numberingCache[fromElement][-1, :, :]
-        elif fromSide == 'W': data = numberingCache[fromElement][ :, 0, :]
-        elif fromSide == 'E': data = numberingCache[fromElement][ :,-1, :]
-        elif fromSide == 'B': data = numberingCache[fromElement][ :, :, 0]
-        elif fromSide == 'F': data = numberingCache[fromElement][ :, :,-1]
-        else: raise Exception()
+        fromElement, fromSide, toElement, toSide, numberingCache
+    ):
+        if fromSide == 'N':
+            data = numberingCache[fromElement][0, :, :]
+        elif fromSide == 'S':
+            data = numberingCache[fromElement][-1, :, :]
+        elif fromSide == 'W':
+            data = numberingCache[fromElement][:, 0, :]
+        elif fromSide == 'E':
+            data = numberingCache[fromElement][:, -1, :]
+        elif fromSide == 'B':
+            data = numberingCache[fromElement][:, :, 0]
+        elif fromSide == 'F':
+            data = numberingCache[fromElement][:, :, -1]
+        else:
+            raise Exception()
 
-        if toSide == 'N'  : numberingCache[toElement][ 0, :, :] = data
-        elif toSide == 'S': numberingCache[toElement][-1, :, :] = data
-        elif toSide == 'W': numberingCache[toElement][ :, 0, :] = data
-        elif toSide == 'E': numberingCache[toElement][ :,-1, :] = data
-        elif toSide == 'B': numberingCache[toElement][ :, :, 0] = data
-        elif toSide == 'F': numberingCache[toElement][ :, :,-1] = data
-        else: raise Exception()
+        if toSide == 'N':
+            numberingCache[toElement][0, :, :] = data
+        elif toSide == 'S':
+            numberingCache[toElement][-1, :, :] = data
+        elif toSide == 'W':
+            numberingCache[toElement][:, 0, :] = data
+        elif toSide == 'E':
+            numberingCache[toElement][:, -1, :] = data
+        elif toSide == 'B':
+            numberingCache[toElement][:, :, 0] = data
+        elif toSide == 'F':
+            numberingCache[toElement][:, :, -1] = data
+        else:
+            raise Exception()
 
     @property
     def map(self):
@@ -160,17 +179,18 @@ class _3dCSCG_Node_Elements(FrozenOnly):
             for i in range(self._mesh_.elements.global_num):
                 mp_i = MAP[i]
                 for ind, node in enumerate(mp_i):
-                    if node not in LOC_DICT: LOC_DICT[node] = list()
+                    if node not in LOC_DICT:
+                        LOC_DICT[node] = list()
                     LOC_DICT[node].append(str(i)+ind_2_loc[ind])
 
                     if len(LOC_DICT[node]) == 8:
                         LOC_DICT_FULL[node] = LOC_DICT[node]
                         del LOC_DICT[node]
 
-            LOC_DICT_FULL.update(LOC_DICT) # LOC_DICT_FULL has all locations on mesh elements.
+            LOC_DICT_FULL.update(LOC_DICT)  # LOC_DICT_FULL has all locations on mesh elements.
             del LOC_DICT
 
-            # now we split the LOC_DICT_FULL to send to each cores.
+            # now we split the LOC_DICT_FULL to send to each core.
             EDs = self._mesh_._element_distribution_
             LOCAL_NODES = list()
             for core in EDs:
@@ -196,7 +216,7 @@ class _3dCSCG_Node_Elements(FrozenOnly):
                 for node in self.map[i]:
                     assert node in LOCAL_NODES, f"safety check!"
 
-        face_ind_dict = {'N':0, 'S':1, 'W':2, 'E':3, 'B':4, 'F':5}
+        face_ind_dict = {'N': 0, 'S': 1, 'W': 2, 'E': 3, 'B': 4, 'F': 5}
 
         LOCAL_NODES_BNS = dict()
 
@@ -204,11 +224,11 @@ class _3dCSCG_Node_Elements(FrozenOnly):
             for loc in LOCAL_NODES[node]:
                 mesh_element = int(loc[:-3])
                 corner = loc[-3:]
-                if mesh_element in mesh_map: # we are looking at a location from a local mesh element.
+                if mesh_element in mesh_map:   # we are looking at a location from a local mesh element.
                     for f in corner:
                         ind = face_ind_dict[f]
                         what_is_here = mesh_map[mesh_element][ind]
-                        if isinstance(what_is_here, str): # a mesh boundary
+                        if isinstance(what_is_here, str):   # a mesh boundary
                             if node not in LOCAL_NODES_BNS:
                                 LOCAL_NODES_BNS[node] = list()
                             if what_is_here not in LOCAL_NODES_BNS[node]:
@@ -235,7 +255,6 @@ class _3dCSCG_Node_Elements(FrozenOnly):
                                 if loc not in send_back[node]:
                                     send_back[node].append(loc)
 
-
             send_back = COMM.gather(send_back, root=i)
 
             if RANK == i:
@@ -253,8 +272,6 @@ class _3dCSCG_Node_Elements(FrozenOnly):
             for node in self._MAP_[i]:
                 assert node in LOCAL_NODES, "safety check!"
                 LOCAL_NODES[node] = tuple(LOCAL_NODES[node])
-
-
 
         bns = self._mesh_.boundaries.names
         ___ = '0123456789'
@@ -277,9 +294,9 @@ class _3dCSCG_Node_Elements(FrozenOnly):
                     on_mesh_boundaries[node].append(position)
 
             # noinspection PyUnresolvedReferences
-            shared_by_elements[node] = tuple(shared_by_elements[node]) # tuple is faster and memory less.
+            shared_by_elements[node] = tuple(shared_by_elements[node])  # tuple is faster and memory less.
             # noinspection PyUnresolvedReferences
-            on_mesh_boundaries[node] = tuple(on_mesh_boundaries[node]) # tuple is faster and memory less.
+            on_mesh_boundaries[node] = tuple(on_mesh_boundaries[node])  # tuple is faster and memory less.
 
         self._shared_by_elements_ = shared_by_elements
         self._on_mesh_boundaries_ = on_mesh_boundaries
@@ -307,8 +324,6 @@ class _3dCSCG_Node_Elements(FrozenOnly):
                     if IS_on_periodic_boundary[node]:
                         break
         self._IS_on_periodic_boundary_ = IS_on_periodic_boundary
-
-
 
         return LOCAL_NODES
 
@@ -349,14 +364,11 @@ class _3dCSCG_Node_Elements(FrozenOnly):
         return self.num
 
 
-
-
-
 if __name__ == '__main__':
     # mpiexec -n 4 python objects\CSCG\_3d\mesh\node\elements\main.py
     from objects.CSCG._3d.master import MeshGenerator
     elements = [2, 2, 2]
-    mesh = MeshGenerator('crazy', c=0.0, bounds=([0,3], [0,3], [0,3]))(elements)
+    mesh = MeshGenerator('crazy', c=0.0, bounds=([0, 3], [0, 3], [0, 3]))(elements)
     # mesh = MeshGenerator('bridge_arch_cracked')(elements)
     nodes = mesh.node.elements
 

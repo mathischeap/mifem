@@ -2,11 +2,11 @@
 from components.freeze.base import FrozenOnly
 import numpy as np
 
+
 class _3dCSCG_Discretize_BoundaryWise(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
         self._freeze_self_()
-
 
     def __call__(self):
         """

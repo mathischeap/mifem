@@ -4,11 +4,8 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 8/28/2022 12:25 PM
 """
-import sys
 
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
-
 
 from importlib import import_module
 
@@ -44,8 +41,3 @@ class _2dCSCG_DiscreteFieldsAllocator(FrozenOnly):
         return {
             "vector": base_path + "vector.main",
         }
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

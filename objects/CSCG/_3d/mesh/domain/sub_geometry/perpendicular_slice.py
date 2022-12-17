@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-
-
 from components.freeze.base import FrozenOnly
-
 
 
 class _3dCSCG_DomainPerpendicularSlice(FrozenOnly):
@@ -20,9 +17,8 @@ class _3dCSCG_DomainPerpendicularSlice(FrozenOnly):
 
             RPS_dict[rn] = RPS
 
-        self._RPS_dict_ = RPS_dict # will be same in all cores.
+        self._RPS_dict_ = RPS_dict  # will be same in all cores.
         self._freeze_self_()
-
 
     @property
     def RPS_dict(self):

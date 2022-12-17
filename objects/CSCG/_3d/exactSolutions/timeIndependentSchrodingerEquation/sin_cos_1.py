@@ -4,7 +4,6 @@ from objects.CSCG._3d.exactSolutions.timeIndependentSchrodingerEquation.base imp
     TimeIndependentSchrodingerEquationBase
 
 
-
 class TISE_SinCos1(TimeIndependentSchrodingerEquationBase):
     """The sin cos test case 1.
     """

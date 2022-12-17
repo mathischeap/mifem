@@ -55,6 +55,7 @@ coverage.xml
 
 *.png
 *.pdf
+*.jpg
 
 # Translations
 *.mo

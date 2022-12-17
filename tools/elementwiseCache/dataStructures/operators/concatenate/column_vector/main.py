@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from tools.elementwiseCache.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
-
 from tools.elementwiseCache.dataStructures.operators.concatenate.column_vector.helpers.DG import ___concatenate_HELPER_DataGenerator___
 from tools.elementwiseCache.dataStructures.operators.concatenate.column_vector.helpers.KG import ___concatenate_HELPER_KeyGenerator___
 
-def ___concatenate_EWC_sparse_vectors___(vectors):
+
+def ___concatenate_EWC_sparse_vectors___(vectors, do_a_test=True):
     """"""
     assert vectors.__class__.__name__ in ('list', 'tuple') and len(vectors) > 0, \
         "please put vectors in list or tuple."
@@ -35,10 +35,11 @@ def ___concatenate_EWC_sparse_vectors___(vectors):
     if None not in CGMs:
         EWC.gathering_matrix = Chain_Gathering_Matrix(CGMs)
 
-
-    if 0 in EWC: _ = EWC[0]
-    # do a test to check if concatenate is fine. This is OKAY even if we will apply
-    # some customization later, the cache is done before the customization
-
+    if do_a_test and 0 in EWC:
+        # do a test to check if concatenate is fine. This is OKAY even if we will apply
+        # some customization later, the cache is done before the customization
+        _ = EWC[0]
+    else:
+        pass
 
     return EWC

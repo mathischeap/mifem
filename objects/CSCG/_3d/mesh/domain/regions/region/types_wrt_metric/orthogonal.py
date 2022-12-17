@@ -33,7 +33,7 @@ class Orthogonal(TypeWr2Metric):
            NWF_z == SWF_z == NEF_z == SEF_z:
 
             _Length_ = SWB_x - NWB_x
-            _width_  = NEB_y - NWB_y
+            _width_ = NEB_y - NWB_y
             _height_ = NWF_z - NWB_z
             assert _Length_ > 0 and _width_ > 0 and _height_ > 0, \
                 f"orthogonal regions {region.name} " \
@@ -54,14 +54,13 @@ class Orthogonal(TypeWr2Metric):
         return self._mark_
 
     def ___CLASSIFY_ELEMENT_of_spacing___(self, spacing: tuple):
-        assert np.shape(spacing) == (3,2), \
+        assert np.shape(spacing) == (3, 2), \
             "I need a spacing of shape (3,2) to represent an element in a regions."
         assert all([0 <= spacing[i][0] < spacing[i][1] <= 1 for i in range(3)]), \
             f"spacing={spacing} is wrong."
 
         LxLyLz = [(spacing[i][1] - spacing[i][0]) * self._Lxyz_[i] for i in range(3)]
         return OrthogonalElement(LxLyLz)
-
 
     def ___CLASSIFY_TRACE_ELEMENT_of_spacing___(self, trace_spacing: tuple):
         """

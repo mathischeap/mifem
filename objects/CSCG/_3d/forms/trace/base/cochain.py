@@ -15,14 +15,14 @@ class _3dCSCG_Trace_Cochain(CSCG_Trace_Form_Cochain_BASE):
 
     def ___local_2_local_TEW___(self):
         """"""
-        if self._tf_.whether.hybrid: # hybrid trace forms
+        if self._tf_.whether.hybrid:  # hybrid trace forms
             BO = self._tf_.num.basis_onside
-            INDICES = [0,]
+            INDICES = [0, ]
             for sn in 'NSWEBF':
                 # noinspection PyUnresolvedReferences
                 INDICES.append(INDICES[-1]+BO[sn])
-            _D_ = {'N':0, 'S':1, 'W':2, 'E':3, 'B':4, 'F':5}
-            TEW : dict[int] = dict()
+            _D_ = {'N': 0, 'S': 1, 'W': 2, 'E': 3, 'B': 4, 'F': 5}
+            TEW: dict[int] = dict()
             for i in self._tf_.mesh.trace.elements:
                 TE = self._tf_.mesh.trace.elements[i]
                 CE, CS = TE.CHARACTERISTIC_element, TE.CHARACTERISTIC_side
@@ -33,9 +33,9 @@ class _3dCSCG_Trace_Cochain(CSCG_Trace_Form_Cochain_BASE):
                     pass
             self._local_TEW_ = TEW
 
-        else: # non-hybrid trace forms, we use distributors.
+        else:  # non-hybrid trace forms, we use distributors.
             Tmap = self._tf_.mesh.trace.elements.map
-            TEW : dict[int] = dict()
+            TEW: dict[int] = dict()
             sns = 'NSWEBF'
             for ele in self.local:
                 ESW = self._distributor_(self.local[ele])

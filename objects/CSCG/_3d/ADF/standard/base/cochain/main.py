@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
-
 from root.config.main import *
 from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.ADF.standard.base.cochain.local import ____3dCSCG_ADSF_Cochain_Local____
 from scipy.sparse import csr_matrix, csc_matrix
 from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_ColumnVector
-
-
 
 
 class _3dCSCG_Algebra_DUAL_Standard_Form_Cochain(FrozenOnly):
@@ -106,7 +103,7 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Cochain(FrozenOnly):
                     else:
                         # noinspection PyUnboundLocalVariable
                         to_be_sent = csc_matrix(
-                            (VV[lr[0]:lr[1]], range(lr[0],lr[1]), [0, lr[1]-lr[0]]),
+                            (VV[lr[0]:lr[1]], range(lr[0], lr[1]), [0, lr[1]-lr[0]]),
                             shape=(self._dsf_.num.global_dofs, 1))
                     TO_BE_SENT.append(to_be_sent)
             else:
@@ -115,13 +112,13 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Cochain(FrozenOnly):
             # distribute to local cochain ...
             local = dict()
             GM = self._dsf_.prime.numbering.gathering
-            for i in GM: # go through all local elements
+            for i in GM:  # go through all local elements
                 idx = GM[i].full_vector
                 local[i] = TO_BE_SENT[idx].toarray().ravel()
             self.local = local
 
         elif globe.__class__.__name__ == 'LocallyFullVector':
-            V = globe.V # V already be 1-d array.
+            V = globe.V  # V already be 1-d array.
             local = dict()
             GM = self._dsf_.prime.numbering.gathering
             for i in GM:  # go through all local elements

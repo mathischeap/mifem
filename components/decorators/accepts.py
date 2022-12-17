@@ -4,9 +4,7 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 11/22/2022 9:53 AM
 """
-
 import numpy as np
-
 
 
 def accepts(*types):
@@ -77,23 +75,24 @@ def accepts(*types):
         def new_f(*args, **kwds):
             for i, (a, t) in enumerate(zip(args, types)):
                 # we handle iterable accepts in tuple
-                if isinstance(t, list): t = tuple(t)
-                #______________________________________________________________________
+                if isinstance(t, list):
+                    t = tuple(t)
+                # _____________________________________________________________________
                 # we have a self-defined type: sparse_matrix, which basically
                 # includes all sparse type in scipy.sparse.
                 if t == 'sparse_matrix':
                     assert a.__class__.__name__ in ('csc_matrix', 'csr_matrix', 'coo_matrix', 'lil_matrix',
                                                     'dok_matrix', 'dia_matrix', 'bsr_matrix'), \
-                        " <{}> : {}th Arg: %r does not match: %s".format(f.__name__, i)%(a,t)
+                        " <{}> : {}th Arg: %r does not match: %s".format(f.__name__, i) % (a, t)
                 elif t == 'natural_number':
                     assert isinstance(a, int) and a >= 0, \
-                        " <{}> : {}th Arg: %r does not match: %s".format(f.__name__, i)%(a,t)
+                        " <{}> : {}th Arg: %r does not match: %s".format(f.__name__, i) % (a, t)
                 elif t == 'positive_int':
                     assert isinstance(a, int) and a > 0, \
-                        " <{}> : {}th Arg: %r does not match: %s".format(f.__name__, i)%(a,t)
+                        " <{}> : {}th Arg: %r does not match: %s".format(f.__name__, i) % (a, t)
                 elif t == 'negative_int':
                     assert isinstance(a, int) and a < 0, \
-                        " <{}> : {}th Arg: %r does not match: %s".format(f.__name__, i)%(a,t)
+                        " <{}> : {}th Arg: %r does not match: %s".format(f.__name__, i) % (a, t)
                 elif isinstance(t, tuple):
                     if 'sparse_matrix' in t:
                         t += ('csc_matrix', 'csr_matrix', 'coo_matrix', 'lil_matrix',
@@ -102,10 +101,10 @@ def accepts(*types):
                         pass
                     _not_in_multiple_acceptance_ = ('natural_number', 'positive_int', 'negative_int')
                     assert all([ti not in _not_in_multiple_acceptance_ for ti in t]), \
-                    " <{}> : {}th Arg: {} has not-multiple-acceptance type.".format(f.__name__, i, t)
+                        " <{}> : {}th Arg: {} has not-multiple-acceptance type.".format(f.__name__, i, t)
                 else:
                     pass
-                #______________________________________________________________________
+                # _____________________________________________________________________
                 if t is None or t == '' or (t == 'self' and i == 0):
                     # When used for method, we set the first to be 'self' of course.
                     # When t == '' or is None, then the input can be anything.
@@ -117,14 +116,14 @@ def accepts(*types):
                     # shape requirement_________________________________________________
                     if isinstance(t, (list, tuple)):
                         for i_type in t:
-                            #~~~~~~~~~~ check shape ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                            # ~~~~~~~~~ check shape ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                             if isinstance(i_type, str) and i_type[0:5] == 'shape':
                                 input_shape = np.shape(a)
                                 input_ndim = np.ndim(a)
                                 if input_shape == ():
                                     raise Exception(
-                                    " <{}> : {}th Arg has not shape, so can not match shape requirement.".format(
-                                    f.__name__, i))
+                                        " <{}> : {}th Arg has not shape, so can not match shape requirement.".format(
+                                            f.__name__, i))
                                 assert '=' in i_type
                                 shape = i_type.split('=')[1]
                                 assert shape[0] == '(' and shape[-1] == ')', \
@@ -132,11 +131,11 @@ def accepts(*types):
                                                         f.__name__, i, i_type)
                                 shape = shape[1:-1].split(',')
                                 ls = len(shape)
-                                #_____Future potential changes below___________________
+                                # ____Future potential changes below___________________
                                 for j, sj in enumerate(shape):
                                     if sj == '...':
                                         assert j+1 == ls, \
-                                        " <{}> : for shape requirement, '...' must be put at last".format(
+                                            " <{}> : for shape requirement, '...' must be put at last".format(
                                                 f.__name__)
                                     elif sj == 'x':
                                         pass
@@ -160,20 +159,20 @@ def accepts(*types):
                                 except AssertionError:
                                     raise Exception(
                                         " <{}> : {}th Arg does not match shape requirement: {}.".format(
-                                        f.__name__, i, require_shape))
-                                #------------------------------------------------------
+                                            f.__name__, i, require_shape))
+                                # ----------------------------------------------------
                                 break
-                            #~~~~~~~~~~ check ndim ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                            # ~~~~~~~~~ check ndim ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                             elif isinstance(i_type, str) and i_type[0:4] == 'ndim':
                                 assert '=' in i_type
                                 ndim = int(i_type.split('=')[1])
                                 assert np.ndim(a) == ndim, \
-                                " <{}> : {}th Arg does not match ndim requirement: {}.".format(
+                                    " <{}> : {}th Arg does not match ndim requirement: {}.".format(
                                         f.__name__, i, ndim)
-                            #~~~~~~~~~~ ELSE: pass ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                            # ~~~~~~~~~ ELSE: pass ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                             else:
                                 pass
-                            #==========================================================
+                            # =========================================================
                     else:
                         pass
                     # type requirement__________________________________________________
@@ -186,13 +185,13 @@ def accepts(*types):
                             assert a.__class__.__name__ in t
                         except TypeError:
                             assert a.__class__.__name__ == t, " <{}> : {}th Arg: %r does not match: %s".format(
-                                    f.__name__, i)%(a,t)
+                                    f.__name__, i) % (a, t)
                         except AssertionError:
-                            raise Exception(" <{}> : {}th Arg: %r does not match: %s".format(f.__name__, i)%(a,t))
+                            raise Exception(" <{}> : {}th Arg: %r does not match: %s".format(f.__name__, i) % (a, t))
                     except AssertionError:
-                        raise Exception(" <{}> : {}th Arg: %r does not match: %s".format(f.__name__, i)%(a,t))
-                    #------------------------------------------------------------------
-                #----------------------------------------------------------------------
+                        raise Exception(" <{}> : {}th Arg: %r does not match: %s".format(f.__name__, i) % (a, t))
+                    # -----------------------------------------------------------------
+                # ---------------------------------------------------------------------
             return f(*args, **kwds)
         new_f.__name__ = f.__name__
         return new_f

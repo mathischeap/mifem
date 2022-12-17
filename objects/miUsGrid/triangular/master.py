@@ -6,7 +6,8 @@
 """
 
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from root.config.main import COMM, RANK, MASTER_RANK
 from importlib import import_module
@@ -26,13 +27,11 @@ from objects.miUsGrid.triangular.mesh.instances.samples.allocator import miUsGri
 from objects.miUsGrid.triangular.mesh.instances.realtime.allocator import miUsGrid_RealTime_TriangularMeshAllocator
 
 
-
-
 class Call(FrozenOnly):
     """"""
 
     def __init__(self, mesh_source_or_ID, p,
-        boundaries=None, show_info=False, mesh_name='NoNameMesh', **kwargs):
+                 boundaries=None, show_info=False, mesh_name='NoNameMesh', **kwargs):
         """
 
         Parameters
@@ -71,9 +70,6 @@ class Call(FrozenOnly):
         if show_info:
             miprint(f"   Polynomial degree: {self._space_.p}")
         self._freeze_self_()
-
-
-
 
     def __repr__(self):
         return f"miUsGrid_Triangular_Form_caller@{id(self)}=mesh-{self.mesh.name}"
@@ -116,7 +112,9 @@ class Call(FrozenOnly):
     @classmethod
     def listing(cls, printing=True, returning=False):
         """For an allocator class, this list all the possibilities ONLY in the master core."""
-        if RANK != MASTER_RANK: return
+        if RANK != MASTER_RANK:
+            return
+
         included_allocators = [
             miUsGrid_FormsAllocator,
             miUsGrid_ExactSolutionAllocator,
@@ -136,8 +134,6 @@ class Call(FrozenOnly):
             return listing
         else:
             pass
-
-
 
 
 if __name__ == "__main__":

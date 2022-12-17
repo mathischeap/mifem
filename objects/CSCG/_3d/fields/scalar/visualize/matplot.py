@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 from root.config.main import *
 
+
 class _3dCSCG_ScalarField_matplot_Visualize(FrozenOnly):
     """"""
     def __init__(self, f):
@@ -17,9 +18,11 @@ class _3dCSCG_ScalarField_matplot_Visualize(FrozenOnly):
         """"""
         return self.boundary_values(*args, **kwargs)
 
-    def boundary_values(self,
-        density=5000, colormap='coolwarm',
-        num_color_bar_ticks=5):
+    def boundary_values(
+            self,
+            density=5000, colormap='coolwarm',
+            num_color_bar_ticks=5
+    ):
         """"""
         mesh = self._f_.mesh
         NUM = mesh.trace.elements.global_num
@@ -32,7 +35,8 @@ class _3dCSCG_ScalarField_matplot_Visualize(FrozenOnly):
         xyz = COMM.gather(xyz, root=MASTER_RANK)
         v = COMM.gather(v, root=MASTER_RANK)
 
-        if RANK != MASTER_RANK: return
+        if RANK != MASTER_RANK:
+            return
 
         XYZ = list()
         V = list()
@@ -72,8 +76,8 @@ class _3dCSCG_ScalarField_matplot_Visualize(FrozenOnly):
 
         mappable = cm.ScalarMappable(cmap=cmap)
         mappable.set_array(np.array(ticks))
-        cb = plt.colorbar(mappable, ax=ax, # ticks=np.linspace(0,1,num_ticks),
-                          shrink=1, aspect=20,# extend='min',
+        cb = plt.colorbar(mappable, ax=ax,  # ticks=np.linspace(0,1,num_ticks),
+                          shrink=1, aspect=20,  # extend='min',
                           orientation='vertical', )
         # cb.set_label(r'$ \log_{10}\left( \left| \lambda^h-\varphi_{\mathrm{exact}} \right| \right) $',
         #     labelpad=10, size=15)

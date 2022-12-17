@@ -1,9 +1,6 @@
 
-
-
 from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.elements.element.sides.side.coordinate_transformation import _3dCSCG_Mesh_Element_Side_CT
-
 
 
 class _3dCSCG_Mesh_Element_Side(FrozenOnly):
@@ -13,7 +10,7 @@ class _3dCSCG_Mesh_Element_Side(FrozenOnly):
         self._element_ = sides._element_
         self._mesh_ = self._element_._mesh_
         self._position_ = str(self._element_.i) + position
-        self._side_index_= 'NSWEBF'.index(position)
+        self._side_index_ = 'NSWEBF'.index(position)
         self._ct_ = None
         self._freeze_self_()
 

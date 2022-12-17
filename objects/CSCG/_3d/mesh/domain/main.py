@@ -5,6 +5,7 @@ from objects.CSCG._3d.mesh.domain.boundaries import _3dCSCG_Boundaries
 from objects.CSCG._3d.mesh.domain.whether import _3dCSCG_Domain_Whether
 from objects.CSCG._3d.mesh.domain.sub_geometry.main import _3dCSCG_DomainSubGeometry
 
+
 class _3dCSCG_Domain(_3dCSCG_DomainBase):
     """We have the whole ``_3dCSCG_Domain`` (all same) in all cores. This
     is very important.

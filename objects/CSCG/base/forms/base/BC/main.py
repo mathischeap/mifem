@@ -2,11 +2,12 @@
 from components.freeze.base import FrozenOnly
 from objects.CSCG.base.forms.base.BC.interpret.main import CSCG_FORM_BC_Interpret
 
+
 class CSCG_Form_BC(FrozenOnly):
     def __init__(self, f):
         self._f_ = f
         self._CF_ = None
-        self._boundaries_ = None
+        self._boundaries_ = list()
         self._involved_element_parts_ = None
         self._EWC_ = None
         self._interpret_ = CSCG_FORM_BC_Interpret(self._f_)
@@ -34,7 +35,7 @@ class CSCG_Form_BC(FrozenOnly):
         """"""
         BNS = self._f_.mesh.boundaries.names
         if isinstance(bns, str):
-            bns = [bns,]
+            bns = [bns, ]
         else:
             pass
         assert isinstance(bns, (list, tuple)), f"pls put boundary names into a list or tuple."
@@ -63,4 +64,3 @@ class CSCG_Form_BC(FrozenOnly):
         Remember to save its sub-properties with separate variables.
         """
         return self._interpret_
-

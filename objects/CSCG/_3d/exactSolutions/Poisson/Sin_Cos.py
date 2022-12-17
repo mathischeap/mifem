@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-
-
 from numpy import sin, pi
 from objects.CSCG._3d.exactSolutions.Poisson.base import Poisson_Base
-
 
 
 # noinspection PyAbstractClass
@@ -12,7 +9,6 @@ class Poisson_SinCos1(Poisson_Base):
     """
     def __init__(self, mesh):
         super(Poisson_SinCos1, self).__init__(mesh)
-
 
     @property
     def valid_time(self):

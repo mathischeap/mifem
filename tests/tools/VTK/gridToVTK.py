@@ -7,7 +7,8 @@
 import numpy as np
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from components.miscellaneous.miprint import miprint
 from components.miscellaneous.mirand import randint
 from components.miscellaneous.mios import cleandir, rmdir
@@ -46,7 +47,7 @@ def TEST_save_CSCG_objects_to_structured_VTK_file():
     f3.CF.current_time = 0
     f3.discretize()
 
-    grid = [np.linspace(-1,1,11), np.linspace(-1,1,8), np.linspace(-1,1,9)]
+    grid = [np.linspace(-1, 1, 11), np.linspace(-1, 1, 8), np.linspace(-1, 1, 9)]
 
     path = '__gridToVTK_test__'
     gridToVTK(grid, [f0, f1, f2, f3], path)
@@ -75,13 +76,14 @@ def TEST_save_CSCG_objects_to_structured_VTK_file():
     f2.CF.current_time = 0
     f2.discretize()
 
-    grid = [np.linspace(-1,1,23), np.linspace(-1,1,17)]
+    grid = [np.linspace(-1, 1, 23), np.linspace(-1, 1, 17)]
     path = '__gridToVTK_2dtest__'
     gridToVTK(grid, [f0, f1i, f1o, f2], path)
     cleandir(path)
     rmdir(path)
 
     return 1
+
 
 if __name__ == "__main__":
     # mpiexec -n 4 python __tests__/unittests/VTK/gridToVTK.py

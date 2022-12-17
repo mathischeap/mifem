@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-
-
-
-
 from components.freeze.base import FrozenOnly
 
 
@@ -12,7 +8,6 @@ class _3dCSCG_NodeElement_Whether(FrozenOnly):
         """"""
         self._element_ = element
         self._freeze_self_()
-
 
     @property
     def on_mesh_boundary(self):

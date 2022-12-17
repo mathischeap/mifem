@@ -3,7 +3,9 @@ from components.freeze.main import FrozenOnly
 import numpy as np
 from root.config.main import SAFE_MODE
 
-from objects.CSCG._3d.mesh.domain.regions.region.sides.side.coordinate_transformation import SideCoordinateTransformation
+from objects.CSCG._3d.mesh.domain.regions.region.sides.side.coordinate_transformation import \
+    SideCoordinateTransformation
+
 
 class Side(FrozenOnly):
     def __init__(self, sides, side_name):
@@ -25,18 +27,15 @@ class Side(FrozenOnly):
     def position(self):
         return self._position_
 
-
-
     @property
     def coordinate_transformation(self):
         if self._ct_ is None:
             self._ct_ = SideCoordinateTransformation(self)
         return self._ct_
 
-
     def ___generate_full_ep___(self, evaluation_points):
         """ """
-        if len(evaluation_points) == 2: # only two valid ep for local trace element provided.
+        if len(evaluation_points) == 2:  # only two valid ep for local trace element provided.
 
             ep0, ep1 = evaluation_points
             shape0 = np.shape(ep0)
@@ -44,18 +43,24 @@ class Side(FrozenOnly):
                 assert shape0 == np.shape(ep1), \
                     " <TraceElement3D> : evaluation_points shape wrong."
 
-            if self._name_ == 'N': ep = (np.zeros(shape0), *evaluation_points)
-            elif self._name_ == 'S': ep = (np.ones(shape0), *evaluation_points)
-            elif self._name_ == 'W': ep = (ep0, np.zeros(shape0), ep1)
-            elif self._name_ == 'E': ep = (ep0, np.ones(shape0), ep1)
-            elif self._name_ == 'B': ep = (*evaluation_points, np.zeros(shape0))
-            elif self._name_ == 'F': ep = (*evaluation_points, np.ones(shape0))
+            if self._name_ == 'N':
+                ep = (np.zeros(shape0), *evaluation_points)
+            elif self._name_ == 'S':
+                ep = (np.ones(shape0), *evaluation_points)
+            elif self._name_ == 'W':
+                ep = (ep0, np.zeros(shape0), ep1)
+            elif self._name_ == 'E':
+                ep = (ep0, np.ones(shape0), ep1)
+            elif self._name_ == 'B':
+                ep = (*evaluation_points, np.zeros(shape0))
+            elif self._name_ == 'F':
+                ep = (*evaluation_points, np.ones(shape0))
             else:
                 raise Exception()
 
             return ep
 
-        elif len(evaluation_points) == 3: # two valid plus one -1 or +1 coordinates are provided
+        elif len(evaluation_points) == 3:  # two valid plus one -1 or +1 coordinates are provided
             if SAFE_MODE:
                 assert evaluation_points[0].shape == \
                        evaluation_points[1].shape == \
@@ -64,6 +69,3 @@ class Side(FrozenOnly):
 
         else:
             raise Exception("evaluation_points shape wrong dimension wrong.")
-
-
-

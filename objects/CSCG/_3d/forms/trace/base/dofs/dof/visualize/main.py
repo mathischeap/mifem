@@ -1,6 +1,7 @@
 
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.forms.trace.base.dofs.dof.visualize.matplot._0tr import _3dCSCG_0TF_DOF_Matplot
@@ -39,15 +40,12 @@ class _3dCSCG_Trace_forms_DOF_VISUALIZE(FrozenOnly):
         return self._matplot_
 
 
-
-
-
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\form\trace\dofs\dof\main.py
-    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
     mesh = MeshGenerator('crazy', c=0.3)(None)
-    space = SpaceInvoker('polynomials')([('Lobatto',1), ('Lobatto',1), ('Lobatto',1)])
+    space = SpaceInvoker('polynomials')([('Lobatto', 1), ('Lobatto', 1), ('Lobatto', 1)])
     FC = FormCaller(mesh, space)
 
 

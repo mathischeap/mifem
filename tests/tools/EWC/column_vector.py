@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
-
+if './' not in sys.path:
+    sys.path.append('./')
 
 from root.config.main import *
 import random
@@ -18,19 +18,19 @@ def test_LinearAlgebra_EWC_No0_ColumnVector():
         print("&&& [test_LinearAlgebra_No0_EWC_ColumnVector] ...... ", flush=True)
 
     if RANK == MASTER_RANK:
-        load = random.randint(10,100)
-        IH = [True, False][random.randint(0,1)]
-        l = random.randint(2, 3)
+        load = random.randint(10, 100)
+        IH = [True, False][random.randint(0, 1)]
+        L = random.randint(2, 3)
         m = random.randint(1, 3)
         n = random.randint(2, 4)
     else:
         load = None
         IH = None
-        l, m, n = None, None, None
+        L, m, n = None, None, None
     load, IH = COMM.bcast([load, IH], root=MASTER_RANK)
-    l, m, n = COMM.bcast([l, m, n], root=MASTER_RANK)
+    L, m, n = COMM.bcast([L, m, n], root=MASTER_RANK)
     mesh = _3d_RANDOM_MESH_(load)
-    space = SpaceInvoker('polynomials')([('Lobatto', l), ('Lobatto', m), ('Lobatto', n)])
+    space = SpaceInvoker('polynomials')([('Lobatto', L), ('Lobatto', m), ('Lobatto', n)])
     FC = FormCaller(mesh, space)
 
     def u(t, x, y, z): return np.cos(np.pi*x) + np.sin(np.pi*y) * np.sin(np.pi*z-0.125)**2 + t/2
@@ -39,7 +39,7 @@ def test_LinearAlgebra_EWC_No0_ColumnVector():
     def p(t, x, y, z): return np.cos(np.pi*x) + np.sin(np.pi*y) * np.sin(np.pi*z-0.125)**2 + t/2
 
     scalar = FC('scalar', p)
-    vector = FC('vector', (u,v,w))
+    vector = FC('vector', (u, v, w))
     f0 = FC('0-f', hybrid=False)
     f1 = FC('1-f', hybrid=False)
     f0.CF = scalar
@@ -63,12 +63,11 @@ def test_LinearAlgebra_EWC_No0_ColumnVector():
         ZERO = V_ - vvv
         assert ZERO.nnz == 0
 
-
-    #-------- tests of customize ------------------------------------------------------------------
+    # ------- tests of customize ------------------------------------------------------------------
     V = concatenate([v0, v1])
     GLOBAL_num_dofs = V.gathering_matrix.global_num_dofs
     if RANK == MASTER_RANK:
-        num_samples = random.randint(1,5)
+        num_samples = random.randint(1, 5)
         indices = random.sample(range(0, GLOBAL_num_dofs), num_samples)
         values = [random.random() for __ in range(num_samples)]
         renew_values = [random.random() for __ in range(num_samples)]
@@ -94,11 +93,7 @@ def test_LinearAlgebra_EWC_No0_ColumnVector():
     if RANK == MASTER_RANK:
         np.testing.assert_array_almost_equal(Va[indices] - renew_values, 0)
 
-
     return 1
-
-
-
 
 
 if __name__ == '__main__':

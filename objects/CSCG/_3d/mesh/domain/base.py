@@ -70,7 +70,7 @@ class _3dCSCG_DomainBase(FrozenOnly):
         _regions_ = dict()
         for rn in self._region_names_:
             _R_ = Region(
-                3, # self.ndim
+                3,  # self.ndim
                 rn,
                 self._domain_input_.region_corner_coordinates[rn],
                 self._domain_input_.region_side_types,
@@ -261,6 +261,6 @@ class _3dCSCG_DomainBase(FrozenOnly):
             if np.sqrt(
                     (i[0] - corner[0]) ** 2 +
                     (i[1] - corner[1]) ** 2 +
-                    (i[2] - corner[2]) ** 2   ) <= 1e-9:
+                    (i[2] - corner[2]) ** 2) <= 1e-9:
                 return True, _
         return False, -1

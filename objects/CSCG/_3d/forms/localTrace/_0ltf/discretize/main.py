@@ -11,7 +11,6 @@ from objects.CSCG._3d.forms.localTrace._0ltf.discretize.scalar.standard import _
 from objects.CSCG._3d.forms.localTrace._0ltf.discretize.scalar.trace_element_wise import _3dCSCG_0ltf_Discretize_TraceElementWise
 
 
-
 class _3dCSCG_0LocalTrace_Discretize(FrozenOnly):
     """"""
 
@@ -74,4 +73,3 @@ class _3dCSCG_0LocalTrace_Discretize(FrozenOnly):
                                           f'discretize {SELF.BC.CF.__class__}.')
         else:
             raise NotImplementedError(f"3dCSCG 0-ltf cannot discretize while targeting at {target}.")
-

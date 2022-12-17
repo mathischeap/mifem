@@ -4,6 +4,7 @@ the local cochain to each form.
 
 """
 
+
 def distribute_local_cochain(local_cochain, forms):
     """
 
@@ -28,10 +29,10 @@ def distribute_local_cochain(local_cochain, forms):
 
         end = start + num_basis
 
-        f_l_c = dict() # form local cochain
+        f_l_c = dict()  # form local cochain
 
         for me in local_cochain:
-            f_l_c[me] = local_cochain[me][start : end]
+            f_l_c[me] = local_cochain[me][start:end]
 
         f.cochain.local = f_l_c
 

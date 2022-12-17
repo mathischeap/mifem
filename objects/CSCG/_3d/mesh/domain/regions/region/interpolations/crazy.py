@@ -2,6 +2,7 @@
 import numpy as np
 from objects.CSCG._3d.mesh.domain.regions.region.interpolations.base import InterpolationBase
 
+
 class Crazy(InterpolationBase):
     """ The Crazy interpolation in 3D. """
 

@@ -11,7 +11,7 @@ from root.config.main import RANK, MASTER_RANK, COMM
 
 class CuboidPeriodic(_3dDomainInputBase):
     """"""
-    def __init__(self, p_NWB=(0,0,0), width=1, length=1, height=1, region_layout=(2,2,2)):
+    def __init__(self, p_NWB=(0, 0, 0), width=1, length=1, height=1, region_layout=(2, 2, 2)):
         """
 
         Parameters
@@ -28,12 +28,11 @@ class CuboidPeriodic(_3dDomainInputBase):
             If `region_layout = (a, b, c)`, there are `a` regions along x-direction, `b` regions
             along y-direction and `c` regions along z-direction.
         """
-        #---- check region_layout : must be a tuple or list of two positive integers ------------
+        # --- check region_layout : must be a tuple or list of two positive integers ------------
         assert len(region_layout) == 3 and \
-               (region_layout[0] > 0 and region_layout[0] % 1==0) and \
-               (region_layout[1] > 0 and region_layout[1] % 1==0) and \
-               (region_layout[2] > 0 and region_layout[2] % 1==0), \
-            f"region_layout = {region_layout} wrong!"
+               (region_layout[0] > 0 and region_layout[0] % 1 == 0) and \
+               (region_layout[1] > 0 and region_layout[1] % 1 == 0) and \
+               (region_layout[2] > 0 and region_layout[2] % 1 == 0), f"region_layout = {region_layout} wrong!"
         assert width > 0 and length > 0 and height > 0
 
         self._p_NWB = p_NWB
@@ -60,13 +59,13 @@ class CuboidPeriodic(_3dDomainInputBase):
                     y = y_start + j * y_step
                     z = z_start + k * z_step
                     region_corner_coordinates[region_name] = (
-                          (x         , y         , z         ),
-                          (x + x_step, y         , z         ),
-                          (x         , y + y_step, z         ),
-                          (x + x_step, y + y_step, z         ),
-                          (x         , y         , z + z_step),
-                          (x + x_step, y         , z + z_step),
-                          (x         , y + y_step, z + z_step),
+                          (x, y, z),
+                          (x + x_step, y, z),
+                          (x, y + y_step, z),
+                          (x + x_step, y + y_step, z),
+                          (x, y, z + z_step),
+                          (x + x_step, y, z + z_step),
+                          (x, y + y_step, z + z_step),
                           (x + x_step, y + y_step, z + z_step)
                     )
 
@@ -83,17 +82,17 @@ class CuboidPeriodic(_3dDomainInputBase):
 
         for k in range(L2):
             for j in range(L1):
-                boundary_region_edges['North'] += (Rs[ 0][j][k] + '-N',)
+                boundary_region_edges['North'] += (Rs[0][j][k] + '-N',)
                 boundary_region_edges['South'] += (Rs[-1][j][k] + '-S',)
 
         for k in range(L2):
             for i in range(L0):
-                boundary_region_edges['West'] += (Rs[i][ 0][k] + '-W',)
+                boundary_region_edges['West'] += (Rs[i][0][k] + '-W',)
                 boundary_region_edges['East'] += (Rs[i][-1][k] + '-E',)
 
         for j in range(L1):
             for i in range(L0):
-                boundary_region_edges['Back']  += (Rs[i][j][ 0] + '-B',)
+                boundary_region_edges['Back'] += (Rs[i][j][0] + '-B',)
                 boundary_region_edges['Front'] += (Rs[i][j][-1] + '-F',)
 
         self.region_corner_coordinates = region_corner_coordinates
@@ -101,8 +100,8 @@ class CuboidPeriodic(_3dDomainInputBase):
         self.boundary_region_sides = boundary_region_edges
         self.region_interpolators = 'orthogonal'
         self.periodic_boundary_pairs = {'South=North': 'regular',
-                                        'West=East'  : 'regular',
-                                        'Back=Front' : 'regular'}
+                                        'West=East': 'regular',
+                                        'Back=Front': 'regular'}
         self.region_type_wr2_metric = 'orthogonal'
         self.region_sequence = region_sequence
 
@@ -126,18 +125,19 @@ class CuboidPeriodic(_3dDomainInputBase):
     def statistic(cls):
         return {'periodic': True,
                 'region num': 'unknown',
-                'mesh boundary num': 0, # the amount of mesh boundaries (instead of domain boundaries)
+                'mesh boundary num': 0,  # the amount of mesh boundaries (instead of domain boundaries)
                 }
 
     @classproperty
     def random_parameters(cls):
         if RANK == MASTER_RANK:
-            rp = {'p_NWB': (random.uniform(-1,1), random.uniform(-1,1), random.uniform(-1,1)),
-                  'width':random.uniform(1,3),
-                  'length':random.uniform(1,3),
-                  'height':random.uniform(1,3),
-                  "region_layout": random.sample((1,1,2), 3)
-                }
+            rp = {
+                'p_NWB': (random.uniform(-1, 1), random.uniform(-1, 1), random.uniform(-1, 1)),
+                'width': random.uniform(1, 3),
+                'length': random.uniform(1, 3),
+                'height': random.uniform(1, 3),
+                "region_layout": random.sample((1, 1, 2), 3)
+            }
         else:
             rp = None
 

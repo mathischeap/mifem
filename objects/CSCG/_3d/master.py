@@ -7,7 +7,8 @@
          TU Delft, Delft, Netherlands
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from importlib import import_module
 from components.freeze.main import FrozenOnly
@@ -22,6 +23,7 @@ from objects.CSCG._3d.fields.allocator import _3dCSCG_Field_Allocator
 from objects.CSCG._3d.exactSolutions.allocator import _3dCSCG_ExactSolution_Allocator
 from copy import deepcopy
 from root.config.main import RANK, MASTER_RANK, COMM
+
 
 class MeshGenerator(FrozenOnly):
     def __init__(self, ID, **kwargs):
@@ -48,7 +50,8 @@ class MeshGenerator(FrozenOnly):
             print(f"---[3dCSCG]-[MESH]-{MyTimer.current_time()}-----")
             print(f"   <domain ID>: {self._ID_}")
             str_dp = str(self._kwargs_)
-            if len(str_dp) > 40: str_dp = str_dp[:40] + '...'
+            if len(str_dp) > 40:
+                str_dp = str_dp[:40] + '...'
             print("   <domain_parameters>: {}".format(str_dp))
             print(f"   <EDM>: {EDM}", flush=True)
 

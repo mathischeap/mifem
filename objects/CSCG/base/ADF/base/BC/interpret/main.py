@@ -4,11 +4,9 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/10/13 9:19 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
 from objects.CSCG.base.ADF.base.BC.interpret.local import CSCG_AFORM_BC_Interpret_Local
+
 
 class CSCG_AFORM_BC_Interpret(FrozenOnly):
     """"""
@@ -29,8 +27,3 @@ class CSCG_AFORM_BC_Interpret(FrozenOnly):
         if self._local_ is None:
             self._local_ = CSCG_AFORM_BC_Interpret_Local(self._adf_)
         return self._local_
-
-
-if __name__ == "__main__":
-    # mpiexec -n 4 python 
-    pass

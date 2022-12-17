@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
 from objects.CSCG._3d.forms.trace.base.dofs.dof.main import _3dCSCG_Trace_forms_DOF
 from objects.CSCG._3d.forms.trace.base.dofs.do.main import _3dCSCG_TraceDofs_Do
+
 
 class _3dCSCG_Trace_forms_DOFs(FrozenOnly):
     """The class of all dofs of a trace form."""
@@ -41,14 +43,14 @@ class _3dCSCG_Trace_forms_DOFs(FrozenOnly):
         """Find the local mesh-element(s) and the index(es) of its local numbering of a dof i."""
 
 
-        if self._local_range_ == tuple(): # I have no local mesh elements
+        if self._local_range_ == tuple():  # I have no local mesh elements
             return list(), list()
 
         if i in range(*self._local_range_):
             ELEMENTS = list()
             INDICES = list()
             # note that this does not make sure `i` is contained by the core since dofs may not fully cover the range.
-            for e in self._GM_: # go through all local elements
+            for e in self._GM_:  # go through all local elements
                 v = self._GM_[e]
                 if i in v:
                     ELEMENTS.append(e)
@@ -59,7 +61,6 @@ class _3dCSCG_Trace_forms_DOFs(FrozenOnly):
         else:
             return list(), list()
 
-
     @property
     def do(self):
         if self._do_ is None:
@@ -67,15 +68,12 @@ class _3dCSCG_Trace_forms_DOFs(FrozenOnly):
         return self._do_
 
 
-
-
-
 if __name__ == '__main__':
     # mpiexec -n 6 python objects\CSCG\_3d\forms\trace\base\dofs\main.py
-    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('crazy', c=0.3)([2,2,2])
-    space = SpaceInvoker('polynomials')([('Lobatto',1), ('Lobatto',1), ('Lobatto',1)])
+    mesh = MeshGenerator('crazy', c=0.3)([2, 2, 2])
+    space = SpaceInvoker('polynomials')([('Lobatto', 1), ('Lobatto', 1), ('Lobatto', 1)])
     FC = FormCaller(mesh, space)
 
 

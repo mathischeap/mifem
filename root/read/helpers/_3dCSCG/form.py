@@ -16,10 +16,10 @@ def ___restore__3dCSCG_Form___(parameters, mesh_cache, space_cache):
 
     ___COCHAIN_READ_VERSION___ = - 1
     if 'cochain_local' in parameters:
-        ___COCHAIN_READ_VERSION___  = 0
+        ___COCHAIN_READ_VERSION___ = 0
         COCHAIN = parameters.pop('cochain_local')
     else:
-        ___COCHAIN_READ_VERSION___  = 1
+        ___COCHAIN_READ_VERSION___ = 1
         COCHAIN = parameters.pop('region_wise_cochain_local')
 
 

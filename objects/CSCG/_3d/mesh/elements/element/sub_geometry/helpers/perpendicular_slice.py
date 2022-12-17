@@ -2,7 +2,6 @@
 from components.freeze.base import FrozenOnly
 
 
-
 class ElementPerpendicularSlice(FrozenOnly):
     """An element slice can only be a full perpendicular surface (refer to the reference element,
     can be curvilinear in the physical element.)
@@ -28,12 +27,10 @@ class ElementPerpendicularSlice(FrozenOnly):
 
         self._freeze_self_()
 
-
     @property
     def perpendicular_to_axis(self):
         """"""
         return self._PTA_
-
 
     @property
     def position(self):

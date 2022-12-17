@@ -84,11 +84,13 @@ class _3dCSCG_Domain_Visualize(FrozenOnly):
     #     frame.plot().activate()
 
 
-    def matplot(self, density=1000, corlormap='tab10',
-        show_internal_region_sides=False,
-        show_boundary_names=True,
-        distinguish_boundaries_by_color=True,
-        aspect='equal',):
+    def matplot(
+            self, density=1000, corlormap='tab10',
+            show_internal_region_sides=False,
+            show_boundary_names=True,
+            distinguish_boundaries_by_color=True,
+            aspect='equal',
+    ):
         """
 
         :param density:
@@ -100,10 +102,11 @@ class _3dCSCG_Domain_Visualize(FrozenOnly):
         :return:
         """
         # we can do everything in the master core.
-        if RANK != MASTER_RANK: return
+        if RANK != MASTER_RANK:
+            return
 
         density = int(np.ceil(np.sqrt(density/(self._domain_.regions.num*6))))
-        rrr = sss = np.linspace(0,1,density)
+        rrr = sss = np.linspace(0, 1, density)
         rrr, sss = np.meshgrid(rrr, sss, indexing='ij')
 
         regions = self._domain_.regions
@@ -114,13 +117,14 @@ class _3dCSCG_Domain_Visualize(FrozenOnly):
         ax.yaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
         ax.zaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
         # make the grid lines transparent
-        ax.xaxis._axinfo["grid"]['color'] =  (1,1,1,0)
-        ax.yaxis._axinfo["grid"]['color'] =  (1,1,1,0)
-        ax.zaxis._axinfo["grid"]['color'] =  (1,1,1,0)
+        ax.xaxis._axinfo["grid"]['color'] = (1, 1, 1, 0)
+        ax.yaxis._axinfo["grid"]['color'] = (1, 1, 1, 0)
+        ax.zaxis._axinfo["grid"]['color'] = (1, 1, 1, 0)
 
         boundaries_num = self._domain_.boundaries.num
         boundaries_name = self._domain_.boundaries.names
-        if boundaries_num > 10 and corlormap=='tab10': corlormap = 'viridis'
+        if boundaries_num > 10 and corlormap == 'tab10':
+            corlormap = 'viridis'
         color = cm.get_cmap(corlormap, boundaries_num)
         colors = []
         boundary_name_color_dict = dict()
@@ -160,7 +164,7 @@ class _3dCSCG_Domain_Visualize(FrozenOnly):
                         bn = regions.map[rn][i]
                         ax.plot_surface(*xyz, color=boundary_name_color_dict[bn])
                     else:
-                        ax.plot_surface(*xyz, color=(1,1,1,0.6))
+                        ax.plot_surface(*xyz, color=(1, 1, 1, 0.6))
 
                     if show_boundary_names:
                         x, y, z = xyz
@@ -176,7 +180,7 @@ class _3dCSCG_Domain_Visualize(FrozenOnly):
 
                 else:
                     if show_internal_region_sides:
-                        ax.plot_surface(*xyz, color=(1,1,1,0.3))
+                        ax.plot_surface(*xyz, color=(1, 1, 1, 0.3))
 
         if aspect == 'equal':
             ax.set_box_aspect((np.ptp(x_lim), np.ptp(y_lim), np.ptp(z_lim)))
@@ -185,7 +189,7 @@ class _3dCSCG_Domain_Visualize(FrozenOnly):
         ax.set_xlabel(r'$x$', fontsize=15)
         ax.set_ylabel(r'$y$', fontsize=15)
         ax.set_zlabel(r'$z$', fontsize=15)
-        plt.title(self._domain_.name + ', ID: '+
+        plt.title(self._domain_.name + ', ID: ' +
                   self._domain_.parameters['ID'] +
                   ', <domain>')
 

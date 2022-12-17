@@ -5,6 +5,7 @@ from objects.CSCG._3d.fields.scalar.do.reconstruct.trace_element.trace_element_w
 from objects.CSCG._3d.fields.scalar.do.reconstruct.trace_element.boundary_wise import OnTraceElement_BoundaryWise
 from objects.CSCG._3d.fields.scalar.do.reconstruct.trace_element.standard import OnTraceElement_Standard
 
+
 class _3dCSCG_Scalar_Do_Reconstruct(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
@@ -13,7 +14,6 @@ class _3dCSCG_Scalar_Do_Reconstruct(FrozenOnly):
         self._on_trace_element___for_boundary_wise_ = OnTraceElement_BoundaryWise(sf)
         self._on_trace_element___for_standard_ = OnTraceElement_Standard(sf)
         self._freeze_self_()
-
 
     def __call__(self, xi, eta, sigma, time=None, ravel=False, i=None, where=None):
         """
@@ -29,13 +29,13 @@ class _3dCSCG_Scalar_Do_Reconstruct(FrozenOnly):
         """
         ftype = self._sf_.ftype
 
-        #------- deal with time --------------------------------------------------
+        # ------ deal with time --------------------------------------------------
         if time is None:
             pass
         else:
             self._sf_.current_time = time
 
-        # we deal with default `where` input ---------------------------------------------------------------
+        # we deal with default `where` input ------------------------------------------
         if where is None:
             if ftype == "standard":
                 where = "mesh-element"
@@ -46,7 +46,7 @@ class _3dCSCG_Scalar_Do_Reconstruct(FrozenOnly):
         else:
             pass
 
-        #--------------------------------------------------------------------------
+        # -------------------------------------------------------------------------
         if where == 'mesh-element':
             if ftype == 'standard':
                 return self._on_mesh_element___for_standard_(xi, eta, sigma, ravel, i)

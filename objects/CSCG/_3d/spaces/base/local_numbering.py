@@ -10,6 +10,7 @@ TU Delft
 import numpy as np
 from components.freeze.main import FrozenOnly
 
+
 class LocalNumbering(FrozenOnly):
     """ """
     def __init__(self, FS):
@@ -184,19 +185,20 @@ class LocalNumbering(FrozenOnly):
     def _3dCSCG_2Trace(self):
         """Return the trace-element-wise (NOT mesh-element-wise) local numbering of 2-trace-form."""
         p = self._FS_.p
-        TEW__LN = {'N': (np.arange(p[1]*p[2]).reshape((p[1], p[2]), order='F'),),
-                   'S': (np.arange(p[1]*p[2]).reshape((p[1], p[2]), order='F'),),
-                   'W': (np.arange(p[0]*p[2]).reshape((p[0], p[2]), order='F'),),
-                   'E': (np.arange(p[0]*p[2]).reshape((p[0], p[2]), order='F'),),
-                   'B': (np.arange(p[0]*p[1]).reshape((p[0], p[1]), order='F'),),
-                   'F': (np.arange(p[0]*p[1]).reshape((p[0], p[1]), order='F'),)}
+        TEW__LN = {'N': (np.arange(p[1]*p[2]).reshape((p[1], p[2]), order='F'), ),
+                   'S': (np.arange(p[1]*p[2]).reshape((p[1], p[2]), order='F'), ),
+                   'W': (np.arange(p[0]*p[2]).reshape((p[0], p[2]), order='F'), ),
+                   'E': (np.arange(p[0]*p[2]).reshape((p[0], p[2]), order='F'), ),
+                   'B': (np.arange(p[0]*p[1]).reshape((p[0], p[1]), order='F'), ),
+                   'F': (np.arange(p[0]*p[1]).reshape((p[0], p[1]), order='F'), )}
         return TEW__LN
 
 
 
 
     def ___PRIVATE_find_MESH_ELEMENT_WISE_local_dofs_of_0Trace_edge___(
-        self, trace_face, trace_edge, hybrid=True):
+            self, trace_face, trace_edge, hybrid=True
+    ):
         """We try to find the local dofs of 0-trace-form on the `trace_edge` of a trace-element on
         the  `trace_face` side of mesh-element.
 
@@ -221,37 +223,37 @@ class LocalNumbering(FrozenOnly):
 
                 if trace_face in ('N', 'S'):
                     if trace_edge == 'W':
-                        TEW_dofs = LN[0][0,:]
+                        TEW_dofs = LN[0][0, :]
                     elif trace_edge == 'E':
-                        TEW_dofs = LN[0][-1,:]
+                        TEW_dofs = LN[0][-1, :]
                     elif trace_edge == 'B':
-                        TEW_dofs = LN[0][:,0]
+                        TEW_dofs = LN[0][:, 0]
                     elif trace_edge == 'F':
-                        TEW_dofs = LN[0][:,-1]
+                        TEW_dofs = LN[0][:, -1]
                     else:
                         raise Exception()
 
                 elif trace_face in ('W', 'E'):
                     if trace_edge == 'N':
-                        TEW_dofs = LN[0][0,:]
+                        TEW_dofs = LN[0][0, :]
                     elif trace_edge == 'S':
-                        TEW_dofs = LN[0][-1,:]
+                        TEW_dofs = LN[0][-1, :]
                     elif trace_edge == 'B':
-                        TEW_dofs = LN[0][:,0]
+                        TEW_dofs = LN[0][:, 0]
                     elif trace_edge == 'F':
-                        TEW_dofs = LN[0][:,-1]
+                        TEW_dofs = LN[0][:, -1]
                     else:
                         raise Exception()
 
                 elif trace_face in ('B', 'F'):
                     if trace_edge == 'N':
-                        TEW_dofs = LN[0][0,:]
+                        TEW_dofs = LN[0][0, :]
                     elif trace_edge == 'S':
-                        TEW_dofs = LN[0][-1,:]
+                        TEW_dofs = LN[0][-1, :]
                     elif trace_edge == 'W':
-                        TEW_dofs = LN[0][:,0]
+                        TEW_dofs = LN[0][:, 0]
                     elif trace_edge == 'E':
-                        TEW_dofs = LN[0][:,-1]
+                        TEW_dofs = LN[0][:, -1]
                     else:
                         raise Exception()
 
@@ -263,7 +265,7 @@ class LocalNumbering(FrozenOnly):
                 num_basis_WE = num_basis_onsides['W']
                 num_basis_BF = num_basis_onsides['B']
 
-                if trace_face =='N':
+                if trace_face == 'N':
                     self._cache_T0_[TFE] = TEW_dofs
                 elif trace_face == 'S':
                     self._cache_T0_[TFE] = TEW_dofs + num_basis_NS
@@ -284,7 +286,8 @@ class LocalNumbering(FrozenOnly):
             raise NotImplementedError()
 
     def ___PRIVATE_find_MESH_ELEMENT_WISE_local_dofs_of_1Trace_edge___(
-        self, trace_face, trace_edge, hybrid=True):
+            self, trace_face, trace_edge, hybrid=True
+    ):
         """We try to find the local dofs of 1-trace-form on the `trace_edge` of a trace-element on
         the  `trace_face` side of mesh-element.
 
@@ -309,37 +312,37 @@ class LocalNumbering(FrozenOnly):
 
                 if trace_face in ('N', 'S'):
                     if trace_edge == 'W':
-                        TEW_dofs = LN[1][0,:]
+                        TEW_dofs = LN[1][0, :]
                     elif trace_edge == 'E':
-                        TEW_dofs = LN[1][-1,:]
+                        TEW_dofs = LN[1][-1, :]
                     elif trace_edge == 'B':
-                        TEW_dofs = LN[0][:,0]
+                        TEW_dofs = LN[0][:, 0]
                     elif trace_edge == 'F':
-                        TEW_dofs = LN[0][:,-1]
+                        TEW_dofs = LN[0][:, -1]
                     else:
                         raise Exception()
 
                 elif trace_face in ('W', 'E'):
                     if trace_edge == 'N':
-                        TEW_dofs = LN[1][0,:]
+                        TEW_dofs = LN[1][0, :]
                     elif trace_edge == 'S':
-                        TEW_dofs = LN[1][-1,:]
+                        TEW_dofs = LN[1][-1, :]
                     elif trace_edge == 'B':
-                        TEW_dofs = LN[0][:,0]
+                        TEW_dofs = LN[0][:, 0]
                     elif trace_edge == 'F':
-                        TEW_dofs = LN[0][:,-1]
+                        TEW_dofs = LN[0][:, -1]
                     else:
                         raise Exception()
 
                 elif trace_face in ('B', 'F'):
                     if trace_edge == 'N':
-                        TEW_dofs = LN[1][0,:]
+                        TEW_dofs = LN[1][0, :]
                     elif trace_edge == 'S':
-                        TEW_dofs = LN[1][-1,:]
+                        TEW_dofs = LN[1][-1, :]
                     elif trace_edge == 'W':
-                        TEW_dofs = LN[0][:,0]
+                        TEW_dofs = LN[0][:, 0]
                     elif trace_edge == 'E':
-                        TEW_dofs = LN[0][:,-1]
+                        TEW_dofs = LN[0][:, -1]
                     else:
                         raise Exception()
 
@@ -351,7 +354,7 @@ class LocalNumbering(FrozenOnly):
                 num_basis_WE = num_basis_onsides['W']
                 num_basis_BF = num_basis_onsides['B']
 
-                if trace_face =='N':
+                if trace_face == 'N':
                     self._cache_T1_[TFE] = TEW_dofs
                 elif trace_face == 'S':
                     self._cache_T1_[TFE] = TEW_dofs + num_basis_NS
@@ -372,30 +375,23 @@ class LocalNumbering(FrozenOnly):
             raise NotImplementedError()
 
 
-
-
     @property
     def _3dCSCG_0LocalTrace(self):
         return self._3dCSCG_0Trace
+
     @property
     def _3dCSCG_1LocalTrace(self):
         return self._3dCSCG_1Trace
+
     @property
     def _3dCSCG_2LocalTrace(self):
         return self._3dCSCG_2Trace
 
 
-
-
-
-
-
-
-
     @property
     def _3dCSCG_0Form(self):
         """Return the mesh-element-wise local numbering of 0-form."""
-        p = [self._FS_.p[i]+1 for i in range(self._FS_.ndim)]
+        p = [self._FS_.p[i] + 1 for i in range(self._FS_.ndim)]
         _ln_ = (np.arange(self._FS_.num_basis._3dCSCG_0Form[0]).reshape(*p, order='F'),)
         return _ln_
     
@@ -406,8 +402,8 @@ class LocalNumbering(FrozenOnly):
         for i in range(self._FS_.ndim):
             p = [self._FS_.p[j]+1 for j in range(self._FS_.ndim)]
             p[i] -= 1
-            I = 0 if i ==0 else np.sum(self._FS_.num_basis._3dCSCG_1Form[1][0:i])
-            _ln_ += (np.arange(self._FS_.num_basis._3dCSCG_1Form[1][i]).reshape(p, order='F') + I,)
+            _I = 0 if i == 0 else np.sum(self._FS_.num_basis._3dCSCG_1Form[1][0:i])
+            _ln_ += (np.arange(self._FS_.num_basis._3dCSCG_1Form[1][i]).reshape(p, order='F') + _I,)
         return _ln_
     
     @property
@@ -417,8 +413,8 @@ class LocalNumbering(FrozenOnly):
         for i in range(self._FS_.ndim):
             p = [self._FS_.p[j] for j in range(self._FS_.ndim)]
             p[i] += 1
-            I = 0 if i == 0 else np.sum(self._FS_.num_basis._3dCSCG_2Form[1][0:i])
-            _ln_ += (np.arange(self._FS_.num_basis._3dCSCG_2Form[1][i]).reshape(p, order='F') + I,)
+            _I = 0 if i == 0 else np.sum(self._FS_.num_basis._3dCSCG_2Form[1][0:i])
+            _ln_ += (np.arange(self._FS_.num_basis._3dCSCG_2Form[1][i]).reshape(p, order='F') + _I,)
         return _ln_
     
     @property

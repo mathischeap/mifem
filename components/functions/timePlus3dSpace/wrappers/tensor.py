@@ -6,11 +6,12 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
-from components.numerical.timePlus3dSpace.partial_derivative_as_functions import NumericalPartialDerivative_txyz_Functions
-
+from components.numerical.timePlus3dSpace.partial_derivative_as_functions import \
+    NumericalPartialDerivative_txyz_Functions
 
 
 class t3dTensor(FrozenOnly):
@@ -65,6 +66,7 @@ class t3dTensor(FrozenOnly):
         if self.__NPD02__ is None:
             self.__NPD02__ = NumericalPartialDerivative_txyz_Functions(self._t02_)
         return self.__NPD02__
+
     @property
     def _NPD10_(self):
         if self.__NPD10__ is None:
@@ -82,6 +84,7 @@ class t3dTensor(FrozenOnly):
         if self.__NPD12__ is None:
             self.__NPD12__ = NumericalPartialDerivative_txyz_Functions(self._t12_)
         return self.__NPD12__
+
     @property
     def _NPD20_(self):
         if self.__NPD20__ is None:
@@ -114,6 +117,7 @@ class t3dTensor(FrozenOnly):
         return self.__class__(pt00_pt, pt01_pt, pt02_pt,
                               pt10_pt, pt11_pt, pt12_pt,
                               pt20_pt, pt21_pt, pt22_pt)
+
 
 if __name__ == '__main__':
     # mpiexec -n 4 python 

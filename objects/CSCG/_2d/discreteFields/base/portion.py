@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/08/31 3:24 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 
 from components.freeze.base import FrozenOnly
 
@@ -16,9 +13,8 @@ class _2dCSCG_DF_PortionBase(FrozenOnly):
 
     def __init__(self, df):
         """"""
-        self._df_ =  df
+        self._df_ = df
         self._freeze_self_()
-
 
     def ___PRIVATE_parse_region_wise_structured_data_indices___(self, x, y):
         x0, x1 = x
@@ -103,4 +99,3 @@ class _2dCSCG_DF_PortionBase(FrozenOnly):
                         INDICES[rn] = (xInd_bounds, yInd_bounds)
 
         return INDICES
-

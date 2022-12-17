@@ -6,6 +6,7 @@
 """
 from components.freeze.base import FrozenOnly
 
+
 class _3dCSCG_MeshBoundaryIs(FrozenOnly):
     """"""
 

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.main import FrozenOnly
 from root.config.main import *
@@ -265,17 +266,11 @@ class _3dCSCG_Mesh_Elements(FrozenOnly):
         return mark
 
 
-
-
-
-
-
-
 if __name__ == '__main__':
     # mpiexec -n 4 python objects\CSCG\_3d\mesh\elements\main.py
     from objects.CSCG._3d.master import MeshGenerator
     elements = [1, 1, 1]
-    mesh = MeshGenerator('crazy', c=0.0, bounds=([0,1], [0,1], [0,1]))(elements)
+    mesh = MeshGenerator('crazy', c=0.0, bounds=([0, 1], [0, 1], [0, 1]))(elements)
 
     # for i in range(mesh.elements.GLOBAL_num):
     #     mesh.elements.do.illustrate_element(i)

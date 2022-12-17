@@ -11,6 +11,7 @@ from functools import partial
 from scipy.special import legendre, roots_legendre
 from components.freeze.base import FrozenOnly
 
+
 class Quadrature(FrozenOnly):
     """ Here we store the class for 1d-quadrature nodes and weights. """
     def __init__(self, p, category='Gauss'):
@@ -48,15 +49,16 @@ class Quadrature(FrozenOnly):
         'Gauss' or 'Lobatto' quadratures.
         
         For 'Gauss' or 'Lobatto', we use it to integrate f(x) as :
-            \int{f(x)} = \sum w_i * f(x_i).
+
+        \\int{f(x)} = \\sum w_i * f(x_i).
         
         For 'Chebyshev', we do not use it to integrate f(x), but use it to integrate
         f(x)/sqrt(1-x^2). So:
-            \int{f(x)/sqrt{1-x^2}} = \sum w_i * f(x_i)
+            `\\int{f(x)/sqrt{1-x^2}} = \\sum w_i * f(x_i)`
         This is the first case of the 'Chebyshev' quadrature. 
         
         There is a second case which is to integrate sqrt{1-x^2}*g(x) as 
-            \int{sqrt{1-x^2}*g(x)} = \sum w_i * g(x_i),
+            \\int{sqrt{1-x^2}*g(x)} = \\sum w_i * g(x_i),
         where these w_i are different. These weights are not included in this class.
         
         As for 'extended_Gauss' quadrature, just do NOT use it. I am not sure if it is
@@ -113,7 +115,7 @@ class Quadrature(FrozenOnly):
         nodes and the nd weights; in total the quad_ndim is of shape(n+1,x,y,z)
         """
         if self.ndim == 1:
-            quad_ndim =  self.quad
+            quad_ndim = self.quad
         else:
             temp_weights = self.quad[1][0]
             for i in range(self.ndim):
@@ -172,11 +174,11 @@ class Quadrature(FrozenOnly):
         """ 
         For 'Chebyshev', we do not use it to integrate f(x), but use it to integrate
         f(x)/sqrt(1-x^2). So:
-            \int{f(x)/sqrt{1-x^2}} = \sum w_i * f(x_i)
+            \\int{f(x)/sqrt{1-x^2}} = \\sum w_i * f(x_i)
         This is the first case of the 'Chebyshev' quadrature. 
         
         There is a second case which is to integrate sqrt{1-x^2}*g(x) as 
-            \int{sqrt{1-x^2}*g(x)} = \sum w_i * g(x_i),
+            \\int{sqrt{1-x^2}*g(x)} = \\sum w_i * g(x_i),
         where these w_i are different. These weights are not included in this class.
         
         """
@@ -268,14 +270,14 @@ class Quadrature(FrozenOnly):
             x (np.array) = history of convergence
             
         """
-        x = [x_0,]
+        x = [x_0, ]
         for i in range(n_max - 1):
             x.append(x[i] - f(x[i]) / df_dx(x[i]))
-            if abs(x[i + 1] - x[i]) < min_error: return x[-1]
+            if abs(x[i + 1] - x[i]) < min_error:
+                return x[-1]
         print('WARNING : Newton did not converge to machine precision \nRelative error : ',
               x[-1] - x[-2])
         return x[-1]
-
 
 
 if __name__ == '__main__':

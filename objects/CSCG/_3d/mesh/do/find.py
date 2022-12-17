@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-
 from root.config.main import SIZE, np
 from components.freeze.main import FrozenOnly
-
 
 
 class _3dCSCG_Mesh_DO_FIND(FrozenOnly):
@@ -79,10 +77,12 @@ class _3dCSCG_Mesh_DO_FIND(FrozenOnly):
 
         """
         DISTRI = self._mesh_._element_distribution_
-        if isinstance(i, str): i = int(i)
+        if isinstance(i, str):
+            i = int(i)
         if SIZE <= 6 or not self._mesh_.___is_occupying_all_cores___:
             for nC in range(SIZE):
-                if i in DISTRI[nC]: return nC
+                if i in DISTRI[nC]:
+                    return nC
             raise Exception()
         midCore0 = 0
         midCore1 = SIZE // 2
@@ -102,10 +102,12 @@ class _3dCSCG_Mesh_DO_FIND(FrozenOnly):
             return midCore1
         elif i > np.max(DISTRI[midCore1]):
             for noCore in range(midCore1, midCore2):
-                if i in DISTRI[noCore]: return noCore
+                if i in DISTRI[noCore]:
+                    return noCore
         elif i < np.min(DISTRI[midCore1]):
             for noCore in range(midCore0, midCore1):
-                if i in DISTRI[noCore]: return noCore
+                if i in DISTRI[noCore]:
+                    return noCore
         else:
             raise Exception
 
@@ -118,17 +120,17 @@ class _3dCSCG_Mesh_DO_FIND(FrozenOnly):
         """
         EGN1 = self._mesh_.___PRIVATE_generate_element_global_numbering_for_region___(region)
         if side_name == 'N':
-            elements = EGN1[ 0, :, :]
+            elements = EGN1[0, :, :]
         elif side_name == 'S':
             elements = EGN1[-1, :, :]
         elif side_name == 'W':
-            elements = EGN1[ :, 0, :]
+            elements = EGN1[:, 0, :]
         elif side_name == 'E':
-            elements = EGN1[ :,-1, :]
+            elements = EGN1[:, -1, :]
         elif side_name == 'B':
-            elements = EGN1[ :, :, 0]
+            elements = EGN1[:, :, 0]
         elif side_name == 'F':
-            elements = EGN1[ :, :,-1]
+            elements = EGN1[:, :, -1]
         else:
             raise Exception()
         return elements

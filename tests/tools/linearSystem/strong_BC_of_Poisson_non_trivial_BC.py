@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 import random
-
 
 from objects.CSCG._3d.__init__ import mesh as mesh3
 from objects.CSCG._3d.__init__ import space as space3
@@ -15,18 +15,19 @@ from tools.elementwiseCache.dataStructures.operators.bmat.main import bmat
 from tools.elementwiseCache.dataStructures.operators.concatenate.main import concatenate
 from tools.miLinearAlgebra.linearSystem.main import LinearSystem
 
+
 def test_applying_strong_BC_for_Poisson_problem_NT():
     """"""
     mesh = mesh3('crazy',
                  c=0, bounds=([0.125, 1.125], [0.125, 1.125], [0.125, 1.125]))(
-                        [5,4,3], EDM=None)
+                        [5, 4, 3], EDM=None)
     space = space3('polynomials')([('Lobatto', 2), ('Lobatto', 3), ('Lobatto', 4)])
     FC = form3(mesh, space)
     ES = es3(mesh)('Poisson:sincos1')
 
     all_boundaries = mesh.boundaries.names
     if RANK == MASTER_RANK:
-        rn = random.randint(1,5)
+        rn = random.randint(1, 5)
         boundaries = random.sample(all_boundaries, rn)
     else:
         boundaries = None
@@ -40,9 +41,9 @@ def test_applying_strong_BC_for_Poisson_problem_NT():
         if b not in u_boundaries:
             p_boundaries.append(b)
 
-    u = FC('2-f', hybrid = True)
+    u = FC('2-f', hybrid=True)
     p = FC('3-adf')
-    f = FC('3-f', hybrid = True)
+    f = FC('3-f', hybrid=True)
     t = FC('2-adt')
 
     M2 = u.matrices.mass
@@ -50,9 +51,9 @@ def test_applying_strong_BC_for_Poisson_problem_NT():
     E23 = E32.T
     T = t.coboundary.trace_matrix
 
-    A = bmat(([  M2, E23 , -T.T],
+    A = bmat(([  M2, E23, -T.T],
               [-E32, None, None],
-              [ T  , None, None]))
+              [ T, None, None]))
     A.gathering_matrices = ((u, p, t), (u, p, t))
 
     B0 = EWC_ColumnVector(mesh, u)
@@ -103,7 +104,7 @@ def test_applying_strong_BC_for_Poisson_problem_NT():
 
     return 1
 
+
 if __name__ == '__main__':
     # mpiexec -n 4 python __tests__\unittests\linear_system\strong_BC_of_Poisson_non_trivial_BC.py
-
     test_applying_strong_BC_for_Poisson_problem_NT()

@@ -6,7 +6,8 @@ mpiexec -n 4 python objects/CSCG/_2d/__tests__/unittests/main.py
 """
 
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 passed_2dCSCG_tests = 0
 
 from tests.objects.CSCG._2d.unittests.standard_forms.general import *

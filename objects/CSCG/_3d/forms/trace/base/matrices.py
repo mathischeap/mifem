@@ -3,8 +3,6 @@ from components.freeze.main import FrozenOnly
 from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
 
 
-
-
 class _3dCSCG_Trace_Matrices(FrozenOnly):
     def __init__(self, tf):
         self._tf_ = tf

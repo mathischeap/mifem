@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
+
 from root.config.main import *
 from importlib import import_module
 from components.freeze.main import FrozenOnly
@@ -17,6 +19,7 @@ from objects.CSCG._2d.exactSolutions.allocator import _2dCSCG_ExactSolutionAlloc
 
 from copy import deepcopy
 from components.miscellaneous.timer import MyTimer
+
 
 class MeshGenerator(FrozenOnly):
     def __init__(self, ID, **kwargs):

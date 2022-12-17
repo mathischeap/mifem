@@ -8,6 +8,7 @@ from components.freeze.base import FrozenOnly
 from components.assemblers import VectorAssembler
 from objects.CSCG.base.forms.trace.cochain.whether import CSCG_cT_Cochain_Whether
 
+
 class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
     """"""
     def __init__(self, tf):
@@ -114,7 +115,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
         """
         GM = self._tf_.numbering.gathering
         globe = lil_matrix((1, self._tf_.global_num_dofs))
-        for i in GM: # go through all local elements
+        for i in GM:  # go through all local elements
             globe[0, GM[i].full_vector] = self.local[i]
 
         globe = globe.tocsr().T
@@ -166,7 +167,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
                     else:
                         # noinspection PyUnboundLocalVariable
                         to_be_sent = spspa.csc_matrix(
-                            (VV[lr[0]:lr[1]], range(lr[0],lr[1]), [0, lr[1]-lr[0]]),
+                            (VV[lr[0]:lr[1]], range(lr[0], lr[1]), [0, lr[1]-lr[0]]),
                             shape=(self._tf_.global_num_dofs, 1))
                     TO_BE_SENT.append(to_be_sent)
             else:
@@ -175,13 +176,13 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
             # distribute to local cochain ...
             local = dict()
             GM = self._tf_.numbering.gathering
-            for i in GM: # go through all local elements
+            for i in GM:  # go through all local elements
                 idx = GM[i].full_vector
                 local[i] = TO_BE_SENT[idx].toarray().ravel()
             self.local = local
 
         elif globe.__class__.__name__ == 'LocallyFullVector':
-            V = globe.V # V already be 1-d array.
+            V = globe.V  # V already be 1-d array.
             local = dict()
             GM = self._tf_.numbering.gathering
             for i in GM:  # go through all local elements
@@ -205,8 +206,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
     def __len__(self):
         return len(self.local)
 
-
-    #--DEPENDENT PROPERTIES (MAJOR): When set local, clear BRANCHES by set branches to None ------
+    # --DEPENDENT PROPERTIES (MAJOR): When set local, clear BRANCHES by set branches to None ------
     @property
     def local(self):
         """
@@ -235,7 +235,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
         self._local_TEW_ = None
         self._local_ = local
 
-    #--DEPENDENT PROPERTIES (BRANCHES, must have the two switching methods): when set below, update local ------
+    # --DEPENDENT PROPERTIES (BRANCHES, must have the two switching methods): when set below, update local ------
     @property
     def local_TEW(self):
         """
@@ -300,7 +300,7 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
                     locally_full = False
                     break
 
-            if locally_full: # only locally full local-cochain will be passed to `local` property
+            if locally_full:  # only locally full local-cochain will be passed to `local` property
 
                 if self._tf_.whether.hybrid:
                     local[i] = list()
@@ -317,9 +317,9 @@ class CSCG_Trace_Form_Cochain_BASE(FrozenOnly):
             else:
                 pass
 
-        self._local_ = local # do not send `to self.local`!
+        self._local_ = local  # do not send `to self.local`!
 
     def ___local_2_local_TEW___(self):
         return NotImplementedError()
 
-    #=================================== ABOVE -> branch 1 =======================================
+    # =================================== ABOVE -> branch 1 =======================================

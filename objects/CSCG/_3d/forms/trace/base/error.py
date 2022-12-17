@@ -5,11 +5,8 @@
 import sys
 if './' not in sys.path: sys.path.append('/')
 
-
 from components.freeze.main import FrozenOnly
 from root.config.main import *
-
-
 
 
 class _3dCSCG_Trace_Error(FrozenOnly):
@@ -44,7 +41,8 @@ class _3dCSCG_Trace_Error(FrozenOnly):
                 NUM_elements = self._tf_.mesh.elements.global_num
                 density_per_element = quad_density / NUM_elements
                 num_nodes = density_per_element**(1/3)
-                if num_nodes < 1: num_nodes = 3
+                if num_nodes < 1:
+                    num_nodes = 3
 
                 if num_nodes % 1 >= 0.5:
                     num_nodes = int(num_nodes) + 1
@@ -62,7 +60,7 @@ class _3dCSCG_Trace_Error(FrozenOnly):
             assert isinstance(n, int) and n > 0, f"L^{n} error is not valid."
             quad_nodes, _, quad_weights = self._tf_.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
 
-        #-- reconstruct the trace form on all trace-elements -----------------------------------------
+        # - reconstruct the trace form on all trace-elements -----------------------------------------
         xyz, v = self._tf_.reconstruct(*quad_nodes)
 
         if n == 'infinity':
@@ -70,8 +68,9 @@ class _3dCSCG_Trace_Error(FrozenOnly):
             for i in self._tf_.mesh.trace.elements:
 
                 error_i = [
-                    np.max(np.abs(v[i][m] -
-                    self._tf_.CF.___DO_evaluate_func_at_time___()[m](*xyz[i])))
+                    np.max(
+                        np.abs(v[i][m] - self._tf_.CF.___DO_evaluate_func_at_time___()[m](*xyz[i]))
+                    )
                     for m in range(OneOrTwo)
                 ]
                 error_i = max(error_i)
@@ -96,10 +95,10 @@ class _3dCSCG_Trace_Error(FrozenOnly):
 
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\forms\trace\base\error.py
-    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('crazy', c=0.)([5,6,7])
-    space = SpaceInvoker('polynomials')([('Lobatto',4), ('Lobatto',4), ('Lobatto',5)])
+    mesh = MeshGenerator('crazy', c=0.)([5, 6, 7])
+    space = SpaceInvoker('polynomials')([('Lobatto', 4), ('Lobatto', 4), ('Lobatto', 5)])
     FC = FormCaller(mesh, space)
 
     t0 = FC('0-t')

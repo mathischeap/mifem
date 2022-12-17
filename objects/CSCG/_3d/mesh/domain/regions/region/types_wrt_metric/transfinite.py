@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-
-
 from root.config.main import COMM, RANK
 
 import numpy as np
@@ -9,11 +7,10 @@ from objects.CSCG._3d.mesh.domain.regions.region.types_wrt_metric.base import Ty
 
 from objects.CSCG._3d.mesh.elements.element.types_wrt_metric.chaotic import ChaoticElement
 from objects.CSCG._3d.mesh.elements.element.types_wrt_metric.orthogonal import OrthogonalElement
-from objects.CSCG._3d.mesh.trace.elements.element.types_wrt_metric.chaotic import  ChaoticTraceElement
+from objects.CSCG._3d.mesh.trace.elements.element.types_wrt_metric.chaotic import ChaoticTraceElement
 from objects.CSCG._3d.mesh.trace.elements.element.types_wrt_metric.orthogonal import OrthogonalTraceElement
 
 from typing import Union
-
 
 
 class Transfinite(TypeWr2MetricBase):
@@ -55,7 +52,7 @@ class Transfinite(TypeWr2MetricBase):
 
                 self._IS_something_ = 'orthogonal'
                 _Length_ = SWB_x - NWB_x
-                _width_  = NEB_y - NWB_y
+                _width_ = NEB_y - NWB_y
                 _height_ = NWF_z - NWB_z
                 assert _Length_ > 0 and _width_ > 0 and _height_ > 0, \
                     f"orthogonal regions {region.name} " \
@@ -86,8 +83,10 @@ class Transfinite(TypeWr2MetricBase):
 
         return self._mark_
 
-    def ___CLASSIFY_ELEMENT_of_spacing___(self, spacing: tuple) -> Union[ChaoticElement, OrthogonalElement]:
-        assert np.shape(spacing) == (3,2), "I need a spacing of shape (3,2) to represent an element in a regions."
+    def ___CLASSIFY_ELEMENT_of_spacing___(
+            self, spacing: tuple
+    ) -> Union[ChaoticElement, OrthogonalElement]:
+        assert np.shape(spacing) == (3, 2), "I need a spacing of shape (3,2) to represent an element in a regions."
         assert all([0 <= spacing[i][0] < spacing[i][1] <= 1 for i in range(3)]), f"spacing={spacing} is wrong."
         if self._IS_chaotic_:
             return ChaoticElement()
@@ -98,8 +97,9 @@ class Transfinite(TypeWr2MetricBase):
             else:
                 raise Exception()
 
-
-    def ___CLASSIFY_TRACE_ELEMENT_of_spacing___(self, trace_spacing: tuple) -> Union[ChaoticTraceElement, OrthogonalTraceElement]:
+    def ___CLASSIFY_TRACE_ELEMENT_of_spacing___(
+            self, trace_spacing: tuple
+    ) -> Union[ChaoticTraceElement, OrthogonalTraceElement]:
         """
 
         :param trace_spacing: the trace_spacing representing a trace element.

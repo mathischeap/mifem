@@ -28,11 +28,11 @@ class OnMeshElement_Standard(FrozenOnly):
         value = dict()
 
         if isinstance(i, int):
-            INDICES = [i,]
+            INDICES = [i, ]
         elif i is None:
             INDICES = SELF.mesh.elements.indices
         else:
-            raise NotImplementedError( f"We can not reconstruct in elements={i}.")
+            raise NotImplementedError(f"We can not reconstruct in elements={i}.")
 
         func = SELF.___DO_evaluate_func_at_time___()
 
@@ -42,10 +42,10 @@ class OnMeshElement_Standard(FrozenOnly):
             v_i = func[0](*xyz_i)
 
             if ravel:
-                xyz[i] = [I.ravel('F') for I in xyz_i]
-                value[i] = [v_i.ravel('F'),]
+                xyz[i] = [_.ravel('F') for _ in xyz_i]
+                value[i] = [v_i.ravel('F'), ]
             else:
                 xyz[i] = xyz_i
-                value[i] = [v_i,]
+                value[i] = [v_i, ]
 
         return xyz, value

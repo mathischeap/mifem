@@ -10,7 +10,6 @@ import pickle
 from root.read.main import read
 
 
-
 def save(obj, filename):
     """
 
@@ -43,10 +42,6 @@ def save(obj, filename):
             output.close()
     else:
         obj.___PRIVATE_save___(filename, do_save=True)
-
-
-
-
 
 
 

@@ -2,15 +2,14 @@
 """Here we test the find function of Gathering matrix."""
 
 import sys
-if './' not in sys.path: sys.path.append('./')
-
+if './' not in sys.path:
+    sys.path.append('./')
 
 from numpy import sin, cos, exp, pi
 from root.config.main import *
 import random
 from tests.objects.CSCG._3d.randObj.form_caller import random_FormCaller_of_total_load_around as _3d_Caller_
 from tests.objects.CSCG._2d.randObj.form_caller import random_FormCaller_of_total_load_around as _2d_Caller_
-
 
 
 def test_GatheringMatrix_find():
@@ -20,7 +19,7 @@ def test_GatheringMatrix_find():
 
     if RANK == MASTER_RANK:
         load = random.randint(30, 200)
-        IH = [True, False][random.randint(0,1)]
+        IH = [True, False][random.randint(0, 1)]
     else:
         load = None
         IH = None
@@ -36,6 +35,7 @@ def test_GatheringMatrix_find():
 
     def func2(t, x, y):
         return - sin(a * pi * x) * cos(b * pi * y) * exp(d * pi * t / 10) + (a+b+c+d)/4
+
     def func3(t, x, y, z):
         return - sin(a * pi * x) * cos(b * pi * y) * sin( c * pi * z) * exp(d * pi * t / 10) + (a+b+c+d)/4
 
@@ -64,15 +64,13 @@ def test_GatheringMatrix_find():
         globe = f.cochain.globe
         for dof in dofs:
             dof_cc = f.cochain.dofwise[dof]
-            if globe.V[dof,0] !=0:
-                np.testing.assert_almost_equal(dof_cc, globe.V[dof,0])
+            if globe.V[dof, 0] != 0:
+                np.testing.assert_almost_equal(dof_cc, globe.V[dof, 0])
 
     return 1
 
 
-
-
 if __name__ == '__main__':
-    # mpiexec -n 4 python tests\unittests\gathering_matrix\find.py
+    # mpiexec -n 4 python tests/tools/gatheringMatrix/find.py
 
     test_GatheringMatrix_find()

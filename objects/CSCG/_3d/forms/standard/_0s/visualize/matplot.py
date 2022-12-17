@@ -16,17 +16,19 @@ class _3dCSCG_S0F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
         """"""
         return self.perpendicular_surface(*args, **kwargs)
 
-    def perpendicular_surface(self,
-        x=None, y=None, z=None, # only one of them can be not-None.
-        plot_type='contourf', usetex=True, colormap='coolwarm',
-        numOfSamples=100000, figsize=(6, 5),
-        num_of_levels=20,
-        xlabel=None, ylabel=None,
-        title=None, levels=None, # if provide them, put them in list of length 1 (for 0-, 3-form) or 3 (for 1-, 2-form)
-        colorbar_font_size=12, title_pad=10,
-        label_size=12, title_size=12,
-        minor_tick_length=4, major_tick_length=7, tick_pad=8, tick_size=12,
-        saveto=None,):
+    def perpendicular_surface(
+            self,
+            x=None, y=None, z=None, # only one of them can be not-None.
+            plot_type='contourf', usetex=True, colormap='coolwarm',
+            numOfSamples=100000, figsize=(6, 5),
+            num_of_levels=20,
+            xlabel=None, ylabel=None,
+            title=None, levels=None, # if provide them, put them in list of length 1 (for 0-, 3-form) or 3 (for 1-, 2-form)
+            colorbar_font_size=12, title_pad=10,
+            label_size=12, title_size=12,
+            minor_tick_length=4, major_tick_length=7, tick_pad=8, tick_size=12,
+            saveto=None,
+    ):
         """Plot the 0-sf on a surface of x=constant or y=constant or z=constant.
 
         Note that the plot will only be reasonable if the region mappings are regular. For example,
@@ -89,13 +91,13 @@ class _3dCSCG_S0F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
             assert pta == PTA, "For _3dCSCG_MeshPerpendicularSlice, all element perpendicular slice must have same PTA."
             pos = eps.position
             if pta == 'xi':
-                xi = np.array([pos,])
+                xi = np.array([pos, ])
                 eta = sigma = sample
             elif pta == 'eta':
-                eta = np.array([pos,])
+                eta = np.array([pos, ])
                 xi = sigma = sample
             elif pta == 'sigma':
-                sigma = np.array([pos,])
+                sigma = np.array([pos, ])
                 xi = eta = sample
             else:
                 raise Exception()
@@ -111,21 +113,21 @@ class _3dCSCG_S0F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
 
             for i, xyz_i in enumerate(xyz):
                 if pta == 'xi':
-                    _xyz_.append(xyz_i[0,:,:])
+                    _xyz_.append(xyz_i[0, :, :])
                 elif pta == 'eta':
-                    _xyz_.append(xyz_i[:,0,:])
+                    _xyz_.append(xyz_i[:, 0, :])
                 elif pta == 'sigma':
-                    _xyz_.append(xyz_i[:,:,0])
+                    _xyz_.append(xyz_i[:, :, 0])
                 else:
                     raise Exception()
 
             for i, vi in enumerate(val):
                 if pta == 'xi':
-                    _val_.append(vi[0,:,:])
+                    _val_.append(vi[0, :, :])
                 elif pta == 'eta':
-                    _val_.append(vi[:,0,:])
+                    _val_.append(vi[:, 0, :])
                 elif pta == 'sigma':
-                    _val_.append(vi[:,:,0])
+                    _val_.append(vi[:, :, 0])
                 else:
                     raise Exception()
 
@@ -175,11 +177,9 @@ class _3dCSCG_S0F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
                     MAX += 0.5
 
             if levels is None:
-                levels= np.linspace(MIN, MAX, num_of_levels)
-
+                levels = np.linspace(MIN, MAX, num_of_levels)
 
         # Now, we can do the plot ------------- BELOW ---------------------------------------------------
-
         if RANK == MASTER_RANK:
 
             if title is None:

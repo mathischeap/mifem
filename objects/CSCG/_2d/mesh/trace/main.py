@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-
 from components.freeze.main import FrozenOnly
 from objects.CSCG._2d.mesh.trace.visualize import _2dCSCG_Trace_Visualize
 from objects.CSCG._2d.mesh.trace.elements.main import _2dCSCG_Trace_Elements
-
 
 
 class _2dCSCG_Trace(FrozenOnly):

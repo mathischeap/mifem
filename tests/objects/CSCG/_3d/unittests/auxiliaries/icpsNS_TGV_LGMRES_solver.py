@@ -5,9 +5,6 @@ mpiexec -n 12 python _3dCSCG/TESTS/__unittest_scripts__/icpsNS_TGV_LGMRES_solver
 This one actually is mainly used to test the LGMRES solver.
 
 """
-
-
-
 from numpy import pi
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 from tools.miLinearAlgebra.dataStructures.vectors.locallyFull.main import LocallyFullVector
@@ -22,10 +19,10 @@ from root.save import save
 from components.miscellaneous.timer import check_multiple_close, check_almost_in_range
 
 
-
-
-def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
-    atol=1e-5, m=50, K=3, maxiter=10, show_info=True, save_uw=True):
+def NoHy_TGV_NEW_LGMRES(
+    N=2, k=4, t=15, steps=480, Re=500,
+    atol=1e-5, m=50, K=3, maxiter=10, show_info=True, save_uw=True
+):
     """
 
     :param N:
@@ -53,7 +50,7 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
 
     quad_degree = [2 * N, 2 * N, 2 * N]
     RDF_filename = 'icpNS_NH_RDF_LGMRES__TGV_NEW_Re{}_N{}K{}t{}Steps{}'.format(Re, N, k, t, steps)
-    ITR_name     = 'icpNS_NH_ITR_LGMRES__TGV_NEW_Re{}_N{}K{}t{}Steps{}'.format(Re, N, k, t, steps)
+    ITR_name = 'icpNS_NH_ITR_LGMRES__TGV_NEW_Re{}_N{}K{}t{}Steps{}'.format(Re, N, k, t, steps)
     auto_save_frequency = 5
     monitor_factor = 1
 
@@ -63,7 +60,8 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
                         RDF_filename=RDF_filename,
                         name=ITR_name)
 
-    mesh = MeshGenerator('crazy_periodic', c=0.0, bounds=[(-pi,pi),(-pi,pi),(-pi,pi)])([k, k, k], show_info=show_info)
+    mesh = MeshGenerator('crazy_periodic', c=0.0,
+                         bounds=[(-pi, pi), (-pi, pi), (-pi, pi)])([k, k, k], show_info=show_info)
     space = SpaceInvoker('polynomials')([('Lobatto', N), ('Lobatto', N), ('Lobatto', N)], show_info=show_info)
     FC = FormCaller(mesh, space)
     Volume = mesh.domain.volume
@@ -128,8 +126,8 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
     M1E10 = M1 @ E10
     M1E10.gathering_matrices = (u1, P0)
     E01M1 = M1E10.T
-    iA = bmat([[ lhs00_Hf, M1E10 ],
-                [-E01M1   , None ]])
+    iA = bmat([[lhs00_Hf, M1E10],
+               [-E01M1, None]])
     iA.customize.identify_global_row(-1)
 
     B0 = (2 * M1 / dt - 0.5 * CP1 - 0.5*nu*E12M2E21) @ u1.cochain.EWC
@@ -152,7 +150,7 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
 
     w2.cochain.local = u1.coboundary.cochain_local
     KE1_t0h = 0.5 * u1.do.compute_L2_energy_with(M=M1) / Volume
-    E2_t0h  = 0.5 * w2.do.compute_L2_energy_with(M=M2) / Volume
+    E2_t0h = 0.5 * w2.do.compute_L2_energy_with(M=M2) / Volume
 
     if RANK == MASTER_RANK and show_info:
         print('KE1_t0', KE1_t0)
@@ -164,13 +162,13 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
         print('KE1_t0h', KE1_t0h)
         print('E2_t0h', E2_t0h, flush=True)
 
-    iA00 =  M1/dt + 0.5*CP1 + 0.5*nu*E12M2E21
+    iA00 = M1/dt + 0.5*CP1 + 0.5*nu*E12M2E21
     iA00.gathering_matrices = (u1, u1)
     iB_0 = (M1/dt - 0.5*CP1 - 0.5*nu*E12M2E21) @ u1.cochain.EWC
     iB_0.gathering_matrix = u1
 
-    iA = bmat( [[ iA00   , M1E10 ],
-                [-E01M1  , None ]])
+    iA = bmat([[iA00, M1E10],
+               [-E01M1, None]])
     iA.customize.identify_global_row(-1)
     ib = concatenate([iB_0, B1])
 
@@ -186,9 +184,9 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
     M1.gathering_matrices = (w1, w1)
     E32.gathering_matrices = (P3, u2)
 
-    lhs = [[ oA00  , 0.5*nu*M2E21, -E23M3  ],  # u2
-           [-E12M2 , M1          , None    ],  # w1
-           [ E32   , None        , None    ]]  # P3
+    lhs = [[oA00, 0.5*nu*M2E21, -E23M3],  # u2
+           [-E12M2, M1, None],  # w1
+           [E32, None, None]]  # P3
 
 
     # del E23M3, mE23M3_A, E12M2, mE12M2_A, M1_A, E32_A, M2E21_A, E12M2E21
@@ -207,7 +205,7 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
     ob = concatenate([B0, B1, B2])
 
     OUT_R = [0, ]
-    INN_R = [iR,]
+    INN_R = [iR, ]
 
 
 
@@ -252,7 +250,7 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
         else:
             X0 = OUT_R[0]
 
-        oR,_,_,_,mo = RegularSolverDistributor("LGMRES")(SYS_oA, SYS_ob, X0, atol=atol, m=m, k=K, maxiter=maxiter)
+        oR, _, _, _, mo = RegularSolverDistributor("LGMRES")(SYS_oA, SYS_ob, X0, atol=atol, m=m, k=K, maxiter=maxiter)
 
         del SYS_oA, SYS_ob
 
@@ -272,7 +270,7 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
         SYS_ib = ib.assembled
 
         X0 = INN_R[0]
-        iR,_,_,_,mi = RegularSolverDistributor("LGMRES")(SYS_iA, SYS_ib, X0, atol=atol, m=m, k=K, maxiter=maxiter)
+        iR, _, _, _, mi = RegularSolverDistributor("LGMRES")(SYS_iA, SYS_ib, X0, atol=atol, m=m, k=K, maxiter=maxiter)
 
         del SYS_iA, SYS_ib
 
@@ -321,13 +319,14 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
 
         message = [f'ITERATION cost: {int((time() - ts) * 100) / 100}',
                    'Inner solver: ' + mi,
-                   'Outer solver: ' + mo]
+                   'Outer solver: ' + mo
+                   ]
 
         # print(KE1_tk1, KE2_tk1, H1_tk1, H2_tk1, E1_tk1, E2_tk1)
         # print(message)
 
         return 1, 0, message, KE1_tk1, KE1_tk1h, KE2_tk1, H1_tk1, H2_tk1, E1_tk1, E2_tk1, E2_tk1h, \
-               u1u2_diff_tk1, w1w2_diff_tk1, DIV_L2_error_tk1
+            u1u2_diff_tk1, w1w2_diff_tk1, DIV_L2_error_tk1
 
 
 
@@ -336,6 +335,7 @@ def NoHy_TGV_NEW_LGMRES(N=2, k=4, t=15, steps=480, Re=500,
     SI.run()
 
     return SI
+
 
 if __name__ == '__main__':
     # mpiexec -n 12 python _3dCSCG/TESTS/__unittest_scripts__/icpsNS_TGV_LGMRES_solver.py

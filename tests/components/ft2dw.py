@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from root.config.main import RANK, MASTER_RANK
 
@@ -16,21 +17,35 @@ ft2dw = components.ft2dw
 from numpy import sin, cos, pi, exp
 import numpy as np
 
+
 def u(t, x, y):
     return cos(pi * x) * sin(pi * y) * exp(2*t)
+
+
 def v(t, x, y):
     return sin(pi * x) * cos(pi * y) * exp(2*t)
+
+
 def u_t(t, x, y):
     return cos(pi * x) * sin(pi * y) * exp(2*t) * 2
+
+
 def v_t(t, x, y):
     return sin(pi * x) * cos(pi * y) * exp(2*t) * 2
 
+
 def u_x(t, x, y):
     return - pi * sin(pi * x) * sin(pi * y) * exp(2*t)
+
+
 def u_y(t, x, y):
     return pi * cos(pi * x) * cos(pi * y) * exp(2*t)
+
+
 def v_x(t, x, y):
     return pi * cos(pi * x) * cos(pi * y) * exp(2*t)
+
+
 def v_y(t, x, y):
     return - pi * sin(pi * x) * sin(pi * y) * exp(2*t)
 
@@ -38,10 +53,16 @@ def v_y(t, x, y):
 
 def fs(t, x, y):
     return sin(pi * x) * sin(pi * y) * exp(2*t)
+
+
 def fs_x(t, x, y):
     return pi * cos(pi * x) * sin(pi * y) * exp(2*t)
+
+
 def fs_y(t, x, y):
     return pi * sin(pi * x) * cos(pi * y) * exp(2*t)
+
+
 def fs_t(t, x, y):
     return sin(pi * x) * sin(pi * y) * 2 * exp(2*t)
 
@@ -61,7 +82,7 @@ def test_functions_time_plus_2d_wrappers_AKA_ft2dw():
     U_txy = u(t, x, y)
     V_txy = v(t, x, y)
 
-    #--------- test scalar -------------------------------------------------------------------
+    # -------- test scalar -------------------------------------------------------------------
     grad_scalar = scalar.gradient
     pt_scalar = scalar.time_derivative
     curl_scalar = scalar.curl
@@ -97,7 +118,7 @@ def test_functions_time_plus_2d_wrappers_AKA_ft2dw():
     CON = convection(t, x, y)
     np.testing.assert_array_almost_equal(CON, U_txy * fs_x(t, x, y) + V_txy * fs_y(t, x, y))
 
-    #--------- test vector -------------------------------------------------------------------
+    # -------- test vector -------------------------------------------------------------------
 
     V = vector(t, x, y)
     np.testing.assert_array_almost_equal(V[0], U_txy)

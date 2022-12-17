@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
-
-
 from root.config.main import *
 
 from components.freeze.main import FrozenOnly
 from objects.CSCG._2d.mesh.trace.elements.element.main import _2dCSCG_Trace_Element
-
 
 
 class _2dCSCG_Trace_Elements(FrozenOnly):
@@ -15,7 +12,6 @@ class _2dCSCG_Trace_Elements(FrozenOnly):
         self.___PRIVATE_generating_trace_elements___()
         self._type_amount_dict_ = None
         self._freeze_self_()
-
 
     def ___PRIVATE_find_type_and_amount_numbered_before___(self):
         """
@@ -36,7 +32,7 @@ class _2dCSCG_Trace_Elements(FrozenOnly):
             INDICES = sorted(INDICES)
 
             for i in INDICES:
-                if i == 0: POOL[0] = np.array([0,0])
+                if i == 0: POOL[0] = np.array([0, 0])
 
                 tei = self[i]
                 cs = tei.CHARACTERISTIC_edge
@@ -73,7 +69,6 @@ class _2dCSCG_Trace_Elements(FrozenOnly):
 
         return self._type_amount_dict_
 
-
     @property
     def map(self):
         return self._MAP_
@@ -100,7 +95,6 @@ class _2dCSCG_Trace_Elements(FrozenOnly):
     def __len__(self):
         return self.num
 
-
     @property
     def global_num(self):
         """
@@ -114,7 +108,7 @@ class _2dCSCG_Trace_Elements(FrozenOnly):
         self._elements_ = dict()
         elements_map = self._mesh_.elements.map
         sideNames = 'UDLR'
-        sidePairs = {'U':'D', 'D':'U', 'L':'R', 'R':'L'}
+        sidePairs = {'U': 'D', 'D': 'U', 'L': 'R', 'R': 'L'}
         upesp = self._mesh_.___useful_periodic_element_edge_pairs___
         self._MAP_ = dict()
 
@@ -131,7 +125,7 @@ class _2dCSCG_Trace_Elements(FrozenOnly):
                 side_1 = sideNames[j]
                 position_1 = str(i) + side_1
                 what = elements_map[i][j]
-                if isinstance(what, str): #on domain boundary
+                if isinstance(what, str):   # on domain boundary
                     position_2 = what
                     self._elements_[cn] = _2dCSCG_Trace_Element(
                         self, cn, position_1, position_2, position_1, ondb=True, onpb=False)
@@ -190,8 +184,7 @@ class _2dCSCG_Trace_Elements(FrozenOnly):
                 for j in range(4):
                     assert self._MAP_[i][j] in self, f"Miss local trace element {self._MAP_[i][j]}"
 
-
-    def DO_compute_mapping_of_trace_at_position(self, position, ep1d):
+    def ___Pr_compute_mapping_of_trace_at_position___(self, position, ep1d):
         """
 
         :param position: Like "10-U", then we compute for the trace element which is the upper edge of

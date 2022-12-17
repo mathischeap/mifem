@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """"""
 import sys
-if './' not in sys.path: sys.path.append('./')
-
+if './' not in sys.path:
+    sys.path.append('./')
 
 from objects.CSCG._3d.ADF.base import _3dCSCG_Algebra_DUAL_FORM_BASE
 
@@ -101,25 +101,13 @@ class _3dCSCG_Algebra_DUAL_Standard_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
         return self._error_
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 if __name__ == "__main__":
     # mpiexec -n 6 python _3dCSCG\ADF\standard\base\main.py
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('crazy',c=0.0, bounds=([-1,1],[-1,1],[-1,1]))(
-                                        [12, 12, 12], EDM=None, show_info=True)
+    mesh = MeshGenerator('crazy', c=0.0, bounds=([-1, 1], [-1, 1], [-1, 1]))(
+        [12, 12, 12], EDM=None, show_info=True
+    )
 
     space = SpaceInvoker('polynomials')([4, 4, 4], show_info=True)
 

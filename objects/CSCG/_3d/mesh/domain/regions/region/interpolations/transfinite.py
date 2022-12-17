@@ -44,8 +44,8 @@ class Transfinite(InterpolationBase):
         this check is all right.
 
         """
-        I = random.randint(2, 4)
-        rst = np.linspace(0, 1, I)
+        _I = random.randint(2, 4)
+        rst = np.linspace(0, 1, _I)
         _NW_, _WN_ = self.___NW___(rst), self.___WN___(rst)
         _NE_, _EN_ = self.___NE___(rst), self.___EN___(rst)
         _NB_, _BN_ = self.___NB___(rst), self.___BN___(rst)
@@ -484,14 +484,15 @@ class Transfinite(InterpolationBase):
         x13 = -t * NF - (1 - t) * NB + (1 - t) * SB + t * SF
         x23 = (1 - s) * (1 - t) * WBr + (1 - s) * t * WFr + s * (1 - t) * EBr + s * t * EFr
 
-        x123 = - (1 - s) * (1 - t) * NWB \
-               - (1 - s) * t * NWF \
-               - s * (1 - t) * NEB \
-               - s * t * NEF \
-               + (1 - s) * (1 - t) * SWB \
-               + (1 - s) * t * SWF \
-               + s * (1 - t) * SEB \
-               + s * t * SEF
+        x123 = \
+            - (1 - s) * (1 - t) * NWB \
+            - (1 - s) * t * NWF \
+            - s * (1 - t) * NEB \
+            - s * t * NEF \
+            + (1 - s) * (1 - t) * SWB \
+            + (1 - s) * t * SWF \
+            + s * (1 - t) * SEB \
+            + s * t * SEF
         xr = x1 + x2 + x3 - x12 - x13 - x23 + x123
 
         return xr
@@ -542,14 +543,15 @@ class Transfinite(InterpolationBase):
         x13 = (1 - r) * (1 - t) * NBs + (1 - r) * t * NFs + r * (1 - t) * SBs + r * t * SFs
         x23 = -t * WF - (1 - t) * WB + (1 - t) * EB + t * EF
 
-        x123 = - (1 - r) * (1 - t) * NWB \
-               - (1 - r) * t * NWF \
-               + (1 - r) * (1 - t) * NEB \
-               + (1 - r) * t * NEF \
-               - r * (1 - t) * SWB \
-               - r * t * SWF \
-               + r * (1 - t) * SEB \
-               + r * t * SEF
+        x123 = \
+            - (1 - r) * (1 - t) * NWB \
+            - (1 - r) * t * NWF \
+            + (1 - r) * (1 - t) * NEB \
+            + (1 - r) * t * NEF \
+            - r * (1 - t) * SWB \
+            - r * t * SWF \
+            + r * (1 - t) * SEB \
+            + r * t * SEF
         xs = x1 + x2 + x3 - x12 - x13 - x23 + x123
 
         return xs
@@ -599,14 +601,15 @@ class Transfinite(InterpolationBase):
         x13 = -(1 - r) * NB + (1 - r) * NF - r * SB + r * SF
         x23 = -(1 - s) * WB + (1 - s) * WF - s * EB + s * EF
 
-        x123 = - (1 - r) * (1 - s) * NWB \
-               + (1 - r) * (1 - s) * NWF \
-               - (1 - r) * s * NEB \
-               + (1 - r) * s * NEF \
-               - r * (1 - s) * SWB \
-               + r * (1 - s) * SWF \
-               - r * s * SEB \
-               + r * s * SEF
+        x123 = \
+            - (1 - r) * (1 - s) * NWB \
+            + (1 - r) * (1 - s) * NWF \
+            - (1 - r) * s * NEB \
+            + (1 - r) * s * NEF \
+            - r * (1 - s) * SWB \
+            + r * (1 - s) * SWF \
+            - r * s * SEB \
+            + r * s * SEF
         xt = x1 + x2 + x3 - x12 - x13 - x23 + x123
 
         return xt
@@ -656,14 +659,15 @@ class Transfinite(InterpolationBase):
         x13 = -t * NF - (1 - t) * NB + (1 - t) * SB + t * SF
         x23 = (1 - s) * (1 - t) * WBr + (1 - s) * t * WFr + s * (1 - t) * EBr + s * t * EFr
 
-        x123 = - (1 - s) * (1 - t) * NWB \
-               - (1 - s) * t * NWF \
-               - s * (1 - t) * NEB \
-               - s * t * NEF \
-               + (1 - s) * (1 - t) * SWB \
-               + (1 - s) * t * SWF \
-               + s * (1 - t) * SEB \
-               + s * t * SEF
+        x123 = \
+            - (1 - s) * (1 - t) * NWB \
+            - (1 - s) * t * NWF \
+            - s * (1 - t) * NEB \
+            - s * t * NEF \
+            + (1 - s) * (1 - t) * SWB \
+            + (1 - s) * t * SWF \
+            + s * (1 - t) * SEB \
+            + s * t * SEF
         yr = x1 + x2 + x3 - x12 - x13 - x23 + x123
 
         return yr
@@ -714,14 +718,15 @@ class Transfinite(InterpolationBase):
         x13 = (1 - r) * (1 - t) * NBs + (1 - r) * t * NFs + r * (1 - t) * SBs + r * t * SFs
         x23 = -t * WF - (1 - t) * WB + (1 - t) * EB + t * EF
 
-        x123 = - (1 - r) * (1 - t) * NWB \
-               - (1 - r) * t * NWF \
-               + (1 - r) * (1 - t) * NEB \
-               + (1 - r) * t * NEF \
-               - r * (1 - t) * SWB \
-               - r * t * SWF \
-               + r * (1 - t) * SEB \
-               + r * t * SEF
+        x123 = \
+            - (1 - r) * (1 - t) * NWB \
+            - (1 - r) * t * NWF \
+            + (1 - r) * (1 - t) * NEB \
+            + (1 - r) * t * NEF \
+            - r * (1 - t) * SWB \
+            - r * t * SWF \
+            + r * (1 - t) * SEB \
+            + r * t * SEF
         ys = x1 + x2 + x3 - x12 - x13 - x23 + x123
 
         return ys
@@ -772,14 +777,15 @@ class Transfinite(InterpolationBase):
         x13 = -(1 - r) * NB + (1 - r) * NF - r * SB + r * SF
         x23 = -(1 - s) * WB + (1 - s) * WF - s * EB + s * EF
 
-        x123 = - (1 - r) * (1 - s) * NWB \
-               + (1 - r) * (1 - s) * NWF \
-               - (1 - r) * s * NEB \
-               + (1 - r) * s * NEF \
-               - r * (1 - s) * SWB \
-               + r * (1 - s) * SWF \
-               - r * s * SEB \
-               + r * s * SEF
+        x123 = \
+            - (1 - r) * (1 - s) * NWB \
+            + (1 - r) * (1 - s) * NWF \
+            - (1 - r) * s * NEB \
+            + (1 - r) * s * NEF \
+            - r * (1 - s) * SWB \
+            + r * (1 - s) * SWF \
+            - r * s * SEB \
+            + r * s * SEF
         yt = x1 + x2 + x3 - x12 - x13 - x23 + x123
 
         return yt
@@ -829,14 +835,15 @@ class Transfinite(InterpolationBase):
         x13 = -t * NF - (1 - t) * NB + (1 - t) * SB + t * SF
         x23 = (1 - s) * (1 - t) * WBr + (1 - s) * t * WFr + s * (1 - t) * EBr + s * t * EFr
 
-        x123 = - (1 - s) * (1 - t) * NWB \
-               - (1 - s) * t * NWF \
-               - s * (1 - t) * NEB \
-               - s * t * NEF \
-               + (1 - s) * (1 - t) * SWB \
-               + (1 - s) * t * SWF \
-               + s * (1 - t) * SEB \
-               + s * t * SEF
+        x123 = \
+            - (1 - s) * (1 - t) * NWB \
+            - (1 - s) * t * NWF \
+            - s * (1 - t) * NEB \
+            - s * t * NEF \
+            + (1 - s) * (1 - t) * SWB \
+            + (1 - s) * t * SWF \
+            + s * (1 - t) * SEB \
+            + s * t * SEF
         zr = x1 + x2 + x3 - x12 - x13 - x23 + x123
 
         return zr
@@ -885,14 +892,15 @@ class Transfinite(InterpolationBase):
         x12 = -(1 - r) * NW + (1 - r) * NE - r * SW + r * SE
         x13 = (1 - r) * (1 - t) * NBs + (1 - r) * t * NFs + r * (1 - t) * SBs + r * t * SFs
         x23 = -t * WF - (1 - t) * WB + (1 - t) * EB + t * EF
-        x123 = - (1 - r) * (1 - t) * NWB \
-               - (1 - r) * t * NWF \
-               + (1 - r) * (1 - t) * NEB \
-               + (1 - r) * t * NEF \
-               - r * (1 - t) * SWB \
-               - r * t * SWF \
-               + r * (1 - t) * SEB \
-               + r * t * SEF
+        x123 = \
+            - (1 - r) * (1 - t) * NWB \
+            - (1 - r) * t * NWF \
+            + (1 - r) * (1 - t) * NEB \
+            + (1 - r) * t * NEF \
+            - r * (1 - t) * SWB \
+            - r * t * SWF \
+            + r * (1 - t) * SEB \
+            + r * t * SEF
         zs = x1 + x2 + x3 - x12 - x13 - x23 + x123
 
         return zs
@@ -943,14 +951,16 @@ class Transfinite(InterpolationBase):
         x13 = -(1 - r) * NB + (1 - r) * NF - r * SB + r * SF
         x23 = -(1 - s) * WB + (1 - s) * WF - s * EB + s * EF
 
-        x123 = - (1 - r) * (1 - s) * NWB \
-               + (1 - r) * (1 - s) * NWF \
-               - (1 - r) * s * NEB \
-               + (1 - r) * s * NEF \
-               - r * (1 - s) * SWB \
-               + r * (1 - s) * SWF \
-               - r * s * SEB \
-               + r * s * SEF
+        x123 = \
+            - (1 - r) * (1 - s) * NWB \
+            + (1 - r) * (1 - s) * NWF \
+            - (1 - r) * s * NEB \
+            + (1 - r) * s * NEF \
+            - r * (1 - s) * SWB \
+            + r * (1 - s) * SWF \
+            - r * s * SEB \
+            + r * s * SEF
+
         zt = x1 + x2 + x3 - x12 - x13 - x23 + x123
 
         return zt
@@ -963,9 +973,6 @@ class Transfinite(InterpolationBase):
 
     def Jacobian_Z_(self, r, s, t):
         return self.Jacobian_Zr(r, s, t), self.Jacobian_Zs(r, s, t), self.Jacobian_Zt(r, s, t)
-
-
-
 
     def ___NnN___(self, s, t):
         return (self._region_._side_geometries_['N'].X(s, t),

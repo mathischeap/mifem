@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.domain.sub_geometry.perpendicular_slice import _3dCSCG_DomainPerpendicularSlice
@@ -27,16 +28,12 @@ class _3dCSCG_DomainSubGeometry(FrozenOnly):
         return self._3dCSCG_DomainPerpendicularSlice_(self._domain_, x, y, z)
 
 
-
-
-
-
 if __name__ == '__main__':
     # mpiexec -n 8 python objects/CSCG/_3d/mesh/domain/sub_geometry/main.py
 
     from objects.CSCG._3d.master import MeshGenerator
 
-    mesh = MeshGenerator('cuboid', region_layout=(2,2,2))([3, 3, 3], EDM='chaotic', show_info=True)
+    mesh = MeshGenerator('cuboid', region_layout=(2, 2, 2))([3, 3, 3], EDM='chaotic', show_info=True)
 
     DSG = mesh.domain.sub_geometry
 

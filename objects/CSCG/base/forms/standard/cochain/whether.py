@@ -8,7 +8,6 @@ from components.freeze.main import FrozenOnly
 from root.config.main import COMM, MPI
 
 
-
 class CSCG_Standard_Form_Whether(FrozenOnly):
     """"""
 

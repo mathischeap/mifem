@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
-
-
 from components.freeze.main import FrozenOnly
-
-
-
 
 
 class _3dCSCG_Node_Element_CT(FrozenOnly):
@@ -37,7 +32,6 @@ class _3dCSCG_Node_Element_CT(FrozenOnly):
             else:
                 pass
 
-
         if from_element is None:
             i = self._ne_.CHARACTERISTIC_element
         elif from_element == 'any':
@@ -45,21 +39,20 @@ class _3dCSCG_Node_Element_CT(FrozenOnly):
         else:
             i = from_element
 
-
         assert self._ne_.i in self._ne_._elements_.map[i], \
             f"trace element #{self._ne_.i} is not on mesh element {i}."
 
         ___ = ['NWB', 'SWB', 'NEB', 'SEB', 'NWF', 'SWF', 'NEF', 'SEF']
-        if self._ne_._elements_.map[i].count(self._ne_.i) == 1: # this mesh element is not periodic to itself.
+        if self._ne_._elements_.map[i].count(self._ne_.i) == 1:  # this mesh element is not periodic to itself.
             corner_index = self._ne_._elements_.map[i].index(self._ne_.i)
             element_corner = ___[corner_index]
-            if from_element is None: # if we do not provide `from_element` we must have this
+            if from_element is None:  # if we do not provide `from_element` we must have this
                 assert element_corner == self._ne_.CHARACTERISTIC_corner
 
             if corner is not None:
                 assert element_corner == corner, f"cannot compute it at provided corner {corner}"
 
-        elif self._ne_._elements_.map[i].count(self._ne_.i) > 1: # this mesh element is periodic to itself.
+        elif self._ne_._elements_.map[i].count(self._ne_.i) > 1:  # this mesh element is periodic to itself.
             assert corner is not None, f"node element #{self._ne_.i} " \
                                        f"is on more than 1 corners of element #{i} " \
                                        f"(periodic), provide corner as well."
@@ -67,7 +60,7 @@ class _3dCSCG_Node_Element_CT(FrozenOnly):
         else:
             raise Exception()
 
-        # we will compute the physical position of this node element from mesh element #`i` at its corner `element_corner`
+        # we will compute the physical position of this node element from mesh element #`i` at corner `element_corner`
         assert self._ne_.i == self._ne_._elements_.map[i][___.index(element_corner)], \
             f"node element #{self._ne_.i} is not at {element_corner} of mesh element #{i}."
 
@@ -100,7 +93,3 @@ class _3dCSCG_Node_Element_CT(FrozenOnly):
             return 1, 1, 1
         else:
             raise Exception()
-
-
-
-

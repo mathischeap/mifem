@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 11/28/2022 3:14 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
 from root.config.main import RANK, MASTER_RANK, COMM
@@ -27,10 +24,12 @@ class _3dCSCG_2LocalTrace_Visualize_Matplot(FrozenOnly):
     def __call__(self, *args, **kwargs):
         return self.boundary_value(*args, **kwargs)
 
-    def boundary_value(self,
-                       density=10000,
-                       colormap='RdBu',
-                       num_color_bar_ticks=5):
+    def boundary_value(
+        self,
+        density=10000,
+        colormap='RdBu',
+        num_color_bar_ticks=5
+    ):
         """
 
         Parameters
@@ -116,7 +115,7 @@ class _3dCSCG_2LocalTrace_Visualize_Matplot(FrozenOnly):
         mappable.set_array(np.array(ticks))
         cb = plt.colorbar(
             mappable,
-            ax=ax, # ticks=np.linspace(0,1,num_ticks),
+            ax=ax,   # ticks=np.linspace(0,1,num_ticks),
             shrink=1,
             aspect=20, # extend='min',
             orientation='vertical',
@@ -125,17 +124,10 @@ class _3dCSCG_2LocalTrace_Visualize_Matplot(FrozenOnly):
             f'{self._ltf_.name}',
             labelpad=10, size=15
         )
-        cb.ax.tick_params()#labelsize=13.5)
+        cb.ax.tick_params()  # labelsize=13.5)
 
         ax.set_xlabel('x')
         ax.set_ylabel('y')
         ax.set_zlabel('z')
 
         plt.show()
-
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

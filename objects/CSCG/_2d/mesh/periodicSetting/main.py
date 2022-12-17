@@ -13,7 +13,6 @@ from components.freeze.main import FrozenOnly
 from objects.CSCG._2d.mesh.periodicSetting.periodic_boundary_pairs.regular.main import _2dCSCG_Regular_PBP
 
 
-
 class _2dCSCG_PeriodicDomainSetting(FrozenOnly):
     """ This class is only initialized once in the MasterCore."""
     def __init__(self, baseMesh, givenPairs):

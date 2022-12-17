@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
-
-
 from objects.CSCG._3d.mesh.domain.inputs.base import _3dDomainInputBase
 import numpy as np
 from components.decorators.classproperty.main import classproperty
@@ -11,6 +8,7 @@ from components.decorators.classproperty.main import classproperty
 
 import random
 from root.config.main import RANK, MASTER_RANK, COMM
+
 
 class Crazy(_3dDomainInputBase):
     """A "crazy" 3d rectangular domain's input class whose inside is distorted with the "crazy" mapping."""
@@ -52,17 +50,17 @@ class Crazy(_3dDomainInputBase):
     def statistic(cls):
         return {'periodic': False,
                 'region num': 1,
-                'mesh boundary num': 6, # the amount of mesh boundaries (instead of domain boundaries)
+                'mesh boundary num': 6,  # the amount of mesh boundaries (instead of domain boundaries)
                 }
 
     @classproperty
     def random_parameters(cls):
         if RANK == MASTER_RANK:
-            rp = {'c': random.randint(0,3) * random.random() / 10,
-                  'bounds': [(-random.random(), random.random()+0.5),
-                             (-random.random(), random.random()+0.5),
-                             (-random.random(), random.random()+0.5)]
-                   }
+            rp = {'c': random.randint(0, 3) * random.random() / 10,
+                  'bounds': [(-random.random(), random.random() + 0.5),
+                             (-random.random(), random.random() + 0.5),
+                             (-random.random(), random.random() + 0.5)]
+                  }
         else:
             rp = None
 

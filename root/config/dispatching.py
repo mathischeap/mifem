@@ -3,14 +3,12 @@ from mpi4py import MPI
 cOmm = MPI.COMM_WORLD
 sIze: int = cOmm.Get_size()
 rAnk: int = cOmm.Get_rank()
-mAster_rank: int = 0 # you can, but you do not need to change this!
+mAster_rank: int = 0  # you can, but you do not need to change this!
 sLave_ranks: list = [i for i in range(sIze)]
 """(list) The collections of ranks of all slaves (cores other than the master). So, 
 the secretary core can be also a slave if ``SECRETARY_RANK != MASTER_RANK``."""
 sLave_ranks.remove(mAster_rank)
 import numpy as np
-
-
 
 
 def DISPATCHING(originalTaskInputs: list, method):
@@ -30,7 +28,7 @@ def DISPATCHING(originalTaskInputs: list, method):
     else:
         taskInputs = None
 
-    if sIze <= 2: # master does all jobs
+    if sIze <= 2:  # master does all jobs
         if rAnk == mAster_rank:
             while len(taskInputs) > 0:
                 nextData = taskInputs.pop(0)
@@ -38,13 +36,13 @@ def DISPATCHING(originalTaskInputs: list, method):
         else:
             pass
     else:
-        if rAnk == mAster_rank: # master does nothing, but distributing the tasks.
-            CORE_STATUS = [True for _ in range(sIze)] # when True, the core is free.
-            CORE_STATUS[mAster_rank] = False # Master core always not free.
+        if rAnk == mAster_rank:  # master does nothing, but distributing the tasks.
+            CORE_STATUS = [True for _ in range(sIze)]  # when True, the core is free.
+            CORE_STATUS[mAster_rank] = False  # Master core always not free.
 
             while len(taskInputs) > 0:
 
-                if any(CORE_STATUS): # there are free cores.
+                if any(CORE_STATUS):  # there are free cores.
                     core2bUsed = CORE_STATUS.index(True)
                     data2bSent = taskInputs.pop(0)
                     cOmm.send(data2bSent, dest=core2bUsed, tag=core2bUsed)
@@ -63,22 +61,22 @@ def DISPATCHING(originalTaskInputs: list, method):
                     # send back its rank, which means it is done with current job.
                     newFreeCore = np.empty(1, dtype='i')
                     cOmm.Recv(newFreeCore, source=i, tag=i)
-                    assert newFreeCore[0] == i # make sure we recv something correct.
+                    assert newFreeCore[0] == i  # make sure we recv something correct.
                     CORE_STATUS[newFreeCore[0]] = True
 
             # now all tasks are gone. Send message to all slaves to tell they stop waiting for more new tasks.
             for i in sLave_ranks:
-                assert CORE_STATUS[i] # must be true
-                cOmm.send('stop waiting for new tasks', dest=i, tag=i) # ask it stopping waiting.
+                assert CORE_STATUS[i]  # must be true
+                cOmm.send('stop waiting for new tasks', dest=i, tag=i)  # ask it stopping waiting.
         else:
             while 1:
                 nextTaskData = cOmm.recv(source=mAster_rank, tag=rAnk)
                 if nextTaskData == 'stop waiting for new tasks':
-                    break # stop waiting
+                    break  # stop waiting
                 else:
                     resultPOOL.append(method(nextTaskData))
                     cOmm.Send(np.array([rAnk], dtype='i'), dest=mAster_rank, tag=rAnk)
 
-    cOmm.Barrier() # sync all cores.
+    cOmm.Barrier()  # sync all cores.
     
     return resultPOOL

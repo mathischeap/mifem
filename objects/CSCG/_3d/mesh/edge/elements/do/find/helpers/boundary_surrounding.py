@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 
-
 from root.config.main import COMM
 from itertools import combinations
-
-
-
 
 
 class OBJ_SurBoundary_EdgeElement(object):
@@ -18,7 +14,7 @@ class OBJ_SurBoundary_EdgeElement(object):
         mesh
         i : The edge-element #i.
         """
-        #----------- find involved mesh_elements, boundaries and cores -------------------------
+        # ---------- find involved mesh_elements, boundaries and cores -------------------------
         if i in mesh.edge.elements:
 
             ee = mesh.edge.elements[i]
@@ -50,7 +46,7 @@ class OBJ_SurBoundary_EdgeElement(object):
                 involved_mesh_boundaries = _
                 break
 
-        self._useful_ = False # this local core is useful for this connection.
+        self._useful_ = False  # this local core is useful for this connection.
         for m in involved_mesh_elements:
             if m in mesh.elements:
                 self._useful_ = True
@@ -58,7 +54,7 @@ class OBJ_SurBoundary_EdgeElement(object):
 
         involved_mesh_elements.sort()
 
-        #--------------------- make the sequence ------------------------------------------------
+        # -------------------- make the sequence ------------------------------------------------
         if len(involved_mesh_elements) == 1:
             # this edge element must be at the mesh boundary and at a region's corner.
             trace_elements = mesh.edge.elements.do.find.trace_elements_attached_to_element(i)
@@ -76,7 +72,7 @@ class OBJ_SurBoundary_EdgeElement(object):
             else:
                 pass
 
-        else: # more than one mesh elements involved
+        else:  # more than one mesh elements involved
             trace_elements = mesh.edge.elements.do.find.trace_elements_attached_to_element(i)
 
             COMs = combinations(trace_elements, 2)
@@ -99,7 +95,7 @@ class OBJ_SurBoundary_EdgeElement(object):
                     assert COUNT == 2, f"An internal trace element must appear twice."
             assert len(TE_on_MB) == 2, f"Must find two trace elements on mesh boundary."
 
-            sequence = [TE_on_MB[0],]
+            sequence = [TE_on_MB[0], ]
             while len(Ts) > 0:
                 start = sequence[-1]
                 for mesh_element in Ts:
@@ -139,11 +135,10 @@ class OBJ_SurBoundary_EdgeElement(object):
                 if _ is not None:
                     mb2 = _
 
-            sequence = [mb1,] + sequence + [mb2,]
+            sequence = [mb1, ] + sequence + [mb2, ]
 
             if self._useful_:
                 self._sequence_ = sequence
-
 
     @property
     def sequence(self):

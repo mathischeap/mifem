@@ -3,7 +3,6 @@ from components.freeze.main import FrozenOnly
 import numpy as np
 
 
-
 class _3dCSCG_ADF_SF_Error(FrozenOnly):
     """This is one of the key properties of a algebraic dual form.
 

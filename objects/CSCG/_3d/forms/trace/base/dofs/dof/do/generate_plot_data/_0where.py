@@ -2,7 +2,6 @@
 from components.freeze.base import FrozenOnly
 
 
-
 class _3dCSCG_T0F_DOF_Where(FrozenOnly):
     """"""
     def __init__(self, dof):
@@ -17,7 +16,7 @@ class _3dCSCG_T0F_DOF_Where(FrozenOnly):
         trace_elements = mesh.trace.elements
         x, y, z = tf.space.nodes
 
-        if trace_element_position is not None: # this dof is in this core.
+        if trace_element_position is not None:  # this dof is in this core.
 
             trace_element, local_numbering, _, local_index = trace_element_position[:4]
             assert _ == 0, f"0-trace only have one component!"

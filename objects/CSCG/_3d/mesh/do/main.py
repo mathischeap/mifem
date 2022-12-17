@@ -70,7 +70,7 @@ class _3dCSCG_Mesh_DO(FrozenOnly):
         :return: two 1d array representing x, y coordinates.
 
         """
-        amount = random.randint(20, 200) # 3*amount points in #amount local mesh elements.
+        amount = random.randint(20, 200)  # 3*amount points in #amount local mesh elements.
 
         assert isinstance(amount, int) and amount > 0, \
             f"amount={amount} ({amount.__class__.__name__}) is wrong."
@@ -81,7 +81,7 @@ class _3dCSCG_Mesh_DO(FrozenOnly):
         if num_local_mesh_elements == 0:
             return np.array([]), np.array([]), np.array([])
 
-        elif num_local_mesh_elements <= amount: # we will use all local mesh elements
+        elif num_local_mesh_elements <= amount:  # we will use all local mesh elements
             USED = mesh.elements.indices
 
         else:

@@ -2,7 +2,6 @@
 from components.freeze.base import FrozenOnly
 
 
-
 class _2dCSCG_TraceElement_whether(FrozenOnly):
     """"""
     def __init__(self, element):
@@ -38,7 +37,7 @@ class _2dCSCG_TraceElement_whether(FrozenOnly):
                 self._shared_by_cores_ = False
             else:
                 if int(self._element_._p1_[:-1]) in self._element_._elements_._mesh_.elements and \
-                    int(self._element_._p2_[:-1]) in self._element_._elements_._mesh_.elements:
+                   int(self._element_._p2_[:-1]) in self._element_._elements_._mesh_.elements:
                     self._shared_by_cores_ = False
                 else:
                     self._shared_by_cores_ = True

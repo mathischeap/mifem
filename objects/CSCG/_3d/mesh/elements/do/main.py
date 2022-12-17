@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
 """"""
-
 from components.freeze.main import FrozenOnly
 from root.config.main import COMM, np
 import matplotlib.pyplot as plt
 
 from objects.CSCG._3d.mesh.elements.do.find import _3dCSCG_Mesh_Elements_DO_FIND
-
-
-
 
 class _3dCSCG_Mesh_Elements_DO(FrozenOnly):
     def __init__(self, elements):
@@ -24,9 +20,10 @@ class _3dCSCG_Mesh_Elements_DO(FrozenOnly):
         :return:
 
         """
-        if not i in self._elements_:
+        if i not in self._elements_:
             COMM.barrier()
             return
+
         density = 5 + 4 * density_factor
         i0 = 1 + density_factor
         i1 = 2 * density_factor + 2
@@ -40,8 +37,8 @@ class _3dCSCG_Mesh_Elements_DO(FrozenOnly):
             [i2, i2],
             [i1, i1],
         )
-        uv_r = np.array([r[indices[0],indices[1]] for indices in anchors])
-        uv_s = np.array([s[indices[0],indices[1]] for indices in anchors])
+        uv_r = np.array([r[indices[0], indices[1]] for indices in anchors])
+        uv_s = np.array([s[indices[0], indices[1]] for indices in anchors])
 
         element = self._elements_[i]
         sides = element.sides

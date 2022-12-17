@@ -6,7 +6,8 @@
 """
 import sys
 mifem_dir = './' # the dir containing the mifem package
-if mifem_dir not in sys.path: sys.path.append(mifem_dir)
+if mifem_dir not in sys.path:
+    sys.path.append(mifem_dir)
 
 from __init__ import tools as mt
 from tools.__init__ import milinalg
@@ -18,10 +19,11 @@ import numpy as np
 from components.miscellaneous.mios import rmdir, remove
 from components.miscellaneous.miprint import miprint
 
+
 def test_Regular_Newton_Raphson():
     """"""
     miprint("RNR [test_Regular_Newton_Raphson] ...... ", flush=True)
-    #--------- define the problem ---------------------------------------------------------
+    # -------- define the problem ---------------------------------------------------------
     c = 0
     K = 5   # K * K elements (uniform)
     N = 3   # polynomial degree
@@ -29,16 +31,18 @@ def test_Regular_Newton_Raphson():
     t = 0.05
     image_folder = './__images_test_NRR__'
     RDF_filename = 'shear_layer_rollup_p1_NRR_test'
-    iterator_name='shear-layer-rollup-p1_NRR_test'
+    iterator_name = 'shear-layer-rollup-p1_NRR_test'
     image_levels = [-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6]
-    #--------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------------------
     t0 = 0
     steps = int((t-t0)/dt)
-    SI = mt.SimpleIterator(t0=t0, dt=dt, max_steps=steps,
-                        auto_save_frequency=10,
-                        RDF_filename=RDF_filename,
-                        real_time_monitor=True,
-                        name=iterator_name)
+    SI = mt.SimpleIterator(
+        t0=t0, dt=dt, max_steps=steps,
+        auto_save_frequency=10,
+        RDF_filename=RDF_filename,
+        real_time_monitor=True,
+        name=iterator_name,
+    )
 
     IC = mc.Counter()
     mc.mkdir(image_folder)
@@ -50,12 +54,12 @@ def test_Regular_Newton_Raphson():
     FC = cscg2.form(mesh, space)
     es = cscg2.exact_solution(mesh)("Euler:shear_layer_rollup", show_info=False)
 
-    #----------- unknowns -----------------------------------------------------------------
+    # --------- unknowns -----------------------------------------------------------------
     u = FC('1-f-o', hybrid=False, name='velocity')
     w = FC('0-f-o', hybrid=False, name='vorticity')
     P = FC('2-f-o', hybrid=False, name='total pressure')
 
-    #--------- tests ----------------------------------------------------------------------
+    # ------- tests ----------------------------------------------------------------------
     v = FC('1-f-o', hybrid=False, name='test-velocity')
     o = FC('0-f-o', hybrid=False, name='test-vorticity')
     q = FC('2-f-o', hybrid=False, name='test-total pressure')
@@ -73,7 +77,7 @@ def test_Regular_Newton_Raphson():
 
     Cv = MDM.do.reduce_to_vector(v)
 
-    #----------- initial condition: u, w @ t0 ----------------------------------------------
+    # --------- initial condition: u, w @ t0 ----------------------------------------------
     u.CF = es.velocity
     u.CF.current_time = t0
     u.discretize()
@@ -87,7 +91,7 @@ def test_Regular_Newton_Raphson():
                                 show_boundaries=False,
                                 usetex=False,
                                 saveto=image_folder + '/' + str(next(IC)),
-                                title=f't=%.3f'%t0)
+                                title=f't=%.3f' % t0)
     EN_t0 = 0.5*w.do.compute_L2_energy_with(M=M0)
     Vor_t0 = w.do.compute_Ln_energy(n=1)
 
@@ -129,24 +133,26 @@ def test_Regular_Newton_Raphson():
         assert tk1 == tk + dt, f"A trivial check."
         message = list()
 
-        #---- u, w @ tk -----------------------------------------------------------------------
+        # --- u, w @ tk -----------------------------------------------------------------------
         x0 = milinalg.LocallyFullVector((u, w, P))
         # R = nLS.solve(x0, atol=1e-3, maxiter=5,
-                      # LS_solver_para='GMRES', LS_solver_kwargs={'atol':1e-5})
+        # LS_solver_para='GMRES', LS_solver_kwargs={'atol':1e-5})
         R = nLS.solve(x0, atol=1e-5, maxiter=5,
                       LS_solver_para='direct', LS_solver_kwargs={})
         R[0].do.distributed_to(u, w, P)
         message.append(R[4])
 
         # -------- u, w @ tk1 ----------------------------------------------
-        w.visualize.matplot.contour(levels=image_levels,
-                                    show_boundaries=False,
-                                    usetex=False,
-                                    saveto=image_folder + '/' + str(next(IC)),
-                                    title=f't=%.3f'%tk1)
+        w.visualize.matplot.contour(
+            levels=image_levels,
+            show_boundaries=False,
+            usetex=False,
+            saveto=image_folder + '/' + str(next(IC)),
+            title=f't=%.3f' % tk1
+        )
 
-        EN_tk1  = 0.5 * w.do.compute_L2_energy_with(M=M0)
-        KE_tk1  = 0.5 * u.do.compute_L2_energy_with(M=M1)
+        EN_tk1 = 0.5 * w.do.compute_L2_energy_with(M=M0)
+        KE_tk1 = 0.5 * u.do.compute_L2_energy_with(M=M1)
         Vor_tk1 = w.do.compute_Ln_energy(n=1)
         L2_du_tk1 = u.do.compute_Ln_norm_of_coboundary()
 
@@ -169,7 +175,6 @@ def test_Regular_Newton_Raphson():
     rmdir(image_folder)
 
     return 1
-
 
 
 if __name__ == '__main__':

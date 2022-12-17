@@ -28,7 +28,6 @@ class CustomizeSequent(FrozenOnly):
         miprint("--- [GM-Customize-Sequent-Test] ...... ", flush=True)
         self._freeze_self_()
 
-
     def __call__(self):
         """"""
         fc = miTri.call('rand0', 2)
@@ -59,21 +58,21 @@ class CustomizeSequent(FrozenOnly):
 
         CGM = GatheringMatrixChaining(f0, f1o, f1i, f2)(chain_method='sequent')
 
-        A = ([M0  , None, None, None],
-             [None, M1i , None, None],
-             [None, None, M1o , None],
-             [None, None, None, M2  ])
+        A = ([M0,   None, None, None],
+             [None, M1i,  None, None],
+             [None, None, M1o,  None],
+             [None, None, None, M2])
 
         A = tools.ewc.bmat(A)
         A.assembler.chain_method = 'sequent'
         A.gathering_matrices = (CGM, CGM)
 
         f0.BC.CF = scalar
-        f0.BC.boundaries = ['Upper','Right']
+        f0.BC.boundaries = ['Upper', 'Right']
         f1i.BC.CF = vector
-        f1i.BC.boundaries = ['Down','Left']
+        f1i.BC.boundaries = ['Down', 'Left']
         f1o.BC.CF = vector
-        f1o.BC.boundaries = ['Right','Upper','Down']
+        f1o.BC.boundaries = ['Right', 'Upper', 'Down']
 
         A.customize.identify_global_rows_according_to(0, f0.BC.interpret)
         A.customize.identify_global_rows_according_to(1, f1i.BC.interpret)
@@ -85,7 +84,7 @@ class CustomizeSequent(FrozenOnly):
         if RANK == MASTER_RANK:
             A = A.tocsr()
             for i in range(A.shape[0]):
-                Ai = A[i,:]
+                Ai = A[i, :]
                 nnz = Ai.nnz
 
                 if nnz == 1:
@@ -93,7 +92,6 @@ class CustomizeSequent(FrozenOnly):
                     assert i == index
 
         return 1
-
 
 
 if __name__ == "__main__":

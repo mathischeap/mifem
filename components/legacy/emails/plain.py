@@ -1,10 +1,11 @@
 
 # -*- coding: utf-8 -*-
-
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path:
+    sys.path.append('/')
 from components.freeze.main import FrozenOnly
-import socket, os
+import socket
+import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -12,7 +13,6 @@ from root.config.main import RANK, MASTER_RANK
 from components.legacy.emails.html import SendAdminAnHTMLEmail
 from components.legacy.internet.connected_or_not import whether_internet_connected
 from components.legacy.internet.in_the_wall_or_not import whether_in_the_great_fire_wall
-
 
 
 class SendAdminAnEmail(FrozenOnly):
@@ -44,7 +44,7 @@ class SendAdminAnEmail(FrozenOnly):
             return 0
 
         if not whether_internet_connected():
-           return 0
+            return 0
 
         # noinspection PyBroadException
         absolute_path = os.path.dirname(__file__)

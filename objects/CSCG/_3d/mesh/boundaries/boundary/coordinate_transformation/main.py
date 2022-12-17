@@ -7,6 +7,7 @@
 from components.freeze.base import FrozenOnly
 from objects.CSCG._3d.mesh.boundaries.boundary.coordinate_transformation.constant import _3dCSCG_MeshBoundaryCT_constant
 
+
 class _3dCSCG_MeshBoundaryCT(FrozenOnly):
     """"""
 

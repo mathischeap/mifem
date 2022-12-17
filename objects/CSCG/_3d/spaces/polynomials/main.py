@@ -16,7 +16,6 @@ from objects.CSCG.base.spaces._1d_basis.polynomials import _1dPolynomial
 from objects.CSCG._3d.spaces.polynomials.do import _3dCSCG_space_Polynomial_do
 
 
-
 class _3dCSCG_PolynomialSpace(_3dCSCG_Space_Base):
     """"""
     def __init__(self, inputs, ndim):
@@ -44,7 +43,8 @@ class _3dCSCG_PolynomialSpace(_3dCSCG_Space_Base):
         :param quad_type:
         :return:
         """
-        if quad_type is None: quad_type = 'Gauss'
+        if quad_type is None:
+            quad_type = 'Gauss'
 
         if [quad_degree, quad_type] == self._quadrature_cache_[:2]:
             pass
@@ -62,21 +62,16 @@ class _3dCSCG_PolynomialSpace(_3dCSCG_Space_Base):
         return self._quadrature_cache_[2:]
 
 
-
-
-
-
-
 if __name__ == "__main__":
     space = _3dCSCG_PolynomialSpace([('Lobatto', 3), ('Lobatto', 4), ('Lobatto', 5)], None)
     print(space.p)
-    space = _3dCSCG_PolynomialSpace([([-1,0,1],), ('Lobatto', 4), ('Lobatto', 5)], None)
+    space = _3dCSCG_PolynomialSpace([([-1, 0, 1],), ('Lobatto', 4), ('Lobatto', 5)], None)
     print(space.p)
-    space = _3dCSCG_PolynomialSpace(([-1,0,1],), 3) # ndim = 3
+    space = _3dCSCG_PolynomialSpace(([-1, 0, 1],), 3)  # ndim = 3
     print(space.p)
-    space = _3dCSCG_PolynomialSpace([([-1,0,0.5,1],), ([-1,-0.5,0,0.5,1],), ([-1,1],)], None) # ndim = 3
+    space = _3dCSCG_PolynomialSpace([([-1, 0, 0.5, 1],), ([-1, -0.5, 0, 0.5, 1],), ([-1, 1],)], None)  # ndim = 3
     print(space.p)
-    space = _3dCSCG_PolynomialSpace((2,3,4), None) # ndim = 3
+    space = _3dCSCG_PolynomialSpace((2, 3, 4), None)  # ndim = 3
     print(space.p)
     # space = _3dCSCG_PolynomialSpace([3,3,3], None) # ndim = 3
     # print(space.p)

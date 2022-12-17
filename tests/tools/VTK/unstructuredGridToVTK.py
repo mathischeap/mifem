@@ -7,7 +7,8 @@
 import numpy as np
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from components.miscellaneous.miprint import miprint
 from components.miscellaneous.mirand import randint
 from components.miscellaneous.mios import remove
@@ -44,13 +45,10 @@ def TEST_save_CSCG_objects_to_unstructured_VTK_file():
     f3.CF.current_time = 0
     f3.discretize()
 
-    grid = [np.linspace(-1,1,10), np.linspace(-1,1,11), np.linspace(-1,1,9)]
+    grid = [np.linspace(-1, 1, 10), np.linspace(-1, 1, 11), np.linspace(-1, 1, 9)]
     filename = '__unstructuredGridToVTK_test__'
     unstructuredGridToVTK(grid, [f0, f1, f2, f3], filename)
     remove(filename + '.vtu')
-
-
-
 
     FC = rf2(randint(99, 199))
     scalar = rs2(FC.mesh)
@@ -72,14 +70,12 @@ def TEST_save_CSCG_objects_to_unstructured_VTK_file():
     f2.CF.current_time = 0
     f2.discretize()
 
-    grid = [np.linspace(-1,1,20), np.linspace(-1,1,19)]
+    grid = [np.linspace(-1, 1, 20), np.linspace(-1, 1, 19)]
     filename = '__unstructuredGridToVTK_2dtest__'
     unstructuredGridToVTK(grid, [f0, f1o, f1i, f2], filename)
     remove(filename + '.vtu')
 
     return 1
-
-
 
 
 if __name__ == "__main__":

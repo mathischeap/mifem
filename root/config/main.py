@@ -29,13 +29,13 @@ RANK: int = COMM.Get_rank()
 SIZE: int = COMM.Get_size()
 """(int) How many cores in total we have?"""
 
-MASTER_RANK: int = 0 # you can, but you do not need to change this!
+MASTER_RANK: int = 0  # you can, but you do not need to change this!
 """(int) the master core is under rank?"""
 
 
 if RANK == MASTER_RANK:
-    ASSEMBLE_COST = {'accumulated': 0, # we have used this much time (seconds) on assembling.
-                     'recent': list(), # we additionally have spent this much time on assembling.
+    ASSEMBLE_COST = {'accumulated': 0,  # we have used this much time (seconds) on assembling.
+                     'recent': list(),  # we additionally have spent this much time on assembling.
                      }
 else:
     ASSEMBLE_COST = None
@@ -43,7 +43,7 @@ else:
 
 assert SIZE > 0, "I must have at least one core, right?"
 if SIZE >= 2:
-    SECRETARY_RANK: int = 1 # you can, but you do not need to change this!
+    SECRETARY_RANK: int = 1  # you can, but you do not need to change this!
     assert MASTER_RANK != SECRETARY_RANK, \
         f"when we have more than one core, master core should be different from secretary core."
 else:
@@ -68,7 +68,7 @@ if RANK == MASTER_RANK:
     SENTRY_ON = False
     """If SENTRY_ON is True, we will monitor the scheme with Sentry."""
 else:
-    SENTRY_ON = False # NEVER turn on this one because we only monitor it through the master!
+    SENTRY_ON = False  # NEVER turn on this one because we only monitor it through the master!
 
 
 from root.config.tree import TREE

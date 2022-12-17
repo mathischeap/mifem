@@ -1,10 +1,5 @@
 
-
-
-
 from components.freeze.main import FrozenOnly
-
-
 
 
 class _3dCSCG_Mesh_Element_Side_CT(FrozenOnly):
@@ -16,8 +11,11 @@ class _3dCSCG_Mesh_Element_Side_CT(FrozenOnly):
         self._freeze_self_()
 
     def mapping(self, *evaluation_points):
-        return self._te_ct_.mapping(*evaluation_points,
-            from_element=self._side_._element_.i, side=self._side_.side_name)
+        return self._te_ct_.mapping(
+            *evaluation_points,
+            from_element=self._side_._element_.i,
+            side=self._side_.side_name,
+        )
 
     def outward_unit_normal_vector(self, *evaluation_points):
         """

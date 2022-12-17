@@ -22,7 +22,7 @@ def ___restore__3dCSCG_Mesh___(parameters, mesh_cache):
         domain_parameters = parameters.pop('domain_parameters')
         if 'element_distribution_method' in parameters:
             parameters.pop('element_distribution_method')
-            EDM = 'debug' # old distribution methods are all trivial one.
+            EDM = 'debug'  # old distribution methods are all trivial one.
         else:
             EDM = parameters.pop('EDM')
         assert len(parameters) == 0, "make sure all information are used."

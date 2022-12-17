@@ -8,7 +8,6 @@ INTRO
          TU Delft, Delft, Netherlands
 
 """
-
 import numpy as np
 from components.freeze.base import FrozenOnly
 

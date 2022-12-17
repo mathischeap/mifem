@@ -15,6 +15,7 @@ from typing import Dict
 from components.freeze.main import FrozenOnly
 from components.decorators.classproperty.main import classproperty
 
+
 class _3dDomainInputBase(FrozenOnly):
     def __init__(self, domain_name='domain without name'):
         self.domain_name = domain_name
@@ -54,7 +55,7 @@ class _3dDomainInputBase(FrozenOnly):
         if isinstance(internal_parameters, list):
             pass
         elif isinstance(internal_parameters, str):
-            internal_parameters = [internal_parameters,]
+            internal_parameters = [internal_parameters, ]
         elif isinstance(internal_parameters, (tuple, set)):
             internal_parameters = list(internal_parameters)
         else:
@@ -107,7 +108,7 @@ class _3dDomainInputBase(FrozenOnly):
             assert len(R) > 2, f"region name = {R} too short, must > 2."
             assert R[0:2] == 'R:', f"regions name = {R} does not start with 'R:'"
             R2 = R[2:].replace('_', '')
-            assert R2.isalpha(),f"region_name = {R} wrong, can only have letter and _ (at >2)."
+            assert R2.isalpha(), f"region_name = {R} wrong, can only have letter and _ (at >2)."
 
 
     def ___PRIVATE_boundary_name_requirement_checker___(self, boundaryRegionSidesDict):
@@ -274,8 +275,8 @@ class _3dDomainInputBase(FrozenOnly):
                     assert R in self.region_corner_coordinates and S in ('N', 'S', 'W', 'E', 'B', 'F'), \
                         " <DomainInput> : domain_boundary[{}]={} is wrong.".format(item, _dict_[item])
             else:
-                raise Exception(" <DomainInput> : boundary_region_sides input value accepts" + \
-                                " only str, tuple of list.")
+                raise Exception(" <DomainInput> : boundary_region_sides input value accepts "
+                                "only str, tuple of list.")
         self._boundary_region_sides_ = _dict_
         self._boundary_names_ = list(_dict_.keys())
 
@@ -312,12 +313,6 @@ class _3dDomainInputBase(FrozenOnly):
         for key in rTwr2M:
             assert key in self.region_corner_coordinates, f"Region name={key} not valid."
         self._region_type_wr2_metric_ = rTwr2M
-
-
-
-
-
-
 
     @classproperty
     def statistic(cls):

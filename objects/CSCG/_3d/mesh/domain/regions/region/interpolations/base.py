@@ -95,9 +95,11 @@ class InterpolationBase(FrozenOnly):
     def ___mapping_Xr_s0t0___(self, r):
         """x = mapping_X(r, 0 , 0)"""
         return self.mapping_X(r, 0, 0)
+
     def ___mapping_Ys_r0t0___(self, s):
         """y = mapping_Y(0, s , 0)"""
         return self.mapping_Y(0, s, 0)
+
     def ___mapping_Zt_r0s0___(self, t):
         """z = mapping_Z(0, 0 , t)"""
         return self.mapping_Z(0, 0, t)
@@ -130,9 +132,11 @@ class InterpolationBase(FrozenOnly):
     def Jacobian_X_(self, r, s, t):
         N31 = NumericalPartialDerivative_xyz(self.mapping_X, r, s, t)
         return N31.scipy_total
+
     def Jacobian_Y_(self, r, s, t):
         N31 = NumericalPartialDerivative_xyz(self.mapping_Y, r, s, t)
         return N31.scipy_total
+
     def Jacobian_Z_(self, r, s, t):
         N31 = NumericalPartialDerivative_xyz(self.mapping_Z, r, s, t)
         return N31.scipy_total
@@ -141,9 +145,11 @@ class InterpolationBase(FrozenOnly):
     def Jacobian_Xr(self, r, s, t):
         N31 = NumericalPartialDerivative_xyz(self.mapping_X, r, s, t)
         return N31.scipy_partial('x')
+
     def Jacobian_Xs(self, r, s, t):
         N31 = NumericalPartialDerivative_xyz(self.mapping_X, r, s, t)
         return N31.scipy_partial('y')
+
     def Jacobian_Xt(self, r, s, t):
         N31 = NumericalPartialDerivative_xyz(self.mapping_X, r, s, t)
         return N31.scipy_partial('z')
@@ -151,9 +157,11 @@ class InterpolationBase(FrozenOnly):
     def Jacobian_Yr(self, r, s, t):
         N31 = NumericalPartialDerivative_xyz(self.mapping_Y, r, s, t)
         return N31.scipy_partial('x')
+
     def Jacobian_Ys(self, r, s, t):
         N31 = NumericalPartialDerivative_xyz(self.mapping_Y, r, s, t)
         return N31.scipy_partial('y')
+
     def Jacobian_Yt(self, r, s, t):
         N31 = NumericalPartialDerivative_xyz(self.mapping_Y, r, s, t)
         return N31.scipy_partial('z')
@@ -161,9 +169,11 @@ class InterpolationBase(FrozenOnly):
     def Jacobian_Zr(self, r, s, t):
         N31 = NumericalPartialDerivative_xyz(self.mapping_Z, r, s, t)
         return N31.scipy_partial('x')
+
     def Jacobian_Zs(self, r, s, t):
         N31 = NumericalPartialDerivative_xyz(self.mapping_Z, r, s, t)
         return N31.scipy_partial('y')
+
     def Jacobian_Zt(self, r, s, t):
         N31 = NumericalPartialDerivative_xyz(self.mapping_Z, r, s, t)
         return N31.scipy_partial('z')
@@ -216,10 +226,3 @@ class InterpolationBase(FrozenOnly):
         if self._Tz00_ is None:
             self._Tz00_ = inversefunc(self.___mapping_Zt_r0s0___)
         return self._Tz00_(z)
-
-
-
-
-
-if __name__ == '__main__':
-    pass

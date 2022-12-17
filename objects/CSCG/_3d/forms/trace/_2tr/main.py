@@ -8,7 +8,8 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from root.config.main import *
 from components.quadrature import Quadrature
 from objects.CSCG._3d.forms.trace.base.main import _3dCSCG_Standard_Trace
@@ -27,8 +28,10 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
     :param numbering_parameters:
     :param name:
     """
-    def __init__(self, mesh, space, hybrid=True, orientation='outer',
-        numbering_parameters='Naive', name='outer-oriented-2-trace-form'):
+    def __init__(
+        self, mesh, space, hybrid=True, orientation='outer',
+        numbering_parameters='Naive', name='outer-oriented-2-trace-form'
+    ):
         super().__init__(mesh, space, hybrid, orientation, numbering_parameters, name)
         self._k_ = 2
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_trace_2form')
@@ -93,7 +96,7 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
             indices = self.mesh.trace.elements._elements_.keys()
         else:
             if not isinstance(trace_element_range, (list, tuple)):
-                indices = [trace_element_range,]
+                indices = [trace_element_range, ]
             else:
                 indices = trace_element_range
 
@@ -122,24 +125,24 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
                     raise Exception()
                 if ravel:
                     xyz[key] = xyz_i
-                    v[key] = [vi,]
+                    v[key] = [vi, ]
                 else:
                     if side in 'NS':
                         xyz[key] = [xyz_i[m].reshape(jj, kk, order='F') for m in range(3)]
-                        v[key] = [vi.reshape((jj, kk), order='F'),]
+                        v[key] = [vi.reshape((jj, kk), order='F'), ]
                     elif side in 'WE':
                         xyz[key] = [xyz_i[m].reshape(ii, kk, order='F') for m in range(3)]
-                        v[key] = [vi.reshape((ii, kk), order='F'),]
+                        v[key] = [vi.reshape((ii, kk), order='F'), ]
                     elif side in 'BF':
                         xyz[key] = [xyz_i[m].reshape(ii, jj, order='F') for m in range(3)]
-                        v[key] = [vi.reshape((ii, jj), order='F'),]
+                        v[key] = [vi.reshape((ii, jj), order='F'), ]
                     else:
                         raise Exception
         return xyz, v
 
     def ___PRIVATE_generate_TEW_mass_matrices___(self):
         """Generate the trace-element-wise mass matrices."""
-        p = [self.dqp[i]+2 for i in range(self.ndim)] # +2 for safety, the mass matrices of standard forms use dqp
+        p = [self.dqp[i]+2 for i in range(self.ndim)]  # +2 for safety, the mass matrices of standard forms use dqp
         quad_nodes, quad_weights = Quadrature(p, category='Gauss').quad
 
         qw = dict()
@@ -156,7 +159,7 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
             te = self.mesh.trace.elements[i]
             side = te.CHARACTERISTIC_side
             mark = te.type_wrt_metric.mark
-            if isinstance(mark, str) and mark in local_cache: # not an id (chaotic) mark, could be cached.
+            if isinstance(mark, str) and mark in local_cache:  # not an id (chaotic) mark, could be cached.
                 MD[i] = local_cache[mark]
             else:
                 g = te.coordinate_transformation.metric(*xietasigma[side])
@@ -171,24 +174,23 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
                 else:
                     raise Exception()
 
-                if isinstance(mark, str): local_cache[mark] = M
+                if isinstance(mark, str):
+                    local_cache[mark] = M
+                else:
+                    pass
 
                 MD[i] = M
 
         return MD
 
 
-
-
-
-
 if __name__ == '__main__':
     # mpiexec -n 5 python objects/CSCG/_3d/forms/trace/_2tr/main.py
 
-    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('ct', c=0.1)([2,2,2])
-    space = SpaceInvoker('polynomials')([('Lobatto',4), ('Lobatto',5), ('Lobatto',6)])
+    mesh = MeshGenerator('ct', c=0.1)([2, 2, 2])
+    space = SpaceInvoker('polynomials')([('Lobatto', 4), ('Lobatto', 5), ('Lobatto', 6)])
     FC = FormCaller(mesh, space)
 
     def p(t, x, y, z): return t + np.cos(2*np.pi*x) * np.cos(2*np.pi*y) * np.cos(2*np.pi*z)

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """"""
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.elements.element.sub_geometry.sub_geometry import ElementSubGeometry
@@ -10,6 +11,7 @@ from objects.CSCG._3d.mesh.elements.element.sides.main import _3dCSCG_Mesh_Eleme
 from objects.CSCG._3d.mesh.elements.element.coordinate_transformation import _3dCSCG_Mesh_Element_CT
 from objects.CSCG._3d.mesh.elements.element.do import _3dCSCG_MeshElement_Do
 from objects.CSCG._3d.mesh.elements.element.whether import _3dCSCG_MeshElement_Whether
+
 
 class _3dCSCG_Mesh_Element(FrozenOnly):
     """The mesh element class"""
@@ -54,7 +56,7 @@ class _3dCSCG_Mesh_Element(FrozenOnly):
         """
         region, localRegionIndices = self._mesh_.do.find.region_name_and_local_indices_of_element(self.i)
         elementsSpacing = self._elements_.spacing[region]
-        _spacing_ = np.zeros((3,2))
+        _spacing_ = np.zeros((3, 2))
         for i in range(3):
             _spacing_[i, 0] = elementsSpacing[i][localRegionIndices[i]]
             _spacing_[i, 1] = elementsSpacing[i][localRegionIndices[i]+1]
@@ -101,11 +103,12 @@ class _3dCSCG_Mesh_Element(FrozenOnly):
             self._whether_ = _3dCSCG_MeshElement_Whether(self)
         return self._whether_
 
+
 if __name__ == '__main__':
     # mpiexec -n 5 python objects\CSCG\_3d\mesh\elements\element\main.py
     from objects.CSCG._3d.master import MeshGenerator
     elements = [2, 2, 2]
-    mesh = MeshGenerator('crazy', c=0.3, bounds=([0,3], [0,3], [0,3]))(elements)
+    mesh = MeshGenerator('crazy', c=0.3, bounds=([0, 3], [0, 3], [0, 3]))(elements)
 
     if 0 in mesh.elements:
         e = mesh.elements[0]

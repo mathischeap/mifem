@@ -8,7 +8,6 @@ from objects.CSCG._2d.mesh.trace.elements.element.coordinate_transformation.main
 from root.config.main import RANK
 
 
-
 class _2dCSCG_Trace_Element(FrozenOnly):
     """
 
@@ -70,7 +69,6 @@ class _2dCSCG_Trace_Element(FrozenOnly):
         else:
             raise Exception(self._p1_)
 
-
     @property
     def on_mesh_boundary(self):
         """Return the mesh boundary name this trace element is on. If it is not on one, return None."""
@@ -86,9 +84,11 @@ class _2dCSCG_Trace_Element(FrozenOnly):
     @property
     def CHARACTERISTIC_position(self):
         return self._cp_
+
     @property
     def CHARACTERISTIC_element(self):
         return int(self._cp_[:-1])
+
     @property
     def CHARACTERISTIC_edge(self):
         return self._cp_[-1]
@@ -133,7 +133,6 @@ class _2dCSCG_Trace_Element(FrozenOnly):
             return CORE
         else:
             return None
-
 
     @property
     def type_wrt_metric(self):

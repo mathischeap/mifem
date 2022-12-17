@@ -5,6 +5,7 @@ sIze: int = cOmm.Get_size()
 rAnk: int = cOmm.Get_rank()
 import numpy as np
 
+
 def GROUP_CORES(member_num, group_num=None):
     """
     Group cores into groups each of ``member_num`` cores.
@@ -41,7 +42,7 @@ def GROUP_CORES(member_num, group_num=None):
 
     for i, g in enumerate(GROUPS):
         assert len(g) > 0, f"group[{i}] is empty!"
-        leader = min(g) # leader of group must be the core of the smallest rank.
+        leader = min(g)  # leader of group must be the core of the smallest rank.
         DG[leader] = [i for i in g][1:]
         DG['leaders'].append(leader)
         if rAnk in g:

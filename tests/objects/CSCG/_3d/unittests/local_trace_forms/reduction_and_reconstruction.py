@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
 from components.miscellaneous.miprint import miprint
@@ -17,10 +18,16 @@ import numpy as np
 
 def p(t, x, y, z):
     return np.cos(2 * np.pi * x) * np.cos(2 * np.pi * y) * np.cos(2 * np.pi * z) + t
+
+
 def u(t, x, y, z):
     return np.sin(2 * np.pi * x) * np.cos(2 * np.pi * y) * np.cos(2 * np.pi * z) + t
+
+
 def v(t, x, y, z):
     return np.cos(2 * np.pi * x) * np.sin(2 * np.pi * y) * np.cos(2 * np.pi * z) + t
+
+
 def w(t, x, y, z):
     return np.cos(2 * np.pi * x) * np.cos(2 * np.pi * y) * np.sin(2 * np.pi * z) + t
 
@@ -141,7 +148,7 @@ class Test_Reduction_and_Reconstruction_of_local_trace_forms(FrozenOnly):
 
         return 1
 
+
 if __name__ == '__main__':
     # mpiexec -n 4 python tests/objects/CSCG/_3d/unittests/local_trace_forms/reduction_and_reconstruction.py
     Test_Reduction_and_Reconstruction_of_local_trace_forms()()
-

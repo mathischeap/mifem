@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
 from tools.elementwiseCache.dataStructures.objects.columnVector.main import EWC_ColumnVector
@@ -58,7 +59,7 @@ class _0Form_Special(FrozenOnly):
         bns = mesh.boundaries.names
         SDb = set(Dirichlet_boundaries)
         SNb = set(Neumann_boundaries)
-        assert SDb & SNb == set()   , f"Dirichlet_boundaries intersect Neumann_boundaries is not None."
+        assert SDb & SNb == set(), f"Dirichlet_boundaries intersect Neumann_boundaries is not None."
         assert SDb | SNb == set(bns), f"Dirichlet_boundaries union Neumann_boundaries is not full!"
         # -------- set Neumann boundary condition ---------------------------------------------------
 
@@ -69,7 +70,7 @@ class _0Form_Special(FrozenOnly):
         T = T.adjust.identify_rows_according_to(row_pd, col_pc)
         b = b.adjust.set_entries_according_to(row_pd, col_pc)
 
-        #-------- set Dirichlet boundary condition -------------------------------
+        # ------- set Dirichlet boundary condition -------------------------------
         adt0.BC.boundaries = Dirichlet_boundaries
         adt_pc = adt0.BC.interpret
         T = T.adjust.clear_rows_according_to(adt_pc)
@@ -83,10 +84,7 @@ class _0Form_Special(FrozenOnly):
 
         return T, D, C, b, eGM
 
-
-
-    def ___PRIVATE_overcoming_hybrid_singularity___(
-        self, T, D, C, adt0, e0, Dirichlet_boundaries=None):
+    def ___PRIVATE_overcoming_hybrid_singularity___(self, T, D, C, adt0, e0, Dirichlet_boundaries=None):
         """Overcoming the hybrid singularity by adjusting trace matrix and complementary matrix.
 
         Parameters
@@ -114,7 +112,7 @@ class _0Form_Special(FrozenOnly):
         if Dirichlet_boundaries is None:
             Dirichlet_boundaries = list()
         elif isinstance(Dirichlet_boundaries, str):
-            Dirichlet_boundaries = [Dirichlet_boundaries,]
+            Dirichlet_boundaries = [Dirichlet_boundaries, ]
         else:
             assert isinstance(Dirichlet_boundaries, (list, tuple)), \
                 f"Dirichlet_boundaries={Dirichlet_boundaries} is wrong."
@@ -132,7 +130,6 @@ class _0Form_Special(FrozenOnly):
         #     T, D, C, adt0, e0, Dirichlet_boundaries)
 
         return T, C
-
 
     def ___PRIVATE_overcoming_hybrid_singularity_EDGE___(self, T, C, Dirichlet_boundaries):
         """Overcoming the hybrid singularity on edge-elements.
@@ -153,6 +150,7 @@ class _0Form_Special(FrozenOnly):
         nC = dict() # the new Trace matrix.
 
         SKIPPED_edge_elements = list()
+        edge_element = None
 
         for i in range(mesh.edge.elements.global_num):
 
@@ -191,24 +189,28 @@ class _0Form_Special(FrozenOnly):
 
                     trace_element, trace_edge = through
                     T_MAP = mesh.trace.elements.map[mesh_element]
+
+                    si = None
                     for si, _ in enumerate(T_MAP):
                         if _ == trace_element:
                             break
                     trace_face = 'NSWEBF'[si]
                     tf_local_dofs = self._sf_.space.local_numbering.\
                         ___PRIVATE_find_MESH_ELEMENT_WISE_local_dofs_of_0Trace_edge___(
-                        trace_face, trace_edge
-                    )
+                            trace_face, trace_edge
+                        )
 
                     positions = edge_element.positions
+
+                    edge_name = None
                     for pos in positions:
                         if int(pos[:-2]) == mesh_element:
                             edge_name = pos[-2:]
                             break
                     ef_local_dofs = self._sf_.space.local_numbering.\
                         ___PRIVATE_find_MESH_ELEMENT_WISE_local_dofs_of_0edge_edge___(
-                        edge_name
-                    )
+                            edge_name
+                        )
 
                     assert len(sf_local_dofs) == len(tf_local_dofs) == len(ef_local_dofs), \
                         f"Trivial check!"
@@ -237,11 +239,10 @@ class _0Form_Special(FrozenOnly):
                 # noinspection PyUnresolvedReferences
                 nC[_] = nC[_].tocsr()
 
-        nT = T.__class__(mesh, nT, cache_key_generator = 'no_cache')
-        nC = C.__class__(mesh, nC, cache_key_generator = 'no_cache')
+        nT = T.__class__(mesh, nT, cache_key_generator='no_cache')
+        nC = C.__class__(mesh, nC, cache_key_generator='no_cache')
 
         return nT, nC, SKIPPED_edge_elements
-
 
     def ___PRIVATE_hybrid_numbering_e0___(self, C):
         """"""
@@ -273,7 +274,7 @@ class _0Form_Special(FrozenOnly):
                 if edge not in numbered_edge_dof:
                     numbered_edge_dof[edge] = np.zeros(p_)
 
-                numbered_edge_dof[edge] += indptr[start : start + p_]
+                numbered_edge_dof[edge] += indptr[start:start + p_]
 
                 start += p_
 
@@ -292,17 +293,17 @@ class _0Form_Special(FrozenOnly):
 
             del numbered_edge_dof
 
-            #--- start numbering --------------------------------------------------
+            # - start numbering --------------------------------------------------
             start = 0
             for i in range(mesh.edge.elements.global_num):
                 Ni = NUMBER_EDGE_ELEMENTS[i]
                 if np.all(Ni == 0):
                     pass
                 else:
-                    A = Ni[Ni!=0]
+                    A = Ni[Ni != 0]
                     LEN = len(A)
                     LN = np.arange(start, start+LEN)
-                    NUMBER_EDGE_ELEMENTS[i][Ni!=0] = LN
+                    NUMBER_EDGE_ELEMENTS[i][Ni != 0] = LN
                     start += LEN
 
         else:
@@ -327,9 +328,9 @@ class _0Form_Special(FrozenOnly):
 
         return eGM
 
-
     def ___PRIVATE_overcoming_hybrid_singularity_INTERNAL_NODE___(
-        self, T, D, C, adt0, e0, Dirichlet_boundaries):
+        self, T, D, C, adt0, e0, Dirichlet_boundaries
+    ):
         """"""
         mesh = self._sf_.mesh
         px, py, pz = e0.space.p
@@ -340,11 +341,11 @@ class _0Form_Special(FrozenOnly):
         GMt0_TEW = adt0.prime.numbering.trace_element_wise
         GMe0_EEW = e0.numbering.edge_element_wise
 
-        DICT0= {'WB': 0, 'EB': py, 'WF': -py-1, 'EF': -1,
-                'NB': 0, 'SB': px, 'NF': -px-1, 'SF': -1,
-                'NW': 0, 'SW': px, 'NE': -px-1, 'SE': -1}
+        DICT0 = {'WB': 0, 'EB': py, 'WF': -py-1, 'EF': -1,
+                 'NB': 0, 'SB': px, 'NF': -px-1, 'SF': -1,
+                 'NW': 0, 'SW': px, 'NE': -px-1, 'SE': -1}
 
-        DICT1= {'W': 0, 'E': -1, 'B': 0, 'F': -1, 'N': 0, 'S':-1}
+        DICT1 = {'W': 0, 'E': -1, 'B': 0, 'F': -1, 'N': 0, 'S': -1}
 
         DICT3 = {'EF': 'E', 'WF': 'F', 'WB': 'W', 'EB': 'B'}
 
@@ -361,10 +362,9 @@ class _0Form_Special(FrozenOnly):
 
             SOS = mesh.node.elements.do.find.hybrid_singularity_overcoming_setting(i)
 
-            #-------------- INTERNAL NODE SOS ------------------------------------------------------
+            # ------------- INTERNAL NODE SOS ------------------------------------------------------
             if SOS.__class__ == _3dCSCG_InternalNodeSOS:
-
-                #-- We find all the participates: S_e0_dof, N_e0_dof, involved_t0_dofs, involved_e0_dofs --
+                # - We find all the participates: S_e0_dof, N_e0_dof, involved_t0_dofs, involved_e0_dofs --
                 trace = SOS.trace
 
                 involved_t0_dofs = dict()
@@ -417,7 +417,7 @@ class _0Form_Special(FrozenOnly):
                         N_e0_dof = _
                         break
 
-                #- we find the local mesh-elements and indices of all participates ------
+                #  - we find the local mesh-elements and indices of all participates ------
                 t_dof_mesh_elements, t_dof_local_indices = \
                     GMt0.do.find.elements_and_local_indices_of_dofs(involved_t0_dofs.keys())
 
@@ -430,13 +430,11 @@ class _0Form_Special(FrozenOnly):
                 else:
                     Se_mesh_elements, Se_local_indices = list(), list()
 
-
                 _ = GMe0.do.find.elements_and_local_indices_of_dof(N_e0_dof)
                 if _ is not None:
                     Ne_mesh_elements, Ne_local_indices = _
                 else:
                     Ne_mesh_elements, Ne_local_indices = list(), list()
-
 
                 # --- clear the existing connection on e0_dofs ------------------------
                 for _ in e_dof_mesh_elements:
@@ -448,7 +446,7 @@ class _0Form_Special(FrozenOnly):
                         ind = IDS[j]
                         newC[me][:, ind] = 0 # clear all connections for 0-edge dofs on N-S surface
 
-                #--- Find a first pair ----------------------------------------
+                # -- Find a first pair ----------------------------------------
                 tdf0 = list(involved_t0_dofs.keys())[0]
                 position = involved_t0_dofs[tdf0][1]
                 cop = DICT3[position]
@@ -456,7 +454,7 @@ class _0Form_Special(FrozenOnly):
                     if involved_e0_dofs[_][1] == cop:
                         break
                 edf0 = _
-                #>>>>>>>>>>>> connect edf0 to S_e0_dof by tdf0 ----------------------
+                # >>>>>>>>>>> connect edf0 to S_e0_dof by tdf0 ----------------------
 
                 tdf_mesh_elements = t_dof_mesh_elements[tdf0]
                 tdf_local_indices = t_dof_local_indices[tdf0]
@@ -484,7 +482,7 @@ class _0Form_Special(FrozenOnly):
 
                 del involved_t0_dofs[tdf0] # tdf0 will not be used anymore
 
-                #---- Find a second pair ------------------------------------------------------
+                # --- Find a second pair ------------------------------------------------------
 
                 for _ in involved_t0_dofs:
                     pos = involved_t0_dofs[_][1]
@@ -492,7 +490,7 @@ class _0Form_Special(FrozenOnly):
                         break
                 tdf1 = _
 
-                #>>>>>>>>>>>> connect edf0 to N_e0_dof by tdf1 -----------------------
+                # >>>>>>>>>>> connect edf0 to N_e0_dof by tdf1 -----------------------
                 tdf_mesh_elements = t_dof_mesh_elements[tdf1]
                 tdf_local_indices = t_dof_local_indices[tdf1]
 
@@ -517,7 +515,7 @@ class _0Form_Special(FrozenOnly):
                 del involved_t0_dofs[tdf1] # tdf1 will not be used anymore
                 del involved_e0_dofs[edf0]
 
-                #--- Find a third pair ------------------------------------------------------
+                # -- Find a third pair ------------------------------------------------------
                 tdf2 = list(involved_t0_dofs.keys())[0]
                 position = involved_t0_dofs[tdf2][1]
                 cop = DICT3[position]
@@ -526,7 +524,7 @@ class _0Form_Special(FrozenOnly):
                         break
                 edf1 = _
 
-                #>>>>>>>>>>>> connect edf1 to S_e0_dof by tdf2 ----------------------
+                # >>>>>>>>>>> connect edf1 to S_e0_dof by tdf2 ----------------------
 
                 tdf_mesh_elements = t_dof_mesh_elements[tdf2]
                 tdf_local_indices = t_dof_local_indices[tdf2]
@@ -555,11 +553,14 @@ class _0Form_Special(FrozenOnly):
                 del involved_t0_dofs[tdf2] # tdf2 will not be used anymore
                 del involved_e0_dofs[edf1]
 
-                #---------- The last pair --------------------
+                # --------- The last pair --------------------
                 assert len(involved_t0_dofs) == 1
                 assert len(involved_e0_dofs) == 2
+
                 for tdf3 in involved_t0_dofs:
                     pass
+
+                # noinspection PyUnboundLocalVariable
                 position = involved_t0_dofs[tdf3][1]
                 cop = DICT3[position]
                 for _ in involved_e0_dofs:
@@ -592,7 +593,7 @@ class _0Form_Special(FrozenOnly):
                         newC[me][ind, edf_local_indices[edf_mesh_elements.index(me)]] = -1
 
                 del involved_e0_dofs[edf2]
-                #==============================================================================
+                # =============================================================================
 
                 for _ in involved_e0_dofs:
                     pass
@@ -600,8 +601,8 @@ class _0Form_Special(FrozenOnly):
                 if involved_e0_dofs[_][0] in mesh.edge.elements:
                     SKIP_e0_dofs.append(involved_e0_dofs[_])
 
-            #-----------
             elif SOS.__class__ == _3dCSCG_CornerNodeSOS:
+
                 # This `SOS` must only involve one core (all involved mesh-, trace, edge-elements).
                 if SOS.mesh is not None:
 
@@ -611,9 +612,9 @@ class _0Form_Special(FrozenOnly):
                         if mb in Dirichlet_boundaries:
                             num_trace_elements_on_Dirichlet_boundary += 1
 
-                    #------------------- Enough Dirichlet_boundaries found at this corner-node -----
+                    # ------------------ Enough Dirichlet_boundaries found at this corner-node -----
                     if num_trace_elements_on_Dirichlet_boundary >= 2:
-                    # this corner-node-element will introduce no singularity if the BC is properly imposed.
+                        # this corner-node-element will introduce no singularity if the BC is properly imposed.
                         SKIP_e0_dofs.extend(SOS.edge)
 
                         tf_DOFs = dict()
@@ -664,7 +665,6 @@ class _0Form_Special(FrozenOnly):
                                     assert newC[corner_mesh_element][t_local_index].nnz == 0
                                 else:
                                     assert C[corner_mesh_element][t_local_index].nnz == 0
-
 
                     elif num_trace_elements_on_Dirichlet_boundary == 1:
                         # we will have to skip 2-edge dofs
@@ -751,7 +751,6 @@ class _0Form_Special(FrozenOnly):
                                         raise Exception()
 
                                     SKIP_e0_dofs.append(SOS.edge[j])
-
 
                     elif num_trace_elements_on_Dirichlet_boundary == 0:
                         # we will have to skip 2-edge dofs
@@ -845,12 +844,10 @@ class _0Form_Special(FrozenOnly):
                 # noinspection PyUnresolvedReferences
                 newC[_] = newC[_].tocsr()
 
-        newT = T.__class__(mesh, newT, cache_key_generator = 'no_cache')
-        newC = C.__class__(mesh, newC, cache_key_generator = 'no_cache')
+        newT = T.__class__(mesh, newT, cache_key_generator='no_cache')
+        newC = C.__class__(mesh, newC, cache_key_generator='no_cache')
 
         return newT, newC, SKIP_e0_dofs
-
-
 
 
 if __name__ == '__main__':
@@ -876,8 +873,6 @@ if __name__ == '__main__':
     f = FC('0-f', is_hybrid=True)
     t = FC('0-adt')
     e = FC('0-e')
-
-
 
     f.TW.BC.body = ES.status.potential
     f.TW.do.push_BC_to_instant(0)

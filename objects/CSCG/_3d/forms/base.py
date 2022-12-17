@@ -10,11 +10,13 @@ A BASE for all forms except continuous forms.
 
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path: 
+    sys.path.append('./')
 
 import numpy as np
 from functools import lru_cache
 from objects.CSCG.base.forms.base.main import CSCG_FORM_BASE
+
 
 # noinspection PyAbstractClass
 class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
@@ -80,7 +82,7 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
             clB = other.cochain.local[e]
             COCHAIN_LOCAL[e] = clA - clB
 
-        #=========================================================
+        # ========================================================
         result_form.cochain.local = COCHAIN_LOCAL
         return result_form
 
@@ -117,7 +119,7 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
             clB = other.cochain.local[e]
             COCHAIN_LOCAL[e] = clA + clB
 
-        #=========================================================
+        # ========================================================
         result_form.cochain.local = COCHAIN_LOCAL
         return result_form
 
@@ -139,10 +141,10 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
 
         D0, D1, D2 = None, None, None
         D0b, D1b, D2b = None, None, None
-        for I, y in enumerate(YL):
+        for _I, y in enumerate(YL):
             for J, z in enumerate(ZL):
-                d0, d1, d2 = self.___PRIVATE_generate_line_data____('x', (y,z), density, zoom=zoom)
-                if (I == 0 or I == By) and (J == 0 or J == Bz):
+                d0, d1, d2 = self.___PRIVATE_generate_line_data____('x', (y, z), density, zoom=zoom)
+                if (_I == 0 or _I == By) and (J == 0 or J == Bz):
                     if D0b is None:
                         D0b = d0
                         D1b = d1
@@ -162,22 +164,22 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
                         D2 = np.vstack((D2, d2))
 
         X, Y, Z = mesh.elements[i].coordinate_transformation.mapping(D0b, D1b, D2b)
-        DATA['xLines_x_B'] = X # x coordinate of x-grid lines on element boundary
-        DATA['xLines_y_B'] = Y # y coordinate of x-grid lines on element boundary
-        DATA['xLines_z_B'] = Z # z coordinate of x-grid lines on element boundary
+        DATA['xLines_x_B'] = X  # x coordinate of x-grid lines on element boundary
+        DATA['xLines_y_B'] = Y  # y coordinate of x-grid lines on element boundary
+        DATA['xLines_z_B'] = Z  # z coordinate of x-grid lines on element boundary
 
         if D0 is not None:
             X, Y, Z = mesh.elements[i].coordinate_transformation.mapping(D0, D1, D2)
-            DATA['xLines_x'] = X # x coordinate of internal x-grid lines
-            DATA['xLines_y'] = Y # y coordinate of internal x-grid lines
-            DATA['xLines_z'] = Z # z coordinate of internal x-grid lines
+            DATA['xLines_x'] = X  # x coordinate of internal x-grid lines
+            DATA['xLines_y'] = Y  # y coordinate of internal x-grid lines
+            DATA['xLines_z'] = Z  # z coordinate of internal x-grid lines
 
         D0, D1, D2 = None, None, None
         D0b, D1b, D2b = None, None, None
-        for I, z in enumerate(ZL):
+        for _I, z in enumerate(ZL):
             for J, x in enumerate(XL):
-                d0, d1, d2 = self.___PRIVATE_generate_line_data____('y', (z,x), density, zoom=zoom)
-                if (I == 0 or I == Bz) and (J == 0 or J == Bx):
+                d0, d1, d2 = self.___PRIVATE_generate_line_data____('y', (z, x), density, zoom=zoom)
+                if (_I == 0 or _I == Bz) and (J == 0 or J == Bx):
                     if D0b is None:
                         D0b = d0
                         D1b = d1
@@ -208,10 +210,10 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
 
         D0, D1, D2 = None, None, None
         D0b, D1b, D2b = None, None, None
-        for I, x in enumerate(XL):
+        for _I, x in enumerate(XL):
             for J, y in enumerate(YL):
-                d0, d1, d2 = self.___PRIVATE_generate_line_data____('z', (x,y), density, zoom=zoom)
-                if (I == 0 or I == Bx) and (J == 0 or J == By):
+                d0, d1, d2 = self.___PRIVATE_generate_line_data____('z', (x, y), density, zoom=zoom)
+                if (_I == 0 or _I == Bx) and (J == 0 or J == By):
                     if D0b is None:
                         D0b = d0
                         D1b = d1
@@ -241,7 +243,7 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
             DATA['zLines_y'] = Y
             DATA['zLines_z'] = Z
 
-        #-------- below, we find the center -------------
+        # ------- below, we find the center -------------
 
         xyz = np.array([0]), np.array([0]), np.array([0])
         xyz = mesh.elements[i].coordinate_transformation.mapping(*xyz)
@@ -257,7 +259,7 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
         :param density:
         :return:
         """
-        ___ = np.linspace(-1,1,density) * zoom
+        ___ = np.linspace(-1, 1, density) * zoom
         if direction == 'x':
             y, z = coordinates
             X = ___
@@ -278,19 +280,25 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
 
         return X, Y, Z
 
+
 if __name__ == '__main__':
     # mpiexec -n 4 python _3dCSCG\forms\base.py
-    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('crazy', c=0.0)([5,5,5])
-    space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3), ('Lobatto',3)])
+    mesh = MeshGenerator('crazy', c=0.0)([5, 5, 5])
+    space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 3), ('Lobatto', 3)])
     FC = FormCaller(mesh, space)
 
-    def p(t, x, y, z): return - 6 * np.pi * np.sin(2 * np.pi * x) * np.sin(2 * np.pi * y) * np.sin(2 * np.pi * z) + 0 * t
-    def u(t,x,y,z): return np.sin(np.pi*x)*np.cos(2*np.pi*y)*np.cos(np.pi*z) + t
-    def v(t,x,y,z): return np.cos(np.pi*x)*np.sin(np.pi*y)*np.cos(2*np.pi*z) + t
-    def w(t,x,y,z): return np.cos(np.pi*x)*np.cos(np.pi*y)*np.sin(2*np.pi*z) + t
-    velocity = FC('vector', (u,v,w))
+    def p(t, x, y, z):
+        return - 6 * np.pi * np.sin(2 * np.pi * x) * np.sin(2 * np.pi * y) * np.sin(2 * np.pi * z) + 0 * t
+
+    def u(t, x, y, z): return np.sin(np.pi*x)*np.cos(2*np.pi*y)*np.cos(np.pi*z) + t
+
+    def v(t, x, y, z): return np.cos(np.pi*x)*np.sin(np.pi*y)*np.cos(2*np.pi*z) + t
+
+    def w(t, x, y, z): return np.cos(np.pi*x)*np.cos(np.pi*y)*np.sin(2*np.pi*z) + t
+
+    velocity = FC('vector', (u, v, w))
     scalar = FC('scalar', p)
 
     f1 = FC('1-f', is_hybrid=False, name='A')

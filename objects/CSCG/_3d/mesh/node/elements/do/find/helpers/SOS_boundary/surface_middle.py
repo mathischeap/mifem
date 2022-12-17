@@ -1,7 +1,5 @@
 
 
-
-
 class _3dCSCG_SurfaceMiddleNodeSOS():
     """"""
 

@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/08/29 9:20 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 
 from components.freeze.base import FrozenOnly
 
@@ -53,10 +50,4 @@ class _2dCSCG_TE_CT_Constant(FrozenOnly):
             else:
                 self._Jacobian_ = None
 
-
         return self._Jacobian_
-
-
-if __name__ == "__main__":
-    # mpiexec -n 4 python 
-    pass

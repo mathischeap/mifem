@@ -7,7 +7,8 @@ particular structure.
 """
 
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.domain.regions.region.sub_geometry.perpendicular_slice import RegionPerpendicularSlice
@@ -20,8 +21,6 @@ class RegionSubGeometry(FrozenOnly):
         """"""
         self._region_ = region
         self._freeze_self_()
-
-
 
     def make_a_perpendicular_slice_object_on(self, x=None, y=None, z=None, r=None, s=None, t=None):
         """"""
@@ -50,20 +49,21 @@ class RegionSubGeometry(FrozenOnly):
                     if 0 <= _ <= 1:
                         pass
                     else:
-                        return None # this region has no business with this slice x, y or z constant slice.
+                        return None  # this region has no business with this slice x, y or z constant slice.
 
             return RegionPerpendicularSlice(self._region_, r=r, s=s, t=t)
 
         elif any([_ is not None for _ in (r, s, t)]):
-            if r is not None: assert 0<= r <= 1
-            if s is not None: assert 0<= s <= 1
-            if t is not None: assert 0<= t <= 1
+            if r is not None:
+                assert 0 <= r <= 1
+            if s is not None:
+                assert 0 <= s <= 1
+            if t is not None:
+                assert 0 <= t <= 1
             return RegionPerpendicularSlice(self._region_, r=r, s=s, t=t)
 
         else:
             raise Exception()
-
-
 
 
 if __name__ == '__main__':
@@ -71,11 +71,9 @@ if __name__ == '__main__':
 
     from objects.CSCG._3d.master import MeshGenerator
 
-    mesh = MeshGenerator('crazy', bounds=([0,2],[0,2],[0,2]))([3, 3, 3], EDM='chaotic', show_info=True)
+    mesh = MeshGenerator('crazy', bounds=([0, 2], [0, 2], [0, 2]))([3, 3, 3], EDM='chaotic', show_info=True)
 
     R = mesh.domain.regions['R:R']
 
-
     RSG = R.sub_geometry
     RSG.make_a_perpendicular_slice_object_on(x=2)
-

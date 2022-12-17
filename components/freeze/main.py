@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
-import sys
-if './' not in sys.path: sys.path.append('./')
 import pickle
 from root.config.main import RANK, MASTER_RANK
 from components.freeze.base import FrozenOnly
 from components.freeze.standard_properties import StandardProperties
-
 
 
 class FrozenClass(FrozenOnly):
@@ -31,6 +28,7 @@ class FrozenClass(FrozenOnly):
                 self.___sp___ = StandardProperties(self)
                 self._freeze_self_()
             else:
+                # noinspection PyAttributeOutsideInit
                 self.___sp___ = StandardProperties(self)
         return self.___sp___
 
@@ -42,7 +40,8 @@ class FrozenClass(FrozenOnly):
         _2bs_['parameters'] = self.standard_properties.parameters
         if RANK == MASTER_RANK:
             if do_save:
-                if filename[-3:] != '.mi': filename += '.mi'
+                if filename[-3:] != '.mi':
+                    filename += '.mi'
                 assert filename.count('.') == 1, f"filename={filename} wrong."
                 with open(filename, 'wb') as output:
                     pickle.dump(_2bs_, output, pickle.HIGHEST_PROTOCOL)

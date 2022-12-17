@@ -3,12 +3,7 @@
 The type classes for trace elements w.r.t. metric.
 
 """
-
 from components.freeze.main import FrozenOnly
-
-
-
-
 
 
 class TraceElementTypeWr2MetricBase(FrozenOnly):

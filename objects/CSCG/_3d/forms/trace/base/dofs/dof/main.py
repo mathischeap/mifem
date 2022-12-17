@@ -7,6 +7,7 @@ from objects.CSCG._3d.forms.trace.base.dofs.dof.visualize.main import _3dCSCG_Tr
 from objects.CSCG._3d.forms.trace.base.dofs.dof.do.main import _3dCSCG_TF_dof_DO
 from objects.CSCG._3d.forms.trace.base.dofs.dof.whether import _3dCSCG_TraceForm_DofWhether
 
+
 class _3dCSCG_Trace_forms_DOF(FrozenOnly):
     """A dof of a trace form."""
     def __init__(self, dofs, i):
@@ -16,7 +17,7 @@ class _3dCSCG_Trace_forms_DOF(FrozenOnly):
         self._local_positions_ = list()
         for E, I in zip(ELEMENTS, INDICES):
             self._local_positions_.append((E, I))
-        self._i_ = i # I am the #i dof.
+        self._i_ = i  # I am the #i dof.
         self._dofs_ = dofs
         self._tf_ = dofs._tf_
         self._bf_ = None
@@ -62,7 +63,7 @@ class _3dCSCG_Trace_forms_DOF(FrozenOnly):
 
                 i0, i1 = index
 
-                if k == 0: # this is a dof of 0-trace-form
+                if k == 0:  # this is a dof of 0-trace-form
                     raise NotImplementedError()
 
                 elif k == 1:
@@ -210,7 +211,7 @@ class _3dCSCG_Trace_forms_DOF(FrozenOnly):
             local_indices = None
 
             for _, ln in enumerate(LN):
-                local_indices = np.argwhere(ln==local_numbering)
+                local_indices = np.argwhere(ln == local_numbering)
                 if local_indices.shape[0] == 1:
                     break
 

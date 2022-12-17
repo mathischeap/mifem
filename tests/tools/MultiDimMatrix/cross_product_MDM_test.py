@@ -29,8 +29,8 @@ def test_MDM_sf_CrossProduct():
     """"""
     miprint("XXX [test_MDM_sf_CrossProduct] ...... ", flush=True)
 
-    mesh = mesh2('crazy', c=0.0)([11,12])
-    space = space2('polynomials')([2,2])
+    mesh = mesh2('crazy', c=0.0)([11, 12])
+    space = space2('polynomials')([2, 2])
 
     fc2 = form2(mesh, space)
 
@@ -67,11 +67,11 @@ def test_MDM_sf_CrossProduct():
     s2_X_v2__ip__V2 = s2.do.cross_product(v2).do.inner_product(V2)
     s2_X_v2__ip__V2.current_time = 0
     norm = s2_X_v2__ip__V2.do.compute_Ln_norm()
-    NORM = MDM.do.evaluate([(w,w), (u,u), (v,v)])
+    NORM = MDM.do.evaluate([(w, w), (u, u), (v, v)])
     np.testing.assert_almost_equal(norm, NORM, decimal=4)
 
-    mesh = MeshGenerator('crazy', c=0.0)([11,12,10])
-    space = SpaceInvoker('polynomials')([('Lobatto',2), ('Lobatto',2), ('Lobatto',2)])
+    mesh = MeshGenerator('crazy', c=0.0)([11, 12, 10])
+    space = SpaceInvoker('polynomials')([('Lobatto', 2), ('Lobatto', 2), ('Lobatto', 2)])
     fc3 = FormCaller(mesh, space)
 
     v3 = rv3(fc3.mesh)
@@ -107,14 +107,13 @@ def test_MDM_sf_CrossProduct():
     s2_X_v2__ip__V2 = s3.do.cross_product(v3).do.inner_product(V3)
     s2_X_v2__ip__V2.current_time = 0
     norm = s2_X_v2__ip__V2.do.compute_Ln_norm()
-    NORM = MDM.do.evaluate([(w,w), (u,u), (v,v)])
+    NORM = MDM.do.evaluate([(w, w), (u, u), (v, v)])
 
     np.testing.assert_almost_equal(norm, NORM, decimal=3)
 
     return 1
 
 
-
 if __name__ == '__main__':
-    # mpiexec -n 4 python __tests__/unittests/MultiDimMatrix/cross_product_MDM_test.py
+    # mpiexec -n 4 python tests/tools/MultiDimMatrix/cross_product_MDM_test.py
     test_MDM_sf_CrossProduct()

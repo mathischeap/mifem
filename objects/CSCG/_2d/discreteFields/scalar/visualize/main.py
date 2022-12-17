@@ -4,12 +4,9 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 8/30/2022 11:50 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
-
 from components.freeze.base import FrozenOnly
 from objects.CSCG._2d.discreteFields.scalar.visualize.matplot import _2cCSCG_DS_VisualizeMatplot
+
 
 class _2cCSCG_DS_Visualize(FrozenOnly):
     """"""
@@ -26,8 +23,3 @@ class _2cCSCG_DS_Visualize(FrozenOnly):
     @property
     def matplot(self):
         return self._matplot_
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python objects/CSCG/_2d/discrete_fields/scalar/visualize/main.py
-    pass

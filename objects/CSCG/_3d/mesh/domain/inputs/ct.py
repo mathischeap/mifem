@@ -47,20 +47,16 @@ class CurvilinearTestMesh(_3dDomainInputBase):
         return {
             'periodic': False,
             'region num': 1,
-            'mesh boundary num': 6, # the amount of mesh boundaries (instead of domain boundaries)
+            'mesh boundary num': 6,  # the amount of mesh boundaries (instead of domain boundaries)
         }
 
     @classproperty
     def random_parameters(cls):
         if RANK == MASTER_RANK:
             rp = {
-                'c': random.randint(0,3) * random.random() / 10,
+                'c': random.randint(0, 3) * random.random() / 10,
             }
         else:
             rp = None
 
         return COMM.bcast(rp, root=MASTER_RANK)
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

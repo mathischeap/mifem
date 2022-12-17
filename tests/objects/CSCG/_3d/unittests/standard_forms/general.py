@@ -5,7 +5,8 @@ For standard forms only.
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 import random
 
@@ -23,6 +24,7 @@ from tools.miLinearAlgebra.linearSystem.main import LinearSystem
 from tools.elementwiseCache.dataStructures.operators.bmat.main import bmat
 from tools.elementwiseCache.dataStructures.operators.concatenate.main import concatenate
 
+
 def test_Form_NO1_discretization_and_reconstruction():
     """"""
     if RANK == MASTER_RANK:
@@ -34,7 +36,7 @@ def test_Form_NO1_discretization_and_reconstruction():
     def p(t, x, y, z): return np.cos(np.pi*x) + np.sin(np.pi*y) * np.sin(np.pi*z-0.125)**2 + t/2
 
     try:
-        mesh = MeshGenerator('LDC', l=1, w=1.2, h=1.5)([f'Lobatto:{3}', f'Lobatto:{4}', f'Lobatto:{5}'], EDM='debug')
+        mesh = MeshGenerator('LDC', L=1, w=1.2, h=1.5)([f'Lobatto:{3}', f'Lobatto:{4}', f'Lobatto:{5}'], EDM='debug')
         space = SpaceInvoker('polynomials')([('Lobatto', 5), ('Lobatto', 5), ('Lobatto', 5)])
         FC = FormCaller(mesh, space)
         scalar = FC('scalar', p)
@@ -215,6 +217,7 @@ def test_Form_NO1_discretization_and_reconstruction():
 
     return 1
 
+
 def test_Form_NO1a_discretization_and_reconstruction():
     """"""
     if RANK == MASTER_RANK:
@@ -226,7 +229,7 @@ def test_Form_NO1a_discretization_and_reconstruction():
     def p(t, x, y, z): return np.cos(np.pi*x) + np.sin(np.pi*y) * np.sin(np.pi*z-0.125)**2 + t/2
 
     try:
-        mesh = MeshGenerator('LDC', l=1, w=1.2, h=1.5)([f'Lobatto:{3}', f'Lobatto:{4}', f'Lobatto:{5}'])
+        mesh = MeshGenerator('LDC', L=1, w=1.2, h=1.5)([f'Lobatto:{3}', f'Lobatto:{4}', f'Lobatto:{5}'])
         space = SpaceInvoker('polynomials')([('Lobatto', 5), ('Lobatto', 5), ('Lobatto', 5)])
         FC = FormCaller(mesh, space)
         scalar = FC('scalar', p)
@@ -406,7 +409,7 @@ def test_Form_NO1b_trace_form_Rd_and_Rc():
         x, y, z = xyz[i]
         v = V[i][0]
         v_exact = p(t, x, y, z)
-        assert np.max(np.abs(v - v_exact)) < 1e-5 # must be accurate enough!
+        assert np.max(np.abs(v - v_exact)) < 1e-5  # must be accurate enough!
 
     # test 2-Trace form reconstruct...............
     t2 = FC('2-t')
@@ -419,7 +422,7 @@ def test_Form_NO1b_trace_form_Rd_and_Rc():
         x, y, z = xyz[i]
         v = V[i][0]
         v_exact = p(t, x, y, z)
-        assert np.max(np.abs(v - v_exact)) < 1e-4 # must be accurate enough!
+        assert np.max(np.abs(v - v_exact)) < 1e-4  # must be accurate enough!
 
     # ------------------------------------------------------------------------------------------
 
@@ -1174,8 +1177,8 @@ def test_Form_No10_standard_form_dofs():
         D = dofs[i]
         local_positions = D.positions
         for E_I in local_positions:
-            E, I = E_I
-            assert f0.numbering.gathering[E][I] == i, f"must be the case."
+            E, _I = E_I
+            assert f0.numbering.gathering[E][_I] == i, f"must be the case."
     return 1
 
 

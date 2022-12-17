@@ -7,7 +7,8 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from root.config.main import *
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 from tests.objects.CSCG._3d.randObj.form_caller import random_FormCaller_of_total_load_around
@@ -36,7 +37,7 @@ def test_Naive_Numbering_NO1_0form():
          [17, 23, 15, 14, 20, 12, 29, 31, 25, 28, 30, 24, 5, 21, 3, 2, 18, 0]]
     )
     for i in f0.numbering.gathering:
-        assert np.all(f0.numbering.gathering[i].full_vector == benchmark[i,:])
+        assert np.all(f0.numbering.gathering[i].full_vector == benchmark[i, :])
 
     return 1
 
@@ -53,8 +54,8 @@ def test_Naive_Numbering_NO2_1form():
     f1 = FC('1-f', hybrid=False, numbering_parameters='Naive')
 
     benchmark = np.array(
-        [[ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,
-               17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32],
+        [[0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,
+          17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32],
          [33, 39, 36, 42, 34, 40, 37, 43, 35, 41, 38, 44, 14, 45, 12, 17, 46,
           15, 20, 47, 18, 23, 48, 21, 26, 50, 24, 29, 49, 27, 32, 51, 30],
          [2, 3, 0, 1, 6, 7, 4, 5, 10, 11, 8, 9, 52, 55, 58, 53, 56,
@@ -71,7 +72,7 @@ def test_Naive_Numbering_NO2_1form():
           92, 58, 61, 52, 81, 90, 73, 79, 88, 71, 82, 91, 74, 80, 89, 72]]
     )
     for i in f1.numbering.gathering:
-        assert np.all(f1.numbering.gathering[i].full_vector == benchmark[i,:])
+        assert np.all(f1.numbering.gathering[i].full_vector == benchmark[i, :])
 
     return 1
 
@@ -105,7 +106,7 @@ def test_Naive_Numbering_NO3_2form():
          95, 50, 53]
     ])
     for i in f2.numbering.gathering:
-        assert np.all(f2.numbering.gathering[i].full_vector == benchmark[i,:])
+        assert np.all(f2.numbering.gathering[i].full_vector == benchmark[i, :])
 
     return 1
 
@@ -117,11 +118,11 @@ def test_Naive_Numbering_NO5_0trace():
         load = random.randint(10, 199)
         print(f"--- [test_Naive_Numbering_NO5_0trace] @ FC-load = {load} ...... ", flush=True)
     else:
-        load= None
+        load = None
     load = COMM.bcast(load, root=MASTER_RANK)
     FC = random_FormCaller_of_total_load_around(load)
 
-    t0 = FC('0-t', numbering_parameters={'scheme_name': 'Naive',})
+    t0 = FC('0-t', numbering_parameters={'scheme_name': 'Naive'})
 
     GM_TEW = t0.numbering.trace_element_wise
     for i in GM_TEW:
@@ -131,7 +132,7 @@ def test_Naive_Numbering_NO5_0trace():
     GM_TEW = COMM.gather(GM_TEW, root=MASTER_RANK)
     if RANK == MASTER_RANK:
         END = 0
-        for i in range(t0.mesh.trace.elements.global_num):# go through all (global) trace elements
+        for i in range(t0.mesh.trace.elements.global_num):  # go through all (global) trace elements
             for gm_core in GM_TEW:
                 if i in gm_core:
                     fv = gm_core[i].full_vector
@@ -156,11 +157,11 @@ def test_Naive_Numbering_NO6_1trace():
         load = random.randint(10, 199)
         print(f"--- [test_Naive_Numbering_NO6_1trace] @ FC-load = {load} ...... ", flush=True)
     else:
-        load= None
+        load = None
     load = COMM.bcast(load, root=MASTER_RANK)
     FC = random_FormCaller_of_total_load_around(load, EDM_pool=('chaotic',))
 
-    t1 = FC('1-t', numbering_parameters={'scheme_name': 'Naive',})
+    t1 = FC('1-t', numbering_parameters={'scheme_name': 'Naive'})
 
     GM_TEW = t1.numbering.trace_element_wise
     for i in GM_TEW:
@@ -170,7 +171,7 @@ def test_Naive_Numbering_NO6_1trace():
     GM_TEW = COMM.gather(GM_TEW, root=MASTER_RANK)
     if RANK == MASTER_RANK:
         END = 0
-        for i in range(t1.mesh.trace.elements.global_num):# go through all (global) trace elements
+        for i in range(t1.mesh.trace.elements.global_num):  # go through all (global) trace elements
             for gm_core in GM_TEW:
                 if i in gm_core:
                     fv = gm_core[i].full_vector
@@ -213,16 +214,12 @@ def test_Naive_Numbering_NO4_2trace():
          [85, 86, 87, 82, 83, 84, 80, 81, 78, 79, 62, 63, 64, 65, 66, 67, 56, 57, 58, 59, 60, 61]]
     )
     for i in GM:
-        assert np.all(GM[i].full_vector == benchmark[i,:])
+        assert np.all(GM[i].full_vector == benchmark[i, :])
         LOCAL_NUMBERING.update(GM[i].full_vector)
 
     assert num_of_dofs_in_this_core == len(LOCAL_NUMBERING), "must be the case!"
 
     return 1
-
-
-
-
 
 
 if __name__ == '__main__':

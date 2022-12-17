@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/09/05 4:14 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 
 from components.freeze.base import FrozenOnly
 
@@ -49,23 +46,18 @@ class OnTraceElement_Standard(FrozenOnly):
             raise NotImplementedError(f"_3dCSCG_ScalarField of ftype 'standard'"
                                       f"trace-element-reconstruction currently doesn't accept i={i}.")
 
-        for I in INDICES:
-            te = sf.mesh.trace.elements[I]
+        for _I in INDICES:
+            te = sf.mesh.trace.elements[_I]
             xyz_i = te.coordinate_transformation.mapping(xi, eta, sigma, parse_3_1d_eps=True)
             func_i = func[0]
 
             v_i = func_i(*xyz_i)
 
             if ravel:
-                xyz[I] = [_.ravel('F') for _ in xyz_i]
-                value[I] = [v_i.ravel('F'), ]
+                xyz[_I] = [_.ravel('F') for _ in xyz_i]
+                value[_I] = [v_i.ravel('F'), ]
             else:
-                xyz[I] = xyz_i
-                value[I] = [v_i, ]
+                xyz[_I] = xyz_i
+                value[_I] = [v_i, ]
 
         return xyz, value
-
-
-if __name__ == "__main__":
-    # mpiexec -n 4 python 
-    pass

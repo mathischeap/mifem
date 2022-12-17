@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
 from components.freeze.main import FrozenOnly
 
 import numpy as np
 from components.exceptions import DimensionError
 from components.decorators.all import memoize1
+
 
 class _3dCSCG_space_do(FrozenOnly):
     """"""

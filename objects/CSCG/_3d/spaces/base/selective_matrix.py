@@ -8,7 +8,8 @@ Aerodynamics, AE
 TU Delft
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 import numpy as np
 from components.freeze.main import FrozenOnly
@@ -37,16 +38,16 @@ class SelectiveMatrix(FrozenOnly):
         LNe = self._FS_.local_numbering._3dCSCG_0Edge
 
         WB = np.zeros((p[0] + 1, num_basis_0form), dtype=int)
-        WB[LNe['WB'], LNf[:,0,0].ravel('F')] = 1
+        WB[LNe['WB'], LNf[:, 0, 0].ravel('F')] = 1
 
         EB = np.zeros((p[0] + 1, num_basis_0form), dtype=int)
-        EB[LNe['EB'], LNf[:,-1,0].ravel('F')] = 1
+        EB[LNe['EB'], LNf[:, -1, 0].ravel('F')] = 1
 
         WF = np.zeros((p[0] + 1, num_basis_0form), dtype=int)
-        WF[LNe['WF'], LNf[:,0,-1].ravel('F')] = 1
+        WF[LNe['WF'], LNf[:, 0, -1].ravel('F')] = 1
 
         EF = np.zeros((p[0] + 1, num_basis_0form), dtype=int)
-        EF[LNe['EF'], LNf[:,-1,-1].ravel('F')] = 1
+        EF[LNe['EF'], LNf[:, -1, -1].ravel('F')] = 1
 
 
         NB = np.zeros((p[1] + 1, num_basis_0form), dtype=int)
@@ -96,16 +97,16 @@ class SelectiveMatrix(FrozenOnly):
 
 
         WB = np.zeros((p[0], num_basis_1form), dtype=int)
-        WB[LNe['WB'], LNf[0][:,0,0].ravel('F')] = 1
+        WB[LNe['WB'], LNf[0][:, 0, 0].ravel('F')] = 1
 
         EB = np.zeros((p[0], num_basis_1form), dtype=int)
-        EB[LNe['EB'], LNf[0][:,-1,0].ravel('F')] = 1
+        EB[LNe['EB'], LNf[0][:, -1, 0].ravel('F')] = 1
 
         WF = np.zeros((p[0], num_basis_1form), dtype=int)
-        WF[LNe['WF'], LNf[0][:,0,-1].ravel('F')] = 1
+        WF[LNe['WF'], LNf[0][:, 0, -1].ravel('F')] = 1
 
         EF = np.zeros((p[0], num_basis_1form), dtype=int)
-        EF[LNe['EF'], LNf[0][:,-1,-1].ravel('F')] = 1
+        EF[LNe['EF'], LNf[0][:, -1, -1].ravel('F')] = 1
 
 
         NB = np.zeros((p[1], num_basis_1form), dtype=int)
@@ -169,7 +170,7 @@ class SelectiveMatrix(FrozenOnly):
         Nn, Ns, Nw, Ne, Nb, Nf = N_
 
         S_hybrid = csr_matrix(N)
-        S_non_hybrid = None # to be implemented
+        S_non_hybrid = None  # to be implemented
         return {True: S_hybrid, False: S_non_hybrid}, \
                {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne, 'B': Nb, 'F': Nf}
 
@@ -210,7 +211,7 @@ class SelectiveMatrix(FrozenOnly):
         N = np.vstack((Nn, Ns, Nw, Ne, Nb, Nf))
 
         S_hybrid = csr_matrix(N)
-        S_non_hybrid = None # to be implemented
+        S_non_hybrid = None  # to be implemented
         return {True: S_hybrid, False: S_non_hybrid}, \
                {'N': Nn, 'S': Ns, 'W': Nw, 'E': Ne, 'B': Nb, 'F': Nf}
 
@@ -257,14 +258,10 @@ class SelectiveMatrix(FrozenOnly):
         return _gte_
 
 
-
-
-
-
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\space\topology\selective_matrix.py
     from objects.CSCG._3d.master import SpaceInvoker
 
-    space = SpaceInvoker('polynomials')([('Lobatto',2), ('Lobatto',1), ('Lobatto',3)])
+    space = SpaceInvoker('polynomials')([('Lobatto', 2), ('Lobatto', 1), ('Lobatto', 3)])
 
     print(space._selective_matrix_._3dCSCG_1Edge)

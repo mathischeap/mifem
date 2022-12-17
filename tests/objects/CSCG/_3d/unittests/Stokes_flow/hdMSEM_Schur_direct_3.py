@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 from tools.elementwiseCache.dataStructures.operators.concatenate.main import concatenate
@@ -68,12 +69,12 @@ def test_Stokes_hdMSEM_Schur_Rank2Solver():
     E12 = E21.T
     E23 = E32.T
 
-    A = ([      M1, - E12 @ M2,  None,  T1T, None, None],
-         [M2 @ E21,       None, - E23, None,  T2T, None],
-         [    None,        E32,  None, None, None, None],
-         [      T1,       None,  None,   D1, None,   C1],
-         [    None,         T2,  None, None,   D2, None],
-         [    None,       None,  None, C1.T, None, None])
+    A = ([M1, - E12 @ M2, None, T1T, None, None],
+         [M2 @ E21, None, - E23, None, T2T, None],
+         [None, E32, None, None, None, None],
+         [T1, None, None, D1, None, C1],
+         [None, T2, None, None, D2, None],
+         [None, None, None, C1.T, None, None])
 
     A = bmat(A)
 

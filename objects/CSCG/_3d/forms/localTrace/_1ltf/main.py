@@ -5,8 +5,10 @@
 @time: 11/26/2022 2:55 PM
 """
 import sys
+from abc import ABC
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from objects.CSCG._3d.forms.localTrace.base.main import _3dCSCG_LocalTrace
 from objects.CSCG._3d.forms.localTrace._1ltf.discretize.main import _3dCSCG_1LocalTrace_Discretize
 from objects.CSCG._3d.forms.localTrace._1ltf.reconstruct import _3dCSCG_1LocalTrace_Reconstruct
@@ -15,11 +17,14 @@ from components.quadrature import Quadrature
 import numpy as np
 from scipy.sparse import csr_matrix, bmat
 
-class _3dCSCG_1LocalTrace(_3dCSCG_LocalTrace):
+
+class _3dCSCG_1LocalTrace(_3dCSCG_LocalTrace, ABC):
     """"""
 
-    def __init__(self, mesh, space, hybrid=True, orientation='outer',
-        numbering_parameters='Naive', name='outer-oriented-1-local-trace-form'):
+    def __init__(
+        self, mesh, space, hybrid=True, orientation='outer',
+        numbering_parameters='Naive', name='outer-oriented-1-local-trace-form',
+    ):
         super().__init__(mesh, space, hybrid, orientation, numbering_parameters, name)
         self._k_ = 1
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_localtrace_1form')
@@ -27,7 +32,6 @@ class _3dCSCG_1LocalTrace(_3dCSCG_LocalTrace):
         self._reconstruct_ = _3dCSCG_1LocalTrace_Reconstruct(self)
         self._visualize_ = _3dCSCG_1LocalTrace_Visualize(self)
         self._freeze_self_()
-
 
     def ___Pr_check_CF___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
@@ -92,7 +96,7 @@ class _3dCSCG_1LocalTrace(_3dCSCG_LocalTrace):
                 M = list()
                 for j, side in zip(tes, 'NSWEBF'):
                     te = self.mesh.trace.elements[j]
-                    R = RSi[side] # array, if sparse, do toarray()
+                    R = RSi[side]   # array, if sparse, do toarray()
 
                     if side in 'NS':
                         g = te.coordinate_transformation.metric(xNS, yNS)
@@ -139,8 +143,6 @@ class _3dCSCG_1LocalTrace(_3dCSCG_LocalTrace):
                 MD[i] = M
 
         return MD
-
-
 
 
 if __name__ == '__main__':

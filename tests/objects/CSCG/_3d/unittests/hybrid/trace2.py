@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from objects.CSCG._3d.__init__ import mesh as mesh3
 from objects.CSCG._3d.__init__ import space as space3
@@ -9,15 +10,16 @@ from objects.CSCG._3d.__init__ import form as form3
 from root.config.main import RANK, MASTER_RANK, COMM
 import random
 
+
 def test_hybridization_trace2():
     """"""
-    mesh = mesh3('cuboid', region_layout=[2,2,2])([3,2,1])
+    mesh = mesh3('cuboid', region_layout=[2, 2, 2])([3, 2, 1])
     space = space3('polynomials')([('Lobatto', 1), ('Lobatto', 2), ('Lobatto', 3)])
     FC = form3(mesh, space)
 
     all_boundaries = mesh.boundaries.names
     if RANK == MASTER_RANK:
-        rn = random.randint(1,5)
+        rn = random.randint(1, 5)
         boundaries = random.sample(all_boundaries, rn)
     else:
         boundaries = None
@@ -53,6 +55,7 @@ def test_hybridization_trace2():
     u.dofs.do.hybrid_pairing_check(t, T, D, b)
 
     return 1
+
 
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/_3d/__tests__/unittests/hybrid/trace2.py

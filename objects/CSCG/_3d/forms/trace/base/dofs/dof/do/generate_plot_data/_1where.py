@@ -23,12 +23,13 @@ class _3dCSCG_T1F_DOF_Where(FrozenOnly):
 
         trace_element_position = self._dof_.trace_element_position
 
-        if trace_element_position is None: return
+        if trace_element_position is None:
+            return
 
-        trace_element, local_numbering, component, component_indices =  trace_element_position[:4]
+        trace_element, local_numbering, component, component_indices = trace_element_position[:4]
 
         mesh = self._dof_._tf_._mesh_
-        trace_element =mesh.trace.elements[trace_element]
+        trace_element = mesh.trace.elements[trace_element]
 
         MAPPING = trace_element.coordinate_transformation.mapping
 
@@ -64,7 +65,7 @@ class _3dCSCG_T1F_DOF_Where(FrozenOnly):
             MAPPING(
                     dof_x, dof_y,
                     from_element=trace_element.CHARACTERISTIC_element,
-                    side = trace_element.CHARACTERISTIC_side)
+                    side=trace_element.CHARACTERISTIC_side)
         )
 
         SPAN = np.linspace(-1, 1, density) * zoom
@@ -75,7 +76,7 @@ class _3dCSCG_T1F_DOF_Where(FrozenOnly):
             xyz = MAPPING(
                     *eps,
                     from_element=trace_element.CHARACTERISTIC_element,
-                    side = trace_element.CHARACTERISTIC_side)
+                    side=trace_element.CHARACTERISTIC_side)
             LINES.append(xyz)
 
         for n in NODES[1]:
@@ -83,13 +84,13 @@ class _3dCSCG_T1F_DOF_Where(FrozenOnly):
             xyz = MAPPING(
                   *eps,
                   from_element=trace_element.CHARACTERISTIC_element,
-                  side = trace_element.CHARACTERISTIC_side)
+                  side=trace_element.CHARACTERISTIC_side)
             LINES.append(xyz)
 
         # make sure that if a periodic trace element is always shown twice even it is only in one core.
         if trace_element.whether.on_periodic_boundary and not trace_element.whether.shared_by_cores:
             NCP = trace_element.NON_CHARACTERISTIC_position
-            element= int(NCP[:-1])
+            element = int(NCP[:-1])
             side = NCP[-1]
             for n in NODES[0]:
                 eps = [n * ONES, SPAN]
@@ -111,7 +112,7 @@ class _3dCSCG_T1F_DOF_Where(FrozenOnly):
                 MAPPING(
                         dof_x, dof_y,
                         from_element=element,
-                        side = side)
+                        side=side)
             )
 
         RETURN = dict()

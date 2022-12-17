@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """Generate random objects for testing purpose.
 """
-
-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from objects.CSCG._3d.master import FormCaller
 from tests.objects.CSCG._3d.randObj.space import random_space_of_degrees_around
@@ -12,16 +11,11 @@ from tests.objects.CSCG._3d.randObj.mesh import random_mesh_of_elements_around
 from tests.objects.CSCG._3d.randObj.mesh_and_space import random_mesh_and_space_of_total_load_around
 
 
-
-
 def random_FormCaller_of_total_load_around(*args, **kwargs):
     """A wrapper of `random_mesh_and_space_of_total_load_around` and we use the outputs to make a
     3D FormCaller instance."""
     mesh, space = random_mesh_and_space_of_total_load_around(*args, **kwargs)
     return FormCaller(mesh, space)
-
-
-
 
 
 if __name__ == '__main__':

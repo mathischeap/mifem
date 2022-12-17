@@ -3,6 +3,7 @@
 from components.freeze.main import FrozenOnly
 from root.config.main import COMM
 
+
 class _3dCSCG_Mesh_Elements_DO_FIND(FrozenOnly):
     def __init__(self, elements):
         self._elements_ = elements
@@ -55,8 +56,7 @@ class _3dCSCG_Mesh_Elements_DO_FIND(FrozenOnly):
             assert 'F' in corner_names
             id2 = -1
 
-        element_numbering = mesh.___PRIVATE_generate_element_global_numbering___ \
-            (number_what=region_name)
+        element_numbering = mesh.___PRIVATE_generate_element_global_numbering___(number_what=region_name)
 
         the_corner_element_numbering = element_numbering[id0, id1, id2]
 

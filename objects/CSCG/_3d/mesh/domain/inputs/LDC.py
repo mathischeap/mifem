@@ -9,15 +9,15 @@ from components.decorators.classproperty.main import classproperty
 
 class Lid_Driven_Cavity(_3dDomainInputBase):
     """3d lid driven cavity, moving wall: z+ wall."""
-    def __init__(self, l=1, w=1, h=1, domain_name="Lid-Driven-Cavity"):
-        assert l > 0 and w > 0 and h > 0, f"l, w, h = {l}, {w}, {h} is wrong."
+    def __init__(self, L=1, w=1, h=1, domain_name="Lid-Driven-Cavity"):
+        assert L > 0 and w > 0 and h > 0, f"l, w, h = {L}, {w}, {h} is wrong."
 
-        self._lwh_ = [l, w, h]
+        self._lwh_ = [L, w, h]
 
         super().__init__(domain_name=domain_name)
 
         x0 = 0
-        x1 = l
+        x1 = L
         y0 = 0
         y1 = w
         z0 = 0
@@ -25,7 +25,7 @@ class Lid_Driven_Cavity(_3dDomainInputBase):
 
         self.region_corner_coordinates = {'R:R': ((x0, y0, z0), (x1, y0, z0), (x0, y1, z0), (x1, y1, z0),
                                                   (x0, y0, z1), (x1, y0, z1), (x0, y1, z1), (x1, y1, z1))}
-        self.region_side_types = dict() # all plane
+        self.region_side_types = dict()  # all plane
         self.boundary_region_sides = {'WALL': ("R:R-N", "R:R-S", "R:R-W", "R:R-E", "R:R-B"),
                                       'LID': "R:R-F"}
         self.region_interpolators = {'R:R': 'transfinite'}
@@ -35,8 +35,6 @@ class Lid_Driven_Cavity(_3dDomainInputBase):
     @property
     def lwh(self):
         return self._lwh_
-
-
 
     @classproperty
     def statistic(cls):

@@ -23,6 +23,7 @@ from components.decorators.memoize.memoize_5 import memoize5
 
 from components.decorators.accepts import accepts
 
+
 if __name__ == "__main__":
     # do some tests
     @timeit2

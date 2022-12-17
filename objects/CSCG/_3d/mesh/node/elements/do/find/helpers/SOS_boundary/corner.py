@@ -1,6 +1,4 @@
 
-
-
 from components.freeze.base import FrozenOnly
 
 
@@ -13,7 +11,6 @@ class _3dCSCG_CornerNodeSOS(FrozenOnly):
         edge_elements = mesh.edge.elements
         elements = mesh.elements
 
-
         if i not in mesh.node.elements:
             self._mesh_ = None
             return
@@ -25,7 +22,6 @@ class _3dCSCG_CornerNodeSOS(FrozenOnly):
         corner_name = mesh_element_corner_name[-3:]
 
         self._mesh_ = (mesh_element, corner_name)
-
 
         s0, s1, s2 = corner_name
 
@@ -46,16 +42,12 @@ class _3dCSCG_CornerNodeSOS(FrozenOnly):
             self._trace_.append((trace, corner, boundary))
             self._mesh_boundaries_.append(boundary)
 
-
-
         ___ = ['WB', 'EB', 'WF', 'EF', 'NB', 'SB', 'NF', 'SF', 'NW', 'SW', 'NE', 'SE']
         E_MAP = edge_elements.map[mesh_element]
         self._edge_ = list()
         for end, corner_edge in zip((side0, side1, side2), (corner0, corner1, corner2)):
             edge = E_MAP[___.index(corner_edge)]
             self._edge_.append((edge, end))
-
-
 
         self._freeze_self_()
 

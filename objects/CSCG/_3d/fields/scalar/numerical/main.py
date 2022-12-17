@@ -22,11 +22,12 @@ class _3dCSCG_ScalarField_Numerical(FrozenOnly):
 
             scalar_class = getattr(import_module(base_path + 'scalar.main'), '_3dCSCG_ScalarField')
 
-            TDS = scalar_class(self._sf_.mesh, NPD4F('t'),
-                              ftype='standard',
-                              valid_time=self._sf_.valid_time,
-                              name = 'time-derivative-of-' + self._sf_.standard_properties.name
-                              )
+            TDS = scalar_class(
+                self._sf_.mesh, NPD4F('t'),
+                ftype='standard',
+                valid_time=self._sf_.valid_time,
+                name='time-derivative-of-' + self._sf_.standard_properties.name
+            )
             return TDS
 
         else:
@@ -44,12 +45,12 @@ class _3dCSCG_ScalarField_Numerical(FrozenOnly):
 
             vector_class = getattr(import_module(base_path + 'vector.main'), '_3dCSCG_VectorField')
 
-
-            GV = vector_class(self._sf_.mesh, (NPD4F('x'), NPD4F('y'), NPD4F('z')),
-                              ftype='standard',
-                              valid_time=self._sf_.valid_time,
-                              name = 'gradient-of-' + self._sf_.standard_properties.name
-                              )
+            GV = vector_class(
+                self._sf_.mesh, (NPD4F('x'), NPD4F('y'), NPD4F('z')),
+                ftype='standard',
+                valid_time=self._sf_.valid_time,
+                name='gradient-of-' + self._sf_.standard_properties.name
+            )
             return GV
 
         else:

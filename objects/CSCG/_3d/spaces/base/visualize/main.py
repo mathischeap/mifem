@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-
-
 from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.spaces.base.visualize.matplot import _3dCSC_Space_Visualize_Matplot
-
 
 
 class _3dCSC_Space_Visualize(FrozenOnly):

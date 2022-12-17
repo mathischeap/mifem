@@ -16,6 +16,7 @@ from tools.elementwiseCache.dataStructures.objects.columnVector.blocks.main impo
 
 from tools.elementwiseCache.gathering.chain import GatheringMatrixChaining
 
+
 class EWC_ColumnVector(FrozenOnly):
     """
     Element-wise cached column vector (csc_matrix of shape (n,1)).
@@ -46,20 +47,19 @@ class EWC_ColumnVector(FrozenOnly):
         :param cache_key_generator:
         :param con_shape:
         """
-
-        #----------- when only provide one input `mesh_elements` ------------------------------
+        # ---------- when only provide one input `mesh_elements` ------------------------------
         if data_generator is None and cache_key_generator is None and con_shape is False:
 
-            #------- we have a cscg form -------------------------------------------------
+            # ------ we have a cscg form -------------------------------------------------
             if hasattr(mesh_elements, 'standard_properties') and \
-                'CSCG_form' in mesh_elements.standard_properties.tags:
+               'CSCG_form' in mesh_elements.standard_properties.tags:
                 form = mesh_elements
                 data_generator = form
                 mesh_elements = form.mesh.elements
-            #------- we have a cscg AD-form -------------------------------------------------
+            # ------ we have a cscg AD-form -------------------------------------------------
             elif hasattr(mesh_elements, 'prime') and \
-                hasattr(mesh_elements.prime, 'standard_properties') and \
-                'CSCG_form' in mesh_elements.prime.standard_properties.tags:
+                    hasattr(mesh_elements.prime, 'standard_properties') and \
+                    'CSCG_form' in mesh_elements.prime.standard_properties.tags:
                 dual_form = mesh_elements
                 data_generator = dual_form.prime
                 mesh_elements = dual_form.mesh.elements
@@ -69,7 +69,7 @@ class EWC_ColumnVector(FrozenOnly):
         else:
             pass
 
-        #------------------------ check elements  --------------------------------------------------
+        # ----------------------- check elements  --------------------------------------------------
         if mesh_elements.__class__.__name__ in ('_3dCSCG_Mesh_Elements', '_2dCSCG_Mesh_Elements'):
             self._elements_ = mesh_elements
         elif mesh_elements.__class__.__name__ in ('miUsGrid_TriangularMesh_Elements',):
@@ -90,19 +90,20 @@ class EWC_ColumnVector(FrozenOnly):
             assert data_generator % 1 == 0 and data_generator > 0, f"empty vector size {data_generator} wrong!"
             DATA_TYPE = 'EMPTY'
         elif hasattr(data_generator, 'standard_properties') and \
-            'CSCG_form' in data_generator.standard_properties.tags:
+                'CSCG_form' in data_generator.standard_properties.tags:
             # data_generator is a CSCG form.
             DATA_TYPE = 'EMPTY'
             data_generator = data_generator.num.basis
             # equivalent to EWC_ColumnVector(mesh, form.num.basis)
         elif hasattr(data_generator, 'prime') and \
-            hasattr(data_generator.prime, 'standard_properties') and \
-            'CSCG_form' in data_generator.prime.standard_properties.tags:
+                hasattr(data_generator.prime, 'standard_properties') and \
+                'CSCG_form' in data_generator.prime.standard_properties.tags:
+
             # data_generator is a CSCG AD-form.
             DATA_TYPE = 'EMPTY'
             data_generator = data_generator.prime.num.basis
             # equivalent to EWC_ColumnVector(mesh, ad_form.prime.num.basis)
-        else: # default data type
+        else:  # default data type
             pass
 
         # we can accept a dictionary as a data generator, we will wrap it with a method -----------
@@ -117,7 +118,7 @@ class EWC_ColumnVector(FrozenOnly):
         else:
             pass
 
-        #---------- parse default cache_key_generator ---------------------------------------------
+        # --------- parse default cache_key_generator ---------------------------------------------
         if cache_key_generator is None:
 
             if DATA_TYPE == 'EMPTY': # make empty sparse vector.
@@ -136,8 +137,7 @@ class EWC_ColumnVector(FrozenOnly):
         else: # have given a generator, use it.
             pass
 
-        #--------- get DG and KG -------------------------------------------------------------------
-
+        # -------- get DG and KG -------------------------------------------------------------------
         if DATA_TYPE == 'EMPTY':
 
             self._DG_ = self.___PRIVATE_empty_data_generator___
@@ -154,7 +154,7 @@ class EWC_ColumnVector(FrozenOnly):
 
             else:
 
-                #If it's not no_cache, it must be a method (cannot be a function) have 1 input (#element) except self.
+                # If it's not no_cache, it must be a method (cannot be a function) have 1 input (#element) except self.
                 if isinstance(cache_key_generator, types.MethodType):
                     # noinspection PyUnresolvedReferences
                     assert cache_key_generator.__code__.co_argcount == 2
@@ -167,8 +167,7 @@ class EWC_ColumnVector(FrozenOnly):
         else:
             raise Exception(f"DATA_TYPE = {DATA_TYPE} wrong!")
 
-        #--------------------------------------- DONE ----------------------------------------
-
+        # -------------------------------------- DONE ----------------------------------------
         self._gathering_matrix_ = None
         self.___PRIVATE_reset_cache___()
         self.___CT___ = '>CT<'
@@ -185,7 +184,6 @@ class EWC_ColumnVector(FrozenOnly):
         self._adjust_ = None
         self._blocks_ = None
         self._freeze_self_()
-
 
     def __repr__(self):
         return f'EWC_ColVec:{id(self)}'
@@ -224,7 +222,7 @@ class EWC_ColumnVector(FrozenOnly):
 
         else:
             if not isinstance(gathering_matrix, (list, tuple)):
-                gathering_matrix = [gathering_matrix,]
+                gathering_matrix = [gathering_matrix, ]
 
             cgm0 = list()
             for _ in gathering_matrix:
@@ -400,7 +398,7 @@ class EWC_ColumnVector(FrozenOnly):
 
     def ___PRIVATE_sum___(self, others):
         """self + all others."""
-        vec = [self,] + others
+        vec = [self, ] + others
         data_generator = ColVec_PRIVATE_sum(vec)
         # noinspection PyTypeChecker
         RETURN = EWC_ColumnVector(self._elements_, data_generator, data_generator.__KG_call__)

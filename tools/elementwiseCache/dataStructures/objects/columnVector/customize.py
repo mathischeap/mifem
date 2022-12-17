@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-
-# from components.decorators.accepts import accepts
 from components.freeze.main import FrozenOnly
 from scipy import sparse as spspa
 import numpy as np
 from root.config.main import COMM, RANK, MASTER_RANK, SIZE
+
 
 class SpaVec_Customize(FrozenOnly):
     def __init__(self, spa_vec):
@@ -35,7 +34,6 @@ class SpaVec_Customize(FrozenOnly):
             self.___PRIVATE_sent_to_applying___()
         return self._customizations_to_be_applied_
 
-
     def ___PRIVATE_sent_to_applying___(self):
         """We renew _customizations_to_be_applied_ according to ___customizations___."""
 
@@ -43,18 +41,17 @@ class SpaVec_Customize(FrozenOnly):
 
             if e not in self._customizations_to_be_applied_:
                 self._customizations_to_be_applied_[e] = (list(),  # indices
-                                                          list()) # values)
+                                                          list())  # values)
 
-            CUSi = self.___customizations___[e]  # customizations for the output of #e element.
+            CUSi = self.___customizations___[e]   # customizations for the output of #e element.
             indices, values = self._customizations_to_be_applied_[e]
 
             for cus in CUSi:
 
                 key, factors = cus
 
-
                 # clear a local row of the EWC-sparse-matrix ----------------- BELOW ---------------
-                if key == 'cletr':  # Clear Local EnTRy #factors
+                if key == 'cletr':   # Clear Local EnTRy #factors
                     # `factors` will be an int
                     if factors.__class__.__name__ in ("int", "int32", "int64"):
                         pass
@@ -96,8 +93,7 @@ class SpaVec_Customize(FrozenOnly):
                     raise NotImplementedError(f"Can not handle customization key={key}.")
                 # ================================ ABOVE ============================
 
-        self.___customizations___ = dict() # we have to clear ___customizations___ to avoid multiple renewing.
-
+        self.___customizations___ = dict()  # we have to clear ___customizations___ to avoid multiple renewing.
 
     def ___PRIVATE_do_execute_customization___(self, RETURN, e):
         """Execute all added customization.
@@ -116,11 +112,11 @@ class SpaVec_Customize(FrozenOnly):
             indices, values = self._customizations_[e]
             RETURN[indices, 0] = values
 
-        if not spspa.isspmatrix_csc(RETURN): RETURN = RETURN.tocsc()
+        if not spspa.isspmatrix_csc(RETURN):
+            RETURN = RETURN.tocsc()
         assert RETURN.shape[1] == 1, f"A vector must to csc_matrix of shape (x, 1), " \
                                      f"now its shape is {RETURN.shape}."
         return RETURN
-
 
     def set_entries_according_to(self, i, BC_itp, cochain_itp=None, AS='local'):
         """
@@ -150,14 +146,12 @@ class SpaVec_Customize(FrozenOnly):
         assert 0 <= i < bsp[0], f"i={i} is beyond the shape of this " \
                                 f"EWC spare vector of block shape {bsp}."
 
-
         if AS == 'local':
             dofs = BC_itp.local.dofs
             if cochain_itp is None:
                 cochains = BC_itp.local.cochains
             else:
                 cochains = cochain_itp.local.cochains
-
 
             GM = self._spa_vec_.gathering_matrix
             if GM.___Pr_IS_regular___:
@@ -208,7 +202,6 @@ class SpaVec_Customize(FrozenOnly):
         assert 0 <= i < bsp[0], f"i={i} is beyond the shape of this " \
                                 f"EWC spare vector of block shape {bsp}."
 
-
         if AS == 'local':
             dofs = BC_itp.local.dofs
 
@@ -229,11 +222,9 @@ class SpaVec_Customize(FrozenOnly):
 
                 self.___customizations___[e].append(('slest', (local_dofs, CONSTANT)))
 
-
         else:
             raise NotImplementedError(f"interpret={AS} not implemented.")
 
-    #
     # @accepts('self', (int, float, 'int32', 'int64'), ('PartialDofs', 'PartialCochain'))
     # def set_entries_according_to_CSCG_partial_cochains(
     #     self, i, pd, pc=None, interpreted_as='local_dofs'):
@@ -276,7 +267,7 @@ class SpaVec_Customize(FrozenOnly):
     #             LDR_row = GM.___Pr_regular__local_dofs_ranges___[i]
     #             start_row = LDR_row.start
     #         else:
-    #             raise NotImplementedError(f"Not implemented for irregular Gathering Matrix.")
+    #             raise NotImplementedError
     #         LDF_row = pd.interpreted_as.local_dofs
     #         # LDF_col = pc.dofs.interpreted_as.local_dofs
     #         cochain = pc.cochain
@@ -355,18 +346,6 @@ class SpaVec_Customize(FrozenOnly):
     # #
     # #     else:
     # #         return local_cochain
-    #
-    #
-    #
-
-
-
-
-
-
-
-
-
 
     def set_assembled_V_i_to(self, i, v):
         """Let V be the assembled vector (csc_matrix of shape (x,1)), we set V[i] = v.

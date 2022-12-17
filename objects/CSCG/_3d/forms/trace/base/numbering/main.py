@@ -14,6 +14,7 @@ from root.config.main import *
 
 from objects.CSCG._3d.forms.trace.base.numbering.do.main import _3dCSCG_Trace_Numbering_DO
 
+
 class _3dCSCG_Trace_Numbering(FrozenOnly):
     def __init__(self, tf, numbering_parameters):
         # ... parse number and numbering parameters ...
@@ -113,7 +114,8 @@ class _3dCSCG_Trace_Numbering(FrozenOnly):
         boundaries = mesh.boundaries
         BNS = boundaries.names
         self._boundary_dofs_ = dict()
-        for bn in BNS: self._boundary_dofs_[bn] = list()
+        for bn in BNS:
+            self._boundary_dofs_[bn] = list()
 
         RTE = boundaries.range_of_trace_elements
         for bn in RTE:

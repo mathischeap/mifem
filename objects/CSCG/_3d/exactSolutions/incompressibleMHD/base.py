@@ -13,19 +13,15 @@ PB/Pt + curl(E) = r (r normally is 0, r != 0 cases are usually for manufactured 
 (1/Rm) * j - E - u X B = 0
 j = curl(B)
 
-
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
-
 from functools import lru_cache, partial
 from objects.CSCG._3d.exactSolutions.base import Base
 from objects.CSCG._3d.fields.vector.main import _3dCSCG_VectorField
 from objects.CSCG._3d.fields.scalar.main import _3dCSCG_ScalarField
 from components.numerical._3dSpace.partial_derivative import NumericalPartialDerivative_xyz
 from components.numerical.timePlus3dSpace.partial_derivative import NumericalPartialDerivative_txyz
-from components.numerical.timePlus3dSpace.partial_derivative_as_functions import NumericalPartialDerivative_txyz_Functions
+from components.numerical.timePlus3dSpace.partial_derivative_as_functions import \
+    NumericalPartialDerivative_txyz_Functions
 import numpy as np
 
 
@@ -72,9 +68,9 @@ class incompressible_MHD_Base(Base):
         self._pressure_ = None
         self._body_force_ = None
 
-        self._volume_current_density_ = None # j
-        self._magnetic_field_ = None # B
-        self._electric_field_ = None #E
+        self._volume_current_density_ = None  # j
+        self._magnetic_field_ = None  # B
+        self._electric_field_ = None  # E
 
         self._divergence_of_magnetic_field_ = None
 
@@ -118,9 +114,9 @@ class incompressible_MHD_Base(Base):
         self._cross_helicity_distribution_ = None
         self._magnetic_helicity_distribution_ = None
 
-        self._mass_source_term_ = None #s,  div (u) = s, should be 0;
-        self._magnetic_source_term_ = None # m, div(B) = m, should be 0;
-        self._electric_source_term_ = None # r, \partial_t(B) + curl(E) = r, should be 0;
+        self._mass_source_term_ = None  # s,  div (u) = s, should be 0;
+        self._magnetic_source_term_ = None  # m, div(B) = m, should be 0;
+        self._electric_source_term_ = None  # r, \partial_t(B) + curl(E) = r, should be 0;
 
         self._freeze_self_()
 
@@ -141,18 +137,22 @@ class incompressible_MHD_Base(Base):
 
     def u(self, t, x, y, z):
         raise NotImplementedError()
+    
     def u_t(self, t, x, y, z):
         if self._NPDf_u_ is None:
             self._NPDf_u_ = NumericalPartialDerivative_txyz_Functions(self.u)
         return self._NPDf_u_('t')(t, x, y, z)
+    
     def u_x(self, t, x, y, z):
         if self._NPDf_u_ is None:
             self._NPDf_u_ = NumericalPartialDerivative_txyz_Functions(self.u)
         return self._NPDf_u_('x')(t, x, y, z)
+    
     def u_y(self, t, x, y, z):
         if self._NPDf_u_ is None:
             self._NPDf_u_ = NumericalPartialDerivative_txyz_Functions(self.u)
         return self._NPDf_u_('y')(t, x, y, z)
+    
     def u_z(self, t, x, y, z):
         if self._NPDf_u_ is None:
             self._NPDf_u_ = NumericalPartialDerivative_txyz_Functions(self.u)
@@ -161,18 +161,22 @@ class incompressible_MHD_Base(Base):
 
     def v(self, t, x, y, z):
         raise NotImplementedError()
+    
     def v_t(self, t, x, y, z):
         if self._NPDf_v_ is None:
             self._NPDf_v_ = NumericalPartialDerivative_txyz_Functions(self.v)
         return self._NPDf_v_('t')(t, x, y, z)
+    
     def v_x(self, t, x, y, z):
         if self._NPDf_v_ is None:
             self._NPDf_v_ = NumericalPartialDerivative_txyz_Functions(self.v)
         return self._NPDf_v_('x')(t, x, y, z)
+    
     def v_y(self, t, x, y, z):
         if self._NPDf_v_ is None:
             self._NPDf_v_ = NumericalPartialDerivative_txyz_Functions(self.v)
         return self._NPDf_v_('y')(t, x, y, z)
+    
     def v_z(self, t, x, y, z):
         if self._NPDf_v_ is None:
             self._NPDf_v_ = NumericalPartialDerivative_txyz_Functions(self.v)
@@ -181,167 +185,208 @@ class incompressible_MHD_Base(Base):
 
     def w(self, t, x, y, z):
         raise NotImplementedError()
+    
     def w_t(self, t, x, y, z):
         if self._NPDf_w_ is None:
             self._NPDf_w_ = NumericalPartialDerivative_txyz_Functions(self.w)
         return self._NPDf_w_('t')(t, x, y, z)
+    
     def w_x(self, t, x, y, z):
         if self._NPDf_w_ is None:
             self._NPDf_w_ = NumericalPartialDerivative_txyz_Functions(self.w)
         return self._NPDf_w_('x')(t, x, y, z)
+    
     def w_y(self, t, x, y, z):
         if self._NPDf_w_ is None:
             self._NPDf_w_ = NumericalPartialDerivative_txyz_Functions(self.w)
         return self._NPDf_w_('y')(t, x, y, z)
+    
     def w_z(self, t, x, y, z):
         if self._NPDf_w_ is None:
             self._NPDf_w_ = NumericalPartialDerivative_txyz_Functions(self.w)
         return self._NPDf_w_('z')(t, x, y, z)
 
+
     def u_xx(self, t, x, y, z):
         if self._NPDf_ux_ is None:
             self._NPDf_ux_ = NumericalPartialDerivative_txyz_Functions(self.u_x)
         return self._NPDf_ux_('x')(t, x, y, z)
+    
     def u_yy(self, t, x, y, z):
         if self._NPDf_uy_ is None:
             self._NPDf_uy_ = NumericalPartialDerivative_txyz_Functions(self.u_y)
         return self._NPDf_uy_('y')(t, x, y, z)
+    
     def u_zz(self, t, x, y, z):
         if self._NPDf_uz_ is None:
             self._NPDf_uz_ = NumericalPartialDerivative_txyz_Functions(self.u_z)
         return self._NPDf_uz_('z')(t, x, y, z)
+    
 
     def v_xx(self, t, x, y, z):
         if self._NPDf_vx_ is None:
             self._NPDf_vx_ = NumericalPartialDerivative_txyz_Functions(self.v_x)
         return self._NPDf_vx_('x')(t, x, y, z)
+    
     def v_yy(self, t, x, y, z):
         if self._NPDf_vy_ is None:
             self._NPDf_vy_ = NumericalPartialDerivative_txyz_Functions(self.v_y)
         return self._NPDf_vy_('y')(t, x, y, z)
+    
     def v_zz(self, t, x, y, z):
         if self._NPDf_vz_ is None:
             self._NPDf_vz_ = NumericalPartialDerivative_txyz_Functions(self.v_z)
         return self._NPDf_vz_('z')(t, x, y, z)
+    
 
     def w_xx(self, t, x, y, z):
         if self._NPDf_wx_ is None:
             self._NPDf_wx_ = NumericalPartialDerivative_txyz_Functions(self.w_x)
         return self._NPDf_wx_('x')(t, x, y, z)
+    
     def w_yy(self, t, x, y, z):
         if self._NPDf_wy_ is None:
             self._NPDf_wy_ = NumericalPartialDerivative_txyz_Functions(self.w_y)
         return self._NPDf_wy_('y')(t, x, y, z)
+    
     def w_zz(self, t, x, y, z):
         if self._NPDf_wz_ is None:
             self._NPDf_wz_ = NumericalPartialDerivative_txyz_Functions(self.w_z)
         return self._NPDf_wz_('z')(t, x, y, z)
+    
 
     def p(self, t, x, y, z): raise NotImplementedError()
+    
     def p_x(self, t, x, y, z):
         if self._NPDf_p_ is None:
             self._NPDf_p_ = NumericalPartialDerivative_txyz_Functions(self.p)
         return self._NPDf_p_('x')(t, x, y, z)
+    
     def p_y(self, t, x, y, z):
         if self._NPDf_p_ is None:
             self._NPDf_p_ = NumericalPartialDerivative_txyz_Functions(self.p)
         return self._NPDf_p_('y')(t, x, y, z)
+    
     def p_z(self, t, x, y, z):
         if self._NPDf_p_ is None:
             self._NPDf_p_ = NumericalPartialDerivative_txyz_Functions(self.p)
         return self._NPDf_p_('z')(t, x, y, z)
+    
 
     def Bx(self, t, x, y, z):
         raise NotImplementedError()
+    
     def Bx_t(self, t, x, y, z):
         if self._NPDf_Bx_ is None:
             self._NPDf_Bx_ = NumericalPartialDerivative_txyz_Functions(self.Bx)
         return self._NPDf_Bx_('t')(t, x, y, z)
+    
     def Bx_x(self, t, x, y, z):
         if self._NPDf_Bx_ is None:
             self._NPDf_Bx_ = NumericalPartialDerivative_txyz_Functions(self.Bx)
         return self._NPDf_Bx_('x')(t, x, y, z)
+    
     def Bx_y(self, t, x, y, z):
         if self._NPDf_Bx_ is None:
             self._NPDf_Bx_ = NumericalPartialDerivative_txyz_Functions(self.Bx)
         return self._NPDf_Bx_('y')(t, x, y, z)
+    
     def Bx_z(self, t, x, y, z):
         if self._NPDf_Bx_ is None:
             self._NPDf_Bx_ = NumericalPartialDerivative_txyz_Functions(self.Bx)
         return self._NPDf_Bx_('z')(t, x, y, z)
+    
 
     def By(self, t, x, y, z):
         raise NotImplementedError()
+    
     def By_t(self, t, x, y, z):
         if self._NPDf_By_ is None:
             self._NPDf_By_ = NumericalPartialDerivative_txyz_Functions(self.By)
         return self._NPDf_By_('t')(t, x, y, z)
+    
     def By_x(self, t, x, y, z):
         if self._NPDf_By_ is None:
             self._NPDf_By_ = NumericalPartialDerivative_txyz_Functions(self.By)
         return self._NPDf_By_('x')(t, x, y, z)
+    
     def By_y(self, t, x, y, z):
         if self._NPDf_By_ is None:
             self._NPDf_By_ = NumericalPartialDerivative_txyz_Functions(self.By)
         return self._NPDf_By_('y')(t, x, y, z)
+    
     def By_z(self, t, x, y, z):
         if self._NPDf_By_ is None:
             self._NPDf_By_ = NumericalPartialDerivative_txyz_Functions(self.By)
         return self._NPDf_By_('z')(t, x, y, z)
+    
 
     def Bz(self, t, x, y, z):
         raise NotImplementedError()
+    
     def Bz_t(self, t, x, y, z):
         if self._NPDf_Bz_ is None:
             self._NPDf_Bz_ = NumericalPartialDerivative_txyz_Functions(self.Bz)
         return self._NPDf_Bz_('t')(t, x, y, z)
+    
     def Bz_x(self, t, x, y, z):
         if self._NPDf_Bz_ is None:
             self._NPDf_Bz_ = NumericalPartialDerivative_txyz_Functions(self.Bz)
         return self._NPDf_Bz_('x')(t, x, y, z)
+    
     def Bz_y(self, t, x, y, z):
         if self._NPDf_Bz_ is None:
             self._NPDf_Bz_ = NumericalPartialDerivative_txyz_Functions(self.Bz)
         return self._NPDf_Bz_('y')(t, x, y, z)
+    
     def Bz_z(self, t, x, y, z):
         if self._NPDf_Bz_ is None:
             self._NPDf_Bz_ = NumericalPartialDerivative_txyz_Functions(self.Bz)
         return self._NPDf_Bz_('z')(t, x, y, z)
+    
 
     def Ex_x(self, t, x, y, z):
         if self._NPDf_Ex_ is None:
             self._NPDf_Ex_ = NumericalPartialDerivative_txyz_Functions(self.Ex)
         return self._NPDf_Ex_('x')(t, x, y, z)
+    
     def Ex_y(self, t, x, y, z):
         if self._NPDf_Ex_ is None:
             self._NPDf_Ex_ = NumericalPartialDerivative_txyz_Functions(self.Ex)
         return self._NPDf_Ex_('y')(t, x, y, z)
+    
     def Ex_z(self, t, x, y, z):
         if self._NPDf_Ex_ is None:
             self._NPDf_Ex_ = NumericalPartialDerivative_txyz_Functions(self.Ex)
         return self._NPDf_Ex_('z')(t, x, y, z)
+    
 
     def Ey_x(self, t, x, y, z):
         if self._NPDf_Ey_ is None:
             self._NPDf_Ey_ = NumericalPartialDerivative_txyz_Functions(self.Ey)
         return self._NPDf_Ey_('x')(t, x, y, z)
+    
     def Ey_y(self, t, x, y, z):
         if self._NPDf_Ey_ is None:
             self._NPDf_Ey_ = NumericalPartialDerivative_txyz_Functions(self.Ey)
         return self._NPDf_Ey_('y')(t, x, y, z)
+    
     def Ey_z(self, t, x, y, z):
         if self._NPDf_Ey_ is None:
             self._NPDf_Ey_ = NumericalPartialDerivative_txyz_Functions(self.Ey)
         return self._NPDf_Ey_('z')(t, x, y, z)
+    
 
     def Ez_x(self, t, x, y, z):
         if self._NPDf_Ez_ is None:
             self._NPDf_Ez_ = NumericalPartialDerivative_txyz_Functions(self.Ez)
         return self._NPDf_Ez_('x')(t, x, y, z)
+    
     def Ez_y(self, t, x, y, z):
         if self._NPDf_Ez_ is None:
             self._NPDf_Ez_ = NumericalPartialDerivative_txyz_Functions(self.Ez)
         return self._NPDf_Ez_('y')(t, x, y, z)
+    
     def Ez_z(self, t, x, y, z):
         if self._NPDf_Ez_ is None:
             self._NPDf_Ez_ = NumericalPartialDerivative_txyz_Functions(self.Ez)
@@ -362,28 +407,33 @@ class incompressible_MHD_Base(Base):
     def divergence_of_magnetic_field(self):
         if self._divergence_of_magnetic_field_ is None:
             # this condition must be valid for all time.
-            self._divergence_of_magnetic_field_ = _3dCSCG_ScalarField(self.mesh,
-                                                                self.___div_of_B___,
-                                                                valid_time=None)
+            self._divergence_of_magnetic_field_ = _3dCSCG_ScalarField(
+                self.mesh,
+                self.___div_of_B___,
+                valid_time=None)
         return self._divergence_of_magnetic_field_
 
     def ___div_of_B___(self, t, x, y, z):
         # must be zero
         return self.Bx_x(t, x, y, z) + self.By_y(t, x, y, z) + self.Bz_z(t, x, y, z)
+    
     @property
     def volume_current_density(self):
         """j"""
         if self._volume_current_density_ is None:
-            self._volume_current_density_ = _3dCSCG_VectorField(self.mesh,
-                                                   (self.j_x, self.j_y, self.j_z),
-                                                   valid_time=self.valid_time)
+            self._volume_current_density_ = _3dCSCG_VectorField(
+                self.mesh,
+                (self.j_x, self.j_y, self.j_z),
+                valid_time=self.valid_time)
         return self._volume_current_density_
 
     def j_x(self, t, x, y, z):
         """ j = curl (B) """
         return self.Bz_y(t, x, y, z) - self.By_z(t, x, y, z)
+    
     def j_y(self, t, x, y, z):
         return self.Bx_z(t, x, y, z) - self.Bz_x(t, x, y, z)
+    
     def j_z(self, t, x, y, z):
         return self.By_x(t, x, y, z) - self.Bx_y(t, x, y, z)
 
@@ -394,9 +444,10 @@ class incompressible_MHD_Base(Base):
         E = (1/Rm) * j - u X B
         """
         if self._electric_field_ is None:
-            self._electric_field_ = _3dCSCG_VectorField(self.mesh,
-                                                   (self.Ex, self.Ey, self.Ez),
-                                                   valid_time=self.valid_time)
+            self._electric_field_ = _3dCSCG_VectorField(
+                self.mesh,
+                (self.Ex, self.Ey, self.Ez),
+                valid_time=self.valid_time)
         return self._electric_field_
 
     def _uXB_x_(self, t, x, y, z):
@@ -414,9 +465,11 @@ class incompressible_MHD_Base(Base):
     def Ex(self, t, x, y, z):
         """"""
         return self._1_over_Rm_ * self.j_x(t, x, y, z) - self._uXB_x_(t, x, y, z)
+    
     def Ey(self, t, x, y, z):
         """"""
         return self._1_over_Rm_ * self.j_y(t, x, y, z) - self._uXB_y_(t, x, y, z)
+    
     def Ez(self, t, x, y, z):
         """"""
         return self._1_over_Rm_ * self.j_z(t, x, y, z) - self._uXB_z_(t, x, y, z)
@@ -424,9 +477,11 @@ class incompressible_MHD_Base(Base):
     @property
     def velocity(self):
         if self._velocity_ is None:
-            self._velocity_ =  _3dCSCG_VectorField(self.mesh,
-                                                   (self.u, self.v, self.w),
-                                                   valid_time=self.valid_time)
+            self._velocity_ = _3dCSCG_VectorField(
+                self.mesh,
+                (self.u, self.v, self.w),
+                valid_time=self.valid_time
+            )
         return self._velocity_
 
     @property
@@ -448,7 +503,6 @@ class incompressible_MHD_Base(Base):
         # must be zero
         return self.u_x(t, x, y, z) + self.v_y(t, x, y, z) + self.w_z(t, x, y, z)
 
-
     # noinspection PyUnusedLocal
     @staticmethod
     def s(t, x, y, z):
@@ -463,10 +517,11 @@ class incompressible_MHD_Base(Base):
     @property
     def mass_source_term(self):
         if self._mass_source_term_ is None:
-            self._mass_source_term_ = _3dCSCG_ScalarField(self.mesh,
-                                                    self.s,
-                                                    valid_time=None,
-                                                    name='mass-source-term')
+            self._mass_source_term_ = _3dCSCG_ScalarField(
+                self.mesh,
+                self.s,
+                valid_time=None,
+                name='mass-source-term')
         return self._mass_source_term_
 
     # noinspection PyUnusedLocal
@@ -478,10 +533,11 @@ class incompressible_MHD_Base(Base):
     @property
     def magnetic_source_term(self):
         if self._magnetic_source_term_ is None:
-            self._magnetic_source_term_ = _3dCSCG_ScalarField(self.mesh,
-                                                    self.m,
-                                                    valid_time=None,
-                                                    name='magnetic-source-term')
+            self._magnetic_source_term_ = _3dCSCG_ScalarField(
+                self.mesh,
+                self.m,
+                valid_time=None,
+                name='magnetic-source-term')
         return self._magnetic_source_term_
 
     @property
@@ -494,31 +550,40 @@ class incompressible_MHD_Base(Base):
 
     def omega_x(self, t, x, y, z):
         return self.w_y(t, x, y, z) - self.v_z(t, x, y, z)
+    
     def omega_y(self, t, x, y, z):
         return self.u_z(t, x, y, z) - self.w_x(t, x, y, z)
+    
     def omega_z(self, t, x, y, z):
         return self.v_x(t, x, y, z) - self.u_y(t, x, y, z)
 
+
     def _CurlBx_(self, t, x, y, z):
         return self.Bz_y(t, x, y, z) - self.By_z(t, x, y, z)
+    
     def _CurlBy_(self, t, x, y, z):
         return self.Bx_z(t, x, y, z) - self.Bz_x(t, x, y, z)
+    
     def _CurlBz_(self, t, x, y, z):
         return self.By_x(t, x, y, z) - self.Bx_y(t, x, y, z)
 
+
     def _CurlEx_(self, t, x, y, z):
         return self.Ez_y(t, x, y, z) - self.Ey_z(t, x, y, z)
+    
     def _CurlEy_(self, t, x, y, z):
         return self.Ex_z(t, x, y, z) - self.Ez_x(t, x, y, z)
+    
     def _CurlEz_(self, t, x, y, z):
         return self.Ey_x(t, x, y, z) - self.Ex_y(t, x, y, z)
 
     @property
     def curl_of_magnetic_field(self):
         if self._curl_of_magnetic_field_ is None:
-            self._curl_of_magnetic_field_ = _3dCSCG_VectorField(self.mesh,
-                               (self._CurlBx_, self._CurlBy_, self._CurlBz_),
-                               valid_time=self.valid_time)
+            self._curl_of_magnetic_field_ = _3dCSCG_VectorField(
+                self.mesh,
+                (self._CurlBx_, self._CurlBy_, self._CurlBz_),
+                valid_time=self.valid_time)
         return self._curl_of_magnetic_field_
 
     @property
@@ -539,11 +604,13 @@ class incompressible_MHD_Base(Base):
         return self._curl_of_vorticity_
 
     def ___m_laplace_u___(self, t, x, y, z):
-        return - ( self.u_xx(t, x, y, z) + self.u_yy(t, x, y, z) + self.u_zz(t, x, y, z) )
+        return - (self.u_xx(t, x, y, z) + self.u_yy(t, x, y, z) + self.u_zz(t, x, y, z))
+    
     def ___m_laplace_v___(self, t, x, y, z):
-        return - ( self.v_xx(t, x, y, z) + self.v_yy(t, x, y, z) + self.v_zz(t, x, y, z) )
+        return - (self.v_xx(t, x, y, z) + self.v_yy(t, x, y, z) + self.v_zz(t, x, y, z))
+    
     def ___m_laplace_w___(self, t, x, y, z):
-        return - ( self.w_xx(t, x, y, z) + self.w_yy(t, x, y, z) + self.w_zz(t, x, y, z) )
+        return - (self.w_xx(t, x, y, z) + self.w_yy(t, x, y, z) + self.w_zz(t, x, y, z))
 
 
     @property
@@ -561,31 +628,34 @@ class incompressible_MHD_Base(Base):
         return 0 * t * x * y * z
 
     def fx(self, t, x, y, z):
-        return self.u_t(t,x,y,z) \
-                + self.omega_y(t, x, y, z) * self.w(t, x, y, z) - self.omega_z(t, x, y, z) * self.v(t, x, y, z) \
-                + self._tp_x_(t, x, y, z) \
-                - self._1_over_Re_ * (self.u_xx(t,x,y,z) + self.u_yy(t,x,y,z) + self.u_zz(t,x,y,z)) \
-                - self.j_y(t, x, y, z) * self.Bz(t, x, y, z) + self.j_z(t, x, y, z) * self.By(t, x, y, z)
+        return self.u_t(t, x, y, z) \
+                    + self.omega_y(t, x, y, z) * self.w(t, x, y, z) - self.omega_z(t, x, y, z) * self.v(t, x, y, z) \
+                    + self._tp_x_(t, x, y, z) \
+                    - self._1_over_Re_ * (self.u_xx(t, x, y, z) + self.u_yy(t, x, y, z) + self.u_zz(t, x, y, z)) \
+                    - self.j_y(t, x, y, z) * self.Bz(t, x, y, z) + self.j_z(t, x, y, z) * self.By(t, x, y, z)
+    
     def fy(self, t, x, y, z):
-        return self.v_t(t,x,y,z) \
-                + self.omega_z(t, x, y, z) * self.u(t, x, y, z) - self.omega_x(t, x, y, z) * self.w(t, x, y, z) \
-                + self._tp_y_(t, x, y, z) \
-                - self._1_over_Re_ * (self.v_xx(t,x,y,z) + self.v_yy(t,x,y,z) + self.v_zz(t,x,y,z)) \
-                - self.j_z(t, x, y, z) * self.Bx(t, x, y, z) + self.j_x(t, x, y, z) * self.Bz(t, x, y, z)
+        return self.v_t(t, x, y, z) \
+                    + self.omega_z(t, x, y, z) * self.u(t, x, y, z) - self.omega_x(t, x, y, z) * self.w(t, x, y, z) \
+                    + self._tp_y_(t, x, y, z) \
+                    - self._1_over_Re_ * (self.v_xx(t, x, y, z) + self.v_yy(t, x, y, z) + self.v_zz(t, x, y, z)) \
+                    - self.j_z(t, x, y, z) * self.Bx(t, x, y, z) + self.j_x(t, x, y, z) * self.Bz(t, x, y, z)
+    
     def fz(self, t, x, y, z):
-        return self.w_t(t,x,y,z) \
-                + self.omega_x(t, x, y, z) * self.v(t, x, y, z) - self.omega_y(t, x, y, z) * self.u(t, x, y, z) \
-                + self._tp_z_(t, x, y, z) \
-                - self._1_over_Re_ * (self.w_xx(t,x,y,z) + self.w_yy(t,x,y,z) + self.w_zz(t,x,y,z)) \
-                - self.j_x(t, x, y, z) * self.By(t, x, y, z) + self.j_y(t, x, y, z) * self.Bx(t, x, y, z)
+        return self.w_t(t, x, y, z) \
+                    + self.omega_x(t, x, y, z) * self.v(t, x, y, z) - self.omega_y(t, x, y, z) * self.u(t, x, y, z) \
+                    + self._tp_z_(t, x, y, z) \
+                    - self._1_over_Re_ * (self.w_xx(t, x, y, z) + self.w_yy(t, x, y, z) + self.w_zz(t, x, y, z)) \
+                    - self.j_x(t, x, y, z) * self.By(t, x, y, z) + self.j_y(t, x, y, z) * self.Bx(t, x, y, z)
 
     @property
     def body_force(self):
         """In fact, it is sort of momentum source term."""
         if self._body_force_ is None:
-            self._body_force_ = _3dCSCG_VectorField(self.mesh,
-                                                   (self.fx, self.fy, self.fz),
-                                                   valid_time=self.valid_time)
+            self._body_force_ = _3dCSCG_VectorField(
+                self.mesh,
+                (self.fx, self.fy, self.fz),
+                valid_time=self.valid_time)
         return self._body_force_
 
 
@@ -604,9 +674,10 @@ class incompressible_MHD_Base(Base):
         """r; partial_t(B) + curl(E) = r"""
         if self._electric_source_term_ is None:
 
-            self._electric_source_term_ = _3dCSCG_VectorField(self.mesh,
-                                   (self.rx, self.ry, self.rz),
-                                   valid_time=self.valid_time)
+            self._electric_source_term_ = _3dCSCG_VectorField(
+                self.mesh,
+                (self.rx, self.ry, self.rz),
+                valid_time=self.valid_time)
         return self._electric_source_term_
 
 
@@ -622,9 +693,10 @@ class incompressible_MHD_Base(Base):
     @property
     def gradient_of_pressure(self):
         if self._gradientOfPressure_ is None:
-            self._gradientOfPressure_ =  _3dCSCG_VectorField(self.mesh,
-                                                             (self.p_x, self.p_y, self.p_z),
-                                                             valid_time=self.valid_time)
+            self._gradientOfPressure_ = _3dCSCG_VectorField(
+                self.mesh,
+                (self.p_x, self.p_y, self.p_z),
+                valid_time=self.valid_time)
         return self._gradientOfPressure_
 
     @property
@@ -634,17 +706,22 @@ class incompressible_MHD_Base(Base):
                                                        self.___total_pressure___,
                                                        valid_time=self.valid_time)
         return self._totalPressure_
+    
     def ___total_pressure___(self, t, x, y, z):
         return self.p(t, x, y, z) + self.___kinetic_energy_distribution___(t, x, y, z)
+    
     def _tp_x_(self, t, x, y, z):
         """ """
         return self.p_x(t, x, y, z) + self._ke_x_(t, x, y, z)
+    
     def _tp_y_(self, t, x, y, z):
         """ """
         return self.p_y(t, x, y, z) + self._ke_y_(t, x, y, z)
+    
     def _tp_z_(self, t, x, y, z):
         """ """
         return self.p_z(t, x, y, z) + self._ke_z_(t, x, y, z)
+    
 
     @property
     def gradient_of_total_pressure(self):
@@ -661,52 +738,58 @@ class incompressible_MHD_Base(Base):
     def kinetic_energy_distribution(self):
         """A scalar field of the kinetic energy distribution."""
         if self._kineticEnergyDistribution_ is None:
-            self._kineticEnergyDistribution_ =_3dCSCG_ScalarField(
+            self._kineticEnergyDistribution_ = _3dCSCG_ScalarField(
                 self.mesh,
                 self.___kinetic_energy_distribution___,
                 valid_time=self.valid_time)
         return self._kineticEnergyDistribution_
+    
     def ___kinetic_energy_distribution___(self, t, x, y, z):
         return 0.5 * (self.u(t, x, y, z)**2 + self.v(t, x, y, z)**2 + self.w(t, x, y, z)**2)
+    
     def _ke_x_(self, t, x, y, z):
         """ d(kinetic_energy)/dx """
-        return self.u(t, x, y, z)*self.u_x(t, x, y, z) + \
-               self.v(t, x, y, z)*self.v_x(t, x, y, z) + \
-               self.w(t, x, y, z)*self.w_x(t, x, y, z)
+        return self.u(t, x, y, z) * self.u_x(t, x, y, z) + \
+            self.v(t, x, y, z) * self.v_x(t, x, y, z) + \
+            self.w(t, x, y, z) * self.w_x(t, x, y, z)
+    
     def _ke_y_(self, t, x, y, z):
         """ d(kinetic_energy)/dy """
-        return self.u(t, x, y, z)*self.u_y(t, x, y, z) + \
-               self.v(t, x, y, z)*self.v_y(t, x, y, z) + \
-               self.w(t, x, y, z)*self.w_y(t, x, y, z)
+        return self.u(t, x, y, z) * self.u_y(t, x, y, z) + \
+            self.v(t, x, y, z) * self.v_y(t, x, y, z) + \
+            self.w(t, x, y, z) * self.w_y(t, x, y, z)
+    
     def _ke_z_(self, t, x, y, z):
         """ d(kinetic_energy)/dz """
-        return self.u(t, x, y, z)*self.u_z(t, x, y, z) + \
-               self.v(t, x, y, z)*self.v_z(t, x, y, z) + \
-               self.w(t, x, y, z)*self.w_z(t, x, y, z)
+        return self.u(t, x, y, z) * self.u_z(t, x, y, z) + \
+            self.v(t, x, y, z) * self.v_z(t, x, y, z) + \
+            self.w(t, x, y, z) * self.w_z(t, x, y, z)
 
     @property
     def fluid_helicity_distribution(self):
         """A scalar field of the helicity distribution."""
         if self._helicityDistribution_ is None:
-            self._helicityDistribution_ =_3dCSCG_ScalarField(
+            self._helicityDistribution_ = _3dCSCG_ScalarField(
                 self.mesh,
                 self.___fluid_helicity_distribution___,
                 valid_time=self.valid_time)
         return self._helicityDistribution_
+
     def ___fluid_helicity_distribution___(self, t, x, y, z):
-        return self.u(t,x,y,z) * self.omega_x(t, x, y, z) + \
-               self.v(t,x,y,z) * self.omega_y(t, x, y, z) + \
-               self.w(t,x,y,z) * self.omega_z(t, x, y, z)
+        return self.u(t, x, y, z) * self.omega_x(t, x, y, z) + \
+               self.v(t, x, y, z) * self.omega_y(t, x, y, z) + \
+               self.w(t, x, y, z) * self.omega_z(t, x, y, z)
 
     @property
     def enstrophy_distribution(self):
         """A scalar field of the enstrophy distribution."""
         if self._enstrophyDistribution_ is None:
-            self._enstrophyDistribution_ =_3dCSCG_ScalarField(
+            self._enstrophyDistribution_ = _3dCSCG_ScalarField(
                 self.mesh,
                 self.___enstrophy_distribution___,
                 valid_time=self.valid_time)
         return self._enstrophyDistribution_
+
     def ___enstrophy_distribution___(self, t, x, y, z):
         return 0.5 * (self.omega_x(t, x, y, z) ** 2 +
                       self.omega_y(t, x, y, z) ** 2 +
@@ -741,27 +824,28 @@ class incompressible_MHD_Base(Base):
 
         rst = (x, y, z)
 
-        if len(x) == 0: return
+        if len(x) == 0:
+            return
 
         for t in TS:
             try:
-                fx = self.u_t(t,x,y,z) + \
-                self.omega_y(t, x, y, z) * self.w(t, x, y, z) - self.omega_z(t, x, y, z) * self.v(t, x, y, z) + \
-                self._tp_x_(t, x, y, z) - \
-                self._1_over_Re_ * (self.u_xx(t,x,y,z) + self.u_yy(t,x,y,z) + self.u_zz(t,x,y,z)) - \
-                self.j_y(t, x, y, z) * self.Bz(t, x, y, z) + self.j_z(t, x, y, z) * self.By(t, x, y, z)
+                fx = self.u_t(t, x, y, z) + \
+                    self.omega_y(t, x, y, z) * self.w(t, x, y, z) - self.omega_z(t, x, y, z) * self.v(t, x, y, z) + \
+                    self._tp_x_(t, x, y, z) - \
+                    self._1_over_Re_ * (self.u_xx(t, x, y, z) + self.u_yy(t, x, y, z) + self.u_zz(t, x, y, z)) - \
+                    self.j_y(t, x, y, z) * self.Bz(t, x, y, z) + self.j_z(t, x, y, z) * self.By(t, x, y, z)
 
-                fy = self.v_t(t,x,y,z) + \
-                self.omega_z(t, x, y, z) * self.u(t, x, y, z) - self.omega_x(t, x, y, z) * self.w(t, x, y, z) + \
-                self._tp_y_(t, x, y, z) - \
-                self._1_over_Re_ * (self.v_xx(t,x,y,z) + self.v_yy(t,x,y,z) + self.v_zz(t,x,y,z))- \
-               self.j_z(t, x, y, z) * self.Bx(t, x, y, z) + self.j_x(t, x, y, z) * self.Bz(t, x, y, z)
+                fy = self.v_t(t, x, y, z) + \
+                    self.omega_z(t, x, y, z) * self.u(t, x, y, z) - self.omega_x(t, x, y, z) * self.w(t, x, y, z) + \
+                    self._tp_y_(t, x, y, z) - \
+                    self._1_over_Re_ * (self.v_xx(t, x, y, z) + self.v_yy(t, x, y, z) + self.v_zz(t, x, y, z)) - \
+                    self.j_z(t, x, y, z) * self.Bx(t, x, y, z) + self.j_x(t, x, y, z) * self.Bz(t, x, y, z)
 
-                fz = self.w_t(t,x,y,z) + \
-                self.omega_x(t, x, y, z) * self.v(t, x, y, z) - self.omega_y(t, x, y, z) * self.u(t, x, y, z) + \
-                self._tp_z_(t, x, y, z) - \
-                self._1_over_Re_ * (self.w_xx(t,x,y,z) + self.w_yy(t,x,y,z) + self.w_zz(t,x,y,z))- \
-                self.j_x(t, x, y, z) * self.By(t, x, y, z) + self.j_y(t, x, y, z) * self.Bx(t, x, y, z)
+                fz = self.w_t(t, x, y, z) + \
+                    self.omega_x(t, x, y, z) * self.v(t, x, y, z) - self.omega_y(t, x, y, z) * self.u(t, x, y, z) + \
+                    self._tp_z_(t, x, y, z) - \
+                    self._1_over_Re_ * (self.w_xx(t, x, y, z) + self.w_yy(t, x, y, z) + self.w_zz(t, x, y, z)) - \
+                    self.j_x(t, x, y, z) * self.By(t, x, y, z) + self.j_y(t, x, y, z) * self.Bx(t, x, y, z)
 
                 FX = self.fx(t, x, y, z)
                 FY = self.fy(t, x, y, z)
@@ -892,8 +976,3 @@ class incompressible_MHD_Base(Base):
             assert Pw_y.check_partial_y(w_yy)
             Pw_z = NumericalPartialDerivative_xyz(w_z, *rst)
             assert Pw_z.check_partial_z(w_zz)
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

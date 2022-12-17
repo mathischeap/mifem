@@ -3,8 +3,6 @@
 from components.freeze.base import FrozenOnly
 
 
-
-
 class _3dCSCG_Region_Whether(FrozenOnly):
     """"""
     def __init__(self, region):
@@ -45,7 +43,7 @@ class _3dCSCG_Region_Whether(FrozenOnly):
             if isinstance(mark, str) and mark[:10] == "orthogonal":
                 self._orthogonal_ = True
             elif isinstance(mark, str) and mark[:5] == "crazy" and TwM._c_ == 0:
-                    self._orthogonal_ = True
+                self._orthogonal_ = True
             else:
                 self._orthogonal_ = False
         return self._orthogonal_

@@ -1,6 +1,6 @@
 
-
 from components.freeze.main import FrozenOnly
+
 
 class RegionPerpendicularSlice(FrozenOnly):
     """A perpendicular slice object in the regions.
@@ -22,9 +22,12 @@ class RegionPerpendicularSlice(FrozenOnly):
     @staticmethod
     def ___PRIVATE_check_x_y_z___(r, s, t):
         """"""
-        if r is None: r = [0, 1]
-        if s is None: s = [0, 1]
-        if t is None: t = [0, 1]
+        if r is None:
+            r = [0, 1]
+        if s is None:
+            s = [0, 1]
+        if t is None:
+            t = [0, 1]
 
         NUM_float, NUM_range = 0, 0
         for i, _ in enumerate([r, s, t]):
@@ -38,7 +41,7 @@ class RegionPerpendicularSlice(FrozenOnly):
                 S, E = _
                 assert 0 <= S <= 1, 'rst'[i] + f'={_} is wrong.'
                 assert 0 <= E <= 1, 'rst'[i] + f'={_} is wrong.'
-                assert S < E      , 'rst'[i] + f'={_} is wrong.'
+                assert S < E, 'rst'[i] + f'={_} is wrong.'
             else:
                 raise Exception('rst'[i] + f'={_}({_.__class__}) is wrong.')
 
@@ -48,12 +51,10 @@ class RegionPerpendicularSlice(FrozenOnly):
 
         return r, s, t, perpendicular_to_axis
 
-
     @property
     def r(self):
         """Or x-direction."""
         return self._r_
-
 
     @property
     def s(self):

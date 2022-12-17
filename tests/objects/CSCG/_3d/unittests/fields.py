@@ -5,7 +5,8 @@ For testing fields
 """
 
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path: 
+    sys.path.append('./')
 
 from root.config.main import *
 from components.miscellaneous.timer import MyTimer
@@ -14,17 +15,19 @@ from tests.objects.CSCG._3d.randObj.form_caller import random_FormCaller_of_tota
 
 from __init__ import cscg3
 
+
 def test_Form_NO0_3dCSCG_Field_numerical():
     """"""
     if RANK == MASTER_RANK:
         load = random.randint(100, 499)
         print(f"-N- [test_Form_NO0_3dCSCG_Field_numerical] {MyTimer.current_time()} with load={load}.", flush=True)
     else:
-        load= None
+        load = None
 
-    mesh = cscg3.mesh('crazy', c=0.25)(element_layout=[3,3,3])
-    space = cscg3.space('polynomials')([1,1,1])
+    mesh = cscg3.mesh('crazy', c=0.25)(element_layout=[3, 3, 3])
+    space = cscg3.space('polynomials')([1, 1, 1])
     FC = cscg3.form(mesh, space)
+
     def func(t, x, y, z): return t + 0 * x * y * z
 
     SS = FC('scalar', func)
@@ -40,13 +43,13 @@ def test_Form_NO0_3dCSCG_Field_numerical():
     FC = random_FormCaller_of_total_load_around(load, exclude_periodic=False)
 
     t = random.random() * 10
-    I, J, K = random.randint(2,10), random.randint(4,8), random.randint(3,9)
-    xi = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, I)
+    _I, J, K = random.randint(2, 10), random.randint(4, 8), random.randint(3, 9)
+    xi = np.linspace(-0.9 - random.random() / 10, 0.9 + random.random() / 10, _I)
     et = np.linspace(-0.8-random.random()/5, 0.8+random.random()/5, J)
     sg = np.linspace(-0.95-random.random()/20, 0.95+random.random()/20, K)
     x, y, z = np.meshgrid(xi, et, sg, indexing='ij')
 
-    #================ test for scalar ======================================================================
+    # =============== test for scalar ======================================================================
     def func(t, x, y, z): return np.sin(2*np.pi*x) * np.sin(np.pi*y) * np.sin(np.pi*z) * t
     SS = FC('scalar', func)
 
@@ -63,13 +66,12 @@ def test_Form_NO0_3dCSCG_Field_numerical():
         np.testing.assert_array_almost_equal(R_v[i][0], _V_)
         np.testing.assert_array_almost_equal(R_V[i][0], _V_)
 
-
-    def APt(t, x, y, z): return np.sin(2*np.pi*x) * np.sin(np.pi*y) * np.sin(np.pi*z) + 0*t
+    def APt(t, x, y, z): return np.sin(2*np.pi*x) * np.sin(np.pi*y) * np.sin(np.pi*z) + 0 * t
     def APx(t, x, y, z): return 2*np.pi*np.cos(2*np.pi*x) * np.sin(np.pi*y) * np.sin(np.pi*z) * t
     def APy(t, x, y, z): return np.pi*np.sin(2*np.pi*x) * np.cos(np.pi*y) * np.sin(np.pi*z) * t
     def APz(t, x, y, z): return np.pi*np.sin(2*np.pi*x) * np.sin(np.pi*y) * np.cos(np.pi*z) * t
 
-    #---------- scalar gradient ---------
+    # --------- scalar gradient ---------
     numerical_gradient = SS.numerical.gradient
     numerical_gradient.current_time = t
     # in each core, current_time is different. This is bad for applications, but for tests, it is good.
@@ -85,7 +87,7 @@ def test_Form_NO0_3dCSCG_Field_numerical():
         assert np.max(np.abs(exact_vy - numerical_vy)) < 1e-7, f"numerical partial y is not accurate enough."
         assert np.max(np.abs(exact_vz - numerical_vz)) < 1e-7, f"numerical partial z is not accurate enough."
 
-    #---------- scalar time_derivative ---------
+    # --------- scalar time_derivative ---------
     time_derivative = SS.numerical.time_derivative
     time_derivative.current_time = t
     # in each core, current_time is different. This is bad for applications, but for tests, it is good.
@@ -96,7 +98,7 @@ def test_Form_NO0_3dCSCG_Field_numerical():
         numerical_td = R_v[i]
         assert np.max(np.abs(exact_td - numerical_td)) < 1e-7, f"time derivative is not accurate enough."
 
-    #================ test for vector ======================================================================
+    # =============== test for vector ======================================================================
     def U(t, x, y, z): return 2 * t * np.sin(np.pi * x) * np.cos(np.pi * y) * np.cos(np.pi * z)
     def V(t, x, y, z): return t * np.sin(2 * np.pi * x) * np.cos(np.pi * y) * np.sin(np.pi * z)
     def W(t, x, y, z): return t * np.sin(2 * np.pi * x) * np.sin(np.pi * y) * np.cos(np.pi * z)
@@ -125,9 +127,9 @@ def test_Form_NO0_3dCSCG_Field_numerical():
         np.testing.assert_array_almost_equal(Y, R_V[i][1])
         np.testing.assert_array_almost_equal(Z, R_V[i][2])
 
-    def Ut(t, x, y, z): return 2 * np.sin(np.pi * x) * np.cos(np.pi * y) * np.cos(np.pi * z) + 0*t
-    def Vt(t, x, y, z): return np.sin(2 * np.pi * x) * np.cos(np.pi * y) * np.sin(np.pi * z) + 0*t
-    def Wt(t, x, y, z): return np.sin(2 * np.pi * x) * np.sin(np.pi * y) * np.cos(np.pi * z) + 0*t
+    def Ut(t, x, y, z): return 2 * np.sin(np.pi * x) * np.cos(np.pi * y) * np.cos(np.pi * z) + 0 * t
+    def Vt(t, x, y, z): return np.sin(2 * np.pi * x) * np.cos(np.pi * y) * np.sin(np.pi * z) + 0 * t
+    def Wt(t, x, y, z): return np.sin(2 * np.pi * x) * np.sin(np.pi * y) * np.cos(np.pi * z) + 0 * t
 
     def Ux(t, x, y, z): return 2 * np.pi * t * np.cos(np.pi * x) * np.cos(np.pi * y) * np.cos(np.pi * z)
     def Uy(t, x, y, z): return - 2 * np.pi * t * np.sin(np.pi * x) * np.sin(np.pi * y) * np.cos(np.pi * z)
@@ -141,7 +143,7 @@ def test_Form_NO0_3dCSCG_Field_numerical():
     def Wy(t, x, y, z): return np.pi * t * np.sin(2 * np.pi * x) * np.cos(np.pi * y) * np.cos(np.pi * z)
     def Wz(t, x, y, z): return - np.pi * t * np.sin(2 * np.pi * x) * np.sin(np.pi * y) * np.sin(np.pi * z)
 
-    #---------- vector time_derivative ---------
+    # --------- vector time_derivative ---------
     time_derivative = SV.numerical.time_derivative
     time_derivative.current_time = t
     # in each core, current_time is different. This is bad for applications, but for tests, it is good.
@@ -156,7 +158,7 @@ def test_Form_NO0_3dCSCG_Field_numerical():
         assert np.max(np.abs(exact_tdy - numerical_tdy)) < 1e-7, f"time derivative y-component is not accurate enough."
         assert np.max(np.abs(exact_tdz - numerical_tdz)) < 1e-7, f"time derivative z-component is not accurate enough."
 
-    #---------- vector gradient ---------
+    # --------- vector gradient ---------
     numerical_gradient = SV.numerical.gradient
     numerical_gradient.current_time = t
     # in each core, current_time is different. This is bad for applications, but for tests, it is good.
@@ -182,7 +184,7 @@ def test_Form_NO0_3dCSCG_Field_numerical():
         assert np.max(np.abs(exact_Wy - numerical_Wy)) < 1e-7, f"numerical partial Wy is not accurate enough."
         assert np.max(np.abs(exact_Wz - numerical_Wz)) < 1e-7, f"numerical partial Wz is not accurate enough."
 
-    #---------- vector curl ---------
+    # --------- vector curl ---------
     numerical_curl = SV.numerical.curl
     numerical_curl.current_time = t
     # in each core, current_time is different. This is bad for applications, but for tests, it is good.
@@ -198,7 +200,7 @@ def test_Form_NO0_3dCSCG_Field_numerical():
         assert np.max(np.abs(Cy - numerical_Cy)) < 1e-7, f"numerical y-component of curl is not accurate enough."
         assert np.max(np.abs(Cz - numerical_Cz)) < 1e-7, f"numerical z-component of curl is not accurate enough."
 
-    #---------- vector divergence ---------
+    # --------- vector divergence ---------
     numerical_divergence = SV.numerical.divergence
     numerical_divergence.current_time = t
     # in each core, current_time is different. This is bad for applications, but for tests, it is good.
@@ -210,7 +212,7 @@ def test_Form_NO0_3dCSCG_Field_numerical():
         numerical_D = R_v[i][0]
         assert np.max(np.abs(D - numerical_D)) < 1e-7, f"numerical divergence is not accurate enough."
 
-    #================ test for tensor ======================================================================
+    # =============== test for tensor ======================================================================
     def T00(t, x, y, z): return 2 * t * np.sin(np.pi * x) * np.cos(np.pi * y) * np.cos(np.pi * z)
     def T01(t, x, y, z): return t * np.sin(2 * np.pi * x) * np.cos(np.pi * y) * np.sin(np.pi * z)
     def T02(t, x, y, z): return t * np.sin(2 * np.pi * x) * np.sin(np.pi * y) * np.cos(np.pi * z)
@@ -225,7 +227,7 @@ def test_Form_NO0_3dCSCG_Field_numerical():
 
     ST = FC('tensor', ([T00, T01, T02], [T10, T11, T12], [T20, T21, T22]))
 
-    #---------- tensor time_derivative ---------
+    # --------- tensor time_derivative ---------
     def T00t(t, x, y, z): return 2 * np.sin(np.pi * x) * np.cos(np.pi * y) * np.cos(np.pi * z) + 0 * t
     def T01t(t, x, y, z): return np.sin(2 * np.pi * x) * np.cos(np.pi * y) * np.sin(np.pi * z) + 0 * t
     def T02t(t, x, y, z): return np.sin(2 * np.pi * x) * np.sin(np.pi * y) * np.cos(np.pi * z) + 0 * t
@@ -260,7 +262,7 @@ def test_Form_NO0_3dCSCG_Field_numerical():
         assert np.max(np.abs(AT21 - numerical_T21)) < 1e-7, f"time derivative 21-component is not accurate enough."
         assert np.max(np.abs(AT22 - numerical_T22)) < 1e-7, f"time derivative 22-component is not accurate enough."
 
-    #---------- tensor divergence ---------
+    # --------- tensor divergence ---------
     def T00x(t, x, y, z): return np.pi * 2 * t * np.cos(np.pi * x) * np.cos(np.pi * y) * np.cos(np.pi * z)
     def T01y(t, x, y, z): return - np.pi * t * np.sin(2 * np.pi * x) * np.sin(np.pi * y) * np.sin(np.pi * z)
     def T02z(t, x, y, z): return - np.pi * t * np.sin(2 * np.pi * x) * np.sin(np.pi * y) * np.sin(np.pi * z)
@@ -296,9 +298,10 @@ def test_Form_NO1_3dCSCG_VectorField():
     """"""
     if RANK == MASTER_RANK:
         print(f"-V- [test_Form_NO1_3dCSCG_VectorField]...", flush=True)
-    def w0(t, x, y, z): return -np.pi * np.sin(x) * np.cos(y) * np.cos(z) + np.sin(t)
-    def w1(t, x, y, z): return -np.pi * np.cos(x) * np.sin(y) * np.cos(z) * np.sin(2*t)
-    def w2(t, x, y, z): return -np.pi * np.cos(x) * np.sin(y) * np.sin(z) / (1.5-np.cos(t/2))
+
+    def w0(t, x, y, z): return - np.pi * np.sin(x) * np.cos(y) * np.cos(z) + np.sin(t)
+    def w1(t, x, y, z): return - np.pi * np.cos(x) * np.sin(y) * np.cos(z) * np.sin(2 * t)
+    def w2(t, x, y, z): return - np.pi * np.cos(x) * np.sin(y) * np.sin(z) / (1.5-np.cos(t / 2))
     def u0(t, x, y, z): return np.sin(np.pi*x) * np.sin(y) * np.cos(np.pi*z) * 5 * np.sin(t)
     def u1(t, x, y, z): return np.cos(x) * np.sin(np.pi*y) * np.sin(np.pi*z) * 5 * np.cos(t)
     def u2(t, x, y, z): return np.sin(np.pi*x) * np.cos(np.pi*y) * np.sin(z) + 2 * np.cos(t)
@@ -311,19 +314,19 @@ def test_Form_NO1_3dCSCG_VectorField():
     t1 = random.random() * 10
     t2 = random.random() * 10
     t3 = random.random() * 10
-    I, J, K = random.randint(2,10), random.randint(4,8), random.randint(3,9)
-    xi = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, I)
-    et = np.linspace(-0.8-random.random()/5, 0.8+random.random()/5, J)
-    sg = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, K)
+    I, J, K = random.randint(2, 10), random.randint(4, 8), random.randint(3, 9)
+    xi = np.linspace(-0.9-random.random() / 10, 0.9 + random.random() / 10, I)
+    et = np.linspace(-0.8-random.random() / 5, 0.8 + random.random() / 5, J)
+    sg = np.linspace(-0.9-random.random() / 10, 0.9 + random.random() / 10, K)
     x, y, z = np.meshgrid(xi, et, sg, indexing='ij')
 
     if RANK == MASTER_RANK:
         load = random.randint(100, 499)
     else:
-        load= None
+        load = None
     load = COMM.bcast(load, root=MASTER_RANK)
 
-    #----------------- use crazy mesh --------------------------------------------------------
+    # ---------------- use crazy mesh --------------------------------------------------------
     FC = random_FormCaller_of_total_load_around(load, mesh_pool=('crazy',))
     W = FC('vector', (w0, w1, w2))
     W.current_time = t
@@ -397,16 +400,16 @@ def test_Form_NO1_3dCSCG_VectorField():
         else:
             raise Exception()
 
-    #now we test norm component + parallel component = the vector on all trace elements ------------------
+    # now we test norm component + parallel component = the vector on all trace elements ------------------
     T_para.current_time = t + t1
-    N_xyz, N_v = N.reconstruct(xi, et, sg) # on all trace-elements
-    P_xyz, P_v = T_para.reconstruct(xi, et, sg) # on all trace-elements
+    N_xyz, N_v = N.reconstruct(xi, et, sg)  # on all trace-elements
+    P_xyz, P_v = T_para.reconstruct(xi, et, sg)  # on all trace-elements
     for i in N_xyz:
         xyz = N_xyz[i]
         nv = N_v[i]
         pv = P_v[i]
         vec = (nv[0] + pv[0], nv[1] + pv[1], nv[2] + pv[2])
-        VEC = (w0(t+t1, *xyz), w1(t+t1, *xyz), w2(t+t1, *xyz))
+        VEC = (w0(t + t1, *xyz), w1(t + t1, *xyz), w2(t + t1, *xyz))
         np.testing.assert_array_almost_equal(vec[0]-VEC[0], 0)
         np.testing.assert_array_almost_equal(vec[1]-VEC[1], 0)
         np.testing.assert_array_almost_equal(vec[2]-VEC[2], 0)
@@ -503,7 +506,7 @@ def test_Form_NO2_3dCSCG_ScalarField():
 
 
     t = random.random() * 10
-    I, J, K = random.randint(2,10), random.randint(4,8), random.randint(3,9)
+    I, J, K = random.randint(2, 10), random.randint(4, 8), random.randint(3, 9)
     xi = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, I)
     et = np.linspace(-0.8-random.random()/5, 0.8+random.random()/5, J)
     sg = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, K)
@@ -512,14 +515,14 @@ def test_Form_NO2_3dCSCG_ScalarField():
     if RANK == MASTER_RANK:
         load = random.randint(100, 499)
     else:
-        load= None
+        load = None
     load = COMM.bcast(load, root=MASTER_RANK)
     FC = random_FormCaller_of_total_load_around(load, exclude_periodic=False)
 
     A = FC('scalar', www)
     B = FC('scalar', uuu)
 
-    #---- neg --------------------------------------------------------------------
+    # --- neg --------------------------------------------------------------------
     X = -A
     X.current_time = t
     R_xyz, R_v = X.reconstruct(x, y, z)
@@ -529,7 +532,7 @@ def test_Form_NO2_3dCSCG_ScalarField():
         Cx = R_v[i][0]
         assert np.max(np.abs(Ax - Cx)) < 1e-10, f"neg is not accurate enough."
 
-    #---- sub --------------------------------------------------------------------
+    # --- sub --------------------------------------------------------------------
     X = A - B
     X.current_time = t
     R_xyz, R_v = X.reconstruct(x, y, z)
@@ -540,7 +543,7 @@ def test_Form_NO2_3dCSCG_ScalarField():
         assert np.max(np.abs(Ax - Cx)) < 1e-10, f"sub is not accurate enough."
 
 
-    #---- add --------------------------------------------------------------------
+    # --- add --------------------------------------------------------------------
     X = A + B
     X.current_time = t
     R_xyz, R_v = X.reconstruct(x, y, z)
@@ -560,8 +563,8 @@ def test_Form_NO3_3dCSCG_TensorField():
         print(f"-T- [test_Form_NO3_3dCSCG_TensorField]...", flush=True)
 
     t = random.random() * 10
-    I, J, K = random.randint(2,10), random.randint(4,8), random.randint(3,9)
-    xi = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, I)
+    _I, J, K = random.randint(2, 10), random.randint(4, 8), random.randint(3, 9)
+    xi = np.linspace(-0.9 - random.random() / 10, 0.9 + random.random() / 10, _I)
     et = np.linspace(-0.8-random.random()/5, 0.8+random.random()/5, J)
     sg = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, K)
     x, y, z = np.meshgrid(xi, et, sg, indexing='ij')
@@ -593,14 +596,14 @@ def test_Form_NO3_3dCSCG_TensorField():
     if RANK == MASTER_RANK:
         load = random.randint(100, 499)
     else:
-        load= None
+        load = None
     load = COMM.bcast(load, root=MASTER_RANK)
     FC = random_FormCaller_of_total_load_around(load, exclude_periodic=False)
 
     w = FC('tensor', ([T00, T01, T02], [T10, T11, T12], [T20, T21, T22]))
     u = FC('tensor', ([t00, t01, t02], [t10, t11, t12], [t20, t21, t22]))
 
-    #---- neg --------------------------------------------------------------------
+    # --- neg --------------------------------------------------------------------
     X = -w
     X.current_time = t
     R_xyz, R_v = X.reconstruct(x, y, z)
@@ -623,7 +626,7 @@ def test_Form_NO3_3dCSCG_TensorField():
         assert np.max(np.abs(C21 - A21)) < 1e-10, f"neg is not accurate enough."
         assert np.max(np.abs(C22 - A22)) < 1e-10, f"neg is not accurate enough."
 
-    #---- sub --------------------------------------------------------------------
+    # --- sub --------------------------------------------------------------------
     X = w - u
     X.current_time = t
     R_xyz, R_v = X.reconstruct(x, y, z)
@@ -646,7 +649,7 @@ def test_Form_NO3_3dCSCG_TensorField():
         assert np.max(np.abs(C21 - A21)) < 1e-10, f"sub is not accurate enough."
         assert np.max(np.abs(C22 - A22)) < 1e-10, f"sub is not accurate enough."
 
-    #---- add --------------------------------------------------------------------
+    # --- add --------------------------------------------------------------------
     X = w + u
     X.current_time = t
     R_xyz, R_v = X.reconstruct(x, y, z)

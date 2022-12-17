@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.base import FrozenOnly
 from components.miscellaneous.miprint import miprint
@@ -15,6 +16,7 @@ from tests.objects.CSCG._3d.randObj.form_caller import random_FormCaller_of_tota
 from objects.miUsGrid.triangular.master import Call as miUsFc2
 
 from tools.elementwiseCache.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
+
 
 class Test_ChainGM_sequent_chain_method(FrozenOnly):
     """"""
@@ -64,7 +66,7 @@ class Test_ChainGM_sequent_chain_method(FrozenOnly):
                 else:
                     raise Exception(f"We should never reach this place.")
 
-        #---- test find ----------------------------------------------------------------------------
+        # --- test find ----------------------------------------------------------------------------
         GLOBAL_num_dofs = cgm.global_num_dofs
         sample_amount = int(GLOBAL_num_dofs/5)
         if sample_amount > 10: sample_amount = 10
@@ -107,7 +109,7 @@ class Test_ChainGM_sequent_chain_method(FrozenOnly):
                 else:
                     assert dof not in fv
 
-        #-------------------------------------------------------------------------------------------
+        # ------------------------------------------------------------------------------------------
         mesh = self.fc3.mesh
         f0 = self.fc3('0-f', hybrid=False)
         f1 = self.fc3('1-f', hybrid=False)
@@ -144,7 +146,7 @@ class Test_ChainGM_sequent_chain_method(FrozenOnly):
                 else:
                     assert check_dict_f2[sep_numbering] == total_numbering
 
-        #---- test find ----------------------------------------------------------------------------
+        # --- test find ----------------------------------------------------------------------------
         GLOBAL_num_dofs = cgm.global_num_dofs
         sample_amount = int(GLOBAL_num_dofs/5)
         if sample_amount > 10: sample_amount = 10

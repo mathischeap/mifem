@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 class ___SCALAR_NEG_HELPER_1___(object):
     def __init__(self, v):
         self._v_ = v

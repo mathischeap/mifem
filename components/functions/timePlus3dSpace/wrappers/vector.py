@@ -6,10 +6,12 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
-from components.numerical.timePlus3dSpace.partial_derivative_as_functions import NumericalPartialDerivative_txyz_Functions
+from components.numerical.timePlus3dSpace.partial_derivative_as_functions import \
+    NumericalPartialDerivative_txyz_Functions
 
 from importlib import import_module
 from components.functions.timePlus3dSpace.wrappers.helpers._3scalars_add import t3d_3ScalarAdd
@@ -100,7 +102,6 @@ class t3dVector(FrozenOnly):
         pv2_pt = self._NPD2_('t')
         return self.__class__(pv0_pt, pv1_pt, pv2_pt)
 
-
     @property
     def divergence(self):
         pv0_px = self._NPD0_('x')
@@ -136,7 +137,6 @@ class t3dVector(FrozenOnly):
         v2 = t3d_ScalarSub(pv_px, pu_py)
 
         return self.__class__(v0, v1, v2)
-
 
     def convection_by(self, u):
         """We compute (u cdot nabla) of self where u is another t3d vector.
@@ -176,7 +176,6 @@ class t3dVector(FrozenOnly):
         return self.__class__(t3d_3ScalarAdd(v0x, v0y, v0z),
                               t3d_3ScalarAdd(v1x, v1y, v1z),
                               t3d_3ScalarAdd(v2x, v2y, v2z))
-
 
     def __add__(self, other):
         """
@@ -228,7 +227,6 @@ class t3dVector(FrozenOnly):
         else:
             raise NotImplementedError()
 
-
     def __neg__(self):
         v0, v1, v2 = self._v0_, self._v1_, self._v2_
 
@@ -266,4 +264,3 @@ class t3dVector(FrozenOnly):
 
         else:
             raise NotImplementedError()
-

@@ -6,7 +6,6 @@ from objects.CSCG._2d.mesh.elements.element.types_wrt_metric.base import Element
 # from objects.mpRfT._2d.mesh.segments.segment.types_wrt_metric.chaotic import mpRfT2_ChaoticSegment
 
 
-
 class ChaoticElement(ElementTypeWr2MetricBase):
     """
     Chaotic element is the element that its metric is unique.
@@ -17,7 +16,6 @@ class ChaoticElement(ElementTypeWr2MetricBase):
     def __init__(self):
         self._mark_ = id(self)
         self._freeze_self_()
-
 
     # def ___CLASSIFY_mpRfT2_CELL_of_origin_and_delta___(self, origin_and_delta):
     #     """"""

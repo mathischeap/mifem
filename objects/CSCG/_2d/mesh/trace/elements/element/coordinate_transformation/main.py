@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-
 from components.freeze.main import FrozenOnly
 from objects.CSCG._2d.mesh.trace.elements.element.coordinate_transformation.constant import _2dCSCG_TE_CT_Constant
+
 
 class _2dCSCG_Trace_Element_CoordinateTransformation(FrozenOnly):
     def __init__(self, te):
@@ -51,6 +51,3 @@ class _2dCSCG_Trace_Element_CoordinateTransformation(FrozenOnly):
     def metric(self, ep1d):
         """ g, which should be det(metric_matrix): det(G). """
         return self.metric_matrix(ep1d)
-
-
-

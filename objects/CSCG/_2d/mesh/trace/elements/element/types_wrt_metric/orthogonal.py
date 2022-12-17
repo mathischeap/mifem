@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
-
 from objects.CSCG._2d.mesh.trace.elements.element.types_wrt_metric.base import TraceElementTypeWr2MetricBase
-
-
 
 
 class OrthogonalTraceElement(TraceElementTypeWr2MetricBase):
     """
-    An orthogonal trace element must be a rectangle or square and it is
+    An orthogonal trace element must be a rectangle or square, and it is
     perpendicular to one of the three axes. And has no rotation. That means each edge must be
     perpendicular to the corresponding axes.
 

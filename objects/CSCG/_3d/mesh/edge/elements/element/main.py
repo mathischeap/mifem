@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
-
-
-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.edge.elements.element.coordinate_transformation import _3dCSCG_Edge_Element_CT
 from objects.CSCG._3d.mesh.edge.elements.element.whether import _3dCSCG_EdgeElement_Whether
-
 
 
 class _3dCSCG_Edge_Element(FrozenOnly):
@@ -77,7 +74,6 @@ class _3dCSCG_Edge_Element(FrozenOnly):
         """This edge element is on these mesh boundaries"""
         return self._elements_._on_mesh_boundaries_[self._i_]
 
-
     @property
     def CHARACTERISTIC_position(self):
         """The position we mainly locate this edge element."""
@@ -94,6 +90,7 @@ class _3dCSCG_Edge_Element(FrozenOnly):
                     break
 
         return self._cp_
+
     @property
     def CHARACTERISTIC_element(self):
         """We mainly consider this edge element is a corner-edge of this mesh
@@ -101,6 +98,7 @@ class _3dCSCG_Edge_Element(FrozenOnly):
         if self._ce_ is None:
             _ = self.CHARACTERISTIC_position
         return self._ce_
+
     @property
     def CHARACTERISTIC_corner_edge(self):
         """We mainly consider this edge element is such a corner-edge of the
@@ -108,16 +106,12 @@ class _3dCSCG_Edge_Element(FrozenOnly):
         if self._cce_ is None:
             _ = self.CHARACTERISTIC_position
         return self._cce_
+
     @property
     def CHARACTERISTIC_region(self):
         """We mainly consider this edge element is in this regions."""
         region = self._elements_._mesh_.do.FIND_region_name_of_element(self.CHARACTERISTIC_element)
         return region
-
-
-
-
-
 
 
 if __name__ == '__main__':

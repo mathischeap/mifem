@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
 from objects.CSCG._2d.mesh.elements.coordinate_transformation.main import _2dCSCG_Mesh_Elements_CT
@@ -9,6 +10,7 @@ from objects.CSCG._2d.mesh.elements.element.main import _2dCSCG_Mesh_Element
 from objects.CSCG._2d.mesh.elements.whether import _2dCSCG_MeshElements_Whether
 from objects.CSCG._2d.mesh.elements.visualize import _2dCSCG_MeshElements_VIS
 from objects.CSCG._2d.mesh.elements.do.main import _2dCSCG_Mesh_Elements_do
+
 
 class _2dCSCG_Mesh_Elements(FrozenOnly):
     """"""
@@ -202,14 +204,14 @@ class _2dCSCG_Mesh_Elements(FrozenOnly):
         return self._do_
 
 
-
 if __name__ == '__main__':
-    # mpiexec python _2dCSCG\mesh\elements\main.py
+    # mpiexec -n 4 python objects/CSCG/_2d/mesh/elements/main.py
     from objects.CSCG._2d.master import MeshGenerator
 
     # mesh = MeshGenerator('crazy', c=0.3)([50,45])
     # mesh = MeshGenerator('chp1',)([2,2])
-    mesh = MeshGenerator('crazy', c=0., bounds=([0,1],[0,1]))([10,10])
+    mesh = MeshGenerator('crazy', c=0, bounds=([0, 1],[0, 1]))([10, 10])
     elements = mesh.elements
     S = elements.statistic
+    # print(S)
     print(elements.whether.homogeneous_according_to_types_wrt_metric)

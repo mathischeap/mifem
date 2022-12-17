@@ -8,7 +8,8 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from root.config.main import *
 
 from tests.objects.CSCG._3d.unittests.auxiliaries.icpNS_TGV_new import NoHy_TGV_NEW
@@ -17,6 +18,7 @@ from tests.objects.CSCG._3d.unittests.auxiliaries.icpsNS_TGV_LGMRES_solver impor
 import os
 
 from components.miscellaneous.mios import remove, isfile
+
 
 def test_APP_NO2_icpsNS_no_hybrid_TGV():
     # warnings.filterwarnings("default")
@@ -28,12 +30,16 @@ def test_APP_NO2_icpsNS_no_hybrid_TGV():
     filename1 = f'icpNS_NH_RDF___TGV_NEW_Re{Re}_N{N}K{k}t{t}Steps{steps}.csv'
     filename2 = f'icpNS_NH_RDF_LGMRES__TGV_NEW_Re{Re}_N{N}K{k}t{t}Steps{steps}.csv'
 
-    if isfile(filename1): remove(filename1)
-    if isfile(filename2): remove(filename2)
+    if isfile(filename1):
+        remove(filename1)
+    if isfile(filename2):
+        remove(filename2)
 
-    SN = NoHy_TGV_NEW(N=N, k=k, t=t, steps=steps, Re=Re, atol=1e-5, restart=50, maxiter=10, show_info=False, save_uw=False)
+    SN = NoHy_TGV_NEW(N=N, k=k, t=t, steps=steps, Re=Re, atol=1e-5,
+                      restart=50, maxiter=10, show_info=False, save_uw=False)
 
-    SL = NoHy_TGV_NEW_LGMRES(N=N, k=k, t=t, steps=steps, Re=Re, atol=1e-5, m=45, K=5, maxiter=10, show_info=False, save_uw=False)
+    SL = NoHy_TGV_NEW_LGMRES(N=N, k=k, t=t, steps=steps, Re=Re, atol=1e-5,
+                             m=45, K=5, maxiter=10, show_info=False, save_uw=False)
 
     if RANK == MASTER_RANK:
         os.remove(filename1)
@@ -52,10 +58,6 @@ def test_APP_NO2_icpsNS_no_hybrid_TGV():
              2.5546e+00, 6.4708e+00, 2.2965e-09]), decimal=4)
 
     return 1
-
-
-
-
 
 
 if __name__ == '__main__':

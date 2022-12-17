@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from tests.objects.CSCG._2d.randObj.form_caller import random_FormCaller_of_total_load_around as _2d_RANDOM_FC_
 import random
 
@@ -10,13 +11,12 @@ from numpy import sin, cos, exp, pi
 from root.config.main import RANK, MASTER_RANK, np, COMM
 
 
-
 def test_LinearAlgebra_EWC_No1_Operators():
     """"""
-    #--------- 2d CSCG tests ---------------------------------------------------------------
+    # -------- 2d CSCG tests ---------------------------------------------------------------
     if RANK == MASTER_RANK:
         print("&&& [test_LinearAlgebra_EWC_No1_Operators] ...... ", flush=True)
-        load = random.randint(99, 999)
+        load = random.randint(180, 199)
         IH = [True, False][random.randint(0, 1)]
     else:
         load = None
@@ -29,7 +29,7 @@ def test_LinearAlgebra_EWC_No1_Operators():
 
     a, b, c, d = random.random(), random.random(), random.random(), random.random()
     rT = random.random()
-    def P(t, x, y): return - sin(a*pi*x) * cos(b*pi*y) * exp(- 0.2 * pi * t )
+    def P(t, x, y): return - sin(a*pi*x) * cos(b*pi*y) * exp(- 0.2 * pi * t)
 
     scalar = FC('scalar', P)
 
@@ -56,10 +56,7 @@ def test_LinearAlgebra_EWC_No1_Operators():
     return 1
 
 
-
-
-
 if __name__ == '__main__':
-    # mpiexec -n 4 python __tests__\unittests\EWC\operators.py
+    # mpiexec -n 4 python tests/tools/EWC/operators.py
 
     test_LinearAlgebra_EWC_No1_Operators()

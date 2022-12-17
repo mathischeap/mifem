@@ -1,7 +1,8 @@
 
 
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from components.freeze.base import FrozenOnly
 from root.config.main import COMM, MPI
 
@@ -17,9 +18,8 @@ class _3dCSCG_NodeMesh_DoFind(FrozenOnly):
         self._elements_ = elements
         self._mesh_ = elements._mesh_
         self._SOS_cache_ = dict()
-        _ = self._mesh_.edge.elements # to make sure the edge.elements.map is generated!
+        _ = self._mesh_.edge.elements  # to make sure the edge.elements.map is generated!
         self._freeze_self_()
-
 
     def hybrid_singularity_overcoming_setting(self, i):
         """
@@ -53,7 +53,7 @@ class _3dCSCG_NodeMesh_DoFind(FrozenOnly):
                     indicator = ind
                     break
 
-            #find SOS class according to the indicator (the boundary position of this node element)
+            #  find SOS class according to the indicator (the boundary position of this node element)
             if isinstance(indicator, str):
 
                 ind = indicator.split('|')[0]
@@ -68,15 +68,14 @@ class _3dCSCG_NodeMesh_DoFind(FrozenOnly):
             else:
                 raise NotImplementedError(f"Currently, I only understand string indicator")
 
-            #------- Make the SOS instance ----------------------------------------------
+            # ------ Make the SOS instance ----------------------------------------------
             sos = CLASS(self._mesh_, i)
-            #==============================================================================
+            # =============================================================================
 
         else:
             sos = _3dCSCG_InternalNodeSOS(self._mesh_, i)
 
         return sos
-
 
     def edge_elements_attached_to_element(self, i):
         """Find the edge elements that are attached to a node element #`i`.
@@ -108,15 +107,16 @@ class _3dCSCG_NodeMesh_DoFind(FrozenOnly):
                         edge3 = sWE + sBF
 
                         indices = [
-                        ['WB', 'EB', 'WF', 'EF', 'NB', 'SB',
-                         'NF', 'SF', 'NW', 'SW', 'NE', 'SE'].index(_) for _ in [edge1, edge2, edge3] ]
+                            ['WB', 'EB', 'WF', 'EF', 'NB', 'SB',
+                             'NF', 'SF', 'NW', 'SW', 'NE', 'SE'].index(_) for _ in [edge1, edge2, edge3]
+                        ]
 
                         E_MAP = self._mesh_.edge.elements.map[mesh_element]
 
                         EDGE_ELEMENTS.update([E_MAP[_] for _ in indices])
                     else:
                         pass
-                else: # a boundary location.
+                else:   # a boundary location.
                     pass
 
         else:
@@ -130,7 +130,6 @@ class _3dCSCG_NodeMesh_DoFind(FrozenOnly):
             ___.update(EE)
 
         return list(___)
-
 
     def trace_elements_attached_to_element(self, i):
         """Find the trace elements that are attached to a node element #`i`.
@@ -164,7 +163,7 @@ class _3dCSCG_NodeMesh_DoFind(FrozenOnly):
                         TRACE_ELEMENTS.update([T_MAP[_] for _ in indices])
                     else:
                         pass
-                else: # a boundary location.
+                else:  # a boundary location.
                     pass
 
         else:
@@ -180,19 +179,16 @@ class _3dCSCG_NodeMesh_DoFind(FrozenOnly):
         return list(___)
 
 
-
-
 if __name__ == '__main__':
     # mpiexec -n 4 python objects\CSCG\_3d\mesh\node\elements\do\find\main.py
 
     from objects.CSCG._3d.master import MeshGenerator
     elements = [2, 2, 2]
-    mesh = MeshGenerator('crazy', c=0.0, bounds=([0,3], [0,3], [0,3]))(elements)
+    mesh = MeshGenerator('crazy', c=0.0, bounds=([0, 3], [0,  3], [0, 3]))(elements)
     # mesh = MeshGenerator('bridge_arch_cracked')(elements)
     nodes = mesh.node.elements
 
     S = nodes.do.find.hybrid_singularity_overcoming_setting(0)
-
 
     # for i in nodes:
     #     print(i, nodes[i].boundary_position_indicator)

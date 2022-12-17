@@ -3,7 +3,8 @@
 
 
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.edge.elements.main import _3dCSCG_Edge_Elements
@@ -21,9 +22,6 @@ class _3dCSCG_Edge(FrozenOnly):
         if self._elements_ is None:
             self._elements_ = _3dCSCG_Edge_Elements(self)
         return self._elements_
-
-
-
 
 
 if __name__ == '__main__':

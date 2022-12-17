@@ -23,10 +23,16 @@ class ParallelogramElement(ElementTypeWr2MetricBase):
         self._data_ = angleL, L, L_angle_U, U
         assert 0 < L_angle_U < np.pi, f"L.U angle = {L_angle_U} wrong!"
         assert 0 <= angleL < 2 * np.pi, f" angle L={angleL} must be < 2pi."
+
+        angleL = round(angleL, 6)
+        L = round(L, 6)
+        L_angle_U = round(L_angle_U, 6)
+        U = round(U, 6)
+
         self._mark_ = 'Parallelogram.' + 'aL{}_L{}_{}_U{}'.format(
             '%.5f' % angleL, '%.5f' % L, '%.5f' % L_angle_U, '%.5f' % U)
-        self._freeze_self_()
 
+        self._freeze_self_()
 
     # def ___CLASSIFY_mpRfT2_CELL_of_origin_and_delta___(self, origin_and_delta):
     #     """"""

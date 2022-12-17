@@ -2,6 +2,7 @@
 
 from objects.CSCG._2d.master import SpaceInvoker as _2dCSCG_SpaceInvoker
 
+
 def ___restore__2dCSCG_Space___(parameters, space_cache):
     cache_tag = str(parameters)
 
@@ -20,7 +21,7 @@ def ___restore__2dCSCG_Space___(parameters, space_cache):
         inputs = parameters.pop('inputs')
         ndim = parameters.pop('ndim')
         assert len(parameters) == 0, "make sure all information are used."
-        cache_obj =  _2dCSCG_SpaceInvoker(ID)(inputs, ndim=ndim)
+        cache_obj = _2dCSCG_SpaceInvoker(ID)(inputs, ndim=ndim)
 
         if len(space_cache) == 0:
             space_cache.append(cache_tag)

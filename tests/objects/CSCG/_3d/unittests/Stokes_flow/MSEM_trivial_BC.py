@@ -4,7 +4,8 @@
 """
 
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 from tools.elementwiseCache.dataStructures.operators.concatenate.main import concatenate
@@ -49,9 +50,9 @@ def test_Stokes_MSEM_trivial_BC():
     E12 = E21.T
     E23 = E32.T
 
-    A = ([      M1, - E12 @ M2,      None],
-         [M2 @ E21,       None, -E23 @ M3],
-         [    None,   M3 @ E32,      None],)
+    A = ([M1, - E12 @ M2, None],
+         [M2 @ E21, None, -E23 @ M3],
+         [None, M3 @ E32, None],)
     A = bmat(A)
 
     b0 = EWC_ColumnVector(w)

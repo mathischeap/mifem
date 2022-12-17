@@ -15,7 +15,7 @@ class miUsGrid_Form_BC(FrozenOnly):
         """"""
         self._f_ = f
         self._CF_ = None
-        self._boundaries_ = None
+        self._boundaries_ = list()
         self._involved_element_parts_ = None
         self._interpret_ = miUsForm_Form_BC_Interpret(self._f_)
         self._freeze_self_()
@@ -40,10 +40,9 @@ class miUsGrid_Form_BC(FrozenOnly):
     @boundaries.setter
     def boundaries(self, bns):
         """"""
-
         BNS = self._f_.mesh.boundaries.names
         if isinstance(bns, str):
-            bns = [bns,]
+            bns = [bns, ]
         else:
             pass
         assert isinstance(bns, (list, tuple)), f"pls put boundary names into a list or tuple."

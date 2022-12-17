@@ -6,15 +6,15 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
+
 import numpy as np
 from root.config.main import RANK, SECRETARY_RANK, COMM
 from components.freeze.base import FrozenOnly
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib import cm
-
-
 
 
 class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
@@ -26,38 +26,28 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
         self._mesh_ = dv.mesh
         self._freeze_self_()
 
-
     def __call__(self, *args, **kwargs):
         return self.quiver(*args, **kwargs)
 
-    def quiver(self, title=None,
-
+    def quiver(
+        self, title=None,
         usetex=False,
-
         axis_on=True, tick_on=True, show_boundaries=False,
-
         colormap='cool', color=None,
-
-        xlim = None, ylim=None,
-
+        xlim=None, ylim=None,
         show_colorbar=True,
         colorbar_label=None, colorbar_orientation='vertical', colorbar_aspect=20,
         colorbar_labelsize=12.5, colorbar_extend='both',
-        colorbar_position = None, colorbar_ticks=None,
-
+        colorbar_position=None, colorbar_ticks=None,
         scale=10, scale_units='xy',
-
-        # ticks
         xticks=None, yticks=None,
         tick_size=12, tick_pad=6, minor_tick_length=4, major_tick_length=8,
-        label_size = 15,
-
+        label_size=15,
         saveto=None, dpi=210,
-
-        key_coordinates = (0.5, 0.5),
-        key_length = 1,
-        key_label = '1'
-        ):
+        key_coordinates=(0.5, 0.5),
+        key_length=1,
+        key_label='1'
+    ):
         """Could be very badly distributed arrows for non-uniform meshes. Try to use visualization
         of discrete forms.
 
@@ -164,15 +154,15 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
         V = np.concatenate(V)
         M = np.hypot(U, V)
 
-        #---- check if zero field, if it is quiver will return warning, so we skip it ---------
+        # --- check if zero field, if it is quiver will return warning, so we skip it ---------
         U_max, U_min = np.max(U), np.min(U)
         V_max, V_min = np.max(V), np.min(V)
-        if U_max - U_min == 0 and  V_max - V_min == 0:
+        if U_max - U_min == 0 and V_max - V_min == 0:
             ZERO_FIELD = True
         else:
             ZERO_FIELD = False
 
-        #----------------------------------------------------------------------------------------
+        # ---------------------------------------------------------------------------------------
         if saveto is not None: matplotlib.use('Agg')
         plt.rc('text', usetex=usetex)
         plt.rcParams['text.latex.preamble'] = r"\usepackage{amsmath}"
@@ -180,7 +170,7 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
         fig, ax = plt.subplots()
         ax.set_aspect('equal')
 
-        #----------- set labels, ticks, frame and so on ------------------------------------------1
+        # ---------- set labels, ticks, frame and so on ------------------------------------------1
         if xlim is not None: plt.xlim(xlim)
         if ylim is not None: plt.ylim(ylim)
         if axis_on:
@@ -196,14 +186,15 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
                 plt.xlabel('$x$', fontsize=label_size)
                 plt.ylabel('$y$', fontsize=label_size)
             else:
-                plt.tick_params(which='both',
+                plt.tick_params(
+                    which='both',
                     labeltop=False, labelright=False, labelleft=False, labelbottom=False,
-                    top=False, right=False, left=False, bottom=False)
+                    top=False, right=False, left=False, bottom=False
+                )
         else:
             ax.set_axis_off()
 
-
-        #----------------- mesh boundaries -------------------------------------------------------1
+        # ---------------- mesh boundaries -------------------------------------------------------1
         if show_boundaries:
             mesh = self._mesh_
             RB, RBN, boundary_name_color_dict, pb_text = \
@@ -214,27 +205,25 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
                 for ei in range(4):
                     if reo_db[rn][ei] == 1:
                         # noinspection PyUnresolvedReferences
-                        ax.plot(RB[rn][ei][0], RB[rn][ei][1], color='k', # not an error, do not use else
+                        ax.plot(RB[rn][ei][0], RB[rn][ei][1], color='k',   # not an error, do not use else
                                 linewidth=0.75)
         else:
             pass
 
-
-        #----------------------------------------------------------------------------------------
-
+        # --------------------------------------------------------------------------------------
         if show_colorbar:
-            if  colorbar_ticks is None:
+            if colorbar_ticks is None:
                 pass
             else:
                 tMin, tMax = min(colorbar_ticks), max(colorbar_ticks)
                 assert tMax > tMin, f"colorbar_ticks={colorbar_ticks} wrong!"
-                assert tMin >=0 , f"quiver tick can not be lower than 0!"
+                assert tMin >= 0, f"quiver tick can not be lower than 0!"
                 LARGE = M > tMax
                 M[LARGE] = tMax
                 LOW = M < tMin
                 M[LOW] = tMin
                 M = np.concatenate((M, [tMin, tMax]))
-            norm = matplotlib.colors.Normalize() # M normalized to be [0,1]
+            norm = matplotlib.colors.Normalize()   # M normalized to be [0,1]
             norm.autoscale(M)
             cm = getattr(matplotlib.cm, colormap)
             sm = matplotlib.cm.ScalarMappable(cmap=cm, norm=norm)
@@ -242,13 +231,17 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
 
             if colorbar_position is not None:
                 cb_axes = fig.add_axes(colorbar_position)
-                cbar = plt.colorbar(sm, orientation=colorbar_orientation, cax=cb_axes,
-                              extend=colorbar_extend,
-                              aspect=colorbar_aspect,)
+                cbar = plt.colorbar(
+                    sm, orientation=colorbar_orientation, cax=cb_axes,
+                    extend=colorbar_extend,
+                    aspect=colorbar_aspect,
+                )
             else:
-                cbar = plt.colorbar(sm, orientation=colorbar_orientation,
-                              extend=colorbar_extend,
-                              aspect=colorbar_aspect,)
+                cbar = plt.colorbar(
+                    sm, orientation=colorbar_orientation,
+                    extend=colorbar_extend,
+                    aspect=colorbar_aspect,
+                )
 
             if colorbar_label is not None:
                 colorbar_label.set_label(colorbar_label, labelpad=10, size=15)
@@ -256,9 +249,10 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
             if colorbar_ticks is not None: cbar.set_ticks(colorbar_ticks)
             cbar.ax.tick_params(labelsize=colorbar_labelsize)
         else:
-            pass
+            cm = None
+            norm = None
 
-        #----------------------------------------------------------------------------------------
+        # ---------------------------------------------------------------------------------------
         if ZERO_FIELD:
             pass
         else:
@@ -282,14 +276,13 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
                 ax.quiverkey(Q, *key_coordinates, key_length, key_label,
                              labelpos='E', coordinates='figure')
 
-
         # =========== super title ==============================================================
         if title is None or title == '':
             pass
         else:
             plt.title(title)
 
-        #---------------------- save to --------------------------------------------------------
+        # --------------------- save to --------------------------------------------------------
         if saveto is None or saveto is False:
             plt.show()
         else:
@@ -325,31 +318,24 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
         levels = np.linspace(MINv, MAXv, num_levels)
         return levels
 
-    def contour(self,
+    def contour(
+        self,
         levels_x=None, levels_y=None, num_levels=20, linewidth=1, linestyles=None,
-
         usetex=False,
-
-        colormap='coolwarm', color=None, # color will override color map, only works in contour.
-
+        colormap='coolwarm', color=None,   # color will override color map, only works in contour.
         axis_on=True, tick_on=True, show_boundaries=False,
-
         xlim=None, ylim=None,
-
         show_colorbar=True,
-                colorbar_label=None, colorbar_orientation='vertical', colorbar_aspect=20,
-                colorbar_labelsize=12.5, colorbar_extend='both',
-
-        # ticks
-        xticks = None, yticks = None,
+        colorbar_label=None, colorbar_orientation='vertical', colorbar_aspect=20,
+        colorbar_labelsize=12.5, colorbar_extend='both',
+        xticks=None, yticks=None,
         tick_size=12, tick_pad=6, minor_tick_length=4, major_tick_length=8,
-
-        label_size = 15,
-
+        label_size=15,
         title_x=True,
         title_y=True,
         saveto=None, dpi=210,
-        plot_type = 'contour'):
+        plot_type='contour'
+    ):
         """
 
         Parameters
@@ -443,7 +429,7 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
             _.update(__)
         v = _
 
-        #------------ prepare levels -------------------------------------------------------------1
+        # ----------- prepare levels -------------------------------------------------------------1
         if levels_x is None:
             levels_x = self.___set_contour_levels___(v, num_levels, i=0)
         else:
@@ -453,15 +439,15 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
         else:
             pass
 
-        #------- config plt ----------------------------------------------------------------------1
+        # ------ config plt ----------------------------------------------------------------------1
         if saveto is not None: matplotlib.use('Agg')
         plt.rc('text', usetex=usetex)
         plt.rcParams['text.latex.preamble'] = r"\usepackage{amsmath}"
         if colormap is not None: plt.rcParams['image.cmap'] = colormap
-        fig = plt.figure(figsize=(12,5.5))
+        fig = plt.figure(figsize=(12, 5.5))
 
-        #---------------------- x-component ------------------------------------------------------1
-        ax = plt.subplot(121) #----------- set labels, ticks, frame and so on ----------2
+        # --------------------- x-component ------------------------------------------------------1
+        ax = plt.subplot(121)   # ---------- set labels, ticks, frame and so on ----------2
         ax.set_aspect('equal')
 
         if xlim is not None: plt.xlim(xlim)
@@ -479,13 +465,15 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
                 plt.xlabel('$x$', fontsize=label_size)
                 plt.ylabel('$y$', fontsize=label_size)
             else:
-                plt.tick_params(which='both',
+                plt.tick_params(
+                    which='both',
                     labeltop=False, labelright=False, labelleft=False, labelbottom=False,
-                    top=False, right=False, left=False, bottom=False)
+                    top=False, right=False, left=False, bottom=False
+                )
         else:
             ax.set_axis_off()
 
-        #----------------- mesh boundaries --------------------------------------------2
+        # ---------------- mesh boundaries --------------------------------------------2
         if show_boundaries:
             RB, RBN, boundary_name_color_dict, pb_text = \
                 mesh.visualize.matplot.___PRIVATE_DO_generate_boundary_data___(
@@ -500,15 +488,15 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
         else:
             pass
 
-        #-------------- contour or contourf plot -----------------------------------2
+        # ------------- contour or contourf plot -----------------------------------2
         for rn in xy:
-            if plot_type =='contour':
+            if plot_type == 'contour':
                 if color is None:
                     plt.contour(*xy[rn], v[rn][0], levels=levels_x, linewidths=linewidth, linestyles=linestyles)
                 else:
                     plt.contour(*xy[rn], v[rn][0], colors=color, levels=levels_x, linewidths=linewidth, linestyles=linestyles)
 
-            elif plot_type =='contourf':
+            elif plot_type == 'contourf':
                 VAL = v[rn][0]
                 VAL[VAL > levels_x[-1]] = levels_x[-1]
                 VAL[VAL < levels_x[0]] = levels_x[0]
@@ -518,15 +506,15 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
 
         # --------------- title ----------------------------------------------------2
         if title_x is True:
-            title_x =  'x-component-of-' + self._dv_.standard_properties.name
+            title_x = 'x-component-of-' + self._dv_.standard_properties.name
             plt.title(title_x)
         elif title_x is False:
             pass
         else:
             plt.title(title_x)
 
-        #-------------------------------- color bar -------------------------------2
-        if (plot_type =='contour' and color is None and show_colorbar) or (plot_type =='contourf' and show_colorbar):
+        # ------------------------------- color bar -------------------------------2
+        if (plot_type == 'contour' and color is None and show_colorbar) or (plot_type == 'contourf' and show_colorbar):
             mappable = cm.ScalarMappable()
             mappable.set_array(np.array(levels_x))
             cb = plt.colorbar(mappable, ax=ax,
@@ -542,8 +530,8 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
         else:
             pass
 
-        #---------------------- y-component ------------------------------------------------------1
-        ax = plt.subplot(122) #----------- set labels, ticks, frame and so on ----------2
+        # --------------------- y-component ------------------------------------------------------1
+        ax = plt.subplot(122)   # ---------- set labels, ticks, frame and so on ----------2
         ax.set_aspect('equal')
 
         if xlim is not None: plt.xlim(xlim)
@@ -561,13 +549,15 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
                 plt.xlabel('$x$', fontsize=label_size)
                 plt.ylabel('$y$', fontsize=label_size)
             else:
-                plt.tick_params(which='both',
+                plt.tick_params(
+                    which='both',
                     labeltop=False, labelright=False, labelleft=False, labelbottom=False,
-                    top=False, right=False, left=False, bottom=False)
+                    top=False, right=False, left=False, bottom=False
+                )
         else:
             ax.set_axis_off()
 
-        #----------------- mesh boundaries --------------------------------------------2
+        # ---------------- mesh boundaries --------------------------------------------2
         if show_boundaries:
             RB, RBN, boundary_name_color_dict, pb_text = \
                 mesh.visualize.matplot.___PRIVATE_DO_generate_boundary_data___(
@@ -582,15 +572,15 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
         else:
             pass
 
-        #-------------- contour or contourf plot -----------------------------------2
+        # ------------- contour or contourf plot -----------------------------------2
         for rn in xy:
-            if plot_type =='contour':
+            if plot_type == 'contour':
                 if color is None:
                     plt.contour(*xy[rn], v[rn][1], levels=levels_y, linewidths=linewidth, linestyles=linestyles)
                 else:
                     plt.contour(*xy[rn], v[rn][1], colors=color, levels=levels_y, linewidths=linewidth, linestyles=linestyles)
 
-            elif plot_type =='contourf':
+            elif plot_type == 'contourf':
                 VAL = v[rn][1]
                 VAL[VAL > levels_y[-1]] = levels_y[-1]
                 VAL[VAL < levels_y[0]] = levels_y[0]
@@ -600,15 +590,15 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
 
         # --------------- title ----------------------------------------------------2
         if title_y is True:
-            title_y =  'y-component-of-' + self._dv_.standard_properties.name
+            title_y = 'y-component-of-' + self._dv_.standard_properties.name
             plt.title(title_y)
         elif title_y is False:
             pass
         else:
             plt.title(title_y)
 
-        #-------------------------------- color bar -------------------------------2
-        if (plot_type =='contour' and color is None and show_colorbar) or (plot_type =='contourf' and show_colorbar):
+        # ------------------------------- color bar -------------------------------2
+        if (plot_type == 'contour' and color is None and show_colorbar) or (plot_type == 'contourf' and show_colorbar):
             mappable = cm.ScalarMappable()
             mappable.set_array(np.array(levels_y))
             cb = plt.colorbar(mappable, ax=ax,
@@ -624,7 +614,7 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
         else:
             pass
 
-        #---------------------- save to ----------------------------------------------------------1
+        # --------------------- save to ----------------------------------------------------------1
         if saveto is None:
             plt.show()
         else:
@@ -634,35 +624,33 @@ class _2cCSCG_DV_VisualizeMatplot(FrozenOnly):
                 plt.savefig(saveto, dpi=dpi, bbox_inches='tight')
         plt.close()
 
-        #=========================================================================================1
+        # =======================================================================================1
         return fig
-
 
     def contourf(self, *args, **kwargs):
         return self.contour(*args, **kwargs, plot_type='contourf')
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python objects/CSCG/_2d/discrete_fields/vector/visualize/matplot.py
+    # mpiexec -n 4 python objects/CSCG/_2d/discreteFields/vector/visualize/matplot.py
     from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
     # mesh = MeshGenerator('crazy', c=0.3)([50,45])
     # mesh = MeshGenerator('chp1',)([2,2])
-    mesh = MeshGenerator('chp2')([[1,2,4,8,8,8,4,2,1],10])
-    space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3)])
+    mesh = MeshGenerator('chp2')([[1, 2, 4, 8, 8, 8, 4, 2, 1], 10])
+    space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 3)])
     FC = FormCaller(mesh, space)
 
     ES = ExactSolutionSelector(mesh)('sL:sincos1')
 
-    u = FC('1-f-o', is_hybrid=True)
+    u = FC('1-f-o', hybrid=True)
 
-    u.TW.func.do.set_func_body_as(ES, 'velocity')
-    u.TW.current_time = 0
-    u.TW.do.push_all_to_instant()
+    u.CF = ES.velocity
+    u.CF.current_time = 0
     u.discretize()
 
-    r = np.linspace(-1,1,5)
-    s = np.linspace(-1,1,6)
+    r = np.linspace(-1, 1, 5)
+    s = np.linspace(-1, 1, 6)
 
     dv = u.reconstruct.discrete_vector([r, s])
 

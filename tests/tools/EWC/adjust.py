@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
 from tools.elementwiseCache.dataStructures.objects.columnVector.main import EWC_ColumnVector
@@ -10,16 +11,14 @@ import random
 from scipy.sparse import random as sci_rand
 
 
-
-
 def test_EWC_adjust():
     """"""
     if RANK == MASTER_RANK:
         print("ADJ [test_EWC_adjust] ...... ", flush=True)
-        i, j, k = random.randint(1,3), random.randint(1,3), random.randint(1,3)
-        a, b, c = random.randint(1,3), random.randint(1,3), random.randint(1,3)
+        i, j, k = random.randint(1, 3), random.randint(1, 3), random.randint(1, 3)
+        a, b, c = random.randint(1, 3), random.randint(1, 3), random.randint(1, 3)
         Dirichlet_boundaries = random.sample(
-            ['North', 'West', 'South', 'Back', 'Front', "East"], random.randint(0,6))
+            ['North', 'West', 'South', 'Back', 'Front', "East"], random.randint(0, 6))
     else:
         i, j, k, a, b, c = [None for _ in range(6)]
         Dirichlet_boundaries = None
@@ -115,10 +114,9 @@ def test_EWC_adjust():
                 assert bb[_] == 0
                 Di = DD[_]
                 assert Di.nnz == 1
-                assert Di[0,_] == 1
+                assert Di[0, _] == 1
 
     return 1
-
 
 
 if __name__ == '__main__':

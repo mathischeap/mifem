@@ -12,6 +12,7 @@ ___CSCG_global_BC_itp_Local_dofs_cache___ = {
     'dofs': dict(),
 }
 
+
 class CSCG_FORM_BC_Interpret_Local(FrozenOnly):
     """"""
 
@@ -21,7 +22,7 @@ class CSCG_FORM_BC_Interpret_Local(FrozenOnly):
         self._mesh_ = f.mesh
         self._cochains_ = None
         # both dofs and cochains will be initialized and will not follow the form.BC in real time.
-        self.___Pr_parse_dofs___() # need no BC.CF
+        self.___Pr_parse_dofs___()  # need no BC.CF
         if self._f_.BC.CF is not None:
             self.___Pr_parse_cochains___()
         else:
@@ -40,7 +41,7 @@ class CSCG_FORM_BC_Interpret_Local(FrozenOnly):
             self._dofs_ = dict()
             for e_p in iEP:
                 element, part = int(e_p[:-1]), e_p[-1]
-                if  self._mesh_.ndim == 3:
+                if self._mesh_.ndim == 3:
                     dofs = self._f_.numbering.do.\
                         find.local_dofs_on_element_side(part)
                 elif self._mesh_.ndim == 2:
@@ -94,7 +95,7 @@ class CSCG_FORM_BC_Interpret_Local(FrozenOnly):
         elif indicator == 'locally full local TEW cochain':
 
             iEP = self._f_.BC._involved_element_parts_
-            t = self._f_ # must be a trace form.
+            t = self._f_  # must be a trace form.
             TEM = t.mesh.trace.elements.map
             if t.ndim == 2:
                 side_index = {'U': 0, 'D': 1, 'L': 2, 'R': 3}

@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-
-
 from components.decorators.all import accepts
 from objects.CSCG._2d.mesh.elements.element.types_wrt_metric.base import ElementTypeWr2MetricBase
 
 # from objects.mpRfT._2d.mesh.cell.types_wrt_metric.orthogonal import mpRfT2_OrthogonalCell
 # from objects.mpRfT._2d.mesh.segments.segment.types_wrt_metric.straight import mpRfT2_StraightSegment
+
 
 class OrthogonalElement(ElementTypeWr2MetricBase):
     """
@@ -16,21 +15,13 @@ class OrthogonalElement(ElementTypeWr2MetricBase):
     def __init__(self, LxLy):
         self._LxLy_ = LxLy
         Lx, Ly = LxLy
+        Lx = round(Lx, 5)
+        Ly = round(Ly, 5)
         if Lx == Ly:
             self._mark_ = 'Orth.{:.4f}'.format(Lx)
         else:
             self._mark_ = 'Orth.x{:.4f}y{:.4f}'.format(Lx, Ly)
         self._freeze_self_()
-
-
-
-
-
-
-
-
-
-
 
     # def ___CLASSIFY_mpRfT2_CELL_of_origin_and_delta___(self, origin_and_delta):
     #     """"""

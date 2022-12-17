@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
-
-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.main import FrozenOnly
-
 
 
 class _3dCSCG_Edge_Element_CT(FrozenOnly):
@@ -54,7 +52,7 @@ class _3dCSCG_Edge_Element_CT(FrozenOnly):
             # this mesh element is not periodic to itself.
             corner_index = self._ee_._elements_.map[i].index(self._ee_.i)
             element_corner = ___[corner_index]
-            if from_element is None: # if we do not provide `from_element` we must have this
+            if from_element is None:  # if we do not provide `from_element` we must have this
                 assert element_corner == self._ee_.CHARACTERISTIC_corner_edge
 
             if corner_edge is not None:
@@ -70,7 +68,8 @@ class _3dCSCG_Edge_Element_CT(FrozenOnly):
         else:
             raise Exception()
 
-        # we will compute the physical position of this edge element from mesh element #`i` at its corner_edge `element_corner`
+        # we will compute the physical position of this edge element from mesh element
+        # #`i` at its corner_edge `element_corner`
         assert self._ee_.i == self._ee_._elements_.map[i][___.index(element_corner)], \
             f"node element #{self._ee_.i} is not at {element_corner} of mesh element #{i}."
 
@@ -78,10 +77,6 @@ class _3dCSCG_Edge_Element_CT(FrozenOnly):
         x, y, z = self._ee_._elements_._mesh_.elements[i].coordinate_transformation.mapping(*ep)
 
         return x, y, z
-
-
-
-
 
 
 if __name__ == '__main__':

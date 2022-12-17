@@ -67,7 +67,7 @@ class SpaMat_Customize(FrozenOnly):
 
                 # clear local rows for element #e --------------------- BELOW ---------------------------
                 elif key == 'clrs': # Clear Local Row
-                    #factores are rows
+                    # factores are rows
                     if not spspa.isspmatrix_lil(RETURN): RETURN = RETURN.tolil()
                     RETURN[factors, :] = 0
 
@@ -94,11 +94,10 @@ class SpaMat_Customize(FrozenOnly):
                 # Not Implemented --------------------------------------------- BELOW ----------------------------------
                 else:
                     raise NotImplementedError(f"Can not handle customization key={key}.")
-                #============================================================== ABOVE ==================================
+                # ============================================================= ABOVE ==================================
 
-
-        if not (spspa.isspmatrix_csc(RETURN) or spspa.isspmatrix_csr(RETURN)): RETURN = RETURN.tocsr()
-
+        if not (spspa.isspmatrix_csc(RETURN) or spspa.isspmatrix_csr(RETURN)):
+            RETURN = RETURN.tocsr()
 
         return RETURN
 
@@ -203,11 +202,10 @@ class SpaMat_Customize(FrozenOnly):
             assert len(ELEMENTS_HAVE_THE_TARGET) > 0, "We are trying to set value to an empty place at which the " \
                                                       "assembling will allocate no value."
 
-            the_element = ELEMENTS_HAVE_THE_TARGET[0] # we must find an element by here.
+            the_element = ELEMENTS_HAVE_THE_TARGET[0]  # we must find an element by here.
         else:
             the_element = None
         the_element = COMM.bcast(the_element, root=MASTER_RANK)
-
 
         if TBG is not None:
             if the_element in TBG:
@@ -236,7 +234,6 @@ class SpaMat_Customize(FrozenOnly):
                     self.___customizations___[e].append(('salv', ([i, j], 0)))
                 else:
                     self.___customizations___[e].append(('salv', ([i, j], v)))
-
 
         else: # These cores have no business with the setting the value, they only need to make the value to be zero.
             if TBG is None: # these cores have no business at all.
@@ -337,7 +334,8 @@ class SpaMat_Customize(FrozenOnly):
                             f" as <{AS}>.")
 
     def off_diagonally_identify_rows_according_to(
-        self, i, j, row_itp, col_itp, AS='local'):
+        self, i, j, row_itp, col_itp, AS='local'
+    ):
         """We will identify off-diagonal block, block[i][j], and set
         block[i][:][row_pds.dofs, :] = 0
         block[i][j][row_pds.dofs, col_pds.dofs] = 1

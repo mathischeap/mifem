@@ -64,8 +64,6 @@ class Closed_Unit_Cube_Dissipation1(incompressible_NavierStokes_Base):
         return self._bodyForce_
 
 
-
-
 # noinspection PyAbstractClass
 class Constant_X_direction_body_force(incompressible_NavierStokes_Base):
     """"""
@@ -121,7 +119,6 @@ class Constant_X_direction_body_force(incompressible_NavierStokes_Base):
         return self._bodyForce_
 
 
-
 # noinspection PyAbstractClass
 class Still(incompressible_NavierStokes_Base):
     """"""
@@ -129,7 +126,6 @@ class Still(incompressible_NavierStokes_Base):
         super(Still, self).__init__(es, 1)
         self._melt_self_()
         self._freeze_self_()
-
 
     @property
     def valid_time(self):

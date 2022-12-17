@@ -25,15 +25,15 @@ def random_mesh_and_space_of_total_load_around(total_load, **kwargs):
         elif total_load == 3:
             K, P = 3, 1
         elif total_load == 4:
-            K, P = [[2,2],[4,1]][random.randint(0,1)]
+            K, P = [[2, 2], [4, 1]][random.randint(0, 1)]
         elif total_load == 5:
-            K, P = [[3,2], [5,1]][random.randint(0,1)]
+            K, P = [[3, 2], [5, 1]][random.randint(0, 1)]
         elif total_load == 6:
-            K, P = [[3,2], [6,1], [4, 2]][random.randint(0,2)]
+            K, P = [[3, 2], [6, 1], [4, 2]][random.randint(0, 2)]
         elif total_load == 7:
-            K, P = [[3,2], [7,1], [4, 2]][random.randint(0,2)]
+            K, P = [[3, 2], [7, 1], [4, 2]][random.randint(0, 2)]
         elif total_load == 8:
-            K, P = [[3,2], [7,1], [4, 2], [3,3]][random.randint(0,3)]
+            K, P = [[3, 2], [7, 1], [4, 2], [3, 3]][random.randint(0, 3)]
         else:
             f0 = random.randint(int(total_load**0.5), int(3*total_load**0.5))
             f1 = int(total_load/f0)
@@ -46,8 +46,10 @@ def random_mesh_and_space_of_total_load_around(total_load, **kwargs):
                 P = f0
                 K = f1
 
-            if K < 1: K = 1
-            if P < 1: P = 1
+            if K < 1:
+                K = 1
+            if P < 1:
+                P = 1
     else:
         K = None
         P = None

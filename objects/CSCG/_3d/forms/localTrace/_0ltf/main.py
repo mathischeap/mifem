@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from objects.CSCG._3d.forms.localTrace.base.main import _3dCSCG_LocalTrace
 from objects.CSCG._3d.forms.localTrace._0ltf.discretize.main import _3dCSCG_0LocalTrace_Discretize
 from objects.CSCG._3d.forms.localTrace._0ltf.reconstruct import _3dCSCG_0LocalTrace_Reconstruct
@@ -16,11 +17,14 @@ import numpy as np
 from scipy.sparse import csr_matrix, bmat
 from components.assemblers import MatrixAssembler
 
+
 class _3dCSCG_0LocalTrace(_3dCSCG_LocalTrace):
     """"""
 
-    def __init__(self, mesh, space, hybrid=True, orientation='outer',
-        numbering_parameters='Naive', name='outer-oriented-0-local-trace-form'):
+    def __init__(
+            self, mesh, space, hybrid=True, orientation='outer',
+            numbering_parameters='Naive', name='outer-oriented-0-local-trace-form'
+    ):
         super().__init__(mesh, space, hybrid, orientation, numbering_parameters, name)
         self._k_ = 0
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_localtrace_0form')
@@ -44,7 +48,7 @@ class _3dCSCG_0LocalTrace(_3dCSCG_LocalTrace):
         assert func_body.ndim == self.ndim == 3
 
         if func_body.__class__.__name__ == '_3dCSCG_ScalarField':
-            assert func_body.ftype in ('standard','boundary-wise', 'trace-element-wise'), \
+            assert func_body.ftype in ('standard', 'boundary-wise', 'trace-element-wise'), \
                 f"3dCSCG 0ltf BC does not accept func _3dCSCG_ScalarField of ftype {func_body.ftype}."
         else:
             raise Exception(f"3dCSCG 0ltf BC does not accept func {func_body.__class__}")
@@ -101,7 +105,7 @@ class _3dCSCG_0LocalTrace(_3dCSCG_LocalTrace):
                 M = dict()
                 for j, side in zip(tes, 'NSWEBF'):
                     te = self.mesh.trace.elements[j]
-                    R = RSi[side] # array, if sparse, do toarray()
+                    R = RSi[side]  # array, if sparse, do toarray()
 
                     if side in 'NS':
                         g = te.coordinate_transformation.metric(xNS, yNS)
@@ -225,6 +229,7 @@ class _3dCSCG_0LocalTrace(_3dCSCG_LocalTrace):
 
         return MD
 
+
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/_3d/forms/localTrace/_0ltf/main.py
 
@@ -239,7 +244,7 @@ if __name__ == '__main__':
     tf0 = FC('0-t', hybrid=False)
 
     def p(t, x, y, z): return np.sin(2*np.pi*x) + t + 0 * y * z
-    scalar = FC('scalar', {'North':p, 'South': p, 'West':p, 'East':p, 'Back':p, 'Front':p})
+    scalar = FC('scalar', {'North': p, 'South': p, 'West': p, 'East': p, 'Back': p, 'Front': p})
     # scalar = FC('scalar', p)
 
     Tsf, Ttf = space.topological_connection(tf0, sf0, ltf0)

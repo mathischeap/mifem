@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 8/28/2022 12:24 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 
 import numpy as np
 from components.freeze.main import FrozenClass
@@ -87,9 +84,9 @@ class CSCG_DiscreteField(FrozenClass):
         self._vdim_ = __ck
 
         self._coordinates_ = coordinates
-        self._values_ =values
+        self._values_ = values
 
-        if structured: # the data are on a structured grid.
+        if structured:  # the data are on a structured grid.
             if grid is not None:
                 if not isinstance(grid, dict):
                     _LPD_ = dict()
@@ -101,7 +98,7 @@ class CSCG_DiscreteField(FrozenClass):
                     lsp = grid[rn]
 
                     for i, _ in enumerate(lsp):
-                        assert np.ndim(_) == 1 and np.min(_) >=0 and np.max(_) <= 1, \
+                        assert np.ndim(_) == 1 and np.min(_) >= 0 and np.max(_) <= 1, \
                             f"grid[{rn}][{i}] wrong, must be 1d and in [-1,1]."
                         if len(_) > 1:
                             assert np.all(np.diff(_)) > 0, \
@@ -143,6 +140,7 @@ class CSCG_DiscreteField(FrozenClass):
         """the dimension of the value. Then vdim == 1, it is a scalar; when vdim == ndim, it
         is a vector; and so on."""
         return self._vdim_
+
     @property
     def name(self):
         return self.standard_properties.name
@@ -184,8 +182,3 @@ class CSCG_DiscreteField(FrozenClass):
     def portion(self):
         """A portion of the data."""
         return self._portion_
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

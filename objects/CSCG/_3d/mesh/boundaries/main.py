@@ -16,13 +16,15 @@ when I first code it, I did not consider periodic boundaries. So ...
 """
 
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from root.config.main import *
 from components.freeze.main import FrozenOnly
 
 from objects.CSCG._3d.mesh.boundaries.boundary.main import _3dCSCG_Mesh_Boundary
 from objects.CSCG._3d.mesh.boundaries.visualize import _3dCSCG_MeshBoundaries_VIS
+
 
 class _3dCSCG_Mesh_Boundaries(FrozenOnly):
     """"""
@@ -56,9 +58,12 @@ class _3dCSCG_Mesh_Boundaries(FrozenOnly):
                 target = elements.map[i][j]
                 if isinstance(target, str):
                     if target in bns:
-                        if target not in names: names.append(target)
-                        if target not in Res: Res[target] = list()
-                        if target not in Rte: Rte[target] = list()
+                        if target not in names:
+                            names.append(target)
+                        if target not in Res:
+                            Res[target] = list()
+                        if target not in Rte:
+                            Rte[target] = list()
                         Res[target].append(str(i)+side_names[j])
                         Rte[target].append(t_elements.map[i][j])
                     else:
@@ -79,8 +84,10 @@ class _3dCSCG_Mesh_Boundaries(FrozenOnly):
         # ...
 
         for na in names:
-            if na not in Res: Res[na] = list()
-            if na not in Rte: Rte[na] = list()
+            if na not in Res:
+                Res[na] = list()
+            if na not in Rte:
+                Rte[na] = list()
 
         # note that self._names_ != mesh.domain.boundaries.names unless the domain has no periodic boundaries.
         self._names_ = names
@@ -170,7 +177,8 @@ class _3dCSCG_Mesh_Boundaries(FrozenOnly):
         If the domain is not periodic, then sum(range_of_region_sides) must cover the whale
         domain boundary!
         """
-        if self._range_of_region_sides_ is not None: return self._range_of_region_sides_
+        if self._range_of_region_sides_ is not None:
+            return self._range_of_region_sides_
 
         periodic_boundaries = self._mesh_.domain._domain_input_.periodic_boundaries
         BRS = self._mesh_.domain._domain_input_.boundary_region_sides
@@ -199,10 +207,11 @@ class _3dCSCG_Mesh_Boundaries(FrozenOnly):
     def __len__(self):
         return len(self.names)
 
+
 if __name__ == "__main__":
     # mpiexec -n 6 python _3dCSCG\mesh\boundaries\main.py
     from objects.CSCG._3d.master import MeshGenerator
-    mesh = MeshGenerator('bridge_arch_cracked')([4,2,[1,2,4,2,1]])
+    mesh = MeshGenerator('bridge_arch_cracked')([4, 2, [1, 2, 4, 2, 1]])
     # mesh = MeshGenerator('crazy', bounds=((0,3),(0,3),(0,3)))([2,1,1])
     # mesh.boundaries.___PRIVATE_parse_boundaries___()
     # print(RANK, mesh.boundaries.range_of_element_sides)

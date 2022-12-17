@@ -8,10 +8,7 @@ INTRO
          TU Delft, Delft, the Netherlands
 
 """
-
-
 from components.freeze.base import FrozenOnly
-
 
 
 class _2dCSCG_MeshElements_Whether(FrozenOnly):

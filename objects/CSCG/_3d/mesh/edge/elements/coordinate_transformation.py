@@ -1,15 +1,9 @@
 # -*- coding: utf-8 -*-
-
-
-
-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.main import FrozenOnly
-
-
-
 
 
 class _3dCSCG_Edge_Elements_CT(FrozenOnly):
@@ -18,10 +12,6 @@ class _3dCSCG_Edge_Elements_CT(FrozenOnly):
         """"""
         self._elements_ = elements
         self._freeze_self_()
-
-
-
-
 
 
 if __name__ == '__main__':

@@ -7,6 +7,7 @@
 from components.freeze.main import FrozenOnly
 import numpy as np
 
+
 class _3dCSCG_Space_LocalGathering(FrozenOnly):
     """"""
 

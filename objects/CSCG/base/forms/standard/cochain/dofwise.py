@@ -3,8 +3,6 @@ from components.freeze.base import FrozenOnly
 import numpy as np
 from root.config.main import COMM, RANK, MASTER_RANK
 
-
-
 class CSCG_SF_Cochain_DofWise(FrozenOnly):
     """"""
     def __init__(self, cochain):

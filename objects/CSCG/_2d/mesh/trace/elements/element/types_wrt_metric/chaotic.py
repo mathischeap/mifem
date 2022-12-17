@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
-
-
-
-
 from objects.CSCG._2d.mesh.trace.elements.element.types_wrt_metric.base import TraceElementTypeWr2MetricBase
-
 
 
 class ChaoticTraceElement(TraceElementTypeWr2MetricBase):

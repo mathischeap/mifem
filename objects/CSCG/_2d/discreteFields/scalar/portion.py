@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from objects.CSCG._2d.discreteFields.base.portion import _2dCSCG_DF_PortionBase
 import numpy as np
 
@@ -19,7 +20,6 @@ class _2dCSCG_DF_ScalarPortion(_2dCSCG_DF_PortionBase):
         """"""
         super(_2dCSCG_DF_ScalarPortion, self).__init__(df)
         self._freeze_self_()
-
 
     def xy_range(self, x, y):
         """Get a  portion through x- and y-ranges. For example x = (x0, x1), y=(y0, y1), the
@@ -70,15 +70,13 @@ class _2dCSCG_DF_ScalarPortion(_2dCSCG_DF_PortionBase):
         return range_df
 
 
-
-
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/CSCG/_2d/discreteFields/scalar/portion.py
     from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
-    mesh = MeshGenerator('crazy', c=0.0, bounds=([-1,1], [-1,1]))([5,5])
+    mesh = MeshGenerator('crazy', c=0.0, bounds=([-1, 1], [-1, 1]))([5, 5])
     # mesh = MeshGenerator('chp1',)([2,2])
-    space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3)])
+    space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 3)])
     FC = FormCaller(mesh, space)
     ES = ExactSolutionSelector(mesh)('sL:sincos1')
     f0 = FC('0-f-o', hybrid=False)
@@ -87,7 +85,7 @@ if __name__ == "__main__":
     f0.CF.current_time = 0
     f0.discretize()
 
-    x = np.linspace(-1,1,200)
+    x = np.linspace(-1, 1, 200)
 
     ds = f0.reconstruct.discrete_scalar([x, x])
 

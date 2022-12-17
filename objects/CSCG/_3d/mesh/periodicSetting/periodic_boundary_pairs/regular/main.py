@@ -19,8 +19,8 @@ class _3dCSCG_Regular_PBP(FrozenOnly):
         self._baseMesh_ = PDS._baseMesh_
         self._boundaryPair_ = thePair
         sideOne, sideTwo = thePair.split('=')
-        regionSidesOne =  self._baseMesh_.domain.domain_input.boundary_region_sides[sideOne]
-        regionSidesTwo =  self._baseMesh_.domain.domain_input.boundary_region_sides[sideTwo]
+        regionSidesOne = self._baseMesh_.domain.domain_input.boundary_region_sides[sideOne]
+        regionSidesTwo = self._baseMesh_.domain.domain_input.boundary_region_sides[sideTwo]
         self.___CHECK_REGION_SIDE_PAIRS___(regionSidesOne, regionSidesTwo)
         self._freeze_self_()
 

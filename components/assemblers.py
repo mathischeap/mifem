@@ -6,10 +6,12 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from components.freeze.main import FrozenOnly
 import numpy as np
 from scipy.sparse import csc_matrix, csr_matrix
+
 
 def ___Pr_gathering_matrix_checker___(gathering, indices):
     """
@@ -42,6 +44,7 @@ def ___Pr_gathering_matrix_checker___(gathering, indices):
     assert len(SET) == num_dofs, f"gathering matrix wrong, it misses some numbers."
 
     return num_dofs
+
 
 class VectorAssembler(FrozenOnly):
     """A local assembler. It does not assemble data across cores.
@@ -110,6 +113,7 @@ class VectorAssembler(FrozenOnly):
 
         else:
             raise NotImplementedError(f"scheme = {scheme} is not implemented for routine: basic.")
+
 
 # noinspection PyShadowingBuiltins
 class MatrixAssembler(FrozenOnly):
@@ -200,6 +204,7 @@ class MatrixAssembler(FrozenOnly):
 
         else:
             raise NotImplementedError(f"Not implemented for assembler scheme: {scheme}.")
+
 
 if __name__ == '__main__':
     # mpiexec -n 1 python components/assemblers.py

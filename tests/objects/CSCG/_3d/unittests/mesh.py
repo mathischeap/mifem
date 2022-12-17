@@ -3,7 +3,8 @@
 Mesh related unittests.
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path: 
+    sys.path.append('./')
 from root.config.main import *
 from components.quadrature import Quadrature
 from components.exceptions import ThreeDimensionalTransfiniteInterpolationError
@@ -20,8 +21,8 @@ def test_Mesh_NO0_element_division_and_numbering_quality():
         print("~~~ [test_Mesh_NO0_element_division_and_numbering_quality] ...... ", flush=True)
 
     try:
-        MESH = MeshGenerator('LDC', l=1, w=1.2, h=1.5)([f'Lobatto:{13}', f'Lobatto:{14}', f'Lobatto:{15}'], EDM='debug')
-        mesh = MeshGenerator('LDC', l=1, w=1.2, h=1.5)([f'Lobatto:{13}', f'Lobatto:{14}', f'Lobatto:{15}'])
+        MESH = MeshGenerator('LDC', L=1, w=1.2, h=1.5)([f'Lobatto:{13}', f'Lobatto:{14}', f'Lobatto:{15}'], EDM='debug')
+        mesh = MeshGenerator('LDC', L=1, w=1.2, h=1.5)([f'Lobatto:{13}', f'Lobatto:{14}', f'Lobatto:{15}'])
 
         if 6 <= SIZE <= 24:
             A = MESH.___PRIVATE_element_division_and_numbering_quality___()[0]
@@ -33,9 +34,9 @@ def test_Mesh_NO0_element_division_and_numbering_quality():
         if RANK == MASTER_RANK:
             print("   = Partial test SKIPPED.", flush=True)
 
-    MESH = MeshGenerator('bridge_arch_cracked',)([3,2,4], EDM='debug')
+    MESH = MeshGenerator('bridge_arch_cracked',)([3, 2, 4], EDM='debug')
     if SIZE >= 4:
-        mesh = MeshGenerator('bridge_arch_cracked',)([3,2,4], EDM='SWV0')
+        mesh = MeshGenerator('bridge_arch_cracked',)([3, 2, 4], EDM='SWV0')
     else:
         mesh = MeshGenerator('bridge_arch_cracked', )([3, 2, 4])
     A = MESH.___PRIVATE_element_division_and_numbering_quality___()[0]
@@ -114,12 +115,12 @@ def test_Mesh_NO2_trace_elements():
                  6: [22, 23, 19, 18, 13, 12], 7: [23, 22, 21, 20, 15, 14]}
     for i in trace_elements.map:
         assert trace_elements.map[i] == benchmark[i]
-    benchmark = {0 : ('0N', '1S') ,
-                 1 : ('0S', '1N') ,
-                 2 : ('0W', '0E') ,
-                 3 : ('0B', '0F') ,
-                 4 : ('1W', '1E') ,
-                 5 : ('1B', '1F')}
+    benchmark = {0: ('0N', '1S'),
+                 1: ('0S', '1N'),
+                 2: ('0W', '0E'),
+                 3: ('0B', '0F'),
+                 4: ('1W', '1E'),
+                 5: ('1B', '1F')}
     mesh = MeshGenerator('crazy_periodic')([2, 1, 1], EDM='debug')
     trace_elements = mesh.trace.elements
     for i in trace_elements:
@@ -139,16 +140,16 @@ def test_Mesh_NO2a_trace_elements_CT():
 
     if RANK == MASTER_RANK:
         while 1:
-            el1 = random.randint(2,5)
-            el2 = random.randint(2,5)
-            el3 = random.randint(2,5)
-            if el1 * el2 * el3 < 100: # do not test too big mesh
+            el1 = random.randint(2, 5)
+            el2 = random.randint(2, 5)
+            el3 = random.randint(2, 5)
+            if el1 * el2 * el3 < 100:  # do not test too big mesh
                 break
         c = random.uniform(0.0, 0.3)
         if c < 0.15:
             c = 0
-        _i_ = random.randint(3,6)
-        _j_ = random.randint(3,6)
+        _i_ = random.randint(3, 6)
+        _j_ = random.randint(3, 6)
     else:
         el1, el2, el3, c, _i_, _j_ = [None for _ in range(6)]
     el1, el2, el3, c = COMM.bcast([el1, el2, el3, c], root=MASTER_RANK)
@@ -240,7 +241,7 @@ def test_Mesh_NO2a_trace_elements_CT():
     MM = COMM.gather(MM, root=MASTER_RANK)
     JM = COMM.gather(JM, root=MASTER_RANK)
 
-    if RANK == MASTER_RANK: #to check we get same results in different cores.
+    if RANK == MASTER_RANK:  # to check we get same results in different cores.
         _POS_ = dict()
         for PI in POSITION:
             for i in PI:
@@ -280,10 +281,10 @@ def test_Mesh_NO2a_trace_elements_CT():
             _00_01_, _10_11_ = B
             b00, b01 = _00_01_
             b10, b11 = _10_11_
-            np.testing.assert_almost_equal( np.sum(np.abs(a00-b00)), 0)
-            np.testing.assert_almost_equal( np.sum(np.abs(a01-b01)), 0)
-            np.testing.assert_almost_equal( np.sum(np.abs(a10-b10)), 0)
-            np.testing.assert_almost_equal( np.sum(np.abs(a11-b11)), 0)
+            np.testing.assert_almost_equal(np.sum(np.abs(a00-b00)), 0)
+            np.testing.assert_almost_equal(np.sum(np.abs(a01-b01)), 0)
+            np.testing.assert_almost_equal(np.sum(np.abs(a10-b10)), 0)
+            np.testing.assert_almost_equal(np.sum(np.abs(a11-b11)), 0)
 
             # noinspection PyTupleAssignmentBalance
             A, B = _JM_[i]
@@ -295,14 +296,14 @@ def test_Mesh_NO2a_trace_elements_CT():
             b00, b01 = _0_
             b10, b11 = _1_
             b20, b21 = _2_
-            np.testing.assert_almost_equal( np.sum(np.abs(a00-b00)), 0)
-            np.testing.assert_almost_equal( np.sum(np.abs(a01-b01)), 0)
-            np.testing.assert_almost_equal( np.sum(np.abs(a10-b10)), 0)
-            np.testing.assert_almost_equal( np.sum(np.abs(a11-b11)), 0)
-            np.testing.assert_almost_equal( np.sum(np.abs(a20-b20)), 0)
-            np.testing.assert_almost_equal( np.sum(np.abs(a21-b21)), 0)
+            np.testing.assert_almost_equal(np.sum(np.abs(a00-b00)), 0)
+            np.testing.assert_almost_equal(np.sum(np.abs(a01-b01)), 0)
+            np.testing.assert_almost_equal(np.sum(np.abs(a10-b10)), 0)
+            np.testing.assert_almost_equal(np.sum(np.abs(a11-b11)), 0)
+            np.testing.assert_almost_equal(np.sum(np.abs(a20-b20)), 0)
+            np.testing.assert_almost_equal(np.sum(np.abs(a21-b21)), 0)
 
-    if RANK == SECRETARY_RANK: #to check we get same results in different cores.
+    if RANK == SECRETARY_RANK:  # to check we get same results in different cores.
         _MAP_ = dict()
         for MI in MAPPING:
             for i in MI:
@@ -317,9 +318,9 @@ def test_Mesh_NO2a_trace_elements_CT():
             A, B = _MAP_[i]
             x, y, z = A
             a, b, c = B
-            np.testing.assert_almost_equal( np.sum(np.abs(x-a)), 0)
-            np.testing.assert_almost_equal( np.sum(np.abs(y-b)), 0)
-            np.testing.assert_almost_equal( np.sum(np.abs(z-c)), 0)
+            np.testing.assert_almost_equal(np.sum(np.abs(x-a)), 0)
+            np.testing.assert_almost_equal(np.sum(np.abs(y-b)), 0)
+            np.testing.assert_almost_equal(np.sum(np.abs(z-c)), 0)
 
         _MET_ = dict()
         for MI in METRIC:
@@ -378,9 +379,9 @@ def test_Mesh_NO3_elements_CT():
         print(">>> {test_Mesh_NO3_elements_CT} ...... ", flush=True)
 
     if RANK == MASTER_RANK:
-        el1 = random.randint(1,4)
-        el2 = random.randint(1,3)
-        el3 = random.randint(2,3)
+        el1 = random.randint(1, 4)
+        el2 = random.randint(1, 3)
+        el3 = random.randint(2, 3)
         c = random.uniform(0, 0.3)
         if c < 0.15:
             c = 0
@@ -391,15 +392,15 @@ def test_Mesh_NO3_elements_CT():
     m.___PRIVATE_generate_element_global_numbering___()
 
     if RANK == MASTER_RANK:
-        r = np.linspace(random.uniform(-1, -0.9), random.uniform(0.95, 0.99), random.randint(2,4))
-        s = np.linspace(random.uniform(-1, -0.8), random.uniform(0.85, 0.9), random.randint(1,3))
-        t = np.linspace(random.uniform(-1, -0.85), random.uniform(0.88, 0.93), random.randint(1,5))
+        r = np.linspace(random.uniform(-1, -0.9), random.uniform(0.95, 0.99), random.randint(2, 4))
+        s = np.linspace(random.uniform(-1, -0.8), random.uniform(0.85, 0.9), random.randint(1, 3))
+        t = np.linspace(random.uniform(-1, -0.85), random.uniform(0.88, 0.93), random.randint(1, 5))
     else:
         r, s, t = None, None, None
 
     r, s, t = COMM.bcast([r, s, t], root=MASTER_RANK)
 
-    r,s,t = np.meshgrid(r,s,t, indexing='ij')
+    r, s, t = np.meshgrid(r, s, t, indexing='ij')
 
     m.___TEST_MODE___ = True
     m.___DEPRECATED_ct___.evaluated_at(r, s, t)
@@ -438,7 +439,7 @@ def test_Mesh_NO3_elements_CT():
     for i in m.elements:
         ei = m.elements[i]
 
-        mapping_i = ei.coordinate_transformation.mapping(r,s,t)
+        mapping_i = ei.coordinate_transformation.mapping(r, s, t)
 
         X = ei.coordinate_transformation.X(r, s, t)
         Y = ei.coordinate_transformation.Y(r, s, t)
@@ -452,7 +453,7 @@ def test_Mesh_NO3_elements_CT():
         np.testing.assert_array_almost_equal(mapping[1][i], mapping_i[1])
         np.testing.assert_array_almost_equal(mapping[2][i], mapping_i[2])
 
-        JM_i = ei.coordinate_transformation.Jacobian_matrix(r,s,t)
+        JM_i = ei.coordinate_transformation.Jacobian_matrix(r, s, t)
 
         np.testing.assert_array_almost_equal(JM[0][0][i], JM_i[0][0])
         np.testing.assert_array_almost_equal(JM[0][1][i], JM_i[0][1])
@@ -464,15 +465,15 @@ def test_Mesh_NO3_elements_CT():
         np.testing.assert_array_almost_equal(JM[2][1][i], JM_i[2][1])
         np.testing.assert_array_almost_equal(JM[2][2][i], JM_i[2][2])
 
-        J00 = ei.coordinate_transformation.J00(r,s,t)
-        J01 = ei.coordinate_transformation.J01(r,s,t)
-        J02 = ei.coordinate_transformation.J02(r,s,t)
-        J10 = ei.coordinate_transformation.J10(r,s,t)
-        J11 = ei.coordinate_transformation.J11(r,s,t)
-        J12 = ei.coordinate_transformation.J12(r,s,t)
-        J20 = ei.coordinate_transformation.J20(r,s,t)
-        J21 = ei.coordinate_transformation.J21(r,s,t)
-        J22 = ei.coordinate_transformation.J22(r,s,t)
+        J00 = ei.coordinate_transformation.J00(r, s, t)
+        J01 = ei.coordinate_transformation.J01(r, s, t)
+        J02 = ei.coordinate_transformation.J02(r, s, t)
+        J10 = ei.coordinate_transformation.J10(r, s, t)
+        J11 = ei.coordinate_transformation.J11(r, s, t)
+        J12 = ei.coordinate_transformation.J12(r, s, t)
+        J20 = ei.coordinate_transformation.J20(r, s, t)
+        J21 = ei.coordinate_transformation.J21(r, s, t)
+        J22 = ei.coordinate_transformation.J22(r, s, t)
 
         np.testing.assert_array_almost_equal(JM[0][0][i], J00)
         np.testing.assert_array_almost_equal(JM[0][1][i], J01)
@@ -484,9 +485,9 @@ def test_Mesh_NO3_elements_CT():
         np.testing.assert_array_almost_equal(JM[2][1][i], J21)
         np.testing.assert_array_almost_equal(JM[2][2][i], J22)
 
-        J0 = ei.coordinate_transformation.J0_(r,s,t)
-        J1 = ei.coordinate_transformation.J1_(r,s,t)
-        J2 = ei.coordinate_transformation.J2_(r,s,t)
+        J0 = ei.coordinate_transformation.J0_(r, s, t)
+        J1 = ei.coordinate_transformation.J1_(r, s, t)
+        J2 = ei.coordinate_transformation.J2_(r, s, t)
         np.testing.assert_array_almost_equal(J0[0], J00)
         np.testing.assert_array_almost_equal(J0[1], J01)
         np.testing.assert_array_almost_equal(J0[2], J02)
@@ -497,9 +498,9 @@ def test_Mesh_NO3_elements_CT():
         np.testing.assert_array_almost_equal(J2[1], J21)
         np.testing.assert_array_almost_equal(J2[2], J22)
 
-        J_i = ei.coordinate_transformation.Jacobian(r,s,t)
-        iJ_i = ei.coordinate_transformation.inverse_Jacobian(r,s,t)
-        M_i = ei.coordinate_transformation.metric(r,s,t)
+        J_i = ei.coordinate_transformation.Jacobian(r, s, t)
+        iJ_i = ei.coordinate_transformation.inverse_Jacobian(r, s, t)
+        M_i = ei.coordinate_transformation.metric(r, s, t)
 
 
 
@@ -510,7 +511,7 @@ def test_Mesh_NO3_elements_CT():
 
 
         # test iJ @ J = I _________________________________________________
-        iJM_i = ei.coordinate_transformation.inverse_Jacobian_matrix(r,s,t)
+        iJM_i = ei.coordinate_transformation.inverse_Jacobian_matrix(r, s, t)
         iJ0, iJ1, iJ2 = iJM_i
         iJ00, iJ01, iJ02 = iJ0
         iJ10, iJ11, iJ12 = iJ1
@@ -539,7 +540,7 @@ def test_Mesh_NO3_elements_CT():
         np.testing.assert_array_almost_equal(iJJ20, 0)
         np.testing.assert_array_almost_equal(iJJ21, 0)
         np.testing.assert_array_almost_equal(iJJ22, 1)
-        #---------------------------------------------------------------
+        # --------------------------------------------------------------
 
         np.testing.assert_array_almost_equal(iJM[0][0][i], iJM_i[0][0])
         np.testing.assert_array_almost_equal(iJM[0][1][i], iJM_i[0][1])
@@ -551,8 +552,8 @@ def test_Mesh_NO3_elements_CT():
         np.testing.assert_array_almost_equal(iJM[2][1][i], iJM_i[2][1])
         np.testing.assert_array_almost_equal(iJM[2][2][i], iJM_i[2][2])
 
-        MM_i = ei.coordinate_transformation.metric_matrix(r,s,t)
-        iMM_i = ei.coordinate_transformation.inverse_metric_matrix(r,s,t)
+        MM_i = ei.coordinate_transformation.metric_matrix(r, s, t)
+        iMM_i = ei.coordinate_transformation.inverse_metric_matrix(r, s, t)
         np.testing.assert_array_almost_equal(MM[0][0][i], MM_i[0][0])
         np.testing.assert_array_almost_equal(MM[0][1][i], MM_i[0][1])
         np.testing.assert_array_almost_equal(MM[0][2][i], MM_i[0][2])
@@ -662,7 +663,7 @@ def test_Mesh_NO3_elements_CT():
     for i in m.elements:
         ei = m.elements[i]
 
-        mapping_i = ei.coordinate_transformation.mapping(r,s,t)
+        mapping_i = ei.coordinate_transformation.mapping(r, s, t)
         np.testing.assert_array_almost_equal(_mapping[i][0], mapping_i[0])
         np.testing.assert_array_almost_equal(_mapping[i][1], mapping_i[1])
         np.testing.assert_array_almost_equal(_mapping[i][2], mapping_i[2])
@@ -671,15 +672,15 @@ def test_Mesh_NO3_elements_CT():
         np.testing.assert_array_almost_equal(_Z[i], mapping_i[2])
 
 
-        J00 = ei.coordinate_transformation.J00(r,s,t)
-        J01 = ei.coordinate_transformation.J01(r,s,t)
-        J02 = ei.coordinate_transformation.J02(r,s,t)
-        J10 = ei.coordinate_transformation.J10(r,s,t)
-        J11 = ei.coordinate_transformation.J11(r,s,t)
-        J12 = ei.coordinate_transformation.J12(r,s,t)
-        J20 = ei.coordinate_transformation.J20(r,s,t)
-        J21 = ei.coordinate_transformation.J21(r,s,t)
-        J22 = ei.coordinate_transformation.J22(r,s,t)
+        J00 = ei.coordinate_transformation.J00(r, s, t)
+        J01 = ei.coordinate_transformation.J01(r, s, t)
+        J02 = ei.coordinate_transformation.J02(r, s, t)
+        J10 = ei.coordinate_transformation.J10(r, s, t)
+        J11 = ei.coordinate_transformation.J11(r, s, t)
+        J12 = ei.coordinate_transformation.J12(r, s, t)
+        J20 = ei.coordinate_transformation.J20(r, s, t)
+        J21 = ei.coordinate_transformation.J21(r, s, t)
+        J22 = ei.coordinate_transformation.J22(r, s, t)
         np.testing.assert_array_almost_equal(_JM[i][0][0], J00)
         np.testing.assert_array_almost_equal(_JM[i][0][1], J01)
         np.testing.assert_array_almost_equal(_JM[i][0][2], J02)
@@ -700,16 +701,16 @@ def test_Mesh_NO3_elements_CT():
         np.testing.assert_array_almost_equal(_J21[i], J21)
         np.testing.assert_array_almost_equal(_J22[i], J22)
 
-        J_i = ei.coordinate_transformation.Jacobian(r,s,t)
-        iJ_i = ei.coordinate_transformation.inverse_Jacobian(r,s,t)
-        M_i = ei.coordinate_transformation.metric(r,s,t)
+        J_i = ei.coordinate_transformation.Jacobian(r, s, t)
+        iJ_i = ei.coordinate_transformation.inverse_Jacobian(r, s, t)
+        M_i = ei.coordinate_transformation.metric(r, s, t)
         np.testing.assert_array_almost_equal(_J[i], J_i)
         np.testing.assert_array_almost_equal(_M[i], M_i)
         np.testing.assert_array_almost_equal(_iJ[i], iJ_i)
 
-        iJM_i = ei.coordinate_transformation.inverse_Jacobian_matrix(r,s,t)
-        MM_i = ei.coordinate_transformation.metric_matrix(r,s,t)
-        iMM_i = ei.coordinate_transformation.inverse_metric_matrix(r,s,t)
+        iJM_i = ei.coordinate_transformation.inverse_Jacobian_matrix(r, s, t)
+        MM_i = ei.coordinate_transformation.metric_matrix(r, s, t)
+        iMM_i = ei.coordinate_transformation.inverse_metric_matrix(r, s, t)
 
         np.testing.assert_array_almost_equal(_iJM[i][0][0], iJM_i[0][0])
         np.testing.assert_array_almost_equal(_iJM[i][0][1], iJM_i[0][1])
@@ -752,8 +753,8 @@ def test_Mesh_NO4_elements_CT_QUAD():
     mesh_2 = MeshGenerator('crazy_periodic')([2, 3, 4], EDM='debug')
 
     if RANK == MASTER_RANK:
-        ii, jj, kk = random.randint(1,5), random.randint(2,4), random.randint(2,3)
-        quad_type = ['Gauss', 'Lobatto'][random.randint(0,1)]
+        ii, jj, kk = random.randint(1, 5), random.randint(2, 4), random.randint(2, 3)
+        quad_type = ['Gauss', 'Lobatto'][random.randint(0, 1)]
     else:
         ii, jj, kk = None, None, None
         quad_type = None
@@ -941,11 +942,11 @@ def test_Mesh_NO5_mesh_trace_topology():
 
     MID = list(DomainInputAllocator.___defined_DI___().keys())
     if RANK == MASTER_RANK:
-        __ = random.sample(range(0,len(MID)), 2)
+        __ = random.sample(range(0, len(MID)), 2)
         meshes = [MID[i] for i in __]
-        II = random.randint(3,4) # [II, JJ, KK] element layout
-        JJ = random.randint(2,5) # [II, JJ, KK] element layout
-        KK = random.randint(1,4) # [II, JJ, KK] element layout
+        II = random.randint(3, 4)  # [II, JJ, KK] element layout
+        JJ = random.randint(2, 5)  # [II, JJ, KK] element layout
+        KK = random.randint(1, 4)  # [II, JJ, KK] element layout
     else:
         meshes = None
         II, JJ, KK = None, None, None
@@ -996,7 +997,7 @@ def test_Mesh_NO5_mesh_trace_topology():
             sd = list()
             for SDi in SD:
                 sd.extend(SDi)
-            sd_SET =set(sd)
+            sd_SET = set(sd)
             for i in sd_SET:
                 assert sd.count(i) % 2 == 0
 
@@ -1012,9 +1013,9 @@ def test_Mesh_NO5a_mesh_trace_CT():
 
 
     if RANK == MASTER_RANK:
-        el1 = random.randint(1,4)
-        el2 = random.randint(1,3)
-        el3 = random.randint(2,3)
+        el1 = random.randint(1, 4)
+        el2 = random.randint(1, 3)
+        el3 = random.randint(2, 3)
         c = random.uniform(0., 0.25)
         if c < 0.1:
             c = 0
@@ -1025,9 +1026,9 @@ def test_Mesh_NO5a_mesh_trace_CT():
 
 
     if RANK == MASTER_RANK:
-        el1 = random.randint(1,4)
-        el2 = random.randint(1,3)
-        el3 = random.randint(2,3)
+        el1 = random.randint(1, 4)
+        el2 = random.randint(1, 3)
+        el3 = random.randint(2, 3)
         c = random.uniform(0., 0.25)
         if c < 0.1:
             c = 0
@@ -1040,9 +1041,9 @@ def test_Mesh_NO5a_mesh_trace_CT():
 
         tes = M.trace.elements
 
-        xi = np.random.rand(3,3)
-        et = np.random.rand(3,3)
-        sg = np.random.rand(3,3)
+        xi = np.random.rand(3, 3)
+        et = np.random.rand(3, 3)
+        sg = np.random.rand(3, 3)
 
         JM = tes.coordinate_transformation.Jacobian_matrix(xi, et, sg)
         iJM = tes.coordinate_transformation.inverse_Jacobian_matrix(xi, et, sg)
@@ -1098,9 +1099,8 @@ def test_Mesh_NO5a_mesh_trace_CT():
             np.testing.assert_almost_equal(UNVi[1], unv[1])
             np.testing.assert_almost_equal(UNVi[2], unv[2])
 
-
-
     return 1
+
 
 def test_Mesh_NO6_transfinite():
     """Unittests for the mesh."""
@@ -1114,13 +1114,13 @@ def test_Mesh_NO6_transfinite():
 
     try:
 
-        mesh = MeshGenerator('psc')([4,2,2])
+        mesh = MeshGenerator('psc')([4, 2, 2])
 
-        space = SpaceInvoker('polynomials')([('Lobatto',4), ('Lobatto',4), ('Lobatto',4)])
+        space = SpaceInvoker('polynomials')([('Lobatto', 4), ('Lobatto', 4), ('Lobatto', 4)])
         FC = FormCaller(mesh, space)
 
         scalar = FC('scalar', p)
-        vector = FC('vector', (u,v,w))
+        vector = FC('vector', (u, v, w))
 
         f0 = FC('0-f', hybrid=False)
         f1 = FC('1-f', hybrid=False)
@@ -1151,6 +1151,7 @@ def test_Mesh_NO6_transfinite():
 
     return 1
 
+
 def test_Mesh_NO7_boundaries():
     """Unittests for the mesh."""
     if RANK == MASTER_RANK:
@@ -1164,11 +1165,13 @@ def test_Mesh_NO7_boundaries():
     DBN = DB.names
     MBN = MB.names
 
-    # below, we test that at domain.boundaries, the periodic boundaries are included while in mesh.boundaries they are not.
+    # below, we test that at domain.boundaries, the periodic boundaries are included while
+    # in mesh.boundaries they are not.
     assert DBN == ('North', 'South', 'West', 'East', 'Back', 'Front')
     assert MBN == tuple()
 
     return 1
+
 
 def test_Mesh_NO8_Mesh_SubGeometry_perpendicular_slice_object():
     """Unittests for the mesh.
@@ -1192,7 +1195,7 @@ def test_Mesh_NO8_Mesh_SubGeometry_perpendicular_slice_object():
     def w(t, x, y, z): return np.sin(np.pi*x) + np.cos(np.pi*y) * np.cos(np.pi*z-0.125)**2 + t
     def p(t, x, y, z): return x + np.sin(2*np.pi*y)*np.sin(2*np.pi*z) + t/2
     scalar = FC('scalar', p)
-    vector = FC('vector', (u,v,w))
+    vector = FC('vector', (u, v, w))
     f0 = FC('0-f', hybrid=False)
     f1 = FC('1-f', hybrid=False)
     f2 = FC('2-f', hybrid=False)
@@ -1231,9 +1234,6 @@ def test_Mesh_NO8_Mesh_SubGeometry_perpendicular_slice_object():
     return 1
 
 
-
-
-
 def test_Mesh_NO9_edge_node_mesh():
     if RANK == MASTER_RANK:
         print("ENM {test_Mesh_NO9_edge_node_mesh} ...... ", flush=True)
@@ -1264,12 +1264,12 @@ def test_Mesh_NO9_edge_node_mesh():
             f"a node element cannot be two corners of one mesh element unless it is a fully periodic domain" \
             f"of one 1 mesh element along an axis, which is not allowed!"
 
-    if SIZE > 1: # only need to do this check when use >1 cores.
+    if SIZE > 1:  # only need to do this check when use >1 cores.
 
         for i in range(SIZE):
             LOCATIONS = COMM.bcast(locations, root=i)
 
-            if RANK != i: # do the check
+            if RANK != i:  # do the check
                 for node in LOCATIONS:
                     if node in locations:
                         assert set(locations[node]) == set(LOCATIONS[node]), \
@@ -1290,19 +1290,19 @@ def test_Mesh_NO9_edge_node_mesh():
             f"an edge element cannot be two corner edges of one mesh element unless it is a fully periodic domain" \
             f"of one 1 mesh element along an axis, which is not allowed!"
 
-    if SIZE > 1: # only need to do this check when use >1 cores.
+    if SIZE > 1:  # only need to do this check when use >1 cores.
 
         for i in range(SIZE):
             LOCATIONS = COMM.bcast(locations, root=i)
 
-            if RANK != i: # do the check
+            if RANK != i:  # do the check
                 for edge in LOCATIONS:
                     if edge in locations:
                         assert set(locations[edge]) == set(LOCATIONS[edge]), \
                             f"location[{edge}] = {locations[edge]} in core #{RANK} is not equal to" \
                             f"location[{edge}] = {LOCATIONS[edge]} in core #{i}."
 
-    return  1
+    return 1
 
 
 

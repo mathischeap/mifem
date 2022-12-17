@@ -6,7 +6,8 @@ test the hybridization of 0-forms.
 """
 
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 import random
 
 from objects.CSCG._3d.__init__ import mesh as mesh3
@@ -61,17 +62,17 @@ def test_hdMSEM_Poisson_Inner():
     t.prime.BC.CF.current_time = 0
     t.BC.boundaries = u_boundaries
 
-    I = EWC_SparseMatrix(mesh, ('identity', u.num.basis))
+    _I = EWC_SparseMatrix(mesh, ('identity', u.num.basis))
     E10 = p.matrices.incidence
     E01 = E10.T
     M1 = u.matrices.mass
     T0T = t.matrices.trace.T
     T, D, C, b2, eGM = p.special.hybrid_pairing(t, e)
 
-    A = bmat([(        I, -E10, None, None),
-              (-E01 @ M1, None,  T0T, None),
-              (     None,    T,    D,    C),
-              (     None, None,  C.T, None)])
+    A = bmat([(_I, -E10, None, None),
+              (-E01 @ M1, None, T0T, None),
+              (None, T, D, C),
+              (None, None, C.T, None)])
     A.gathering_matrices = [(u, p, t, eGM), (u, p, t, eGM)]
 
     b0 = EWC_ColumnVector(mesh, u)

@@ -7,6 +7,7 @@ from root.config.main import np, RANK, MASTER_RANK, COMM
 from objects.CSCG.base.forms.standard.cochain.dofwise import CSCG_SF_Cochain_DofWise
 from objects.CSCG.base.forms.standard.cochain.whether import CSCG_Standard_Form_Whether
 
+
 class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
@@ -43,8 +44,10 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
         Notice that if we have changed the local cochain, the EWC will also change because we make the vector in real
         time.
 
+        DO not cache it with, for example, `self._ewc_` as we may want to customize it for some specific usages.
+
         """
-        ewc = EWC_ColumnVector(self._sf_.mesh.elements, self.___PRIVATE_local_call___)
+        ewc = EWC_ColumnVector(self._sf_.mesh.elements, self.___PRIVATE_local_call___, "no_cache")
         ewc.gathering_matrix = self._sf_
         return ewc
 
@@ -117,7 +120,7 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
         """Will raise error if cochain is not full."""
         GM = self._sf_.numbering.gathering
         globe = lil_matrix((1, self._sf_.num.global_dofs))
-        for i in GM: # go through all local elements
+        for i in GM:  # go through all local elements
             globe[0, GM[i].full_vector] = self.local[i]
         globe = globe.tocsr().T
 
@@ -135,7 +138,7 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
                     indices = G.indices
                     measure[indices] += 1
 
-                measure[measure==0] = 1
+                measure[measure == 0] = 1
                 # noinspection PyUnresolvedReferences
                 _____ = np.sum(GLOBE).toarray().ravel() / measure
                 globe = csr_matrix(_____).T
@@ -181,7 +184,7 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
                     else:
                         # noinspection PyUnboundLocalVariable
                         to_be_sent = csc_matrix(
-                            (VV[lr[0]:lr[1]], range(lr[0],lr[1]), [0, lr[1]-lr[0]]),
+                            (VV[lr[0]:lr[1]], range(lr[0], lr[1]), [0, lr[1]-lr[0]]),
                             shape=(self._sf_.num.global_dofs, 1))
                     TO_BE_SENT.append(to_be_sent)
             else:
@@ -190,13 +193,13 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
             # distribute to local cochain ...
             local = dict()
             GM = self._sf_.numbering.gathering
-            for i in GM: # go through all local elements
+            for i in GM:  # go through all local elements
                 idx = GM[i].full_vector
                 local[i] = TO_BE_SENT[idx].toarray().ravel()
             self.local = local
 
         elif globe.__class__.__name__ == 'LocallyFullVector':
-            V = globe.V # V already be 1-d array.
+            V = globe.V  # V already be 1-d array.
             local = dict()
             GM = self._sf_.numbering.gathering
             for i in GM:  # go through all local elements
@@ -251,6 +254,6 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
 
         self._local_ = local
 
-    #--------------- DEPENDENT PROPERTIES (BRANCHES, must have the two switching methods): when set, update local ------
+    # -------------- DEPENDENT PROPERTIES (BRANCHES, must have the two switching methods): when set, update local ------
 
-    #=================================== ABOVE =========================================================================
+    # ================================== ABOVE =========================================================================

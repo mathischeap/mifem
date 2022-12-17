@@ -7,6 +7,7 @@
 from components.freeze.main import FrozenOnly
 from root.config.main import COMM, MPI
 
+
 class CSCG_LocalTraceForm_Cochain_Whether(FrozenOnly):
     """"""
 

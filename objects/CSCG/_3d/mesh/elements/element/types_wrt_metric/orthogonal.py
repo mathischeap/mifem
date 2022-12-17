@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-
-
 from components.decorators.all import accepts
 from objects.CSCG._3d.mesh.elements.element.types_wrt_metric.base import ElementTypeWr2MetricBase
 
@@ -30,8 +28,6 @@ class OrthogonalElement(ElementTypeWr2MetricBase):
             self._mark_ = 'Orth.x{}y{}z{}'.format('%.3f' % Lx, '%.3f' % Ly, '%.3f' % Lz)
 
         self._freeze_self_()
-
-
 
     # def ___CLASSIFY_3nCSCG_RF2_CELL_of_origin_and_delta___(self, origin_and_delta):
     #     """"""

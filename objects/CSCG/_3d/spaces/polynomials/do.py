@@ -6,6 +6,7 @@
 """
 from objects.CSCG._3d.spaces.base.do import _3dCSCG_space_do
 
+
 class _3dCSCG_space_Polynomial_do(_3dCSCG_space_do):
     """"""
 
@@ -14,7 +15,7 @@ class _3dCSCG_space_Polynomial_do(_3dCSCG_space_do):
         super(_3dCSCG_space_Polynomial_do, self).__init__(space)
         self._freeze_self_()
 
-    def refine(self, p =(1, 1, 1)):
+    def refine(self, p=(1, 1, 1)):
         """We return a new polynomial space of higher degree.
 
         For example, if current space's degree is (1,2,3) and do self.do.refine(p=(2,3,4)),

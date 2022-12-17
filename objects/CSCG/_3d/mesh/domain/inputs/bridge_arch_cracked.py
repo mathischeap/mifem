@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-
-
-
 from objects.CSCG._3d.mesh.domain.inputs.base import _3dDomainInputBase
 import numpy as np
 from components.decorators.classproperty.main import classproperty
@@ -9,9 +6,11 @@ from components.decorators.classproperty.main import classproperty
 
 
 class BridgeArchCracked(_3dDomainInputBase):
-    def __init__(self, domain_name="BridgeArch",
-        l=4, w=1, h=1.5, r=5 / 2, d=0.25,
-        region_interpolators='bridge_arch_cracked'):
+    def __init__(
+            self, domain_name="BridgeArch",
+            length=4, w=1, h=1.5, r=5 / 2, d=0.25,
+            region_interpolators='bridge_arch_cracked'
+    ):
         """
         Parameters
         ----------
@@ -21,43 +20,43 @@ class BridgeArchCracked(_3dDomainInputBase):
             Uncracked depth.
 
         """
-        self._l_, self._w_, self._h_, self._r_ = l, w, h, r
-        assert r ** 2 - l ** 2 / 4 > 0, " <BridgeArch> : parameters do not fit an arch."
-        alpha = np.sqrt(r ** 2 - l ** 2 / 4)
+        self._length_, self._w_, self._h_, self._r_ = length, w, h, r
+        assert r ** 2 - length ** 2 / 4 > 0, " <BridgeArch> : parameters do not fit an arch."
+        alpha = np.sqrt(r ** 2 - length ** 2 / 4)
         beta = h + alpha - r
         assert beta > 0, " <BridgeArch> : bridge has zero thickness."
-        self._center_ = (h + alpha, l / 2)
+        self._center_ = (h + alpha, length / 2)
         self._alpha_ = alpha
         self._beta_ = beta
         self._d_ = d
         assert d < beta, " <BridgeArchCracked> : Bridge already breaks into two."
         A = (0, 0, 0)
         B = (h, 0, 0)
-        C = (0, l / 2, 0)
-        Dl = (beta, l / 2, 0)
-        Dr = (beta, l / 2, 0)
+        C = (0, length / 2, 0)
+        Dl = (beta, length / 2, 0)
+        Dr = (beta, length / 2, 0)
         E = (0, 0, w)
         F = (h, 0, w)
-        G = (0, l / 2, w)
-        Hl = (beta, l / 2, w)
-        Hr = (beta, l / 2, w)
-        I = (0, l, 0)
-        J = (h, l, 0)
-        K = (0, l, w)
-        L = (h, l, w)
+        G = (0, length / 2, w)
+        Hl = (beta, length / 2, w)
+        Hr = (beta, length / 2, w)
+        _I = (0, length, 0)
+        J = (h, length, 0)
+        K = (0, length, w)
+        L = (h, length, w)
         rd = beta - d
         M = (rd * beta / h, 0, 0)
         N = (rd * beta / h, 0, w)
-        O = (rd, l / 2, 0)
-        P = (rd, l / 2, w)
-        Q = (rd * beta / h, l, 0)
-        R = (rd * beta / h, l, w)
+        _O = (rd, length / 2, 0)
+        P = (rd, length / 2, w)
+        Q = (rd * beta / h, length, 0)
+        R = (rd * beta / h, length, w)
         super().__init__(domain_name=domain_name)
-        self.region_corner_coordinates = {'R:R_left_up': (A, M, C, O, E, N, G, P),
-                                          'R:R_left_down': (M, B, O, Dl, N, F, P, Hl),
-                                          'R:R_right_up': (C, O, I, Q, G, P, K, R),
-                                          'R:R_right_down': (O, Dr, Q, J, P, Hr, R, L)}
-        self.region_side_types = {} # all plane
+        self.region_corner_coordinates = {'R:R_left_up': (A, M, C, _O, E, N, G, P),
+                                          'R:R_left_down': (M, B, _O, Dl, N, F, P, Hl),
+                                          'R:R_right_up': (C, _O, _I, Q, G, P, K, R),
+                                          'R:R_right_down': (_O, Dr, Q, J, P, Hr, R, L)}
+        self.region_side_types = dict()  # all plane
         self.boundary_region_sides = {
             'Left_Floor': ("R:R_left_up-N",),
             'Right_Floor': ('R:R_right_up-N',),
@@ -71,8 +70,8 @@ class BridgeArchCracked(_3dDomainInputBase):
         self.region_interpolators = region_interpolators
 
     @property
-    def l(self):
-        return self._l_
+    def L(self):
+        return self._length_
 
     @property
     def w(self):
@@ -105,7 +104,7 @@ class BridgeArchCracked(_3dDomainInputBase):
     def statistic(cls):
         return {'periodic': False,
                 'region num': 4,
-                'mesh boundary num': 8, # the amount of mesh boundaries (instead of domain boundaries)
+                'mesh boundary num': 8,  # the amount of mesh boundaries (instead of domain boundaries)
                 }
 
     @classproperty

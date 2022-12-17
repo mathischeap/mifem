@@ -7,7 +7,8 @@
 import os
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from components.freeze.base import FrozenOnly
 import numpy as np
 
@@ -18,8 +19,13 @@ from objects.miUsGrid.triangular.master import Call
 
 current_dir = os.path.dirname(__file__)
 
+
 def func(t, x, y): return np.sin(2*np.pi*x) * np.sin(2*np.pi*y) + t
+
+
 def fx(t, x, y): return np.sin(2*np.pi*x) * np.cos(np.pi*y) + t
+
+
 def fy(t, x, y): return np.cos(2*np.pi*x) * np.sin(np.pi*y) + t
 
 
@@ -115,6 +121,7 @@ def ___Pr_error_function___(N, K, c):
 
     return f0i_er, f0o_er, f1i_er, f1o_er, f2i_er, f2o_er, df0i_er, df0o_er, df1i_er, df1o_er
 
+
 # noinspection PyUnusedLocal
 def ___Pr_error_function_pc___(N, K, c):
     """
@@ -141,7 +148,8 @@ def ___Pr_error_function_pc___(N, K, c):
     """
     fc = Call('rand0', N)
 
-    if N == 10: fc.mesh.visualize(saveto=current_dir + '/pc_mesh.pdf')
+    if N == 10:
+        fc.mesh.visualize(saveto=current_dir + '/pc_mesh.pdf')
 
     f0i = fc('0-f-i')
     f0o = fc('0-f-o')
@@ -204,7 +212,7 @@ def ___Pr_error_function_pc___(N, K, c):
     df1o.CF = div_vector
     df1o_er = df1o.error.L()
 
-    if N >= 20: # a check of reduction and reconstruction.
+    if N >= 20:  # a check of reduction and reconstruction.
         # when N is significantly large, we should reach machine zero.
         assert f0i_er < 1e-11
         assert f0o_er < 1e-11
@@ -232,26 +240,25 @@ class miUsGrid_TriangleMesh_ConvergenceTest(FrozenOnly):
     def __call__(self):
         """"""
 
-        Ns = [[1, 1, 1, 1, 1,],
-              [2, 2, 2, 2, 2,],
-              [3, 3, 3, 3, 3,]]
-        Ks = [[2, 4, 6, 8, 10,],
-              [2, 4, 6, 8, 10,],
-              [2, 4, 6, 8, 10,],]
-        cs = [0,]
+        Ns = [[1, 1, 1, 1, 1],
+              [2, 2, 2, 2, 2],
+              [3, 3, 3, 3, 3]]
+        Ks = [[2, 4, 6, 8, 10],
+              [2, 4, 6, 8, 10],
+              [2, 4, 6, 8, 10], ]
+        cs = [0, ]
 
         pr = ParallelMatrix3dInputRunner(___Pr_error_function___)
 
-        if isfile(current_dir + '/WTP.txt'): remove(current_dir + '/WTP.txt')
+        if isfile(current_dir + '/WTP.txt'):
+            remove(current_dir + '/WTP.txt')
 
         pr.iterate(Ns, Ks, cs, writeto=current_dir + '/WTP.txt', show_progress=False)
-
-
 
         remove(current_dir + '/WTP.txt')
 
         pr.visualize('loglog', 'N', 'f0i_er', prime='input2', hcp=1, usetex=True,
-                     labels=['$N=1$', '$N=2$', '$N=3$',],
+                     labels=['$N=1$', '$N=2$', '$N=3$', ],
                      styles=["-s", "-v", '-^'],
                      colors=[(0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
                      title=False,
@@ -265,7 +272,7 @@ class miUsGrid_TriangleMesh_ConvergenceTest(FrozenOnly):
                      saveto=current_dir + '/f0_error_L2.pdf')
 
         pr.visualize('loglog', 'N', 'f1i_er', prime='input2', hcp=1, usetex=True,
-                     labels=['$N=1$', '$N=2$', '$N=3$',],
+                     labels=['$N=1$', '$N=2$', '$N=3$', ],
                      styles=["-s", "-v", '-^'],
                      colors=[(0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
                      title=False,
@@ -279,7 +286,7 @@ class miUsGrid_TriangleMesh_ConvergenceTest(FrozenOnly):
                      saveto=current_dir + '/f1i_error_L2.pdf')
 
         pr.visualize('loglog', 'N', 'f1o_er', prime='input2', hcp=1, usetex=True,
-                     labels=['$N=1$', '$N=2$', '$N=3$',],
+                     labels=['$N=1$', '$N=2$', '$N=3$', ],
                      styles=["-s", "-v", '-^'],
                      colors=[(0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
                      title=False,
@@ -293,7 +300,7 @@ class miUsGrid_TriangleMesh_ConvergenceTest(FrozenOnly):
                      saveto=current_dir + '/f1o_error_L2.pdf')
 
         pr.visualize('loglog', 'N', 'f2i_er', prime='input2', hcp=1, usetex=True,
-                     labels=['$N=1$', '$N=2$', '$N=3$',],
+                     labels=['$N=1$', '$N=2$', '$N=3$', ],
                      styles=["-s", "-v", '-^'],
                      colors=[(0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
                      title=False,
@@ -307,7 +314,7 @@ class miUsGrid_TriangleMesh_ConvergenceTest(FrozenOnly):
                      saveto=current_dir + '/f2_error_L2.pdf')
 
         pr.visualize('loglog', 'N', 'df0i_er', prime='input2', hcp=1, usetex=True,
-                     labels=['$N=1$', '$N=2$', '$N=3$',],
+                     labels=['$N=1$', '$N=2$', '$N=3$', ],
                      styles=["-s", "-v", '-^'],
                      colors=[(0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
                      title=False,
@@ -321,7 +328,7 @@ class miUsGrid_TriangleMesh_ConvergenceTest(FrozenOnly):
                      saveto=current_dir + '/df0i_error_L2.pdf')
 
         pr.visualize('loglog', 'N', 'df0o_er', prime='input2', hcp=1, usetex=True,
-                     labels=['$N=1$', '$N=2$', '$N=3$',],
+                     labels=['$N=1$', '$N=2$', '$N=3$', ],
                      styles=["-s", "-v", '-^'],
                      colors=[(0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
                      title=False,
@@ -335,7 +342,7 @@ class miUsGrid_TriangleMesh_ConvergenceTest(FrozenOnly):
                      saveto=current_dir + '/df0o_error_L2.pdf')
 
         pr.visualize('loglog', 'N', 'df1i_er', prime='input2', hcp=1, usetex=True,
-                     labels=['$N=1$', '$N=2$', '$N=3$',],
+                     labels=['$N=1$', '$N=2$', '$N=3$', ],
                      styles=["-s", "-v", '-^'],
                      colors=[(0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
                      title=False,
@@ -349,7 +356,7 @@ class miUsGrid_TriangleMesh_ConvergenceTest(FrozenOnly):
                      saveto=current_dir + '/df1i_error_L2.pdf')
 
         pr.visualize('loglog', 'N', 'df1o_er', prime='input2', hcp=1, usetex=True,
-                     labels=['$N=1$', '$N=2$', '$N=3$',],
+                     labels=['$N=1$', '$N=2$', '$N=3$', ],
                      styles=["-s", "-v", '-^'],
                      colors=[(0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
                      title=False,
@@ -362,12 +369,13 @@ class miUsGrid_TriangleMesh_ConvergenceTest(FrozenOnly):
                                           2: {'tp': (0.02, 0.2), 'order': 2}},
                      saveto=current_dir + '/df1o_error_L2.pdf')
 
-        Ns = [[i for i in range(1, 18)],]
-        Ks = [[0 for _ in range(1, 18)],]
+        Ns = [[i for i in range(1, 18)], ]
+        Ks = [[0 for _ in range(1, 18)], ]
         cs = [0, ]
         pr = ParallelMatrix3dInputRunner(___Pr_error_function_pc___)
 
-        if isfile(current_dir + '/WTP_pc.txt'): remove(current_dir + '/WTP_pc.txt')
+        if isfile(current_dir + '/WTP_pc.txt'):
+            remove(current_dir + '/WTP_pc.txt')
 
         pr.iterate(Ns, Ks, cs, writeto=current_dir + '/WTP_pc.txt', show_progress=False)
         remove(current_dir + '/WTP_pc.txt')
@@ -375,7 +383,7 @@ class miUsGrid_TriangleMesh_ConvergenceTest(FrozenOnly):
         pr.visualize('semilogy', 'K', 'f0i_er', prime='input2', usetex=True,
                      labels=False,
                      styles=["-v", "-v"],
-                     colors=[(0.4, 0.4, 0.4, 1),], title=False,
+                     colors=[(0.4, 0.4, 0.4, 1), ], title=False,
                      xlabel=r'$N$',
                      ylabel=r"$\left\| \varphi^h\right\|_{L^2-\mathrm{error}}$",
                      order_text_size=15,
@@ -384,7 +392,7 @@ class miUsGrid_TriangleMesh_ConvergenceTest(FrozenOnly):
         pr.visualize('semilogy', 'K', 'f1i_er', prime='input2', usetex=True,
                      labels=False,
                      styles=["-v", "-v"],
-                     colors=[(0.4, 0.4, 0.4, 1),], title=False,
+                     colors=[(0.4, 0.4, 0.4, 1), ], title=False,
                      xlabel=r'$N$',
                      ylabel=r"$\left\| \boldsymbol{\omega}^h\right\|_{L^2-\mathrm{error}}$",
                      order_text_size=15,
@@ -393,7 +401,7 @@ class miUsGrid_TriangleMesh_ConvergenceTest(FrozenOnly):
         pr.visualize('semilogy', 'K', 'f1o_er', prime='input2', usetex=True,
                      labels=False,
                      styles=["-v", "-v"],
-                     colors=[(0.4, 0.4, 0.4, 1),], title=False,
+                     colors=[(0.4, 0.4, 0.4, 1), ], title=False,
                      xlabel=r'$N$',
                      ylabel=r"$\left\| \boldsymbol{u}^h\right\|_{L^2-\mathrm{error}}$",
                      order_text_size=15,
@@ -402,7 +410,7 @@ class miUsGrid_TriangleMesh_ConvergenceTest(FrozenOnly):
         pr.visualize('semilogy', 'K', 'f2i_er', prime='input2', usetex=True,
                      labels=False,
                      styles=["-v", "-v"],
-                     colors=[(0.4, 0.4, 0.4, 1),], title=False,
+                     colors=[(0.4, 0.4, 0.4, 1), ], title=False,
                      xlabel=r'$N$',
                      ylabel=r"$\left\| f^h\right\|_{L^2-\mathrm{error}}$",
                      order_text_size=15,
@@ -412,7 +420,7 @@ class miUsGrid_TriangleMesh_ConvergenceTest(FrozenOnly):
         pr.visualize('semilogy', 'K', 'df0i_er', prime='input2', usetex=True,
                      labels=False,
                      styles=["-v", "-v"],
-                     colors=[(0.4, 0.4, 0.4, 1),], title=False,
+                     colors=[(0.4, 0.4, 0.4, 1), ], title=False,
                      xlabel=r'$N$',
                      ylabel=r"$\left\| \mathrm{grad}(\varphi)^h\right\|_{L^2-\mathrm{error}}$",
                      order_text_size=15,
@@ -421,7 +429,7 @@ class miUsGrid_TriangleMesh_ConvergenceTest(FrozenOnly):
         pr.visualize('semilogy', 'K', 'df0o_er', prime='input2', usetex=True,
                      labels=False,
                      styles=["-v", "-v"],
-                     colors=[(0.4, 0.4, 0.4, 1),], title=False,
+                     colors=[(0.4, 0.4, 0.4, 1), ], title=False,
                      xlabel=r'$N$',
                      ylabel=r"$\left\| \mathrm{curl}(\varphi)^h\right\|_{L^2-\mathrm{error}}$",
                      order_text_size=15,
@@ -431,7 +439,7 @@ class miUsGrid_TriangleMesh_ConvergenceTest(FrozenOnly):
         pr.visualize('semilogy', 'K', 'df1i_er', prime='input2', usetex=True,
                      labels=False,
                      styles=["-v", "-v"],
-                     colors=[(0.4, 0.4, 0.4, 1),], title=False,
+                     colors=[(0.4, 0.4, 0.4, 1), ], title=False,
                      xlabel=r'$N$',
                      ylabel=r"$\left\| \mathrm{rot}(\boldsymbol{\omega})^h\right\|_{L^2-\mathrm{error}}$",
                      order_text_size=15,
@@ -440,17 +448,13 @@ class miUsGrid_TriangleMesh_ConvergenceTest(FrozenOnly):
         pr.visualize('semilogy', 'K', 'df1o_er', prime='input2', usetex=True,
                      labels=False,
                      styles=["-v", "-v"],
-                     colors=[(0.4, 0.4, 0.4, 1),], title=False,
+                     colors=[(0.4, 0.4, 0.4, 1), ], title=False,
                      xlabel=r'$N$',
                      ylabel=r"$\left\| \mathrm{div}(\boldsymbol{u})^h\right\|_{L^2-\mathrm{error}}$",
                      order_text_size=15,
                      saveto=current_dir + '/pc_df1o_error_L2.pdf')
 
         return 1
-
-
-
-
 
 
 if __name__ == "__main__":

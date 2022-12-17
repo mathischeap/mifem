@@ -10,6 +10,7 @@
 from objects.base.form.base import FormBase
 from objects.CSCG.base.forms.base.BC.main import CSCG_Form_BC
 
+
 class CSCG_FORM_BASE(FormBase):
     """"""
     def __init_subclass__(cls, ndim=None):
@@ -26,7 +27,7 @@ class CSCG_FORM_BASE(FormBase):
 
         self.___is_wrapped_in_ADF___ = False
 
-    #------------------- fundamental --------------------------------
+    # ------------------ fundamental --------------------------------
     @property
     def k(self):
         return self._k_

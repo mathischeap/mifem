@@ -10,13 +10,15 @@ It is always suggested testing the library multiple time with different numbers 
 
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from root.config.main import *
 
 passed_GLOBAL_tests = 0
 
-if RANK == MASTER_RANK: print(f"\n [Global] tests start...\n")
+if RANK == MASTER_RANK:
+    print(f"\n [Global] tests start...\n")
 
 from tests.tools.mifem import *
 from tests.tools.tools_ import *

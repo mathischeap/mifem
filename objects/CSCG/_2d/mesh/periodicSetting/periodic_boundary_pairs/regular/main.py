@@ -11,15 +11,14 @@ from components.freeze.main import FrozenOnly
 from objects.CSCG._2d.mesh.periodicSetting.periodic_boundary_pairs.regular.region_edge_pair import _2dCSCG_Regular_PBP_RegionEdgePair
 
 
-
 class _2dCSCG_Regular_PBP(FrozenOnly):
     def __init__(self, PDS, thePair):
         self._PDS_ = PDS
         self._baseMesh_ = PDS._baseMesh_
         self._boundaryPair_ = thePair
         edgeOne, edgeTwo = thePair.split('=')
-        regionEdgesOne =  self._baseMesh_.domain.domain_input.boundary_region_edges[edgeOne]
-        regionEdgesTwo =  self._baseMesh_.domain.domain_input.boundary_region_edges[edgeTwo]
+        regionEdgesOne = self._baseMesh_.domain.domain_input.boundary_region_edges[edgeOne]
+        regionEdgesTwo = self._baseMesh_.domain.domain_input.boundary_region_edges[edgeTwo]
 
         self.___CHECK_REGION_EDGE_PAIRS___(regionEdgesOne, regionEdgesTwo)
         self._freeze_self_()

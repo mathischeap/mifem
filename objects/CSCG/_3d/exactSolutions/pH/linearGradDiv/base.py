@@ -8,16 +8,15 @@ dS/dt = - div V
 @contact: zhangyi_aero@hotmail.com
 @time: 11/23/2022 5:35 PM
 """
-import sys
 import numpy as np
 
-if './' not in sys.path: sys.path.append('./')
 from objects.CSCG._3d.exactSolutions.base import Base
 
 from objects.CSCG._3d.fields.vector.main import _3dCSCG_VectorField
 from objects.CSCG._3d.fields.scalar.main import _3dCSCG_ScalarField
 
-from components.numerical.timePlus3dSpace.partial_derivative_as_functions import NumericalPartialDerivative_txyz_Functions
+from components.numerical.timePlus3dSpace.partial_derivative_as_functions import \
+    NumericalPartialDerivative_txyz_Functions
 
 
 class pH_LinearGradDiv_Base(Base):
@@ -78,7 +77,8 @@ class pH_LinearGradDiv_Base(Base):
         TS = self.___PRIVATE_generate_random_valid_time_instances___()
         x, y, z = self._mesh_.do.generate_random_coordinates()
 
-        if len(x) == 0: return
+        if len(x) == 0:
+            return
 
         Np = NumericalPartialDerivative_txyz_Functions(self.p)
 
@@ -111,10 +111,3 @@ class pH_LinearGradDiv_Base(Base):
                 - pt(t, x, y, z),
                 ux(t, x, y, z) + vy(t, x, y, z) + wz(t, x, y, z)
             )
-
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

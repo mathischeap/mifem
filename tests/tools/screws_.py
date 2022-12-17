@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from root.config.main import *
 
 import random
@@ -11,11 +12,13 @@ from components.functions._3dSpace.constant import CFG
 from components.functions._3dSpace._0_ import _0_
 from components.functions._3dSpace.Cartesian_spherical_coordinate_switcher import CartSphSwitcher
 from components.functions._3dSpace.Cartesian_cylinder_coordinate_switcher import CartCylSwitcher
-from components.numerical.timePlus3dSpace.partial_derivative_as_functions import NumericalPartialDerivative_txyz_Functions
+from components.numerical.timePlus3dSpace.partial_derivative_as_functions import \
+    NumericalPartialDerivative_txyz_Functions
 from components.numerical.timePlus3dSpace.partial_derivative import NumericalPartialDerivative_txyz
 from components.miscellaneous.generalized_piecewise_function import genpiecewise
 
 from functools import partial
+
 
 def SIN(x, y, z): return np.sin(x * y * z)
 
@@ -25,8 +28,8 @@ def test_SCREWS_NO1_3d_functions():
     if RANK == MASTER_RANK:
         print("--- [test_SCREWS_NO1_3d_functions] ...... ", flush=True)
 
-    i = random.randint(2,10)
-    j = random.randint(2,10)
+    i = random.randint(2, 10)
+    j = random.randint(2, 10)
 
     x = np.random.rand(i, j)
     y = np.random.rand(i, j)
@@ -71,7 +74,7 @@ def test_SCREWS_NO3_4d_functions():
     def APz(t, x, y, z): return np.pi*np.sin(np.pi*x) * np.sin(np.pi*y) * np.cos(np.pi*z) * t
 
     t = random.random() * 100
-    I, J, K = random.randint(10,20), random.randint(10,20), random.randint(10,20)
+    I, J, K = random.randint(10, 20), random.randint(10, 20), random.randint(10, 20)
     x = np.random.rand(I, J, K)
     y = np.random.rand(I, J, K)
     z = np.random.rand(I, J, K)
@@ -82,25 +85,24 @@ def test_SCREWS_NO3_4d_functions():
     NPx = NPD4F('x')
     NPy = NPD4F('y')
     NPz = NPD4F('z')
-    assert np.sum(np.abs(APt(t,x,y,z) - NPt(t, x, y, z))) < 1e-4, f"Partial t error too big!"
-    assert np.sum(np.abs(APx(t,x,y,z) - NPx(t, x, y, z))) < 1e-4, f"Partial x error too big!"
-    assert np.sum(np.abs(APy(t,x,y,z) - NPy(t, x, y, z))) < 1e-4, f"Partial y error too big!"
-    assert np.sum(np.abs(APz(t,x,y,z) - NPz(t, x, y, z))) < 1e-4, f"Partial z error too big!"
+    assert np.sum(np.abs(APt(t, x, y, z) - NPt(t, x, y, z))) < 1e-4, f"Partial t error too big!"
+    assert np.sum(np.abs(APx(t, x, y, z) - NPx(t, x, y, z))) < 1e-4, f"Partial x error too big!"
+    assert np.sum(np.abs(APy(t, x, y, z) - NPy(t, x, y, z))) < 1e-4, f"Partial y error too big!"
+    assert np.sum(np.abs(APz(t, x, y, z) - NPz(t, x, y, z))) < 1e-4, f"Partial z error too big!"
 
     NPt_t = partial(NPt, t)
     NPx_t = partial(NPx, t)
     NPy_t = partial(NPy, t)
     NPz_t = partial(NPz, t)
-    assert np.sum(np.abs(APt(t,x,y,z) - NPt_t(x, y, z))) < 1e-4, f"Partial t error too big!"
-    assert np.sum(np.abs(APx(t,x,y,z) - NPx_t(x, y, z))) < 1e-4, f"Partial x error too big!"
-    assert np.sum(np.abs(APy(t,x,y,z) - NPy_t(x, y, z))) < 1e-4, f"Partial y error too big!"
-    assert np.sum(np.abs(APz(t,x,y,z) - NPz_t(x, y, z))) < 1e-4, f"Partial z error too big!"
+    assert np.sum(np.abs(APt(t, x, y, z) - NPt_t(x, y, z))) < 1e-4, f"Partial t error too big!"
+    assert np.sum(np.abs(APx(t, x, y, z) - NPx_t(x, y, z))) < 1e-4, f"Partial x error too big!"
+    assert np.sum(np.abs(APy(t, x, y, z) - NPy_t(x, y, z))) < 1e-4, f"Partial y error too big!"
+    assert np.sum(np.abs(APz(t, x, y, z) - NPz_t(x, y, z))) < 1e-4, f"Partial z error too big!"
 
-    assert np.sum(np.abs(NPt(t,x,y,z) - NPt_t(x, y, z))) < 1e-10, f"Partial t error too big!"
-    assert np.sum(np.abs(NPx(t,x,y,z) - NPx_t(x, y, z))) < 1e-10, f"Partial x error too big!"
-    assert np.sum(np.abs(NPy(t,x,y,z) - NPy_t(x, y, z))) < 1e-10, f"Partial y error too big!"
-    assert np.sum(np.abs(NPz(t,x,y,z) - NPz_t(x, y, z))) < 1e-10, f"Partial z error too big!"
-
+    assert np.sum(np.abs(NPt(t, x, y, z) - NPt_t(x, y, z))) < 1e-10, f"Partial t error too big!"
+    assert np.sum(np.abs(NPx(t, x, y, z) - NPx_t(x, y, z))) < 1e-10, f"Partial x error too big!"
+    assert np.sum(np.abs(NPy(t, x, y, z) - NPy_t(x, y, z))) < 1e-10, f"Partial y error too big!"
+    assert np.sum(np.abs(NPz(t, x, y, z) - NPz_t(x, y, z))) < 1e-10, f"Partial z error too big!"
 
 
 def test_SCREWS_NO4_generalized_piecewise_function():
@@ -113,28 +115,27 @@ def test_SCREWS_NO4_generalized_piecewise_function():
     def FUNC3(t, x, y, z): return - 3 - x + y * z - t
     def FUNC4(t, x, y, z): return + 4 - x * y + z + t
 
-    x = np.random.rand(10,10)
-    y = np.random.rand(10,10)
-    z = np.random.rand(10,10)
+    x = np.random.rand(10, 10)
+    y = np.random.rand(10, 10)
+    z = np.random.rand(10, 10)
     t = 1
 
-    cond1, cond2 = y <= 0.5, (y > 0.5) & (y<=1)
+    cond1, cond2 = y <= 0.5, (y > 0.5) & (y <= 1)
     RESULT = genpiecewise([t, x, y, z], [cond1, cond2], [FUNC3, FUNC4])
     #
     assert np.all(FUNC3(t, x[cond1], y[cond1], z[cond1]) == RESULT[cond1])
     assert np.all(FUNC4(t, x[cond2], y[cond2], z[cond2]) == RESULT[cond2])
 
-
-    cond1, cond2, cond3, cond4 = y <= 0.25, \
-                                 (0.25 < y) & (y <= 0.5), \
-                                 (0.5  < y) & (y <= 0.75), \
-                                 0.75 < y
+    cond1, cond2, cond3, cond4 = \
+        y <= 0.25, \
+        (0.25 < y) & (y <= 0.5), \
+        (0.5 < y) & (y <= 0.75), \
+        0.75 < y
     RESULT = genpiecewise([t, x, y, z], [cond1, cond2, cond3, cond4], [FUNC1, FUNC2, FUNC3, FUNC4])
     assert np.all(FUNC1(t, x[cond1], y[cond1], z[cond1]) == RESULT[cond1])
     assert np.all(FUNC2(t, x[cond2], y[cond2], z[cond2]) == RESULT[cond2])
     assert np.all(FUNC3(t, x[cond3], y[cond3], z[cond3]) == RESULT[cond3])
     assert np.all(FUNC4(t, x[cond4], y[cond4], z[cond4]) == RESULT[cond4])
-
 
 
 if __name__ == '__main__':

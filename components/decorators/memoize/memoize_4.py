@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
 
-
-
-
-
 def memoize4(f):
     """ Memoization decorator for a function taking one or more arguments.
 

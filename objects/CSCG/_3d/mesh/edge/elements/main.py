@@ -2,21 +2,15 @@
 """['WB', 'EB', 'WF', 'EF', 'NB', 'SB', 'NF', 'SF', 'NW', 'SW', 'NE', 'SE']"""
 
 import sys
-if './' not in sys.path: sys.path.append('./')
-
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.main import FrozenOnly
 from root.config.main import *
 
-
 from objects.CSCG._3d.mesh.edge.elements.element.main import _3dCSCG_Edge_Element
 from objects.CSCG._3d.mesh.edge.elements.coordinate_transformation import _3dCSCG_Edge_Elements_CT
 from objects.CSCG._3d.mesh.edge.elements.do.main import _3dCSCG_Edge_Elements_DO
-
-
-
-
-
 
 
 class _3dCSCG_Edge_Elements(FrozenOnly):
@@ -61,12 +55,12 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
             COMM.send([element_map, element_indices], dest=MASTER_RANK, tag=RANK)
             global_numbering = COMM.recv(source=MASTER_RANK, tag=RANK)
         else:
-            p = [1,1,1]
-            numOfBasisComponents = [4,4,4]
+            p = [1, 1, 1]
+            numOfBasisComponents = [4, 4, 4]
             numberingCache = dict()
             currentNumber = 0
-            other_side_name = 'SNEWFB' # not an error, this is other side name.
-            sidePairDict = {'N':'S', 'S':'N', 'W':'E', 'E':'W', 'B':'F', 'F':'B'}
+            other_side_name = 'SNEWFB'  # not an error, this is other side name.
+            sidePairDict = {'N': 'S', 'S': 'N', 'W': 'E', 'E': 'W', 'B': 'F', 'F': 'B'}
             for i in range(SIZE):
                 if i == MASTER_RANK:
                     element_map = mesh.elements.map
@@ -124,7 +118,7 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
                             currentNumber += howManyNotNumbered2
 
                     for j, EMki in enumerate(element_map[k]):
-                        if isinstance(EMki, str): # on domain boundary
+                        if isinstance(EMki, str):  # on domain boundary
                             pass
                         else:
                             otherElement = EMki
@@ -139,12 +133,14 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
                                 )
 
                 toBeSentAway = dict()
-                for k in element_indices: toBeSentAway[k] = numberingCache[k]
+                for k in element_indices:
+                    toBeSentAway[k] = numberingCache[k]
                 if i == MASTER_RANK:
                     global_numbering = toBeSentAway
                 else:
                     COMM.send(toBeSentAway, dest=i, tag=i)
-                for k in element_indices: del numberingCache[k]
+                for k in element_indices:
+                    del numberingCache[k]
 
         MAX = list()
         for i in self._mesh_.elements:
@@ -170,49 +166,50 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
 
     @staticmethod
     def ___PRIVATE_EDGE_for_1Form_pass_element_side_numbering_from_to___(
-        fromElement, fromSide, toElement, toSide, numberingCache):
+        fromElement, fromSide, toElement, toSide, numberingCache
+    ):
 
         data0, data1, data2 = None, None, None
 
-        if fromSide == 'N'  :
-            data1 = numberingCache[fromElement][1][0 , :, :]
-            data2 = numberingCache[fromElement][2][0 , :, :]
+        if fromSide == 'N':
+            data1 = numberingCache[fromElement][1][0, :, :]
+            data2 = numberingCache[fromElement][2][0, :, :]
         elif fromSide == 'S':
             data1 = numberingCache[fromElement][1][-1, :, :]
             data2 = numberingCache[fromElement][2][-1, :, :]
         elif fromSide == 'W':
-            data0 = numberingCache[fromElement][0][ :, 0, :]
-            data2 = numberingCache[fromElement][2][ :, 0, :]
+            data0 = numberingCache[fromElement][0][:, 0, :]
+            data2 = numberingCache[fromElement][2][:, 0, :]
         elif fromSide == 'E':
-            data0 = numberingCache[fromElement][0][ :,-1, :]
-            data2 = numberingCache[fromElement][2][ :,-1, :]
+            data0 = numberingCache[fromElement][0][:, -1, :]
+            data2 = numberingCache[fromElement][2][:, -1, :]
         elif fromSide == 'B':
-            data0 = numberingCache[fromElement][0][ :, :, 0]
-            data1 = numberingCache[fromElement][1][ :, :, 0]
+            data0 = numberingCache[fromElement][0][:, :, 0]
+            data1 = numberingCache[fromElement][1][:, :, 0]
         elif fromSide == 'F':
-            data0 = numberingCache[fromElement][0][ :, :,-1]
-            data1 = numberingCache[fromElement][1][ :, :,-1]
+            data0 = numberingCache[fromElement][0][:, :, -1]
+            data1 = numberingCache[fromElement][1][:, :, -1]
         else:
             raise Exception()
 
-        if toSide == 'N'  :
-            numberingCache[toElement][1][ 0, :, :] = data1
-            numberingCache[toElement][2][ 0, :, :] = data2
+        if toSide == 'N':
+            numberingCache[toElement][1][0, :, :] = data1
+            numberingCache[toElement][2][0, :, :] = data2
         elif toSide == 'S':
             numberingCache[toElement][1][-1, :, :] = data1
             numberingCache[toElement][2][-1, :, :] = data2
         elif toSide == 'W':
-            numberingCache[toElement][0][ :, 0, :] = data0
-            numberingCache[toElement][2][ :, 0, :] = data2
+            numberingCache[toElement][0][:, 0, :] = data0
+            numberingCache[toElement][2][:, 0, :] = data2
         elif toSide == 'E':
-            numberingCache[toElement][0][ :,-1, :] = data0
-            numberingCache[toElement][2][ :,-1, :] = data2
+            numberingCache[toElement][0][:, -1, :] = data0
+            numberingCache[toElement][2][:, -1, :] = data2
         elif toSide == 'B':
-            numberingCache[toElement][0][ :, :, 0] = data0
-            numberingCache[toElement][1][ :, :, 0] = data1
+            numberingCache[toElement][0][:, :, 0] = data0
+            numberingCache[toElement][1][:, :, 0] = data1
         elif toSide == 'F':
-            numberingCache[toElement][0][ :, :,-1] = data0
-            numberingCache[toElement][1][ :, :,-1] = data1
+            numberingCache[toElement][0][:, :, -1] = data0
+            numberingCache[toElement][1][:, :, -1] = data1
         else:
             raise Exception()
 
@@ -237,7 +234,8 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
             INDICES = sorted(INDICES)
 
             for i in INDICES:
-                if i == 0: POOL[0] = np.array([0,0,0])
+                if i == 0:
+                    POOL[0] = np.array([0, 0, 0])
 
                 ee = self[i]
                 cs = ee.direction
@@ -317,14 +315,15 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
             for i in range(self._mesh_.elements.global_num):
                 mp_i = MAP[i]
                 for ind, edge in enumerate(mp_i):
-                    if edge not in LOC_DICT: LOC_DICT[edge] = list()
+                    if edge not in LOC_DICT:
+                        LOC_DICT[edge] = list()
                     LOC_DICT[edge].append(str(i)+ind_2_loc[ind])
 
                     if len(LOC_DICT[edge]) == 4:
                         LOC_DICT_FULL[edge] = LOC_DICT[edge]
                         del LOC_DICT[edge]
 
-            LOC_DICT_FULL.update(LOC_DICT) # LOC_DICT_FULL has all locations on mesh elements.
+            LOC_DICT_FULL.update(LOC_DICT)  # LOC_DICT_FULL has all locations on mesh elements.
             del LOC_DICT
 
             # now we split the LOC_DICT_FULL to send to each core.
@@ -353,7 +352,7 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
                 for edge in self.map[i]:
                     assert edge in LOCAL_EDGES, f"safety check!"
 
-        face_ind_dict = {'N':0, 'S':1, 'W':2, 'E':3, 'B':4, 'F':5}
+        face_ind_dict = {'N': 0, 'S': 1, 'W': 2, 'E': 3, 'B': 4, 'F': 5}
 
         LOCAL_EDGES_BNS = dict()
 
@@ -361,11 +360,11 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
             for loc in LOCAL_EDGES[edge]:
                 mesh_element = int(loc[:-2])
                 corner = loc[-2:]
-                if mesh_element in mesh_map: # we are looking at a location from a local mesh element.
+                if mesh_element in mesh_map:  # we are looking at a location from a local mesh element.
                     for f in corner:
                         ind = face_ind_dict[f]
                         what_is_here = mesh_map[mesh_element][ind]
-                        if isinstance(what_is_here, str): # a mesh boundary
+                        if isinstance(what_is_here, str):  # a mesh boundary
                             if edge not in LOCAL_EDGES_BNS:
                                 LOCAL_EDGES_BNS[edge] = list()
                             if what_is_here not in LOCAL_EDGES_BNS[edge]:
@@ -430,9 +429,9 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
                     on_mesh_boundaries[edge].append(position)
 
             # noinspection PyUnresolvedReferences
-            shared_by_elements[edge] = tuple(shared_by_elements[edge]) # tuple is faster and memory less.
+            shared_by_elements[edge] = tuple(shared_by_elements[edge])  # tuple is faster and memory less.
             # noinspection PyUnresolvedReferences
-            on_mesh_boundaries[edge] = tuple(on_mesh_boundaries[edge]) # tuple is faster and memory less.
+            on_mesh_boundaries[edge] = tuple(on_mesh_boundaries[edge])  # tuple is faster and memory less.
 
         self._shared_by_elements_ = shared_by_elements
         self._on_mesh_boundaries_ = on_mesh_boundaries
@@ -497,7 +496,8 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
         :param element_corner_edge:
         :return:
         """
-        assert len(ep3) == 3 and all([np.ndim(epi) == 1 for epi in ep3]), f"we must parse_1d_3ep, we need 3 evaluation_points of ndim=1 ."
+        assert len(ep3) == 3 and all([np.ndim(epi) == 1 for epi in ep3]), \
+            f"we must parse_1d_3ep, we need 3 evaluation_points of ndim=1 ."
 
         for i, ep in enumerate(ep3):
             assert np.max(ep) <= 1 and np.min(ep) >= -1 and np.all(
@@ -545,14 +545,6 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
         if self._do_ is None:
             self._do_ = _3dCSCG_Edge_Elements_DO(self)
         return self._do_
-
-
-
-
-
-
-
-
 
 
 if __name__ == '__main__':

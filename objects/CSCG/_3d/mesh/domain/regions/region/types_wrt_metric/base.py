@@ -10,7 +10,6 @@
 from components.freeze.main import FrozenOnly
 
 
-
 class TypeWr2MetricBase(FrozenOnly):
     """A parent of all regions types w.r.t. metric."""
     def __init__(self, region):
@@ -52,4 +51,3 @@ class TypeWr2MetricBase(FrozenOnly):
             f"Please implement ___CLASSIFY_TRACE_ELEMENT_of_spacing___ for "
             f"TypeWr2Metric named: {self.__class__.__name__}"
         )
-

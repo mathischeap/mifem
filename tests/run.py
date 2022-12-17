@@ -15,8 +15,10 @@ mpiexec -n 4 python tests/objects/CSCG/_3d/unittests/main.py
 mpiexec -n 4 python tests/objects/miUsGrid/triangular/unittests/main.py
 
 """
+
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from root.config.main import RANK, MASTER_RANK, MPI
 
@@ -24,25 +26,25 @@ if RANK == MASTER_RANK:
     from components.miscellaneous.timer import count_files_and_lines
     files, lines = count_files_and_lines('./')
 
-passed_components_tests = 0       # do not comment this
-passed_2dCSCG_tests = 0           # do not comment this
-passed_3dCSCG_tests = 0           # do not comment this
-passed_GLOBAL_tests = 0           # do not comment this
-passed_miUSGridTriangle_tests = 0 # do not comment this
+passed_components_tests = 0        # do not comment this
+passed_2dCSCG_tests = 0            # do not comment this
+passed_3dCSCG_tests = 0            # do not comment this
+passed_GLOBAL_tests = 0            # do not comment this
+passed_miUSGridTriangle_tests = 0  # do not comment this
 
 t_global_start = MPI.Wtime()
 
 
-from tests.components.main import passed_components_tests # comment to skip these tests
+from tests.components.main import passed_components_tests  # comment to skip these tests
 
 
-from tests.tools.main import passed_GLOBAL_tests # comment to skip these tests.
+from tests.tools.main import passed_GLOBAL_tests  # comment to skip these tests.
 
 
-from tests.objects.CSCG._2d.unittests.main import passed_2dCSCG_tests # comment to skip these tests.
+from tests.objects.CSCG._2d.unittests.main import passed_2dCSCG_tests  # comment to skip these tests.
 
 
-from tests.objects.CSCG._3d.unittests.main import passed_3dCSCG_tests # comment to skip these tests.
+from tests.objects.CSCG._3d.unittests.main import passed_3dCSCG_tests  # comment to skip these tests.
 
 
 from tests.objects.miUsGrid.triangular.unittests.main import passed_miUSGridTriangle_tests

@@ -60,19 +60,20 @@ class CSCG_Algebra_DUAL_FORM_BASE(FrozenClass):
         """
         _2bs_ = dict()
         _2bs_['obj'] = self.__class__.__name__
-        _2bs_['parameters'] = self.prime.standard_properties.parameters # this is the key
+        _2bs_['parameters'] = self.prime.standard_properties.parameters  # this is the key
         if RANK == MASTER_RANK:
             if do_save:
-                if filename[-3:] != '.mi': filename += '.mi'
+                if filename[-3:] != '.mi':
+                    filename += '.mi'
                 assert filename.count('.') == 1, f"filename={filename} wrong."
                 with open(filename, 'wb') as output:
                     pickle.dump(_2bs_, output, pickle.HIGHEST_PROTOCOL)
                 output.close()
         return _2bs_
 
-    #-----------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------
     @property
-    def BC(self): # ADF form has its own BC property
+    def BC(self):  # ADF form has its own BC property
         if self._BC_ is None:
             self._BC_ = CSCG_ADForm_BC(self)
         return self._BC_
@@ -82,7 +83,7 @@ class CSCG_Algebra_DUAL_FORM_BASE(FrozenClass):
         """Return the prime form."""
         return self._prime_
 
-    #-----------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------
 
     @property
     def orientation(self):

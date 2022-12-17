@@ -15,17 +15,19 @@ class _3dCSCG_S1F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
         """"""
         return self.perpendicular_surface(*args, **kwargs)
 
-    def perpendicular_surface(self,
-        x=None, y=None, z=None, # only one of them can be not-None.
+    def perpendicular_surface(
+        self,
+        x=None, y=None, z=None,    # only one of them can be not-None.
         plot_type='contourf', usetex=False, colormap='coolwarm',
         numOfSamples=100000, figsize=(6, 5),
         num_of_levels=20,
         xlabel=None, ylabel=None,
-        title=None, levels=None, # if provide them, put them in list of 3 (for 1-, 2-form)
+        title=None, levels=None,   # if provide them, put them in list of 3 (for 1-, 2-form)
         colorbar_font_size=12, title_pad=10,
         label_size=12, title_size=12,
         minor_tick_length=4, major_tick_length=7, tick_pad=8, tick_size=12,
-        saveto=None,):
+        saveto=None,
+    ):
         """Plot the 2-sf on a surface of x=constant or y=constant or z=constant.
 
         Note that the plot will only be reasonable if the region mappings are regular. For example,
@@ -83,20 +85,20 @@ class _3dCSCG_S1F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
         density = COMM.bcast(density, root=MASTER_RANK)
         sample = np.linspace(-1, 1, density)
 
-        XYZ, VAL = dict(), dict() # get data for plot.
+        XYZ, VAL = dict(), dict()  # get data for plot.
         for e in MPS:
             eps = MPS[e]
             pta = eps.perpendicular_to_axis
             assert pta == PTA, "For _3dCSCG_MeshPerpendicularSlice, all element perpendicular slice must have same PTA."
             pos = eps.position
             if pta == 'xi':
-                xi = np.array([pos,])
+                xi = np.array([pos, ])
                 eta = sigma = sample
             elif pta == 'eta':
-                eta = np.array([pos,])
+                eta = np.array([pos, ])
                 xi = sigma = sample
             elif pta == 'sigma':
-                sigma = np.array([pos,])
+                sigma = np.array([pos, ])
                 xi = eta = sample
             else:
                 raise Exception()
@@ -112,21 +114,21 @@ class _3dCSCG_S1F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
 
             for i, xyz_i in enumerate(xyz):
                 if pta == 'xi':
-                    _xyz_.append(xyz_i[0,:,:])
+                    _xyz_.append(xyz_i[0, :, :])
                 elif pta == 'eta':
-                    _xyz_.append(xyz_i[:,0,:])
+                    _xyz_.append(xyz_i[:, 0, :])
                 elif pta == 'sigma':
-                    _xyz_.append(xyz_i[:,:,0])
+                    _xyz_.append(xyz_i[:, :, 0])
                 else:
                     raise Exception()
 
             for i, vi in enumerate(val):
                 if pta == 'xi':
-                    _val_.append(vi[0,:,:])
+                    _val_.append(vi[0, :, :])
                 elif pta == 'eta':
-                    _val_.append(vi[:,0,:])
+                    _val_.append(vi[:, 0, :])
                 elif pta == 'sigma':
-                    _val_.append(vi[:,:,0])
+                    _val_.append(vi[:, :, 0])
                 else:
                     raise Exception()
 
@@ -249,24 +251,24 @@ class _3dCSCG_S1F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
 
                 plt.title(title[n], fontsize=title_size, pad=title_pad)
 
-                #------------ save to figure file ------------------------------------------------------3
+                # ----------- save to figure file ------------------------------------------------------3
                 if saveto is not None and saveto != '':
-                    if isinstance(saveto, str): # only one filename, we make it three_______________4
+                    if isinstance(saveto, str):  # only one filename, we make it three_______________4
                         assert saveto.count('.') >= 1, f'filename {saveto} is wrong, cannot save to it.'
                         filename_extension = saveto.split('.')
                         extension = filename_extension[-1]
                         filename = '.'.join(filename_extension[:-1])
                         plt.savefig(filename + f'_{n}th_component'+'.'+extension, bbox_inches='tight')
 
-                    elif isinstance(saveto, (list, tuple)): # multiple names provided_______________4
+                    elif isinstance(saveto, (list, tuple)):  # multiple names provided_______________4
                         plt.savefig(saveto[n], bbox_inches='tight')
 
-                    else: #--------- else, do not understand the names, raise Error ================4
+                    else: # -------- else, do not understand the names, raise Error ================4
                         raise Exception()
 
                 else:
                     plt.show()
-                #======================================================================================3
+                # =====================================================================================3
                 plt.close()
                 FIGURES.append(fig)
 

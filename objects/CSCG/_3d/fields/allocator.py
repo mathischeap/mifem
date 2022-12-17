@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from components.freeze.base import FrozenOnly
 
+
 class _3dCSCG_Field_Allocator(FrozenOnly):
     """"""
     @classmethod

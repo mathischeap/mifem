@@ -2,6 +2,7 @@
 from objects.CSCG._3d.forms.standard.base.visualize.main import _3dCSCG_FormVisualize
 from objects.CSCG._3d.forms.standard._1s.visualize.matplot import _3dCSCG_S1F_VISUALIZE_Matplot
 
+
 class _3dCSCG_S1F_VISUALIZE(_3dCSCG_FormVisualize):
     """"""
     def __init__(self, sf):

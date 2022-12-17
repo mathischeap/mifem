@@ -75,7 +75,7 @@ class _2dCSCG_Trace_Numbering_Visualize(FrozenOnly):
             tec_p = None
         tec_p = COMM.bcast(tec_p, root=MASTER_RANK)
         for pi in tec_p:
-            tec_p[pi] = self._trace_.elements.DO_compute_mapping_of_trace_at_position(tec_p[pi], c)
+            tec_p[pi] = self._trace_.elements.___Pr_compute_mapping_of_trace_at_position___(tec_p[pi], c)
 
         if RANK == MASTER_RANK:
             ted, tec = dict(), dict()
@@ -278,9 +278,9 @@ class _2dCSCG_Trace_Numbering_Visualize(FrozenOnly):
         for pi in mp_p:
             position = mp_p[pi][-1]
             if position in 'UD':
-                mp_p[pi] = self._trace_.elements.DO_compute_mapping_of_trace_at_position(mp_p[pi], cy)
+                mp_p[pi] = self._trace_.elements.___Pr_compute_mapping_of_trace_at_position___(mp_p[pi], cy)
             elif position in 'LR':
-                mp_p[pi] = self._trace_.elements.DO_compute_mapping_of_trace_at_position(mp_p[pi], cx)
+                mp_p[pi] = self._trace_.elements.___Pr_compute_mapping_of_trace_at_position___(mp_p[pi], cx)
             else:
                 raise Exception()
 

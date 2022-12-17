@@ -1,8 +1,6 @@
 
 
 
-
-
 class _3dCSCG_CornerEdgeNodeSOS():
     """"""
 

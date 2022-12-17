@@ -2,11 +2,6 @@
 from components.freeze.base import FrozenOnly
 
 
-
-
-
-
-
 class _3dCSCG_ADF_SF_Whether(FrozenOnly):
     """"""
     def __init__(self, adf):

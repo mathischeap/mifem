@@ -4,10 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/09/21 4:17 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
-
 from components.freeze.base import FrozenOnly
 import numpy as np
 from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_ColumnVector
@@ -26,8 +22,6 @@ class miUsGrid_SF_CochainBase(FrozenOnly):
         self._local_ = None
         self._freeze_self_()
 
-    def RESET_cache(self):
-        """"""
 
     def __getitem__(self, item):
         return self.local[item]
@@ -42,14 +36,12 @@ class miUsGrid_SF_CochainBase(FrozenOnly):
     def __len__(self):
         return len(self.local)
 
-
-
     @property
     def globe(self):
         """"""
         GM = self._sf_.numbering.gathering
         globe = lil_matrix((1, self._sf_.num.global_dofs))
-        for i in GM: # go through all local elements
+        for i in GM:  # go through all local elements
             globe[0, GM[i].full_vector] = self.local[i]
         globe = globe.tocsr().T
 
@@ -67,7 +59,7 @@ class miUsGrid_SF_CochainBase(FrozenOnly):
                     indices = G.indices
                     measure[indices] += 1
 
-                measure[measure==0] = 1
+                measure[measure == 0] = 1
                 # noinspection PyUnresolvedReferences
                 _____ = np.sum(GLOBE).toarray().ravel() / measure
                 globe = csr_matrix(_____).T
@@ -113,7 +105,7 @@ class miUsGrid_SF_CochainBase(FrozenOnly):
                     else:
                         # noinspection PyUnboundLocalVariable
                         to_be_sent = csc_matrix(
-                            (VV[lr[0]:lr[1]], range(lr[0],lr[1]), [0, lr[1]-lr[0]]),
+                            (VV[lr[0]:lr[1]], range(lr[0], lr[1]), [0, lr[1]-lr[0]]),
                             shape=(self._sf_.num.global_dofs, 1))
                     TO_BE_SENT.append(to_be_sent)
             else:
@@ -122,16 +114,16 @@ class miUsGrid_SF_CochainBase(FrozenOnly):
             # distribute to local cochain ...
             local = dict()
             GM = self._sf_.numbering.gathering
-            for i in GM: # go through all local elements
+            for i in GM:  # go through all local elements
                 idx = GM[i].full_vector
                 local[i] = TO_BE_SENT[idx].toarray().ravel()
             self.local = local
 
         elif glb.__class__.__name__ == 'LocallyFullVector':
-            V = glb.V # V already be 1-d array.
+            V = glb.V  # V already be 1-d array.
             local = dict()
             GM = self._sf_.numbering.gathering
-            for i in GM:  # go through all local elements
+            for i in GM:   # go through all local elements
                 idx = GM[i].full_vector
                 local[i] = V[idx]
             self.local = local
@@ -185,15 +177,10 @@ class miUsGrid_SF_CochainBase(FrozenOnly):
         except AssertionError:
             raise Exception("Cannot set local cochain.")
 
-        self.RESET_cache()
         self._local_ = local
 
 
-    #--- DEPENDENT PROPERTIES (BRANCHES, must have the two switching methods): when set, update local ------
+    # --- DEPENDENT PROPERTIES (BRANCHES, must have the two switching methods): when set, update local ------
 
 
-    #======================== ABOVE =========================================================================
-
-if __name__ == "__main__":
-    # mpiexec -n 4 python 
-    pass
+    # ======================== ABOVE =========================================================================

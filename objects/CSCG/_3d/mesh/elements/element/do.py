@@ -2,12 +2,12 @@
 from components.freeze.base import FrozenOnly
 import numpy as np
 
+
 class _3dCSCG_MeshElement_Do(FrozenOnly):
     """"""
     def __init__(self, element):
         self._element_ = element
         self._freeze_self_()
-
 
     def generate_element_plot_data(self, zoom=1, density=10):
         """
@@ -31,25 +31,25 @@ class _3dCSCG_MeshElement_Do(FrozenOnly):
 
         assert 0 < zoom <= 1, f"zoom={zoom} is wrong!"
 
-        O = np.ones(density) * zoom
+        o = np.ones(density) * zoom
         M = - np.ones(density) * zoom
         S = np.linspace(-1 * zoom, 1 * zoom, density)
 
         data = np.array([
-        np.array(self._element_.coordinate_transformation.mapping(S, M, M)),
-        np.array(self._element_.coordinate_transformation.mapping(S, M, O)),
-        np.array(self._element_.coordinate_transformation.mapping(S, O, O)),
-        np.array(self._element_.coordinate_transformation.mapping(S, O, M)),
+            np.array(self._element_.coordinate_transformation.mapping(S, M, M)),
+            np.array(self._element_.coordinate_transformation.mapping(S, M, o)),
+            np.array(self._element_.coordinate_transformation.mapping(S, o, o)),
+            np.array(self._element_.coordinate_transformation.mapping(S, o, M)),
 
-        np.array(self._element_.coordinate_transformation.mapping(M, S, M)),
-        np.array(self._element_.coordinate_transformation.mapping(M, S, O)),
-        np.array(self._element_.coordinate_transformation.mapping(O, S, O)),
-        np.array(self._element_.coordinate_transformation.mapping(O, S, M)),
+            np.array(self._element_.coordinate_transformation.mapping(M, S, M)),
+            np.array(self._element_.coordinate_transformation.mapping(M, S, o)),
+            np.array(self._element_.coordinate_transformation.mapping(o, S, o)),
+            np.array(self._element_.coordinate_transformation.mapping(o, S, M)),
 
-        np.array(self._element_.coordinate_transformation.mapping(M, M, S)),
-        np.array(self._element_.coordinate_transformation.mapping(M, O, S)),
-        np.array(self._element_.coordinate_transformation.mapping(O, O, S)),
-        np.array(self._element_.coordinate_transformation.mapping(O, M, S))
+            np.array(self._element_.coordinate_transformation.mapping(M, M, S)),
+            np.array(self._element_.coordinate_transformation.mapping(M, o, S)),
+            np.array(self._element_.coordinate_transformation.mapping(o, o, S)),
+            np.array(self._element_.coordinate_transformation.mapping(o, M, S))
         ])
 
         return data

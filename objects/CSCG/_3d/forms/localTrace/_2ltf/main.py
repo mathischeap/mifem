@@ -5,6 +5,7 @@
 @time: 11/26/2022 2:49 PM
 """
 import sys
+from abc import ABC
 
 if './' not in sys.path: sys.path.append('./')
 from objects.CSCG._3d.forms.localTrace.base.main import _3dCSCG_LocalTrace
@@ -17,11 +18,14 @@ from components.quadrature import Quadrature
 from scipy.sparse import csr_matrix, bmat
 from components.assemblers import MatrixAssembler
 
-class _3dCSCG_2LocalTrace(_3dCSCG_LocalTrace):
+
+class _3dCSCG_2LocalTrace(_3dCSCG_LocalTrace, ABC):
     """"""
 
-    def __init__(self, mesh, space, hybrid=True, orientation='outer',
-        numbering_parameters='Naive', name='outer-oriented-2-local-trace-form'):
+    def __init__(
+        self, mesh, space, hybrid=True, orientation='outer',
+        numbering_parameters='Naive', name='outer-oriented-2-local-trace-form'
+    ):
         super().__init__(mesh, space, hybrid, orientation, numbering_parameters, name)
         self._k_ = 2
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_localtrace_2form')
@@ -29,7 +33,6 @@ class _3dCSCG_2LocalTrace(_3dCSCG_LocalTrace):
         self._reconstruct_ = _3dCSCG_2LocalTrace_Reconstruct(self)
         self._visualize_ = _3dCSCG_2LocalTrace_Visualize(self)
         self._freeze_self_()
-
 
     def ___Pr_check_CF___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
@@ -46,7 +49,7 @@ class _3dCSCG_2LocalTrace(_3dCSCG_LocalTrace):
         assert func_body.ndim == self.ndim == 3
 
         if func_body.__class__.__name__ == '_3dCSCG_ScalarField':
-            assert func_body.ftype in ('standard','boundary-wise'), \
+            assert func_body.ftype in ('standard', 'boundary-wise'), \
                 f"3dCSCG 2ltf BC does not accept func _3dCSCG_ScalarField of ftype {func_body.ftype}."
         else:
             raise Exception(f"3dCSCG 2ltf BC does not accept func {func_body.__class__}")
@@ -239,6 +242,7 @@ class _3dCSCG_2LocalTrace(_3dCSCG_LocalTrace):
 
         return MD
 
+
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/_3d/forms/localTrace/_2ltf/main.py
 
@@ -253,7 +257,7 @@ if __name__ == '__main__':
     tf2 = FC('2-t', hybrid=False)
 
     def p(t, x, y, z): return np.sin(2*np.pi*x) + t + 0 * y * z
-    scalar = FC('scalar', {'North':p, 'South': p, 'West':p, 'East':p, 'Back':p, 'Front':p})
+    scalar = FC('scalar', {'North': p, 'South': p, 'West': p, 'East': p, 'Back': p, 'Front': p})
     # scalar = FC('scalar', p)
 
     Ts, Tt = space.topological_connection(sf2, ltf2, tf2)

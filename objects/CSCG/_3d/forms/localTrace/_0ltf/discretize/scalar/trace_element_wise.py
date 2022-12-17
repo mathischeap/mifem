@@ -6,6 +6,7 @@
 """
 from components.freeze.base import FrozenOnly
 
+
 class _3dCSCG_0ltf_Discretize_TraceElementWise(FrozenOnly):
     """"""
 
@@ -39,7 +40,7 @@ class _3dCSCG_0ltf_Discretize_TraceElementWise(FrozenOnly):
 
         mesh = self._ltf_.mesh
         trace_elements = mesh.trace.elements
-        cochainLocal : dict[int] = dict()
+        cochainLocal: dict[int] = dict()
 
         for e in FUNC:
             te = trace_elements[e]
@@ -65,7 +66,7 @@ class _3dCSCG_0ltf_Discretize_TraceElementWise(FrozenOnly):
                         side = pos[-1] # find the side
 
                         if element not in cochainLocal:
-                            cochainLocal[element] : dict[str]= dict()
+                            cochainLocal[element]: dict[str] = dict()
                         else:
                             pass
 

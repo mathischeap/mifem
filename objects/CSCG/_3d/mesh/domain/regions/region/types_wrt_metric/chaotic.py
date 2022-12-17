@@ -4,8 +4,7 @@ from objects.CSCG._3d.mesh.domain.regions.region.types_wrt_metric.base import Ty
 import numpy as np
 from root.config.main import COMM, RANK
 from objects.CSCG._3d.mesh.elements.element.types_wrt_metric.chaotic import ChaoticElement
-from objects.CSCG._3d.mesh.trace.elements.element.types_wrt_metric.chaotic import  ChaoticTraceElement
-
+from objects.CSCG._3d.mesh.trace.elements.element.types_wrt_metric.chaotic import ChaoticTraceElement
 
 
 class Chaotic(TypeWr2MetricBase):
@@ -33,7 +32,7 @@ class Chaotic(TypeWr2MetricBase):
         return self._mark_
 
     def ___CLASSIFY_ELEMENT_of_spacing___(self, spacing: tuple) -> ChaoticElement:
-        assert np.shape(spacing) == (3,2), "I need a spacing of shape (3,2) to represent an element in a regions."
+        assert np.shape(spacing) == (3, 2), "I need a spacing of shape (3,2) to represent an element in a regions."
         assert all([0 <= spacing[i][0] < spacing[i][1] <= 1 for i in range(3)]), f"spacing={spacing} is wrong."
         return ChaoticElement()
 
@@ -44,4 +43,3 @@ class Chaotic(TypeWr2MetricBase):
         :return:
         """
         return ChaoticTraceElement()
-

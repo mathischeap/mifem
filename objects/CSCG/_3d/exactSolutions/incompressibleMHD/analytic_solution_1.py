@@ -10,7 +10,8 @@ incompressible MHD systems, JCP, (2021)]
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from objects.CSCG._3d.exactSolutions.incompressibleMHD.base import incompressible_MHD_Base
 
 
@@ -24,19 +25,25 @@ class AS1(incompressible_MHD_Base):
 
     @staticmethod
     def _h(a): return (a ** 2 - a) ** 2
+
     @staticmethod
-    def _h_p(a): return 2 * (a ** 2 - a)* (2*a - 1)
+    def _h_p(a): return 2 * (a ** 2 - a) * (2*a - 1)
+
     @staticmethod
     def _g1(t): return 4 - 2 * t
+
     @staticmethod
     def _g2(t): return 1 + t
+
     @staticmethod
     def _g3(t): return 1 - t
 
     def u(self, t, x, y, z):
         return - self._g1(t) * self._h_p(x) * self._h(y) * self._h(z)
+
     def v(self, t, x, y, z):
         return - self._g2(t) * self._h(x) * self._h_p(y) * self._h(z)
+
     def w(self, t, x, y, z):
         return - self._g3(t) * self._h(x) * self._h(y) * self._h_p(z)
 
@@ -57,8 +64,10 @@ class AS1(incompressible_MHD_Base):
 
     def Bx(self, t, x, y, z):
         return self.w_y(t, x, y, z) - self.v_z(t, x, y, z)
+
     def By(self, t, x, y, z):
         return self.u_z(t, x, y, z) - self.w_x(t, x, y, z)
+
     def Bz(self, t, x, y, z):
         return self.v_x(t, x, y, z) - self.u_y(t, x, y, z)
 

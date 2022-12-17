@@ -1,18 +1,14 @@
 # -*- coding: utf-8 -*-
-
-
-
-
 from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.mesh.domain.regions.region.sides.side.main import Side
 
 
 class Sides(FrozenOnly):
     def __init__(self, region):
-        assert region.ndim == 3, " <Region> <DIII> <Sides> "
-        assert region.__class__.__name__ == 'Region', " <Region> <DIII> <Sides> "
+        assert region.ndim == 3, " <Region> <Sides> "
+        assert region.__class__.__name__ == 'Region', " <Region> <Sides> "
         self._region_ = region
-        self._sides_cache_ = {}
+        self._sides_cache_ = dict()
         self._freeze_self_()
 
     @property
@@ -34,6 +30,3 @@ class Sides(FrozenOnly):
     @property
     def geometries(self):
         return self._region_._side_geometries_
-
-
-

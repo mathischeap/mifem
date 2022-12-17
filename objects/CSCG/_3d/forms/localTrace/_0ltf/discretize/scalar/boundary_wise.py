@@ -2,6 +2,7 @@
 from components.freeze.base import FrozenOnly
 import numpy as np
 
+
 class _3dCSCG_0ltf_Discretize_BoundaryWise(FrozenOnly):
     def __init__(self, ltf):
         self._ltf_ = ltf

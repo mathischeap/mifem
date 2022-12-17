@@ -8,7 +8,8 @@ This is more like an example rather than a test.
 """
 import os
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.miscellaneous.docstringReaders.numpy_styple import NumpyStyleDocstringReader
 import pandas as pd
@@ -16,6 +17,7 @@ import pandas as pd
 current_dir = os.path.dirname(__file__)
 from tools.run.reader import ParallelMatrix3dInputRunner
 from components.miscellaneous.mios import remove, isfile
+
 
 def csvReader(N, K, c):
     """
@@ -54,19 +56,22 @@ def csvReader(N, K, c):
 
     return RT
 
-Ns = [[1, 1, 1,],
-      [2, 2, 2,]]
-Ks = [[4, 6, 8,],
-      [4, 6, 8,]]
-cs = [0,]
+
+Ns = [[1, 1, 1, ],
+      [2, 2, 2, ]]
+Ks = [[4, 6, 8, ],
+      [4, 6, 8, ]]
+cs = [0, ]
 
 pr = ParallelMatrix3dInputRunner(csvReader)
 
-if isfile(current_dir + '/csv_reader.txt'): remove(current_dir + '/csv_reader.txt')
+if isfile(current_dir + '/csv_reader.txt'):
+    remove(current_dir + '/csv_reader.txt')
 
 pr.iterate(Ns, Ks, cs, writeto=current_dir + '/csv_reader.txt', show_progress=False)
 
-if isfile(current_dir + '/csv_reader.txt'): remove(current_dir + '/csv_reader.txt')
+if isfile(current_dir + '/csv_reader.txt'):
+    remove(current_dir + '/csv_reader.txt')
 
 pr.visualize('loglog', 'N', 'a_L2_error', prime='input2', hcp=1, usetex=True,
              labels=['$N=1$', '$N=2$'],
@@ -94,7 +99,8 @@ pr.visualize('loglog', 'N', 'b_L2_error', prime='input2', hcp=1, usetex=True,
                                   1: {'tp': (0.02, 0.2), 'order': 3}},
              saveto=current_dir + '/b_L2_error.png')
 
-test_csv_reader_passed = 1 # do not comment this.
+test_csv_reader_passed = 1  # do not comment this.
+
 
 if __name__ == '__main__':
     # python tests/tools/ParallelMatrix3dInputRunner/csv_reader_test.py

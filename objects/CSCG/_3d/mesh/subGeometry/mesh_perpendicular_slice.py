@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-
-
 from components.freeze.main import FrozenOnly
 
 
@@ -14,7 +12,7 @@ class _3dCSCG_MeshPerpendicularSlice(FrozenOnly):
         self._mesh_ = mesh
 
         # only provide a RegionPerpendicularSlice as input: `_3dCSCG_MeshPerpendicularSlice(RPS)`
-        if len(args)== 1 and args[0].__class__.__name__ == 'RegionPerpendicularSlice':
+        if len(args) == 1 and args[0].__class__.__name__ == 'RegionPerpendicularSlice':
             self._element_slices_, self._PTA_ = \
                 self.___PRIVATE_generate_element_slices_from_A_RegionPerpendicularSlice__(args[0])
 
@@ -29,16 +27,13 @@ class _3dCSCG_MeshPerpendicularSlice(FrozenOnly):
 
         self._freeze_self_()
 
-
     def ___PRIVATE_generate_element_slices_from_A_DomainPerpendicularSlice__(self, DPS):
         """"""
         RPS_dict = DPS.RPS_dict
 
         element_slices, PTA = dict(), None
 
-
         for rn in RPS_dict:
-
 
             RPS = RPS_dict[rn]
 
@@ -61,8 +56,6 @@ class _3dCSCG_MeshPerpendicularSlice(FrozenOnly):
 
         return element_slices, PTA
 
-
-
     def ___PRIVATE_generate_element_slices_from_A_RegionPerpendicularSlice__(self, RS):
         """
         :param RS: A RegionSlice instance.
@@ -70,7 +63,7 @@ class _3dCSCG_MeshPerpendicularSlice(FrozenOnly):
         """
         element_slices = dict()
         rn = RS._region_.name
-        #----  the region is not involved in this core, we can return empty element_slices here!
+        # ---  the region is not involved in this core, we can return empty element_slices here!
         if rn not in self._mesh_.elements.in_regions:
             return element_slices, None
 
@@ -105,8 +98,8 @@ class _3dCSCG_MeshPerpendicularSlice(FrozenOnly):
                     assert start <= PTA_position < end, f"[start, end] = [{start}, {end}], " \
                                                         f"PTA_position={PTA_position} wrong."
                     PTA_element_position = -1 + 2 * (PTA_position - start) / (end - start)
-                elif len(LS) == 1: # we found the last node LS = [1,]
-                    assert LS == [1,]
+                elif len(LS) == 1:  # we found the last node LS = [1,]
+                    assert LS == [1, ]
                     PTA_element_position = 1
                     loc -= 1
                 else:
@@ -147,11 +140,11 @@ class _3dCSCG_MeshPerpendicularSlice(FrozenOnly):
         for e in involved_loc_elements:
             element = self._mesh_.elements[e]
             if PTA == 0:
-                ESG_PS = element.sub_geometry.make_a_perpendicular_slice_object_on(xi = position)
+                ESG_PS = element.sub_geometry.make_a_perpendicular_slice_object_on(xi=position)
             elif PTA == 1:
-                ESG_PS = element.sub_geometry.make_a_perpendicular_slice_object_on(eta = position)
+                ESG_PS = element.sub_geometry.make_a_perpendicular_slice_object_on(eta=position)
             elif PTA == 2:
-                ESG_PS = element.sub_geometry.make_a_perpendicular_slice_object_on(sigma = position)
+                ESG_PS = element.sub_geometry.make_a_perpendicular_slice_object_on(sigma=position)
             else:
                 raise Exception()
 
@@ -173,7 +166,7 @@ class _3dCSCG_MeshPerpendicularSlice(FrozenOnly):
         :return:
         """
         if isinstance(indices, (int, float)):
-            indices = [indices,]
+            indices = [indices, ]
 
         location = tuple()
         for i in indices:
@@ -191,7 +184,6 @@ class _3dCSCG_MeshPerpendicularSlice(FrozenOnly):
             location += (LOC,)
 
         return location
-
 
     def __getitem__(self, i):
         return self._element_slices_[i]

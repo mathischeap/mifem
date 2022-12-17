@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/10/13 9:19 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 
 from components.freeze.base import FrozenOnly
 
@@ -98,11 +95,3 @@ class CSCG_AFORM_BC_Interpret_Local(FrozenOnly):
     @property
     def cochains(self):
         return self._cochains_
-
-
-
-
-
-if __name__ == "__main__":
-    # mpiexec -n 4 python 
-    pass

@@ -14,10 +14,9 @@ from objects.CSCG._3d.fields.vector.main import _3dCSCG_VectorField
 from objects.CSCG._3d.fields.scalar.main import _3dCSCG_ScalarField
 from components.numerical._3dSpace.partial_derivative import NumericalPartialDerivative_xyz
 from components.numerical.timePlus3dSpace.partial_derivative import NumericalPartialDerivative_txyz
-from components.numerical.timePlus3dSpace.partial_derivative_as_functions import NumericalPartialDerivative_txyz_Functions
+from components.numerical.timePlus3dSpace.partial_derivative_as_functions import \
+    NumericalPartialDerivative_txyz_Functions
 import numpy as np
-
-
 
 
 class incompressible_NavierStokes_Base(Base):
@@ -71,18 +70,22 @@ class incompressible_NavierStokes_Base(Base):
 
     def u(self, t, x, y, z):
         raise NotImplementedError()
+    
     def u_t(self, t, x, y, z):
         if self._NPDf_u_ is None:
             self._NPDf_u_ = NumericalPartialDerivative_txyz_Functions(self.u)
         return self._NPDf_u_('t')(t, x, y, z)
+    
     def u_x(self, t, x, y, z):
         if self._NPDf_u_ is None:
             self._NPDf_u_ = NumericalPartialDerivative_txyz_Functions(self.u)
         return self._NPDf_u_('x')(t, x, y, z)
+    
     def u_y(self, t, x, y, z):
         if self._NPDf_u_ is None:
             self._NPDf_u_ = NumericalPartialDerivative_txyz_Functions(self.u)
         return self._NPDf_u_('y')(t, x, y, z)
+    
     def u_z(self, t, x, y, z):
         if self._NPDf_u_ is None:
             self._NPDf_u_ = NumericalPartialDerivative_txyz_Functions(self.u)
@@ -91,18 +94,22 @@ class incompressible_NavierStokes_Base(Base):
 
     def v(self, t, x, y, z):
         raise NotImplementedError()
+    
     def v_t(self, t, x, y, z):
         if self._NPDf_v_ is None:
             self._NPDf_v_ = NumericalPartialDerivative_txyz_Functions(self.v)
         return self._NPDf_v_('t')(t, x, y, z)
+    
     def v_x(self, t, x, y, z):
         if self._NPDf_v_ is None:
             self._NPDf_v_ = NumericalPartialDerivative_txyz_Functions(self.v)
         return self._NPDf_v_('x')(t, x, y, z)
+    
     def v_y(self, t, x, y, z):
         if self._NPDf_v_ is None:
             self._NPDf_v_ = NumericalPartialDerivative_txyz_Functions(self.v)
         return self._NPDf_v_('y')(t, x, y, z)
+    
     def v_z(self, t, x, y, z):
         if self._NPDf_v_ is None:
             self._NPDf_v_ = NumericalPartialDerivative_txyz_Functions(self.v)
@@ -111,18 +118,22 @@ class incompressible_NavierStokes_Base(Base):
 
     def w(self, t, x, y, z):
         raise NotImplementedError()
+    
     def w_t(self, t, x, y, z):
         if self._NPDf_w_ is None:
             self._NPDf_w_ = NumericalPartialDerivative_txyz_Functions(self.w)
         return self._NPDf_w_('t')(t, x, y, z)
+    
     def w_x(self, t, x, y, z):
         if self._NPDf_w_ is None:
             self._NPDf_w_ = NumericalPartialDerivative_txyz_Functions(self.w)
         return self._NPDf_w_('x')(t, x, y, z)
+    
     def w_y(self, t, x, y, z):
         if self._NPDf_w_ is None:
             self._NPDf_w_ = NumericalPartialDerivative_txyz_Functions(self.w)
         return self._NPDf_w_('y')(t, x, y, z)
+    
     def w_z(self, t, x, y, z):
         if self._NPDf_w_ is None:
             self._NPDf_w_ = NumericalPartialDerivative_txyz_Functions(self.w)
@@ -130,14 +141,17 @@ class incompressible_NavierStokes_Base(Base):
 
 
     def p(self, t, x, y, z): raise NotImplementedError()
+    
     def p_x(self, t, x, y, z):
         if self._NPDf_p_ is None:
             self._NPDf_p_ = NumericalPartialDerivative_txyz_Functions(self.p)
         return self._NPDf_p_('x')(t, x, y, z)
+    
     def p_y(self, t, x, y, z):
         if self._NPDf_p_ is None:
             self._NPDf_p_ = NumericalPartialDerivative_txyz_Functions(self.p)
         return self._NPDf_p_('y')(t, x, y, z)
+    
     def p_z(self, t, x, y, z):
         if self._NPDf_p_ is None:
             self._NPDf_p_ = NumericalPartialDerivative_txyz_Functions(self.p)
@@ -148,36 +162,44 @@ class incompressible_NavierStokes_Base(Base):
         if self._NPDf_ux_ is None:
             self._NPDf_ux_ = NumericalPartialDerivative_txyz_Functions(self.u_x)
         return self._NPDf_ux_('x')(t, x, y, z)
+    
     def u_yy(self, t, x, y, z):
         if self._NPDf_uy_ is None:
             self._NPDf_uy_ = NumericalPartialDerivative_txyz_Functions(self.u_y)
         return self._NPDf_uy_('y')(t, x, y, z)
+    
     def u_zz(self, t, x, y, z):
         if self._NPDf_uz_ is None:
             self._NPDf_uz_ = NumericalPartialDerivative_txyz_Functions(self.u_z)
         return self._NPDf_uz_('z')(t, x, y, z)
+    
 
     def v_xx(self, t, x, y, z):
         if self._NPDf_vx_ is None:
             self._NPDf_vx_ = NumericalPartialDerivative_txyz_Functions(self.v_x)
         return self._NPDf_vx_('x')(t, x, y, z)
+    
     def v_yy(self, t, x, y, z):
         if self._NPDf_vy_ is None:
             self._NPDf_vy_ = NumericalPartialDerivative_txyz_Functions(self.v_y)
         return self._NPDf_vy_('y')(t, x, y, z)
+    
     def v_zz(self, t, x, y, z):
         if self._NPDf_vz_ is None:
             self._NPDf_vz_ = NumericalPartialDerivative_txyz_Functions(self.v_z)
         return self._NPDf_vz_('z')(t, x, y, z)
+    
 
     def w_xx(self, t, x, y, z):
         if self._NPDf_wx_ is None:
             self._NPDf_wx_ = NumericalPartialDerivative_txyz_Functions(self.w_x)
         return self._NPDf_wx_('x')(t, x, y, z)
+    
     def w_yy(self, t, x, y, z):
         if self._NPDf_wy_ is None:
             self._NPDf_wy_ = NumericalPartialDerivative_txyz_Functions(self.w_y)
         return self._NPDf_wy_('y')(t, x, y, z)
+    
     def w_zz(self, t, x, y, z):
         if self._NPDf_wz_ is None:
             self._NPDf_wz_ = NumericalPartialDerivative_txyz_Functions(self.w_z)
@@ -188,10 +210,12 @@ class incompressible_NavierStokes_Base(Base):
     @property
     def velocity(self):
         if self._velocity_ is None:
-            self._velocity_ =  _3dCSCG_VectorField(self.mesh,
-                                                   (self.u, self.v, self.w),
-                                                   valid_time=self.valid_time,
-                                                   name="velocity")
+            self._velocity_ = _3dCSCG_VectorField(
+                self.mesh,
+                (self.u, self.v, self.w),
+                valid_time=self.valid_time,
+                name="velocity"
+            )
         return self._velocity_
 
     @property
@@ -202,10 +226,12 @@ class incompressible_NavierStokes_Base(Base):
     def divergence_of_velocity(self):
         if self._divergence_of_velocity_ is None:
             # this condition must be valid for all time.
-            self._divergence_of_velocity_ = _3dCSCG_ScalarField(self.mesh,
-                        self.___div_of_velocity___,
-                        valid_time=None,
-                        name='divergence_of_velocity')
+            self._divergence_of_velocity_ = _3dCSCG_ScalarField(
+                self.mesh,
+                self.___div_of_velocity___,
+                valid_time=None,
+                name='divergence_of_velocity'
+            )
         return self._divergence_of_velocity_
 
     def ___div_of_velocity___(self, t, x, y, z):
@@ -233,10 +259,12 @@ class incompressible_NavierStokes_Base(Base):
 
         """
         if self._source_term_ is None:
-            self._source_term_ = _3dCSCG_ScalarField(self.mesh,
-                                                    self.s,
-                                                    valid_time=None,
-                                                    name='mass-source-term')
+            self._source_term_ = _3dCSCG_ScalarField(
+                self.mesh,
+                self.s,
+                valid_time=None,
+                name='mass-source-term'
+                )
         return self._source_term_
 
     @property
@@ -250,8 +278,10 @@ class incompressible_NavierStokes_Base(Base):
 
     def omega_x(self, t, x, y, z):
         return self.w_y(t, x, y, z) - self.v_z(t, x, y, z)
+    
     def omega_y(self, t, x, y, z):
         return self.u_z(t, x, y, z) - self.w_x(t, x, y, z)
+    
     def omega_z(self, t, x, y, z):
         return self.v_x(t, x, y, z) - self.u_y(t, x, y, z)
 
@@ -276,11 +306,13 @@ class incompressible_NavierStokes_Base(Base):
         return self._curl_of_vorticity_
 
     def ___m_laplace_u___(self, t, x, y, z):
-        return - ( self.u_xx(t, x, y, z) + self.u_yy(t, x, y, z) + self.u_zz(t, x, y, z) )
+        return - (self.u_xx(t, x, y, z) + self.u_yy(t, x, y, z) + self.u_zz(t, x, y, z))
+    
     def ___m_laplace_v___(self, t, x, y, z):
-        return - ( self.v_xx(t, x, y, z) + self.v_yy(t, x, y, z) + self.v_zz(t, x, y, z) )
+        return - (self.v_xx(t, x, y, z) + self.v_yy(t, x, y, z) + self.v_zz(t, x, y, z))
+    
     def ___m_laplace_w___(self, t, x, y, z):
-        return - ( self.w_xx(t, x, y, z) + self.w_yy(t, x, y, z) + self.w_zz(t, x, y, z) )
+        return - (self.w_xx(t, x, y, z) + self.w_yy(t, x, y, z) + self.w_zz(t, x, y, z))
 
 
     @property
@@ -299,20 +331,22 @@ class incompressible_NavierStokes_Base(Base):
         return 0 * t * x * y * z
 
     def fx(self, t, x, y, z):
-        return self.u_t(t,x,y,z) + \
+        return self.u_t(t, x, y, z) + \
                self.omega_y(t, x, y, z) * self.w(t, x, y, z) - self.omega_z(t, x, y, z) * self.v(t, x, y, z) + \
                self._tp_x_(t, x, y, z) - \
-               self.nu * (self.u_xx(t,x,y,z) + self.u_yy(t,x,y,z) + self.u_zz(t,x,y,z))
+               self.nu * (self.u_xx(t, x, y, z) + self.u_yy(t, x, y, z) + self.u_zz(t, x, y, z))
+    
     def fy(self, t, x, y, z):
-        return self.v_t(t,x,y,z) + \
+        return self.v_t(t, x, y, z) + \
                self.omega_z(t, x, y, z) * self.u(t, x, y, z) - self.omega_x(t, x, y, z) * self.w(t, x, y, z) + \
                self._tp_y_(t, x, y, z) - \
-               self.nu * (self.v_xx(t,x,y,z) + self.v_yy(t,x,y,z) + self.v_zz(t,x,y,z))
+               self.nu * (self.v_xx(t, x, y, z) + self.v_yy(t, x, y, z) + self.v_zz(t, x, y, z))
+    
     def fz(self, t, x, y, z):
-        return self.w_t(t,x,y,z) + \
+        return self.w_t(t, x, y, z) + \
                self.omega_x(t, x, y, z) * self.v(t, x, y, z) - self.omega_y(t, x, y, z) * self.u(t, x, y, z) + \
                self._tp_z_(t, x, y, z) - \
-               self.nu * (self.w_xx(t,x,y,z) + self.w_yy(t,x,y,z) + self.w_zz(t,x,y,z))
+               self.nu * (self.w_xx(t, x, y, z) + self.w_yy(t, x, y, z) + self.w_zz(t, x, y, z))
 
     @property
     def body_force(self):
@@ -335,30 +369,36 @@ class incompressible_NavierStokes_Base(Base):
     @property
     def gradient_of_pressure(self):
         if self._gradientOfPressure_ is None:
-            self._gradientOfPressure_ =  _3dCSCG_VectorField(self.mesh,
-                 (self.p_x, self.p_y, self.p_z),
-                 valid_time=self.valid_time,
-                 name="gradient_of_pressure",
+            self._gradientOfPressure_ = _3dCSCG_VectorField(
+                self.mesh,
+                (self.p_x, self.p_y, self.p_z),
+                valid_time=self.valid_time,
+                name="gradient_of_pressure",
             )
         return self._gradientOfPressure_
 
     @property
     def total_pressure(self):
         if self._totalPressure_ is None:
-            self._totalPressure_ = _3dCSCG_ScalarField(self.mesh,
-                   self.___total_pressure___,
-                   valid_time=self.valid_time,
-                   name='total_pressure'
+            self._totalPressure_ = _3dCSCG_ScalarField(
+                self.mesh,
+                self.___total_pressure___,
+                valid_time=self.valid_time,
+                name='total_pressure'
             )
         return self._totalPressure_
+
     def ___total_pressure___(self, t, x, y, z):
         return self.p(t, x, y, z) + self.___kinetic_energy_distribution___(t, x, y, z)
+
     def _tp_x_(self, t, x, y, z):
         """ """
         return self.p_x(t, x, y, z) + self._ke_x_(t, x, y, z)
+
     def _tp_y_(self, t, x, y, z):
         """ """
         return self.p_y(t, x, y, z) + self._ke_y_(t, x, y, z)
+
     def _tp_z_(self, t, x, y, z):
         """ """
         return self.p_z(t, x, y, z) + self._ke_z_(t, x, y, z)
@@ -379,58 +419,64 @@ class incompressible_NavierStokes_Base(Base):
     def kinetic_energy_distribution(self):
         """A scalar field of the kinetic energy distribution."""
         if self._kineticEnergyDistribution_ is None:
-            self._kineticEnergyDistribution_ =_3dCSCG_ScalarField(
+            self._kineticEnergyDistribution_ = _3dCSCG_ScalarField(
                 self.mesh,
                 self.___kinetic_energy_distribution___,
                 valid_time=self.valid_time,
                 name='kinetic_energy_distribution'
             )
         return self._kineticEnergyDistribution_
+
     def ___kinetic_energy_distribution___(self, t, x, y, z):
         return 0.5 * (self.u(t, x, y, z)**2 + self.v(t, x, y, z)**2 + self.w(t, x, y, z)**2)
+
     def _ke_x_(self, t, x, y, z):
         """ d(kinetic_energy)/dx """
         return self.u(t, x, y, z)*self.u_x(t, x, y, z) + \
-               self.v(t, x, y, z)*self.v_x(t, x, y, z) + \
-               self.w(t, x, y, z)*self.w_x(t, x, y, z)
+                    self.v(t, x, y, z)*self.v_x(t, x, y, z) + \
+                    self.w(t, x, y, z)*self.w_x(t, x, y, z)
+
     def _ke_y_(self, t, x, y, z):
         """ d(kinetic_energy)/dy """
         return self.u(t, x, y, z)*self.u_y(t, x, y, z) + \
-               self.v(t, x, y, z)*self.v_y(t, x, y, z) + \
-               self.w(t, x, y, z)*self.w_y(t, x, y, z)
+                    self.v(t, x, y, z)*self.v_y(t, x, y, z) + \
+                    self.w(t, x, y, z)*self.w_y(t, x, y, z)
+
     def _ke_z_(self, t, x, y, z):
         """ d(kinetic_energy)/dz """
         return self.u(t, x, y, z)*self.u_z(t, x, y, z) + \
-               self.v(t, x, y, z)*self.v_z(t, x, y, z) + \
-               self.w(t, x, y, z)*self.w_z(t, x, y, z)
+                    self.v(t, x, y, z)*self.v_z(t, x, y, z) + \
+                    self.w(t, x, y, z)*self.w_z(t, x, y, z)
 
     @property
     def helicity_distribution(self):
         """A scalar field of the helicity distribution."""
         if self._helicityDistribution_ is None:
-            self._helicityDistribution_ =_3dCSCG_ScalarField(
+            self._helicityDistribution_ = _3dCSCG_ScalarField(
                 self.mesh,
                 self.___helicity_distribution___,
                 valid_time=self.valid_time,
                 name='helicity_distribution'
             )
         return self._helicityDistribution_
+
     def ___helicity_distribution___(self, t, x, y, z):
-        return self.u(t,x,y,z) * self.omega_x(t, x, y, z) + \
-               self.v(t,x,y,z) * self.omega_y(t, x, y, z) + \
-               self.w(t,x,y,z) * self.omega_z(t, x, y, z)
+        return self.u(t, x, y, z) * self.omega_x(t, x, y, z) + \
+                self.v(t, x, y, z) * self.omega_y(t, x, y, z) + \
+                self.w(t, x, y, z) * self.omega_z(t, x, y, z)
 
     @property
     def enstrophy_distribution(self):
         """A scalar field of the enstrophy distribution."""
         if self._enstrophyDistribution_ is None:
-            self._enstrophyDistribution_ =_3dCSCG_ScalarField(
+            self._enstrophyDistribution_ = _3dCSCG_ScalarField(
                 self.mesh,
                 self.___enstrophy_distribution___,
                 valid_time=self.valid_time,
                 name='enstrophy_distribution'
             )
         return self._enstrophyDistribution_
+
     def ___enstrophy_distribution___(self, t, x, y, z):
         return 0.5 * (self.omega_x(t, x, y, z) ** 2 +
                       self.omega_y(t, x, y, z) ** 2 +
@@ -461,24 +507,25 @@ class incompressible_NavierStokes_Base(Base):
 
         rst = (x, y, z)
 
-        if len(x) == 0: return
+        if len(x) == 0:
+            return
 
         for t in TS:
             try:
-                fx = self.u_t(t,x,y,z) + \
-                self.omega_y(t, x, y, z) * self.w(t, x, y, z) - self.omega_z(t, x, y, z) * self.v(t, x, y, z) + \
-                self._tp_x_(t, x, y, z) - \
-                self.nu * (self.u_xx(t,x,y,z) + self.u_yy(t,x,y,z) + self.u_zz(t,x,y,z))
+                fx = self.u_t(t, x, y, z) + \
+                    self.omega_y(t, x, y, z) * self.w(t, x, y, z) - self.omega_z(t, x, y, z) * self.v(t, x, y, z) + \
+                    self._tp_x_(t, x, y, z) - \
+                    self.nu * (self.u_xx(t, x, y, z) + self.u_yy(t, x, y, z) + self.u_zz(t, x, y, z))
 
-                fy = self.v_t(t,x,y,z) + \
-                self.omega_z(t, x, y, z) * self.u(t, x, y, z) - self.omega_x(t, x, y, z) * self.w(t, x, y, z) + \
-                self._tp_y_(t, x, y, z) - \
-                self.nu * (self.v_xx(t,x,y,z) + self.v_yy(t,x,y,z) + self.v_zz(t,x,y,z))
+                fy = self.v_t(t, x, y, z) + \
+                    self.omega_z(t, x, y, z) * self.u(t, x, y, z) - self.omega_x(t, x, y, z) * self.w(t, x, y, z) + \
+                    self._tp_y_(t, x, y, z) - \
+                    self.nu * (self.v_xx(t, x, y, z) + self.v_yy(t, x, y, z) + self.v_zz(t, x, y, z))
 
-                fz = self.w_t(t,x,y,z) + \
-                self.omega_x(t, x, y, z) * self.v(t, x, y, z) - self.omega_y(t, x, y, z) * self.u(t, x, y, z) + \
-                self._tp_z_(t, x, y, z) - \
-                self.nu * (self.w_xx(t,x,y,z) + self.w_yy(t,x,y,z) + self.w_zz(t,x,y,z))
+                fz = self.w_t(t, x, y, z) + \
+                    self.omega_x(t, x, y, z) * self.v(t, x, y, z) - self.omega_y(t, x, y, z) * self.u(t, x, y, z) + \
+                    self._tp_z_(t, x, y, z) - \
+                    self.nu * (self.w_xx(t, x, y, z) + self.w_yy(t, x, y, z) + self.w_zz(t, x, y, z))
 
                 FX = self.fx(t, x, y, z)
                 FY = self.fy(t, x, y, z)

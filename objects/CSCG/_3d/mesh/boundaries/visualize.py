@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from components.freeze.base import FrozenOnly
 from root.config.main import RANK, MASTER_RANK, np
 
 import matplotlib.pyplot as plt
 from matplotlib import cm
+
 
 class _3dCSCG_MeshBoundaries_VIS(FrozenOnly):
     """"""
@@ -23,12 +25,13 @@ class _3dCSCG_MeshBoundaries_VIS(FrozenOnly):
         boundaries_num = len(boundaries_name)
         range_of_region_sides = self._boundaries_.range_of_region_sides
 
-        if RANK != MASTER_RANK: return
+        if RANK != MASTER_RANK:
+            return
 
         domain = self._mesh_.domain
 
         density = int(np.ceil(np.sqrt(density/(domain.regions.num*6))))
-        rrr = sss = np.linspace(0,1,density)
+        rrr = sss = np.linspace(0, 1, density)
         rrr, sss = np.meshgrid(rrr, sss, indexing='ij')
 
         regions = domain.regions
@@ -39,9 +42,9 @@ class _3dCSCG_MeshBoundaries_VIS(FrozenOnly):
         ax.yaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
         ax.zaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
         # make the grid lines transparent
-        ax.xaxis._axinfo["grid"]['color'] =  (1,1,1,0)
-        ax.yaxis._axinfo["grid"]['color'] =  (1,1,1,0)
-        ax.zaxis._axinfo["grid"]['color'] =  (1,1,1,0)
+        ax.xaxis._axinfo["grid"]['color'] = (1, 1, 1, 0)
+        ax.yaxis._axinfo["grid"]['color'] = (1, 1, 1, 0)
+        ax.zaxis._axinfo["grid"]['color'] = (1, 1, 1, 0)
 
         if boundaries_num > 10:
             corlormap = 'viridis'
@@ -80,10 +83,10 @@ class _3dCSCG_MeshBoundaries_VIS(FrozenOnly):
                     z_lim.append(np.min(z))
 
                 if is_boundary:
-                    ax.plot_surface(*xyz, color=(1,1,1,0.4))
+                    ax.plot_surface(*xyz, color=(1, 1, 1, 0.4))
 
         ONES = np.ones(density)
-        SPACING = np.linspace(0,1, density)
+        SPACING = np.linspace(0, 1, density)
         for bn in range_of_region_sides:
 
             for region_side in range_of_region_sides[bn]:
@@ -130,12 +133,14 @@ class _3dCSCG_MeshBoundaries_VIS(FrozenOnly):
 
         if aspect == 'equal':
             ax.set_box_aspect((np.ptp(x_lim), np.ptp(y_lim), np.ptp(z_lim)))
+        else:
+            pass
 
         ax.tick_params(labelsize=12)
         ax.set_xlabel(r'$x$', fontsize=15)
         ax.set_ylabel(r'$y$', fontsize=15)
         ax.set_zlabel(r'$z$', fontsize=15)
-        plt.title(domain.name + ', ID: '+
+        plt.title(domain.name + ', ID: ' +
                   domain.parameters['ID'] +
                   ', <domain>')
 
@@ -143,10 +148,11 @@ class _3dCSCG_MeshBoundaries_VIS(FrozenOnly):
         plt.show()
         plt.close(fig)
 
+
 if __name__ == "__main__":
     # mpiexec -n 6 python _3dCSCG\mesh\boundaries\visualize.py
     from objects.CSCG._3d.master import MeshGenerator
-    mesh = MeshGenerator('bridge_arch_cracked')([4,2,[1,2,4,2,1]])
+    mesh = MeshGenerator('bridge_arch_cracked')([4, 2, [1, 2, 4, 2, 1]])
     # mesh = MeshGenerator('crazy_periodic')([4,2,[1,2,4,2,1]])
     boundaries = mesh.boundaries
 
