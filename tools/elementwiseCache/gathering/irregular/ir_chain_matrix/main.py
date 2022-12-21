@@ -6,12 +6,12 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path:
+    sys.path.append('/')
 
 from components.freeze.base import FrozenOnly
 from root.config.main import COMM, MPI, np
 from tools.elementwiseCache.gathering.irregular.ir_chain_matrix.do.main import iR_CGM_DO
-
 
 
 class iR_Chain_Gathering_Matrix(FrozenOnly):
@@ -25,7 +25,7 @@ class iR_Chain_Gathering_Matrix(FrozenOnly):
         """
 
         if GMs.__class__.__name__ in ('iR_Gathering_Matrix', 'iR_Chain_Gathering_Matrix,'):
-            GMs = [GMs,]
+            GMs = [GMs, ]
 
         assert isinstance(GMs, (list, tuple)) and len(GMs) >= 1, \
             "we need a list or tuple of at least one irregular gathering matrices."
@@ -68,7 +68,7 @@ class iR_Chain_Gathering_Matrix(FrozenOnly):
                 for i in gm0:
                     assert i in gm, f"GMs[{_+1}] represent different elements comparing to GMs[0]."
 
-        To_Be_Added = [0,]
+        To_Be_Added = [0, ]
         for gm in GMs[:-1]:
             GLOBAL_num_dofs = gm.global_num_dofs
             # noinspection PyUnresolvedReferences
@@ -190,11 +190,6 @@ class iR_Chain_Gathering_Matrix(FrozenOnly):
         return self._do_
 
 
-
-
-
-
 if __name__ == "__main__":
     # mpiexec -n 4 python tools/linear_algebra/gathering/irregular/ir_chain_matrix/main.py
     pass
-

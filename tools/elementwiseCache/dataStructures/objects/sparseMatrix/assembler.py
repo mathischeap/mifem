@@ -7,14 +7,15 @@ from components.freeze.base import FrozenOnly
 from tools.miLinearAlgebra.dataStructures.globalMatrix.main import GlobalMatrix
 from root.config.main import ASSEMBLE_COST, COMM, MPI, RANK, MASTER_RANK
 
+
 class EWC_SparseMatrix_Assembler(FrozenOnly):
     """"""
     def __init__(self, MAT):
         self._MAT_ = MAT
         self._chain_method_ = 'silly'
-        self._format_ = 'csc' # by default, we use csc format.
+        self._format_ = 'csc'  # by default, we use csc format.
         self._cache_ = None
-        self.___AMC___ = None # assembled matrix cache
+        self.___AMC___ = None  # assembled matrix cache
         self._freeze_self_()
 
     def RESET_cache(self):
@@ -95,10 +96,10 @@ class EWC_SparseMatrix_Assembler(FrozenOnly):
             COL = list()
             DAT = list()
 
-            A = SPA_MATRIX((DEP, WID)) # initialize a sparse matrix
+            A = SPA_MATRIX((DEP, WID))  # initialize a sparse matrix
 
-            for i in self._MAT_: # go through all local sparse matrices.
-                Mi = self._MAT_[i] # get the local sparse matrix
+            for i in self._MAT_:  # go through all local sparse matrices.
+                Mi = self._MAT_[i]  # get the local sparse matrix
                 indices = Mi.indices
                 indptr = Mi.indptr
                 data = Mi.data
@@ -107,18 +108,18 @@ class EWC_SparseMatrix_Assembler(FrozenOnly):
                     for j, num in enumerate(nums):
                         idx = indices[indptr[j]:indptr[j+1]]
                         ROW.extend(GI[i][idx])
-                        COL.extend([GJ[i][j],]*num)
+                        COL.extend([GJ[i][j], ]*num)
                 elif Mi.__class__.__name__ == 'csr_matrix':
                     for j, num in enumerate(nums):
                         idx = indices[indptr[j]:indptr[j+1]]
-                        ROW.extend([GI[i][j],]*num)
+                        ROW.extend([GI[i][j], ]*num)
                         COL.extend(GJ[i][idx])
                 else:
-                    raise Exception("I can not handle %r."%Mi)
+                    raise Exception("I can not handle %r." % Mi)
                 DAT.extend(data)
 
-                if len(DAT) > 1e7: # every 10 million data, we make it into sparse matrix.
-                    _ = SPA_MATRIX((DAT, (ROW, COL)), shape=(DEP, WID)) # we make it into sparse
+                if len(DAT) > 1e7:  # every 10 million data, we make it into sparse matrix.
+                    _ = SPA_MATRIX((DAT, (ROW, COL)), shape=(DEP, WID))  # we make it into sparse
 
                     del ROW, COL, DAT
                     A += _
@@ -141,8 +142,8 @@ class EWC_SparseMatrix_Assembler(FrozenOnly):
                 COL = list()
                 DAT = list()
 
-                for i in self._MAT_: # go through all local sparse matrices.
-                    Mi = self._MAT_[i] # get the local sparse matrix
+                for i in self._MAT_:  # go through all local sparse matrices.
+                    Mi = self._MAT_[i]  # get the local sparse matrix
                     indices = Mi.indices
                     indptr = Mi.indptr
                     data = Mi.data
@@ -151,14 +152,14 @@ class EWC_SparseMatrix_Assembler(FrozenOnly):
                         for j, num in enumerate(nums):
                             idx = indices[indptr[j]:indptr[j+1]]
                             ROW.extend(GI[i][idx])
-                            COL.extend([GJ[i][j],]*num)
+                            COL.extend([GJ[i][j], ]*num)
                     elif Mi.__class__.__name__ == 'csr_matrix':
                         for j, num in enumerate(nums):
                             idx = indices[indptr[j]:indptr[j+1]]
-                            ROW.extend([GI[i][j],]*num)
+                            ROW.extend([GI[i][j], ]*num)
                             COL.extend(GJ[i][idx])
                     else:
-                        raise Exception("I can not handle %r."%Mi)
+                        raise Exception("I can not handle %r." % Mi)
                     DAT.extend(data)
 
                 self._cache_ = ('default', ROW, COL)
@@ -168,8 +169,8 @@ class EWC_SparseMatrix_Assembler(FrozenOnly):
                 DAT = list()
 
                 if len(self._MAT_) > 0:
-                    for i in self._MAT_: # go through all local sparse matrices.
-                        Mi = self._MAT_[i] # get the local sparse matrix
+                    for i in self._MAT_:  # go through all local sparse matrices.
+                        Mi = self._MAT_[i]  # get the local sparse matrix
                         DAT.append(Mi.data)
                     DAT = np.concatenate(DAT)
                 else:

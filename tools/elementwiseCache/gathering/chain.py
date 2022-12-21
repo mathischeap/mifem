@@ -8,7 +8,9 @@ from components.freeze.base import FrozenOnly
 from tools.elementwiseCache.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
 from tools.elementwiseCache.gathering.irregular.ir_chain_matrix.main import iR_Chain_Gathering_Matrix
 
-___GLOBAL_CGM_CACHE___ = {'key': list(), 'cache': list()} # to cache global CGM.
+
+___GLOBAL_CGM_CACHE___ = {'key': list(), 'cache': list()}  # to cache global CGM.
+
 
 class GatheringMatrixChaining(FrozenOnly):
     """"""
@@ -53,7 +55,7 @@ class GatheringMatrixChaining(FrozenOnly):
             ___GLOBAL_CGM_CACHE___['key'].append(cache_key)
             ___GLOBAL_CGM_CACHE___['cache'].append(CGM)
 
-            if len(___GLOBAL_CGM_CACHE___['key']) > 3: # only cache 3 CGM
+            if len(___GLOBAL_CGM_CACHE___['key']) > 3:  # only cache 3 CGM
                 ___GLOBAL_CGM_CACHE___['key'] = ___GLOBAL_CGM_CACHE___['key'][-3:]
                 ___GLOBAL_CGM_CACHE___['cache'] = ___GLOBAL_CGM_CACHE___['cache'][-3:]
             else:

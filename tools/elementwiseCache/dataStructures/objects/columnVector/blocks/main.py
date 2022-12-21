@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-
-
 from components.freeze.base import FrozenOnly
 from tools.elementwiseCache.dataStructures.operators.concatenate.main import concatenate
-
 
 
 class EWC_ColVec_Blocks(FrozenOnly):

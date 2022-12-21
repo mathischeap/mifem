@@ -30,9 +30,9 @@ class _3dCSCG_0ltf_Discretize_TraceElementWise(FrozenOnly):
         """
         if target == 'BC':
             assert update_cochain is False, f"Wo do not update cochain when targeting at BC!"
-            FUNC = self._ltf_.BC.CF.do.evaluate_func_at_time() # evaluate at current time
+            FUNC = self._ltf_.BC.CF.do.evaluate_func_at_time()  # evaluate at current time
         elif target == 'func':
-            FUNC = self._ltf_.CF.do.evaluate_func_at_time() # evaluate at current time
+            FUNC = self._ltf_.CF.do.evaluate_func_at_time()  # evaluate at current time
         else:
             raise NotImplementedError(f"target={target} is not implemented.")
 
@@ -61,9 +61,9 @@ class _3dCSCG_0ltf_Discretize_TraceElementWise(FrozenOnly):
                     # we find a mesh-element position for this trace-element
                     element = int(pos[:-1])
 
-                    if element in mesh.elements: # if the mesh-element is local.
+                    if element in mesh.elements:  # if the mesh-element is local.
 
-                        side = pos[-1] # find the side
+                        side = pos[-1]  # find the side
 
                         if element not in cochainLocal:
                             cochainLocal[element]: dict[str] = dict()

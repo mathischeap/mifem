@@ -6,6 +6,7 @@ from root.config.main import RANK, MASTER_RANK, COMM, MPI
 
 from tools.elementwiseCache.gathering.regular.matrix.do.main import Gathering_Matrix_DO
 
+
 class Gathering_Matrix(FrozenOnly):
     """A gathering matrix is a bunch of gathering vectors.
 
@@ -36,7 +37,8 @@ class Gathering_Matrix(FrozenOnly):
         if RANK == MASTER_RANK:
             shape_1 = np.max(LOCAL_len)
             for i in LOCAL_len:
-                if i != shape_1: assert i == -1
+                if i != shape_1:
+                    assert i == -1
         else:
             shape_1 = None
         shape_1 = COMM.bcast(shape_1, root=MASTER_RANK)
@@ -113,7 +115,7 @@ class Gathering_Matrix(FrozenOnly):
     def global_num_dofs(self):
         """How many dofs in total in all cores."""
         if self._GLOBAL_num_dofs_ is None:
-            LOCAL_MAX = [-1,]
+            LOCAL_MAX = [-1, ]
             for i in self:
                 gv = self[i]
                 LOCAL_MAX.append(gv.___PRIVATE_find_max_label___())

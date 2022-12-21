@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 """"""
-
-
 from components.freeze.base import FrozenOnly
 from root.config.main import COMM, MPI, np
 from tools.elementwiseCache.gathering.irregular.ir_matrix.do.main import iR_Gathering_Matrix_DO
-
 
 
 class iR_Gathering_Matrix(FrozenOnly):
@@ -76,7 +73,7 @@ class iR_Gathering_Matrix(FrozenOnly):
     def global_num_dofs(self):
         """How many dofs in total in all cores."""
         if self._GLOBAL_num_dofs_ is None:
-            LOCAL_MAX = [-1,]
+            LOCAL_MAX = [-1, ]
             for i in self:
                 gv = self[i]
                 LOCAL_MAX.append(gv.___PRIVATE_find_max_label___())

@@ -39,10 +39,10 @@ def Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename
             os.mkdir(image_folder)
 
     mesh = MeshGenerator('rectangle_periodic',
-                         p_UL=(0,0), width=2 * pi, length=2 * pi,
-                         region_layout=(2,2))([K, K])
+                         p_UL=(0, 0), width=2 * pi, length=2 * pi,
+                         region_layout=(2, 2))([K, K])
 
-    space = SpaceInvoker('polynomials')([('Lobatto',N), ('Lobatto',N)])
+    space = SpaceInvoker('polynomials')([('Lobatto', N), ('Lobatto', N)])
     FC = FormCaller(mesh, space)
     es = ExactSolutionSelector(mesh)("Euler:shear_layer_rollup")
 
@@ -58,7 +58,7 @@ def Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename
     C = w.special.cross_product_1f__ip_1f(u, u)
 
 
-    #----------- initial condition -----------------------------------------------------------
+    # ---------- initial condition -----------------------------------------------------------
     u.CF = es.velocity
     u.CF.current_time = t0
     u.discretize()
@@ -71,12 +71,12 @@ def Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename
     w.visualize.matplot.contour(levels=image_levels,
                                 show_boundaries=False,
                                 saveto=image_folder + '/' + str(next(IC)),
-                                title=f't=%.3f'%t0)
+                                title=f't=%.3f' % t0)
 
-    #---------- 1/2 step ----------------------------------------------------------------
+    # --------- 1/2 step ----------------------------------------------------------------
 
-    A = ([(2/dt) * M1 , - E12 @ M2],
-         [         E21,   None    ])
+    A = ([(2/dt) * M1, - E12 @ M2],
+         [E21,   None])
     A = bmat(A)
     A.gathering_matrices = ((u, P), (u, P))
 
@@ -105,8 +105,8 @@ def Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename
     Vor_t0_half = w.do.compute_Ln_energy(n=1)
 
     # ------------ u @ t0,   w @ t_1/2 --------------------------------------------------
-    A = ([(1/dt) * M1 + 0.5 * C , - E12 @ M2],
-         [                   E21,   None    ])
+    A = ([(1/dt) * M1 + 0.5 * C, - E12 @ M2],
+         [E21,   None])
     A = bmat(A)
     A.gathering_matrices = ((u, P), (u, P))
 
@@ -130,9 +130,9 @@ def Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename
     LS_w.A.do.lock_assembled_matrix()
 
     w.visualize.matplot.contour(levels=image_levels,
-                                show_boundaries =False,
+                                show_boundaries=False,
                                 saveto=image_folder + '/' + str(next(IC)),
-                                title=f't=%.3f'%(dt/2))
+                                title=f't=%.3f' % (dt/2))
 
     def SOLVER(tk, tk1):
         """
@@ -156,11 +156,11 @@ def Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename
         assert tk1 == tk + dt, f"A trivial check."
         message = list()
 
-        #---- u @ tk , w @ tk+half
+        # --- u @ tk , w @ tk+half
         R = LSuP.solve('direct')()
         R[0].do.distributed_to(u, P)
         message.append(R[4])
-        #-------- u @ tk+1 ---------------------
+        # ------- u @ tk+1 ---------------------
         R = LS_w.solve('direct')()
         R[0].do.distributed_to(w)
         message.append(R[4])
@@ -168,9 +168,9 @@ def Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename
         w.visualize.matplot.contour(levels=image_levels,
                                     show_boundaries=False,
                                     saveto=image_folder + '/' + str(next(IC)),
-                                    title=f't=%.3f'%(tk1+dt/2))
-        EN_tk1_half  = 0.5 * w.do.compute_L2_energy_with(M=M0)
-        KE_tk1       = 0.5 * u.do.compute_L2_energy_with(M=M1)
+                                    title=f't=%.3f' % (tk1+dt/2))
+        EN_tk1_half = 0.5 * w.do.compute_L2_energy_with(M=M0)
+        KE_tk1 = 0.5 * u.do.compute_L2_energy_with(M=M1)
         Vor_tk1_half = w.do.compute_Ln_energy(n=1)
         L2_du_tk1 = u.do.compute_Ln_norm_of_coboundary()
 
@@ -180,6 +180,5 @@ def Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename
     SI.run()
 
     make_a_video_from_images_in_folder(image_folder, duration=t, clean_images=True)
-
 
     return SI

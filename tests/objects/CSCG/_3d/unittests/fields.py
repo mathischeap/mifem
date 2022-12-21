@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
+"""For testing fields.
 """
-For testing fields
-
-"""
-
 import sys
 if './' not in sys.path: 
     sys.path.append('./')
@@ -293,7 +290,6 @@ def test_Form_NO0_3dCSCG_Field_numerical():
     return 1
 
 
-
 def test_Form_NO1_3dCSCG_VectorField():
     """"""
     if RANK == MASTER_RANK:
@@ -495,7 +491,6 @@ def test_Form_NO1_3dCSCG_VectorField():
     return 1
 
 
-
 def test_Form_NO2_3dCSCG_ScalarField():
     """"""
     if RANK == MASTER_RANK:
@@ -503,7 +498,6 @@ def test_Form_NO2_3dCSCG_ScalarField():
 
     def www(t, x, y, z): return -np.pi * np.sin(x) * np.cos(y) * np.cos(z) + np.cos(t)
     def uuu(t, x, y, z): return np.sin(2*np.pi*x) * np.sin(3*y) * np.cos(np.pi*0.125*z) + np.sin(t)
-
 
     t = random.random() * 10
     I, J, K = random.randint(2, 10), random.randint(4, 8), random.randint(3, 9)
@@ -542,7 +536,6 @@ def test_Form_NO2_3dCSCG_ScalarField():
         Cx = R_v[i][0]
         assert np.max(np.abs(Ax - Cx)) < 1e-10, f"sub is not accurate enough."
 
-
     # --- add --------------------------------------------------------------------
     X = A + B
     X.current_time = t
@@ -554,7 +547,6 @@ def test_Form_NO2_3dCSCG_ScalarField():
         assert np.max(np.abs(Ax - Cx)) < 1e-10, f"add is not accurate enough."
 
     return 1
-
 
 
 def test_Form_NO3_3dCSCG_TensorField():
@@ -675,9 +667,51 @@ def test_Form_NO3_3dCSCG_TensorField():
     return 1
 
 
+def test_Form_NO3_3dCSCG_VectorField_Flux_test():
+    """"""
+    if RANK == MASTER_RANK:
+        print(f"-T- [test_Form_NO3_3dCSCG_VectorField_Flux_test]...", flush=True)
 
+    mesh = cscg3.mesh('ct', c=0)([3, 4, 5], EDM='chaotic', show_info=True)
+    space = cscg3.space('polynomials')([1, 1, 1])
+    fc = cscg3.form(mesh, space)
+
+    def u(t, x, y, z): return 2 * np.cos(np.pi * x) * np.cos(np.pi * y) * np.cos(np.pi * z) + t
+    def v(t, x, y, z): return -2 * np.cos(2 * np.pi * x) * np.cos(2 * np.pi * y) * np.sin(np.pi * z) + t
+    def w(t, x, y, z): return 3 * np.cos(2 * np.pi * x) * np.cos(np.pi * y) * np.cos(2 * np.pi * z) + t
+
+    t = 0
+    vector = fc('vector', (u, v, w))
+    flux = vector.flux
+    flux.current_time = t
+
+    xi = et = sg = np.linspace(-1, 1, 7)
+
+    elements = mesh.trace.elements
+
+    xyz, R = flux.reconstruct(xi, et, sg)
+    for i in xyz:
+        x, y, z = xyz[i]
+        r = R[i][0]
+
+        element = elements[i]
+
+        direction = element.normal_direction
+
+        if direction == 'NS':
+            res = u(t, x, y, z)
+        elif direction == 'WE':
+            res = v(t, x, y, z)
+        elif direction == 'BF':
+            res = w(t, x, y, z)
+        else:
+            raise Exception()
+
+        np.testing.assert_array_almost_equal(r, res)
+
+    return 1
 
 
 if __name__ == '__main__':
-    # mpiexec -n 6 python objects/CSCG/_3d/__tests__/unittests/fields.py
-    test_Form_NO1_3dCSCG_VectorField()
+    # mpiexec -n 6 python tests/objects/CSCG/_3d/unittests/fields.py
+    test_Form_NO3_3dCSCG_VectorField_Flux_test()

@@ -30,6 +30,7 @@ from tools.elementwiseCache.dataStructures.objects.columnVector.main import EWC_
 
 from tools.elementwiseCache.gathering.chain import GatheringMatrixChaining
 
+
 class EWC_SparseMatrix(FrozenOnly):
     """
     Element-wise cached sparse matrix (2D).
@@ -93,10 +94,11 @@ class EWC_SparseMatrix(FrozenOnly):
 
         # we can accept a dictionary as a data generator, we will wrap it with a method -----------
         if isinstance(data_generator, dict):
-            self.___fully_pre_data_DICT___ = True # the data are already created!
+            self.___fully_pre_data_DICT___ = True  # the data are already created!
 
             assert len(data_generator) == len(self._elements_), "dict key wrong."
-            for _ in data_generator: assert _ in self._elements_, "dict key wrong."
+            for _ in data_generator:
+                assert _ in self._elements_, "dict key wrong."
             self.___dict_DG___ = data_generator
             data_generator = self.___PRIVATE_dict_2_method_data_generator___
 
@@ -104,9 +106,9 @@ class EWC_SparseMatrix(FrozenOnly):
                 cache_key_generator = 'no_cache'
                 # the data are in the dict anyway, so do not need to be cached.
         else:
-            self.___fully_pre_data_DICT___ = False # the data are not created yet.
+            self.___fully_pre_data_DICT___ = False  # the data are not created yet.
 
-        #---------------parse data type ------------------------------------------------------------
+        # --------------parse data type ------------------------------------------------------------
         DATA_TYPE = None
         if isinstance(data_generator, (list, tuple)) and data_generator[0] == 'identity':
             # data_generator[1] = a (int), (a, a) be the shape of the local identity matrix.
@@ -119,7 +121,7 @@ class EWC_SparseMatrix(FrozenOnly):
         else:
             pass
 
-        #---- parse default cache_key_generator ----------------------------------------------------
+        # --- parse default cache_key_generator ----------------------------------------------------
         if cache_key_generator is None:
 
             if DATA_TYPE == 'IDENTITY':
@@ -159,20 +161,20 @@ class EWC_SparseMatrix(FrozenOnly):
 
 
         # we are making regular sparse matrices --------------------------------------------------
-        elif DATA_TYPE is None: # regular
-            if cache_key_generator == 'all_diff': # all elements return different things but still cache all.
+        elif DATA_TYPE is None:  # regular
+            if cache_key_generator == 'all_diff':  # all elements return different things but still cache all.
                 # although all different, we cache everything because it may be used over iterations.
                 self._DG_ = data_generator
                 self._KG_ = self.___PRIVATE_all_different_cache_key_generator___
-            elif cache_key_generator == 'constant': # return the same sparse matrix for all elements.
+            elif cache_key_generator == 'constant':  # return the same sparse matrix for all elements.
                 # the data_generator should be the data itself
                 if spspa.isspmatrix_csc(data_generator) or spspa.isspmatrix_csr(data_generator):
-                    self.___DGD___ = data_generator # save it, then we can call it.
+                    self.___DGD___ = data_generator  # save it, then we can call it.
                     self._DG_ = self.___PRIVATE_constant_cache_data_generator___
                 else:
                     self._DG_ = data_generator
                 self._KG_ = self.___PRIVATE_constant_cache_key_generator___
-            elif cache_key_generator == 'no_cache': # do not cache for any elements.
+            elif cache_key_generator == 'no_cache':  # do not cache for any elements.
                 # use this when nothing is the same in elements and iterations: i.e. for the cross product
                 self._DG_ = data_generator
                 self._KG_ = self.___PRIVATE_no_cache_key_generator___
@@ -189,15 +191,15 @@ class EWC_SparseMatrix(FrozenOnly):
         else:
             raise NotImplementedError(f"cannot deal with data type = {DATA_TYPE}.")
 
-        #--------------------------------------------------------------------------------------
+        # -------------------------------------------------------------------------------------
         self._gathering_matrices_0_ = None
         self._gathering_matrices_1_ = None
-        self._cache_ = dict() # do not use self.___PRIVATE_reset_cache___()
+        self._cache_ = dict()  # do not use self.___PRIVATE_reset_cache___()
         self.___CT___ = '>CT<'
         self.___NC___ = '>NC<'
         self.___IS_CT___ = False
         self.___IS_NC___ = False
-        self.____CT_DG____ = None # the cache for constant data.
+        self.____CT_DG____ = None  # the cache for constant data.
         self.___CHECK_repeat_CT___ = True
         self.___CHECK_repeat_CT___ = True
         self.___repeat_CK___ = ''
@@ -279,11 +281,11 @@ class EWC_SparseMatrix(FrozenOnly):
                 if name in ('iR_Chain_Gathering_Matrix', 'Chain_Gathering_Matrix'):
                     GMS.append(gm)
                 elif name in ('iR_Gathering_Matrix', 'Gathering_Matrix'):
-                    GMS.append([gm,])
+                    GMS.append([gm, ])
                 elif hasattr(gm, '___IS_ADF___') and gm.___IS_ADF___:
-                    GMS.append([gm.prime.numbering.gathering,])
+                    GMS.append([gm.prime.numbering.gathering, ])
                 else:
-                    GMS.append([gm.numbering.gathering,])
+                    GMS.append([gm.numbering.gathering, ])
             else:
                 GM = list()
 
@@ -301,7 +303,7 @@ class EWC_SparseMatrix(FrozenOnly):
         FINAL_GMS = list()
         for gms in GMS:
 
-            if gms.__class__.__name__  == 'iR_Chain_Gathering_Matrix':
+            if gms.__class__.__name__ == 'iR_Chain_Gathering_Matrix':
 
                 assert gms.chain_method == self.assembler.chain_method, \
                     f"The GM.chain_method = {gms.chain_method} does not match that of the " \
@@ -418,14 +420,14 @@ class EWC_SparseMatrix(FrozenOnly):
                     if temp != -1:
                         self.___repeat_CK___ = ck[:temp]
                     # ...
-                self.___CHECK_repeat_CT___ = False # only do above check once.
+                self.___CHECK_repeat_CT___ = False  # only do above check once.
 
             if ck == self.___CT___ or self.___repeat_CK___ == self.___CT___:
 
                 assert self.____CT_DG____ is None, "self.____CT_DG____ must be None so far"
                 # one more cache to make it always cached even after operators
                 self.____CT_DG____ = self._DG_(item)
-                RETURN = self.____CT_DG____ # then we do not call the data generator
+                RETURN = self.____CT_DG____  # then we do not call the data generator
                 self.___IS_CT___ = True
                 # once reach here, we no longer do self._KG_(i) for further items because we know it is CT
             elif self.___NC___ in ck:
@@ -524,7 +526,7 @@ class EWC_SparseMatrix(FrozenOnly):
         DKC = ___ADD___(self, other)
         return EWC_SparseMatrix(self._elements_, DKC.__DG_call__, DKC.__KG_call__)
 
-    def __matmul__ (self, other):
+    def __matmul__(self, other):
         """"""
         if other.__class__.__name__ == 'EWC_SparseMatrix':
             DKC = ___MATMUL___(self, other)
@@ -563,7 +565,7 @@ class EWC_SparseMatrix(FrozenOnly):
 
     def ___PRIVATE_sum___(self, others):
         """self + all others."""
-        Mat = [self,] + others
+        Mat = [self, ] + others
         data_generator = SpaMat_PRIVATE_sum(Mat)
         # noinspection PyTypeChecker
         RETURN = EWC_SparseMatrix(self._elements_, data_generator, data_generator.__KG_call__)

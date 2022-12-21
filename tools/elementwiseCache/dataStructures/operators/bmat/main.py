@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
-
-
-
 from tools.elementwiseCache.dataStructures.operators.bmat.sparse_matrix.main import \
     ___bmat_EWC_sparse_matrices___
 
 
-
-
-def bmat(blocks):
+def bmat(blocks, **kwargs):
     """ We bmat some vectors.
 
     :param blocks:
@@ -35,7 +30,7 @@ def bmat(blocks):
 
     if whats_in_blocks.count('EWC_SparseMatrix') == len(whats_in_blocks):
         # blocks of EWC_SparseMatrix (and None).
-        return ___bmat_EWC_sparse_matrices___(blocks)
+        return ___bmat_EWC_sparse_matrices___(blocks, **kwargs)
     else:
         raise NotImplementedError(
             "Currently, I can only bmat blocks of `EWC_SparseMatrix` and None.")

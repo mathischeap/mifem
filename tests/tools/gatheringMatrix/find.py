@@ -37,7 +37,7 @@ def test_GatheringMatrix_find():
         return - sin(a * pi * x) * cos(b * pi * y) * exp(d * pi * t / 10) + (a+b+c+d)/4
 
     def func3(t, x, y, z):
-        return - sin(a * pi * x) * cos(b * pi * y) * sin( c * pi * z) * exp(d * pi * t / 10) + (a+b+c+d)/4
+        return - sin(a * pi * x) * cos(b * pi * y) * sin(c * pi * z) * exp(d * pi * t / 10) + (a+b+c+d)/4
 
     RC = [_2d_Caller_, _3d_Caller_]
     for rc in RC:

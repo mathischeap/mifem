@@ -3,6 +3,7 @@ from components.freeze.main import FrozenOnly
 
 from root.config.main import COMM
 
+
 class _3dCSCG_Trace_Elements_Do_Find(FrozenOnly):
     """We find some specific groups of elements."""
 
@@ -52,7 +53,7 @@ class _3dCSCG_Trace_Elements_Do_Find(FrozenOnly):
                 pos = _
                 break
 
-        edge_elements = self._elements_._mesh_.edge.elements # in case the edge elements were not made.
+        edge_elements = self._elements_._mesh_.edge.elements  # in case the edge elements were not made.
         CHARACTERISTIC_element, side_index = pos
         if CHARACTERISTIC_element in self._elements_._mesh_.elements:
             edge_map = edge_elements.map[CHARACTERISTIC_element]
@@ -164,7 +165,7 @@ class _3dCSCG_Trace_Elements_Do_Find(FrozenOnly):
             if TEi.NON_CHARACTERISTIC_position[0].isnumeric():
                 MEi = [int(TEi.CHARACTERISTIC_position[:-1]), int(TEi.NON_CHARACTERISTIC_position[:-1])]
             else:
-                MEi = [int(TEi.CHARACTERISTIC_position[:-1]),]
+                MEi = [int(TEi.CHARACTERISTIC_position[:-1]), ]
         else:
             MEi = None
 
@@ -173,7 +174,7 @@ class _3dCSCG_Trace_Elements_Do_Find(FrozenOnly):
             if TEj.NON_CHARACTERISTIC_position[0].isnumeric():
                 MEj = [int(TEj.CHARACTERISTIC_position[:-1]), int(TEj.NON_CHARACTERISTIC_position[:-1])]
             else:
-                MEj = [int(TEj.CHARACTERISTIC_position[:-1]),]
+                MEj = [int(TEj.CHARACTERISTIC_position[:-1]), ]
         else:
             MEj = None
 
@@ -192,6 +193,6 @@ class _3dCSCG_Trace_Elements_Do_Find(FrozenOnly):
 
         for ei in MEi:
             if ei in MEj:
-                return ei # we find one shared mesh element, return!
+                return ei  # we find one shared mesh element, return!
 
-        return None # return None as we do not find a shared mesh element
+        return None  # return None as we do not find a shared mesh element

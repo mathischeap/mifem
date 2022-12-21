@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 """Time-wise iterator.
 """
-
 from root.config.main import *
 from tools.iterators.base.main import Iterator
-
 
 
 class SimpleIterator(Iterator):
@@ -24,7 +22,7 @@ class SimpleIterator(Iterator):
     def __next__(self):
         outputs = self._solver_(self.t, self.t+self.dt)
         # SimpleIterator use constant dt. Updating dt is necessary for all particular iterators.
-        self.dt = self.___PRIVATE_update_dt___() # this dt will be used for the next call of the solver
+        self.dt = self.___PRIVATE_update_dt___()  # this dt will be used for the next call of the solver
         return outputs
 
     def ___PRIVATE_update_dt___(self):

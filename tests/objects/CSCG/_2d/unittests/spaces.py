@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from root.config.main import *
 from objects.CSCG._2d.master import SpaceInvoker
-
 
 
 def test_Space_NO1_polynomial_space():
@@ -14,16 +14,16 @@ def test_Space_NO1_polynomial_space():
     space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 2)])
 
     np.testing.assert_array_almost_equal(space.nodes[0],
-                                         np.array([-1.       , -0.4472136,  0.4472136,  1.       ]))
+                                         np.array([-1., -0.4472136, 0.4472136,  1.]))
     np.testing.assert_array_almost_equal(space.nodes[1],
-                                         np.array([-1.00000000e+00,  1.23259516e-32,  1.00000000e+00]))
+                                         np.array([-1.00000000e+00, 1.23259516e-32, 1.00000000e+00]))
 
     quad_nodes, quad_weights, quad_weights_ravel = space.___PRIVATE_do_evaluate_quadrature___((3, 2))
 
     np.testing.assert_array_almost_equal(
         quad_nodes[0], np.array([-0.86113631, -0.33998104,  0.33998104,  0.86113631]))
     np.testing.assert_array_almost_equal(
-        quad_nodes[1], np.array([-0.77459667,  0.        ,  0.77459667]))
+        quad_nodes[1], np.array([-0.77459667,  0.,  0.77459667]))
 
     np.testing.assert_array_almost_equal(
         quad_weights[0], np.array([0.34785485, 0.65214515, 0.65214515, 0.34785485]))
@@ -40,10 +40,6 @@ def test_Space_NO1_polynomial_space():
     assert space.standard_properties.stamp == '2dCSCG|structured|space'
 
     return 1
-
-
-
-
 
 
 if __name__ == '__main__':

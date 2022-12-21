@@ -5,6 +5,7 @@ from components.exceptions import LinerSystemSolverDivergenceError
 from tools.miLinearAlgebra.solvers.regular.GMRES.helpers.components.stop_criterion import ___gmres_stop_criterion___
 from tools.miLinearAlgebra.solvers.regular.GMRES.helpers.components.residual_ploter import ___gmres_plot_residuals___
 
+
 def ___mpi_v0_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-4, preconditioner=None,
                        COD=True, name=None, plot_residuals=False):
     """
@@ -43,7 +44,7 @@ def ___mpi_v0_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
     Time_start = MPI.Wtime()
     A = lhs.M
     f = rhs.V.toarray().ravel()
-    x0 = np.array(X0.V) # just to make another copy of x0: IMPORTANT TO do SO!
+    x0 = np.array(X0.V)  # just to make another copy of x0: IMPORTANT TO do SO!
 
     shape0, shape1 = A.shape
     assert f.shape[0] == x0.shape[0] == shape0 == shape1, "Ax=f shape dis-match."
@@ -60,7 +61,7 @@ def ___mpi_v0_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
             raise NotImplementedError(f"We did not yet code preconditioning for the "
                                       f"routine: ___mpi_v0_gmres___ using method: <{applying_method}>.")
 
-    if COD: # needs be after preconditioning since the preconditioner will use A.M
+    if COD:  # needs be after preconditioning since the preconditioner will use A.M
         lhs._M_ = None
         rhs._V_ = None
         X0._V_ = None
@@ -81,7 +82,7 @@ def ___mpi_v0_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
         AVJ = None
         VV = None
 
-    while 1: # always do till break.
+    while 1:  # always do till break.
 
         v0 = f - A @ x0
 
@@ -97,15 +98,18 @@ def ___mpi_v0_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
         beta = COMM.bcast(beta, root=MASTER_RANK)
 
         # check stop iteration or not ...
-        if BETA is None: BETA = [beta,] # this is right, do not initial BETA as an empty list.
-        if len(BETA) > 20: BETA = BETA[:1] + BETA[-2:]
+        if BETA is None:
+            BETA = [beta, ]  # this is right, do not initial BETA as an empty list.
+        if len(BETA) > 20:
+            BETA = BETA[:1] + BETA[-2:]
         BETA.append(beta)
         if RANK == MASTER_RANK:
             if plot_residuals:
                 # noinspection PyUnboundLocalVariable
                 residuals.append(beta)
         JUDGE, stop_iteration, info, JUDGE_explanation = ___gmres_stop_criterion___(tol, atol, ITER, maxiter, BETA)
-        if stop_iteration: break
+        if stop_iteration:
+            break
         # ...
 
         if RANK == MASTER_RANK:
@@ -129,7 +133,7 @@ def ___mpi_v0_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
                 for i in range(j+1):
                     Hij = np.sum(AVJ * Vm[i])
                     # noinspection PyUnboundLocalVariable
-                    Hm[i,j] = Hij
+                    Hm[i, j] = Hij
                     sum_Hij_vi += Hij * Vm[i]
 
                 hat_v_jp1 = AVJ - sum_Hij_vi
@@ -157,7 +161,7 @@ def ___mpi_v0_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
         if RANK == MASTER_RANK:
             HmT = Hm.T
             ls_A = HmT @ Hm
-            ls_b = HmT[:,0] * beta
+            ls_b = HmT[:, 0] * beta
             ym = np.linalg.solve(ls_A, ls_b)
             del HmT, ls_A, ls_b
             x0 += ym.T @ Vm
@@ -177,7 +181,7 @@ def ___mpi_v0_gmres___(lhs, rhs, X0, restart=100, maxiter=20, tol=1e-3, atol=1e-
     message = f" mpi_v0_gmres = [SYSTEM-SHAPE: {A.shape}] [ITER={ITER}] " \
               f"[residual=%.2e] costs %.2f, " \
               f"convergence info={info}, restart={restart}, maxiter={maxiter}, " \
-              f"stop_judge={JUDGE}: {JUDGE_explanation}]"%(beta, COST_total)
+              f"stop_judge={JUDGE}: {JUDGE_explanation}]" % (beta, COST_total)
 
     if RANK == MASTER_RANK:
         if plot_residuals:

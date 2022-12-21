@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.base import FrozenOnly
 from components.miscellaneous.miprint import miprint
@@ -15,8 +16,13 @@ from __init__ import miTri, tools
 import numpy as np
 from root.config.main import RANK, MASTER_RANK
 
+
 def _func(t, x, y): return np.sin(2*np.pi*x) * np.sin(2*np.pi*y) + t
+
+
 def _fx(t, x, y): return np.sin(2*np.pi*x) * np.cos(np.pi*y) + t
+
+
 def _fy(t, x, y): return np.cos(2*np.pi*x) * np.sin(np.pi*y) + t
 
 

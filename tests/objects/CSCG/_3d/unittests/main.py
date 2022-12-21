@@ -17,7 +17,6 @@ It is always suggested testing the library multiple time with different numbers 
 import sys
 if './' not in sys.path:
     sys.path.append('./')
-passed_3dCSCG_tests = 0
 
 from tests.objects.CSCG._3d.unittests.standard_forms.general import *
 from tests.objects.CSCG._3d.unittests.standard_forms.reconstruct_2_DF import *
@@ -48,7 +47,10 @@ from tests.objects.CSCG._3d.unittests.local_trace_forms.reduction_and_reconstruc
 from tests.objects.CSCG._3d.unittests.local_trace_forms.reconstruction_matrix_and_mass_matrix import \
     Test_reconstruction_matrix_and_mass_matrix
 
+from components.miscellaneous.mirand import randint
 t_3dCSCG_start = MPI.Wtime()
+
+passed_3dCSCG_tests = 0
 
 if RANK == MASTER_RANK:
     print(f"\n [_3dCSCG] tests start...\n")
@@ -63,6 +65,7 @@ passed_3dCSCG_tests += test_Form_NO0_3dCSCG_Field_numerical()
 passed_3dCSCG_tests += test_Form_NO1_3dCSCG_VectorField()
 passed_3dCSCG_tests += test_Form_NO2_3dCSCG_ScalarField()
 passed_3dCSCG_tests += test_Form_NO3_3dCSCG_TensorField()
+passed_3dCSCG_tests += test_Form_NO3_3dCSCG_VectorField_Flux_test()
 
 passed_3dCSCG_tests += test_Form_NO1_discretization_and_reconstruction()
 passed_3dCSCG_tests += test_Form_NO1a_discretization_and_reconstruction()
@@ -120,8 +123,6 @@ passed_3dCSCG_tests += test_reconstruct_DF()
 passed_3dCSCG_tests += Test_Reduction_and_Reconstruction_of_local_trace_forms()()
 passed_3dCSCG_tests += Test_reconstruction_matrix_and_mass_matrix()()
 
-
-from components.miscellaneous.mirand import randint
 a = randint(0, 3)  # below tests are slow, we do not run them at every single time.
 if a == 1:
     passed_3dCSCG_tests += test_Stokes_MSEM_trivial_BC()

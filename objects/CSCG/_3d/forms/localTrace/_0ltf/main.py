@@ -5,6 +5,7 @@
 @time: 11/26/2022 2:56 PM
 """
 import sys
+from abc import ABC
 
 if './' not in sys.path:
     sys.path.append('./')
@@ -12,18 +13,19 @@ from objects.CSCG._3d.forms.localTrace.base.main import _3dCSCG_LocalTrace
 from objects.CSCG._3d.forms.localTrace._0ltf.discretize.main import _3dCSCG_0LocalTrace_Discretize
 from objects.CSCG._3d.forms.localTrace._0ltf.reconstruct import _3dCSCG_0LocalTrace_Reconstruct
 from objects.CSCG._3d.forms.localTrace._0ltf.visualize.main import _3dCSCG_0LocalTrace_Visualize
+from objects.CSCG._3d.forms.localTrace._0ltf.boundary_integration.main import _3dCSCG_0LTF_BoundaryIntegration
 from components.quadrature import Quadrature
 import numpy as np
 from scipy.sparse import csr_matrix, bmat
 from components.assemblers import MatrixAssembler
 
 
-class _3dCSCG_0LocalTrace(_3dCSCG_LocalTrace):
+class _3dCSCG_0LocalTrace(_3dCSCG_LocalTrace, ABC):
     """"""
 
     def __init__(
-            self, mesh, space, hybrid=True, orientation='outer',
-            numbering_parameters='Naive', name='outer-oriented-0-local-trace-form'
+        self, mesh, space, hybrid=True, orientation='outer',
+        numbering_parameters='Naive', name='outer-oriented-0-local-trace-form',
     ):
         super().__init__(mesh, space, hybrid, orientation, numbering_parameters, name)
         self._k_ = 0
@@ -31,6 +33,7 @@ class _3dCSCG_0LocalTrace(_3dCSCG_LocalTrace):
         self._discretize_ = _3dCSCG_0LocalTrace_Discretize(self)
         self._reconstruct_ = _3dCSCG_0LocalTrace_Reconstruct(self)
         self._visualize_ = _3dCSCG_0LocalTrace_Visualize(self)
+        self._bi_ = None
         self._freeze_self_()
 
     def ___Pr_check_CF___(self, func_body):
@@ -54,7 +57,7 @@ class _3dCSCG_0LocalTrace(_3dCSCG_LocalTrace):
             raise Exception(f"3dCSCG 0ltf BC does not accept func {func_body.__class__}")
 
     def ___PrLT_mass_matrices_brutal_force___(self):
-        """Should return the same (mesh-element-wise) mass matrices as ___PrLT_mass_matrices___"""
+        """Should return the same (mesh-element-wise) mass matrices as ___PrLT_mass_matrices___."""
 
         if self.mesh.whether.orthogonal:
             p = self.dqp
@@ -62,7 +65,6 @@ class _3dCSCG_0LocalTrace(_3dCSCG_LocalTrace):
         else:
             p = [self.dqp[i] + 1 for i in range(self.ndim)]
             quad_nodes, quad_weights = Quadrature(p, category='Gauss').quad
-
 
         x, y = np.meshgrid(quad_nodes[1], quad_nodes[2], indexing='ij')
         xNS = x.ravel('F')
@@ -79,7 +81,7 @@ class _3dCSCG_0LocalTrace(_3dCSCG_LocalTrace):
         qw['WE'] = np.kron(quad_weights[2], quad_weights[0])
         qw['BF'] = np.kron(quad_weights[1], quad_weights[0])
 
-        R_sides = self.do.make_reconstruction_matrix_on_grid(*quad_nodes)[1]
+        R_sides = self.do.make_reconstruction_matrix_on_grid(*quad_nodes)
 
         MD = dict()
         cacheDict = dict()
@@ -192,13 +194,19 @@ class _3dCSCG_0LocalTrace(_3dCSCG_LocalTrace):
                     b = pb[side][0]
 
                     if side in 'NS':
-                        M_ = np.einsum('im, jm, m -> ij', b, b, np.sqrt(g) * qw['NS'], optimize='greedy')
+                        M_ = np.einsum(
+                            'im, jm, m -> ij', b, b, np.sqrt(g) * qw['NS'], optimize='greedy'
+                        )
 
                     elif side in 'WE':
-                        M_ = np.einsum('im, jm, m -> ij', b, b, np.sqrt(g) * qw['WE'], optimize='greedy')
+                        M_ = np.einsum(
+                            'im, jm, m -> ij', b, b, np.sqrt(g) * qw['WE'], optimize='greedy'
+                        )
 
                     elif side in 'BF':
-                        M_ = np.einsum('im, jm, m -> ij', b, b, np.sqrt(g) * qw['BF'], optimize='greedy')
+                        M_ = np.einsum(
+                            'im, jm, m -> ij', b, b, np.sqrt(g) * qw['BF'], optimize='greedy'
+                        )
 
                     else:
                         raise Exception()
@@ -229,22 +237,34 @@ class _3dCSCG_0LocalTrace(_3dCSCG_LocalTrace):
 
         return MD
 
+    @property
+    def boundary_integration(self):
+        if self._bi_ is None:
+            self._bi_ = _3dCSCG_0LTF_BoundaryIntegration(self)
+        return self._bi_
+
 
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/_3d/forms/localTrace/_0ltf/main.py
 
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('ct', c=0.1)([3, 4, 3])
+    mesh = MeshGenerator('crazy', c=0.)([3, 3, 3])
     space = SpaceInvoker('polynomials')([1, 1, 1])
     FC = FormCaller(mesh, space)
 
-    sf0 = FC('0-f', hybrid=True)
     ltf0 = FC('0-lt', hybrid=False)
-    tf0 = FC('0-t', hybrid=False)
 
     def p(t, x, y, z): return np.sin(2*np.pi*x) + t + 0 * y * z
     scalar = FC('scalar', {'North': p, 'South': p, 'West': p, 'East': p, 'Back': p, 'Front': p})
-    # scalar = FC('scalar', p)
 
-    Tsf, Ttf = space.topological_connection(tf0, sf0, ltf0)
+
+    ltf0.BC.CF = scalar
+    ltf0.BC.boundaries = 'all'
+    scalar.current_time = 0
+
+    BI = ltf0.BC.interpret.boundary_integration
+
+    for i in BI:
+        _ = BI[i]
+        # print(i, BI[i])

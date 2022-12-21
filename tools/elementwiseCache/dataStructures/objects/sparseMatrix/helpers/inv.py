@@ -7,6 +7,7 @@ from components.freeze.base import FrozenOnly
 
 from scipy.sparse import linalg as spspalinalg
 
+
 class ___LinearAlgebraINV___(FrozenOnly):
     def __init__(self, ewc):
         self._ewc_ = ewc

@@ -2,6 +2,7 @@
 
 from components.freeze.base import FrozenOnly
 
+
 class ___TRUE_DIV___(FrozenOnly):
     def __init__(self, ewc, number):
         self._ewc_ = ewc

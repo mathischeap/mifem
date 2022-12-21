@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.base import FrozenOnly
 from objects.miUsGrid.triangular.mesh.instances.samples.rand_mesh_0 import generate_rand_mesh_0
@@ -16,27 +17,33 @@ from root.config.main import COMM
 # noinspection PyUnusedLocal
 def _bUpper(x, y): return x == 0
 
+
 # noinspection PyUnusedLocal
 def _bDown(x, y): return x == 1
+
 
 # noinspection PyUnusedLocal
 def _bLeft(x, y): return y == 0
 
+
 # noinspection PyUnusedLocal
 def _bRight(x, y): return y == 1
+
 
 # noinspection PyUnusedLocal
 def __bUpper__(x, y): return x == -1
 
+
 # noinspection PyUnusedLocal
 def __bDown__(x, y): return x == 1
+
 
 # noinspection PyUnusedLocal
 def __bLeft__(x, y): return y == -1
 
+
 # noinspection PyUnusedLocal
 def __bRight__(x, y): return y == 1
-
 
 
 
@@ -54,18 +61,18 @@ class miUsGrid_TriangularMeshAllocator(FrozenOnly):
         generate_rand_mesh_0()
         base_path = str(__file__).split('allocator')[0]
 
-        #------- mesh examples ---------------------------------------------------------------------
+        # ------ mesh examples ---------------------------------------------------------------------
         DICT = {
             'test0': base_path + 'test_mesh_0.vtu',
             'test2': base_path + 'test2.vtu',
             'rand0': base_path + 'rand0.vtu'
         }
-        #------- stK meshes ------------------------------------------------------------------------
-        stK = [2, 4, 6, 8, 10, 12, 14, 16, 32, 48, 64 ,128]
+        # ------ stK meshes ------------------------------------------------------------------------
+        stK = [2, 4, 6, 8, 10, 12, 14, 16, 32, 48, 64, 128]
         for key in stK:
             DICT['st' + str(key)] = \
                 base_path + f'structured_tests/structured_test_mesh_01_K{key}.vtu'
-        #------- stKd meshes -----------------------------------------------------------------------
+        # ------ stKd meshes -----------------------------------------------------------------------
         DICT.update(
             {
                 'sqK8d2': base_path + f'structured_square/K8d2.vtu',
@@ -77,7 +84,7 @@ class miUsGrid_TriangularMeshAllocator(FrozenOnly):
             }
         )
         COMM.barrier()
-        #___________________________________________________________________________________________
+        # __________________________________________________________________________________________
         return DICT
 
     @classmethod
@@ -86,17 +93,17 @@ class miUsGrid_TriangularMeshAllocator(FrozenOnly):
         boundaries_test0 = {'Upper': _bUpper, 'Down': _bDown, 'Left': _bLeft, 'Right': _bRight}
         boundaries_test1 = {'Upper': __bUpper__, 'Down': __bDown__, 'Left': __bLeft__, 'Right': __bRight__}
 
-        #------- mesh examples ---------------------------------------------------------------------
+        # ------ mesh examples ---------------------------------------------------------------------
         DICT = {
             'test0': boundaries_test0,
             'test2': boundaries_test0,
             'rand0': boundaries_test0,
         }
-        #------- stK meshes ------------------------------------------------------------------------
-        stK = [2, 4, 6, 8, 10, 12, 14, 16, 32, 48, 64 ,128]
+        # ------ stK meshes ------------------------------------------------------------------------
+        stK = [2, 4, 6, 8, 10, 12, 14, 16, 32, 48, 64, 128]
         for key in stK:
             DICT['st' + str(key)] = boundaries_test0
-        #------- stKd meshes -----------------------------------------------------------------------
+        # ------ stKd meshes -----------------------------------------------------------------------
         DICT.update(
             {
                 'sqK8d2': boundaries_test1,
@@ -109,10 +116,3 @@ class miUsGrid_TriangularMeshAllocator(FrozenOnly):
         )
 
         return DICT
-
-
-
-
-if __name__ == "__main__":
-    # mpiexec -n 4 python 
-    pass

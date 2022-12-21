@@ -22,7 +22,7 @@ def scalar_Laplace_solver_iterative_solver(c, Kx, Ky, Nx, Ny):
     -------
 
     """
-    mesh = MeshGenerator('crazy', c=c, bounds=[(0,1), (0,1)])([Kx, Ky], EDM=None)
+    mesh = MeshGenerator('crazy', c=c, bounds=[(0, 1), (0, 1)])([Kx, Ky], EDM=None)
     space = SpaceInvoker('polynomials')([('Lobatto', Nx), ('Lobatto', Ny)])
     FC = FormCaller(mesh, space)
     ES = ExactSolutionSelector(mesh)('sL:sincos1')
@@ -46,8 +46,8 @@ def scalar_Laplace_solver_iterative_solver(c, Kx, Ky, Nx, Ny):
     E12 = E21.T
     E12M2 = E12 @ M2
 
-    A = bmat(([M1 , E12M2],
-              [E21, None ]))
+    A = bmat(([M1, E12M2],
+              [E21, None]))
     A.gathering_matrices = ((u, p), (u, p))
     b = concatenate([B0, B1])
     LS = LinearSystem(A, b)

@@ -109,7 +109,8 @@ class EWC_ColumnVector(FrozenOnly):
         # we can accept a dictionary as a data generator, we will wrap it with a method -----------
         if isinstance(data_generator, dict):
             assert len(data_generator) == len(self._elements_), "dict key wrong."
-            for _ in data_generator: assert _ in self._elements_, "dict key wrong."
+            for _ in data_generator:
+                assert _ in self._elements_, "dict key wrong."
             self.___dict_DG___ = data_generator
             data_generator = self.___PRIVATE_dict_2_method_data_generator___
             if cache_key_generator is None:
@@ -121,7 +122,7 @@ class EWC_ColumnVector(FrozenOnly):
         # --------- parse default cache_key_generator ---------------------------------------------
         if cache_key_generator is None:
 
-            if DATA_TYPE == 'EMPTY': # make empty sparse vector.
+            if DATA_TYPE == 'EMPTY':  # make empty sparse vector.
 
                 # noinspection PyTypeChecker
                 if data_generator % 1 == 0:
@@ -132,9 +133,9 @@ class EWC_ColumnVector(FrozenOnly):
                     raise Exception(f"empty sparse vector of local length={data_generator} is wrong.")
 
             else:
-                cache_key_generator = 'no_cache' # do NOT CHANGE THIS DEFAULT SETTING!!!
+                cache_key_generator = 'no_cache'  # do NOT CHANGE THIS DEFAULT SETTING!!!
 
-        else: # have given a generator, use it.
+        else:  # have given a generator, use it.
             pass
 
         # -------- get DG and KG -------------------------------------------------------------------
@@ -306,13 +307,13 @@ class EWC_ColumnVector(FrozenOnly):
                     if temp != -1:
                         self.___repeat_CK___ = ck[:temp]
                     # ...
-                self.___CHECK_repeat_CT___ = False # only do above check once.
+                self.___CHECK_repeat_CT___ = False  # only do above check once.
 
             if ck == self.___CT___ or self.___repeat_CK___ == self.___CT___:
                 assert self.____CT_DG____ is None, "self.____CT_DG____ must be None so far"
                 # one more cache to make it always cached even after operators
                 self.____CT_DG____ = self._DG_(item)
-                RETURN = self.____CT_DG____ # then we do not call the data generator
+                RETURN = self.____CT_DG____  # then we do not call the data generator
                 self.___IS_CT___ = True
                 # once reach here, we no longer do self._KG_(i) for further items because we know it is CT
             elif self.___NC___ in ck:
@@ -329,7 +330,8 @@ class EWC_ColumnVector(FrozenOnly):
 
         RETURN = self.customize.___PRIVATE_do_execute_customization___(RETURN, item)
 
-        # here we do not check the shape of RETURN because we could use this method to compute shape, so if we do, we may end up in dead loop.
+        # here we do not check the shape of RETURN because we could use this method to compute shape,
+        # so if we do, we may end up in dead loop.
 
         return RETURN
 

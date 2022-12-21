@@ -140,5 +140,5 @@ def test_reconstruct_DF():
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python objects/CSCG/_3d/__tests__/unittests/standard_forms/reconstruct_2_DF.py
+    # mpiexec -n 4 python tests/objects/CSCG/_3d/unittests/standard_forms/reconstruct_2_DF.py
     test_reconstruct_DF()

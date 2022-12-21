@@ -1,15 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 """
-
-
-
-
-
 class MyCustomizedWarning(UserWarning, ValueError):
     pass
-
-
 
 # import warnings
 # warnings.warn("deprecated", DeprecationWarning)

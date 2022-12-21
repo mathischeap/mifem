@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path: 
+    sys.path.append('./')
 
 from types import FunctionType, MethodType
 from components.freeze.main import FrozenOnly
@@ -93,8 +94,8 @@ if __name__ == '__main__':
     Npy = NPD4F('y')
 
     # noinspection PyArgumentList
-    print(np.sum(np.abs(Pt(t,x,y) - Npt(t,x,y))))
+    print(np.sum(np.abs(Pt(t, x, y) - Npt(t, x, y))))
     # noinspection PyArgumentList
-    print(np.sum(np.abs(Px(t,x,y) - Npx(t,x,y))))
+    print(np.sum(np.abs(Px(t, x, y) - Npx(t, x, y))))
     # noinspection PyArgumentList
-    print(np.sum(np.abs(Py(t,x,y) - Npy(t,x,y))))
+    print(np.sum(np.abs(Py(t, x, y) - Npy(t, x, y))))

@@ -79,5 +79,5 @@ def TEST_save_CSCG_objects_to_unstructured_VTK_file():
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python __tests__/unittests/VTK/unstructuredGridToVTK.py
+    # mpiexec -n 4 python tests/tools/VTK/unstructuredGridToVTK.py
     TEST_save_CSCG_objects_to_unstructured_VTK_file()

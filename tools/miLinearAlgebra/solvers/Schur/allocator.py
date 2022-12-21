@@ -2,15 +2,7 @@
 """
 A collection of all parallel solvers.
 """
-
-
-
-import sys
-if './' not in sys.path: sys.path.append('./')
-
-
 from importlib import import_module
-
 
 from components.freeze.main import FrozenOnly
 
@@ -49,16 +41,14 @@ class SchurSolverDistributor(FrozenOnly):
             f"results must be in a dict!"
         return Results
 
-
     @classmethod
     def ___solver_name___(cls):
         """"""
-        return {2 : 'Rank2',}
-
+        return {2: 'Rank2', }
 
     @classmethod
     def ___solver_path___(cls):
         base_path = '.'.join(str(cls).split(' ')[1][1:-2].split('.')[:-2]) + '.'
         return {
-            2 : base_path + 'rank2.main',
+            2: base_path + 'rank2.main',
         }

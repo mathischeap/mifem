@@ -19,9 +19,9 @@ class _3dCSCG_2ltf_Discretize_Standard(FrozenOnly):
         the local cochains.
         """
         if target == 'func':
-            FUNC = self._ltf_.CF.do.evaluate_func_at_time()[0] # evaluate at current time
+            FUNC = self._ltf_.CF.do.evaluate_func_at_time()[0]  # evaluate at current time
         elif target == 'BC':
-            FUNC = self._ltf_.BC.CF.do.evaluate_func_at_time()[0] # evaluate at current time
+            FUNC = self._ltf_.BC.CF.do.evaluate_func_at_time()[0]  # evaluate at current time
             assert update_cochain is False, \
                 f"When target is {target}, cannot update cochain!"
         else:
@@ -145,7 +145,8 @@ class _3dCSCG_2ltf_Discretize_Standard(FrozenOnly):
                 cochainLocal[ele] = local_cochain_ele
 
         # isKronecker? ...
-        if not self._ltf_.space.IS_Kronecker: raise NotImplementedError()
+        if not self._ltf_.space.IS_Kronecker:
+            raise NotImplementedError()
         # pass to cochain.local ...
 
         if self._ltf_.whether.hybrid:

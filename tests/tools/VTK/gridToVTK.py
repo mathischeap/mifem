@@ -86,5 +86,5 @@ def TEST_save_CSCG_objects_to_structured_VTK_file():
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python __tests__/unittests/VTK/gridToVTK.py
+    # mpiexec -n 4 python tests/tools/VTK/gridToVTK.py
     TEST_save_CSCG_objects_to_structured_VTK_file()

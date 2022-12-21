@@ -6,6 +6,7 @@
 """
 from components.freeze.main import FrozenOnly
 
+
 class _3dCSCG_LocalTrace_Do(FrozenOnly):
     """"""
 
@@ -35,13 +36,13 @@ class _3dCSCG_LocalTrace_Do(FrozenOnly):
             f"p = {p} is wring, p must be a tuple or list of 3 integers (no need to be positive)."
 
         new_space = self._ltf_.space.do.refine(p=p)
-        numbering_parameters = {'scheme_name' : self._ltf_.numbering._scheme_name_}
+        numbering_parameters = {'scheme_name': self._ltf_.numbering._scheme_name_}
         numbering_parameters.update(self._ltf_.numbering._parameters_)
 
         return self._ltf_.__class__(
             self._ltf_.mesh, new_space,
             orientation=self._ltf_._orientation_,
-            numbering_parameters = numbering_parameters,
+            numbering_parameters=numbering_parameters,
             name='p-refined-' + self._ltf_._orientation_ + '-0-ltf'
         )
 

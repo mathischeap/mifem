@@ -8,7 +8,6 @@ class _3dCSCG_ADT_TF_Matrices(FrozenOnly):
         self._adt_ = adt
         self._freeze_self_()
 
-
     @property
     def trace(self):
         """Return the trace matrix."""

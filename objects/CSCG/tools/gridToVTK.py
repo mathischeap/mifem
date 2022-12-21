@@ -134,7 +134,6 @@ def gridToVTK(grid, objs, path):
             raise Exception(f"Trivial check!")
 
 
-
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/tools/gridToVTK.py
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller

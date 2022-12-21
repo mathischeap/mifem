@@ -4,13 +4,10 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/08/16 6:03 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
-
 from components.freeze.base import FrozenOnly
 from components.matplotWrappers.plot import plot, semilogy, loglog
 from root.config.main import RANK, MASTER_RANK
+
 
 class csvFilerVisualize(FrozenOnly):
     """"""
@@ -34,7 +31,8 @@ class csvFilerVisualize(FrozenOnly):
         -------
 
         """
-        if RANK != MASTER_RANK: return
+        if RANK != MASTER_RANK:
+            return
 
         if isinstance(column_x, str):
             assert column_x in self._filer_.columns, f"column_x = {column_x} is not valid."
@@ -71,7 +69,8 @@ class csvFilerVisualize(FrozenOnly):
         -------
 
         """
-        if RANK != MASTER_RANK: return
+        if RANK != MASTER_RANK:
+            return
 
         if isinstance(column_x, str):
             assert column_x in self._filer_.columns, f"column_x = {column_x} is not valid."
@@ -108,7 +107,8 @@ class csvFilerVisualize(FrozenOnly):
         -------
 
         """
-        if RANK != MASTER_RANK: return
+        if RANK != MASTER_RANK:
+            return
 
         if isinstance(column_x, str):
             assert column_x in self._filer_.columns, f"column_x = {column_x} is not valid."
@@ -131,10 +131,3 @@ class csvFilerVisualize(FrozenOnly):
                 raise Exception()
         else:
             raise NotImplementedError()
-
-
-
-
-if __name__ == "__main__":
-    # mpiexec -n 4 python 
-    pass

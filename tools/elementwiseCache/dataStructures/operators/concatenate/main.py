@@ -2,7 +2,9 @@
 """Store other functions for linear algebra.
 """
 
-from tools.elementwiseCache.dataStructures.operators.concatenate.column_vector.main import ___concatenate_EWC_sparse_vectors___
+from tools.elementwiseCache.dataStructures.operators.concatenate.column_vector.main import \
+    ___concatenate_EWC_sparse_vectors___
+
 
 def concatenate(vectors, **kwargs):
     """ We concatenate (vstack) some vectors.

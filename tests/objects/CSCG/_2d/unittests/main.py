@@ -51,7 +51,6 @@ passed_2dCSCG_tests += test_Fields_NO2_scalar()
 passed_2dCSCG_tests += test_identities()
 
 
-
 if RANK == MASTER_RANK:
     print("\n<{}> _2dCSCG tests passed; cost {:.3f} seconds.\n".format(
         passed_2dCSCG_tests, MPI.Wtime()-t_3dCSCG_start))

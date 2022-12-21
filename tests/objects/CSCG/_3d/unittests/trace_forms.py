@@ -267,7 +267,6 @@ def test_trace_NO3_trace_matrices():
 
         assert len(SPL) == COUNT
 
-
     # Below we do a check for the assembled trace matrix for 1-trace-form---------------------------------
     t1 = FC('1-t')
     f1 = FC('1-f', hybrid=True)

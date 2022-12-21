@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 8/11/2022 11:38 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('/')
 from components.freeze.main import FrozenOnly
 from numpy import einsum, newaxis
 from scipy.sparse import csc_matrix
@@ -40,9 +37,3 @@ class nLS_DoR2V_Helper(FrozenOnly):
                optimize='optimal')
 
         return csc_matrix(vec[:, newaxis])
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

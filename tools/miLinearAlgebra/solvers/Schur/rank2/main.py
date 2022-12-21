@@ -57,7 +57,7 @@ class Rank2(SchurSolverBase):
         assert blocks < A_SHAPE[0], f"blocks={blocks} wrong, must be < {A_SHAPE[0]}."
 
         AS = A_SHAPE[0]
-        if AS - blocks  == 1:
+        if AS - blocks == 1:
             M = A.blocks[:blocks, :blocks]
             B = A.blocks[:blocks, blocks:]
             C = A.blocks[blocks:, :blocks]
@@ -79,7 +79,7 @@ class Rank2(SchurSolverBase):
         else:
             raise NotImplementedError()
 
-        # ---------- Do the computation ----------------------------------------------------------------
+        # ---------- Do the computation ----------------------------------------------------
         if ROUTINE == ___scipy_sparse_linalg_direct___:
             GM0, GM1 = A.gathering_matrices
             GM_row = GM0.GMs[blocks:]
@@ -88,9 +88,9 @@ class Rank2(SchurSolverBase):
         else:
             raise Exception()
 
-        _ = kwargs # trivial; just leave freedom for future updates for kwargs.
+        _ = kwargs  # trivial; just leave freedom for future updates for kwargs.
 
-        MESSAGE =  message + ':' + solver_message
-        #===============================================================================================
+        MESSAGE = message + ':' + solver_message
+        # ================================================================================
 
         return results, info, beta, ITER, MESSAGE

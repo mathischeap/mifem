@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from tools.elementwiseCache.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
-from tools.elementwiseCache.dataStructures.operators.concatenate.column_vector.helpers.DG import ___concatenate_HELPER_DataGenerator___
-from tools.elementwiseCache.dataStructures.operators.concatenate.column_vector.helpers.KG import ___concatenate_HELPER_KeyGenerator___
+from tools.elementwiseCache.dataStructures.operators.concatenate.column_vector.helpers.DG import \
+    ___concatenate_HELPER_DataGenerator___
+from tools.elementwiseCache.dataStructures.operators.concatenate.column_vector.helpers.KG import \
+    ___concatenate_HELPER_KeyGenerator___
 
 
 def ___concatenate_EWC_sparse_vectors___(vectors, do_a_test=True):

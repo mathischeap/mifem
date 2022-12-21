@@ -7,7 +7,8 @@
 import sys
 from abc import ABC
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from objects.CSCG._3d.forms.localTrace.base.main import _3dCSCG_LocalTrace
 from objects.CSCG._3d.forms.localTrace._2ltf.discretize.main import _3dCSCG_2LocalTrace_Discretize
 from objects.CSCG._3d.forms.localTrace._2ltf.reconstruct import _3dCSCG_2LocalTrace_Reconstruct
@@ -78,7 +79,7 @@ class _3dCSCG_2LocalTrace(_3dCSCG_LocalTrace, ABC):
         qw['WE'] = np.kron(quad_weights[2], quad_weights[0])
         qw['BF'] = np.kron(quad_weights[1], quad_weights[0])
 
-        R_sides = self.do.make_reconstruction_matrix_on_grid(*quad_nodes)[1]
+        R_sides = self.do.make_reconstruction_matrix_on_grid(*quad_nodes)
 
         MD = dict()
         cacheDict = dict()
@@ -104,7 +105,7 @@ class _3dCSCG_2LocalTrace(_3dCSCG_LocalTrace, ABC):
                 M = dict()
                 for j, side in zip(tes, 'NSWEBF'):
                     te = self.mesh.trace.elements[j]
-                    R = RSi[side] # array, if sparse, do toarray()
+                    R = RSi[side]  # array, if sparse, do toarray()
 
                     if side in 'NS':
                         g = te.coordinate_transformation.metric(xNS, yNS)

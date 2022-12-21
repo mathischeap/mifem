@@ -213,7 +213,6 @@ class _3dCSCG_Edge_Elements(FrozenOnly):
         else:
             raise Exception()
 
-
     def ___PRIVATE_find_type_and_amount_numbered_before___(self):
         """
         :return: A dictionary. For example, ``{..., 107: [32, 33, 42], ...}``, it means

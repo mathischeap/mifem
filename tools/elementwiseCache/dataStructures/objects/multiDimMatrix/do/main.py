@@ -6,16 +6,20 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path:
+    sys.path.append('/')
 from components.freeze.main import FrozenOnly
 
 import numpy as np
 from root.config.main import COMM, MASTER_RANK, RANK
 
-from tools.elementwiseCache.dataStructures.objects.multiDimMatrix.do.helpers.eliminate_helper import ___PRIVATE_eliminate_caller___
-from tools.elementwiseCache.dataStructures.objects.multiDimMatrix.do.helpers.sparse_matrix_helper import ____PRIVATE_SparseMatrix_caller___
+from tools.elementwiseCache.dataStructures.objects.multiDimMatrix.do.helpers.eliminate_helper import \
+    ___PRIVATE_eliminate_caller___
+from tools.elementwiseCache.dataStructures.objects.multiDimMatrix.do.helpers.sparse_matrix_helper import \
+    ____PRIVATE_SparseMatrix_caller___
 from tools.elementwiseCache.dataStructures.objects.multiDimMatrix.do.helpers.evaluate_remaining_1 import nLS_DoEvaRM1
-from tools.elementwiseCache.dataStructures.objects.multiDimMatrix.do.helpers.reduce_to_vector_helper import nLS_DoR2V_Helper
+from tools.elementwiseCache.dataStructures.objects.multiDimMatrix.do.helpers.reduce_to_vector_helper import \
+    nLS_DoR2V_Helper
 
 from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
 from tools.elementwiseCache.dataStructures.objects.columnVector.main import EWC_ColumnVector
@@ -98,20 +102,20 @@ class MDM_Do(FrozenOnly):
         -------
 
         """
-        #------- check the test_variable -----------------------------------------------
+        # ------ check the test_variable -----------------------------------------------
         assert test_variable in self._MDM_.correspondence, f"test_variable is not found."
 
-        #---if the unknown variable is not in the correspondence, return None --
+        # --if the unknown variable is not in the correspondence, return None --
         unknown_variable = unknown_variable_pair[0]
         if unknown_variable not in self._MDM_.correspondence:
             return None
-        #------- we clear not relative pairs -----------------------------------------
+        # ------ we clear not relative pairs -----------------------------------------
         _pairs = list()
         for kp in known_pairs:
             if kp[0] in self._MDM_.correspondence:
                 _pairs.append(kp)
         known_pairs = _pairs
-        #---------------------------------------------------------------------------
+        # --------------------------------------------------------------------------
         if self._MDM_.ndim == 3:
 
             if self._MDM_.whether.inhomogeneous:
@@ -166,7 +170,7 @@ class MDM_Do(FrozenOnly):
         remaining_dimensions = self._MDM_.ndim - len(eliminated_dimensions)
         assert remaining_dimensions >= 0
 
-        #------- 0 ----------------------------------------------------------------------
+        # ------ 0 ----------------------------------------------------------------------
         if remaining_dimensions == 0:
             # all dimensions being eliminated; return a real number
             MDM = self._MDM_
@@ -181,10 +185,12 @@ class MDM_Do(FrozenOnly):
 
             local_value = list()
             for basic_unit in MDM:
-                _ = np.einsum(_ein_str,
-                       MDM[basic_unit],
-                       *[_.cochain.local[basic_unit] for _ in _eli_form],
-                       optimize='optimal')
+                _ = np.einsum(
+                    _ein_str,
+                    MDM[basic_unit],
+                    *[_.cochain.local[basic_unit] for _ in _eli_form],
+                    optimize='optimal'
+                )
                 local_value.append(_)
 
             local_value = np.sum(local_value)
@@ -197,7 +203,7 @@ class MDM_Do(FrozenOnly):
             local_value = COMM.bcast(local_value, root=MASTER_RANK)
             return local_value
 
-        #----------- 1 ---------------------------------------------------------------------------
+        # ---------- 1 ---------------------------------------------------------------------------
         elif remaining_dimensions == 1:
 
             caller = nLS_DoEvaRM1(self._MDM_, eliminated_dimensions)
@@ -238,15 +244,15 @@ if __name__ == '__main__':
     # mpiexec -n 4 python tools/linear_algebra/elementwise_cache/objects/multi_dim_matrix/do/main.py
     from __init__ import cscg3
 
-    mesh = cscg3.mesh('cuboid', region_layout=[2,2,2])([3,3,3])
-    space = cscg3.space('polynomials')((2,2,2))
+    mesh = cscg3.mesh('cuboid', region_layout=[2, 2, 2])([3, 3, 3])
+    space = cscg3.space('polynomials')((2, 2, 2))
     FC = cscg3.form(mesh, space)
 
-    def u(t,x,y,z): return np.sin(np.pi*x)*np.cos(2*np.pi*y)*np.cos(np.pi*z) + t
-    def v(t,x,y,z): return np.cos(np.pi*x)*np.sin(np.pi*y)*np.cos(2*np.pi*z) + t
-    def w(t,x,y,z): return np.cos(np.pi*x)*np.cos(np.pi*y)*np.sin(2*np.pi*z) + t
+    def u(t, x, y, z): return np.sin(np.pi*x)*np.cos(2*np.pi*y)*np.cos(np.pi*z) + t
+    def v(t, x, y, z): return np.cos(np.pi*x)*np.sin(np.pi*y)*np.cos(2*np.pi*z) + t
+    def w(t, x, y, z): return np.cos(np.pi*x)*np.cos(np.pi*y)*np.sin(2*np.pi*z) + t
 
-    velocity = FC('vector', (u,v,w))
+    velocity = FC('vector', (u, v, w))
     U = FC('scalar', u)
     V = FC('scalar', v)
     W = FC('scalar', w)

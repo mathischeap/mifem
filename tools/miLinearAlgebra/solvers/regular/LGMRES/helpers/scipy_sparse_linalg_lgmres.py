@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/10/20 2:13 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from root.config.main import COMM, RANK, MASTER_RANK, np, MPI
 from time import time
 
@@ -14,9 +11,10 @@ from scipy.sparse import linalg as spspalinalg
 from tools.miLinearAlgebra.dataStructures.vectors.locallyFull.main import LocallyFullVector
 
 
-
-def ___sp_sp_linalg_lgmres___(A, b, x0, m=3, k=3, maxiter=20, tol=1e-3, atol=1e-4, preconditioner=None,
-                       COD=True, name=None, plot_residuals=False):
+def ___sp_sp_linalg_lgmres___(
+        A, b, x0, m=3, k=3, maxiter=20, tol=1e-3, atol=1e-4, preconditioner=None,
+        COD=True, name=None, plot_residuals=False
+):
     """
 
     Parameters
@@ -73,16 +71,20 @@ def ___sp_sp_linalg_lgmres___(A, b, x0, m=3, k=3, maxiter=20, tol=1e-3, atol=1e-
 
                 M = spspalinalg.LinearOperator(A.shape, sA_iLU.solve)
                 # noinspection PyTypeChecker
-                RES = spspalinalg.lgmres(A, b,
-                                         x0=x0, tol=tol,
-                                         inner_m=m, outer_k = k,
-                                         maxiter=maxiter, M=M, atol=atol)
+                RES = spspalinalg.lgmres(
+                    A, b,
+                    x0=x0, tol=tol,
+                    inner_m=m, outer_k=k,
+                    maxiter=maxiter, M=M, atol=atol
+                )
             else:
                 raise Exception(f"Cannot used {preconditioner}. Plot ({plot_residuals}).")
         else:
-            RES = spspalinalg.lgmres(A, b,
-                                    x0=x0, tol=tol, inner_m=m, outer_k=k, maxiter=maxiter,
-                                    atol=atol)
+            RES = spspalinalg.lgmres(
+                A, b,
+                x0=x0, tol=tol, inner_m=m, outer_k=k, maxiter=maxiter,
+                atol=atol
+            )
 
         x, info = RES
         assert x.__class__.__name__ == 'ndarray' and x.shape == (num_dofs,)
@@ -105,7 +107,3 @@ def ___sp_sp_linalg_lgmres___(A, b, x0, m=3, k=3, maxiter=20, tol=1e-3, atol=1e-
               f'costs {int((t3-t0)*100)/100}s with convergence info = {info}.'
 
     return x, info, 0, 0, message
-
-if __name__ == "__main__":
-    # mpiexec -n 4 python 
-    pass

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
-
+if './' not in sys.path:
+    sys.path.append('./')
 
 from objects.CSCG._3d.ADF.standard.base.main import _3dCSCG_Algebra_DUAL_Standard_Form
 
@@ -16,7 +16,10 @@ class _3dCSCG_S1_ADF(_3dCSCG_Algebra_DUAL_Standard_Form):
     :param name:
     """
     def __init__(self, prime, mesh, space, orientation='outer', name=None):
-        if name is None: name = orientation + '-oriented-1-ADF'
+        if name is None:
+            name = orientation + '-oriented-1-ADF'
+        else:
+            pass
         super().__init__(3, mesh, space, prime, orientation, name)
         self._k_ = 1
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_standard_algebra_dual_1form')
@@ -30,14 +33,16 @@ if __name__ == "__main__":
     import numpy as np
 
     # mesh = MeshGenerator('bridge_arch_cracked')([8,9,7], EDM='SWV0', show_info=True)
-    mesh = MeshGenerator('crazy', c = 0.)([10, 10, 10], EDM=None, show_info=True)
-    space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3), ('Lobatto',3)], show_info=True)
+    mesh = MeshGenerator('crazy', c=0.)([10, 10, 10], EDM=None, show_info=True)
+    space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 3), ('Lobatto', 3)], show_info=True)
 
 
     def u(t, x, y, z):
         return np.cos(2*np.pi*x) * np.sin(2*np.pi*y) * np.sin(2*np.pi*z) + t
+
     def v(t, x, y, z):
         return np.sin(2*np.pi*x) * np.cos(2*np.pi*y) * np.sin(2*np.pi*z) + t
+
     def w(t, x, y, z):
         return np.sin(2*np.pi*x) * np.sin(2*np.pi*y) * np.cos(2*np.pi*z) + t
 

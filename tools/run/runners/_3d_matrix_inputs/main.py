@@ -7,7 +7,6 @@ from tools.legacy.serialRunners.INSTANCES.matrix3d_input_runner import Matrix3dI
 from tools.run.runners._3d_matrix_inputs.visualize.main import ___SlaveParallelMatrix3dInputRunnerVisualize___
 
 
-
 class ParallelMatrix3dInputRunner(ParallelRunnerBase):
     """"""
 
@@ -70,7 +69,7 @@ class ParallelMatrix3dInputRunner(ParallelRunnerBase):
             if RANK == MASTER_RANK:
                 self._SR_.iterate(I1, I2, I3, criterion=criterion, writeto=writeto, saveto=False, **kwargs)
             else:
-                I, J, K = COMM.recv(source=MASTER_RANK, tag=RANK + 1) # position mark 1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                I, J, K = COMM.recv(source=MASTER_RANK, tag=RANK + 1)  # position mark 1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
                 COMM.barrier()
 
                 for k in range(K):  # we let the axis2 go at the last.

@@ -7,8 +7,8 @@ class EWC_SparseMatrix_Do(FrozenOnly):
     def __init__(self, MAT):
         """"""
         self._MAT_ = MAT
-        self.___locker___ = False # By default, the locker is off!
-        self.___sparsity_locker___ = False # # By default, the sparsity locker is off!
+        self.___locker___ = False  # By default, the locker is off!
+        self.___sparsity_locker___ = False  # # By default, the sparsity locker is off!
         self._freeze_self_()
 
     def lock_assembled_matrix(self):
@@ -23,7 +23,7 @@ class EWC_SparseMatrix_Do(FrozenOnly):
         the assembled matrix once we assemble it, and if we already save it, we just clear it.
         """
         self.___locker___ = False
-        self._MAT_.assembler.___AMC___ = None # clear the assembled matrix cache
+        self._MAT_.assembler.___AMC___ = None  # clear the assembled matrix cache
 
 
     def lock_sparsity(self):
@@ -38,7 +38,7 @@ class EWC_SparseMatrix_Do(FrozenOnly):
         will be invalid when we have changed the sparsity.
         """
         self.___sparsity_locker___ = False
-        self._MAT_.assembler._cache_ = None # clear the assembler cache
+        self._MAT_.assembler._cache_ = None  # clear the assembler cache
 
 
     def clean(self, jobs=None):
@@ -59,18 +59,18 @@ class EWC_SparseMatrix_Do(FrozenOnly):
             {default: None} Which jobs we are going to do?
 
         """
-        if jobs is None: # we do all jobs
-            jobs = [1,]
+        if jobs is None:  # we do all jobs
+            jobs = [1, ]
 
         spa_mat = self._MAT_
         jobs = set(jobs)
         reports = dict()
 
-        for job in jobs: # Job-1
-            #------------- memory saving by delete repeating data ----------------------------------
+        for job in jobs:  # Job-1
+            # ------------ memory saving by delete repeating data ----------------------------------
             if job == 1:
                 if spa_mat.___fully_pre_data_DICT___:
-                    #TODO: to be continued...
+                    # TODO: to be continued...
                     reports[1] = ''
                 else:
                     # we should have optimized this with the data_generator and key_generator!

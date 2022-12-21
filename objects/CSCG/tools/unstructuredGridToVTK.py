@@ -86,9 +86,6 @@ def unstructuredGridToVTK(grid, objs, filename):
         raise Exception
 
 
-
-
-
 def _2dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
     """The function for objects in 2d CSCG meshes.
 

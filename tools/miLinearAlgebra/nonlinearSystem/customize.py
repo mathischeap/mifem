@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/8/9 14:28
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
 
@@ -98,7 +95,7 @@ class nLS_Customize(FrozenOnly):
         else:
             pass
 
-        #======== customize =============================================================
+        # ======= customize =============================================================
         I, J = self._nLS_.shape
         assert i % 1 == 0, f"i={i}({i.__class__.__name__}) cannot be an index!"
         assert j % 1 == 0, f"j={j}({j.__class__.__name__}) cannot be an index!"
@@ -111,14 +108,3 @@ class nLS_Customize(FrozenOnly):
             ))
         else:
             raise NotImplementedError(dof_itp, cochain_itp)
-
-
-
-
-
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python tools/linear_algebra/nonlinear_system/customize.py
-    pass

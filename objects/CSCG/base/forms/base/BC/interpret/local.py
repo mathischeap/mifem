@@ -75,13 +75,15 @@ class CSCG_FORM_BC_Interpret_Local(FrozenOnly):
 
         elif indicator == 'mesh-element-side-wise local cochain':
             # will only look at cochains for dofs on mesh element side (boundary of the mesh).
+
             iEP = self._f_.BC._involved_element_parts_
 
             for e_p in iEP:
                 e, part = int(e_p[:-1]), e_p[-1]
                 assert e in local_cochain, \
-                    f"element {e} in not in the local cochain, most likely," \
-                    f"the boundaries in the func do not cover BC.valid_boundaries: {self._f_.BC.boundaries}."
+                    f"element {e} in not in the local cochain, most likely, " \
+                    f"the boundaries in the func do not cover BC.valid_boundaries: " \
+                    f"{self._f_.BC.boundaries}."
 
                 if e not in self._cochains_:
                     self._cochains_[e] = list()

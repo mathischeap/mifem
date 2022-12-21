@@ -19,8 +19,9 @@ class CSCG_FORM_BC_Interpret_BoundaryCochain(FrozenOnly):
         self._elements_ = f.mesh.elements
         self.___empty___ = csc_matrix((f.num.basis, 1))
         self.___boundary_cochain_cache___ = None
-        self._representing_CF_ = None
+        self._representing_CF_ = -1  # will store id, so use int
         self._representing_ct_ = None
+        self._representing_boundaries_ = -1  # will store id, so use int
         self._freeze_self_()
 
     def ___Pr_make_mesh_element_wise_boundary_local_dofs___(self):
@@ -37,7 +38,8 @@ class CSCG_FORM_BC_Interpret_BoundaryCochain(FrozenOnly):
                 e, side = int(e_p[:-1]), e_p[-1]
                 assert e in local_cochain, \
                     f"element {e} in not in the local cochain, most likely," \
-                    f"the boundaries in the func do not cover `BC.boundaries`: {self._f_.BC.boundaries}."
+                    f"the boundaries in the func do not cover `BC.boundaries`: " \
+                    f"{self._f_.BC.boundaries}."
 
                 if e not in self.___boundary_cochain_cache___:
                     self.___boundary_cochain_cache___[e] = np.zeros(self._f_.num.basis)
@@ -59,9 +61,11 @@ class CSCG_FORM_BC_Interpret_BoundaryCochain(FrozenOnly):
             raise NotImplementedError(f"indicator={indicator} is not implemented.")
 
         # we update representing information below.
-        self._representing_CF_ = self._f_.BC.CF
+        self._representing_CF_ = id(self._f_.BC.CF)
         # we use `CF.current_time` here as if we reach here but do not see current time, it should raise error.
         self._representing_ct_ = self._f_.BC.CF.current_time
+        # we update representing boundaries as well
+        self._representing_boundaries_ = id(self._f_.BC.boundaries)
 
     @property
     def ___Pr_BcCo___(self):
@@ -69,7 +73,9 @@ class CSCG_FORM_BC_Interpret_BoundaryCochain(FrozenOnly):
             self.___Pr_make_mesh_element_wise_boundary_local_dofs___()
         else:
             # the following check is OK, since when CF is None, we will never call `___Pr_BcCo___`.
-            if self._representing_CF_ is self._f_.BC.CF and self._representing_ct_ == self._f_.BC.CF.current_time:
+            if self._representing_CF_ == id(self._f_.BC.CF) and \
+                    self._representing_ct_ == self._f_.BC.CF.current_time and \
+                    self._representing_boundaries_ == id(self._f_.BC.boundaries):
                 # we use `CF.current_time` here as if we reach here but do not see current time, it should raise error.
                 pass  # as nothing has changed, so we use the cached instance.
             else:
@@ -89,14 +95,19 @@ class CSCG_FORM_BC_Interpret_BoundaryCochain(FrozenOnly):
         -------
 
         """
-        element = self._elements_[i]
-        if element.whether.internal or \
-           self._f_.BC.boundaries == list() or \
+        if self._f_.BC.boundaries == list() or \
            self._f_.BC.boundaries is None:
-            # cause this is a realtime function, we always check self._f_.BC.
+
             return self.___empty___
+
         else:
-            if i in self.___Pr_BcCo___:
-                return csr_matrix(self.___Pr_BcCo___[i]).T
-            else:
+            element = self._elements_[i]
+            if element.whether.internal:
+                # cause this is a realtime function, we always check self._f_.BC.
                 return self.___empty___
+
+            else:
+                if i in self.___Pr_BcCo___:
+                    return csr_matrix(self.___Pr_BcCo___[i]).T
+                else:
+                    return self.___empty___

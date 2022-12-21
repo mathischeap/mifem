@@ -19,9 +19,10 @@ class Direct(ParallelSolverBase):
         """
         super().__init__(routine, name)
 
-    def __call__(self, A, b, COD=None,
-        **kwargs
-        ):
+    def __call__(
+            self, A, b, COD=None,
+            **kwargs
+    ):
         """
 
         :param A: GlobalMatrix
@@ -59,9 +60,9 @@ class Direct(ParallelSolverBase):
         # ---------- Do the computation ----------------------------------------------------------------
         results, info, beta, ITER, solver_message = ROUTINE(A, b, COD=COD)
 
-        _ = kwargs # trivial; just leave freedom for future updates for kwargs.
+        _ = kwargs  # trivial; just leave freedom for future updates for kwargs.
 
-        MESSAGE =  message + '-' + solver_message
-        #===============================================================================================
+        MESSAGE = message + '-' + solver_message
+        # ==============================================================================================
 
         return results, info, beta, ITER, MESSAGE

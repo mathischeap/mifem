@@ -3,6 +3,7 @@ from components.freeze.main import FrozenOnly
 from scipy import sparse as spspa
 from root.config.main import *
 
+
 class SpaMat_Customize(FrozenOnly):
     """Store all method to customize the EWC sparse matrix.
 
@@ -30,8 +31,8 @@ class SpaMat_Customize(FrozenOnly):
                 ...,
                 5: [('clr', 16), ...],  # The first customization for #5 element output is "clear local row #16".
                     Customization are executed in a positive sequence.
-                6: [('salv', ([5, 6], 151.1256221)), ...],  # Set A Local Value whose local indices are (5,6) in element 6 to
-                    151.1256221.
+                6: [('salv', ([5, 6], 151.1256221)), ...],  # Set A Local Value whose local indices are (5,6)
+                    in element 6 to 151.1256221.
                 ...
         }
         """
@@ -52,42 +53,47 @@ class SpaMat_Customize(FrozenOnly):
         else:
             assert spspa.isspmatrix_csc(RETURN) or spspa.isspmatrix_csr(RETURN)
 
-            CUSi = self._customizations_[e] # customizations for the output of #e element.
+            CUSi = self._customizations_[e]  # customizations for the output of #e element.
 
             for cus in CUSi:
 
-                key, factors = cus # for example cus=('clr', 5) or ('salv', ([1,1],5))
+                key, factors = cus  # for example cus=('clr', 5) or ('salv', ([1,1],5))
 
                 # clear a local row of the EWC-sparse-matrix ----------------- BELOW -----------------------------------
-                if key == 'clr': # Clear Local Row
+                if key == 'clr':  # Clear Local Row
                     # `factors` will be an int
                     assert factors % 1 == 0, f"factors={factors} wrong, when `clr`, factors must be an int."
-                    if not spspa.isspmatrix_lil(RETURN): RETURN = RETURN.tolil()
+                    if not spspa.isspmatrix_lil(RETURN):
+                        RETURN = RETURN.tolil()
                     RETURN[factors, :] = 0
 
                 # clear local rows for element #e --------------------- BELOW ---------------------------
-                elif key == 'clrs': # Clear Local Row
-                    # factores are rows
-                    if not spspa.isspmatrix_lil(RETURN): RETURN = RETURN.tolil()
+                elif key == 'clrs':  # Clear Local Row
+                    #  factors are rows
+                    if not spspa.isspmatrix_lil(RETURN):
+                        RETURN = RETURN.tolil()
                     RETURN[factors, :] = 0
 
                 # Set A Local Value of local indices (i, j) to v --------------------- BELOW ---------------------------
                 elif key == 'salv':
                     ij, v = factors
                     i, j = ij
-                    if not spspa.isspmatrix_lil(RETURN): RETURN = RETURN.tolil()
+                    if not spspa.isspmatrix_lil(RETURN):
+                        RETURN = RETURN.tolil()
                     RETURN[i, j] = v
 
                 # identify Local Rows --------------------- BELOW ---------------------------
                 elif key == 'ilrs':
-                    if not spspa.isspmatrix_lil( RETURN): RETURN = RETURN.tolil()
+                    if not spspa.isspmatrix_lil(RETURN):
+                        RETURN = RETURN.tolil()
                     RETURN[factors, :] = 0
                     RETURN[factors, factors] = 1
 
                 # identify Local Rows At Columns --------------------- BELOW ---------------------------
                 elif key == 'ilrsac':
                     # key, factors = ('ilrsac', ([0,1,2,3], [10, 11, 12 ,14]))
-                    if not spspa.isspmatrix_lil( RETURN): RETURN = RETURN.tolil()
+                    if not spspa.isspmatrix_lil(RETURN):
+                        RETURN = RETURN.tolil()
                     RETURN[factors[0], :] = 0
                     RETURN[factors[0], factors[1]] = 1
 
@@ -115,7 +121,8 @@ class SpaMat_Customize(FrozenOnly):
         assert not self._spa_mat_.do.___sparsity_locker___, f"the sparsity is locked!"
 
         assert r % 1 == 0, f"r={r}({r.__class__.__name__}) is wrong."
-        if not isinstance(r, int): r = int(r)
+        if not isinstance(r, int):
+            r = int(r)
 
         rCGM = self._spa_mat_.gathering_matrices[0]
         assert rCGM is not None, "I have no row gathering_matrix!"
@@ -155,9 +162,11 @@ class SpaMat_Customize(FrozenOnly):
         assert not self._spa_mat_.do.___sparsity_locker___, f"the sparsity is locked!"
 
         assert i % 1 == 0, f"i={i}({i.__class__.__name__}) is wrong."
-        if not isinstance(i, int): i = int(i)
+        if not isinstance(i, int):
+            i = int(i)
         assert j % 1 == 0, f"j={j}({j.__class__.__name__}) is wrong."
-        if not isinstance(j, int): j = int(j)
+        if not isinstance(j, int):
+            j = int(j)
 
         rCGM, cCGM = self._spa_mat_.gathering_matrices
         assert rCGM is not None, "I have no row gathering_matrix!"
@@ -187,7 +196,7 @@ class SpaMat_Customize(FrozenOnly):
                 TBG = None
 
         else:
-            TBG = None # to be gathered to master
+            TBG = None  # to be gathered to master
 
         ALL_TBG = COMM.gather(TBG, root=MASTER_RANK)
         if RANK == MASTER_RANK:
@@ -235,8 +244,8 @@ class SpaMat_Customize(FrozenOnly):
                 else:
                     self.___customizations___[e].append(('salv', ([i, j], v)))
 
-        else: # These cores have no business with the setting the value, they only need to make the value to be zero.
-            if TBG is None: # these cores have no business at all.
+        else:  # These cores have no business with the setting the value, they only need to make the value to be zero.
+            if TBG is None:  # these cores have no business at all.
                 pass
             else:
                 for k, e in enumerate(TBG):
@@ -256,7 +265,8 @@ class SpaMat_Customize(FrozenOnly):
         assert not self._spa_mat_.do.___sparsity_locker___, f"the sparsity is locked!"
 
         assert r % 1 == 0, f"r={r}({r.__class__.__name__}) is wrong."
-        if not isinstance(r, int): r = int(r)
+        if not isinstance(r, int):
+            r = int(r)
 
         self.clear_global_row(r)
         self.set_assembled_M_ij_to(r, r, 1)
@@ -298,7 +308,8 @@ class SpaMat_Customize(FrozenOnly):
             "list, then send it to bmat"
 
         assert i % 1 == 0, f"i={i}({i.__class__.__name__}) cannot be an index!"
-        if not isinstance(i, int): i = int(i)
+        if not isinstance(i, int):
+            i = int(i)
         assert 0 <= i < bsp[0], f"i={i} is beyond the shape of this " \
                                 f"EWC spare matrix of block shape ({bsp[0]},.)."
 
@@ -318,7 +329,7 @@ class SpaMat_Customize(FrozenOnly):
                 else:
                     raise NotImplementedError(f"Not implemented for irregular Gathering Matrix.")
 
-                for e in LDF: # go through all locally involved mesh element numbers
+                for e in LDF:  # go through all locally involved mesh element numbers
                     assert e in self._spa_mat_
 
                     if e not in self.___customizations___:
@@ -370,12 +381,14 @@ class SpaMat_Customize(FrozenOnly):
             "a list, then send it to bmat"
 
         assert i % 1 == 0, f"i={i}({i.__class__.__name__}) cannot be an index!"
-        if not isinstance(i, int): i = int(i)
+        if not isinstance(i, int):
+            i = int(i)
         assert 0 <= i < bsp[0], f"i={i} is beyond the shape of this " \
                                 f"EWC spare matrix of block shape ({bsp[0]},.)."
 
         assert j % 1 == 0, f"j={j}({j.__class__.__name__}) cannot be an index!"
-        if not isinstance(j, int): j = int(j)
+        if not isinstance(j, int):
+            j = int(j)
         assert 0 <= j < bsp[1], f"j={j} is beyond the shape of this " \
                                 f"EWC spare matrix of block shape ({bsp[1]},.)."
 
@@ -402,7 +415,7 @@ class SpaMat_Customize(FrozenOnly):
                 else:
                     raise NotImplementedError(f"Not implemented for irregular Gathering Matrix.")
 
-                for e in LDF_row: # go through all locally involved mesh element numbers
+                for e in LDF_row:  # go through all locally involved mesh element numbers
                     assert e in self._spa_mat_ and e in LDF_col
 
                     if e not in self.___customizations___:

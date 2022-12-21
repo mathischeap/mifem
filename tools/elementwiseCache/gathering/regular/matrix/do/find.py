@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from components.freeze.main import FrozenOnly
 
+
 class Gathering_Matrix_FIND(FrozenOnly):
     """"""
     def __init__(self, GM):
@@ -17,8 +18,8 @@ class Gathering_Matrix_FIND(FrozenOnly):
         mesh_elements = list()
         local_indices = list()
 
-        for e in self._GM_: # go through all local mesh elements
-            gv = self._GM_[e] # get the local gathering vector in each local mesh element
+        for e in self._GM_:  # go through all local mesh elements
+            gv = self._GM_[e]  # get the local gathering vector in each local mesh element
             if i in gv:
                 mesh_elements.append(e)
                 local_indices.append(gv.index(i))
@@ -37,8 +38,8 @@ class Gathering_Matrix_FIND(FrozenOnly):
             mesh_elements[i] = list()
             local_indices[i] = list()
 
-        for e in self._GM_: # go through all local mesh elements
-            gv = self._GM_[e] # get the local gathering vector in each local mesh element
+        for e in self._GM_:  # go through all local mesh elements
+            gv = self._GM_[e]  # get the local gathering vector in each local mesh element
             for i in dofs:
                 if i in gv:
                     mesh_elements[i].append(e)

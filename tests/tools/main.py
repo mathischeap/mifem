@@ -82,6 +82,7 @@ passed_GLOBAL_tests += test_applying_strong_BC_for_Poisson_problem_NT()
 passed_GLOBAL_tests += test_MDM_sf_CrossProduct()
 passed_GLOBAL_tests += test_Regular_Newton_Raphson()
 passed_GLOBAL_tests += WellTest_ParallelMatrix3dInputRunner()
+
 from tests.tools.ParallelMatrix3dInputRunner.csv_reader_test import test_csv_reader_passed
 passed_GLOBAL_tests += test_csv_reader_passed
 

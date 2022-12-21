@@ -6,7 +6,7 @@
 """
 from components.freeze.main import FrozenOnly
 import numpy as np
-from scipy.sparse import csr_matrix, bmat
+
 
 class _3dCSCG_2LocalTrace_Reconstruct(FrozenOnly):
     """"""
@@ -36,22 +36,22 @@ class _3dCSCG_2LocalTrace_Reconstruct(FrozenOnly):
         if element_range is None:
             indices = mesh.elements._elements_.keys()
         elif isinstance(element_range, int):
-            indices = [element_range,]
+            indices = [element_range, ]
         else:
             indices = element_range
 
         xietasigma, pb = self._ltf_.do.evaluate_basis_at_meshgrid(xi, eta, sigma)
         ii, jj, kk = np.size(xi), np.size(eta), np.size(sigma)
-        xyz : dict = dict()
-        v : dict = dict()
+        xyz: dict = dict()
+        v: dict = dict()
 
         Tmap = mesh.trace.elements.map
         for i in indices:
             if i in mesh.elements:
 
                 tes = Tmap[i]
-                xyz_i : list = list()
-                v_i : list = list()
+                xyz_i: list = list()
+                v_i: list = list()
 
                 for te_number, side in zip(tes, 'NSWEBF'):
                     te = mesh.trace.elements[te_number]
@@ -113,7 +113,7 @@ class _3dCSCG_2LocalTrace_Reconstruct(FrozenOnly):
 
                     for j, side in enumerate('NSWEBF'):
                         XYZ[side] = xyz_i[j]
-                        V[side] = [v_i[j],]
+                        V[side] = [v_i[j], ]
 
                 else:
                     XYZ = dict()
@@ -127,7 +127,7 @@ class _3dCSCG_2LocalTrace_Reconstruct(FrozenOnly):
                         else:
                             if side in 'NS':
                                 xyz_ = [xyz_[_].reshape((jj, kk), order='F') for _ in range(3)]
-                                v_ = [v_.reshape((jj, kk), order='F'),]
+                                v_ = [v_.reshape((jj, kk), order='F'), ]
                             elif side in 'WE':
                                 xyz_ = [xyz_[_].reshape((ii, kk), order='F') for _ in range(3)]
                                 v_ = [v_.reshape((ii, kk), order='F'), ]
@@ -164,14 +164,13 @@ class _3dCSCG_2LocalTrace_Reconstruct(FrozenOnly):
         if element_range is None:
             indices = mesh.elements._elements_.keys()
         elif isinstance(element_range, int):
-            indices = [element_range,]
+            indices = [element_range, ]
         else:
             indices = element_range
 
         xietasigma, pb = self._ltf_.do.evaluate_basis_at_meshgrid(xi, et, sg)
-        RD = dict()
         RD_sides = dict()
-        cacheDict : dict = dict()
+        cacheDict: dict = dict()
 
         Tmap = mesh.trace.elements.map
         for i in indices:
@@ -181,7 +180,7 @@ class _3dCSCG_2LocalTrace_Reconstruct(FrozenOnly):
 
                 if isinstance(mark, str) and mark in cacheDict:
 
-                    RD[i], RD_sides[i] = cacheDict[mark]
+                    RD_sides[i] = cacheDict[mark]
 
                 else:
 
@@ -206,18 +205,6 @@ class _3dCSCG_2LocalTrace_Reconstruct(FrozenOnly):
 
                         M.append(ms)
 
-                    RDi = bmat(
-                        [
-                            [csr_matrix(M[0]), None, None, None, None, None],
-                            [None, csr_matrix(M[1]), None, None, None, None],
-                            [None, None, csr_matrix(M[2]), None, None, None],
-                            [None, None, None, csr_matrix(M[3]), None, None],
-                            [None, None, None, None, csr_matrix(M[4]), None],
-                            [None, None, None, None, None, csr_matrix(M[5])],
-                        ],
-                        format='csr'
-                    )
-
                     RDi_sides = {
                         'N': M[0],
                         'S': M[1],
@@ -228,11 +215,12 @@ class _3dCSCG_2LocalTrace_Reconstruct(FrozenOnly):
                     }
 
                     if isinstance(mark, str):
-                        cacheDict[mark] = (RDi, RDi_sides)
+                        cacheDict[mark] = RDi_sides
                     else:
                         pass
 
-                    RD[i] = RDi
                     RD_sides[i] = RDi_sides
+            else:
+                pass
 
-        return RD, RD_sides
+        return RD_sides

@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 """A collection of all parallel solvers.
 """
-import sys
-if './' not in sys.path: sys.path.append('./')
-
-
 from importlib import import_module
 
 
@@ -57,30 +53,23 @@ class RegularSolverDistributor(FrozenOnly):
     @classmethod
     def ___solver_name___(cls):
         """"""
-        return {'GMRES'   : 'GMRES',
-                'LGMRES'  : 'LGMRES',
-                'BiCGSTAB': 'BiCGSTAB',
-                'direct'  : 'Direct',
-                'TFQMR'   : 'TFQMR',
-                'GCROTmk' : 'GCROTmk',
+        return {
+            'GMRES': 'GMRES',
+            'LGMRES': 'LGMRES',
+            'BiCGSTAB': 'BiCGSTAB',
+            'direct': 'Direct',
+            'TFQMR': 'TFQMR',
+            'GCROTmk': 'GCROTmk',
         }
 
     @classmethod
     def ___solver_path___(cls):
         base_path = '.'.join(str(cls).split(' ')[1][1:-2].split('.')[:-2]) + '.'
         return {
-            'GMRES'   : base_path + 'GMRES.main',
-            'LGMRES'  : base_path + 'LGMRES.main',
+            'GMRES': base_path + 'GMRES.main',
+            'LGMRES': base_path + 'LGMRES.main',
             'BiCGSTAB': base_path + 'BiCGSTAB.main',
-            'direct'  : base_path + 'direct.main',
-            'TFQMR'   : base_path + 'TFQMR.main',
-            'GCROTmk' : base_path + 'GCROTmk.main',
+            'direct': base_path + 'direct.main',
+            'TFQMR': base_path + 'TFQMR.main',
+            'GCROTmk': base_path + 'GCROTmk.main',
         }
-
-
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n  4 python tools/linearAlgebra/solvers/regular/allocator.py
-    pass

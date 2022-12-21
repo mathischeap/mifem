@@ -14,7 +14,9 @@ class _3dCSCG_SF1_reconstruct(_3dCSCG_SF_Reconstruct):
         super(_3dCSCG_SF1_reconstruct, self).__init__(sf)
         self._freeze_self_()
 
-    def __call__(self, xi, eta, sigma, ravel=False, element_range=None, regions=None, vectorized=False, value_only=False):
+    def __call__(
+        self, xi, eta, sigma, ravel=False, element_range=None, regions=None, vectorized=False, value_only=False
+    ):
         """
 
         :param xi:
@@ -74,9 +76,15 @@ class _3dCSCG_SF1_reconstruct(_3dCSCG_SF_Reconstruct):
                 for i in INDICES:
                     element = mesh.elements[i]
                     xyz[i] = element.coordinate_transformation.mapping(*xietasigma)
-                    u = np.einsum('ij, i -> j', basis[0], f.cochain.___PRIVATE_local_on_axis___('x', i), optimize='optimal')
-                    v = np.einsum('ij, i -> j', basis[1], f.cochain.___PRIVATE_local_on_axis___('y', i), optimize='optimal')
-                    w = np.einsum('ij, i -> j', basis[2], f.cochain.___PRIVATE_local_on_axis___('z', i), optimize='optimal')
+                    u = np.einsum(
+                        'ij, i -> j', basis[0], f.cochain.___PRIVATE_local_on_axis___('x', i), optimize='optimal'
+                    )
+                    v = np.einsum(
+                        'ij, i -> j', basis[1], f.cochain.___PRIVATE_local_on_axis___('y', i), optimize='optimal'
+                    )
+                    w = np.einsum(
+                        'ij, i -> j', basis[2], f.cochain.___PRIVATE_local_on_axis___('z', i), optimize='optimal'
+                    )
                     value[i] = [None, None, None]
                     typeWr2Metric = element.type_wrt_metric.mark
                     iJi = iJ[i]
@@ -156,7 +164,7 @@ class _3dCSCG_SF1_reconstruct(_3dCSCG_SF_Reconstruct):
                 # noinspection PyUnresolvedReferences
                 xyz[e] = [xyz[e][j].reshape(shape, order='F') for j in range(3)]
                 # noinspection PyUnresolvedReferences
-                value[e] = [value[e][j].reshape(shape, order='F') for j in range(3)] # ========diff
+                value[e] = [value[e][j].reshape(shape, order='F') for j in range(3)]  # ========diff
 
         # ------- prime-region-wise stack coordinates and values ----------------------------------1
         XYZ, VAL, element_global_numbering = self.___PRIVATE_distribute_XYZ_and_VAL___(mesh, xyz, value)

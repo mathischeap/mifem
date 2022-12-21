@@ -6,11 +6,13 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from components.freeze.main import FrozenOnly
 from importlib import import_module
 from root.config.main import RANK, MASTER_RANK, COMM, SAFE_MODE
 from objects.CSCG._3d.forms.localTrace.base.numbering.do.main import _3dCSCG_LocalTrace_Numbering_Do
+
 
 class _3dCSCG_LocalTrace_Numbering(FrozenOnly):
     """"""
@@ -112,7 +114,8 @@ class _3dCSCG_LocalTrace_Numbering(FrozenOnly):
         boundaries = mesh.boundaries
         BNS = boundaries.names
         self._boundary_dofs_ = dict()
-        for bn in BNS: self._boundary_dofs_[bn] = list()
+        for bn in BNS:
+            self._boundary_dofs_[bn] = list()
 
         RES = boundaries.range_of_element_sides
 
@@ -148,7 +151,8 @@ class _3dCSCG_LocalTrace_Numbering(FrozenOnly):
                 for name in names:
                     # noinspection PyUnresolvedReferences
                     A = BD[name]
-                    if SAFE_MODE: assert isinstance(A, list), "SAFETY check failed."
+                    if SAFE_MODE:
+                        assert isinstance(A, list), "SAFETY check failed."
                     A.extend(bdi[name])
                     BD[name] = A
 
@@ -166,6 +170,7 @@ class _3dCSCG_LocalTrace_Numbering(FrozenOnly):
         for bn in GLOBAL_boundary_dofs:
             RAVEL.update(GLOBAL_boundary_dofs[bn])
         return list(RAVEL)
+
 
 if __name__ == '__main__':
     # mpiexec -n 4 python 

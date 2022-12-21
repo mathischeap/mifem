@@ -3,6 +3,7 @@ from components.freeze.main import FrozenOnly
 import numpy as np
 from itertools import chain
 
+
 class Gathering_Vector(FrozenOnly):
     """A gathering vector stores the numbering of dofs in one element.
 
@@ -15,17 +16,18 @@ class Gathering_Vector(FrozenOnly):
     def __init__(self, i, gv):
         self._i_ = i
 
-        if isinstance(gv, list): # list of integers
+        if isinstance(gv, list):  # list of integers
             self._gv_ = np.array(gv)
 
-        if isinstance(gv, tuple): # tuple of a series of range object.
-            for gvi in gv: assert isinstance(gvi, range), "Tuple of ranges."
+        if isinstance(gv, tuple):  # tuple of a series of range object.
+            for gvi in gv:
+                assert isinstance(gvi, range), "Tuple of ranges."
             CHAIN = chain(*gv)
             self._gv_ = np.array([_ for _ in CHAIN])
-        elif gv.__class__.__name__ == 'ndarray': # 1d numpy.array of integers.
+        elif gv.__class__.__name__ == 'ndarray':  # 1d numpy.array of integers.
             assert np.ndim(gv) == 1, f"gathering vector needs to be 1d."
             self._gv_ = gv
-        elif isinstance(gv, range): # A single range object.
+        elif isinstance(gv, range):  # A single range object.
             self._gv_ = gv
         else:
             raise Exception(f'gathering vector type {gv.__class__.__name__} wrong.')
@@ -106,6 +108,6 @@ class Gathering_Vector(FrozenOnly):
             >>> A.index(5)
             2
         """
-        WHERE =  np.where(self.full_vector == dof)[0]
+        WHERE = np.where(self.full_vector == dof)[0]
         assert len(WHERE) == 1, f"We must only find one dof is numbered i."
         return WHERE[0]

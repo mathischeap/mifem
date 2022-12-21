@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-
-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 
 from objects.CSCG._3d.ADF.standard.base.main import _3dCSCG_Algebra_DUAL_Standard_Form
@@ -18,34 +17,37 @@ class _3dCSCG_S3_ADF(_3dCSCG_Algebra_DUAL_Standard_Form):
     :param name:
     """
     def __init__(self, prime, mesh, space, orientation='outer', name=None):
-        if name is None: name = orientation + '-oriented-3-ADF'
+        if name is None:
+            name = orientation + '-oriented-3-ADF'
+        else:
+            pass
         super().__init__(3, mesh, space, prime, orientation, name)
         self._k_ = 3
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_standard_algebra_dual_3form')
         self._freeze_self_()
 
 
-
 if __name__ == "__main__":
 
     # mpiexec -n 6 python _3dCSCG\ADF\standard\_3_AD_form.py
     import numpy as np
-    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
     # mesh = MeshGenerator('bridge_arch_cracked')([8,9,7], EDM='SWV0', show_info=True)
     mesh = MeshGenerator('crazy', c=0.0)([10, 10, 10], EDM=None, show_info=True)
-    space = SpaceInvoker('polynomials')([3,3,3], show_info=True)
-
+    space = SpaceInvoker('polynomials')([3, 3, 3], show_info=True)
 
     def p(t, x, y, z):
         return np.sin(2*np.pi*x) * np.sin(2*np.pi*y) * np.sin(2*np.pi*z) + t
+
     def u(t, x, y, z):
         return 2*np.pi*np.cos(2*np.pi*x) * np.sin(2*np.pi*y) * np.sin(2*np.pi*z) + t
+
     def v(t, x, y, z):
         return 2*np.pi*np.sin(2*np.pi*x) * np.cos(2*np.pi*y) * np.sin(2*np.pi*z) + t
+
     def w(t, x, y, z):
         return 2*np.pi*np.sin(2*np.pi*x) * np.sin(2*np.pi*y) * np.cos(2*np.pi*z) + t
-
 
     FC = FormCaller(mesh, space)
     df3 = FC('3-adf', numbering_parameters={'scheme_name': 'Naive', })
@@ -63,7 +65,6 @@ if __name__ == "__main__":
     dt2.prime.TW.current_time = 0
     dt2.prime.TW.do.push_all_to_instant()
     dt2.prime.do.discretize()
-
 
     df2 = df3.coboundary(dt2)
 

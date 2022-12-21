@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path:
+    sys.path.append('/')
 from components.freeze.main import FrozenOnly
 
 
@@ -36,8 +37,6 @@ class MDM_Whether(FrozenOnly):
             self._IH_ = IH
 
         return self._IH_
-
-
 
 
 if __name__ == '__main__':

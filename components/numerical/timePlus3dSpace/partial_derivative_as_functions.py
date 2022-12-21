@@ -1,21 +1,13 @@
 # -*- coding: utf-8 -*-
-
-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from types import FunctionType, MethodType
 import numpy as np
 from components.freeze.main import FrozenOnly
 
-
-
-
-
 from components.numerical.timePlus3dSpace.partial_derivative import NumericalPartialDerivative_txyz
-
-
-
 
 
 class NumericalPartialDerivative_txyz_Functions(FrozenOnly):
@@ -82,9 +74,6 @@ class NumericalPartialDerivative_txyz_Functions(FrozenOnly):
         return NPD4.scipy_partial('z')
 
 
-
-
-
 if __name__ == '__main__':
     # mpiexec -n 6 python components\numerical\time_plus_3d_space\partial_derivative_as_functions.py
 
@@ -110,8 +99,3 @@ if __name__ == '__main__':
     Npx = NPD4F('x')
     Npy = NPD4F('y')
     Npz = NPD4F('z')
-
-    # print(np.sum(np.abs(Pt(t,x,y,z) - Npt(t,x,y,z))))
-    # print(np.sum(np.abs(Px(t,x,y,z) - Npx(t,x,y,z))))
-    # print(np.sum(np.abs(Py(t,x,y,z) - Npy(t,x,y,z))))
-    # print(np.sum(np.abs(Pz(t,x,y,z) - Npz(t,x,y,z))))

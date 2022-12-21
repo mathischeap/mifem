@@ -262,7 +262,8 @@ class _3dCSCG_Mesh_Elements(FrozenOnly):
     def ___PRIVATE_elementwise_cache_metric_key___(self, i):
         """A private method to produce str key for cache."""
         mark = self[i].type_wrt_metric.mark
-        if not isinstance(mark, str): mark = str(mark)
+        if not isinstance(mark, str):
+            mark = str(mark)
         return mark
 
 

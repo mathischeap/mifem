@@ -7,9 +7,9 @@ class SpaVec_Adjust(FrozenOnly):
         self._spa_vec_ = spa_vec
         self._freeze_self_()
 
-
     def set_entries_according_to(
-        self, dof_itp, cochain_itp=None, AS='local'):
+        self, dof_itp, cochain_itp=None, AS='local'
+    ):
         """We do:
         V[row_pds.dofs, 0] = col_pds.cochain
         locally. Note it is "locally", that means, after assembly, we
@@ -56,7 +56,8 @@ class SpaVec_Adjust(FrozenOnly):
                 SPA_VEC[e] = self._spa_vec_[e]
 
         SPA_VEC = self._spa_vec_.__class__(
-            self._spa_vec_._elements_, SPA_VEC, cache_key_generator = 'no_cache')
+            self._spa_vec_._elements_, SPA_VEC, cache_key_generator='no_cache',
+        )
 
         if self._spa_vec_.gathering_matrix is not None:
             SPA_VEC.gathering_matrix = self._spa_vec_.gathering_matrix

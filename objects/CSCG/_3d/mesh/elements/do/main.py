@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 
 from objects.CSCG._3d.mesh.elements.do.find import _3dCSCG_Mesh_Elements_DO_FIND
 
+
 class _3dCSCG_Mesh_Elements_DO(FrozenOnly):
     def __init__(self, elements):
         self._elements_ = elements
@@ -30,7 +31,7 @@ class _3dCSCG_Mesh_Elements_DO(FrozenOnly):
         i2 = 3 * density_factor + 3
         _ = np.linspace(-1, 1, density)
         r, s = np.meshgrid(_, _, indexing='ij')
-        anchors = ( # the points we will plot the outward unit norm vector
+        anchors = (  # the points we will plot the outward unit norm vector
             [i0, i0],
             [i0, i2],
             [i2, i0],

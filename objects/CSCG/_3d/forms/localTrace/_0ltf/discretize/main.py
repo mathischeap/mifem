@@ -8,7 +8,8 @@ from components.freeze.main import FrozenOnly
 
 from objects.CSCG._3d.forms.localTrace._0ltf.discretize.scalar.boundary_wise import _3dCSCG_0ltf_Discretize_BoundaryWise
 from objects.CSCG._3d.forms.localTrace._0ltf.discretize.scalar.standard import _3dCSCG_0ltf_Discretize_Standard
-from objects.CSCG._3d.forms.localTrace._0ltf.discretize.scalar.trace_element_wise import _3dCSCG_0ltf_Discretize_TraceElementWise
+from objects.CSCG._3d.forms.localTrace._0ltf.discretize.scalar.trace_element_wise import \
+    _3dCSCG_0ltf_Discretize_TraceElementWise
 
 
 class _3dCSCG_0LocalTrace_Discretize(FrozenOnly):

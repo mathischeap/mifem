@@ -29,7 +29,6 @@ class ___concatenate_HELPER_KeyGenerator___:
                 else:
                     repeated = ''
 
-
                 if repeated == self._CT_:
                     self._IS_CT_ = True
                 else:

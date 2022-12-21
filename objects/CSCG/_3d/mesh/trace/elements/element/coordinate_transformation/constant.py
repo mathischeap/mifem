@@ -4,10 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/08/26 2:20 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
-
 from components.freeze.base import FrozenOnly
 
 
@@ -18,8 +14,8 @@ class _3dTraceElement_CT_Constant(FrozenOnly):
     def __init__(self, te):
         """"""
         self._te_ = te
-        self._constant_unit_normal_vector_ = True # do not use None
-        self._Jacobian_ = True # do not use None
+        self._constant_unit_normal_vector_ = True  # do not use None
+        self._Jacobian_ = True  # do not use None
         self._freeze_self_()
 
 
@@ -34,23 +30,23 @@ class _3dTraceElement_CT_Constant(FrozenOnly):
 
         """
 
-        if self._constant_unit_normal_vector_ is True: # not initialized as None
+        if self._constant_unit_normal_vector_ is True:  # not initialized as None
 
             te = self._te_
 
             if te.whether.orthogonal:
                 # it has a constant_unit_normal_vector
-                x = [0,]
-                y = [0,]
-                z = [0,]
+                x = [0, ]
+                y = [0, ]
+                z = [0, ]
 
                 nV = te.coordinate_transformation.unit_normal_vector(x, y, z, parse_3_1d_eps=True)
 
                 x, y, z = nV
 
-                x = x[0,0]
-                y = y[0,0]
-                z = z[0,0]
+                x = x[0, 0]
+                y = y[0, 0]
+                z = z[0, 0]
 
                 self._constant_unit_normal_vector_ = (x, y, z)
 
@@ -69,7 +65,7 @@ class _3dTraceElement_CT_Constant(FrozenOnly):
         -------
 
         """
-        if self._Jacobian_ is True: # not initialized as None
+        if self._Jacobian_ is True:  # not initialized as None
 
             te = self._te_
 
@@ -84,16 +80,9 @@ class _3dTraceElement_CT_Constant(FrozenOnly):
 
                 self._Jacobian_ = f0 * f1 / 4
 
-
-            # + elif, because when it is not orthogonal, the unit_normal_vector can also be constant.
+            # + elif, because when it is not orthogonal, the Jacobian can also be constant.
 
             else:
                 self._Jacobian_ = None
 
         return self._Jacobian_
-
-
-
-if __name__ == "__main__":
-    # mpiexec -n 4 python 
-    pass

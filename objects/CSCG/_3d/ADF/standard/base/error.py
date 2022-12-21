@@ -12,11 +12,9 @@ class _3dCSCG_ADF_SF_Error(FrozenOnly):
         self._dsf_ = dsf
         self._freeze_self_()
 
-
     def L(self, *args, **kwargs):
         """"""
         return self._dsf_.prime.error.L(*args, **kwargs)
-
 
     def dH(self, dt, dfunc, time=None, n=1):
         """

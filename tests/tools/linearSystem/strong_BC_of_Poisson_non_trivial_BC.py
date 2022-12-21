@@ -51,9 +51,9 @@ def test_applying_strong_BC_for_Poisson_problem_NT():
     E23 = E32.T
     T = t.coboundary.trace_matrix
 
-    A = bmat(([  M2, E23, -T.T],
+    A = bmat(([M2, E23, -T.T],
               [-E32, None, None],
-              [ T, None, None]))
+              [T, None, None]))
     A.gathering_matrices = ((u, p, t), (u, p, t))
 
     B0 = EWC_ColumnVector(mesh, u)

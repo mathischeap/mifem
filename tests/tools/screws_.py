@@ -140,5 +140,4 @@ def test_SCREWS_NO4_generalized_piecewise_function():
 
 if __name__ == '__main__':
     # mpiexec python __tests__\unittests\screws_.py
-
     test_SCREWS_NO4_generalized_piecewise_function()

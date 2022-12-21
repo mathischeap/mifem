@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/8/10 20:47
 """
-import sys
-
-if './' not in sys.path: sys.path.append('/')
 from components.freeze.main import FrozenOnly
 
 
@@ -20,8 +17,3 @@ class MDM_MUL(FrozenOnly):
 
     def __call__(self, basic_unit):
         return self._other_ * self._mdm_[basic_unit]
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

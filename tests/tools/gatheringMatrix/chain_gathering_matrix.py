@@ -69,7 +69,8 @@ class Test_ChainGM_sequent_chain_method(FrozenOnly):
         # --- test find ----------------------------------------------------------------------------
         GLOBAL_num_dofs = cgm.global_num_dofs
         sample_amount = int(GLOBAL_num_dofs/5)
-        if sample_amount > 10: sample_amount = 10
+        if sample_amount > 10:
+            sample_amount = 10
         samples = sample(range(GLOBAL_num_dofs), sample_amount)
 
         for dof in samples:
@@ -88,7 +89,7 @@ class Test_ChainGM_sequent_chain_method(FrozenOnly):
                         assert fv[local_numbering] == dof
                     else:
                         assert dof not in fv
-            else: # no local element found
+            else:   # no local element found
 
                 for i in mesh.elements:
                     fv = cgm[i]
@@ -149,7 +150,8 @@ class Test_ChainGM_sequent_chain_method(FrozenOnly):
         # --- test find ----------------------------------------------------------------------------
         GLOBAL_num_dofs = cgm.global_num_dofs
         sample_amount = int(GLOBAL_num_dofs/5)
-        if sample_amount > 10: sample_amount = 10
+        if sample_amount > 10:
+            sample_amount = 10
         samples = sample(range(GLOBAL_num_dofs), sample_amount)
 
         for dof in samples:
@@ -168,7 +170,7 @@ class Test_ChainGM_sequent_chain_method(FrozenOnly):
                         assert fv[local_numbering] == dof
                     else:
                         assert dof not in fv
-            else: # no local element found
+            else:   # no local element found
 
                 for i in mesh.elements:
                     fv = cgm[i]

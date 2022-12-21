@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.base import FrozenOnly
 import pandas as pd
@@ -21,7 +22,8 @@ class csvFiler(FrozenOnly):
     def __init__(self, csv_filename):
         assert SIZE == 1, f"csvFiler better not work in parallel."
         assert isinstance(csv_filename, str), "csv filename must be a str."
-        if csv_filename[-4:] != '.csv': csv_filename += '.csv'
+        if csv_filename[-4:] != '.csv':
+            csv_filename += '.csv'
         self._df_ = pd.read_csv(csv_filename, index_col=0)
         self._visualize_ = csvFilerVisualize(self)
         self._do_ = csvFilerDo(self)
@@ -43,16 +45,18 @@ class csvFiler(FrozenOnly):
     def do(self):
         return self._do_
 
+
 if __name__ == '__main__':
     # mpiexec -n 1 python tools/filer/csv/main.py
     import os
     current_dir = os.path.dirname(__file__)
-    csv = csvFiler(current_dir + '\csv_test')
+    csv = csvFiler(current_dir + '/csv_test')
     csv.do.drop(0)
-    csv.df['enstrophy'] = csv.df['enstrophy'] - csv.df.loc[1,'enstrophy']
+    csv.df['enstrophy'] = csv.df['enstrophy'] - csv.df.loc[1, 'enstrophy']
 
-    csv.visualize.plot('t', 'enstrophy', style='-',
-                        yticks = [-1e-13, 0, 1e-13,],
-                        xlabel=r"$t$",
-                        ylabel = r'$\mathcal{E}^h$',
-                        )
+    csv.visualize.plot(
+        't', 'enstrophy', style='-',
+        yticks=[-1e-13, 0, 1e-13],
+        xlabel=r"$t$",
+        ylabel=r'$\mathcal{E}^h$',
+    )

@@ -4,6 +4,7 @@ import numpy as np
 from tools.elementwiseCache.gathering.vector import Gathering_Vector
 from tools.elementwiseCache.gathering.regular.matrix.do.find import Gathering_Matrix_FIND
 
+
 class Gathering_Matrix_DO(FrozenOnly):
     """"""
 
@@ -11,7 +12,6 @@ class Gathering_Matrix_DO(FrozenOnly):
         self._GM_ = GM
         self._find_ = None
         self._freeze_self_()
-
 
     def hstack(self, *args):
         """`hstack` other gathering matrices to the right of self.

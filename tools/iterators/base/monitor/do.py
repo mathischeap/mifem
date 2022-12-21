@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 from components.freeze.main import FrozenOnly
-import matplotlib, psutil, platform
+import matplotlib
+import psutil
+import platform
 
 import matplotlib.pyplot as plt
 from matplotlib import cm
@@ -10,6 +12,7 @@ import datetime
 import socket
 from components.miscellaneous.timer import MyTimer
 
+
 class IteratorMonitorDo(FrozenOnly):
     """"""
     def __init__(self, monitor):
@@ -17,7 +20,7 @@ class IteratorMonitorDo(FrozenOnly):
         self._monitor_ = monitor
         self._do_first_auto_save_ = True
         memory = psutil.virtual_memory()
-        self._mem_total_ = str(round(memory.total / 1024 / 1024/ 1024, 2))
+        self._mem_total_ = str(round(memory.total / 1024 / 1024 / 1024, 2))
         self._cpu_count_ = psutil.cpu_count(logical=False)
         self._logical_cpu_count_ = psutil.cpu_count()
         self._platform_ = platform.platform()
@@ -51,7 +54,7 @@ class IteratorMonitorDo(FrozenOnly):
         monitor = self._monitor_
         monitor._computed_steps_ += 1
         if monitor._current_time_ is None:
-            monitor._current_time_ = monitor._ft_firstRun_ # to make the first iteration time correct.
+            monitor._current_time_ = monitor._ft_firstRun_  # to make the first iteration time correct.
         monitor._last_run_cost_ = time() - monitor._current_time_
         monitor._current_time_ = time()
         monitor._total_cost_ = monitor._current_time_ - monitor._ft_start_time_
@@ -74,7 +77,7 @@ class IteratorMonitorDo(FrozenOnly):
                 monitor._estimated_end_time_ = datetime.datetime.now() + datetime.timedelta(
                     seconds=monitor._estimated_remaining_time_)
 
-                if monitor._do_first_assessment_: # will see first 5 iterations to see the estimated time.
+                if monitor._do_first_assessment_:  # will see first 5 iterations to see the estimated time.
                     monitor._do_first_assessment_counter_ += 1
                     monitor._do_first_assessment_estimate_ += monitor._estimated_remaining_time_
                     est = monitor._do_first_assessment_estimate_ / monitor._do_first_assessment_counter_
@@ -82,7 +85,7 @@ class IteratorMonitorDo(FrozenOnly):
                     if est > monitor.___graph_report_time___:
                         monitor._do_first_graph_warning_report_ = True
                     if monitor._do_first_graph_warning_report_ or \
-                        monitor._do_first_assessment_counter_ >= 5:
+                       monitor._do_first_assessment_counter_ >= 5:
                         monitor._do_first_assessment_ = False
                         del monitor._do_first_assessment_counter_, monitor._do_first_assessment_estimate_
 
@@ -116,11 +119,11 @@ class IteratorMonitorDo(FrozenOnly):
                     try:
                         # if PermissionError, we do not stop the iteration
                         monitor._iterator_.RDF.to_csv(monitor.RDF_filename, header=True)
-                    except: # wait 3 seconds
+                    except:  # wait 3 seconds
                         sleep(3)
-                        try: # try once more
+                        try:  # try once more
                             monitor._iterator_.RDF.to_csv(monitor.RDF_filename, header=True)
-                        except: # just skip it
+                        except:  # just skip it
                             pass
                     monitor._last_auto_save_time_ = time()
                     self._do_first_auto_save_ = False
@@ -128,21 +131,20 @@ class IteratorMonitorDo(FrozenOnly):
                 else:
                     pass
 
-
             elif monitor.auto_save_frequency > 0:
 
                 if ((monitor._computed_steps_ % monitor.auto_save_frequency == 0) and
-                    gap_time > 0.1*monitor.___auto_save_time___) or \
-                    gap_time > monitor.___auto_save_time___ or \
-                    self._do_first_auto_save_: # we always have a look at the first iteration.
+                   gap_time > 0.1*monitor.___auto_save_time___) or \
+                   gap_time > monitor.___auto_save_time___ or \
+                   self._do_first_auto_save_:  # we always have a look at the first iteration.
                     # important. When read from csv, it is very fast, so we do not save.
-                    try: # if PermissionError, we do not stop the iteration
+                    try:  # if PermissionError, we do not stop the iteration
                         monitor._iterator_.RDF.to_csv(monitor.RDF_filename, header=True)
-                    except: # wait 3 seconds
+                    except:  # wait 3 seconds
                         sleep(3)
-                        try: # try once moe
+                        try:  # try once moe
                             monitor._iterator_.RDF.to_csv(monitor.RDF_filename, header=True)
-                        except: # just skip it
+                        except:  # just skip it
                             pass
                     monitor._last_auto_save_time_ = time()
                     self._do_first_auto_save_ = False
@@ -156,11 +158,11 @@ class IteratorMonitorDo(FrozenOnly):
                 try:
                     # if PermissionError, we do not stop the iteration
                     monitor._iterator_.RDF.to_csv(monitor.RDF_filename, header=True)
-                except: # wait 3 seconds
+                except:  # wait 3 seconds
                     sleep(3)
-                    try: # try once more
+                    try:  # try once more
                         monitor._iterator_.RDF.to_csv(monitor.RDF_filename, header=True)
-                    except: # just skip it
+                    except:  # just skip it
                         pass
                 monitor._last_auto_save_time_ = time()
 
@@ -179,7 +181,8 @@ class IteratorMonitorDo(FrozenOnly):
         """"""
         monitor = self._monitor_
 
-        if monitor.whether.open: return self.___Pr_generate_open_graph_report___()
+        if monitor.whether.open:
+            return self.___Pr_generate_open_graph_report___()
 
         # do A LAST REPORT BEFORE STOP:
         judge1 = \
@@ -196,17 +199,19 @@ class IteratorMonitorDo(FrozenOnly):
         # to judge special iteration stop: shut down by the solver.
         judge_sd = monitor._iterator_.shut_down
 
-        if monitor._do_first_graph_warning_report_: monitor._do_first_graph_warning_report_ = False
+        if monitor._do_first_graph_warning_report_:
+            monitor._do_first_graph_warning_report_ = False
 
-        if judge1 or judge2 or judge3: # now we need to do the reporting.
+        if judge1 or judge2 or judge3:  # now we need to do the reporting.
 
-            if not monitor._ever_do_graph_report_: monitor._ever_do_graph_report_ = True
+            if not monitor._ever_do_graph_report_:
+                monitor._ever_do_graph_report_ = True
 
             save_time = MyTimer.current_time()[1:-1]
             indices = self.___Pr_select_reasonable_amount_of_data___(1000, last_num=100)
             RDF = monitor._iterator_.RDF.iloc[indices]
 
-            matplotlib.use('Agg') # make sure we use the right backend.
+            matplotlib.use('Agg')  # make sure we use the right backend.
 
             plt.rc('text', usetex=False)
 
@@ -219,8 +224,8 @@ class IteratorMonitorDo(FrozenOnly):
             fig = plt.figure(figsize=(x_len, y_len))
             plot_keys = list(RDF.columns)
             plot_keys = plot_keys[:2] + \
-                        ['t iteration', 't accumulation', 'solver message', 'machine load'] + \
-                        plot_keys[2:]
+                ['t iteration', 't accumulation', 'solver message', 'machine load'] + \
+                plot_keys[2:]
 
             # subplots ...
             for i, di in enumerate(plot_keys):
@@ -230,7 +235,7 @@ class IteratorMonitorDo(FrozenOnly):
                 m = int(i/2)
                 n = i % 2
                 # noinspection PyUnboundLocalVariable
-                ax = plt.subplot2grid((r_num_subplots, 2),(m, n))
+                ax = plt.subplot2grid((r_num_subplots, 2), (m, n))
                 if di == 'machine load':
                     mem_percent = psutil.virtual_memory().percent
                     cpu_load = self._monitor_._iterator_.___cpu_load___
@@ -239,19 +244,19 @@ class IteratorMonitorDo(FrozenOnly):
                     ax.axes.get_xaxis().set_visible(False)
                     ax.axes.get_yaxis().set_visible(False)
                     plt.text(0.1, 9.5, 'MACHINE LOAD:',
-                             color= 'deepskyblue', fontsize=18, style='normal',
+                             color='deepskyblue', fontsize=18, style='normal',
                              ha='left', va='top', wrap=True)
 
                     TEXT = f"MEM: {mem_percent}% of {self._mem_total_}G used.\n" \
                            f" CPU: {cpu_load}% of {self._cpu_count_} (physical) = " \
-                                f"{self._logical_cpu_count_} (logical) processors used.\n\n" \
+                           f"{self._logical_cpu_count_} (logical) processors used.\n\n" \
                            f"SYSTEM: {self._system_}\n" \
                            f"{self._platform_}\n" \
                            f"{self._architecture_}\n" \
                            f"{self._processor_}\n\n" \
                            f"PYTHON version: {self._python_version_}"
 
-                    plt.text(0.1, 8, TEXT, color= 'navy', fontsize=13,
+                    plt.text(0.1, 8, TEXT, color='navy', fontsize=13,
                              ha='left', va='top', wrap=True)
 
                 elif di == 'solver message':
@@ -259,7 +264,7 @@ class IteratorMonitorDo(FrozenOnly):
                     plt.axis([0, 10, 0, 10])
                     ax.axes.get_xaxis().set_visible(False)
                     ax.axes.get_yaxis().set_visible(False)
-                    plt.text(0.1, 9.5, 'SOLVER MESSAGE:', color= 'deepskyblue', fontsize=18, style='normal',
+                    plt.text(0.1, 9.5, 'SOLVER MESSAGE:', color='deepskyblue', fontsize=18, style='normal',
                              ha='left', va='top', wrap=True)
                     message = ''
                     for M in monitor._iterator_.message:
@@ -290,7 +295,7 @@ class IteratorMonitorDo(FrozenOnly):
                     if monitor._iterator_.shut_down:
                         message += '>>> SHUT-DOWN <<<'
 
-                    plt.text(0.1, 8.5, message, color= 'black', fontsize=12,
+                    plt.text(0.1, 8.5, message, color='black', fontsize=12,
                              ha='left', va='top', wrap=True)
 
                 elif di == 't':
@@ -303,20 +308,20 @@ class IteratorMonitorDo(FrozenOnly):
                     ax.spines['left'].set_visible(False)
                     ax.spines['right'].set_visible(False)
                     t1 = f'* {monitor._iterator_.standard_properties.name}'
-                    plt.text(-2, 11.3, t1, color= 'darkorchid', fontsize=26, style='normal', ha='left',
+                    plt.text(-2, 11.3, t1, color='darkorchid', fontsize=26, style='normal', ha='left',
                              va='top', wrap=True)
                     sITC = MyTimer.seconds2hms(monitor._average_each_run_cost_)
                     sPPT = MyTimer.seconds2hms(monitor._preparation_time_)
-                    sTTC = MyTimer.seconds2dhmsm(monitor._total_cost_) .split('.')[0]  + ']'
+                    sTTC = MyTimer.seconds2dhmsm(monitor._total_cost_) .split('.')[0] + ']'
                     sLIC = MyTimer.seconds2hms(monitor._last_run_cost_)
-                    sERT = MyTimer.seconds2dhmsm(monitor._estimated_remaining_time_).split('.')[0]  + ']'
-                    t2 = 'ITC: ' + sITC  + '      LIC: '    + sLIC + '\n'
+                    sERT = MyTimer.seconds2dhmsm(monitor._estimated_remaining_time_).split('.')[0] + ']'
+                    t2 = 'ITC: ' + sITC + '      LIC: ' + sLIC + '\n'
                     t2 += 'TTC: ' + sTTC + '  Preparation:' + sPPT + ' \n'
                     t2 += 'ERT: ' + sERT + '\n'
                     percentage = int(10000*(monitor._computed_steps_/monitor._max_steps_)) / 100
                     t2 += f'Iterations done: {monitor._computed_steps_}/{monitor._max_steps_} ~ {percentage}%\n'
                     t2 += f'Iterator type: {monitor._iterator_.__class__.__name__}\n'
-                    plt.text(-0.5, 9.5, t2, color= 'darkblue', fontsize=22, style='normal', ha='left',
+                    plt.text(-0.5, 9.5, t2, color='darkblue', fontsize=22, style='normal', ha='left',
                              va='top', wrap=True)
                     t3 = 'Graph saved at:: ' + save_time + '\n'
                     t3 += 'Start at :: ' + monitor._str_started_time_ + '\n'
@@ -324,12 +329,12 @@ class IteratorMonitorDo(FrozenOnly):
                         t3 += 'E end at:: NOW'
                     else:
                         t3 += 'E end at:: ' + str(monitor._estimated_end_time_)[:19]
-                    plt.text(-0.5, 3.25, t3, color= 'red', fontsize=22, style='normal', ha='left',
+                    plt.text(-0.5, 3.25, t3, color='red', fontsize=22, style='normal', ha='left',
                              va='top', wrap=True)
                     local_IP = socket.gethostbyname(socket.gethostname())
                     local_machine_name = socket.gethostname()
-                    t4 = "Running on <" + local_machine_name + '@' + local_IP +'>'
-                    plt.text(-1, -0.5, t4, color= 'black', fontsize=20, style='normal', ha='left',
+                    t4 = "Running on <" + local_machine_name + '@' + local_IP + '>'
+                    plt.text(-1, -0.5, t4, color='black', fontsize=20, style='normal', ha='left',
                              va='top', wrap=True)
 
                 elif di == 'dt':
@@ -344,17 +349,17 @@ class IteratorMonitorDo(FrozenOnly):
                         ax.set_xticks(indices)
 
                     ylim = ax.get_ylim()
-                    plt.text(0, ylim[1] - (ylim[1] - ylim[0])*0.1, "saved at: "+save_time, color= 'teal',
+                    plt.text(0, ylim[1] - (ylim[1] - ylim[0])*0.1, "saved at: "+save_time, color='teal',
                              fontsize=22, style='normal', ha='left',
                              va='top', wrap=True)
 
                     from_t = monitor._iterator_.RDF['t'][indices[0]]
-                    plt.text(0, ylim[0] + (ylim[1] - ylim[0])*0.2, f"compute from: t=%.3f s."%from_t, color= 'k',
+                    plt.text(0, ylim[0] + (ylim[1] - ylim[0]) * 0.2, f"compute from: t=%.3f s." % from_t, color='k',
                              fontsize=22, style='normal', ha='left',
                              va='bottom', wrap=True)
 
                     till_t = monitor._iterator_.RDF['t'][indices[-1]]
-                    plt.text(0, ylim[0] + (ylim[1] - ylim[0])*0.1, f"compute till: t=%.3f s."%till_t, color= 'k',
+                    plt.text(0, ylim[0] + (ylim[1] - ylim[0])*0.1, f"compute till: t=%.3f s." % till_t, color='k',
                              fontsize=22, style='normal', ha='left',
                              va='bottom', wrap=True)
 
@@ -362,7 +367,7 @@ class IteratorMonitorDo(FrozenOnly):
                     ylabel_backgroundcolor = 'greenyellow'
                     face_color = 'snow'
                     itime = monitor._times_[indices]
-                    itime = self.___Pr_filter_extreme_time___(itime) # extreme values are replaced by nan.
+                    itime = self.___Pr_filter_extreme_time___(itime)  # extreme values are replaced by nan.
                     valid_time = itime[~np.isnan(itime)]
                     if len(valid_time) > 0:
                         max_time = np.max(valid_time)
@@ -404,10 +409,12 @@ class IteratorMonitorDo(FrozenOnly):
                         pass
                     elif unit == 'm':
                         average /= 60
-                        if average_last_10 is not None: average_last_10 /= 60
+                        if average_last_10 is not None:
+                            average_last_10 /= 60
                     elif unit == 'h':
                         average /= 3600
-                        if average_last_10 is not None: average_last_10 /= 3600
+                        if average_last_10 is not None:
+                            average_last_10 /= 3600
                     else:
                         raise Exception()
                     if indices[-1] > 1:
@@ -419,17 +426,18 @@ class IteratorMonitorDo(FrozenOnly):
                     else:
                         plt.plot([1, indices[-10]], [average_last_10, average_last_10], '--',
                                  color='blue', linewidth=1.2)
-                        plt.plot([indices[-10],indices[-1]], [average_last_10, average_last_10],
+                        plt.plot([indices[-10], indices[-1]], [average_last_10, average_last_10],
                                  color='blue', linewidth=1.2, label='V10')
 
-                    if len(indices) <= 5: ax.set_xticks(indices)
+                    if len(indices) <= 5:
+                        ax.set_xticks(indices)
                     plt.legend(fontsize=16, loc='best', frameon=False)
 
                 elif di == 't accumulation':
                     ylabel_backgroundcolor = 'greenyellow'
                     face_color = 'snow'
                     TIME = monitor._TIMES_[indices]
-                    MAX_TIME= TIME[-1]
+                    MAX_TIME = TIME[-1]
                     if MAX_TIME < 60 * 3:
                         ylabel = 'Cumulative t (s)'
                     elif MAX_TIME < 3600 * 3:
@@ -451,7 +459,7 @@ class IteratorMonitorDo(FrozenOnly):
                     if not judge1:
                         sERT = MyTimer.seconds2dhmsm(monitor._estimated_remaining_time_).split('.')[0] + ']'
                         y_position = 0.9 * TIME[-1]
-                        plt.text(0, y_position, 'ERT: '+ sERT, color= 'darkblue',
+                        plt.text(0, y_position, 'ERT: ' + sERT, color='darkblue',
                                  fontsize=22, style='normal', ha='left',
                                  va='top', wrap=True)
                         # noinspection PyUnboundLocalVariable
@@ -460,7 +468,7 @@ class IteratorMonitorDo(FrozenOnly):
                             v10_ERT_seconds = monitor._estimated_remaining_time_ * v10_ratio
                             vERT = MyTimer.seconds2dhmsm(v10_ERT_seconds).split('.')[0] + ']'
                             y_position = 0.75 * TIME[-1]
-                            plt.text(0, y_position, 'V10: '+ vERT, color= 'purple',
+                            plt.text(0, y_position, 'V10: ' + vERT, color='purple',
                                      fontsize=22, style='normal', ha='left',
                                      va='top', wrap=True)
 
@@ -476,13 +484,13 @@ class IteratorMonitorDo(FrozenOnly):
                 ax.set_ylabel(ylabel, fontsize=17, backgroundcolor=ylabel_backgroundcolor)
 
                 # ITERATING watermark ...
-                if i < 4: # 0,1,2,3 for regular plots, no ITERATING
+                if i < 4:  # 0,1,2,3 for regular plots, no ITERATING
                     pass
-                elif di == 'solver message': # no ITERATING for solver message subplot
+                elif di == 'solver message':  # no ITERATING for solver message subplot
                     pass
-                elif di == 'machine load': # no ITERATING for machine load subplot
+                elif di == 'machine load':  # no ITERATING for machine load subplot
                     pass
-                elif not judge1: # if not the last iteration, texture it.
+                elif not judge1:  # if not the last iteration, texture it.
                     the_text = 'ITERATING'
                     text = ax.text(0.1, 0.5, the_text, fontsize=65, color='gray',
                                    horizontalalignment='left',
@@ -493,25 +501,25 @@ class IteratorMonitorDo(FrozenOnly):
                     pass
 
                 # facecolor ...
-                if i < 4: # regular subplots always have face color
+                if i < 4:  # regular subplots always have face color
                     ax.set_facecolor(face_color)
-                elif di == 'solver message': # solver message subplot always have face color
+                elif di == 'solver message':  # solver message subplot always have face color
                     ax.set_facecolor(face_color)
-                elif di == 'machine load': # machine load subplot always have face color
+                elif di == 'machine load':  # machine load subplot always have face color
                     ax.set_facecolor(face_color)
-                elif not judge1: # only have facecolor if it is not the last iteration.
+                elif not judge1:  # only have facecolor if it is not the last iteration.
                     ax.set_facecolor(face_color)
                 else:
                     pass
 
                 # ... further things.
                 if judge_sd:
-                    pass # Maybe we wanna some special sign when iteration terminated by the solver
+                    pass  # Maybe we wanna some special sign when iteration terminated by the solver
                 else:
                     pass
 
             # .. subplots done ...
-            super_title = "mifem.MPI ITERATIONS \n> {}/{} <".format(monitor._computed_steps_,monitor._max_steps_)
+            super_title = "mifem.MPI ITERATIONS \n> {}/{} <".format(monitor._computed_steps_, monitor._max_steps_)
             st_fontsize = 100
 
             alpha = (3.1 * x_len / 17.4) / y_len
@@ -522,7 +530,7 @@ class IteratorMonitorDo(FrozenOnly):
                 fig.suptitle(super_title, fontsize=st_fontsize, backgroundcolor='tomato', y=1 + alpha*beta)
 
             # noinspection PyBroadException
-            try: # in case saving fail
+            try:  # in case saving fail
                 plt.savefig(
                     f'{monitor._iterator_.standard_properties.name}.png',
                     dpi=225,
@@ -555,10 +563,10 @@ class IteratorMonitorDo(FrozenOnly):
             avrg = np.mean(valid_time)
             maxt = np.max(valid_time)
 
-            if maxt > 2 * avrg and len(valid_time[valid_time>0.9*maxt]) == 1:
+            if maxt > 2 * avrg and len(valid_time[valid_time > 0.9*maxt]) == 1:
                 # there is only one huge value. This happens in some, for example, TGV cases.
                 TIME = np.nan_to_num(times)
-                max_ind = np.argwhere(TIME > 0.9*maxt)[:,0]
+                max_ind = np.argwhere(TIME > 0.9*maxt)[:, 0]
                 times[max_ind] = np.nan
             else:
                 pass

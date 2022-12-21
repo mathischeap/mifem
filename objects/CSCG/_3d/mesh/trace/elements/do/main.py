@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from root.config.main import RANK, MASTER_RANK, COMM, np
 from components.freeze.main import FrozenOnly
 import matplotlib.pyplot as plt
@@ -9,6 +10,7 @@ from components.functions._3dSpace.angle import angle_between_two_vectors
 from itertools import combinations
 
 from objects.CSCG._3d.mesh.trace.elements.do.find import _3dCSCG_Trace_Elements_Do_Find
+
 
 class _3dCSCG_Trace_Elements_DO(FrozenOnly):
     """We find some specific groups of elements."""
@@ -23,7 +25,6 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
         if self._find_ is None:
             self._find_ = _3dCSCG_Trace_Elements_Do_Find(self._elements_)
         return self._find_
-
 
     def illustrate_element(self, i, density_factor=2):
         """We illustrate the trace element #i with matplotlib on the
@@ -58,7 +59,7 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
             the_other_core = None
             for _ in who_are_in:
                 if _ != -1:
-                    if _ !=who_will_do_it:
+                    if _ != who_will_do_it:
                         assert the_other_core is None
                         the_other_core = _
                     in_how_many_cores += 1
@@ -96,16 +97,16 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
             i2 = 3 * density_factor + 3
             _ = np.linspace(-1, 1, density)
             r, s = np.meshgrid(_, _, indexing='ij')
-            anchors = ( # the points we will plot the outward unit norm vector
+            anchors = (  # the points we will plot the outward unit norm vector
                 [i0, i0],
                 [i0, i2],
                 [i2, i0],
                 [i2, i2],
                 [i1, i1],
             )
-            uv_r = np.array([r[indices[0],indices[1]] for indices in anchors])
-            uv_s = np.array([s[indices[0],indices[1]] for indices in anchors])
-            cr, cs = np.array([r[i1, i1],]), np.array([s[i1, i1],])
+            uv_r = np.array([r[indices[0], indices[1]] for indices in anchors])
+            uv_s = np.array([s[indices[0], indices[1]] for indices in anchors])
+            cr, cs = np.array([r[i1, i1], ]), np.array([s[i1, i1], ])
             np.testing.assert_almost_equal(cr, 0)
             np.testing.assert_almost_equal(cs, 0)
 
@@ -113,7 +114,7 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
         if in_how_many_cores == 1:
             if RANK == who_will_do_it:
                 if SELF[i].IS_on_mesh_boundary:
-                    DATA2 = SELF[i].NON_CHARACTERISTIC_position # a string
+                    DATA2 = SELF[i].NON_CHARACTERISTIC_position  # a string
                 else:
                     ncp = SELF[i].NON_CHARACTERISTIC_position
                     other_element = int(ncp[:-1])
@@ -135,7 +136,8 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
                                 uv_r, uv_s, from_element=element, side=_side_)
                             uvx, uvy, uvz = te.coordinate_transformation.\
                                 ___PRIVATE_outward_unit_normal_vector___(
-                                uv_r, uv_s, from_element=element, side=_side_)
+                                    uv_r, uv_s, from_element=element, side=_side_
+                                )
                             DATA2[str(tei)+_side_] = [(X, Y, Z), (x, y, z), (uvx, uvy, uvz)]
                         else:
                             x, y, z = te.coordinate_transformation.mapping(
@@ -144,7 +146,7 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
 
             else:
                 pass
-        else: # in_how_many_cores == 2
+        else:  # in_how_many_cores == 2
             if RANK == the_other_core:
                 element = SELF[i].CHARACTERISTIC_element
                 side = SELF[i].CHARACTERISTIC_side
@@ -166,12 +168,13 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
                             uv_r, uv_s, from_element=element, side=_side_)
                         uvx, uvy, uvz = te.coordinate_transformation.\
                             ___PRIVATE_outward_unit_normal_vector___(
-                            uv_r, uv_s, from_element=element, side=_side_)
+                                uv_r, uv_s, from_element=element, side=_side_
+                            )
                         DATA2[str(tei)+_side_] = [(X, Y, Z), (x, y, z), (uvx, uvy, uvz)]
                     else:
                         x, y, z = te.coordinate_transformation.mapping(
                             cr, cs, from_element=element, side=_side_)
-                        DATA2[str(tei)+_side_] = [(X, Y, Z), (x, y, z),  _side_   ]
+                        DATA2[str(tei)+_side_] = [(X, Y, Z), (x, y, z),  _side_]
 
                 DATA2['rank'] = RANK
                 COMM.send(DATA2, dest=sent_to, tag=who_will_do_it)
@@ -189,7 +192,7 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
             # noinspection PyTypeChecker
             assert 'NSWEBF'[tes.index(i)] == side
 
-            fig = plt.figure(figsize=(14,6))
+            fig = plt.figure(figsize=(14, 6))
             TITLE = f"**trace element {i}**"
             if SELF[i].IS_on_periodic_boundary:
                 TITLE += ' (periodic)'
@@ -201,12 +204,13 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
                 _side_ = 'NSWEBF'[_]
                 X, Y, Z = te.coordinate_transformation.mapping(r, s, from_element=element, side=_side_)
                 if tei == i and _side_ == side:
-                    ax.plot_surface(X, Y, Z) # plot the trace element
+                    ax.plot_surface(X, Y, Z)  # plot the trace element
                     x, y, z = te.coordinate_transformation.mapping(
                         uv_r, uv_s, from_element=element, side=_side_)
                     uvx, uvy, uvz = te.coordinate_transformation.\
                         ___PRIVATE_outward_unit_normal_vector___(
-                        uv_r, uv_s, from_element=element, side=_side_)
+                            uv_r, uv_s, from_element=element, side=_side_
+                        )
 
                     x_range = np.max(X) - np.min(X)
                     y_range = np.max(Y) - np.min(Y)
@@ -219,7 +223,7 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
                             0.5*uvy[-1]*mean_range, z[-1] + 0.5*uvz[-1]*mean_range,
                             side, color='green', ha='center', va='center', ma='center')
                 else:
-                    ax.plot_surface(X, Y, Z, color=(0.7,0.7,0.7,0.5))
+                    ax.plot_surface(X, Y, Z, color=(0.7, 0.7, 0.7, 0.5))
                     x, y, z = te.coordinate_transformation.mapping(
                         cr, cs, from_element=element, side=_side_)
                     ax.text(x[0], y[0], z[0], 'NSWEBF'[_],
@@ -288,8 +292,6 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
         else:
             return
 
-
-
     def get_quality_of_trace_elements(self):
         """
 
@@ -321,7 +323,7 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
             for v1v2 in comb:
                 angle.append(angle_between_two_vectors(*v1v2))
             angle = max(angle)
-            quality_0 =  float(1 - angle / np.pi)
+            quality_0 = float(1 - angle / np.pi)
 
             me = SELF._mesh_.elements[e]
             me_ct = me.coordinate_transformation.mapping(xi, et, sg)
@@ -332,7 +334,6 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
             v_outer = te_uv
             angle = angle_between_two_vectors(v_inner, v_outer)
             quality_1 = float(angle / np.pi)
-
 
             _ = min([quality_0, quality_1])
             Q[i] = _
@@ -350,12 +351,11 @@ class _3dCSCG_Trace_Elements_DO(FrozenOnly):
         return Q, AvQ, WorstQ, BestQ
 
 
-
 if __name__ == '__main__':
     # mpiexec -n 4 python objects\CSCG\_3d\mesh\trace\elements\main.py
     from objects.CSCG._3d.master import MeshGenerator
     elements = [3, 4, 2]
-    mesh = MeshGenerator('crazy_periodic', c=0.3, bounds=([0,1], [0,1], [0,1]))(elements)
+    mesh = MeshGenerator('crazy_periodic', c=0.3, bounds=([0, 1], [0, 1], [0, 1]))(elements)
     mesh.trace.elements.selfcheck.outward_unit_normal_vector()
     # Q = mesh.trace.elements.quality
 

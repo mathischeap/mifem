@@ -32,11 +32,3 @@ class spiLU(Preconditioner):
     @property
     def drop_rule(self):
         return self._drop_rule_
-
-
-
-
-
-if __name__ == "__main__":
-    # mpiexec -n 4 python 
-    pass

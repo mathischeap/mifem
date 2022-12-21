@@ -66,7 +66,7 @@ def test_applying_strong_BC_for_Poisson_problem():
     u.BC.CF.current_time = 0
     u.BC.boundaries = boundaries
 
-    LS.customize.apply_strong_BC(0, 0, u) # this is the test!!!!
+    LS.customize.apply_strong_BC(0, 0, u)  # this is the test!!!!
 
     results = LS.solve('direct')()[0]
     results.do.distributed_to(u, p)
@@ -112,7 +112,7 @@ def test_applying_strong_BC_for_Poisson_problem():
     E23 = E32.T
     E23M3 = E23 @ M3
 
-    A = bmat(([ M2, E23M3],
+    A = bmat(([M2,   E23M3],
               [-E32, None]))
     A.gathering_matrices = ((u, p), (u, p))
     b = concatenate([B0, B1])
@@ -122,7 +122,7 @@ def test_applying_strong_BC_for_Poisson_problem():
     u.BC.CF.current_time = 0
     u.BC.boundaries = boundaries
 
-    LS.customize.apply_strong_BC(0, 0, u) # this is the test!!!!
+    LS.customize.apply_strong_BC(0, 0, u)   # this is the test!!!!
 
     results = LS.solve('direct')()[0]
     results.do.distributed_to(u, p)

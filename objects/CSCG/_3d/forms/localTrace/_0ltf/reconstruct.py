@@ -6,8 +6,7 @@
 """
 from components.freeze.main import FrozenOnly
 import numpy as np
-from scipy.sparse import csr_matrix, bmat
-from components.assemblers import MatrixAssembler
+
 
 class _3dCSCG_0LocalTrace_Reconstruct(FrozenOnly):
     """"""
@@ -37,11 +36,11 @@ class _3dCSCG_0LocalTrace_Reconstruct(FrozenOnly):
         if element_range is None:
             indices = mesh.elements._elements_.keys()
         elif isinstance(element_range, int):
-            indices = [element_range,]
+            indices = [element_range, ]
         else:
             indices = element_range
 
-        xietasigma, pb = self._ltf_.do.evaluate_basis_at_meshgrid(xi, eta,sigma)
+        xietasigma, pb = self._ltf_.do.evaluate_basis_at_meshgrid(xi, eta, sigma)
         ii, jj, kk = np.size(xi), np.size(eta), np.size(sigma)
         xyz = dict()
         v = dict()
@@ -102,7 +101,7 @@ class _3dCSCG_0LocalTrace_Reconstruct(FrozenOnly):
                 if ravel:
                     for j, side in enumerate('NSWEBF'):
                         XYZ[side] = xyz_i[j]
-                        V[side] = [v_i[j],]
+                        V[side] = [v_i[j], ]
 
                 else:
                     for j, side in enumerate('NSWEBF'):
@@ -114,7 +113,7 @@ class _3dCSCG_0LocalTrace_Reconstruct(FrozenOnly):
                         else:
                             if side in 'NS':
                                 xyz_ = [xyz_[_].reshape((jj, kk), order='F') for _ in range(3)]
-                                v_ = [v_.reshape((jj, kk), order='F'),]
+                                v_ = [v_.reshape((jj, kk), order='F'), ]
                             elif side in 'WE':
                                 xyz_ = [xyz_[_].reshape((ii, kk), order='F') for _ in range(3)]
                                 v_ = [v_.reshape((ii, kk), order='F'), ]
@@ -155,13 +154,37 @@ class _3dCSCG_0LocalTrace_Reconstruct(FrozenOnly):
 
         if element_range is None:
             indices = mesh.elements._elements_.keys()
+
         elif isinstance(element_range, int):
-            indices = [element_range,]
+            indices = [element_range, ]
+
+        elif isinstance(element_range, list):  # a list of positions.
+
+            # a list of positions, we assume they are element_sides or something else!
+
+            indices = dict()
+            for pos in element_range:
+                if isinstance(pos, str) and len(pos) > 1 and pos[0].isnumeric() and not pos[-1].isnumeric():
+                    element = int(pos[:-1])
+                    side = pos[-1]
+
+                    if element not in indices:
+                        indices[element] = list()
+                    else:
+                        pass
+
+                    if side in indices[element]:
+                        pass
+                    else:
+                        indices[element].append(side)
+
+                else:
+                    raise NotImplementedError(f"position {pos} is not not understandable.")
+
         else:
             indices = element_range
 
         xietasigma, pb = self._ltf_.do.evaluate_basis_at_meshgrid(xi, et, sg)
-        RD = dict()
         RD_sides = dict()
 
         M = list()
@@ -177,36 +200,21 @@ class _3dCSCG_0LocalTrace_Reconstruct(FrozenOnly):
             'F': M[5],
         }
 
-        if self._ltf_.whether.hybrid:
+        if not isinstance(indices, dict):
+            for i in indices:
+                if i in mesh.elements:
+                    RD_sides[i] = rdi_sides
 
-            rdi = bmat(
-                [
-                    [csr_matrix(M[0]), None, None, None, None, None],
-                    [None, csr_matrix(M[1]), None, None, None, None],
-                    [None, None, csr_matrix(M[2]), None, None, None],
-                    [None, None, None, csr_matrix(M[3]), None, None],
-                    [None, None, None, None, csr_matrix(M[4]), None],
-                    [None, None, None, None, None, csr_matrix(M[5])],
-                ],
-                format='csr'
-            )
-        else:
+            return RD_sides
 
-            GM0 = dict()
-            cn = 0
+        else:  # we get a dictionary indices whose keys are then mesh-elements and values are mesh-element-positions.
 
-            for side in 'NSWEBF':
-                shape0 = rdi_sides[side].shape[0]
-                GM0[side] = [_ for _ in range(cn, cn+shape0)]
-                cn += shape0
+            for i in indices:
+                if i in mesh.elements:
+                    RD_sides[i] = dict()
+                    for side in indices[i]:
+                        RD_sides[i][side] = rdi_sides[side]
+                else:
+                    pass
 
-            local_gathering = self._ltf_.numbering.local_gathering
-            _assembler_ = MatrixAssembler(GM0, local_gathering)
-            rdi = _assembler_(rdi_sides, 'add', format='csr')
-
-        for i in indices:
-            if i in mesh.elements:
-                RD[i] = rdi
-                RD_sides[i] = rdi_sides
-
-        return RD, RD_sides
+            return RD_sides

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
-
+if './' not in sys.path:
+    sys.path.append('./')
 
 from objects.CSCG._3d.ADF.standard.base.main import _3dCSCG_Algebra_DUAL_Standard_Form
 
@@ -16,15 +16,14 @@ class _3dCSCG_S0_ADF(_3dCSCG_Algebra_DUAL_Standard_Form):
     :param name:
     """
     def __init__(self, prime, mesh, space, orientation='outer', name=None):
-        if name is None: name = orientation + '-oriented-0-ADF'
+        if name is None:
+            name = orientation + '-oriented-0-ADF'
+        else:
+            pass
         super().__init__(3, mesh, space, prime, orientation, name)
         self._k_ = 0
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_standard_algebra_dual_0form')
         self._freeze_self_()
-
-
-
-
 
 
 if __name__ == "__main__":
@@ -33,7 +32,7 @@ if __name__ == "__main__":
 
     # mesh = MeshGenerator('bridge_arch_cracked')([8,9,7], EDM='SWV0', show_info=True)
     mesh = MeshGenerator('crazy')([3, 3, 3], EDM=None, show_info=True)
-    space = SpaceInvoker('polynomials')([('Lobatto',2), ('Lobatto',1), ('Lobatto',2)], show_info=True)
+    space = SpaceInvoker('polynomials')([('Lobatto', 2), ('Lobatto', 1), ('Lobatto', 2)], show_info=True)
     es = ExactSolutionSelector(mesh)('icpsNS:sincosRD')
     FC = FormCaller(mesh, space)
     df0 = FC('0-adf', numbering_parameters={'scheme_name': 'Naive', }, name='potential')

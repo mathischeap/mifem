@@ -44,6 +44,6 @@ def RunnerDataReader(filename):
     else:
         raise NotImplementedError(f"No class <{runner_name}> to read to data file: {filename}.")
 
-    RDO.___lock_iterate___ = True # we lock the runner such that it can not ``iterate`` as it does not have a solver.
+    RDO.___lock_iterate___ = True  # we lock the runner such that it can not ``iterate`` as it does not have a solver.
 
-    return RDO # RDO stands for: `Runner` but with `Data` `Only`.
+    return RDO  # RDO stands for: `Runner` but with `Data` `Only`.

@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.base import FrozenOnly
 from tools.elementwiseCache.dataStructures.objects.columnVector.main import EWC_ColumnVector
@@ -21,9 +22,14 @@ class _2dCSCG_Outer_S1Form_BI(FrozenOnly):
         self._sf_ = sf
         self._freeze_self_()
 
+    def __call__(self, obj, **kwargs):
+        if obj.__class__.__name__ == '_2dCSCG_VectorField':
+            return self.___Pr_inner_product_with___(obj, **kwargs)
+        else:
+            raise NotImplementedError()
 
-    def inner_product_with(self, V, quad_degree=None):
-        """Let s1f be denoted as w. We do (w,  V)_{\partial\Omega} here. V must be a given vector.
+    def ___Pr_inner_product_with___(self, V, quad_degree=None):
+        """Let s1f be denoted as w. We do (w,  V)_{\\partial\\Omega} here. V must be a given vector.
         And we get a vector.
 
         This returns a `EWC_ColumnVector` whose local vector refers to the
@@ -52,10 +58,10 @@ class _2dCSCG_Outer_S1Form_BI(FrozenOnly):
 
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/CSCG/_2d/forms/standard/_1_form/outer/boundary_integrate/main.py
-    from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller
 
     mesh = MeshGenerator('crazy', c=0.)([2, 2])
-    space = SpaceInvoker('polynomials')([1,1])
+    space = SpaceInvoker('polynomials')([1, 1])
     FC = FormCaller(mesh, space)
 
     f1 = FC('1-f-o', is_hybrid=False)
@@ -63,11 +69,9 @@ if __name__ == "__main__":
     BV = {'Upper': [0, 0],
           'Down': [0, 0],
           'Left': [0, 0],
-          'Right': [1, 0],}
+          'Right': [1, 0]}
 
     V = FC('vector', BV, name='boundary-vector')
     V.current_time = 0
 
-    B = f1.do.boundary_integrate.inner_product_with(V)
-
-
+    B = f1.do.boundary_integrate.___Pr_inner_product_with___(V)

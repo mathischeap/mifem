@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/8/7 12:19
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
 
@@ -34,7 +31,7 @@ class nLS_DO(FrozenOnly):
         S0, S1 = self._nLS_.shape
         f = list()
 
-        #------ linear terms contribution ---------------------------------------------
+        # ------ linear terms contribution ---------------------------------------------
         for i in range(S0):
             fi = list()
             for j in range(S1):
@@ -46,13 +43,13 @@ class nLS_DO(FrozenOnly):
                     fi.append(Aij @ unknown_variables[j])
             f.append(fi)
 
-        #-------- nonlinear terms contribution --------------------------------------------
+        # -------- nonlinear terms contribution --------------------------------------------
         f_nt = self._nLS_.nonlinear_terms.___PRIVATE_evaluate___(unknown_variables)
 
-        #---------- right hand side vector contribution -----------------------------------
+        # --------- right hand side vector contribution -----------------------------------
         v = self._nLS_.b
 
-        #============ combine them below ==================================================
+        # =========== combine them below ==================================================
         for i in range(S0):
             f[i].extend(f_nt[i])
             if v[i] is not None:
@@ -79,9 +76,3 @@ class nLS_DO(FrozenOnly):
             pass
 
         return f
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python tools/linear_algebra/nonlinear_system/do.py
-    pass

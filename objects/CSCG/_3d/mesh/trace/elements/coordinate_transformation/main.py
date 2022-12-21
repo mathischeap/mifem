@@ -1,9 +1,11 @@
-
+# -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('../')
+if './' not in sys.path:
+    sys.path.append('../')
 
 from components.freeze.main import FrozenOnly
-from objects.CSCG._3d.mesh.trace.elements.coordinate_transformation.helpers.value_cache import TraceElementsCTValuesCache
+from objects.CSCG._3d.mesh.trace.elements.coordinate_transformation.helpers.value_cache import \
+    TraceElementsCTValuesCache
 
 
 class _3dCSCG_Trace_Elements_CoordinateTransformation(FrozenOnly):
@@ -44,13 +46,11 @@ class _3dCSCG_Trace_Elements_CoordinateTransformation(FrozenOnly):
         return TraceElementsCTValuesCache(self._elements_, 'unit_normal_vector', evaluation_points_3)
 
 
-
-
 if __name__ == '__main__':
     # mpiexec -n 12 python _3dCSCG\mesh\trace\elements\coordinate_transformation.py
     from objects.CSCG._3d.master import MeshGenerator
     elements = [3, 4, 2]
-    mesh = MeshGenerator('crazy_periodic', c=0.3, bounds=([0,1], [0,1], [0,1]))(elements)
+    mesh = MeshGenerator('crazy_periodic', c=0.3, bounds=([0, 1], [0, 1], [0, 1]))(elements)
     mesh.trace.elements.SELFCHECK.outward_unit_normal_vector()
     Q = mesh.trace.elements.quality
 

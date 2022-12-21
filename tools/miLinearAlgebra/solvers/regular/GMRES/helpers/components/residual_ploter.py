@@ -16,7 +16,7 @@ def ___gmres_plot_residuals___(residuals, solve_name, scheme_name):
 
     fig = plt.figure()
     plt.semilogy(residuals)
-    plt.title(scheme_name + ': ' + solve_name  + '@' + MyTimer.current_time())
+    plt.title(scheme_name + ': ' + solve_name + '@' + MyTimer.current_time())
     plt.ylabel('residuals')
     plt.xlabel('iterations')
 
@@ -25,7 +25,8 @@ def ___gmres_plot_residuals___(residuals, solve_name, scheme_name):
     else:
         os.mkdir('__residuals__')
 
-    plt.savefig(f'./__residuals__/'
+    plt.savefig(
+        f'./__residuals__/'
         f'{scheme_name + "_" + solve_name + "_" + MyTimer.current_time_with_no_special_characters()}.png')
 
     plt.close(fig)

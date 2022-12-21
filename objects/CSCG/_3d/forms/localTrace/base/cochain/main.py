@@ -7,6 +7,7 @@
 from objects.CSCG.base.forms.localTrace.cochain.main import CSCG_LocalTrace_CochainBase
 from components.distributors import VectorDistributor
 
+
 class _3dCSCG_LocalTrace_Cochain(CSCG_LocalTrace_CochainBase):
     """"""
 
@@ -22,15 +23,15 @@ class _3dCSCG_LocalTrace_Cochain(CSCG_LocalTrace_CochainBase):
 
     def ___local_2_local_ESW___(self):
         """"""
-        if self._ltf_.whether.hybrid: # hybrid trace forms
+        if self._ltf_.whether.hybrid:  # hybrid trace forms
             BO = self._ltf_.num.basis_onside
-            INDICES = [0,]
+            INDICES = [0, ]
             sns = 'NSWEBF'
             for sn in sns:
                 # noinspection PyUnresolvedReferences
                 INDICES.append(INDICES[-1]+BO[sn])
-            _D_ = {'N':0, 'S':1, 'W':2, 'E':3, 'B':4, 'F':5}
-            ESW : dict[int] = dict()
+            _D_ = {'N': 0, 'S': 1, 'W': 2, 'E': 3, 'B': 4, 'F': 5}
+            ESW: dict[int] = dict()
 
             for i in self.local:
                 local_i = self.local[i]
@@ -46,8 +47,8 @@ class _3dCSCG_LocalTrace_Cochain(CSCG_LocalTrace_CochainBase):
 
             self._local_ESW_ = ESW
 
-        else: # non-hybrid trace forms, we use distributors.
-            ESW : dict[int] = dict()
+        else:  # non-hybrid trace forms, we use distributors.
+            ESW: dict[int] = dict()
             for i in self.local:
                 ESW[i] = self._distributor_(self.local[i])
             self._local_ESW_ = ESW

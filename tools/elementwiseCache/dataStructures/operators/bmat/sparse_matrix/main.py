@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
-
-
 from tools.elementwiseCache.gathering.regular.chain_matrix.main import Chain_Gathering_Matrix
-from tools.elementwiseCache.dataStructures.operators.bmat.sparse_matrix.helpers.DG import ___BMAT_HELPER_DataGenerator___
-from tools.elementwiseCache.dataStructures.operators.bmat.sparse_matrix.helpers.KG import ___BMAT_HELPER_KeyGenerator___
+from tools.elementwiseCache.dataStructures.operators.bmat.sparse_matrix.helpers.DG import \
+    ___BMAT_HELPER_DataGenerator___
+from tools.elementwiseCache.dataStructures.operators.bmat.sparse_matrix.helpers.KG import \
+    ___BMAT_HELPER_KeyGenerator___
 
 
-
-
-
-def ___bmat_EWC_sparse_matrices___(blocks):
+def ___bmat_EWC_sparse_matrices___(blocks, do_a_test=False):
     """A function to do bmat of EWC_SparseMatrix.
 
     :param blocks:
@@ -18,7 +15,7 @@ def ___bmat_EWC_sparse_matrices___(blocks):
     assert blocks.__class__.__name__ in ('list', 'tuple', 'ndarray'), \
         "please put blocks in list, tuple or array."
 
-    I = len(blocks)
+    _I = len(blocks)
     J = None
     for i, bR in enumerate(blocks):
         assert bR.__class__.__name__ in ('list', 'tuple', 'ndarray'), \
@@ -30,8 +27,8 @@ def ___bmat_EWC_sparse_matrices___(blocks):
 
     elements = None
 
-    RGM = [[None for _ in range(J)] for _ in range(I)]
-    CGM = [[None for _ in range(J)] for _ in range(I)]
+    RGM = [[None for _ in range(J)] for _ in range(_I)]
+    CGM = [[None for _ in range(J)] for _ in range(_I)]
 
     CLASS = None
     for i, Bi in enumerate(blocks):
@@ -63,11 +60,11 @@ def ___bmat_EWC_sparse_matrices___(blocks):
     KG = ___BMAT_HELPER_KeyGenerator___(blocks)
 
     assert CLASS.__name__ == 'EWC_SparseMatrix', "We must find an EWC_SparseMatrix class."
-    EWC = CLASS(elements, DG, KG, bmat_shape=(I, J))
+    EWC = CLASS(elements, DG, KG, bmat_shape=(_I, J))
 
     # Now we have a look at if we can get the gathering matrices for the bmat result.
-    rgm = [None for _ in range(I)]
-    for i in range(I):
+    rgm = [None for _ in range(_I)]
+    for i in range(_I):
         for j in range(J):
             Rij = RGM[i][j]
             if Rij is None:
@@ -82,7 +79,7 @@ def ___bmat_EWC_sparse_matrices___(blocks):
 
     cgm = [None for _ in range(J)]
     for j in range(J):
-        for i in range(I):
+        for i in range(_I):
             Cij = CGM[i][j]
             if Cij is None:
                 pass
@@ -101,9 +98,14 @@ def ___bmat_EWC_sparse_matrices___(blocks):
         R_CGM = Chain_Gathering_Matrix(rgm)
         C_CGM = Chain_Gathering_Matrix(cgm)
         EWC.gathering_matrices = (R_CGM, C_CGM)
+    else:
+        pass
 
-    if 0 in EWC: _ = EWC[0]
-    # do a test to check if bmat is fine. this is OKAY even if we will apply
-    # some customization later, the cache is done before the customization
+    if do_a_test and 0 in EWC:
+        _ = EWC[0]
+        # do a test to check if bmat is fine. this is OKAY even if we will apply
+        # some customization later, the cache is done before the customization
+    else:
+        pass
 
     return EWC

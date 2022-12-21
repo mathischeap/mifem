@@ -414,7 +414,6 @@ def test_Mesh_NO3_elements_CT():
     MM = m.___DEPRECATED_ct___.metric_matrix
     iMM = m.___DEPRECATED_ct___.inverse_metric_matrix
 
-
     _mapping = m.elements.coordinate_transformation.mapping(r, s, t)
     _X = m.elements.coordinate_transformation.X(r, s, t)
     _Y = m.elements.coordinate_transformation.Y(r, s, t)
@@ -502,13 +501,9 @@ def test_Mesh_NO3_elements_CT():
         iJ_i = ei.coordinate_transformation.inverse_Jacobian(r, s, t)
         M_i = ei.coordinate_transformation.metric(r, s, t)
 
-
-
-
         np.testing.assert_array_almost_equal(J[i], J_i)
         np.testing.assert_array_almost_equal(iJ[i], iJ_i)
         np.testing.assert_array_almost_equal(M[i], M_i)
-
 
         # test iJ @ J = I _________________________________________________
         iJM_i = ei.coordinate_transformation.inverse_Jacobian_matrix(r, s, t)
@@ -1303,7 +1298,6 @@ def test_Mesh_NO9_edge_node_mesh():
                             f"location[{edge}] = {LOCATIONS[edge]} in core #{i}."
 
     return 1
-
 
 
 if __name__ == '__main__':

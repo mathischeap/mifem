@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from components.freeze.base import FrozenOnly
 
+
 class SpaMat_Adjust(FrozenOnly):
     """Unlike `Customize`, `Adjust` will make the changes in real time and make a new
     EWC_SparseMatrix afterwards.
@@ -33,7 +34,7 @@ class SpaMat_Adjust(FrozenOnly):
 
             LDF_row = itp.local.dofs
 
-            for e in LDF_row: # go through all locally involved mesh element numbers
+            for e in LDF_row:  # go through all locally involved mesh element numbers
                 assert e in self._spa_mat_
 
                 SMe = self._spa_mat_[e].copy().tolil()
@@ -91,7 +92,7 @@ class SpaMat_Adjust(FrozenOnly):
 
             LDF_row = itp.local.dofs
 
-            for e in LDF_row: # go through all locally involved mesh element numbers
+            for e in LDF_row:  # go through all locally involved mesh element numbers
                 assert e in self._spa_mat_
 
                 SMe = self._spa_mat_[e].copy().tolil()
@@ -150,7 +151,7 @@ class SpaMat_Adjust(FrozenOnly):
             LDF_row = row_itp.local.dofs
             LDF_col = col_itp.local.dofs
 
-            for e in LDF_row: # go through all locally involved mesh element numbers
+            for e in LDF_row:  # go through all locally involved mesh element numbers
                 assert e in self._spa_mat_ and e in LDF_col
 
                 SMe = self._spa_mat_[e].copy().tolil()

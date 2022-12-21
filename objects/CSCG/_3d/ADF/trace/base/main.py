@@ -2,7 +2,8 @@
 """"""
 
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from objects.CSCG._3d.ADF.base import _3dCSCG_Algebra_DUAL_FORM_BASE
 
@@ -16,8 +17,6 @@ from objects.CSCG._3d.ADF.trace.base.coboundary import _3dCSCG_Algebra_DUAL_Trac
 from objects.CSCG._3d.ADF.trace.base.whether import _3dCSCG_ADT_TF_Whether
 from objects.CSCG._3d.ADF.trace.base.num import _3dCSCG_ADF_T_NUM
 from objects.CSCG._3d.ADF.trace.base.matrices import _3dCSCG_ADT_TF_Matrices
-
-
 
 
 class _3dCSCG_Algebra_DUAL_Trace_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
@@ -42,11 +41,11 @@ class _3dCSCG_Algebra_DUAL_Trace_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
         This is very important because
         we have to make sure that the information is consistent across the prime and the dual.
         """
-        assert self.prime.k == self.k           , "Trivial check k."
-        assert self.prime.mesh == self.mesh     , "Trivial check mesh."
-        assert self.prime.space == self.space   , "Trivial check space."
+        assert self.prime.k == self.k, "Trivial check k."
+        assert self.prime.mesh == self.mesh, "Trivial check mesh."
+        assert self.prime.space == self.space, "Trivial check space."
         assert self.prime.orientation == self.orientation, "Trivial check orientation."
-        assert self.prime.whether.hybrid is self.whether.hybrid    , "prime must be a hybrid form, now it is not."
+        assert self.prime.whether.hybrid is self.whether.hybrid, "prime must be a hybrid form, now it is not."
 
     def ___PRIVATE_generate_mass_matrix___(self):
         """For algebra dual forms, this method will only be called once.
@@ -62,7 +61,7 @@ class _3dCSCG_Algebra_DUAL_Trace_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
         # we now need to make a mesh-element-wise mass matrix
         MAP = self.mesh.trace.elements.map
         local_cache = dict()
-        MEW_mass = dict() # mesh-element-wise
+        MEW_mass = dict()  # mesh-element-wise
 
         for i in MAP:
             element = self.mesh.elements[i]
@@ -85,13 +84,14 @@ class _3dCSCG_Algebra_DUAL_Trace_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
                                 (None, None, None, None, M[4], None),
                                 (None, None, None, None, None, M[5])], format='csc')
 
-                if isinstance(mark, str): local_cache[mark] = M
+                if isinstance(mark, str):
+                    local_cache[mark] = M
 
                 MEW_mass[i] = M
 
         M = EWC_SparseMatrix(
-            self.mesh.elements, # iterative with mesh elements
-            MEW_mass          , # the data as dict
+            self.mesh.elements,   # iterative with mesh elements
+            MEW_mass,   # the data as dict
             self.mesh.elements.___PRIVATE_elementwise_cache_metric_key___,
             # cache keys as mesh element types wrt metric.
             )
@@ -137,14 +137,12 @@ class _3dCSCG_Algebra_DUAL_Trace_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
         return self._matrices_
 
 
-
-
-
 if __name__ == "__main__":
     # mpiexec -n 6 python _3dCSCG\ADF\trace\base\main.py
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('crazy',c=0.0, bounds=([-1,1],[-1,1],[-1,1]))([12, 12, 12], EDM=None, show_info=True)
+    mesh = MeshGenerator('crazy', c=0.0,
+                         bounds=([-1, 1], [-1, 1], [-1, 1]))([12, 12, 12], EDM=None, show_info=True)
 
     space = SpaceInvoker('polynomials')([4, 4, 4], show_info=True)
 

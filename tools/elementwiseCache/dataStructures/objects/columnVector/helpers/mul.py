@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 8/12/2022 12:34 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('/')
 from components.freeze.main import FrozenOnly
 
 
@@ -20,8 +17,3 @@ class ColVec_MUL(FrozenOnly):
     def __call__(self, basic_unit):
         """"""
         return self._f_ * self._vec_[basic_unit]
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

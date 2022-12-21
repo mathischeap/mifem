@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from root.config.main import *
 from __init__ import cscg2
 import random
@@ -12,7 +13,7 @@ from tests.objects.CSCG._2d.randObj.field import random_scalar, random_vector
 def test_Fields_NO1_vector():
     """"""
     if RANK == MASTER_RANK:
-        load = random.randint(100,1000)
+        load = random.randint(100, 1000)
         print(f"~~~ [test_Fields_NO1_vector] @ load= {load}... ", flush=True)
     else:
         load = None
@@ -20,7 +21,7 @@ def test_Fields_NO1_vector():
     load = COMM.bcast(load, root=MASTER_RANK)
     FC = random_FormCaller_of_total_load_around(load)
 
-    I, J = random.randint(2,10), random.randint(4,8)
+    I, J = random.randint(2, 10), random.randint(4, 8)
     x = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, I)
     y = np.linspace(-0.8-random.random()/5, 0.8+random.random()/5, J)
     x, y = np.meshgrid(x, y, indexing='ij')
@@ -66,7 +67,7 @@ def test_Fields_NO1_vector():
 def test_Fields_NO2_scalar():
     """"""
     if RANK == MASTER_RANK:
-        load = random.randint(100,1000)
+        load = random.randint(100, 1000)
         print(f"~~~ [test_Fields_NO2_scalar] @ load= {load}... ", flush=True)
     else:
         load = None
@@ -74,14 +75,14 @@ def test_Fields_NO2_scalar():
     load = COMM.bcast(load, root=MASTER_RANK)
     FC = random_FormCaller_of_total_load_around(load)
 
-    I, J = random.randint(2,10), random.randint(4,8)
+    I, J = random.randint(2, 10), random.randint(4, 8)
     x = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, I)
     y = np.linspace(-0.8-random.random()/5, 0.8+random.random()/5, J)
     x, y = np.meshgrid(x, y, indexing='ij')
     t = random.random()
     def f(t, x, y): return - np.pi * np.sin(2.56*np.pi*x) * np.cos(3.12*np.pi*y) * np.sin(t) / 1.554
-    def df_dx(t, x, y): return - 2.56* np.pi**2 * np.cos(2.56*np.pi*x) * np.cos(3.12*np.pi*y) * np.sin(t) / 1.554
-    def df_dy(t, x, y): return 3.12* np.pi**2 * np.sin(2.56*np.pi*x) * np.sin(3.12*np.pi*y) * np.sin(t) / 1.554
+    def df_dx(t, x, y): return - 2.56 * np.pi**2 * np.cos(2.56*np.pi*x) * np.cos(3.12*np.pi*y) * np.sin(t) / 1.554
+    def df_dy(t, x, y): return 3.12 * np.pi**2 * np.sin(2.56*np.pi*x) * np.sin(3.12*np.pi*y) * np.sin(t) / 1.554
     def df_dt(t, x, y): return - np.pi * np.sin(2.56*np.pi*x) * np.cos(3.12*np.pi*y) * np.cos(t) / 1.554
     w = FC('scalar', f)
 
@@ -92,7 +93,7 @@ def test_Fields_NO2_scalar():
     for i in R_xyz:
         assert np.max(np.abs(R_v[i][0] - df_dt(t, *R_xyz[i]))) < 1e-7
 
-    #----------- test numerical gradient ------------------------------------------
+    # ---------- test numerical gradient ------------------------------------------
     grad_w = w.numerical.grad
     grad_w.current_time = t
     R_xyz, R_v = grad_w.reconstruct(x, y)
@@ -100,7 +101,7 @@ def test_Fields_NO2_scalar():
         assert np.max(np.abs(R_v[i][0] - df_dx(t, *R_xyz[i]))) < 1e-7
         assert np.max(np.abs(R_v[i][1] - df_dy(t, *R_xyz[i]))) < 1e-7
 
-    #----------- test numerical curl ------------------------------------------
+    # ---------- test numerical curl ------------------------------------------
     curl_w = w.numerical.curl
     curl_w.current_time = t
     R_xyz, R_v = curl_w.reconstruct(x, y)
@@ -111,11 +112,10 @@ def test_Fields_NO2_scalar():
     return 1
 
 
-
 def test_identities():
     """"""
     if RANK == MASTER_RANK:
-        load = random.randint(100,1000)
+        load = random.randint(100, 1000)
         print(f"-I- [test_identities]...", flush=True)
     else:
         load = None
@@ -124,7 +124,7 @@ def test_identities():
     FC = random_FormCaller_of_total_load_around(load)
 
     t = 1 + random.random() * 10
-    I, J = random.randint(2,10), random.randint(4,8)
+    I, J = random.randint(2, 10), random.randint(4, 8)
     xi = np.linspace(-0.9-random.random()/10, 0.9+random.random()/10, I)
     et = np.linspace(-0.8-random.random()/5, 0.8+random.random()/5, J)
     x, y = np.meshgrid(xi, et, indexing='ij')
@@ -135,7 +135,7 @@ def test_identities():
 
     Sca = FC('scalar', func)
     Vec = FC('vector', [U, V])
-    #--------------------- test a float * a scalar or a float * a vector ----------------------------
+    # -------------------- test a float * a scalar or a float * a vector ----------------------------
     f = 2 + random.random()
     fS = f * Sca
     Sf = Sca * f
@@ -164,7 +164,7 @@ def test_identities():
         np.testing.assert_array_almost_equal(R_V[i][0], f_U)
         np.testing.assert_array_almost_equal(R_V[i][1], f_V)
 
-    #--------------------------------- test add, sub and neg ---------------------------------------
+    # -------------------------------- test add, sub and neg ---------------------------------------
 
     rS0 = random_scalar(FC.mesh)
     rS1 = random_scalar(FC.mesh)
@@ -245,9 +245,9 @@ def test_identities():
         np.testing.assert_array_almost_equal(R_V[i][0], f_U)
         np.testing.assert_array_almost_equal(R_V[i][1], f_V)
 
-    #------------------------------------------------------------------------------------------------
-    mesh = cscg2.mesh('crazy_periodic', c=0.)(element_layout=[5,5])
-    space = cscg2.space('polynomials')([3,3])
+    # -----------------------------------------------------------------------------------------------
+    mesh = cscg2.mesh('crazy_periodic', c=0.)(element_layout=[5, 5])
+    space = cscg2.space('polynomials')([3, 3])
     FC = cscg2.form(mesh, space)
 
     def W(t, x, y): return t * np.cos(2 * np.pi * x) * np.sin(2*np.pi * y)
@@ -277,14 +277,7 @@ def test_identities():
 
     np.testing.assert_almost_equal(LEFT, -R1 + R2)
 
-    #---------------------------------------------------------------------------------------------
-
-
-
     return 1
-
-
-
 
 
 if __name__ == '__main__':

@@ -2,7 +2,6 @@
 from components.freeze.main import FrozenOnly
 
 
-
 class ParallelRunnerBase(FrozenOnly):
     """A template for all parallel runners."""
     def __init__(self):
@@ -26,9 +25,7 @@ class ParallelRunnerBase(FrozenOnly):
     def results(self):
         return self.___results___
 
-
     # A parallel runner must have the following methods and properties ___
-
     def ___iterate___(self, *args, **kwargs):
         return NotImplementedError()
 

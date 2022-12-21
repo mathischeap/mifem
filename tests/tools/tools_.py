@@ -7,7 +7,8 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from root.config.main import *
 import os
@@ -55,6 +56,7 @@ def ___TEST_SOLVER___(tk, tk1):
     ot1, ot2 = COMM.bcast([ot1, ot2], root=MASTER_RANK)
     return 1, 0, 'random message', ot1, ot2
 
+
 def test_TOOLS_NO1_iterator():
     if RANK == MASTER_RANK:
         print("=== [test_TOOLS_NO1_iterator] ...... ", flush=True)
@@ -97,8 +99,8 @@ def test_TOOLS_NO6_send_GM_in_parts_test():
         i = COMM.bcast(i, root=MASTER_RANK)
         j = COMM.bcast(j, root=MASTER_RANK)
         k = COMM.bcast(k, root=MASTER_RANK)
-        l = random.randint(2, 4)
-        empty = sorted(random.sample(range(0, j), int(j / l)))
+        L = random.randint(2, 4)
+        empty = sorted(random.sample(range(0, j), int(j / L)))
 
         sa = random.randint(1, 100)/300
         A = spspa.random(j, j, sa, format='lil')
@@ -126,6 +128,7 @@ def test_TOOLS_NO6_send_GM_in_parts_test():
 
     return 1
 
+
 def test_TOOLS_NO7_linear_algebra_EWC_test():
     if RANK == MASTER_RANK:
         print("::: [test_TOOLS_NO7_linear_algebra_EWC_test] ....", flush=True)
@@ -136,15 +139,16 @@ def test_TOOLS_NO7_linear_algebra_EWC_test():
             i = random.randint(2, 3)
             j = random.randint(1, 3)
             k = random.randint(2, 4)
-            l = random.randint(2, 3)
+            L = random.randint(2, 3)
             m = random.randint(1, 3)
             n = random.randint(2, 4)
         else:
-            c, i, j, k, l, m, n = None, None, None, None, None, None, None
-        c, i, j, k, l, m, n = COMM.bcast([c, i, j, k, l, m, n], root=MASTER_RANK)
-        if c < 0.1: c = 0
+            c, i, j, k, L, m, n = None, None, None, None, None, None, None
+        c, i, j, k, L, m, n = COMM.bcast([c, i, j, k, L, m, n], root=MASTER_RANK)
+        if c < 0.1:
+            c = 0
         mesh = MeshGenerator('crazy', c=c)([f'Lobatto:{i}', f'Lobatto:{j}', f'Lobatto:{k}'], EDM='debug')
-        space = SpaceInvoker('polynomials')([('Lobatto', l), ('Lobatto', m), ('Lobatto', n)])
+        space = SpaceInvoker('polynomials')([('Lobatto', L), ('Lobatto', m), ('Lobatto', n)])
         FC = FormCaller(mesh, space)
 
         f0 = FC('0-f', hybrid=False)
@@ -182,26 +186,27 @@ def test_TOOLS_NO7_linear_algebra_EWC_test():
 
     return 1
 
+
 def test_TOOLS_NO8_GlobalMatrix_dot_product_test():
     """"""
     if RANK == MASTER_RANK:
         print("... [test_TOOLS_NO8_GlobalMatrix_dot_product_test] ....", flush=True)
 
-    for _ in range(20): # do multiple random tests.
+    for _ in range(20):  # do multiple random tests.
         # A @ B @ C, A: (i,j), B: (j, k), C:(k, l)
         if RANK == MASTER_RANK:
             i = random.randint(1, SIZE * 2)
             j = random.randint(1, SIZE * 2)
             k = random.randint(1, SIZE * 2)
-            l = random.randint(1, SIZE * 2)
+            L = random.randint(1, SIZE * 2)
 
             type_A = random.randint(0, 1)
             type_B = random.randint(0, 1)
             type_C = random.randint(0, 1)
         else:
-            i, j, k, l = None, None, None, None
+            i, j, k, L = None, None, None, None
             type_A, type_B, type_C = None, None, None
-        i, j, k, l = COMM.bcast([i, j, k, l], root=MASTER_RANK)
+        i, j, k, L = COMM.bcast([i, j, k, L], root=MASTER_RANK)
         type_A, type_B, type_C = COMM.bcast([type_A, type_B, type_C], root=MASTER_RANK)
         type_A = ['row', 'col'][type_A]
         type_B = ['row', 'col'][type_B]
@@ -218,9 +223,9 @@ def test_TOOLS_NO8_GlobalMatrix_dot_product_test():
             B = ___generate_random_col_major_GM___(j, k)
 
         if type_C == 'row':
-            C = ___generate_random_row_major_GM___(k, l)
+            C = ___generate_random_row_major_GM___(k, L)
         else:
-            C = ___generate_random_col_major_GM___(k, l)
+            C = ___generate_random_col_major_GM___(k, L)
 
         ABC = A @ B @ C
         a = A.do.gather_M_to_core()
@@ -233,6 +238,8 @@ def test_TOOLS_NO8_GlobalMatrix_dot_product_test():
             np.testing.assert_almost_equal(np.sum(np.abs(abc - ___)), 0)
 
     return 1
+
+
 def ___generate_random_row_major_GM___(i, j, s=None):
     """Make a random row major sparse matrix of shape (i,j) at sparsity=s.
 
@@ -243,7 +250,8 @@ def ___generate_random_row_major_GM___(i, j, s=None):
     """
     if s is None:
         s = random.uniform(0, 0.1)
-        if s < 0.02: s = 0
+        if s < 0.02:
+            s = 0
     if RANK == MASTER_RANK:
 
         random_list = random.sample(range(0, i), i)
@@ -281,7 +289,8 @@ def ___generate_random_col_major_GM___(i, j, s=None):
     """
     if s is None:
         s = random.uniform(0, 0.1)
-        if s < 0.02: s = 0
+        if s < 0.02:
+            s = 0
     if RANK == MASTER_RANK:
 
         random_list = random.sample(range(0, j), j)
@@ -308,6 +317,7 @@ def ___generate_random_col_major_GM___(i, j, s=None):
 
     return A
 
+
 def test_TOOLS_NO9_test_Chained_Gathering_Matrix():
     """"""
     if RANK == MASTER_RANK:
@@ -318,20 +328,20 @@ def test_TOOLS_NO9_test_Chained_Gathering_Matrix():
             i = random.randint(2, 3)
             j = random.randint(1, 3)
             k = random.randint(1, 2)
-            l = random.randint(2, 3)
+            L = random.randint(2, 3)
             m = random.randint(1, 2)
             n = random.randint(2, 3)
 
             mid = random.randint(0, 1)
         else:
-            i, j, k, l, m, n = None, None, None, None, None, None
+            i, j, k, L, m, n = None, None, None, None, None, None
             mid = None
-        i, j, k, l, m, n, mid = COMM.bcast([i, j, k, l, m, n, mid], root=MASTER_RANK)
+        i, j, k, L, m, n, mid = COMM.bcast([i, j, k, L, m, n, mid], root=MASTER_RANK)
 
         MID = ('crazy', 'bridge_arch_cracked')[mid]
 
         mesh = MeshGenerator(MID)([f'Lobatto:{i}', f'Lobatto:{j}', f'Lobatto:{k}'], EDM='debug')
-        space = SpaceInvoker('polynomials')([('Lobatto', l), ('Lobatto', m), ('Lobatto', n)])
+        space = SpaceInvoker('polynomials')([('Lobatto', L), ('Lobatto', m), ('Lobatto', n)])
         FC = FormCaller(mesh, space)
         f0 = FC('0-f', hybrid=False)
         f1 = FC('1-f', hybrid=False)
@@ -412,14 +422,14 @@ def test_TOOLS_NO9_test_Chained_Gathering_Matrix():
         n = 0
 
         for m in range(GND):
-            I = CGM.do.find.elements_and_local_indices_of_dof(m)
-            if I is None:
+            _I = CGM.do.find.elements_and_local_indices_of_dof(m)
+            if _I is None:
                 exclude_list = list()
             else:
-                I = I[0]
-                assert isinstance(I, list)
-                exclude_list = I
-                for i in I:
+                _I = _I[0]
+                assert isinstance(_I, list)
+                exclude_list = _I
+                for i in _I:
                     assert m in CGM[i], f"m not in element {i}!"
 
             for j in CGM:
@@ -443,6 +453,7 @@ def test_TOOLS_NO9_test_Chained_Gathering_Matrix():
 
     return 1
 
+
 def test_TOOLS_NO10_test_EWC_SparseMatrix_Customize():
     """"""
     if RANK == MASTER_RANK:
@@ -453,23 +464,23 @@ def test_TOOLS_NO10_test_EWC_SparseMatrix_Customize():
             i = random.randint(2, 3)
             j = random.randint(1, 3)
             k = random.randint(1, 2)
-            l = random.randint(2, 3)
+            L = random.randint(2, 3)
             m = random.randint(1, 2)
             n = random.randint(2, 3)
 
             mid = random.randint(0, 1)
             ish = random.randint(0, 1)
         else:
-            i, j, k, l, m, n = None, None, None, None, None, None
+            i, j, k, L, m, n = None, None, None, None, None, None
             mid = None
             ish = None
-        i, j, k, l, m, n, mid, ish = COMM.bcast([i, j, k, l, m, n, mid, ish], root=MASTER_RANK)
+        i, j, k, L, m, n, mid, ish = COMM.bcast([i, j, k, L, m, n, mid, ish], root=MASTER_RANK)
 
         MID = ('crazy', 'bridge_arch_cracked')[mid]
         ISH = (True, False)[ish]
 
         mesh = MeshGenerator(MID)([f'Lobatto:{i}', f'Lobatto:{j}', f'Lobatto:{k}'], EDM='debug')
-        space = SpaceInvoker('polynomials')([('Lobatto', l), ('Lobatto', m), ('Lobatto', n)])
+        space = SpaceInvoker('polynomials')([('Lobatto', L), ('Lobatto', m), ('Lobatto', n)])
         FC = FormCaller(mesh, space)
 
         f2 = FC('2-f', hybrid=ISH)
@@ -637,6 +648,7 @@ def ___runner_test_function_11___(t0, dt, steps, A=10):
     if RANK == MASTER_RANK:
         result = np.array(SI.RDF.to_numpy()[-1, :][-2:], dtype=float)
         return result[0]+A, result[1]-A
+
 
 def test_TOOLS_NO11_test_ParallelMatrix3dInputRunner():
     """"""
@@ -827,6 +839,7 @@ def test_TOOLS_NO12_EWC_assembling_test():
 
     return 1
 
+
 def ___brutal_force_EWC_matrix_assembling___(EWC, GM0, GM1):
     """Do the brutal force assembling."""
     N0 = GM0.global_num_dofs
@@ -997,9 +1010,11 @@ def test_TOOLS_NO13_EWC_Customize_CSCG_partial_dofs():
 
     if RANK == MASTER_RANK:
         AT2 = dict()
-        for _ in gn_T2: AT2.update(_)
+        for _ in gn_T2:
+            AT2.update(_)
         AF2 = dict()
-        for _ in gn_F2: AF2.update(_)
+        for _ in gn_F2:
+            AF2.update(_)
 
         for e in AT2:
             gt = AT2[e]
@@ -1040,7 +1055,8 @@ def test_TOOLS_NO13_EWC_Customize_CSCG_partial_dofs():
     gn_F2 = COMM.gather(gn_F2, root=MASTER_RANK)
     if RANK == MASTER_RANK:
         AF2_new = dict()
-        for _ in gn_F2: AF2_new.update(_)
+        for _ in gn_F2:
+            AF2_new.update(_)
         ALL = list()
         for e in AF2_new:
             ALL.extend(AF2_new[e])
@@ -1057,9 +1073,15 @@ def test_TOOLS_NO14_partial_cochain_with_3dCSCG_form_BC():
         print("-C- [test_TOOLS_NO14_partial_cochain_with_3dCSCG_form_BC] ....", flush=True)
 
     def Pressure(t, x, y, z): return 2.1 + t + np.cos(np.pi * x) * np.cos(2 * np.pi * y) * np.cos(3 * np.pi * z)
-    def velocity_x(t, x, y, z): return 2.1 + t + np.cos(1.5*np.pi * x) * np.cos(2.5 * np.pi * y) * np.cos(3.5 * np.pi * z)
-    def velocity_y(t, x, y, z): return 2.1 + t + np.cos(0.5*np.pi * x) * np.cos(2.1 * np.pi * y) * np.cos(3 * np.pi * z)
-    def velocity_z(t, x, y, z): return 2.1 + t + np.cos(0.8*np.pi * x) * np.cos(1.3 * np.pi * y) * np.cos(0.7 * np.pi * z)
+
+    def velocity_x(t, x, y, z):
+        return 2.1 + t + np.cos(1.5*np.pi * x) * np.cos(2.5 * np.pi * y) * np.cos(3.5 * np.pi * z)
+
+    def velocity_y(t, x, y, z):
+        return 2.1 + t + np.cos(0.5*np.pi * x) * np.cos(2.1 * np.pi * y) * np.cos(3 * np.pi * z)
+
+    def velocity_z(t, x, y, z):
+        return 2.1 + t + np.cos(0.8*np.pi * x) * np.cos(1.3 * np.pi * y) * np.cos(0.7 * np.pi * z)
 
     if RANK == MASTER_RANK:
         ISH = (True, False, False, False)[random.randint(0, 3)]
@@ -1221,7 +1243,8 @@ def test_TOOLS_NO14_partial_cochain_with_3dCSCG_form_BC():
     gn_t2 = COMM.gather(gn_t2, root=MASTER_RANK)
     if RANK == MASTER_RANK:
         At2 = dict()
-        for _ in gn_t2: At2.update(_)
+        for _ in gn_t2:
+            At2.update(_)
 
         ALL = list()
         for e in At2:
@@ -1275,10 +1298,17 @@ def test_TOOLS_NO15_linear_system_apply_BC():
     mesh, space = random_mesh_and_space_of_total_load_around(LOAD, exclude_periodic=True, mesh_boundary_num='>=2')
     FC = FormCaller(mesh, space)
 
-    def Pressure(t, x, y, z): return 2.5 + t + np.cos(np.pi * x) * np.cos(2 * np.pi * y) * np.cos(3 * np.pi * z)
-    def velocity_x(t, x, y, z): return 2.5 + t + np.cos(1.5*np.pi * x) * np.cos(2.5 * np.pi * y) * np.cos(3.5 * np.pi * z)
-    def velocity_y(t, x, y, z): return 2.5 + t + np.cos(0.5*np.pi * x) * np.cos(2.1 * np.pi * y) * np.cos(3.2 * np.pi * z)
-    def velocity_z(t, x, y, z): return 2.5 + t + np.cos(0.8*np.pi * x) * np.cos(1.3 * np.pi * y) * np.cos(0.7 * np.pi * z)
+    def Pressure(t, x, y, z):
+        return 2.5 + t + np.cos(np.pi * x) * np.cos(2 * np.pi * y) * np.cos(3 * np.pi * z)
+
+    def velocity_x(t, x, y, z):
+        return 2.5 + t + np.cos(1.5*np.pi * x) * np.cos(2.5 * np.pi * y) * np.cos(3.5 * np.pi * z)
+
+    def velocity_y(t, x, y, z):
+        return 2.5 + t + np.cos(0.5*np.pi * x) * np.cos(2.1 * np.pi * y) * np.cos(3.2 * np.pi * z)
+
+    def velocity_z(t, x, y, z):
+        return 2.5 + t + np.cos(0.8*np.pi * x) * np.cos(1.3 * np.pi * y) * np.cos(0.7 * np.pi * z)
     # SS = FC('scalar', Pressure)
     # SV = FC('vector', [velocity_x, velocity_y, velocity_z])
 
@@ -1290,7 +1320,8 @@ def test_TOOLS_NO15_linear_system_apply_BC():
         BNS = None
     BNS = COMM.bcast(BNS, root=MASTER_RANK)
     bcDs = dict()
-    for bn in BNS: bcDs[bn] = Pressure
+    for bn in BNS:
+        bcDs[bn] = Pressure
     # bcDv = dict()
     # for bn in BNS: bcDv[bn] = [velocity_x, velocity_y, velocity_z]
     BS = FC('scalar', bcDs)
@@ -1303,7 +1334,8 @@ def test_TOOLS_NO15_linear_system_apply_BC():
     # bcDs_com = dict()
     # for bn in BNS_com: bcDs_com[bn] = Pressure
     bcDv_com = dict()
-    for bn in BNS_com: bcDv_com[bn] = [velocity_x, velocity_y, velocity_z]
+    for bn in BNS_com:
+        bcDv_com[bn] = [velocity_x, velocity_y, velocity_z]
     # BS_com = FC('scalar', bcDs_com)
     BV_com = FC('vector', bcDv_com)
 
@@ -1373,7 +1405,8 @@ def test_TOOLS_NO15_linear_system_apply_BC():
 
     if RANK == MASTER_RANK:
         AT2 = dict()
-        for _ in gn_T2: AT2.update(_)
+        for _ in gn_T2:
+            AT2.update(_)
 
         changed = list()
 
@@ -1419,7 +1452,7 @@ def test_TOOLS_NO15_linear_system_apply_BC():
     if RANK == MASTER_RANK:
 
         dofs_changed = list()  # the rows that been changed in the global matrix.
-        for bn in t2GBD: # all the boundary dofs.
+        for bn in t2GBD:  # all the boundary dofs.
             dofs_changed.extend(t2GBD[bn])
         dofs_changed = np.array(dofs_changed) + f2.num.global_dofs + f3.num.global_dofs
 
@@ -1461,9 +1494,11 @@ def test_TOOLS_NO15_linear_system_apply_BC():
     gn_F2 = COMM.gather(gn_F2, root=MASTER_RANK)
     if RANK == MASTER_RANK:
         AT2 = dict()
-        for _ in gn_T2: AT2.update(_)
+        for _ in gn_T2:
+            AT2.update(_)
         AF2 = dict()
-        for _ in gn_F2: AF2.update(_)
+        for _ in gn_F2:
+            AF2.update(_)
         for e in AT2:
             gt = AT2[e]
             gf = AF2[e]

@@ -10,7 +10,7 @@ if './' not in sys.path:
     sys.path.append('./')
 from components.freeze.main import FrozenOnly
 import numpy as np
-from scipy.sparse import csc_matrix, csr_matrix
+from scipy.sparse import csr_matrix
 
 
 def ___Pr_gathering_matrix_checker___(gathering, indices):
@@ -115,7 +115,6 @@ class VectorAssembler(FrozenOnly):
             raise NotImplementedError(f"scheme = {scheme} is not implemented for routine: basic.")
 
 
-# noinspection PyShadowingBuiltins
 class MatrixAssembler(FrozenOnly):
     """"""
 
@@ -196,9 +195,9 @@ class MatrixAssembler(FrozenOnly):
             if format == 'array':
                 return output
             elif format == 'csc':
-                return csc_matrix(output)
+                return csr_matrix(output).T  # automatically a column csc matrix
             elif format == 'csr':
-                return csr_matrix(output)
+                return csr_matrix(output)   # a row csr matrix.
             else:
                 raise NotImplementedError(f"cannot return {format} assembled matrix.")
 

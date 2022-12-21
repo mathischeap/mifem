@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
 import numpy as np
@@ -53,8 +54,10 @@ class NonLinearSystem(FrozenOnly):
         assert isinstance(test_variables, (tuple, list)), f"pls put test_variables in a list."
         assert isinstance(unknown_variables, (tuple, list)), f"pls put unknown variables in a list."
 
-        if isinstance(test_variables, tuple): test_variables = list(test_variables)
-        if isinstance(unknown_variables, tuple): unknown_variables = list(unknown_variables)
+        if isinstance(test_variables, tuple):
+            test_variables = list(test_variables)
+        if isinstance(unknown_variables, tuple):
+            unknown_variables = list(unknown_variables)
 
         for tv in test_variables:
             assert tv not in unknown_variables, f"test variables must be different from the unknowns."
@@ -91,7 +94,7 @@ class NonLinearSystem(FrozenOnly):
         """
         assert isinstance(A, (list, tuple)), f"Please put linear blocks in a list or a tuple."
 
-        #---------- parse blocks ------------------------------------------------------
+        # ---------- parse blocks ------------------------------------------------------
         shape0 = len(A)
         shape1 = None
         for i, Ai_ in enumerate(A):
@@ -106,7 +109,7 @@ class NonLinearSystem(FrozenOnly):
                 assert shape1 == len(Ai_)
 
             for j, Aij in enumerate(Ai_):
-                if Aij.__class__.__name__  == 'EWC_SparseMatrix':
+                if Aij.__class__.__name__ == 'EWC_SparseMatrix':
                     pass
                 elif Aij is None:
                     pass
@@ -142,8 +145,8 @@ class NonLinearSystem(FrozenOnly):
         self.___nonlinear_terms___ = terms
         self._nonlinear_terms_ = nLS_NonlinearTerms(self)
 
-        #----- parse regularity lhs: inhomogeneous_MDM -------------------------------------
-        regularity = 'inhomogeneous_MDM' # only have linear inhomogeneous `MultiDimMatrix` terms.
+        # ----- parse regularity lhs: inhomogeneous_MDM -------------------------------------
+        regularity = 'inhomogeneous_MDM'  # only have linear inhomogeneous `MultiDimMatrix` terms.
         for i, row_terms in enumerate(terms):
             if row_terms == 0 or row_terms is None:
                 pass
@@ -175,10 +178,10 @@ class NonLinearSystem(FrozenOnly):
 
             return
 
-        #---------- new regularity check -----------------------------------------------
+        # ---------- new regularity check -----------------------------------------------
 
-        #===============================================================================
-        raise Exception() # find no suitable regularity, raise Exception.
+        # ===============================================================================
+        raise Exception()  # find no suitable regularity, raise Exception.
 
     def ___PRIVATE_parse_b___(self, b):
         """
@@ -192,14 +195,15 @@ class NonLinearSystem(FrozenOnly):
 
         """
         assert isinstance(b, (list, tuple)), f"pls put right-hand-side vector in a list."
-        if isinstance(b, tuple): b = list(b)
-        #----------- save b -------------------------------------------------------------
+        if isinstance(b, tuple):
+            b = list(b)
+        # ----------- save b -------------------------------------------------------------
         self._b_ = b
 
-        #---- check regularity 1 of b --------------------------------------------------------
+        # --- check regularity 1 of b --------------------------------------------------------
         regularity = 'EWC_cv'
         for bi in b:
-            if bi.__class__.__name__  == 'EWC_ColumnVector':
+            if bi.__class__.__name__ == 'EWC_ColumnVector':
                 pass
             elif bi is None or bi == 0:
                 pass
@@ -209,10 +213,10 @@ class NonLinearSystem(FrozenOnly):
         if regularity is not None:
             self._regularity_b_ = 'EWC_cv'
             return
-        #------ check other regularities -----------------------------------------------------
+        # ------ check other regularities -----------------------------------------------------
 
-        #=====================================================================================
-        raise Exception() # find no suitable regularity for b, raise Error.
+        # =====================================================================================
+        raise Exception()  # find no suitable regularity for b, raise Error.
 
     @property
     def A(self):
@@ -254,15 +258,15 @@ if __name__ == '__main__':
     # mpiexec -n 4 python tools/linear_algebra/nonlinear_system/main.py
     from __init__ import cscg3
 
-    mesh = cscg3.mesh('cuboid', region_layout=[2,2,2])([1,1,1])
-    space = cscg3.space('polynomials')((2,2,2))
+    mesh = cscg3.mesh('cuboid', region_layout=[2, 2, 2])([1, 1, 1])
+    space = cscg3.space('polynomials')((2, 2, 2))
     FC = cscg3.form(mesh, space)
 
-    def u(t,x,y,z): return np.sin(np.pi*x)*np.cos(2*np.pi*y)*np.cos(np.pi*z) + t
-    def v(t,x,y,z): return np.cos(np.pi*x)*np.sin(np.pi*y)*np.cos(2*np.pi*z) + t
-    def w(t,x,y,z): return np.cos(np.pi*x)*np.cos(np.pi*y)*np.sin(2*np.pi*z) + t
+    def u(t, x, y, z): return np.sin(np.pi*x)*np.cos(2*np.pi*y)*np.cos(np.pi*z) + t
+    def v(t, x, y, z): return np.cos(np.pi*x)*np.sin(np.pi*y)*np.cos(2*np.pi*z) + t
+    def w(t, x, y, z): return np.cos(np.pi*x)*np.cos(np.pi*y)*np.sin(2*np.pi*z) + t
 
-    velocity = FC('vector', (u,v,w))
+    velocity = FC('vector', (u, v, w))
     U = FC('scalar', u)
     V = FC('scalar', v)
     W = FC('scalar', w)
@@ -290,7 +294,8 @@ if __name__ == '__main__':
     b0 = u.cochain.EWC
     b1 = w.cochain.EWC
 
-    nLS = NonLinearSystem([v, o], ([M2, 0 ],
-                                   [ 0, M1]), [MDM, 0],
-                          [u,w], [b0, b1])
+    nLS = NonLinearSystem(
+        [v, o], ([M2, 0], [0, M1]), [MDM, 0],
+        [u, w], [b0, b1]
+    )
     print(nLS.nonlinear_terms.num)

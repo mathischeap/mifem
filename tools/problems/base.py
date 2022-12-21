@@ -7,7 +7,6 @@ Not useful yet!
 from components.freeze.main import FrozenOnly
 
 
-
 class ProblemBase(FrozenOnly):
     """"""
     def __init__(self):

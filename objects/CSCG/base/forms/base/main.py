@@ -27,6 +27,12 @@ class CSCG_FORM_BASE(FormBase):
 
         self.___is_wrapped_in_ADF___ = False
 
+    def ___Pr_check_CF___(self, CF):
+        raise NotImplementedError()
+
+    def ___Pr_check_BC_CF___(self, CF):
+        raise NotImplementedError()
+
     # ------------------ fundamental --------------------------------
     @property
     def k(self):

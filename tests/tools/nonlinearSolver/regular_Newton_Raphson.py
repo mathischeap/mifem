@@ -5,7 +5,7 @@
 @time: 8/13/2022 3:44 PM
 """
 import sys
-mifem_dir = './' # the dir containing the mifem package
+mifem_dir = './'  # the dir containing the mifem package
 if mifem_dir not in sys.path:
     sys.path.append(mifem_dir)
 
@@ -97,8 +97,8 @@ def test_Regular_Newton_Raphson():
 
     # ------------ nonlinear system @ tk -------------------------------------------------
     A = ([(1/dt) * M1 + 0.25 * C_wk_uk1, 0.25 * C_wk1_uk, - E12 @ M2],
-         [                     E01 @ M1,            - M0,       None],
-         [                          E21,            None,       None])
+         [E01 @ M1,                      - M0,            None],
+         [E21,                           None,            None])
 
     B = [0.25 * MDM, None, None]
 

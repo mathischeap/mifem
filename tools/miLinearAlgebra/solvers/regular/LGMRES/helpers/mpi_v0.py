@@ -8,8 +8,6 @@ from tools.miLinearAlgebra.solvers.regular.GMRES.helpers.components.stop_criteri
 from tools.miLinearAlgebra.solvers.regular.GMRES.helpers.components.residual_ploter import ___gmres_plot_residuals___
 
 
-
-
 def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-5, atol=1e-5, preconditioner=None,
                         COD=True, name=None, plot_residuals=False):
     """
@@ -57,7 +55,7 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-5, atol=1e
     Time_start = MPI.Wtime()
     A = lhs.M
     f = rhs.V.toarray().ravel()
-    x0 = np.array(X0.V) # just to make another copy of x0: IMPORTANT TO do SO!
+    x0 = np.array(X0.V)  # just to make another copy of x0: IMPORTANT TO do SO!
 
     shape0, shape1 = A.shape
     assert f.shape[0] == x0.shape[0] == shape0 == shape1, "Ax=f shape dis-match."
@@ -73,16 +71,16 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-5, atol=1e
             raise NotImplementedError(f"We did not yet code preconditioning for the "
                                       f"routine: ___mpi_v1_gmres___ using method: <{applying_method}>.")
 
-    if COD: # needs be after preconditioning since the preconditioner will use A.M
+    if COD:  # needs be after preconditioning since the preconditioner will use A.M
         lhs._M_ = None
         rhs._V_ = None
-        X0._V_  = None
+        X0._V_ = None
 
     ITER = 0
     BETA = None
 
     AVJ = np.empty((shape0,), dtype=float)
-    Hm = np.zeros((restart + 1, restart), dtype=float) # In the future, we can change this to sparse matrix.
+    Hm = np.zeros((restart + 1, restart), dtype=float)  # In the future, we can change this to sparse matrix.
     if RANK == MASTER_RANK:
         VV = np.empty((shape0,), dtype=float)
         Vm = np.empty((restart, shape0), dtype=float)
@@ -111,7 +109,7 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-5, atol=1e
     ZZZ = dict()
     AZ_cache = dict()
 
-    while 1: # always do till break.
+    while 1:  # always do till break.
 
         if ITER < _k_:
             k = ITER
@@ -132,8 +130,10 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-5, atol=1e
         beta = COMM.bcast(beta, root=MASTER_RANK)
 
         # check stop iteration or not ...
-        if BETA is None: BETA = [beta,] # this is right, do not initial BETA as an empty list.
-        if len(BETA) > 20: BETA = BETA[:1] + BETA[-2:]
+        if BETA is None:
+            BETA = [beta, ]  # this is right, do not initial BETA as an empty list.
+        if len(BETA) > 20:
+            BETA = BETA[:1] + BETA[-2:]
         BETA.append(beta)
         if RANK == MASTER_RANK:
             if plot_residuals:
@@ -142,7 +142,8 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-5, atol=1e
 
         JUDGE, stop_iteration, info, JUDGE_explanation = \
             ___gmres_stop_criterion___(tol, atol, ITER, maxiter, BETA)
-        if stop_iteration: break
+        if stop_iteration:
+            break
         # ...
 
         if RANK == MASTER_RANK:
@@ -159,14 +160,16 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-5, atol=1e
                     Avj = A @ Vm[j]
                 else:
                     Avj = A @ Vm
-                    if j in local_ind: Vs[local_ind_dict[j]] = Vm
+                    if j in local_ind:
+                        Vs[local_ind_dict[j]] = Vm
             else:
                 index = ITER + m - 1 - j
 
                 if index in AZ_cache:
                     pass
                 else:
-                    if ITER > _k_: del AZ_cache[ITER - _k_ - 1]
+                    if ITER > _k_:
+                        del AZ_cache[ITER - _k_ - 1]
                     AZ_cache[index] = A @ ZZZ[index]
 
                 Avj = AZ_cache[index]
@@ -174,7 +177,8 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-5, atol=1e
                 if RANK == MASTER_RANK:
                     pass
                 else:
-                    if j in local_ind: Vs[local_ind_dict[j]] = Vm
+                    if j in local_ind:
+                        Vs[local_ind_dict[j]] = Vm
 
             COMM.Allreduce(Avj, AVJ, op=MPI.SUM)
 
@@ -186,7 +190,7 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-5, atol=1e
                         _ = Vm[i]
                         Hij = np.sum(AVJ * _)
                         sum_Hij_vi += Hij * _
-                        Hm[i,j] = Hij
+                        Hm[i, j] = Hij
                     else:
                         break
             else:
@@ -195,7 +199,7 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-5, atol=1e
                         _ = Vs[local_ind_dict[i]]
                         Hij = np.sum(AVJ * _)
                         sum_Hij_vi += Hij * _
-                        Hm[i,j] = Hij
+                        Hm[i, j] = Hij
                     else:
                         break
 
@@ -229,7 +233,7 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-5, atol=1e
         if RANK == SECRETARY_RANK:
             HMT = HM.T
             ls_A = HMT @ HM
-            ls_b = HMT[:,0] * beta
+            ls_b = HMT[:, 0] * beta
             ym = np.linalg.solve(ls_A, ls_b)
         else:
             pass
@@ -240,7 +244,8 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-5, atol=1e
             else:
                 DL = list()
                 iL = [ITER - _ - 1 for _ in range(k)]
-                for _ in iL: DL.append(ZZZ[_])
+                for _ in iL:
+                    DL.append(ZZZ[_])
                 Ws = np.vstack((Vm[:m], np.array(DL)))
         else:
             pass
@@ -261,11 +266,13 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-5, atol=1e
             # noinspection PyUnboundLocalVariable
             ym = ym.T @ Ws
         else:
-            ym = np.empty((shape0,), dtype=float) # Important: renew ``ym`` every single iteration.
+            ym = np.empty((shape0,), dtype=float)
+            # Important: renew ``ym`` every single iteration.
 
         COMM.Bcast([ym, MPI.FLOAT], root=MASTER_RANK)
 
-        if ITER >= _k_ > 0: del ZZZ[ITER-_k_]
+        if ITER >= _k_ > 0:
+            del ZZZ[ITER-_k_]
         ZZZ[ITER] = ym
 
         x0 += ym
@@ -283,9 +290,7 @@ def ___mpi_v0_LGMRES___(lhs, rhs, X0, m=100, k=10, maxiter=50, tol=1e-5, atol=1e
     message = f" mpi_v0_LGMRES = [SYSTEM-SHAPE: {A.shape}] [ITER={ITER}] " \
               f"[residual=%.2e] costs %.2f, " \
               f"convergence info={info}, m={_m_}, k={_k_}, maxiter={maxiter}, " \
-              f"stop_judge={JUDGE}: {JUDGE_explanation}]"%(beta, COST_total)
-
-
+              f"stop_judge={JUDGE}: {JUDGE_explanation}]" % (beta, COST_total)
 
     if RANK == MASTER_RANK:
         if plot_residuals:

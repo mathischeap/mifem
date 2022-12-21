@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from root.config.main import *
 from objects.CSCG._2d.master import MeshGenerator
 from objects.CSCG._2d.mesh.domain.inputs.allocator import DomainInputFinder
 import random
 from components.quadrature import Quadrature
-
 
 
 def test_Mesh_NO1_mesh_topology():
@@ -18,24 +18,34 @@ def test_Mesh_NO1_mesh_topology():
 
     mesh = MeshGenerator('chp2')([3, 4], EDM='debug')
     MAP = mesh.elements.map
-    if 0 in MAP: assert MAP[0] == ('Upper', 1, 'Left', 3)
-    if 1 in MAP: assert MAP[1] == (0, 2, 'Left', 4)
-    if 73 in MAP: assert MAP[73] == (72, 74, 'Internal', 76)
-    if 33 in MAP: assert MAP[33] == (23, 34, 30, 48)
+    if 0 in MAP:
+        assert MAP[0] == ('Upper', 1, 'Left', 3)
+    if 1 in MAP:
+        assert MAP[1] == (0, 2, 'Left', 4)
+    if 73 in MAP:
+        assert MAP[73] == (72, 74, 'Internal', 76)
+    if 33 in MAP:
+        assert MAP[33] == (23, 34, 30, 48)
     np.testing.assert_array_equal(mesh.elements.spacing['R:R_UL'][1],
-                                  np.array([0.  ,0.25, 0.5 , 0.75, 1.  ]))
+                                  np.array([0., 0.25, 0.5, 0.75, 1.]))
 
-    mesh = MeshGenerator('chp1')({'R:Ru':[4, 3],
-                                  'R:Rl':[5, 3],
-                                  'R:Rd':[[1,2], 3],
-                                  'R:Rr':[[1,2,1], 3],}, EDM='debug')
+    mesh = MeshGenerator('chp1')({'R:Ru': [4, 3],
+                                  'R:Rl': [5, 3],
+                                  'R:Rd': [[1, 2], 3],
+                                  'R:Rr': [[1, 2, 1], 3], }, EDM='debug')
     MAP = mesh.elements.map
-    if 0 in MAP: assert MAP[0] == (31, 1, 'Internal', 4)
-    if 12 in MAP: assert MAP[12] == (3, 13, 'Internal', 15)
-    if 26 in MAP: assert MAP[26] == (25, 37, 24, 'Down')
-    if 32 in MAP: assert MAP[32] == (24, 33, 27, 37)
-    if 39 in MAP: assert MAP[39] == (38, 40, 34, 'Left')
-    if 19 in MAP: assert MAP[19] == (18, 20, 16, 'Right')
+    if 0 in MAP:
+        assert MAP[0] == (31, 1, 'Internal', 4)
+    if 12 in MAP:
+        assert MAP[12] == (3, 13, 'Internal', 15)
+    if 26 in MAP:
+        assert MAP[26] == (25, 37, 24, 'Down')
+    if 32 in MAP:
+        assert MAP[32] == (24, 33, 27, 37)
+    if 39 in MAP:
+        assert MAP[39] == (38, 40, 34, 'Left')
+    if 19 in MAP:
+        assert MAP[19] == (18, 20, 16, 'Right')
 
     mesh = MeshGenerator('chp2')([3, 4], EDM='debug')
     for rn in mesh.domain.regions.names:
@@ -60,29 +70,39 @@ def test_Mesh_NO1_mesh_topology():
 
     mesh = MeshGenerator('crazy_periodic', c=0.3)([3, 4], EDM='debug')
     MAP = mesh.elements.map
-    if 0 in MAP: assert MAP[0] == (2, 1, 9, 3)
-    if 1 in MAP: assert MAP[1] == (0, 2, 10, 4)
-    if 2 in MAP: assert MAP[2] == (1, 0, 11, 5)
-    if 3 in MAP: assert MAP[3] == (5, 4, 0, 6)
-    if 4 in MAP: assert MAP[4] == (3, 5, 1, 7)
-    if 5 in MAP: assert MAP[5] == (4, 3, 2, 8)
-    if 7 in MAP: assert MAP[7] == (6, 8, 4, 10)
-    if 9 in MAP: assert MAP[9] == (11, 10, 6, 0)
-    if 10 in MAP: assert MAP[10] == (9, 11, 7, 1)
-    if 11 in MAP: assert MAP[11] == (10, 9, 8, 2)
+    if 0 in MAP:
+        assert MAP[0] == (2, 1, 9, 3)
+    if 1 in MAP:
+        assert MAP[1] == (0, 2, 10, 4)
+    if 2 in MAP:
+        assert MAP[2] == (1, 0, 11, 5)
+    if 3 in MAP:
+        assert MAP[3] == (5, 4, 0, 6)
+    if 4 in MAP:
+        assert MAP[4] == (3, 5, 1, 7)
+    if 5 in MAP:
+        assert MAP[5] == (4, 3, 2, 8)
+    if 7 in MAP:
+        assert MAP[7] == (6, 8, 4, 10)
+    if 9 in MAP:
+        assert MAP[9] == (11, 10, 6, 0)
+    if 10 in MAP:
+        assert MAP[10] == (9, 11, 7, 1)
+    if 11 in MAP:
+        assert MAP[11] == (10, 9, 8, 2)
 
     mesh = MeshGenerator('quadrangle')([3, 4], EDM=None)
     for i in mesh.elements:
         element = mesh.elements[i]
         mark = element.type_wrt_metric.mark
         assert mark[:13] == 'Parallelogram', "error!"
-    mesh = MeshGenerator('quadrangle', p_UL=(0,0), p_DL=(1,0), p_UR=(0,1), p_DR=(1,1))(
+    mesh = MeshGenerator('quadrangle', p_UL=(0, 0), p_DL=(1, 0), p_UR=(0, 1), p_DR=(1, 1))(
         [3, 4], EDM=None)
     for i in mesh.elements:
         element = mesh.elements[i]
         mark = element.type_wrt_metric.mark
         assert mark[:4] == 'Orth', "error!"
-    mesh = MeshGenerator('quadrangle', p_UL=(1,0), p_DL=(2,1), p_UR=(0,1), p_DR=(1,2))(
+    mesh = MeshGenerator('quadrangle', p_UL=(1, 0), p_DL=(2, 1), p_UR=(0, 1), p_DR=(1, 2))(
         [3, 4], EDM=None)
     for i in mesh.elements:
         element = mesh.elements[i]
@@ -103,10 +123,10 @@ def test_Mesh_NO2_mesh_coordinate_transformation():
     MID = list(DomainInputFinder.___defined_DI___().keys())
 
     if RANK == MASTER_RANK:
-        __ = random.sample(range(0,len(MID)), 4)
+        __ = random.sample(range(0, len(MID)), 4)
         meshes = [MID[i] for i in __]
-        II = random.randint(3,4) # [II, JJ] element layout
-        JJ = random.randint(2,5) # [II, JJ] element layout
+        II = random.randint(3, 4)  # [II, JJ] element layout
+        JJ = random.randint(2, 5)  # [II, JJ] element layout
     else:
         meshes = None
         II, JJ = None, None
@@ -125,12 +145,12 @@ def test_Mesh_NO2_mesh_coordinate_transformation():
             mesh = MeshGenerator(mid)([II, JJ], EDM='debug')
         # ... generate r, s...
         if RANK == MASTER_RANK:
-            r = np.linspace(-0.95, 0.975, random.randint(2,8))
-            s = np.linspace(random.uniform(-0.99, -0.9), random.uniform(0.85, 0.99), random.randint(1,7))
+            r = np.linspace(-0.95, 0.975, random.randint(2, 8))
+            s = np.linspace(random.uniform(-0.99, -0.9), random.uniform(0.85, 0.99), random.randint(1, 7))
         else:
             r, s = None, None
         r, s = COMM.bcast([r, s], root=MASTER_RANK)
-        #... now lets check the coordinate transformation ...
+        # ... now lets check the coordinate transformation ...
 
         r, s = np.meshgrid(r, s, indexing='ij')
 
@@ -265,10 +285,10 @@ def test_Mesh_NO3_mesh_coordinate_transformation_QUAD():
     MID = list(MeshGenerator.___domain_input_statistic___().keys())
 
     if RANK == MASTER_RANK:
-        __ = random.sample(range(0,len(MID)), 3)
+        __ = random.sample(range(0, len(MID)), 3)
         meshes = [MID[i] for i in __]
-        II = random.randint(3,4) # [II, JJ] element layout
-        JJ = random.randint(2,3) # [II, JJ] element layout
+        II = random.randint(3, 4)  # [II, JJ] element layout
+        JJ = random.randint(2, 3)  # [II, JJ] element layout
     else:
         meshes = None
         II, JJ = None, None
@@ -287,8 +307,8 @@ def test_Mesh_NO3_mesh_coordinate_transformation_QUAD():
             mesh = MeshGenerator(mid)([II, JJ], EDM='debug')
 
         if RANK == MASTER_RANK:
-            quad_degree = [random.randint(3,5),random.randint(2,3)]
-            quad_type = ['Gauss', 'Lobatto'][random.randint(0,1)]
+            quad_degree = [random.randint(3, 5), random.randint(2, 3)]
+            quad_type = ['Gauss', 'Lobatto'][random.randint(0, 1)]
         else:
             quad_degree, quad_type = None, None
         quad_degree, quad_type = COMM.bcast([quad_degree, quad_type], root=MASTER_RANK)
@@ -432,10 +452,10 @@ def test_Mesh_NO4_mesh_trace_topology():
 
     MID = list(DomainInputFinder.___defined_DI___().keys())
     if RANK == MASTER_RANK:
-        __ = random.sample(range(0,len(MID)), 4)
+        __ = random.sample(range(0, len(MID)), 4)
         meshes = [MID[i] for i in __]
-        II = random.randint(3,4) # [II, JJ] element layout
-        JJ = random.randint(2,5) # [II, JJ] element layout
+        II = random.randint(3, 4)  # [II, JJ] element layout
+        JJ = random.randint(2, 5)  # [II, JJ] element layout
     else:
         meshes = None
         II, JJ = None, None
@@ -483,7 +503,7 @@ def test_Mesh_NO4_mesh_trace_topology():
             sd = list()
             for SDi in SD:
                 sd.extend(SDi)
-            sd_SET =set(sd)
+            sd_SET = set(sd)
             for i in sd_SET:
                 assert sd.count(i) % 2 == 0
 
@@ -492,7 +512,7 @@ def test_Mesh_NO4_mesh_trace_topology():
     if 1 in MAP:
         assert MAP[1] == [1, 4, 5, 6]
         e = mesh.trace.elements[1]
-        assert e.positions ==('0D', '1U')
+        assert e.positions == ('0D', '1U')
         assert e.CHARACTERISTIC_position in e.positions
         assert str(e.CHARACTERISTIC_element) + e.CHARACTERISTIC_edge == e.CHARACTERISTIC_position
         assert e.whether.on_periodic_boundary is False
@@ -500,13 +520,13 @@ def test_Mesh_NO4_mesh_trace_topology():
     if 17 in MAP:
         assert MAP[17] == [43, 45, 40, 46]
         e = mesh.trace.elements[45]
-        assert e.positions ==('17D', '21U')
+        assert e.positions == ('17D', '21U')
         assert e.CHARACTERISTIC_position in e.positions
         assert str(e.CHARACTERISTIC_element) + e.CHARACTERISTIC_edge == e.CHARACTERISTIC_position
         assert e.whether.on_periodic_boundary is False
         assert e.whether.on_mesh_boundary is False
         e = mesh.trace.elements[46]
-        assert e.positions ==('17R', 'Down')
+        assert e.positions == ('17R', 'Down')
         assert e.CHARACTERISTIC_position == '17R'
         assert e.CHARACTERISTIC_position in e.positions
         assert str(e.CHARACTERISTIC_element) + e.CHARACTERISTIC_edge == e.CHARACTERISTIC_position
@@ -515,21 +535,21 @@ def test_Mesh_NO4_mesh_trace_topology():
     if 33 in MAP:
         assert MAP[33] == [81, 82, 76, 83]
         e = mesh.trace.elements[81]
-        assert e.positions ==('33U', 'Upper')
+        assert e.positions == ('33U', 'Upper')
         assert e.CHARACTERISTIC_position == '33U'
         assert e.CHARACTERISTIC_position in e.positions
         assert str(e.CHARACTERISTIC_element) + e.CHARACTERISTIC_edge == e.CHARACTERISTIC_position
         assert e.whether.on_periodic_boundary is False
         assert e.whether.on_mesh_boundary
 
-    if 27 in MAP: assert MAP[27] == [67, 68, 62, 69]
-    if 28 in MAP: assert MAP[28] == [68, 70, 64, 71]
-    if 29 in MAP: assert MAP[29] == [70, 72, 66, 73]
+    if 27 in MAP:
+        assert MAP[27] == [67, 68, 62, 69]
+    if 28 in MAP:
+        assert MAP[28] == [68, 70, 64, 71]
+    if 29 in MAP:
+        assert MAP[29] == [70, 72, 66, 73]
 
     return 1
-
-
-
 
 
 if __name__ == '__main__':

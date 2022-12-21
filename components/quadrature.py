@@ -34,13 +34,11 @@ class Quadrature(FrozenOnly):
         self._p_ = p
         _category_ = [category for _ in range(self.ndim)] if isinstance(category, str) else category
         assert all([ci in self.___PRIVATE_coded_quadrature___() for ci in _category_]), \
-            f"quad category = {_category_} wrong"
+            f"quad category = {_category_} wrong."
         self._category_ = _category_
         self.___PRIVATE_check_p___()
         self._quad_ = None
         self._freeze_self_()
-
-
 
     @classmethod
     def ___PRIVATE_coded_quadrature___(cls):
@@ -131,7 +129,6 @@ class Quadrature(FrozenOnly):
     def quad_ndim_ravel(self):
         """Same as `quad_ndim` but now we have raveled it, so it is of shape (n+1, x*y*z)."""
         return [qn.ravel('F') for qn in self.quad_ndim]
-
 
     def ___PRIVATE_compute_Lobatto___(self, p):
         """ """

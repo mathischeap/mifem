@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/8/8 20:14
 """
-import sys
-
-if './' not in sys.path: sys.path.append('/')
 from components.freeze.main import FrozenOnly
 
 from numpy import einsum, newaxis
@@ -35,14 +32,11 @@ class nLS_DoEvaRM1(FrozenOnly):
 
     def __call__(self, basic_unit):
         """"""
-        vec = einsum(self._ein_str,
-               self._mdm_[basic_unit],
-               *[_.cochain.local[basic_unit] for _ in self._eli_form],
-               optimize='optimal')
+        vec = einsum(
+            self._ein_str,
+            self._mdm_[basic_unit],
+            *[_.cochain.local[basic_unit] for _ in self._eli_form],
+            optimize='optimal'
+        )
 
         return csc_matrix(vec[:, newaxis])
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

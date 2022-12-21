@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from components.freeze.base import FrozenOnly
 from root.config.main import CACHE_FACTOR
@@ -10,7 +10,7 @@ class TraceElementsCTValuesCache(FrozenOnly):
         assert isinstance(CTT, str) and CTT != 'mapping', f"CTT={CTT} wrong."
         self._CTT_ = CTT
         self._0ep_ = [evaluation_points_3[1], evaluation_points_3[2]]
-        self._e1p_ = [evaluation_points_3[0], evaluation_points_3[2]] # do not use 2, 0
+        self._e1p_ = [evaluation_points_3[0], evaluation_points_3[2]]   # do not use 2, 0
         self._ep2_ = [evaluation_points_3[0], evaluation_points_3[1]]
         self._multi_elements_metric_ = self._elements_._multi_elements_metric_
         self._cache_ = dict()
@@ -20,7 +20,8 @@ class TraceElementsCTValuesCache(FrozenOnly):
         element = self._elements_[i]
         type_wrt_metric = element.type_wrt_metric.mark
 
-        if isinstance(type_wrt_metric, int): # it is unique, we use the id (int) as the mark. Otherwise, it must be a string.
+        if isinstance(type_wrt_metric, int):
+            # it is unique, we use the id (int) as the mark. Otherwise, it must be a string.
             side = element.CHARACTERISTIC_side
             if side in 'NS':
                 _xi_eta_sigma_ = self._0ep_
@@ -51,8 +52,8 @@ class TraceElementsCTValuesCache(FrozenOnly):
                 *_xi_eta_sigma_)
 
             if type_wrt_metric in self._multi_elements_metric_ and \
-                type_wrt_metric not in self._cache_ and \
-                self._multi_elements_metric_[type_wrt_metric] >= CACHE_FACTOR:
+               type_wrt_metric not in self._cache_ and \
+               self._multi_elements_metric_[type_wrt_metric] >= CACHE_FACTOR:
                 # here we have very strict cache rule.
                 self._cache_[type_wrt_metric] = result
 
@@ -67,5 +68,3 @@ class TraceElementsCTValuesCache(FrozenOnly):
     def __iter__(self):
         for i in self._elements_:
             yield i
-
-

@@ -14,7 +14,11 @@ class _3dCSCG_SF0_reconstruct(_3dCSCG_SF_Reconstruct):
         super(_3dCSCG_SF0_reconstruct, self).__init__(sf)
         self._freeze_self_()
 
-    def __call__(self, xi, eta, sigma, ravel=False, element_range=None, regions=None, vectorized=False, value_only=False):
+    def __call__(
+        self, xi, eta, sigma,
+        ravel=False, element_range=None,
+        regions=None, vectorized=False, value_only=False
+    ):
         """
 
         :param xi:
@@ -77,7 +81,7 @@ class _3dCSCG_SF0_reconstruct(_3dCSCG_SF_Reconstruct):
                 raise NotImplementedError()
 
             if value_only:
-                return v, # do not remove comma
+                return v,  # do not remove comma
             else:
                 raise Exception()
 
@@ -148,7 +152,7 @@ class _3dCSCG_SF0_reconstruct(_3dCSCG_SF_Reconstruct):
                 # noinspection PyUnresolvedReferences
                 xyz[e] = [xyz[e][j].reshape(shape, order='F') for j in range(3)]
                 # noinspection PyUnresolvedReferences
-                value[e] = [v.reshape(shape, order='F'), ] # =========diff
+                value[e] = [v.reshape(shape, order='F'), ]   # =========diff
 
         # ------- prime-region-wise stack coordinates and values ----------------------------------1
         XYZ, VAL, element_global_numbering = self.___PRIVATE_distribute_XYZ_and_VAL___(mesh, xyz, value)

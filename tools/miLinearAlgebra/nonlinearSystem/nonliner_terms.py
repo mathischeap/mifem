@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/8/8 13:05
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
 
@@ -31,7 +28,7 @@ class nLS_NonlinearTerms(FrozenOnly):
         self._terms_ = nLS.___nonlinear_terms___
 
         self._IBD_ = dict()
-        self._num_ = 0 # number of nonlinear terms.
+        self._num_ = 0  # number of nonlinear terms.
         for i, term in enumerate(self._terms_):
             if isinstance(term, (list, tuple)):
                 for j, tm in enumerate(term):
@@ -93,12 +90,3 @@ class nLS_NonlinearTerms(FrozenOnly):
             nonlinear_f.append(nfi)
 
         return nonlinear_f
-
-
-
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

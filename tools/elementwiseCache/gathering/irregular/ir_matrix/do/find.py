@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 6/7/2022 3:59 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('/')
 
 from components.freeze.base import FrozenOnly
 
@@ -29,8 +26,8 @@ class iR_Gathering_Matrix_DoFind(FrozenOnly):
         root_cells = list()
         local_indices = list()
 
-        for e in self._GM_: # go through all local root-cells
-            gv = self._GM_[e] # get the local gathering vector in each local root-cells
+        for e in self._GM_:  # go through all local root-cells
+            gv = self._GM_[e]  # get the local gathering vector in each local root-cells
             if i in gv:
                 root_cells.append(e)
                 local_indices.append(gv.index(i))
@@ -49,16 +46,11 @@ class iR_Gathering_Matrix_DoFind(FrozenOnly):
             root_cells[i] = list()
             local_indices[i] = list()
 
-        for e in self._GM_: # go through all local root-cells
-            gv = self._GM_[e] # get the local gathering vector in each local root-cells
+        for e in self._GM_:  # go through all local root-cells
+            gv = self._GM_[e]  # get the local gathering vector in each local root-cells
             for i in dofs:
                 if i in gv:
                     root_cells[i].append(e)
                     local_indices[i].append(gv.index(i))
 
         return root_cells, local_indices
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

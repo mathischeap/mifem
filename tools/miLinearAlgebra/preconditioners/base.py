@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 """A main body of all preconditioners.
 """
-
 from components.freeze.main import FrozenOnly
-
 
 
 class Preconditioner(FrozenOnly):
@@ -18,7 +16,7 @@ class Preconditioner(FrozenOnly):
         """An indicator that explains how to apply this preconditioner."""
         AM = self.___applying_method___
 
-        assert AM in ('left_multiply_invM', # invM @ A x = invM @ b. So self must have `invM` property
+        assert AM in ('left_multiply_invM',  # invM @ A x = invM @ b. So self must have `invM` property
                       )
 
         return AM

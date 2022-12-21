@@ -142,7 +142,8 @@ class SpaVec_Customize(FrozenOnly):
             "if you want to apply it to a single EWC vectors, first wrap it in a list, then send it to concatenate"
 
         assert i % 1 == 0, f"i={i}({i.__class__.__name__}) cannot be an index!"
-        if isinstance(i, float): i = int(i)
+        if isinstance(i, float):
+            i = int(i)
         assert 0 <= i < bsp[0], f"i={i} is beyond the shape of this " \
                                 f"EWC spare vector of block shape {bsp}."
 
@@ -198,7 +199,8 @@ class SpaVec_Customize(FrozenOnly):
             "if you want to apply it to a single EWC vectors, first wrap it in a list, then send it to concatenate"
 
         assert i % 1 == 0, f"i={i}({i.__class__.__name__}) cannot be an index!"
-        if isinstance(i, float): i = int(i)
+        if isinstance(i, float):
+            i = int(i)
         assert 0 <= i < bsp[0], f"i={i} is beyond the shape of this " \
                                 f"EWC spare vector of block shape {bsp}."
 
@@ -357,7 +359,8 @@ class SpaVec_Customize(FrozenOnly):
         assert i % 1 == 0, f"i={i}({i.__class__.__name__}) is wrong."
         assert isinstance(v, (int, float))
 
-        if not isinstance(i, int): i = int(i)
+        if not isinstance(i, int):
+            i = int(i)
 
         rCGM = self._spa_vec_.gathering_matrix
         assert rCGM is not None, "I have no gathering_matrix!"

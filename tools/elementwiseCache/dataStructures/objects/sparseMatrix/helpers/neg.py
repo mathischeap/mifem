@@ -2,6 +2,7 @@
 
 from components.freeze.base import FrozenOnly
 
+
 class ___NEG___(FrozenOnly):
     def __init__(self, ewc):
         self._ewc_ = ewc

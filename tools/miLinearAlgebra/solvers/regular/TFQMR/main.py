@@ -4,7 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/10/20 8:42 PM
 """
-
 from tools.miLinearAlgebra.preconditioners.allocator import PreconditionerAllocator
 from components.miscellaneous.timer import MyTimer
 
@@ -30,13 +29,14 @@ class TFQMR(ParallelSolverBase):
         super().__init__(routine, name)
 
 
-    def __call__(self, A, b, x0,
-                 maxiter=20, tol=1e-5, atol=1e-4,
-                 preconditioner=(None, dict()),
-                 COD=True,
-                 plot_residuals=False,
-                 **kwargs
-        ):
+    def __call__(
+        self, A, b, x0,
+        maxiter=20, tol=1e-5, atol=1e-4,
+        preconditioner=(None, dict()),
+        COD=True,
+        plot_residuals=False,
+        **kwargs
+    ):
         """
 
         :param A: GlobalMatrix
@@ -68,7 +68,7 @@ class TFQMR(ParallelSolverBase):
         message = "GMRES-" + MyTimer.current_time()
 
         # ---- parse x0 ---------------------------------------------------------------------
-        if x0 == 0: # we make it an empty LocallyFullVector
+        if x0 == 0:  # we make it an empty LocallyFullVector
             x0 = LocallyFullVector(len(b))
         else:
             pass
@@ -88,7 +88,8 @@ class TFQMR(ParallelSolverBase):
         assert tol > 0 and atol > 0, f"tol={tol} and atol={atol} wrong, they must be > 0."
 
         # -------  Decide preconditioner -----------------------------------------------------------
-        if preconditioner is None: preconditioner = (None, dict())
+        if preconditioner is None:
+            preconditioner = (None, dict())
 
         preconditioner_ID, preconditioner_kwargs = preconditioner
         if preconditioner_ID is not None:
@@ -98,7 +99,7 @@ class TFQMR(ParallelSolverBase):
 
         # ------- Decide routine -------------------------------------------------------------------
         if self._routine_ == 'auto':
-                ROUTINE = ___sp_sp_linalg_tfqmr___
+            ROUTINE = ___sp_sp_linalg_tfqmr___
 
         else:
             if self._routine_ == 'sp':
@@ -110,18 +111,14 @@ class TFQMR(ParallelSolverBase):
         results, info, beta, ITER, solver_message = ROUTINE(
             A, b, x0,
             maxiter=maxiter, tol=tol, atol=atol,
-                preconditioner=preconditioner,
-                COD=COD,
-                name=self._name_,
-                plot_residuals=plot_residuals
-                )
-        _ = kwargs # trivial; just leave freedom for future updates for kwargs.
+            preconditioner=preconditioner,
+            COD=COD,
+            name=self._name_,
+            plot_residuals=plot_residuals
+        )
+        _ = kwargs  # trivial; just leave freedom for future updates for kwargs.
 
-        MESSAGE =  message + '-' + solver_message
-        #===========================================================================================
+        MESSAGE = message + '-' + solver_message
+        # ==========================================================================================
 
         return results, info, beta, ITER, MESSAGE
-
-if __name__ == "__main__":
-    # mpiexec -n 4 python 
-    pass

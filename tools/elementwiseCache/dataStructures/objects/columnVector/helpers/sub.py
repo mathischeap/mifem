@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
-
-
-
 from components.freeze.main import FrozenOnly
-
-
 
 
 class ___CV_SUB___(FrozenOnly):

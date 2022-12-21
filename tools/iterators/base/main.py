@@ -6,12 +6,14 @@ from time import time, sleep
 from components.freeze.main import FrozenClass
 from components.miscellaneous.timer import NumpyStyleDocstringReader
 from components.miscellaneous.timer import randomStringDigits
-import inspect, pickle, psutil
-
+import inspect
+import pickle
+import psutil
 from root.config.main import COMM, RANK, MASTER_RANK, ASSEMBLE_COST
 
 from tools.iterators.base.monitor.main import IteratorMonitor
 from tools.iterators.base.visualize.main import IteratorVisualize
+
 
 class Iterator(FrozenClass):
     """A parent of all iterators.
@@ -32,14 +34,15 @@ class Iterator(FrozenClass):
     :param save_to_mitr:
         Do we save the results into the `.mitr` file?
     """
-    def __init__(self,
-        auto_save_frequency = True,
-        monitor_factor = 1,
-        RDF_filename = None,
-        real_time_monitor = False,
-        name = None,
-        save_to_mitr = False
-        ):
+    def __init__(
+        self,
+        auto_save_frequency=True,
+        monitor_factor=1,
+        RDF_filename=None,
+        real_time_monitor=False,
+        name=None,
+        save_to_mitr=False
+    ):
 
         # these four will be initialized in the particular iterator.
         assert hasattr(self, '_t0_')
@@ -57,7 +60,7 @@ class Iterator(FrozenClass):
                                              real_time_monitor)
             if name is None:
                 if RDF_filename is None:
-                    name ='Iterator-' + randomStringDigits(8) + '-' + str(id(self))[-5:]
+                    name = 'Iterator-' + randomStringDigits(8) + '-' + str(id(self))[-5:]
                 else:
                     name = RDF_filename
             else:
@@ -84,8 +87,9 @@ class Iterator(FrozenClass):
     def dt(self):
         """(float) Current ``dt``. So the next time will be ``self.t + self.dt``."""
         return self._dt_
+
     @dt.setter
-    def dt(self,dt):
+    def dt(self, dt):
         assert dt > 0
         # noinspection PyAttributeOutsideInit
         self._dt_ = dt
@@ -94,6 +98,7 @@ class Iterator(FrozenClass):
     def max_steps(self):
         # noinspection PyUnresolvedReferences
         return self._max_steps_
+
     @property
     def max_time(self):
         # noinspection PyUnresolvedReferences
@@ -103,6 +108,7 @@ class Iterator(FrozenClass):
     def t(self):
         """(float) Current time."""
         return self._t_
+
     @t.setter
     def t(self, t):
         assert t > self.t
@@ -112,6 +118,7 @@ class Iterator(FrozenClass):
     @property
     def running_step(self):
         return self._running_step_
+
     @running_step.setter
     def running_step(self, running_step):
         assert running_step == self.running_step + 1
@@ -120,6 +127,7 @@ class Iterator(FrozenClass):
     @property
     def computed_steps(self):
         return self._computed_steps_
+
     @computed_steps.setter
     def computed_steps(self, computed_steps):
         assert computed_steps == self.computed_steps + 1
@@ -162,7 +170,7 @@ class Iterator(FrozenClass):
         self._shut_down_ = False
         self.___shut_down_reason___ = None
         self._message_ = None
-        self._t_ = self.t0 # initialing `t` here
+        self._t_ = self.t0  # initialing `t` here
 
         self._solver_ = solver
         self._solver_source_code_ = inspect.getsource(solver)
@@ -178,13 +186,13 @@ class Iterator(FrozenClass):
 
             if self.monitor.RDF_filename is None:
                 self._RDF_ = pd.DataFrame(RDF, index=[0, ])
-            else: # to restart a quest from a RDF file.
+            else:  # to restart a quest from a RDF file.
                 try:
                     self.___PRIVATE_read_RDF___(self.monitor.RDF_filename)
                 except NotImplementedError:
                     raise Exception(f' file: {self.monitor.RDF_filename} extension wrong!')
                 except FileNotFoundError:
-                    self._RDF_ = pd.DataFrame(RDF,index=[0,])
+                    self._RDF_ = pd.DataFrame(RDF, index=[0, ])
         else:
             self._RDF_ = None
         self._freeze_self_()
@@ -272,7 +280,7 @@ class Iterator(FrozenClass):
     @message.setter
     def message(self, message):
         if isinstance(message, str):
-            message = [message,]
+            message = [message, ]
         assert isinstance(message, (list, tuple)), "message must be str or list or tuple."
         for i, mi in enumerate(message):
             assert isinstance(mi, str), f"message must be tuple or list of str, " \
@@ -285,7 +293,7 @@ class Iterator(FrozenClass):
         """"""
         self.RDF.loc[self.running_step-1] = [self.t, self.dt] + list(outputs[3:])
 
-    #-------------- core methods: run and read ------------------------------------------------
+    # ------------- core methods: run and read ------------------------------------------------
 
     def run(self):
         """To run the iterator.
@@ -298,10 +306,12 @@ class Iterator(FrozenClass):
             sleep(0.05)
             self.monitor._ft_firstRun_ = time()
             self.monitor._preparation_time_ = time() - self.monitor._ft_start_time_
-            pbar = tqdm(total=self.max_steps,
-                        desc = ' <' + self.__class__.__name__ + '>')
+            pbar = tqdm(
+                total=self.max_steps,
+                desc=' <' + self.__class__.__name__ + '>'
+            )
 
-        IN = 0 # if in the while loop.
+        IN = 0  # if in the while loop.
 
         while not self.shut_down and self.running_step <= self.max_steps:
 
@@ -324,7 +334,7 @@ class Iterator(FrozenClass):
                 _pass = None
             _pass = COMM.bcast(_pass, root=MASTER_RANK)
             # Do or pass ...
-            dt = self.dt # must do this since dt will be updated in next()
+            dt = self.dt  # must do this since dt will be updated in next()
 
             if RANK == MASTER_RANK:
                 psutil.cpu_percent(None)
@@ -351,13 +361,13 @@ class Iterator(FrozenClass):
             self.exit_code, self.shut_down, self.message = outputs[:3]
             if RANK == MASTER_RANK:
                 # update RDF ...
-                if _pass == 0: # not already in RDF
+                if _pass == 0:  # not already in RDF
                     self.___PRIVATE_append_outputs_to_RDF___(outputs)
 
                 # update monitor ...
-                self.monitor.do.update() # always update monitor ...
+                self.monitor.do.update()  # always update monitor ...
 
-                if _pass == 0: # not already in RDF
+                if _pass == 0:  # not already in RDF
                     # update auto save
                     self.monitor.do.auto_save()
                     self.monitor.do.generate_graph_report()
@@ -367,7 +377,7 @@ class Iterator(FrozenClass):
 
             IN = 0
 
-        assert IN == 0 # must be out.
+        assert IN == 0  # must be out.
 
         if RANK == MASTER_RANK:
             pbar.close()
@@ -382,16 +392,16 @@ class Iterator(FrozenClass):
                     self.RDF.to_csv(self.monitor.RDF_filename, header=True)
 
                 except:
-                    sleep(2) # wait 2 seconds
+                    sleep(2)  # wait 2 seconds
                     # noinspection PyBroadException
-                    try: # try once more
+                    try:  # try once more
                         self.RDF.to_csv(self.monitor.RDF_filename, header=True)
                     except:
-                        sleep(2) # wait 2 seconds
+                        sleep(2)  # wait 2 seconds
                         # noinspection PyBroadException
-                        try: # try once more
+                        try:  # try once more
                             self.RDF.to_csv(self.monitor.RDF_filename, header=True)
-                        except: # save it to a new file!
+                        except:  # save it to a new file!
                             RDF_filename = self.monitor.RDF_filename[:-4] + \
                                            '__completion_save__' + \
                                            randomStringDigits(10) + \
@@ -401,12 +411,13 @@ class Iterator(FrozenClass):
 
                 # when we save RDF, by default we save the iterator itself only for saving some info (not for resume).
                 filename = RDF_filename
-                if filename[-4:] == '.csv': filename = filename[:-4]
+                if filename[-4:] == '.csv':
+                    filename = filename[:-4]
 
-                if self._save_to_mitr_: # we only do this when we set ``save_to_miter`` to be True.
+                if self._save_to_mitr_:  # we only do this when we set ``save_to_miter`` to be True.
 
                     # noinspection PyBroadException
-                    try: # try to save the iterator to .mitr file.
+                    try:  # try to save the iterator to .mitr file.
 
                         with open(filename + '.mitr', 'wb') as output:
                             # '.mitr' stands for mimetic iterator.
@@ -415,7 +426,7 @@ class Iterator(FrozenClass):
 
                     except:  # save it to a new file!
                         # noinspection PyBroadException
-                        try: # may be the solver property is stopping the saving.
+                        try:  # may be the solver property is stopping the saving.
                             # noinspection PyAttributeOutsideInit
                             self._solver_ = None
                             with open(filename+'.mitr', 'wb') as output:
@@ -427,14 +438,15 @@ class Iterator(FrozenClass):
     @classmethod
     def read(cls, filename):
         """ """
-        COMM.barrier() # this is important to make the program safe.
+        COMM.barrier()  # this is important to make the program safe.
         if RANK == MASTER_RANK:
             if filename[-4:] == '.csv':
                 return pd.read_csv(filename, index_col=0)
 
             else:
 
-                if filename[-5:] != '.mitr': filename += '.mitr'
+                if filename[-5:] != '.mitr':
+                    filename += '.mitr'
 
                 with open(filename, 'rb') as INPUT:
                     iterator = pickle.load(INPUT)
@@ -443,5 +455,3 @@ class Iterator(FrozenClass):
         else:
             # `read` can not resume iterator; just for retrieve info like: t0, dt, steps, solver source, solver dir ...
             return None
-
-    # ==============================================================================================

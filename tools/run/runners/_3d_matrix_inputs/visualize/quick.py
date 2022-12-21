@@ -2,7 +2,6 @@
 from components.freeze.main import FrozenOnly
 
 
-
 # noinspection PyUnusedLocal
 class ___SPM3IRV_quick___(FrozenOnly):
     def __init__(self):

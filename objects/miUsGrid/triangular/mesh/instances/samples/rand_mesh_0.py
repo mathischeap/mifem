@@ -10,7 +10,8 @@ mpiexec -n 4 python objects/miUsGrid/triangular/__test__/Random/test_mesh.py
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 import numpy as np
 
@@ -18,6 +19,8 @@ from root.config.main import RANK, MASTER_RANK, COMM
 from random import uniform
 
 from pyevtk.hl import unstructuredGridToVTK
+from time import sleep
+
 
 def generate_rand_mesh_0():
 
@@ -50,4 +53,8 @@ def generate_rand_mesh_0():
         offsets = np.array([3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36])
         types = np.ones(12) * 5  # all triangles
         base_path = str(__file__).split('rand_mesh_0')[0]
-        unstructuredGridToVTK(base_path + 'rand0', x, y, z, CON, offsets, types)
+        try:
+            unstructuredGridToVTK(base_path + 'rand0', x, y, z, CON, offsets, types)
+        except PermissionError:
+            sleep(3)
+            unstructuredGridToVTK(base_path + 'rand0', x, y, z, CON, offsets, types)

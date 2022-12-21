@@ -7,7 +7,6 @@ from tools.miLinearAlgebra.dataStructures.globalMatrix.main import GlobalVector
 from root.config.main import ASSEMBLE_COST, COMM, MPI, RANK, MASTER_RANK
 
 
-
 class EWC_ColumnVector_Assembler(FrozenOnly):
     """"""
     def __init__(self, Vec):

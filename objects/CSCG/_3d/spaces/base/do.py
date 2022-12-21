@@ -14,7 +14,6 @@ class _3dCSCG_space_do(FrozenOnly):
         self.basises = space.basises
         self._freeze_self_()
 
-
     def evaluate_quadrature(self, quad_degree, quad_type=None):
         """
 
@@ -30,7 +29,6 @@ class _3dCSCG_space_do(FrozenOnly):
         return self._space_.___PRIVATE_do_evaluate_quadrature___(
             quad_degree, quad_type=quad_type
         )
-
 
     def evaluate_edge_basis_at_meshgrid(self, k, *domain):
         """ """

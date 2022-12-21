@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from abc import ABC
 from scipy.misc import derivative
 import numpy as np
 from types import FunctionType, MethodType
-
-
-
 
 
 class NumericalPartialDerivative_txyz(ABC):
@@ -185,4 +183,3 @@ if __name__ == '__main__':
 
     NP = NumericalPartialDerivative_txyz(func, t, x, y, z)
     assert all(NP.check_total(Pt, Px, Py, Pz))
-

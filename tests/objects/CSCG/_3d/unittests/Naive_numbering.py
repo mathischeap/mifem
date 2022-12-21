@@ -15,7 +15,6 @@ from tests.objects.CSCG._3d.randObj.form_caller import random_FormCaller_of_tota
 import random
 
 
-
 def test_Naive_Numbering_NO1_0form():
     """"""
     if RANK == MASTER_RANK:
@@ -46,7 +45,6 @@ def test_Naive_Numbering_NO2_1form():
     """"""
     if RANK == MASTER_RANK:
         print("--- [test_Naive_Numbering_NO2_1form] ...... ", flush=True)
-
 
     mesh = MeshGenerator('crazy_periodic')([2, 2, 2], EDM='debug')
     space = SpaceInvoker('polynomials')([('Lobatto', 2), ('Lobatto', 1), ('Lobatto', 2)])
@@ -179,7 +177,6 @@ def test_Naive_Numbering_NO6_1trace():
                     NEW_END = fv[-1] + 1
 
             END = NEW_END
-
 
     num_of_dofs_in_this_core = t1.numbering.num_local_dofs
     LOCAL_NUMBERING = set()

@@ -14,9 +14,6 @@ from objects.CSCG._3d.ADF.standard.base.num import _3dCSCG_ADF_SF_NUM
 from objects.CSCG._3d.ADF.standard.base.error import _3dCSCG_ADF_SF_Error
 
 
-
-
-
 class _3dCSCG_Algebra_DUAL_Standard_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
     """"""
 
@@ -33,7 +30,6 @@ class _3dCSCG_Algebra_DUAL_Standard_Form(_3dCSCG_Algebra_DUAL_FORM_BASE):
         self._whether_ = None
         self._num_ = None
         self._error_ = None
-
 
     def ___PreFrozenChecker___(self):
         """This method will be run automatically before we freeze the object. This is very important because

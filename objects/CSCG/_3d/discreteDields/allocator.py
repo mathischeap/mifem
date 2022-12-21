@@ -29,6 +29,7 @@ class _3dCSCG_DiscreteFieldsAllocator(FrozenOnly):
     def ___discrete_field_name___(cls):
         """"""
         return {
+            "scalar": "_3dCSCG_DF_Scalar",
             "vector": "_3dCSCG_DF_Vector",
         }
 
@@ -38,5 +39,6 @@ class _3dCSCG_DiscreteFieldsAllocator(FrozenOnly):
         base_path = '.'.join(str(cls).split(' ')[1][1:-2].split('.')[:-2]) + '.'
 
         return {
+            "scalar": base_path + "scalar.main",
             "vector": base_path + "vector.main",
         }

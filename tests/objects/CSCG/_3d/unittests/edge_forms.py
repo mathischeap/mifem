@@ -14,7 +14,6 @@ from tests.objects.CSCG._3d.randObj.form_caller import random_FormCaller_of_tota
 from objects.CSCG._3d.master import ExactSolutionSelector, FormCaller, MeshGenerator, SpaceInvoker
 
 
-
 def test_edge_forms_No0_save_read():
     """"""
     if RANK == MASTER_RANK:
@@ -159,10 +158,6 @@ def test_edge_forms_No0_save_read():
     return 1
 
 
-
-
-
-
 def test_edge_forms_No1_0edge_Rd_and_Rc():
     """"""
     if RANK == MASTER_RANK:
@@ -180,7 +175,6 @@ def test_edge_forms_No1_0edge_Rd_and_Rc():
     assert e0.error.L(n='infinity', quad_density=5000000) < 0.1
 
     return 1
-
 
 
 if __name__ == '__main__':

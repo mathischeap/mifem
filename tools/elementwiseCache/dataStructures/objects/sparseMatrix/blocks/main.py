@@ -3,8 +3,6 @@
 If we use bmat to form EWC_SparseMatrix. We can get some blocks of the EWC_SparseMatrix.
 
 """
-
-
 import numpy as np
 from components.freeze.base import FrozenOnly
 from tools.elementwiseCache.dataStructures.operators.bmat.main import bmat
@@ -22,7 +20,7 @@ class EWC_SpaMat_Blocks(FrozenOnly):
         self.___BLOCKS___ = np.array(spa_mat._DG_.blocks, dtype=object)
 
 
-        #-- replace all None blocks by zero-blocks --------------------------------------------
+        # - replace all None blocks by zero-blocks --------------------------------------------
         SHAPE = self.___BLOCKS___.shape
         I, J = SHAPE
         for i in range(I):
@@ -31,7 +29,7 @@ class EWC_SpaMat_Blocks(FrozenOnly):
                     num_basis_0 = GM0.GMs[i].global_shape[1]
                     num_basis_j = GM1.GMs[j].global_shape[1]
                     self.___BLOCKS___[i, j] = spa_mat.__class__(
-                        spa_mat.elements,(num_basis_0, num_basis_j))
+                        spa_mat.elements, (num_basis_0, num_basis_j))
 
         self._spa_mat_ = spa_mat
         self._freeze_self_()

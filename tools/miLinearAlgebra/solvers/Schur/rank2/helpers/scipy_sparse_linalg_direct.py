@@ -41,7 +41,7 @@ def ___scipy_sparse_linalg_direct___(M, B, C, D, g, h, GM_row, GM_col):
     rA.gathering_matrices = (GM_row, GM_col)
     rb.gathering_matrix = GM_col
 
-    GM = rb.gathering_matrix # cannot use GM_col because we have made a chain-GM in `rb`.
+    GM = rb.gathering_matrix  # cannot use GM_col because we have made a chain-GM in `rb`.
 
     rA = rA.assembled
     rb = rb.assembled
@@ -62,7 +62,7 @@ def ___scipy_sparse_linalg_direct___(M, B, C, D, g, h, GM_row, GM_col):
         gi = g[i]
         Bi = B[i]
 
-        xi = inv_Mi @ ( gi.toarray().ravel() - Bi @ Li)
+        xi = inv_Mi @ (gi.toarray().ravel() - Bi @ Li)
 
         X[i] = np.concatenate([xi, Li])
 

@@ -4,11 +4,7 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/7/21 11:42
 """
-import sys
-
-if './' not in sys.path: sys.path.append('/')
 from components.freeze.main import FrozenOnly
-
 
 import numpy as np
 
@@ -35,11 +31,3 @@ class ___PRIVATE_eliminate_caller___(FrozenOnly):
         mdm_minus1 = np.einsum(self._ein_str_,
                                self._mdm_[basic_unit], local_cochain, optimize='optimal')
         return mdm_minus1
-
-
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

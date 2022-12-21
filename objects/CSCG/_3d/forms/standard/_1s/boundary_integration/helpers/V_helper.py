@@ -4,11 +4,8 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 8/26/2022 10:38 AM
 """
-import sys
-
 import numpy as np
 
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
 from components.quadrature import Quadrature
 
@@ -32,19 +29,20 @@ class S1F_BI_V_Helper(FrozenOnly):
         self._s1f_ = s1f
         self._V_ = V
 
-        if quad_degree is None: quad_degree = s1f.dqp
+        if quad_degree is None:
+            quad_degree = s1f.dqp
 
         QUAD, WEIGHTs = Quadrature(quad_degree, category='Gauss').quad
 
         Qx, Qy, Qz = QUAD
         Wx, Wy, Wz = WEIGHTs
 
-        Qn = [[-1,], Qy, Qz]
-        Qs = [[ 1,], Qy, Qz]
-        Qw = [Qx, [-1,], Qz]
-        Qe = [Qx, [ 1,], Qz]
-        Qb = [Qx, Qy, [-1,]]
-        Qf = [Qx, Qy, [ 1,]]
+        Qn = [[-1, ], Qy, Qz]
+        Qs = [[1, ], Qy, Qz]
+        Qw = [Qx, [-1, ], Qz]
+        Qe = [Qx, [1, ], Qz]
+        Qb = [Qx, Qy, [-1, ]]
+        Qf = [Qx, Qy, [1, ]]
 
         self.Wn = self.Ws = np.kron(Wz, Wy)
         self.Ww = self.We = np.kron(Wz, Wx)
@@ -87,7 +85,7 @@ class S1F_BI_V_Helper(FrozenOnly):
 
             for j, bn in enumerate(positions):
 
-                if isinstance(bn, str): # on mesh boundary
+                if isinstance(bn, str):  # on mesh boundary
                     side = 'nswebf'[j]
 
                     vf0, vf1, vf2 = self._V_.func[bn]
@@ -100,16 +98,17 @@ class S1F_BI_V_Helper(FrozenOnly):
 
                     QW = getattr(self, 'W'+side)
 
-                    Vs = np.einsum('w, wb -> wb', vf0, GM0, optimize='optimal') \
-                       + np.einsum('w, wb -> wb', vf1, GM1, optimize='optimal') \
-                       + np.einsum('w, wb -> wb', vf2, GM2, optimize='optimal')
+                    Vs = \
+                        np.einsum('w, wb -> wb', vf0, GM0, optimize='optimal') \
+                        + np.einsum('w, wb -> wb', vf1, GM1, optimize='optimal') \
+                        + np.einsum('w, wb -> wb', vf2, GM2, optimize='optimal')
 
                     TE = self.mesh.trace.elements.map[i][j]
                     TEct = self.mesh.trace.elements[TE].coordinate_transformation
 
                     C_Jacobian = TEct.constant.Jacobian
 
-                    if C_Jacobian is not None: # we have a constant Jacobian
+                    if C_Jacobian is not None:  # we have a constant Jacobian
                         Vs = csc_matrix(
                             np.einsum(
                                 'wb, w -> b',
@@ -127,11 +126,3 @@ class S1F_BI_V_Helper(FrozenOnly):
 
             V = np.sum(V, axis=0)
             return V
-
-
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

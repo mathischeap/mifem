@@ -34,6 +34,12 @@ class CSCG_Form_BC(FrozenOnly):
     def boundaries(self, bns):
         """"""
         BNS = self._f_.mesh.boundaries.names
+
+        if bns == 'all':
+            bns = BNS
+        else:
+            pass
+
         if isinstance(bns, str):
             bns = [bns, ]
         else:

@@ -6,11 +6,13 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
 from tools.elementwiseCache.dataStructures.objects.columnVector.main import EWC_ColumnVector
 from objects.CSCG._3d.forms.standard._1s.boundary_integration.helpers.V_helper import S1F_BI_V_Helper
+
 
 class _3dCSCG_S1F_BI(FrozenOnly):
     """"""
@@ -20,8 +22,14 @@ class _3dCSCG_S1F_BI(FrozenOnly):
         self._s1f_ = s1f
         self._freeze_self_()
 
-    def inner_product_with(self, V, quad_degree=None):
-        """Let s1f be denoted as w. We do (w,  V)_{\partial\Omega} here. V must be given. And we
+    def __call__(self, obj, **kwargs):
+        if obj.__class__.__name__ == '_3dCSCG_VectorField':
+            return self.___Pr_inner_product_with___(obj, **kwargs)
+        else:
+            raise NotImplementedError()
+
+    def ___Pr_inner_product_with___(self, V, quad_degree=None):
+        """Let s1f be denoted as w. We do (w,  V)_{\\partial\\Omega} here. V must be given. And we
         get a vector.
 
         This returns a `EWC_ColumnVector` whose local vector refers to the
@@ -47,19 +55,21 @@ class _3dCSCG_S1F_BI(FrozenOnly):
         # no cache, vector.current_time may change
         return EWC_ColumnVector(self._s1f_.mesh, VDG, 'no_cache')
 
+
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/_3d/forms/standard/_1s/boundary_integration/main.py
 
-    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('crazy', c=0.)([10,10,10])
-    space = SpaceInvoker('polynomials')([1,1,1])
+    mesh = MeshGenerator('crazy', c=0.)([10, 10, 10])
+    space = SpaceInvoker('polynomials')([1, 1, 1])
     FC = FormCaller(mesh, space)
 
-    f1 = FC('1-f', is_hybrid=False)
+    f1 = FC('1-f', hybrid=False)
 
     # noinspection PyUnusedLocal
     def ZERO(t, x, y, z): return 0 * x
+
     # noinspection PyUnusedLocal
     def ONE(t, x, y, z): return 1 + 0 * x
 
@@ -68,14 +78,10 @@ if __name__ == '__main__':
           'West': [ZERO, ZERO, ZERO],
           'East': [ZERO, ZERO, ZERO],
           'Back': [ZERO, ZERO, ZERO],
-          'Front': [ONE, ZERO, ZERO],}
+          'Front': [ONE, ZERO, ZERO]}
 
     V = FC('vector', BV, name='boundary-vector')
     VP = V.components.T_perp
     VP.current_time = 0
 
-    B = f1.do.boundary_integrate.inner_product_with(VP)
-
-
-    for i in B:
-        print(i, B[i])
+    B = f1.do.boundary_integrate.___Pr_inner_product_with___(VP)

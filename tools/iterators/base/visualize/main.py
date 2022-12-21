@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.base import FrozenOnly
 
@@ -22,10 +23,3 @@ class IteratorVisualize(FrozenOnly):
     @property
     def iterator(self):
         return self._iterator_
-
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

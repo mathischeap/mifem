@@ -66,7 +66,8 @@ class _3dCSCG_2LocalTrace_Visualize_Matplot(FrozenOnly):
         v = COMM.gather(v, root=MASTER_RANK)
         local_elements = COMM.gather(local_elements, root=MASTER_RANK)
         local_sides = COMM.gather(local_sides, root=MASTER_RANK)
-        if RANK != MASTER_RANK: return
+        if RANK != MASTER_RANK:
+            return
 
         ___ = dict()
         for _ in xyz:
@@ -117,7 +118,7 @@ class _3dCSCG_2LocalTrace_Visualize_Matplot(FrozenOnly):
             mappable,
             ax=ax,   # ticks=np.linspace(0,1,num_ticks),
             shrink=1,
-            aspect=20, # extend='min',
+            aspect=20,  # extend='min',
             orientation='vertical',
         )
         cb.set_label(

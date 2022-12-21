@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from components.freeze.base import FrozenOnly
 
+
 class SchurSolverBase(FrozenOnly):
     """A base for all Schur solvers."""
     def __init__(self, rank, blocks, routine, name):
@@ -14,7 +15,6 @@ class SchurSolverBase(FrozenOnly):
         self._routine_ = routine
         self._name_ = name
         self._freeze_self_()
-
 
     def __call__(self, *args, **kwargs):
         """

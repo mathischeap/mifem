@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path:
+    sys.path.append('/')
 from components.freeze.main import FrozenOnly
 import numpy as np
 
@@ -15,6 +16,7 @@ from tools.elementwiseCache.dataStructures.objects.multiDimMatrix.whether import
 
 from tools.elementwiseCache.dataStructures.objects.multiDimMatrix.helpers.__neg__ import ___NEG___
 from tools.elementwiseCache.dataStructures.objects.multiDimMatrix.helpers.__mul__ import MDM_MUL
+
 
 class MultiDimMatrix(FrozenOnly):
     def __init__(self, iterator, mdm_generator, correspondence, cache_key_generator):
@@ -35,16 +37,17 @@ class MultiDimMatrix(FrozenOnly):
                 self._KG_ = cache_key_generator
 
         assert isinstance(correspondence, (list, tuple)), f"put correspondence forms in list please."
-        if isinstance(correspondence, tuple): correspondence = list(correspondence)
+        if isinstance(correspondence, tuple):
+            correspondence = list(correspondence)
         self._correspondence_ = correspondence
         self._ndim_ = len(correspondence)
 
-        self._cache_ = dict() # do not use self.___PRIVATE_reset_cache___()
+        self._cache_ = dict()  # do not use self.___PRIVATE_reset_cache___()
         self.___CT___ = '>CT<'
         self.___NC___ = '>NC<'
         self.___IS_CT___ = False
         self.___IS_NC___ = False
-        self.____CT_DG____ = None # the cache for constant data.
+        self.____CT_DG____ = None  # the cache for constant data.
         self.___CHECK_repeat_CT___ = True
         self.___CHECK_repeat_CT___ = True
         self.___repeat_CK___ = ''
@@ -105,14 +108,14 @@ class MultiDimMatrix(FrozenOnly):
                     if temp != -1:
                         self.___repeat_CK___ = ck[:temp]
                     # ...
-                self.___CHECK_repeat_CT___ = False # only do above check once.
+                self.___CHECK_repeat_CT___ = False  # only do above check once.
 
             if ck == self.___CT___ or self.___repeat_CK___ == self.___CT___:
 
                 assert self.____CT_DG____ is None, "self.____CT_DG____ must be None so far"
                 # one more cache to make it always cached even after operators
                 self.____CT_DG____ = self._DG_(item)
-                RETURN = self.____CT_DG____ # then we do not call the data generator
+                RETURN = self.____CT_DG____  # then we do not call the data generator
                 self.___IS_CT___ = True
                 # once reach here, we no longer do self._KG_(i) for further items because we know it is CT
             elif self.___NC___ in ck:
@@ -165,21 +168,19 @@ class MultiDimMatrix(FrozenOnly):
         return RETURN
 
 
-
-
 if __name__ == '__main__':
     # mpiexec -n 4 python tools/linear_algebra/elementwise_cache/objects/multi_dim_matrix/main.py
     from __init__ import cscg3
 
-    mesh = cscg3.mesh('cuboid', region_layout=[2,2,2])([3,3,3])
-    space = cscg3.space('polynomials')((2,2,2))
+    mesh = cscg3.mesh('cuboid', region_layout=[2, 2, 2])([3, 3, 3])
+    space = cscg3.space('polynomials')((2, 2, 2))
     FC = cscg3.form(mesh, space)
 
-    def u(t,x,y,z): return np.sin(np.pi*x)*np.cos(2*np.pi*y)*np.cos(np.pi*z) + t
-    def v(t,x,y,z): return np.cos(np.pi*x)*np.sin(np.pi*y)*np.cos(2*np.pi*z) + t
-    def w(t,x,y,z): return np.cos(np.pi*x)*np.cos(np.pi*y)*np.sin(2*np.pi*z) + t
+    def u(t, x, y, z): return np.sin(np.pi*x)*np.cos(2*np.pi*y)*np.cos(np.pi*z) + t
+    def v(t, x, y, z): return np.cos(np.pi*x)*np.sin(np.pi*y)*np.cos(2*np.pi*z) + t
+    def w(t, x, y, z): return np.cos(np.pi*x)*np.cos(np.pi*y)*np.sin(2*np.pi*z) + t
 
-    velocity = FC('vector', (u,v,w))
+    velocity = FC('vector', (u, v, w))
     U = FC('scalar', u)
     V = FC('scalar', v)
     W = FC('scalar', w)

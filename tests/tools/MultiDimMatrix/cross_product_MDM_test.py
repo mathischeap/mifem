@@ -9,7 +9,8 @@ the MDM class.
 import random
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 import numpy as np
 
@@ -24,6 +25,7 @@ from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 from objects.CSCG._2d.master import SpaceInvoker as space2
 from objects.CSCG._2d.master import FormCaller as form2
 from objects.CSCG._2d import mesh as mesh2
+
 
 def test_MDM_sf_CrossProduct():
     """"""
