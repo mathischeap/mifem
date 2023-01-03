@@ -17,8 +17,6 @@ import numpy as np
 from components.decorators.classproperty.main import classproperty
 
 
-
-
 class DomainInputBase(FrozenOnly):
     def __init__(self, domain_name='domain without name'):
         self.domain_name = domain_name
@@ -55,7 +53,7 @@ class DomainInputBase(FrozenOnly):
         if isinstance(internal_parameters, list):
             pass
         elif isinstance(internal_parameters, str):
-            internal_parameters = [internal_parameters,]
+            internal_parameters = [internal_parameters, ]
         elif isinstance(internal_parameters, (tuple, set)):
             internal_parameters = list(internal_parameters)
         else:
@@ -106,7 +104,7 @@ class DomainInputBase(FrozenOnly):
             assert len(R) > 2, f"region name = {R} too short, must > 2."
             assert R[0:2] == 'R:', f"regions name = {R} does not start with 'R:'"
             R2 = R[2:].replace('_', '')
-            assert R2.isalpha(),f"region_name = {R} wrong, can only have letter and _ (at >2)."
+            assert R2.isalpha(), f"region_name = {R} wrong, can only have letter and _ (at >2)."
 
     @property
     def region_corner_coordinates(self):
@@ -167,7 +165,6 @@ class DomainInputBase(FrozenOnly):
                 " <DomainInput> : region_edge_type key {} is wrong.".format(item)
         self._region_edge_types_ = _dict_
 
-
     def ___PRIVATE_boundary_name_requirement_checker___(self, boundaryRegionSidesDict):
         """
         Requirements:
@@ -180,7 +177,8 @@ class DomainInputBase(FrozenOnly):
             assert boundary_name != self.domain_name
             assert len(boundary_name) > 2, f"boundary_name = {boundary_name} is too short (>2 must)."
             assert boundary_name[0:2] != 'R:', f"boundary_name = {boundary_name} wrong."
-            assert boundary_name.isalpha(), f"boundary_name = {boundary_name} wrong, boundary_name can only contain letters."
+            assert boundary_name.isalpha(), f"boundary_name = {boundary_name} wrong, " \
+                                            f"boundary_name can only contain letters."
 
     @property
     def boundary_region_edges(self):
@@ -224,11 +222,6 @@ class DomainInputBase(FrozenOnly):
         self._boundary_region_edges_ = _dict_
         self._boundary_names_ = list(_dict_.keys())
 
-
-
-
-
-
     def ___PRIVATE_periodic_boundary_requirement_checker___(self, pBd):
         """
         Here we only do a simple check. We make sure that the keys are in format of:
@@ -259,9 +252,6 @@ class DomainInputBase(FrozenOnly):
         self.___PRIVATE_periodic_boundary_requirement_checker___(pBd)
         self._periodic_boundary_pairs_ = pBd
 
-
-
-
     @property
     def periodic_boundaries(self):
         """(set) Return a set of all boundary names those involved in the periodic boundary setting."""
@@ -278,12 +268,6 @@ class DomainInputBase(FrozenOnly):
                 if rn not in regions:
                     regions.add(rn)
         return regions
-
-
-
-
-
-
 
     @property
     def region_sequence(self):
@@ -319,16 +303,10 @@ class DomainInputBase(FrozenOnly):
             assert key in self.region_corner_coordinates, f"Region name={key} not valid."
         self._region_type_wr2_metric_ = rTwr2M
 
-
-
-
-
-
-    # class properties -------------------------
+    # class properties ------------------------
     @classproperty
     def statistic(cls):
         raise NotImplementedError()
-
 
     @classproperty
     def random_parameters(cls):

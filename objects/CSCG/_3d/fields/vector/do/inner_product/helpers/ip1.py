@@ -10,8 +10,6 @@ INTRO
 """
 
 
-
-
 class ___VF_INNER_PRODUCT_HELPER_1___(object):
     def __init__(self, w0, w1, w2, u0, u1, u2):
         self._w0_ = w0

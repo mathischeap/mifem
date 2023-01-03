@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from components.functions._2dSpace.angle import angle
 
+
 def if_two_lines_parallel(a1, a2, b1, b2):
     """
     Check if line p1-p2 is parallel with line p3-p4. If they are parallel but pointing different direction,

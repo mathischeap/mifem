@@ -4,12 +4,10 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 11/3/2022 6:33 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
-from components.numerical.timePlus2dSpace.partial_derivative_as_functions import NumericalPartialDerivative_txy_Functions
+from components.numerical.timePlus2dSpace.partial_derivative_as_functions import \
+    NumericalPartialDerivative_txy_Functions
 
 
 
@@ -39,8 +37,9 @@ class t2dTensor(FrozenOnly):
 
     def __call__(self, t, x, y):
         """Evaluate the tensor at (t, x, y)"""
-        return self._t00_(t, x, y), self._t01_(t, x, y), \
-               self._t10_(t, x, y), self._t11_(t, x, y)
+        return \
+            self._t00_(t, x, y), self._t01_(t, x, y), \
+            self._t10_(t, x, y), self._t11_(t, x, y)
 
     @property
     def ndim(self):
@@ -78,10 +77,3 @@ class t2dTensor(FrozenOnly):
         pt11_pt = self._NPD11_('t')
         return self.__class__(pt00_pt, pt01_pt,
                               pt10_pt, pt11_pt)
-
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python components/functions/timePlus2dSpace/wrappers/tensor.py
-    pass

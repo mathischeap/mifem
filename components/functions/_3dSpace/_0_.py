@@ -1,7 +1,6 @@
 
-
-
 import numpy as np
+
 
 def _0_(x, y, z):
     assert np.shape(x) == np.shape(y) == np.shape(z)

@@ -98,14 +98,11 @@ class CylinderInChannel(DomainInputBase):
     def lo(self):
         return self._lo_
 
-
-
-
     @classproperty
     def statistic(cls):
         return {'periodic': False,
                 'region num': 6,
-                'mesh boundary num': 5, # the amount of mesh boundaries (instead of domain boundaries)
+                'mesh boundary num': 5,  # the amount of mesh boundaries (instead of domain boundaries)
                 }
 
     @classproperty

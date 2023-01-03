@@ -27,10 +27,9 @@ class OnTraceElement_Standard(FrozenOnly):
 
         func = SELF.___DO_evaluate_func_at_time___()
 
-
         if isinstance(i, int):
-            INDICES = [i,]
-        elif i == 'on_mesh_boundaries': # then we plot on all mesh boundaries (mesh elements on the boundaries)
+            INDICES = [i, ]
+        elif i == 'on_mesh_boundaries':  # then we plot on all mesh boundaries (mesh elements on the boundaries)
             INDICES = list()
             RTE = SELF.mesh.boundaries.range_of_trace_elements
             for bn in RTE:
@@ -39,8 +38,8 @@ class OnTraceElement_Standard(FrozenOnly):
             raise NotImplementedError(f"_3dCSCG_VectorField of 'standard' ftype"
                                       f" trace-element-reconstruction currently don't accept i={i}.")
 
-        for I in INDICES:
-            te = SELF.mesh.trace.elements[I]
+        for _I in INDICES:
+            te = SELF.mesh.trace.elements[_I]
             # when reconstruct on trace-element-wise, we only accept 1d xi, eta and sigma.
             xyz_i = te.coordinate_transformation.mapping(xi, eta, sigma, parse_3_1d_eps=True)
 
@@ -49,10 +48,10 @@ class OnTraceElement_Standard(FrozenOnly):
             vz_i = func[2](*xyz_i)
 
             if ravel:
-                xyz[I] = [_.ravel('F') for _ in xyz_i]
-                value[I] = [vx_i.ravel('F'), vy_i.ravel('F'), vz_i.ravel('F')]
+                xyz[_I] = [_.ravel('F') for _ in xyz_i]
+                value[_I] = [vx_i.ravel('F'), vy_i.ravel('F'), vz_i.ravel('F')]
             else:
-                xyz[I] = xyz_i
-                value[I] = [vx_i, vy_i, vz_i,]
+                xyz[_I] = xyz_i
+                value[_I] = [vx_i, vy_i, vz_i, ]
 
         return xyz, value

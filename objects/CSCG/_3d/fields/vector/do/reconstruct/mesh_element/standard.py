@@ -44,11 +44,10 @@ class OnMeshElement_Standard(FrozenOnly):
             vz_i = func[2](*xyz_i)
 
             if ravel:
-                xyz[i] = [I.ravel('F') for I in xyz_i]
+                xyz[i] = [_.ravel('F') for _ in xyz_i]
                 value[i] = [vx_i.ravel('F'), vy_i.ravel('F'), vz_i.ravel('F')]
             else:
                 xyz[i] = xyz_i
                 value[i] = [vx_i, vy_i, vz_i]
-
 
         return xyz, value

@@ -6,6 +6,7 @@ from abc import ABC
 from scipy.misc import derivative
 import numpy as np
 
+
 class NumericalPartialDerivative_xyz(ABC):
     """
     Numerical partial derivative, we call it '3' because we compute a function or method that like:

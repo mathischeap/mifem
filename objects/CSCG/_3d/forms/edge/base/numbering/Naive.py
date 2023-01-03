@@ -8,11 +8,11 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.main import FrozenOnly
 from tools.elementwiseCache.gathering.regular.chain_matrix.main import Gathering_Matrix, Gathering_Vector
-
 
 
 class _3dCSCG_Edge_Numbering_Naive(FrozenOnly):
@@ -57,7 +57,7 @@ class _3dCSCG_Edge_Numbering_Naive(FrozenOnly):
         _p_ = self._ef_.space.p
         p = [_p_[0] + 1, _p_[1] + 1, _p_[2] + 1]
         tAn = self._mesh_.edge.elements.___PRIVATE_find_type_and_amount_numbered_before___()
-        _D_ = {'NS':p[0], 'WE':p[1], 'BF':p[2]}
+        _D_ = {'NS': p[0], 'WE': p[1], 'BF': p[2]}
 
         for i in self._mesh_.edge.elements:
             e_e_i = self._mesh_.edge.elements[i]
@@ -78,13 +78,6 @@ class _3dCSCG_Edge_Numbering_Naive(FrozenOnly):
             GM_EEW[i] = Gathering_Vector(i, GM_EEW[i])
 
         return GM, GM_EEW, local_num_dofs, extraInfo
-
-
-
-
-
-
-
 
     def _3dCSCG_1Edge(self):
         """Do the numbering if it is an edge 1-form:
@@ -121,7 +114,7 @@ class _3dCSCG_Edge_Numbering_Naive(FrozenOnly):
 
         p = self._ef_.space.p
         tAn = self._mesh_.edge.elements.___PRIVATE_find_type_and_amount_numbered_before___()
-        _D_ = {'NS':p[0], 'WE':p[1], 'BF':p[2]}
+        _D_ = {'NS': p[0], 'WE': p[1], 'BF': p[2]}
 
         for i in self._mesh_.edge.elements:
             e_e_i = self._mesh_.edge.elements[i]
@@ -144,19 +137,12 @@ class _3dCSCG_Edge_Numbering_Naive(FrozenOnly):
         return GM, GM_EEW, local_num_dofs, extraInfo
 
 
-
-
-
-
-
-
-
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\form\edge\numbering\Naive.py
-    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('crazy', c=0.25)([3,4,5])
-    space = SpaceInvoker('polynomials')([('Lobatto',2), ('Lobatto',1), ('Lobatto',3)])
+    mesh = MeshGenerator('crazy', c=0.25)([3, 4, 5])
+    space = SpaceInvoker('polynomials')([('Lobatto', 2), ('Lobatto', 1), ('Lobatto', 3)])
     FC = FormCaller(mesh, space)
 
     e = FC('0-e')

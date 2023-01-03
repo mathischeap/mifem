@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-
-
-
 from components.freeze.main import FrozenOnly
-
 
 
 class ___GM_Undirected_Graph___(FrozenOnly):

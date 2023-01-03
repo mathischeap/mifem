@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
-
-
-
 from components.freeze.main import FrozenOnly
-
-
 
 
 class _3dCSCG_Edge_Numbering_DO(FrozenOnly):

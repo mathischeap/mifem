@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
-
 from components.decorators.all import accepts
 import re
-
 
 
 @accepts(str)
@@ -14,7 +12,7 @@ def check_no_splcharacter(test):
     :return:
     """
     # noinspection RegExpRedundantEscape
-    string_check = re.compile('[@!#$%^&*()<>?/\|}{~:]')
+    string_check = re.compile("[@!#$%^&*()<>?/\|}{~:]")
     if string_check.search(test) is None:
         return True
     else:

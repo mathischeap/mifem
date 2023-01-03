@@ -10,7 +10,6 @@ class _3dCSCG_E1F_Dofs_DoFind(FrozenOnly):
         self._dofs_ = dofs
         self._freeze_self_()
 
-
     def edge_element_and_local_index_of_dof(self, i):
         """Return the edge_element, and local index (edge-element-wise) of the edge 1-form dof `i`
         in all cores.
@@ -38,7 +37,7 @@ class _3dCSCG_E1F_Dofs_DoFind(FrozenOnly):
 
             px, py, pz = p
 
-            if 0 <= index < 4 * px: # N-S edge
+            if 0 <= index < 4 * px:  # N-S edge
                 if index < px:
                     edge = "WB"
                     local_index = index
@@ -54,7 +53,7 @@ class _3dCSCG_E1F_Dofs_DoFind(FrozenOnly):
 
             else:
                 index -= 4 * px
-                if 0 <= index < 4 * py: # W-E edge
+                if 0 <= index < 4 * py:  # W-E edge
                     if index < py:
                         edge = "NB"
                         local_index = index
@@ -70,7 +69,7 @@ class _3dCSCG_E1F_Dofs_DoFind(FrozenOnly):
 
                 else:
                     index -= 4 * py
-                    if 0 <= index < 4 * pz: # B-F edge
+                    if 0 <= index < 4 * pz:  # B-F edge
                         if index < pz:
                             edge = "NW"
                             local_index = index

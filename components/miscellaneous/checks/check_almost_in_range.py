@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from components.decorators.all import accepts
 
+
 @accepts((int, float), (int, float), (int, float))
 def check_almost_in_range(a, lb, ub, tol=1e-8):
     """check a is in [lb-tol, up+tol].

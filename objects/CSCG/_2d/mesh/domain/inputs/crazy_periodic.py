@@ -46,8 +46,6 @@ class CrazyPeriodic(DomainInputBase):
     def c(self):
         return self._c_
 
-
-
     @classproperty
     def statistic(cls):
         raise NotImplementedError()
@@ -56,13 +54,11 @@ class CrazyPeriodic(DomainInputBase):
     def random_parameters(cls):
         raise NotImplementedError()
 
-
-
     @classproperty
     def statistic(cls):
         return {'periodic': True,
                 'region num': 1,
-                'mesh boundary num': 0, # the amount of mesh boundaries (instead of domain boundaries)
+                'mesh boundary num': 0,  # the amount of mesh boundaries (instead of domain boundaries)
                 }
 
     @classproperty

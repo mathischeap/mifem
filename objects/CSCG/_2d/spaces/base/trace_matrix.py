@@ -45,7 +45,7 @@ class TraceMatrix(FrozenOnly):
             T_[i] = T[m:m + nbt['UDLR'[i]], :]
             m += nbt['UDLR'[i]]
         Tn, Ts, Tw, Te = T_
-        return {True: csc_matrix(T),}, {'U': Tn, 'D': Ts, 'L': Tw, 'R': Te}
+        return {True: csc_matrix(T), }, {'U': Tn, 'D': Ts, 'L': Tw, 'R': Te}
 
     @property
     def _2dCSCG_0Trace_Outer(self):
@@ -66,9 +66,7 @@ class TraceMatrix(FrozenOnly):
             m += nbt['UDLR'[i]]
         Tn, Ts, Tw, Te = T_
 
-        return {True: csc_matrix(T),}, {'U': Tn, 'D': Ts, 'L': Tw, 'R': Te}
-
-
+        return {True: csc_matrix(T), }, {'U': Tn, 'D': Ts, 'L': Tw, 'R': Te}
 
     @property
     def _2dCSCG_1Trace_Inner(self):
@@ -96,14 +94,16 @@ class TraceMatrix(FrozenOnly):
     @property
     def _2dCSCG_1Trace_Outer(self):
         """ """
-        PU = np.zeros((self._FS_.num_basis._2dCSCG_1Form_Outer[0], self._FS_.num_basis._2dCSCG_1Trace_Outer[0]), dtype=int)
+        PU = np.zeros(
+            (self._FS_.num_basis._2dCSCG_1Form_Outer[0], self._FS_.num_basis._2dCSCG_1Trace_Outer[0]),
+            dtype=int,
+        )
         sln = self.___generate_gathering_hybrid_element___(self._FS_.num_basis._2dCSCG_1Trace_Outer[2])
         oln_NS, oln_WE = self._FS_.local_numbering._2dCSCG_1Form_Outer
-        PU[oln_NS[ 0, :].ravel('F'), sln['U']] = +1  # Upper
+        PU[oln_NS[0, :].ravel('F'), sln['U']] = +1  # Upper
         PU[oln_NS[-1, :].ravel('F'), sln['D']] = -1  # Down
-        PU[oln_WE[:,  0].ravel('F'), sln['L']] = -1  # Left
+        PU[oln_WE[:, 0].ravel('F'), sln['L']] = -1  # Left
         PU[oln_WE[:, -1].ravel('F'), sln['R']] = +1  # Right
-
 
         T = PU.T
         nbt = self._FS_.num_basis._2dCSCG_1Trace_Outer[2]
@@ -118,8 +118,6 @@ class TraceMatrix(FrozenOnly):
         Tr = csc_matrix(T)
 
         return {True: Tr, False: Tr}, {'U': TU, 'D': TD, 'L': TL, 'R': TR}
-
-
 
     @staticmethod
     def ___generate_gathering_hybrid_element___(basis_onsides):

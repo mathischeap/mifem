@@ -14,7 +14,8 @@ It is always suggested testing the library multiple time with different numbers 
 
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 passed_miUSGridTriangle_tests = 0
 
 from root.config.main import MPI, RANK, MASTER_RANK, COMM

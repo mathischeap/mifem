@@ -27,9 +27,9 @@ class LocallyFullVector(FrozenOnly):
 
         """
         # ------- parse input ---------------------------------------------------------------
-        if isinstance(V, (tuple, list)): # tuple of forms
+        if isinstance(V, (tuple, list)):  # tuple of forms
             if all(hasattr(Vi, 'standard_properties') for Vi in V) and \
-                all('form' in Vi.standard_properties.tags for Vi in V):
+                    all('form' in Vi.standard_properties.tags for Vi in V):
 
                 if chain_method == 'silly':
                     globe_cochains = list()
@@ -66,7 +66,7 @@ class LocallyFullVector(FrozenOnly):
 
             else:
                 raise NotImplementedError(f"Cannot accept a list: {V}.")
-        #___________________________________________________________________________________________
+        # _________________________________________________________________________________________
         elif str(V.__class__.__name__) in ("GlobalVector", "DistributedVector"):
             v = V.V
             v = COMM.gather(v, root=MASTER_RANK)

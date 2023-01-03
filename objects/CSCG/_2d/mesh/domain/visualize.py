@@ -25,13 +25,16 @@ class _2dCSCG_Domain_Visualize(FrozenOnly):
         self._freeze_self_()
 
     def __call__(self, **kwargs):
-        if RANK != MASTER_RANK: return
+        if RANK != MASTER_RANK:
+            return
         return self.matplot(**kwargs)
 
-    def matplot(self, show_region_boundary=True, usetex=False, corlormap='tab10',
-        density=1000, xlim=None, ylim=None, show_region_names=True, show_boundary_names=True,
-        labelsize=15, ticksize=15, fontsize=12, do_plot=True, saveto=None,
-        domain_boundary_linewidth=3, region_linewidth=0.8, ):
+    def matplot(
+            self, show_region_boundary=True, usetex=False, corlormap='tab10',
+            density=1000, xlim=None, ylim=None, show_region_names=True, show_boundary_names=True,
+            labelsize=15, ticksize=15, fontsize=12, do_plot=True, saveto=None,
+            domain_boundary_linewidth=3, region_linewidth=0.8,
+    ):
         """
 
         :param show_region_boundary:
@@ -51,10 +54,13 @@ class _2dCSCG_Domain_Visualize(FrozenOnly):
         :param region_linewidth:
         :return:
         """
-        if RANK != MASTER_RANK: return
+        if RANK != MASTER_RANK:
+            return
         density = int(np.ceil(density / self._domain_.regions.num / 4))
-        if density > 100: density = 100
-        if density < 30: density = 30
+        if density > 100:
+            density = 100
+        if density < 30:
+            density = 30
         o = np.linspace(0, 1, density)  # plot density
         O = np.zeros(density)
         I = np.ones(density)
@@ -116,7 +122,8 @@ class _2dCSCG_Domain_Visualize(FrozenOnly):
         boundaries_numb = self._domain_.boundaries.num
         boundaries_name = self._domain_.boundaries.names
         bounbary_name_color_dict = dict()
-        if boundaries_numb > 10 and corlormap=='tab10': corlormap = 'viridis'
+        if boundaries_numb > 10 and corlormap == 'tab10':
+            corlormap = 'viridis'
         color = cm.get_cmap(corlormap, boundaries_numb)
         colors = []
         for j in range(boundaries_numb):
@@ -130,8 +137,10 @@ class _2dCSCG_Domain_Visualize(FrozenOnly):
         # ax.spines['top'].set_visible(False)
         # ax.spines['right'].set_visible(False)
 
-        if xlim is not None: plt.xlim(xlim)
-        if ylim is not None: plt.ylim(ylim)
+        if xlim is not None:
+            plt.xlim(xlim)
+        if ylim is not None:
+            plt.ylim(ylim)
         for rn in self._domain_.regions.names:
             if show_region_names:
                 # noinspection PyUnboundLocalVariable

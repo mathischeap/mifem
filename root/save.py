@@ -7,7 +7,6 @@ In this script, we DO NOT use the structure of naming files and folders of the m
 from components.miscellaneous.timer import check_filename_mi
 from root.config.main import MASTER_RANK, RANK, COMM
 import pickle
-from root.read.main import read
 
 
 def save(obj, filename):
@@ -42,8 +41,3 @@ def save(obj, filename):
             output.close()
     else:
         obj.___PRIVATE_save___(filename, do_save=True)
-
-
-
-if __name__ == '__main__':
-    rd = read

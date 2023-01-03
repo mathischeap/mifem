@@ -21,7 +21,7 @@ class _2dCSCG_Domain_Whether(FrozenOnly):
 
     @property
     def fully_periodic(self):
-        """This domain is fully periodic, so \partial \Omega = \empty"""
+        """This domain is fully periodic, so \\partial \\Omega = \\empty"""
         if self._fully_periodic_ is None:
 
             self._fully_periodic_ = self._d_.domain_input.periodic_boundaries == \

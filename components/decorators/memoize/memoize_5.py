@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-
-
 import functools
-
 
 
 class memoize5(object):

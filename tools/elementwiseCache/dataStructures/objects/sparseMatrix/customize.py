@@ -59,7 +59,7 @@ class SpaMat_Customize(FrozenOnly):
 
                 key, factors = cus  # for example cus=('clr', 5) or ('salv', ([1,1],5))
 
-                # clear a local row of the EWC-sparse-matrix ----------------- BELOW -----------------------------------
+                # clear a local row of the EWC-sparse-matrix ------ BELOW --------------------------------
                 if key == 'clr':  # Clear Local Row
                     # `factors` will be an int
                     assert factors % 1 == 0, f"factors={factors} wrong, when `clr`, factors must be an int."
@@ -74,7 +74,7 @@ class SpaMat_Customize(FrozenOnly):
                         RETURN = RETURN.tolil()
                     RETURN[factors, :] = 0
 
-                # Set A Local Value of local indices (i, j) to v --------------------- BELOW ---------------------------
+                # Set A Local Value of local indices (i, j) to v ------ BELOW ---------------------------
                 elif key == 'salv':
                     ij, v = factors
                     i, j = ij
@@ -97,7 +97,7 @@ class SpaMat_Customize(FrozenOnly):
                     RETURN[factors[0], :] = 0
                     RETURN[factors[0], factors[1]] = 1
 
-                # Not Implemented --------------------------------------------- BELOW ----------------------------------
+                # Not Implemented ---------------------------------- BELOW ---------------
                 else:
                     raise NotImplementedError(f"Can not handle customization key={key}.")
                 # ============================================================= ABOVE ==================================

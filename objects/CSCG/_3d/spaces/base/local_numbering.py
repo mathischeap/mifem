@@ -23,11 +23,6 @@ class LocalNumbering(FrozenOnly):
         self._cache_T1_ = dict()
         self._freeze_self_()
 
-
-
-
-
-
     @property
     def _3dCSCG_0Edge(self):
         """Return the edge-element-wise (NOT mesh-element-wise) local numbering of 0-edge-form."""
@@ -149,7 +144,6 @@ class LocalNumbering(FrozenOnly):
 
         return self._cache_E1_[edge_name]
 
-
     @property
     def _3dCSCG_0Trace(self):
         """Return the trace-element-wise (NOT mesh-element-wise) local numbering of 0-trace-form."""
@@ -192,9 +186,6 @@ class LocalNumbering(FrozenOnly):
                    'B': (np.arange(p[0]*p[1]).reshape((p[0], p[1]), order='F'), ),
                    'F': (np.arange(p[0]*p[1]).reshape((p[0], p[1]), order='F'), )}
         return TEW__LN
-
-
-
 
     def ___PRIVATE_find_MESH_ELEMENT_WISE_local_dofs_of_0Trace_edge___(
             self, trace_face, trace_edge, hybrid=True
@@ -374,7 +365,6 @@ class LocalNumbering(FrozenOnly):
         else:
             raise NotImplementedError()
 
-
     @property
     def _3dCSCG_0LocalTrace(self):
         return self._3dCSCG_0Trace
@@ -386,7 +376,6 @@ class LocalNumbering(FrozenOnly):
     @property
     def _3dCSCG_2LocalTrace(self):
         return self._3dCSCG_2Trace
-
 
     @property
     def _3dCSCG_0Form(self):

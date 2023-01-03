@@ -29,8 +29,8 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
     :param name:
     """
     def __init__(
-        self, mesh, space, hybrid=True, orientation='outer',
-        numbering_parameters='Naive', name='outer-oriented-2-trace-form'
+            self, mesh, space, hybrid=True, orientation='outer',
+            numbering_parameters='Naive', name='outer-oriented-2-trace-form'
     ):
         super().__init__(mesh, space, hybrid, orientation, numbering_parameters, name)
         self._k_ = 2

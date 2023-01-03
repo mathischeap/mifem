@@ -32,7 +32,6 @@ class ParallelMatrix3dInputRunner(ParallelRunnerBase):
 
         self._freeze_self_()
 
-
     def ___iterate___(self, I1, I2, I3, criterion='standard', writeto=None, **kwargs):
         """
 

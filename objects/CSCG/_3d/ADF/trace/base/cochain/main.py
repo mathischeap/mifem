@@ -4,6 +4,7 @@ from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.ADF.trace.base.cochain.local import ____3dCSCG_ADTF_Cochain_Local____
 from scipy.sparse import csc_matrix
 
+
 class _3dCSCG_Algebra_DUAL_Trace_Form_Cochain(FrozenOnly):
     """The cochain of algebra dual form is equal to the mass matrix dot the cochain of the prime
     form.
@@ -83,7 +84,7 @@ class _3dCSCG_Algebra_DUAL_Trace_Form_Cochain(FrozenOnly):
                     else:
                         # noinspection PyUnboundLocalVariable
                         to_be_sent = csc_matrix(
-                            (VV[lr[0]:lr[1]], range(lr[0],lr[1]), [0, lr[1]-lr[0]]),
+                            (VV[lr[0]:lr[1]], range(lr[0], lr[1]), [0, lr[1]-lr[0]]),
                             shape=(self._dt_.num.global_dofs, 1))
                     TO_BE_SENT.append(to_be_sent)
             else:
@@ -92,13 +93,13 @@ class _3dCSCG_Algebra_DUAL_Trace_Form_Cochain(FrozenOnly):
             # distribute to local cochain ...
             local = dict()
             GM = self._dt_.prime.numbering.gathering
-            for i in GM: # go through all local elements
+            for i in GM:  # go through all local elements
                 idx = GM[i].full_vector
                 local[i] = TO_BE_SENT[idx].toarray().ravel()
             self.local = local
 
         elif globe.__class__.__name__ == 'LocallyFullVector':
-            V = globe.V # V already be 1-d array.
+            V = globe.V  # V already be 1-d array.
             local = dict()
             GM = self._dt_.prime.numbering.gathering
             for i in GM:  # go through all local elements

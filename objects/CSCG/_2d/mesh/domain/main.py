@@ -24,7 +24,7 @@ class _2dCSCG_Domain(_2dCSCG_DomainBase):
 
         """
         super(_2dCSCG_Domain, self).__init__(di)
-        self._visualize_ = _2dCSCG_Domain_Visualize(self) # will only do thing in master core.
+        self._visualize_ = _2dCSCG_Domain_Visualize(self)  # will only do thing in master core.
         self._boundaries_ = _2dCSCG_Domain_Boundaries(self)
         self.___define_parameters___ = None
         self._whether_ = _2dCSCG_Domain_Whether(self)
@@ -42,7 +42,6 @@ class _2dCSCG_Domain(_2dCSCG_DomainBase):
                 if self.parameters[key] != other.parameters[key]:
                     return False
         return True
-
 
     @property
     def ndim(self):
@@ -64,7 +63,6 @@ class _2dCSCG_Domain(_2dCSCG_DomainBase):
     def boundaries(self):
         return self._boundaries_
 
-
     def __len__(self):
         """
         The length of a domain, len(domain), is defined to be the number of
@@ -72,7 +70,6 @@ class _2dCSCG_Domain(_2dCSCG_DomainBase):
 
         """
         return self._num_regions_
-
 
     @property
     def interpolators(self):

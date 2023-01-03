@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-
-
 from components.freeze.main import FrozenOnly
-
-
 
 
 class ___GM_Directed_Graph___(FrozenOnly):

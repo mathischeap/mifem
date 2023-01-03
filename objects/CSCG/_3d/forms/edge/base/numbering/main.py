@@ -7,11 +7,9 @@
          TU Delft, Delft, Netherlands
 
 """
-
 from components.freeze.main import FrozenOnly
 from importlib import import_module
 from objects.CSCG._3d.forms.edge.base.numbering.do import _3dCSCG_Edge_Numbering_DO
-
 
 
 class _3dCSCG_Edge_Numbering(FrozenOnly):
@@ -56,8 +54,6 @@ class _3dCSCG_Edge_Numbering(FrozenOnly):
             self._local_ = getattr(self._ef_.space.local_numbering, self._ef_.__class__.__name__)
         return self._local_
 
-
-
     def ___PRIVATE_do_numbering___(self):
         self._gathering_, self._edge_element_wise_, self._local_num_dofs_, self._extra_ = \
             getattr(self._numberer_, self._ef_.__class__.__name__)()
@@ -86,10 +82,6 @@ class _3dCSCG_Edge_Numbering(FrozenOnly):
         if self._extra_ is None:
             self.___PRIVATE_do_numbering___()
         return self._extra_
-
-
-
-
 
     @property
     def do(self):

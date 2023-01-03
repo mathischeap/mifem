@@ -2,14 +2,8 @@
 """
 
 """
-
-
-
 from components.freeze.base import FrozenOnly
 from root.config.main import CACHE_FACTOR
-
-
-
 
 
 class ElementsCTValuesCache(FrozenOnly):
@@ -47,7 +41,6 @@ class ElementsCTValuesCache(FrozenOnly):
 
     def __getitem__(self, i):
 
-
         element = self._elements_[i]
         type_wrt_metric = element.type_wrt_metric.mark
         if self._CTT_ in ('mapping', 'X', 'Y'):
@@ -58,9 +51,9 @@ class ElementsCTValuesCache(FrozenOnly):
             else:
                 JM = getattr(element.coordinate_transformation, self._CTT_)(*self._xi_eta_sigma_)
                 if isinstance(type_wrt_metric, str) and \
-                    type_wrt_metric in self._multi_elements_metric_ and \
-                    type_wrt_metric not in self._cache_ and \
-                    self._multi_elements_metric_[type_wrt_metric] >= CACHE_FACTOR:
+                        type_wrt_metric in self._multi_elements_metric_ and \
+                        type_wrt_metric not in self._cache_ and \
+                        self._multi_elements_metric_[type_wrt_metric] >= CACHE_FACTOR:
                     self._cache_[type_wrt_metric] = JM
                 return JM
         else:
@@ -74,9 +67,9 @@ class ElementsCTValuesCache(FrozenOnly):
                     result = getattr(element.coordinate_transformation, self._CTT_)(
                         *self._xi_eta_sigma_, self._intermediateData_[i])
                 if isinstance(type_wrt_metric, str) and \
-                    type_wrt_metric in self._multi_elements_metric_ and \
-                    type_wrt_metric not in self._cache_ and \
-                    self._multi_elements_metric_[type_wrt_metric] >= CACHE_FACTOR:
+                        type_wrt_metric in self._multi_elements_metric_ and \
+                        type_wrt_metric not in self._cache_ and \
+                        self._multi_elements_metric_[type_wrt_metric] >= CACHE_FACTOR:
                     # here we have very strict cache rule.
                     self._cache_[type_wrt_metric] = result
                 return result

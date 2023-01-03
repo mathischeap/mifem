@@ -25,7 +25,6 @@ from components.numerical.timePlus3dSpace.partial_derivative_as_functions import
 import numpy as np
 
 
-
 class incompressible_MHD_Base(Base):
     def __init__(self, mesh, Re, Rm, c):
         """
@@ -120,7 +119,6 @@ class incompressible_MHD_Base(Base):
 
         self._freeze_self_()
 
-
     @property
     def Re(self):
         return self._Re_
@@ -132,8 +130,6 @@ class incompressible_MHD_Base(Base):
     @property
     def c(self):
         return self._c_
-
-
 
     def u(self, t, x, y, z):
         raise NotImplementedError()
@@ -158,7 +154,6 @@ class incompressible_MHD_Base(Base):
             self._NPDf_u_ = NumericalPartialDerivative_txyz_Functions(self.u)
         return self._NPDf_u_('z')(t, x, y, z)
 
-
     def v(self, t, x, y, z):
         raise NotImplementedError()
     
@@ -181,7 +176,6 @@ class incompressible_MHD_Base(Base):
         if self._NPDf_v_ is None:
             self._NPDf_v_ = NumericalPartialDerivative_txyz_Functions(self.v)
         return self._NPDf_v_('z')(t, x, y, z)
-
 
     def w(self, t, x, y, z):
         raise NotImplementedError()
@@ -206,7 +200,6 @@ class incompressible_MHD_Base(Base):
             self._NPDf_w_ = NumericalPartialDerivative_txyz_Functions(self.w)
         return self._NPDf_w_('z')(t, x, y, z)
 
-
     def u_xx(self, t, x, y, z):
         if self._NPDf_ux_ is None:
             self._NPDf_ux_ = NumericalPartialDerivative_txyz_Functions(self.u_x)
@@ -221,7 +214,6 @@ class incompressible_MHD_Base(Base):
         if self._NPDf_uz_ is None:
             self._NPDf_uz_ = NumericalPartialDerivative_txyz_Functions(self.u_z)
         return self._NPDf_uz_('z')(t, x, y, z)
-    
 
     def v_xx(self, t, x, y, z):
         if self._NPDf_vx_ is None:
@@ -253,7 +245,6 @@ class incompressible_MHD_Base(Base):
         if self._NPDf_wz_ is None:
             self._NPDf_wz_ = NumericalPartialDerivative_txyz_Functions(self.w_z)
         return self._NPDf_wz_('z')(t, x, y, z)
-    
 
     def p(self, t, x, y, z): raise NotImplementedError()
     
@@ -271,7 +262,6 @@ class incompressible_MHD_Base(Base):
         if self._NPDf_p_ is None:
             self._NPDf_p_ = NumericalPartialDerivative_txyz_Functions(self.p)
         return self._NPDf_p_('z')(t, x, y, z)
-    
 
     def Bx(self, t, x, y, z):
         raise NotImplementedError()
@@ -295,7 +285,6 @@ class incompressible_MHD_Base(Base):
         if self._NPDf_Bx_ is None:
             self._NPDf_Bx_ = NumericalPartialDerivative_txyz_Functions(self.Bx)
         return self._NPDf_Bx_('z')(t, x, y, z)
-    
 
     def By(self, t, x, y, z):
         raise NotImplementedError()
@@ -319,7 +308,6 @@ class incompressible_MHD_Base(Base):
         if self._NPDf_By_ is None:
             self._NPDf_By_ = NumericalPartialDerivative_txyz_Functions(self.By)
         return self._NPDf_By_('z')(t, x, y, z)
-    
 
     def Bz(self, t, x, y, z):
         raise NotImplementedError()
@@ -343,7 +331,6 @@ class incompressible_MHD_Base(Base):
         if self._NPDf_Bz_ is None:
             self._NPDf_Bz_ = NumericalPartialDerivative_txyz_Functions(self.Bz)
         return self._NPDf_Bz_('z')(t, x, y, z)
-    
 
     def Ex_x(self, t, x, y, z):
         if self._NPDf_Ex_ is None:
@@ -401,7 +388,6 @@ class incompressible_MHD_Base(Base):
                                                         (self.Bx, self.By, self.Bz),
                                                         valid_time=self.valid_time)
         return self._magnetic_field_
-
 
     @property
     def divergence_of_magnetic_field(self):
@@ -487,8 +473,6 @@ class incompressible_MHD_Base(Base):
     @property
     def curl_of_velocity(self):
         return self.vorticity
-
-
 
     @property
     def divergence_of_velocity(self):
@@ -612,7 +596,6 @@ class incompressible_MHD_Base(Base):
     def ___m_laplace_w___(self, t, x, y, z):
         return - (self.w_xx(t, x, y, z) + self.w_yy(t, x, y, z) + self.w_zz(t, x, y, z))
 
-
     @property
     def divergence_of_vorticity(self):
         if self._divergence_of_vorticity_ is None:
@@ -658,8 +641,6 @@ class incompressible_MHD_Base(Base):
                 valid_time=self.valid_time)
         return self._body_force_
 
-
-
     def rx(self, t, x, y, z):
         return self.Bx_t(t, x, y, z) + self._CurlEx_(t, x, y, z)
 
@@ -679,8 +660,6 @@ class incompressible_MHD_Base(Base):
                 (self.rx, self.ry, self.rz),
                 valid_time=self.valid_time)
         return self._electric_source_term_
-
-
 
     @property
     def pressure(self):
@@ -721,7 +700,6 @@ class incompressible_MHD_Base(Base):
     def _tp_z_(self, t, x, y, z):
         """ """
         return self.p_z(t, x, y, z) + self._ke_z_(t, x, y, z)
-    
 
     @property
     def gradient_of_total_pressure(self):

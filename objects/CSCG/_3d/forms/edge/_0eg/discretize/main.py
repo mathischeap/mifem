@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 
-
 from components.freeze.base import FrozenOnly
 from objects.CSCG._3d.forms.edge._0eg.discretize.standard_scalar import _3dCSCG_Edge0Form_Discretize_StandardScalar
-
-
 
 
 class _3dCSCG_Edge0Form_Discretize(FrozenOnly):
@@ -14,7 +11,6 @@ class _3dCSCG_Edge0Form_Discretize(FrozenOnly):
         self._ef_ = ef
         self._standard_scalar_ = _3dCSCG_Edge0Form_Discretize_StandardScalar(ef)
         self._freeze_self_()
-
 
     def __call__(self, update_cochain=True, target='func'):
         """
@@ -32,7 +28,7 @@ class _3dCSCG_Edge0Form_Discretize(FrozenOnly):
         if target == 'func':
             if self._ef_.CF.__class__.__name__ == '_3dCSCG_ScalarField':
                 if self._ef_.CF.ftype == 'standard':
-                    return self._standard_scalar_(update_cochain=update_cochain, target = 'func')
+                    return self._standard_scalar_(update_cochain=update_cochain, target='func')
                 else:
                     raise NotImplementedError(f"3dCSCG 0-edge cannot (target func) discretize "
                                               f"_3dCSCG_ScalarField of ftype={self._ef_.CF.ftype}")

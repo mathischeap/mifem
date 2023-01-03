@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 11/13/2022 5:49 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
 
@@ -21,9 +18,3 @@ class t2d_ScalarMultiply(FrozenOnly):
 
     def __call__(self, t, x, y):
         return self._v0_(t, x, y) * self._v1_(t, x, y)
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

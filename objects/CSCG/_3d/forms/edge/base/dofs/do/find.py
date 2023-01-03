@@ -2,8 +2,6 @@
 from components.freeze.base import FrozenOnly
 
 
-
-
 class _3dCSCG_EdgeDofs_DoFIND(FrozenOnly):
     """"""
     def __init__(self, dofs):
@@ -28,14 +26,15 @@ class _3dCSCG_EdgeDofs_DoFIND(FrozenOnly):
             f"corner_name = {corner_name} is invalid."
         ef = self._dofs_._ef_
 
-        assert ef.k == 0 , f"1-edge-form has no dof at mesh element corner."
+        assert ef.k == 0, f"1-edge-form has no dof at mesh element corner."
         mesh = ef.mesh
 
-        GM_EEW = ef.numbering.edge_element_wise # make sure this is run in all cores.
+        GM_EEW = ef.numbering.edge_element_wise  # make sure this is run in all cores.
 
         edge_elements = mesh.edge.elements
 
-        if i not in mesh.elements: return None
+        if i not in mesh.elements:
+            return None
 
         DOFS = list()
         edge_names = ['WB', 'EB', 'WF', 'EF', 'NB', 'SB', 'NF', 'SF', 'NW', 'SW', 'NE', 'SE']

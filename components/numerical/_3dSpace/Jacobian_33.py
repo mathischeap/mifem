@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 """3D numerical."""
-
-
-
 from abc import ABC
 from components.numerical._3dSpace.partial_derivative import NumericalPartialDerivative_xyz
-
 
 
 class NumericalJacobian_xyz_33(ABC):
@@ -23,8 +19,10 @@ class NumericalJacobian_xyz_33(ABC):
 
     def ___evaluate_func33_for_x_rst___(self, r, s, t):
         return self._func33_(r, s, t)[0]
+
     def ___evaluate_func33_for_y_rst___(self, r, s, t):
         return self._func33_(r, s, t)[1]
+
     def ___evaluate_func33_for_z_rst___(self, r, s, t):
         return self._func33_(r, s, t)[2]
 
@@ -38,8 +36,3 @@ class NumericalJacobian_xyz_33(ABC):
         return ((xr, xs, xt),
                 (yr, ys, yt),
                 (zr, zs, zt))
-
-
-
-if __name__ == '__main__':
-    pass

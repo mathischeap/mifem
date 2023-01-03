@@ -6,7 +6,6 @@ from components.freeze.main import FrozenOnly
 from scipy.misc import derivative
 
 
-
 class NumericalDerivative_fx(FrozenOnly):
     """Numerical derivative in 1D."""
     def __init__(self, func, x, dx=1e-6, n=1, order=3):
@@ -48,7 +47,7 @@ class NumericalDerivative_fx(FrozenOnly):
     def ___PRIVATE_check_dx___(self, dx):
         """ """
         assert isinstance(dx, (int, float))
-        self._dx_  = dx
+        self._dx_ = dx
 
     def ___PRIVATE_check_n___(self, n):
         """ """
@@ -59,9 +58,6 @@ class NumericalDerivative_fx(FrozenOnly):
         """ """
         assert order % 2 == 1 and order > 0, " <PartialDerivative> : order needs to be odd positive."
         self._order_ = order
-
-
-
 
     def scipy_derivative(self):
         """We compute ``df/d_`` at points ``x``."""

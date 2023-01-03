@@ -5,13 +5,13 @@ from components.freeze.main import FrozenOnly
 # from matplotlib import cm
 # from root.config.main import *
 
+
 class _3dCSCG_TensorField_matplot_Visualize(FrozenOnly):
     """"""
     def __init__(self, f):
         """"""
         self._f_ = f
         self._freeze_self_()
-
 
     def __call__(self, *args, **kwargs):
         """"""

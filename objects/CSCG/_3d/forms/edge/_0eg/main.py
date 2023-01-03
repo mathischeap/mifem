@@ -8,7 +8,8 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from abc import ABC
 
 import numpy as np
@@ -28,14 +29,15 @@ class _3dCSCG_0Edge(_3dCSCG_Edge, ABC):
     :param numbering_parameters:
     :param name:
     """
-    def __init__(self, mesh, space, hybrid=True, orientation='outer',
-        numbering_parameters='Naive', name='outer-oriented-0-edge-form'):
+    def __init__(
+            self, mesh, space, hybrid=True, orientation='outer',
+            numbering_parameters='Naive', name='outer-oriented-0-edge-form'
+    ):
         super().__init__(mesh, space, hybrid, orientation, numbering_parameters, name)
         self._k_ = 0
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_edge_0form')
         self._discretize_ = _3dCSCG_Edge0Form_Discretize(self)
         self._freeze_self_()
-
 
     def ___Pr_check_CF___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
@@ -52,16 +54,14 @@ class _3dCSCG_0Edge(_3dCSCG_Edge, ABC):
         assert func_body.ndim == self.ndim == 3
 
         if func_body.__class__.__name__ == '_3dCSCG_ScalarField':
-            assert func_body.ftype in ('standard','boundary-wise'), \
+            assert func_body.ftype in ('standard', 'boundary-wise'), \
                 f"3dCSCG 0edge BC do not accept func _3dCSCG_ScalarField of ftype {func_body.ftype}."
         else:
             raise Exception(f"3dCSCG 1edge BC do not accept func {func_body.__class__}")
 
-
     @property
     def discretize(self):
         return self._discretize_
-
 
     def reconstruct(self, xi, eta, sigma, i=None):
         """
@@ -102,17 +102,12 @@ class _3dCSCG_0Edge(_3dCSCG_Edge, ABC):
         return xyz, v
 
 
-
-
-
-
-
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\forms\edge\_0_edge.py
-    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('crazy', c=0.25)([5,6,7])
-    space = SpaceInvoker('polynomials')([('Lobatto',10), ('Lobatto',10), ('Lobatto',10)])
+    mesh = MeshGenerator('crazy', c=0.25)([5, 6, 7])
+    space = SpaceInvoker('polynomials')([('Lobatto', 10), ('Lobatto', 10), ('Lobatto', 10)])
     FC = FormCaller(mesh, space)
 
     e0 = FC('0-e')

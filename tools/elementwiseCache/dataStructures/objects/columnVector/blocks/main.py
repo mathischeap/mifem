@@ -14,7 +14,6 @@ class EWC_ColVec_Blocks(FrozenOnly):
         self._col_vec_ = col_vec
         self._freeze_self_()
 
-
     @property
     def shape(self):
         return self._shape_

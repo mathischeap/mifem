@@ -7,7 +7,7 @@
 import sys
 
 if './' not in sys.path:
-    sys.path.append('/')
+    sys.path.append('./')
 from components.freeze.main import FrozenOnly
 import numpy as np
 
@@ -138,7 +138,7 @@ class MultiDimMatrix(FrozenOnly):
         """"""
         RETURN = self.___getitem_pre_customizing___(item)
         # customization is after the cache, so we can do whatever customization afterwards.
-        # RETURN = self.customize.___PRIVATE_do_execute_customization___(RETURN, item)
+        # `RETURN = self.customize.___PRIVATE_do_execute_customization___(RETURN, item)`
         return RETURN
 
     @property
@@ -169,7 +169,7 @@ class MultiDimMatrix(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python tools/linear_algebra/elementwise_cache/objects/multi_dim_matrix/main.py
+    # mpiexec -n 4 python tools/elementwiseCache/dataStructures/objects/multiDimMatrix/main.py
     from __init__ import cscg3
 
     mesh = cscg3.mesh('cuboid', region_layout=[2, 2, 2])([3, 3, 3])

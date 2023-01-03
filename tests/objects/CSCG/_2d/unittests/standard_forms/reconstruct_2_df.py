@@ -5,7 +5,8 @@
 @time: 2022/08/30 3:57 PM
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 import numpy as np
 
@@ -16,8 +17,8 @@ from __init__ import cscg2
 def test_reconstruct_S0F_to_DV():
     """"""
     components.miprint("S0f [test_reconstruct_S0F_to_DV] ...... ", flush=True)
-    mesh = cscg2.mesh('crazy', bounds=[(-1,1) for _ in range(2)])([8,9], EDM='debug')
-    space = cscg2.space('polynomials')([6,5])
+    mesh = cscg2.mesh('crazy', bounds=[(-1, 1) for _ in range(2)])([8, 9], EDM='debug')
+    space = cscg2.space('polynomials')([6, 5])
     FC = cscg2.form(mesh, space)
     def U(t, x, y): return 2 * t * np.sin(np.pi * x) * np.cos(np.pi * y)
     f0 = FC('0-f-o')
@@ -74,11 +75,12 @@ def test_reconstruct_S0F_to_DV():
 
     return 1
 
+
 def test_reconstruct_oS1F_to_DV():
     """"""
     components.miprint("o1f [test_reconstruct_oS1F_to_DV] ...... ", flush=True)
-    mesh = cscg2.mesh('crazy', bounds=[(-1,1) for _ in range(2)])([7,8], EDM='debug')
-    space = cscg2.space('polynomials')([5,4])
+    mesh = cscg2.mesh('crazy', bounds=[(-1, 1) for _ in range(2)])([7, 8], EDM='debug')
+    space = cscg2.space('polynomials')([5, 4])
     FC = cscg2.form(mesh, space)
     def U(t, x, y): return 2 * t * np.sin(np.pi * x) * np.cos(np.pi * y)
     def V(t, x, y): return t * np.sin(2 * np.pi * x) * np.cos(np.pi * y)

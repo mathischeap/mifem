@@ -2,6 +2,7 @@
 from components.freeze.base import FrozenOnly
 from root.config.main import RANK, MASTER_RANK, MPI, COMM
 
+
 class DistributedVectorWhether(FrozenOnly):
     """"""
 

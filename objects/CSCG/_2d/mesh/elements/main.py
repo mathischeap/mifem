@@ -68,7 +68,7 @@ class _2dCSCG_Mesh_Elements(FrozenOnly):
             similarity = 1
         else:
             similarity = (self.num - A) / (self.num - 1)
-        Statistic['similarity according to types wrt metric'] = similarity # in [0, 1]
+        Statistic['similarity according to types wrt metric'] = similarity  # in [0, 1]
         Statistic['num_local_orthogonal_elements'] = self._num_local_orthogonal_elements_
 
         return Statistic
@@ -194,7 +194,8 @@ class _2dCSCG_Mesh_Elements(FrozenOnly):
     def ___PRIVATE_elementwise_cache_metric_key___(self, i):
         """This is an import method, for example, it can be used as a key generator for EWC objects."""
         mark = self[i].type_wrt_metric.mark
-        if not isinstance(mark, str): mark = str(mark)
+        if not isinstance(mark, str):
+            mark = str(mark)
         return mark
 
     @property
@@ -210,7 +211,7 @@ if __name__ == '__main__':
 
     # mesh = MeshGenerator('crazy', c=0.3)([50,45])
     # mesh = MeshGenerator('chp1',)([2,2])
-    mesh = MeshGenerator('crazy', c=0, bounds=([0, 1],[0, 1]))([10, 10])
+    mesh = MeshGenerator('crazy', c=0, bounds=([0, 1], [0, 1]))([10, 10])
     elements = mesh.elements
     S = elements.statistic
     # print(S)

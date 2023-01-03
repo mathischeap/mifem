@@ -16,15 +16,12 @@ from objects.CSCG._2d.spaces.base.trace_matrix import TraceMatrix
 import numpy as np
 
 
-
-
-
-
 class _2dCSCG_Space(FrozenClass):
     """n-D basis; basis functions."""
 
     def __init__(self, inputs, ndim):
-        if ndim is not None: inputs = [inputs for _ in range(ndim)]
+        if ndim is not None:
+            inputs = [inputs for _ in range(ndim)]
         self._inputs_ = inputs
         self._category_ = None
         self.___PRIVATE_generate_1D_basises___()
@@ -40,7 +37,6 @@ class _2dCSCG_Space(FrozenClass):
         self._GoN_ravel_ = None
         self._freeze_self_()
 
-
     def __repr__(self):
         """"""
         return f"2dCSCG-space={self.category}={self.p}"
@@ -52,8 +48,6 @@ class _2dCSCG_Space(FrozenClass):
 
     def __eq__(self, other):
         return self.standard_properties.parameters == other.standard_properties.parameters
-
-
 
     def ___PRIVATE_generate_1D_basises___(self):
         """ """
@@ -157,7 +151,6 @@ class _2dCSCG_Space(FrozenClass):
         """The 1-d nodes."""
         return self._nodes_
 
-
     @property
     def GoN(self):
         """Grid of the nodes."""
@@ -171,7 +164,6 @@ class _2dCSCG_Space(FrozenClass):
         if self._GoN_ravel_ is None:
             self._GoN_ravel_ = [_.ravel('F') for _ in self.GoN]
         return self._GoN_ravel_
-
 
     def ___PRIVATE_do_evaluate_quadrature___(self, quad_degree, quad_type=None):
         """

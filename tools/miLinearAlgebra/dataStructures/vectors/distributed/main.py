@@ -6,6 +6,7 @@ from root.config.main import RANK, MASTER_RANK, COMM, np, SECRETARY_RANK
 from tools.miLinearAlgebra.dataStructures.vectors.distributed.do import DistributedVectorDo
 from tools.miLinearAlgebra.dataStructures.vectors.distributed.whether import DistributedVectorWhether
 
+
 class DistributedVector(FrozenOnly):
     """
     An entry cannot be stored in multiple cores.
@@ -77,7 +78,7 @@ class DistributedVector(FrozenOnly):
                 measure[ind] += 1
 
             assert np.max(measure) <= 1, f"vector is not distributed. {measure}"
-        #================================================= ABOVE ===================================
+        # ================================================ ABOVE ===================================
         self._do_ = None
         self._whether_ = None
         self._freeze_self_()

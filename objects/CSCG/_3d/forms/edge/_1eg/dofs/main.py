@@ -16,4 +16,3 @@ class _3dCSCG_E1F_Dofs(FrozenOnly):
         if self._do_ is None:
             self._do_ = _3dCSCG_E1F_Dofs_Do(self)
         return self._do_
-

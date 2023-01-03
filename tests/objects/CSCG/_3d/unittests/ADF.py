@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import random
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from root.config.main import *
-from root.save import save, read
+from root.save import save
+from root.read.main import read
 import os
 
 from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
@@ -82,12 +84,10 @@ def test_ADF_NO1_general_tests_standard_forms():
     return 1
 
 
-
-
 def test_ADF_NO2_general_tests_trace_forms():
     """"""
     if RANK == MASTER_RANK:
-        load = random.randint(100,200)
+        load = random.randint(100, 200)
         print(f"ADF [test_ADF_NO2_general_tests_trace_forms] @ load = {load}... ", flush=True)
     else:
         load = None
@@ -116,7 +116,7 @@ def test_ADF_NO2_general_tests_trace_forms():
         return np.cos(2*np.pi*x) * np.cos(2*np.pi*y) * np.cos(2*np.pi*z) + t
 
     scalar = FC('scalar', p)
-    vector = FC('vector', (u,v,w))
+    vector = FC('vector', (u, v, w))
 
     # --------- save & read -----------------------------------------------
     dt0.prime.CF = scalar
@@ -172,15 +172,13 @@ def test_ADF_NO2_general_tests_trace_forms():
     return 1
 
 
-
-
-
 def test_ADF_NO3_coboundary():
     """"""
     if RANK == MASTER_RANK:
         c = random.random() / 10
-        if c < 0.075: c = 0
-        print(f"ADF [test_ADF_NO3_coboundary] @ crazy mesh of c = %0.4f..."%c, flush=True)
+        if c < 0.075:
+            c = 0
+        print(f"ADF [test_ADF_NO3_coboundary] @ crazy mesh of c = %0.4f..." % c, flush=True)
     else:
         c = None
     c = COMM.bcast(c, root=MASTER_RANK)
@@ -249,8 +247,10 @@ def test_ADF_NO3_coboundary():
 
     def F(t, x, y, z):
         return np.cos(np.pi*x) * np.sin(np.pi*y-0.125) * np.cos(np.pi*z) + t
+
     def G(t, x, y, z):
         return np.cos(np.pi*x) * np.cos(np.pi*y/2) * np.sin(np.pi*z) + t
+
     def H(t, x, y, z):
         return -2 * np.sin(np.pi*x) * np.cos(np.pi*y) * np.cos(np.pi*z) + t
 
@@ -277,13 +277,6 @@ def test_ADF_NO3_coboundary():
     assert df1.prime.error.L() < 0.02, f"{df1.prime.error.L()}! something is wrong."
 
     return 1
-
-
-
-
-
-
-
 
 
 if __name__ == '__main__':

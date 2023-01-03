@@ -54,7 +54,7 @@ def nLS_stop_criterion(BETA, atol, ITER, maxiter):
             judge_3 = False
 
         # judge_4: slow converging
-        judge_4 = False # we currently turn off this judge, if it is slow, we just do more iterations.
+        judge_4 = False  # we currently turn off this judge, if it is slow, we just do more iterations.
 
         # if len(BETA) > 1 and beta < BETA[-2]:
         #     beta_old = BETA[-2]

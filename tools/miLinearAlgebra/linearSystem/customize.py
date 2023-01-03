@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from components.freeze.main import FrozenOnly
 
+
 class ___LinearSystem_Customize___(FrozenOnly):
     """Used to define customizations to A and b simultaneously."""
     def __init__(self, ls):
@@ -47,28 +48,30 @@ class ___LinearSystem_Customize___(FrozenOnly):
         else:
             pass
 
-        #======== customize =============================================================
+        # ======= customize =============================================================
         I, J = self._LS_.block_shape
         assert i % 1 == 0, f"i={i}({i.__class__.__name__}) cannot be an index!"
         assert j % 1 == 0, f"j={j}({j.__class__.__name__}) cannot be an index!"
         assert 0 <= i < I and 0 <= j < J, f"(i,j)= ({i},{j}) is out of range!"
-        if not isinstance(i, int): i = int(i)
-        if not isinstance(j, int): j = int(j)
+        if not isinstance(i, int):
+            i = int(i)
+        if not isinstance(j, int):
+            j = int(j)
 
         if i == j:
             self._LS_.A.customize.\
                 identify_global_rows_according_to(
-                i, dof_itp, AS=AS)
+                    i, dof_itp, AS=AS)
             self._LS_.b.customize.\
                 set_entries_according_to(
-                i, dof_itp, AS=AS)
+                    i, dof_itp, AS=AS)
         else:
             self._LS_.A.customize.\
                 off_diagonally_identify_rows_according_to(
-                i, j, dof_itp, cochain_itp, AS=AS)
+                    i, j, dof_itp, cochain_itp, AS=AS)
             self._LS_.b.customize.\
                 set_entries_according_to(
-                i, dof_itp, cochain_itp=cochain_itp, AS=AS)
+                    i, dof_itp, cochain_itp=cochain_itp, AS=AS)
 
     def identify_global_row(self, r):
         """We set the row #r to be all zero except M(r, r) = 1."""

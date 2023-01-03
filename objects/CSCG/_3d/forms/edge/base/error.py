@@ -2,14 +2,9 @@
 """
 
 """
-import sys
-if './' not in sys.path: sys.path.append('/')
-
 
 from components.freeze.main import FrozenOnly
 from root.config.main import *
-
-
 
 
 class _3dCSCG_Edge_Error(FrozenOnly):
@@ -18,7 +13,6 @@ class _3dCSCG_Edge_Error(FrozenOnly):
         """"""
         self._ef_ = ef
         self._freeze_self_()
-
 
     def L(self, n='infinity', quad_degree=None, quad_density=None):
         """
@@ -35,7 +29,6 @@ class _3dCSCG_Edge_Error(FrozenOnly):
         quad_degree = [self._ef_.dqp[i] + 2 for i in range(3)] \
             if quad_degree is None else quad_degree
 
-
         if n == 'infinity':
             if quad_density is not None:
                 assert isinstance(quad_density, (int, float)) and quad_density > 0, \
@@ -43,7 +36,8 @@ class _3dCSCG_Edge_Error(FrozenOnly):
                 NUM_elements = self._ef_.mesh.elements.global_num
                 density_per_element = quad_density / NUM_elements
                 num_nodes = density_per_element**(1/3)
-                if num_nodes < 1: num_nodes = 3
+                if num_nodes < 1:
+                    num_nodes = 3
 
                 if num_nodes % 1 >= 0.5:
                     num_nodes = int(num_nodes) + 1
@@ -61,7 +55,7 @@ class _3dCSCG_Edge_Error(FrozenOnly):
             assert isinstance(n, int) and n > 0, f"L^{n} error is not valid."
             quad_nodes, _, quad_weights = self._ef_.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
 
-        #-- reconstruct the edge form on all edge-elements -----------------------------------------
+        # -- reconstruct the edge form on all edge-elements -----------------------------------------
         xyz, v = self._ef_.reconstruct(*quad_nodes)
 
         if n == 'infinity':
@@ -87,28 +81,3 @@ class _3dCSCG_Edge_Error(FrozenOnly):
             raise NotImplementedError(f"Not implemented for L^{n}-error of edge forms.")
 
         return globalError
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 6 python _3dCSCG\forms\edge\base\error.py
-
-    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
-
-    mesh = MeshGenerator('crazy', c=0.)([5,6,7])
-    space = SpaceInvoker('polynomials')([('Lobatto',5), ('Lobatto',5), ('Lobatto',5)])
-    FC = FormCaller(mesh, space)
-
-    e0 = FC('0-e')
-
-    def p(t, x, y, z): return - 6 * np.pi * np.sin(2*np.pi*x) * np.sin(2*np.pi*y) * np.sin(2*np.pi*z) + 0 * t
-    scalar = FC('scalar', p)
-
-    e0.TW.func.do.set_func_body_as(scalar)
-    e0.TW.current_time = 0
-    e0.TW.do.push_all_to_instant()
-
-    e0.discretize()
-
-    error = e0.error.L(quad_density=100000)
-    print(error)

@@ -41,7 +41,7 @@ class OnTraceElement_BoundaryWise(FrozenOnly):
 
         for _I in INDICES:
             te = SELF.mesh.trace.elements[_I]
-            assert te.IS_on_mesh_boundary, f"must be the case!"
+            assert te.whether.on_mesh_boundary, f"must be the case!"
             # when we do trace-element-wise reconstruction, we only accept 1d xi, eta, sigma.
             xyz_i = te.coordinate_transformation.mapping(xi, eta, sigma, parse_3_1d_eps=True)
 

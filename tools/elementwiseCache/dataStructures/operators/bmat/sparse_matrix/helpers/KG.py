@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+
 class ___BMAT_HELPER_KeyGenerator___:
     """"""
     def __init__(self, blocks):

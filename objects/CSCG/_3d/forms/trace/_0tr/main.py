@@ -9,12 +9,14 @@
 """
 from abc import ABC
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from root.config.main import *
 from objects.CSCG._3d.forms.trace.base.main import _3dCSCG_Standard_Trace
 from objects.CSCG._3d.forms.trace._0tr.discretize.main import _3dCSCG_0Trace_Discretize
 from components.quadrature import Quadrature
 from objects.CSCG._3d.forms.trace._0tr.visualize import _3dCSCG_0Trace_Visualize
+
 
 class _3dCSCG_0Trace(_3dCSCG_Standard_Trace, ABC):
     """
@@ -27,8 +29,10 @@ class _3dCSCG_0Trace(_3dCSCG_Standard_Trace, ABC):
     :param numbering_parameters:
     :param name:
     """
-    def __init__(self, mesh, space, hybrid=True, orientation='outer',
-        numbering_parameters='Naive', name='outer-oriented-0-trace-form'):
+    def __init__(
+            self, mesh, space, hybrid=True, orientation='outer',
+            numbering_parameters='Naive', name='outer-oriented-0-trace-form'
+    ):
         super().__init__(mesh, space, hybrid, orientation, numbering_parameters, name)
         self._k_ = 0
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_trace_0form')
@@ -94,11 +98,11 @@ class _3dCSCG_0Trace(_3dCSCG_Standard_Trace, ABC):
             indices = self.mesh.trace.elements._elements_.keys()
         else:
             if not isinstance(trace_element_range, (list, tuple)):
-                indices = [trace_element_range,]
+                indices = [trace_element_range, ]
             else:
                 indices = trace_element_range
 
-        xietasigma, pb = self.do.evaluate_basis_at_meshgrid(xi, eta,sigma)
+        xietasigma, pb = self.do.evaluate_basis_at_meshgrid(xi, eta, sigma)
         ii, jj, kk = np.size(xi), np.size(eta), np.size(sigma)
         xyz = dict()
         v = dict()
@@ -169,19 +173,21 @@ class _3dCSCG_0Trace(_3dCSCG_Standard_Trace, ABC):
                 else:
                     raise Exception()
 
-                if isinstance(mark, str): local_cache[mark] = M
+                if isinstance(mark, str):
+                    local_cache[mark] = M
 
                 MD[i] = M
 
         return MD
+
 
 if __name__ == '__main__':
     # mpiexec -n 5 python objects/CSCG/_3d/forms/trace/_0tr/main.py
 
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('crazy_periodic')([2,2,2])
-    space = SpaceInvoker('polynomials')([('Lobatto',5), ('Lobatto',6), ('Lobatto',4)])
+    mesh = MeshGenerator('crazy_periodic')([2, 2, 2])
+    space = SpaceInvoker('polynomials')([('Lobatto', 5), ('Lobatto', 6), ('Lobatto', 4)])
     FC = FormCaller(mesh, space)
 
     from numpy import sin, pi, cos

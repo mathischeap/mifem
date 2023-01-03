@@ -25,7 +25,6 @@ class FiledBase(FrozenClass):
         self._reconstruct_ = None
         self._do_ = None
 
-
     @property
     def mesh(self):
         return self._mesh_
@@ -39,7 +38,6 @@ class FiledBase(FrozenClass):
     def ftype(self):
         """The function type: same in all cores!"""
         return self._ftype_
-
 
     @property
     def general_format(self):
@@ -57,7 +55,6 @@ class FiledBase(FrozenClass):
                         import_module("components.functions.timePlus2dSpace.wrappers.scalar"),
                         "t2dScalar"
                     )
-
 
                 elif "vector_field" in tags:
 
@@ -79,7 +76,6 @@ class FiledBase(FrozenClass):
                         "t3dScalar"
                     )
 
-
                 elif "vector_field" in tags:
 
                     GFC = getattr(
@@ -98,7 +94,6 @@ class FiledBase(FrozenClass):
         else:
             raise Exception(f"field object of {self.ftype} type has no general format.")
 
-
     @property
     def ndim(self):
         return self.mesh.ndim
@@ -106,7 +101,6 @@ class FiledBase(FrozenClass):
     @property
     def name(self):
         return self.standard_properties.name
-
 
     @property
     def visualize(self):

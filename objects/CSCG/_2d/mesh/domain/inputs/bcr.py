@@ -65,7 +65,8 @@ class BottomCustomizedRectangle(DomainInputBase):
 
         """
         # _____ if l is None, we get is from mapping[0], X _____________________________
-        if l is None: l = mapping[0](1)
+        if l is None:
+            l = mapping[0](1)
         # ____ do some checks for the inputs ___________________________________________
         assert isinstance(h, (int, float)) and h > 0, " <BottomCustomizedRectangular> : h must > 0."
         assert isinstance(l, (int, float)) and l > 0, " <BottomCustomizedRectangular> : l must > 0."
@@ -111,13 +112,11 @@ class BottomCustomizedRectangle(DomainInputBase):
     def bottom_Jacobian(self):
         return self._bottom_Jacobian_
 
-
-
     @classproperty
     def statistic(cls):
         return {'periodic': False,
                 'region num': 1,
-                'mesh boundary num': 4, # the amount of mesh boundaries (instead of domain boundaries)
+                'mesh boundary num': 4,  # the amount of mesh boundaries (instead of domain boundaries)
                 }
 
     @classproperty

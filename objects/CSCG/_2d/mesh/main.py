@@ -13,12 +13,13 @@ from objects.CSCG._2d.mesh.legacy.coordinate_transformation import CoordinateTra
 from objects.CSCG._2d.mesh.do.main import _2dCSCG_Mesh_DO
 from objects.CSCG._2d.mesh.whether import _2dCSCG_Mesh_Whether
 
+
 class _2dCSCG_Mesh(CSCG_MESH_BASE):
     """The 2dCSCG mesh."""
     def __init__(self, domain, element_layout=None, EDM=None):
         assert domain.ndim == 2, " <Mesh> "
         self._domain_ = domain
-        COMM.barrier() # for safety reasons
+        COMM.barrier()  # for safety reasons
 
         self._DO_ = _2dCSCG_Mesh_DO(self)
         self.___PRIVATE_parse_element_layout___(element_layout)
@@ -36,7 +37,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
         self.___PRIVATE_modify_elements_map_wr2_periodic_setting___()
         self.___PRIVATE_generate_boundary_element_edges___()
 
-        self.___DEPRECATED_ct___ = CoordinateTransformation(self) # only for test purpose
+        self.___DEPRECATED_ct___ = CoordinateTransformation(self)  # only for test purpose
         self._elements_ = _2dCSCG_Mesh_Elements(self)
         self._trace_ = _2dCSCG_Trace(self)
         self._visualize_ = _2dCSCG_Mesh_Visualize(self)
@@ -44,7 +45,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
         self.___define_parameters___ = None
         self.___TEST_MODE___ = False
 
-        self.___element_global_numbering___ = None # clean it.
+        self.___element_global_numbering___ = None  # clean it.
         self._whether_ = None
         self._freeze_self_()
 
@@ -69,7 +70,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
         self._num_elements_in_region_: Dict[str] = dict()
         for rn in rns:
             self._element_layout_[rn], self._element_ratio_[rn], \
-            self._element_spacing_[rn], self._num_elements_in_region_[rn] = \
+                self._element_spacing_[rn], self._num_elements_in_region_[rn] = \
                 self.___PRIVATE_parse_element_layout_each_region___(EL[rn])
 
         self._num_elements_accumulation_ = dict()
@@ -140,7 +141,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
         elif number_what == 'all regions':
             DO_number_what = rns
         elif isinstance(number_what, str) and number_what in rns:
-            DO_number_what = [number_what,]
+            DO_number_what = [number_what, ]
         else:
             raise Exception()
 
@@ -186,9 +187,10 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
                     pass
                 current_num += self._num_elements_in_region_[rn]
 
-        elif EDM == 'SWV0': # smart way version 0; cores do not contain elements from different regions.
+        elif EDM == 'SWV0':  # smart way version 0; cores do not contain elements from different regions.
 
-            self.___SWV0_para___ = dict()  # once this method will need optimization, we initialize a variable like this.
+            self.___SWV0_para___ = dict()
+            # once this method will need optimization, we initialize a variable like this.
 
             current_num = 0
 
@@ -207,7 +209,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
 
                     else:
 
-                        if NCR < 4: # number of core in this region is 2 or 3.
+                        if NCR < 4:  # number of core in this region is 2 or 3.
                             # noinspection PyTupleAssignmentBalance
                             I, J = self._element_layout_[rn]
                             A = [I, J]
@@ -221,7 +223,8 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
                             start = current_num
                             end = current_num + self._num_elements_in_region_[rn]
 
-                            #!-Once we use _element_distribution_, _element_indices_, or _num_local_elements_, wo do this
+                            # !-Once we use _element_distribution_, _element_indices_,
+                            # or _num_local_elements_, wo do this
                             if rn in self.___character_num_elements___:
                                 # to make sure that after optimization, the does not change
                                 character_num_elements = self.___character_num_elements___[rn]
@@ -233,14 +236,14 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
 
                                 character_num_elements = int(np.mean(character_num_elements))
 
-                                if character_num_elements <= 0: character_num_elements = 1
+                                if character_num_elements <= 0:
+                                    character_num_elements = 1
 
                                 assert character_num_elements <= self._num_elements_in_region_[rn]
 
                                 self.___character_num_elements___[rn] = character_num_elements
 
-
-                            #!------------------------------------------------------------------------------------------!
+                            # --------------------------------------------------------------------------------------!
 
                             if character_num_elements <= 3:
 
@@ -248,7 +251,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
                                                 current_num + self._num_elements_in_region_[rn]).reshape(
                                                 self._element_layout_[rn], order='F')
 
-                            else: # we end up with a situation we do not know how to do a proper numbering.
+                            else:  # we end up with a situation we do not know how to do a proper numbering.
 
                                 # noinspection PyTupleAssignmentBalance
                                 I, J = self._element_layout_[rn]
@@ -257,18 +260,23 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
                                 A.sort()
                                 A0, A1 = A
 
-                                if A1 / A0 >= NCR * 0.75: # on A1, we have a lot more elements, so we block the regions along A1
+                                if A1 / A0 >= NCR * 0.75:
+                                    # on A1, we have a lot more elements, so we block the regions along A1
 
                                     _E_ = np.arange(current_num,
-                                                    current_num + self._num_elements_in_region_[rn]).reshape(A, order='F')
+                                                    current_num + self._num_elements_in_region_[rn]).reshape(
+                                        A, order='F'
+                                    )
 
                                 else:  # we now define a general numbering rule.
 
-                                    CNE = character_num_elements  # we use this number to decide how to divide the regions.
+                                    CNE = character_num_elements
+                                    # we use this number to decide how to divide the regions.
 
-                                    if A0 * A0 <= CNE: # A0 * A0 is significantly low.
+                                    if A0 * A0 <= CNE:  # A0 * A0 is significantly low.
                                         _E_ = np.arange(current_num,
-                                                        current_num + self._num_elements_in_region_[rn]).reshape(A, order='F')
+                                                        current_num + self._num_elements_in_region_[rn]).reshape(
+                                            A, order='F')
 
                                     else:
 
@@ -279,7 +287,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
                                         Y = (CNE / r) ** 0.5
                                         X = r * Y
 
-                                        X= int(X)
+                                        X = int(X)
                                         X = 1 if X == 0 else X
 
                                         if CNE >= 4 and A0 >= 2:
@@ -288,8 +296,8 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
 
                                         X = A0 if X > A0 else X
 
-                                        B = A0 // X # can have B blocks along A0
-                                        R = A0 % X  # will have R elements resting A0
+                                        B = A0 // X  # can have B blocks along A0
+                                        R = A0 % X   # will have R elements resting A0
 
                                         N = start
 
@@ -310,7 +318,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
                         # A general scheme to transpose _E_ into EGN ...
 
                         ESP = _E_.shape                 # shape of _E_
-                        DSP = self._element_layout_[rn] # designed shape
+                        DSP = self._element_layout_[rn]   # designed shape
 
                         E0, E1 = ESP
 
@@ -324,7 +332,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
                     # give EGN to dict: ___element_global_numbering___ if this region is numbered.
                     ___element_global_numbering___[rn] = EGN
 
-                else: # this region is not numbered, lets pass.
+                else:   # this region is not numbered, lets pass.
                     pass
 
                 current_num += self._num_elements_in_region_[rn]
@@ -363,7 +371,8 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
                 1. The overall quality (of the whole mesh across all cores.)
                 2. The local quality of this core.
         """
-        if SIZE == 1: return 1, 1
+        if SIZE == 1:
+            return 1, 1
 
         INTERNAL = 0
         EXTERNAL = 0
@@ -383,14 +392,14 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
 
         loc_qua = (INTERNAL + BOUNDARY) / (self.elements.num * 4)
 
-        I = COMM.reduce(INTERNAL, root=MASTER_RANK, op=MPI.SUM)
+        _I = COMM.reduce(INTERNAL, root=MASTER_RANK, op=MPI.SUM)
         E = COMM.reduce(EXTERNAL, root=MASTER_RANK, op=MPI.SUM)
         B = COMM.reduce(BOUNDARY, root=MASTER_RANK, op=MPI.SUM)
 
         if RANK == MASTER_RANK:
             ALL_FACES = self.elements.global_num * 4
-            assert I + E + B == ALL_FACES, "Something is wrong."
-            QUALITY = (I + B) / ALL_FACES
+            assert _I + E + B == ALL_FACES, "Something is wrong."
+            QUALITY = (_I + B) / ALL_FACES
         else:
             QUALITY = None
 
@@ -410,11 +419,12 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
             JUST_PASS = self.___SWV0_para___ == dict()
             JUST_PASS = COMM.allreduce(JUST_PASS, op=MPI.LAND)
 
-            if JUST_PASS: return
+            if JUST_PASS:
+                return
 
-            #TODO: optimize it (But not very necessary for 2-d mesh at all. So, may be just leave it.)
+            # TODO: optimize it (But not very necessary for 2-d mesh at all. So, may be just leave it.)
 
-        else: # no need to optimize
+        else:  # no need to optimize
             return
 
         # has to do another check ...
@@ -429,7 +439,7 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
             region_name, local_indices = self.___PRIVATE_do_find_region_name_and_local_indices_of_element___(i)
             _em_i_ = self.___PRIVATE_fetch_side_element___(region_name, local_indices)
             self.___element_map___[i] = _em_i_
-        if len(self._element_indices_) == 0: # to make sure we initialized the memoize cache.
+        if len(self._element_indices_) == 0:  # to make sure we initialized the memoize cache.
             self.___PRIVATE_do_find_region_name_and_local_indices_of_element___(-1)
 
     def ___PRIVATE_fetch_side_element___(self, region_name, local_indices):
@@ -597,10 +607,11 @@ class _2dCSCG_Mesh(CSCG_MESH_BASE):
     def __eq__(self, other):
         return self.standard_properties.parameters == other.standard_properties.parameters
 
-    @memoize5 # must use memoize
+    @memoize5  # must use memoize
     def ___PRIVATE_do_find_region_name_and_local_indices_of_element___(self, i):
         """ Find the regions and the local numbering of ith element. """
-        if i == -1: return None # to make sure we initialized the memoize cache.
+        if i == -1:
+            return None  # to make sure we initialized the memoize cache.
         region_name = None
         for num_elements_accumulation in self._num_elements_accumulation_:
             if i < num_elements_accumulation:

@@ -49,7 +49,6 @@ class Closed_Unit_Cube_Dissipation1(incompressible_NavierStokes_Base):
 
     def w_z(self, t, x, y, z): return 0 * x
 
-
     def fx(self, t, x, y, z): return sin(2 * pi * x)
 
     def fy(self, t, x, y, z): return sin(2 * pi * y)
@@ -73,7 +72,6 @@ class Constant_X_direction_body_force(incompressible_NavierStokes_Base):
         assert isinstance(f, (int, float)), f"f={f} wrong, need to be int or float."
         self._f_ = f
         self._freeze_self_()
-
 
     @property
     def valid_time(self):

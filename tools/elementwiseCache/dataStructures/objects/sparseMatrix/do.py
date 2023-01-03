@@ -17,7 +17,6 @@ class EWC_SparseMatrix_Do(FrozenOnly):
         """
         self.___locker___ = True
 
-
     def unlock_assembled_matrix(self):
         """We will be able to make any customization (adjust) to the MAX. And we will not save
         the assembled matrix once we assemble it, and if we already save it, we just clear it.
@@ -25,13 +24,11 @@ class EWC_SparseMatrix_Do(FrozenOnly):
         self.___locker___ = False
         self._MAT_.assembler.___AMC___ = None  # clear the assembled matrix cache
 
-
     def lock_sparsity(self):
         """We lock the sparsity of local matrices (as well as the global matrix), so the sparsity
          cannot be changed anymore although the entries can still be changed.
          """
         self.___sparsity_locker___ = True
-
 
     def unlock_sparsity(self):
         """We now can change the sparsity. And we clear the assembler cache because which probably
@@ -39,7 +36,6 @@ class EWC_SparseMatrix_Do(FrozenOnly):
         """
         self.___sparsity_locker___ = False
         self._MAT_.assembler._cache_ = None  # clear the assembler cache
-
 
     def clean(self, jobs=None):
         """We do some cleaning jobs with this method.

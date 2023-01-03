@@ -15,6 +15,7 @@ class NumericalJacobian_xy_t_21(ABC):
 
     def ___PRIVATE_evaluate_func21_for_x_t___(self, t):
         return self._func21_(t)[0]
+
     def ___PRIVATE_evaluate_func21_for_y_t___(self, t):
         return self._func21_(t)[1]
 
@@ -41,10 +42,6 @@ class NumericalJacobian_xy_t_21(ABC):
                 else:
                     result[i] = False
         return tuple(result)
-
-
-
-
 
 
 if __name__ == '__main__':

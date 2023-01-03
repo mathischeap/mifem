@@ -22,7 +22,7 @@ def make_a_video_from_images_in_folder(image_folder, video_name=None, duration=5
         return
     all_files = os.listdir(image_folder)
 
-    # ------- parse the video name -----------------------------------------------------------------
+    # ------- parse the video name --------------------------------
     if video_name is None:
         if 'video.avi' in all_files:
             video_name = image_folder + '/video_' + \
@@ -33,17 +33,17 @@ def make_a_video_from_images_in_folder(image_folder, video_name=None, duration=5
     else:
         pass
 
-    # ------- select all legal images --------------------------------------------------------------
+    # ------- select all legal images --------------------------------
     images = list()
     image_file_extensions = ('png', 'jpg', 'jpeg', 'df')
     for file in all_files:
         if '.' in file and file.split('.')[-1] in image_file_extensions:
             images.append(file)
 
-    # ----- sort the images ------------------------------------------------------------------------
+    # ----- sort the images ------------------------------------------
     images.sort(key=lambda x: int(x.split('.')[0]))
 
-    # -------- make the video ----------------------------------------------------------------------
+    # -------- make the video ----------------------------------------
     total_frames = len(images)
     assert total_frames >= 1, f"There is no legal images in this folder."
 
@@ -65,10 +65,9 @@ def make_a_video_from_images_in_folder(image_folder, video_name=None, duration=5
     cv2.destroyAllWindows()
     video.release()
 
-    # --------- clear images -----------------------------------------------------------------------
+    # --------- clear images -----------------------------------------
     if clean_images:  # do not easily clean images!
         for file in images:
             os.remove(image_folder + '/' + file)
     else:
         pass
-    # ==============================================================================================

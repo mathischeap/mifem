@@ -11,6 +11,7 @@ Published on Oct 10, 2014; 11:33am
 import numpy as np
 from collections.abc import Callable
 
+
 def genpiecewise(xi, condlist, funclist, fillvalue=0, args=(), **kw):
     """Evaluate a piecewise-defined function.
 
@@ -132,8 +133,6 @@ def genpiecewise(xi, condlist, funclist, fillvalue=0, args=(), **kw):
     return out
 
 
-
-
 if __name__ == '__main__':
     import doctest
 
@@ -144,7 +143,6 @@ if __name__ == '__main__':
     def Yp1(p, q): return 1
 
     def Yp2(p, q): return 2
-
 
     p = np.linspace(0, 1, 10)
     q = np.linspace(0, 1, 10)

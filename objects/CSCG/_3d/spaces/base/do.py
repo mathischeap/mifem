@@ -266,7 +266,6 @@ class _3dCSCG_space_do(FrozenOnly):
 
         return _meshgrid_ravel_, _basis_
 
-
     def evaluate_local_trace_basis_at_meshgrid(self, k, *domain, compute_xietasigma=True):
         """"""
         return self.evaluate_trace_basis_at_meshgrid(k, *domain, compute_xietasigma=compute_xietasigma)

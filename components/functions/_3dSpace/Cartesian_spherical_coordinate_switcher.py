@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-
 import numpy as np
 from abc import ABC
+
 
 class CartSphSwitcher(ABC):
     """A spherical <-> Cartesian coordinate switcher."""
@@ -21,4 +21,3 @@ class CartSphSwitcher(ABC):
         y = r_cos_theta * np.sin(az)
         z = r * np.sin(el)
         return x, y, z
-

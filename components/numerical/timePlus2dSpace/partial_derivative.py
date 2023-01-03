@@ -61,8 +61,6 @@ class NumericalPartialDerivative_txy(ABC):
         assert order % 2 == 1 and order > 0, " <PartialDerivative> : order needs to be odd positive."
         self._order_ = order
 
-
-
     def ___PRIVATE_evaluate_func_for_t___(self, t):
         return self._func_(t, self._x_, self._y_)
 
@@ -71,9 +69,6 @@ class NumericalPartialDerivative_txy(ABC):
 
     def ___PRIVATE_evaluate_func_for_y___(self, y):
         return self._func_(self._t_, self._x_, y,)
-
-
-
 
     def scipy_partial(self, d_):
         """We compute the partial derivative, i.e. ``df/d_``, at points ``*txyz``."""
@@ -99,7 +94,6 @@ class NumericalPartialDerivative_txy(ABC):
         px = self.scipy_partial('x')
         py = self.scipy_partial('y')
         return pt, px, py
-
 
     def check_partial_t(self, px_func, tolerance=1e-5):
         """give a analytical function `px_func`, we check if it is the partial-t derivative of the self.func"""
@@ -145,7 +139,6 @@ class NumericalPartialDerivative_txy(ABC):
         return (self.check_partial_t(pt_func, tolerance=tolerance),
                 self.check_partial_x(px_func, tolerance=tolerance),
                 self.check_partial_y(py_func, tolerance=tolerance))
-
 
 
 if __name__ == '__main__':

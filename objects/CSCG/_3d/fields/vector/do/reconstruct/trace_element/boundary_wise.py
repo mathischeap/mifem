@@ -38,16 +38,16 @@ class OnTraceElement_BoundaryWise(FrozenOnly):
             raise NotImplementedError(f"_3dCSCG_VectorField of 'boundary-wise' ftype"
                                       f" trace-element-reconstruction currently don't accept i={i}.")
 
-        for I in INDICES:
+        for _I in INDICES:
 
-            te = SELF.mesh.trace.elements[I]
+            te = SELF.mesh.trace.elements[_I]
             assert te.whether.on_mesh_boundary, f"must be the case because ftype == 'boundary-wise!"
 
             # only accept 1d arrays
             xyz_i = te.coordinate_transformation.mapping(xi, eta, sigma, parse_3_1d_eps=True)
 
             bn = te.on_mesh_boundary
-            assert bn in func, f"trace element #{I} is on <{bn}> which is not covered by boundary-wise func."
+            assert bn in func, f"trace element #{_I} is on <{bn}> which is not covered by boundary-wise func."
             func_i = func[bn]
 
             vx_i = func_i[0](*xyz_i)
@@ -55,11 +55,10 @@ class OnTraceElement_BoundaryWise(FrozenOnly):
             vz_i = func_i[2](*xyz_i)
 
             if ravel:
-                xyz[I] = [_.ravel('F') for _ in xyz_i]
-                value[I] = [vx_i.ravel('F'), vy_i.ravel('F'), vz_i.ravel('F')]
+                xyz[_I] = [_.ravel('F') for _ in xyz_i]
+                value[_I] = [vx_i.ravel('F'), vy_i.ravel('F'), vz_i.ravel('F')]
             else:
-                xyz[I] = xyz_i
-                value[I] = [vx_i, vy_i, vz_i, ]
-
+                xyz[_I] = xyz_i
+                value[_I] = [vx_i, vy_i, vz_i, ]
 
         return xyz, value

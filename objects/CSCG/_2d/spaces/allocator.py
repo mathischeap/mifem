@@ -2,14 +2,12 @@
 from components.freeze.base import FrozenOnly
 
 
-
 class _2dCSCG_SpaceAllocator(FrozenOnly):
     """"""
 
     @classmethod
     def ___space_name___(cls):
         return {'polynomials': "_2dCSCG_PolynomialSpace"}
-
 
     @classmethod
     def ___space_path___(cls):

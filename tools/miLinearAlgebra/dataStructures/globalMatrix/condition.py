@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-
-
 from numpy import linalg as nplinalg
 from components.freeze.main import FrozenOnly
 from root.config.main import RANK, MASTER_RANK, COMM
@@ -23,7 +21,7 @@ class ___GM_CONDITION___(FrozenOnly):
             2. (numpy.ndarray) v -- eigen vectors: v[:,i] is the eigenvector corresponding to
                 the eigenvalue w[i].
         """
-        M = self._gm_.do.gather_M_to_core(core=MASTER_RANK) # does not clear the local value.
+        M = self._gm_.do.gather_M_to_core(core=MASTER_RANK)  # does not clear the local value.
         if RANK == MASTER_RANK:
             M = M.toarray()
             w, v = nplinalg.eig(M)
@@ -34,7 +32,7 @@ class ___GM_CONDITION___(FrozenOnly):
 
     @property
     def condition_number(self):
-        M = self._gm_.do.gather_M_to_core(core=MASTER_RANK) # does not clear the local value.
+        M = self._gm_.do.gather_M_to_core(core=MASTER_RANK)  # does not clear the local value.
         if RANK == MASTER_RANK:
             M = M.toarray()
             cn = nplinalg.cond(M)

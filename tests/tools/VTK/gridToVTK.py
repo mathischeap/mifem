@@ -16,7 +16,6 @@ from objects.CSCG.tools.__init__ import gridToVTK
 from tests.objects.CSCG._3d.randObj.form_caller import random_FormCaller_of_total_load_around as rf3
 from tests.objects.CSCG._3d.randObj.field import random_scalar, random_vector
 
-
 from tests.objects.CSCG._2d.randObj.form_caller import random_FormCaller_of_total_load_around as rf2
 from tests.objects.CSCG._2d.randObj.field import random_scalar as rs2
 from tests.objects.CSCG._2d.randObj.field import random_vector as rv2

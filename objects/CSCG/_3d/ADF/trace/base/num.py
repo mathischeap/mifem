@@ -2,7 +2,6 @@
 from components.freeze.base import FrozenOnly
 
 
-
 class _3dCSCG_ADF_T_NUM(FrozenOnly):
     """"""
     def __init__(self, adt):

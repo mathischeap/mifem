@@ -31,38 +31,47 @@ class _2dCSCG_Mesh_Elements_CT(FrozenOnly):
         """Evaluating the coordinate transformation from quadrature. Results are in 2d array."""
         return self._ctq_2d_
 
-
     def mapping(self, xi, eta):
         return ElementsCTValuesCache(self._elements_, 'mapping', xi, eta)
+
     def X(self, xi, eta):
         return ElementsCTValuesCache(self._elements_, 'X', xi, eta)
+
     def Y(self, xi, eta):
         return ElementsCTValuesCache(self._elements_, 'Y', xi, eta)
 
     def Jacobian_matrix(self, xi, eta):
         return ElementsCTValuesCache(self._elements_, 'Jacobian_matrix', xi, eta)
+
     def J00(self, xi, eta):
         return ElementsCTValuesCache(self._elements_, 'J00', xi, eta)
+
     def J01(self, xi, eta):
         return ElementsCTValuesCache(self._elements_, 'J01', xi, eta)
+
     def J10(self, xi, eta):
         return ElementsCTValuesCache(self._elements_, 'J10', xi, eta)
+
     def J11(self, xi, eta):
         return ElementsCTValuesCache(self._elements_, 'J11', xi, eta)
 
     def Jacobian(self, xi, eta, J=None):
         return ElementsCTValuesCache(self._elements_, 'Jacobian', xi, eta, intermediateData=J)
+
     def metric(self, xi, eta, detJ=None):
         """g := det(G) = Jacobian ** 2."""
         return ElementsCTValuesCache(self._elements_, 'metric', xi, eta, intermediateData=detJ)
+
     def metric_matrix(self, xi, eta, J=None):
         """G, g_{i,j}."""
         return ElementsCTValuesCache(self._elements_, 'metric_matrix', xi, eta, intermediateData=J)
 
     def inverse_Jacobian_matrix(self, xi, eta, J=None):
         return ElementsCTValuesCache(self._elements_, 'inverse_Jacobian_matrix', xi, eta, intermediateData=J)
+
     def inverse_Jacobian(self, xi, eta, iJ=None):
         return ElementsCTValuesCache(self._elements_, 'inverse_Jacobian', xi, eta, intermediateData=iJ)
+
     def inverse_metric_matrix(self, xi, eta, iJ=None):
         """G^-1, g^{i,j}."""
         return ElementsCTValuesCache(self._elements_, 'inverse_metric_matrix', xi, eta, intermediateData=iJ)

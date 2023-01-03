@@ -9,7 +9,6 @@ class _3dCSCG_Edge0Form_Discretize_StandardScalar(FrozenOnly):
         self._ef_ = ef
         self._freeze_self_()
 
-
     def __call__(self, update_cochain=True, target='func'):
         """Discretize the standard _3dCSCG_ScalarField to a 0-edge-form
 
@@ -32,8 +31,8 @@ class _3dCSCG_Edge0Form_Discretize_StandardScalar(FrozenOnly):
             raise NotImplementedError(
                 f"_0Form.___PRIVATE_discretize_standard_ftype___ "
                 f"does not work for target={target}.")
-        for i in SELF.mesh.edge.elements: # go through all local edge-elements
-            element = SELF.mesh.edge.elements[i] # edge-element
+        for i in SELF.mesh.edge.elements:  # go through all local edge-elements
+            element = SELF.mesh.edge.elements[i]  # edge-element
             mesh_element = element.CHARACTERISTIC_element
             corner_edge = element.CHARACTERISTIC_corner_edge
             xyz = element.coordinate_transformation.mapping(*nodes,
@@ -42,8 +41,10 @@ class _3dCSCG_Edge0Form_Discretize_StandardScalar(FrozenOnly):
 
             local_EEW[i] = FUNC(*xyz)
         # isKronecker? ...
-        if not SELF.space.IS_Kronecker: raise NotImplementedError()
+        if not SELF.space.IS_Kronecker:
+            raise NotImplementedError()
         # pass to cochain.local ...
-        if update_cochain: SELF.cochain.local_EEW = local_EEW
+        if update_cochain:
+            SELF.cochain.local_EEW = local_EEW
         # ...
         return 'locally full local EEW cochain', local_EEW

@@ -6,8 +6,6 @@ from abc import ABC
 import numpy as np
 
 
-
-
 class NumericalPartialDerivative_xy(ABC):
     """
     Numerical partial derivative; we call it '2' because we compute a function or method that
@@ -81,9 +79,6 @@ class NumericalPartialDerivative_xy(ABC):
 
     def ___PRIVATE_evaluate_func_for_y___(self, y):
         return self._func_(self._x_, y)
-
-
-
 
     def scipy_partial(self, d_):
         """ We compute ``df/d_`` at points ``*xyz.``"""

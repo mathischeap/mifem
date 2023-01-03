@@ -38,8 +38,9 @@ class MeshGenerator(FrozenOnly):
             print(f"---[2dCSCG]-[MESH]-{MyTimer.current_time()}-----")
             print(f"   <domain ID>: {self._ID_}")
             str_dp = str(self._kwargs_)
-            if len(str_dp) > 40: str_dp = str_dp[:40] + '...'
-            print( "   <domain_parameters>: {}".format(str_dp))
+            if len(str_dp) > 40:
+                str_dp = str_dp[:40] + '...'
+            print("   <domain_parameters>: {}".format(str_dp))
             print(f"   <EDM>: {EDM}", flush=True)
 
         COMM.barrier()  # for safety reason
@@ -60,9 +61,9 @@ class MeshGenerator(FrozenOnly):
         if show_info and RANK == MASTER_RANK:
             str_element_layout = str(element_layout)
             if len(str_element_layout) < 40:
-                print( "   <element_layout input>: {}".format(str_element_layout))
+                print("   <element_layout input>: {}".format(str_element_layout))
             else:
-                print( "   <element_layout input>: {}...".format(str_element_layout[:40]))
+                print("   <element_layout input>: {}...".format(str_element_layout[:40]))
             for rn in mesh.elements.layout:
                 print(f"   <element_layout>: {rn} {mesh.elements.layout[rn]}")
             print(f"   <total elements>: {mesh.elements.global_num}", flush=True)
@@ -120,7 +121,8 @@ class SpaceInvoker(FrozenOnly):
             print(f"   <space inputs>: {inputs}")
 
         COMM.barrier()  # for safety reason
-        if ndim is not None: assert ndim == 2
+        if ndim is not None:
+            assert ndim == 2
         S = self._space_(inputs, ndim)
         sp = dict()
         sp['type'] = '_2dCSCG_Space'
@@ -204,7 +206,8 @@ class ExactSolutionSelector(FrozenOnly):
     @classmethod
     def listing(cls, printing=True, returning=False):
         """For an allocator class, this lists all the possibilities ONLY in the master core."""
-        if RANK != MASTER_RANK: return
+        if RANK != MASTER_RANK:
+            return
         included_allocators = [
             _2dCSCG_ExactSolutionAllocator,
         ]

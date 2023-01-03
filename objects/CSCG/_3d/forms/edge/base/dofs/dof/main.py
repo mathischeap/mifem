@@ -2,8 +2,6 @@
 from components.freeze.main import FrozenOnly
 
 
-
-
 class _3dCSCG_Edge_forms_DOF(FrozenOnly):
     """A dof of a edge form."""
     def __init__(self, dofs, i):
@@ -13,7 +11,7 @@ class _3dCSCG_Edge_forms_DOF(FrozenOnly):
         self._local_positions_ = list()
         for E, I in zip(ELEMENTS, INDICES):
             self._local_positions_.append((E, I))
-        self._i_ = i # I am the #i dof.
+        self._i_ = i  # I am the #i dof.
         self._dofs_ = dofs
         self._ef_ = dofs._ef_
         self._freeze_self_()

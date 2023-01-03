@@ -4,19 +4,17 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 11/3/2022 6:32 PM
 """
-import sys
 
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
 from importlib import import_module
-
 
 from components.functions.timePlus2dSpace.wrappers.helpers.scalar_add import t2d_ScalarAdd
 from components.functions.timePlus2dSpace.wrappers.helpers.scalar_sub import t2d_ScalarSub
 from components.functions.timePlus2dSpace.wrappers.helpers.scalar_neg import t2d_ScalarNeg
 from components.functions.timePlus2dSpace.wrappers.helpers.scalar_mul import t2d_ScalarMultiply
 
-from components.numerical.timePlus2dSpace.partial_derivative_as_functions import NumericalPartialDerivative_txy_Functions
+from components.numerical.timePlus2dSpace.partial_derivative_as_functions import \
+    NumericalPartialDerivative_txy_Functions
 
 from objects.CSCG._2d.fields.vector.main import _2dCSCG_VectorField
 from objects.miUsGrid.triangular.fields.vector.main import miUsGrid_Triangular_Vector

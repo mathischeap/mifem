@@ -38,7 +38,8 @@ class CircleHolePlate1(DomainInputBase):
 
         """
         # ____ parse inputs ____________________________________________________________
-        if hy is None: hy = hx
+        if hy is None:
+            hy = hx
         # ____ checks __________________________________________________________________
         assert hx > 0 and hy > 0, " <HolePlate> : hx={}, hy={} illegal.".format(hx, hy)
         assert r < np.min((hx, hy)), " <HolePlate> : r={} too large.".format(r)
@@ -70,7 +71,7 @@ class CircleHolePlate1(DomainInputBase):
     def statistic(cls):
         return {'periodic': False,
                 'region num': 4,
-                'mesh boundary num': 5, # the amount of mesh boundaries (instead of domain boundaries)
+                'mesh boundary num': 5,  # the amount of mesh boundaries (instead of domain boundaries)
                 }
 
     @classproperty

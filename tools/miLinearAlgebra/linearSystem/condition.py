@@ -2,8 +2,6 @@
 from components.freeze.main import FrozenOnly
 
 
-
-
 class ___LinearSystem_Condition___(FrozenOnly):
     """Used to define customizations to A and b simultaneously."""
     def __init__(self, ls):

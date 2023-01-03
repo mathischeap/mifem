@@ -3,8 +3,6 @@ from abc import ABC
 from components.numerical._2dSpace.partial_derivative import NumericalPartialDerivative_xy
 
 
-
-
 class NumericalJacobian_xy_22(ABC):
     """
     For a mapping: ``x = Phi_x(r, s), y = Phi_y(r, s)``,
@@ -18,6 +16,7 @@ class NumericalJacobian_xy_22(ABC):
 
     def ___PRIVATE_evaluate_func22_for_x_rs___(self, r, s):
         return self._func22_(r, s)[0]
+
     def ___PRIVATE_evaluate_func22_for_y_rs___(self, r, s):
         return self._func22_(r, s)[1]
 
@@ -28,4 +27,3 @@ class NumericalJacobian_xy_22(ABC):
                                                r, s, dx_dy=dr_ds, n=n, order=order).scipy_total
         return ((xr, xs),
                 (yr, ys))
-

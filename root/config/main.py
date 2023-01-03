@@ -78,9 +78,6 @@ from root.config.group import GROUP_CORES
 from root.config.check_same_in_all_cores import CHECK_SAME_IN_ALL_CORES
 
 
-
-
-
 if __name__ == '__main__':
     np = np
     tree = TREE

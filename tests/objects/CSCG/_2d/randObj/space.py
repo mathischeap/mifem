@@ -40,8 +40,10 @@ def random_space_of_degrees_around(overall_degrees):
             p0 = random.randint(1, int(overall_degrees/2))
             p1 = int(np.ceil(overall_degrees / p0))
 
-        if p0 < 1: p0 = 1
-        if p1 < 1: p1 = 1
+        if p0 < 1:
+            p0 = 1
+        if p1 < 1:
+            p1 = 1
 
         PPP = random.sample((p0, p1), 2)
 
@@ -56,7 +58,7 @@ def random_space_of_degrees_around(overall_degrees):
             dis = dis * 2 - 1
             dis[0] = -1
             dis[-1] = 1
-            DIS.append([dis,])
+            DIS.append([dis, ])
     else:
         space_name = None
         DIS = None
@@ -65,4 +67,3 @@ def random_space_of_degrees_around(overall_degrees):
     space = SpaceInvoker(space_name)(DIS)
 
     return space
-

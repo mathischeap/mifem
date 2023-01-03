@@ -22,10 +22,12 @@ class _2dCSCG_Mesh_DO_FIND(FrozenOnly):
 
     def slave_of_element(self, i: int) -> int:
         DISTRI = self._mesh_._element_distribution_
-        if isinstance(i, str): i = int(i)
+        if isinstance(i, str):
+            i = int(i)
         if SIZE <= 6 or not self._mesh_.___is_occupying_all_cores___:
             for nC in range(SIZE):
-                if i in DISTRI[nC]: return nC
+                if i in DISTRI[nC]:
+                    return nC
             raise Exception()
         midCore0 = 0
         midCore1 = SIZE // 2
@@ -43,10 +45,12 @@ class _2dCSCG_Mesh_DO_FIND(FrozenOnly):
             return midCore1
         elif i > np.max(DISTRI[midCore1]):
             for noCore in range(midCore1, midCore2):
-                if i in DISTRI[noCore]: return noCore
+                if i in DISTRI[noCore]:
+                    return noCore
         elif i < np.min(DISTRI[midCore1]):
             for noCore in range(midCore0, midCore1):
-                if i in DISTRI[noCore]: return noCore
+                if i in DISTRI[noCore]:
+                    return noCore
         else:
             raise Exception
 
@@ -60,10 +64,6 @@ class _2dCSCG_Mesh_DO_FIND(FrozenOnly):
             origin[i] = self._mesh_._element_spacing_[region_name][i][local_indices[i]]
             delta[i] = self._mesh_._element_ratio_[region_name][i][local_indices[i]]
         return tuple(origin), tuple(delta)
-
-
-
-
 
     def reference_origin_and_size_of_element(self, i):
         region_name, local_indices = self.region_name_and_local_indices_of_element(i)

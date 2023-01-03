@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from components.numerical.timePlus3dSpace.partial_derivative_as_functions import NumericalPartialDerivative_txyz_Functions
+from components.numerical.timePlus3dSpace.partial_derivative_as_functions import \
+    NumericalPartialDerivative_txyz_Functions
 from components.freeze.main import FrozenOnly
 from importlib import import_module
 
@@ -23,12 +24,13 @@ class _3dCSCG_VectorField_Numerical(FrozenOnly):
             NPD4F_z = NumericalPartialDerivative_txyz_Functions(func_z)
             base_path = '.'.join(str(self.__class__).split(' ')[1][1:-2].split('.')[:-4]) + '.'
             vector_class = getattr(import_module(base_path + 'vector.main'), '_3dCSCG_VectorField')
-            TDV = vector_class(self._vf_.mesh,
-                                      (NPD4F_x('t'), NPD4F_y('t'), NPD4F_z('t')),
-                                      ftype='standard',
-                                      valid_time=self._vf_.valid_time,
-                                      name='time-derivative-of-' + self._vf_.standard_properties.name
-                                      )
+            TDV = vector_class(
+                self._vf_.mesh,
+                (NPD4F_x('t'), NPD4F_y('t'), NPD4F_z('t')),
+                ftype='standard',
+                valid_time=self._vf_.valid_time,
+                name='time-derivative-of-' + self._vf_.standard_properties.name
+            )
             return TDV
         else:
             raise NotImplementedError(
@@ -48,13 +50,15 @@ class _3dCSCG_VectorField_Numerical(FrozenOnly):
             base_path = '.'.join(str(self.__class__).split(' ')[1][1:-2].split('.')[:-4]) + '.'
 
             tensor_class = getattr(import_module(base_path + 'tensor.main'), '_3dCSCG_TensorField')
-            gradient_tensor = tensor_class(self._vf_.mesh,
-                                     [(T00, T01, T02),
-                                      (T10, T11, T12),
-                                      (T20, T21, T22),],
-                                     ftype='standard',
-                                     valid_time=self._vf_.valid_time,
-                                     name = 'gradient-of-' + self._vf_.standard_properties.name
+            gradient_tensor = tensor_class(
+                self._vf_.mesh,
+                [(T00, T01, T02),
+                 (T10, T11, T12),
+                 (T20, T21, T22),
+                 ],
+                ftype='standard',
+                valid_time=self._vf_.valid_time,
+                name='gradient-of-' + self._vf_.standard_properties.name
                                      )
             return gradient_tensor
         else:
@@ -80,12 +84,13 @@ class _3dCSCG_VectorField_Numerical(FrozenOnly):
 
             vector_class = getattr(import_module(base_path + 'vector.main'), '_3dCSCG_VectorField')
 
-            curl_vector = vector_class(self._vf_.mesh,
-                                     [curl_vector_0, curl_vector_1, curl_vector_2],
-                                     ftype='standard',
-                                     valid_time=self._vf_.valid_time,
-                                     name = 'curl-of-' + self._vf_.standard_properties.name
-                                     )
+            curl_vector = vector_class(
+                self._vf_.mesh,
+                [curl_vector_0, curl_vector_1, curl_vector_2],
+                ftype='standard',
+                valid_time=self._vf_.valid_time,
+                name='curl-of-' + self._vf_.standard_properties.name
+            )
             return curl_vector
         else:
             raise NotImplementedError(f"Numerical curl not implemented for vector type = {self._vf_.ftype}.")
@@ -106,12 +111,13 @@ class _3dCSCG_VectorField_Numerical(FrozenOnly):
             base_path = '.'.join(str(self.__class__).split(' ')[1][1:-2].split('.')[:-4]) + '.'
 
             scalar_class = getattr(import_module(base_path + 'scalar.main'), '_3dCSCG_ScalarField')
-            divergence_scalar = scalar_class(self._vf_.mesh,
-                                             div_func,
-                                             ftype='standard',
-                                             valid_time=self._vf_.valid_time,
-                                             name = 'divergence-of-' + self._vf_.standard_properties.name
-                                             )
+            divergence_scalar = scalar_class(
+                self._vf_.mesh,
+                div_func,
+                ftype='standard',
+                valid_time=self._vf_.valid_time,
+                name='divergence-of-' + self._vf_.standard_properties.name
+            )
             return divergence_scalar
         else:
             raise NotImplementedError(f"Numerical divergence not implemented for vector type = {self._vf_.ftype}.")

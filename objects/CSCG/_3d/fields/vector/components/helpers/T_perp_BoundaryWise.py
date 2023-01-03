@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 8/26/2022 1:57 AM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 
 from components.freeze.base import FrozenOnly
 
@@ -48,9 +45,3 @@ class _3dCSCG_T_perp_BW(FrozenOnly):
         w2 = w2(t, x, y, z)
 
         return w1 * n2 - w2 * n1
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

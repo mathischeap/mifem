@@ -12,8 +12,6 @@ class NumBasis(FrozenOnly):
         self._FS_ = FS
         self._freeze_self_()
 
-
-
     @property
     def _2dCSCG_0Form_Inner(self):
         """ """
@@ -40,9 +38,6 @@ class NumBasis(FrozenOnly):
         _basis_ = np.prod(self._FS_.p)
         _basis_components_ = (_basis_,)
         return _basis_, _basis_components_
-
-
-
 
     @property
     def _2dCSCG_0Form_Outer(self):
@@ -71,9 +66,6 @@ class NumBasis(FrozenOnly):
         _basis_components_ = (_basis_,)
         return _basis_, _basis_components_
 
-
-
-
     @property
     def _2dCSCG_0Trace_Inner(self):
         """ """
@@ -94,9 +86,6 @@ class NumBasis(FrozenOnly):
         _basis_onsides_ = {'U': p[1], 'D': p[1],
                            'L': p[0], 'R': p[0]}
         return _basis_, _basis_components_, _basis_onsides_
-
-
-
 
     @property
     def _2dCSCG_0Trace_Outer(self):

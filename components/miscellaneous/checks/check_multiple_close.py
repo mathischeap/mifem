@@ -3,6 +3,7 @@
 
 from components.decorators.all import accepts
 
+
 @accepts((int, float), (int, float))
 def check_multiple_close(a, b, tol=1e-8):
     """check if a = b*i +- tol where i = 1,2,3,4,...

@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
-
-
 from abc import ABC
 from types import FunctionType, MethodType
-
-
 
 
 class NumpyStyleDocstringReader(ABC):
@@ -24,7 +20,7 @@ class NumpyStyleDocstringReader(ABC):
             _Para_ = self._docstring_no_space_.split('Parameters')[1]
 
             if '：' in _Para_:
-                _Para_ =_Para_.replace('：', ":")
+                _Para_ = _Para_.replace('：', ":")
 
             _Para_ = _Para_.split('----------')[1]
             _Para_ = _Para_.split('\n\n')[0]

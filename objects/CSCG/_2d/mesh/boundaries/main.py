@@ -15,13 +15,13 @@ periodic boundaries. So ...
 
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from root.config.main import *
 from components.freeze.main import FrozenOnly
 
 from objects.CSCG._2d.mesh.boundaries.visualize.main import _2dCSCG_Mesh_Boundaries_Visualize
 from objects.CSCG._2d.mesh.boundaries.boundary.main import _2dCSCG_Mesh_Boundary
-
 
 
 class _2dCSCG_Mesh_Boundaries(FrozenOnly):
@@ -56,9 +56,12 @@ class _2dCSCG_Mesh_Boundaries(FrozenOnly):
                 if isinstance(target, str):
 
                     if target in bns:
-                        if target not in names: names.append(target)
-                        if target not in Res: Res[target] = list()
-                        if target not in Rte: Rte[target] = list()
+                        if target not in names:
+                            names.append(target)
+                        if target not in Res:
+                            Res[target] = list()
+                        if target not in Rte:
+                            Rte[target] = list()
                         Res[target].append(str(i)+side_names[j])
                         Rte[target].append(t_elements.map[i][j])
 
@@ -80,8 +83,10 @@ class _2dCSCG_Mesh_Boundaries(FrozenOnly):
         # ...
 
         for na in names:
-            if na not in Res: Res[na] = list()
-            if na not in Rte: Rte[na] = list()
+            if na not in Res:
+                Res[na] = list()
+            if na not in Rte:
+                Rte[na] = list()
         self._names_ = names
         self._RANGE_element_edges_ = Res
         self._RANGE_trace_elements_ = Rte
@@ -168,11 +173,6 @@ class _2dCSCG_Mesh_Boundaries(FrozenOnly):
 
     def __len__(self):
         return len(self.names)
-
-
-
-
-
 
 
 if __name__ == "__main__":

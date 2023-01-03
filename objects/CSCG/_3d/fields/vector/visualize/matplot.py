@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 from root.config.main import *
 
+
 class _3dCSCG_VectorField_matplot_Visualize(FrozenOnly):
     """"""
     def __init__(self, f):
@@ -12,14 +13,15 @@ class _3dCSCG_VectorField_matplot_Visualize(FrozenOnly):
         self._f_ = f
         self._freeze_self_()
 
-
     def __call__(self, *args, **kwargs):
         """"""
         return self.boundary_values(*args, **kwargs)
 
-    def boundary_values(self,
-        density=5000, colormap='coolwarm',
-        num_color_bar_ticks=5):
+    def boundary_values(
+            self,
+            density=5000, colormap='coolwarm',
+            num_color_bar_ticks=5
+    ):
         """"""
         mesh = self._f_.mesh
         NUM = mesh.trace.elements.global_num
@@ -30,7 +32,8 @@ class _3dCSCG_VectorField_matplot_Visualize(FrozenOnly):
         xyz = COMM.gather(xyz, root=MASTER_RANK)
         v = COMM.gather(v, root=MASTER_RANK)
 
-        if RANK != MASTER_RANK: return
+        if RANK != MASTER_RANK:
+            return
 
         XYZ = list()
         Vx = list()
@@ -67,7 +70,7 @@ class _3dCSCG_VectorField_matplot_Visualize(FrozenOnly):
 
         del Vx, Vy, Vz
         cmap = getattr(cm, colormap)
-        fig = plt.figure(figsize=(15,5))
+        fig = plt.figure(figsize=(15, 5))
 
         # --------- x - component --------------------------------------------------------------------------
         ax = fig.add_subplot(131, projection='3d')
@@ -81,11 +84,12 @@ class _3dCSCG_VectorField_matplot_Visualize(FrozenOnly):
 
         mappable = cm.ScalarMappable(cmap=cmap)
         mappable.set_array(np.array(ticks[0]))
-        cb = plt.colorbar(mappable, ax=ax, # ticks=np.linspace(0,1,num_ticks),
-                          shrink=1, aspect=20,# extend='min',
+        cb = plt.colorbar(mappable, ax=ax,  # ticks=np.linspace(0,1,num_ticks),
+                          shrink=1, aspect=20,  # extend='min',
                           orientation='vertical', )
-        cb.set_label(r'x-component')#,labelpad=10, size=15)
-        cb.ax.tick_params() # labelsize=13.5
+
+        cb.set_label(r'x-component')   # labelpad=10, size=15)
+        cb.ax.tick_params()   # labelsize=13.5
         ax.set_xlabel(r'$x$', fontsize=10)
         ax.set_ylabel(r'$y$', fontsize=10)
         ax.set_zlabel(r'$z$', fontsize=10)
@@ -102,11 +106,11 @@ class _3dCSCG_VectorField_matplot_Visualize(FrozenOnly):
 
         mappable = cm.ScalarMappable(cmap=cmap)
         mappable.set_array(np.array(ticks[1]))
-        cb = plt.colorbar(mappable, ax=ax, # ticks=np.linspace(0,1,num_ticks),
-                          shrink=1, aspect=20,# extend='min',
+        cb = plt.colorbar(mappable, ax=ax,  # ticks=np.linspace(0,1,num_ticks),
+                          shrink=1, aspect=20,  # extend='min',
                           orientation='vertical', )
-        cb.set_label(r'y-component')#,labelpad=10, size=15)
-        cb.ax.tick_params() #  labelsize=13.5
+        cb.set_label(r'y-component')  # labelpad=10, size=15)
+        cb.ax.tick_params()   # labelsize=13.5
         ax.set_xlabel(r'$x$', fontsize=10)
         ax.set_ylabel(r'$y$', fontsize=10)
         ax.set_zlabel(r'$z$', fontsize=10)
@@ -123,15 +127,15 @@ class _3dCSCG_VectorField_matplot_Visualize(FrozenOnly):
 
         mappable = cm.ScalarMappable(cmap=cmap)
         mappable.set_array(np.array(ticks[2]))
-        cb = plt.colorbar(mappable, ax=ax, # ticks=np.linspace(0,1,num_ticks),
-                          shrink=1, aspect=20,# extend='min',
+        cb = plt.colorbar(mappable, ax=ax,   # ticks=np.linspace(0,1,num_ticks),
+                          shrink=1, aspect=20,  # extend='min',
                           orientation='vertical', )
-        cb.set_label(r'z-component')#,labelpad=10, size=15)
-        cb.ax.tick_params() # labelsize=13.5
+        cb.set_label(r'z-component')  # labelpad=10, size=15)
+        cb.ax.tick_params()   # labelsize=13.5
         ax.set_xlabel(r'$x$', fontsize=10)
         ax.set_ylabel(r'$y$', fontsize=10)
         ax.set_zlabel(r'$z$', fontsize=10)
-        #===================================================================================================
+        # ==================================================================================================
 
         plt.show()
         return fig

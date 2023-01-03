@@ -2,14 +2,12 @@
 from components.freeze.base import FrozenOnly
 
 
-
 class _3dCSCG_EdgeForm_Num(FrozenOnly):
     """"""
     def __init__(self, ef):
         """"""
         self._ef_ = ef
         self._freeze_self_()
-
 
     @property
     def basis(self):

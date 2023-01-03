@@ -45,8 +45,10 @@ class _2dCSCG_Trace_Visualize(FrozenOnly):
         """
         mesh = self._trace_._mesh_
         density = int(np.ceil(density / self._trace_.elements.global_num))
-        if density > 100: density = 100
-        if density < 10: density = 10
+        if density > 100:
+            density = 100
+        if density < 10:
+            density = 10
 
         o = np.linspace(-1, 1, density)  # plot density
         c = np.array([0, ])
@@ -67,7 +69,8 @@ class _2dCSCG_Trace_Visualize(FrozenOnly):
         if RANK == MASTER_RANK:
             # for finding  the position of the other mesh element edge of a periodic trace element.
             tec_p = dict()
-            for TEcp_i in TEC_P:  tec_p.update(TEcp_i)
+            for TEcp_i in TEC_P:
+                tec_p.update(TEcp_i)
         else:
             tec_p = None
         tec_p = COMM.bcast(tec_p, root=MASTER_RANK)
@@ -76,8 +79,10 @@ class _2dCSCG_Trace_Visualize(FrozenOnly):
 
         if RANK == MASTER_RANK:
             ted, tec = dict(), dict()
-            for TEDi in TED:  ted.update(TEDi)
-            for TECi in TEC:  tec.update(TECi)
+            for TEDi in TED:
+                ted.update(TEDi)
+            for TECi in TEC:
+                tec.update(TECi)
             del TED, TEC
 
             RB = mesh.domain.visualize.matplot(
@@ -122,7 +127,8 @@ class _2dCSCG_Trace_Visualize(FrozenOnly):
             boundaries_numb = mesh.domain.boundaries.num
             boundaries_name = mesh.domain.boundaries.names
             bounbary_name_color_dict: dict[str] = dict()
-            if boundaries_numb > 10 and corlormap == 'tab10': corlormap = 'viridis'
+            if boundaries_numb > 10 and corlormap == 'tab10':
+                corlormap = 'viridis'
             color = cm.get_cmap(corlormap, boundaries_numb)
             colors = []
             for j in range(boundaries_numb):
@@ -164,8 +170,10 @@ class _2dCSCG_Trace_Visualize(FrozenOnly):
             plt.xlabel(r"$x$", fontsize=labelsize)
             plt.ylabel(r"$y$", fontsize=labelsize)
             plt.tick_params(axis='both', which='both', labelsize=ticksize)
-            if xlim is not None: plt.xlim(xlim)
-            if ylim is not None: plt.ylim(ylim)
+            if xlim is not None:
+                plt.xlim(xlim)
+            if ylim is not None:
+                plt.ylim(ylim)
 
             for i in ted:
                 ax.plot(*ted[i], color=element_color, linewidth=element_linewidth)
@@ -177,14 +185,14 @@ class _2dCSCG_Trace_Visualize(FrozenOnly):
 
             for rn in mesh.domain.regions.names:
                 for ei in range(4):
-                    if reodb[rn][ei] == 1: # plot the domain boundary
+                    if reodb[rn][ei] == 1:  # plot the domain boundary
                         bn = mesh.domain.regions.map[rn][ei]
                         ax.plot(RB[rn][ei][0], RB[rn][ei][1],
                                 color=bounbary_name_color_dict[bn], linewidth=domain_boundary_linewidth)
                         ax.plot(RB[rn][ei][0], RB[rn][ei][1],
                                 color='k', linewidth=0.1*domain_boundary_linewidth)
                     else:
-                        if region_boundary: # plot the regions boundary
+                        if region_boundary:  # plot the regions boundary
                             ax.plot(RB[rn][ei][0], RB[rn][ei][1], color='b',
                                     linewidth=region_boundary_linewidth)
 

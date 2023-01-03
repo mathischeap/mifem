@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from components.freeze.base import FrozenOnly
 
+
 class Counter(FrozenOnly):
     """"""
     def __init__(self, start=0):
@@ -13,10 +14,6 @@ class Counter(FrozenOnly):
     def __next__(self):
         self._i_ += 1
         return self._i_
-
-
-
-
 
 
 if __name__ == '__main__':

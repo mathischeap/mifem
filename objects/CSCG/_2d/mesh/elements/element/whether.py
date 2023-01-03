@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.base import FrozenOnly
 
@@ -42,8 +43,3 @@ class _2dCSCG_Mesh_Whether(FrozenOnly):
             else:
                 self._orthogonal_ = False
         return self._orthogonal_
-
-
-if __name__ == "__main__":
-    # mpiexec -n 4 python 
-    pass

@@ -8,9 +8,9 @@ from objects.CSCG._2d.master import MeshGenerator
 def random_mesh_of_elements_around(elements_num,
                                    exclude_periodic=False,
                                    domain_boundary_distribution_regularities=None,
-                                   mesh_boundary_num = None,
+                                   mesh_boundary_num=None,
                                    mesh_pool=None,
-                                   EDM_pool = None,
+                                   EDM_pool=None,
                                    ):
     """We generate a random mesh of almost ``elements_num`` elements.
 
@@ -19,7 +19,7 @@ def random_mesh_of_elements_around(elements_num,
     :param mesh_boundary_num: we will select mesh which satisfies this requirement.
     :param domain_boundary_distribution_regularities: We only select from meshes
         that match at least one of `domain_boundary_distribution_regularities`
-        (``domain_boundary_distribution_regularity`` \cap mesh.domain.boundaries.distribution_regularities != empty)
+        (``domain_boundary_distribution_regularity`` \\cap mesh.domain.boundaries.distribution_regularities != empty)
     :param mesh_pool: if `mesh_pool` is not None, we will not select mesh from this pool.
     :param EDM_pool: if `EDM_pool` is not None, we will use one of the EDM from this pool.
         Otherwise, we use EDM = None for the mesh generator.
@@ -32,8 +32,6 @@ def random_mesh_of_elements_around(elements_num,
     RP = MeshGenerator.___domain_input_random_parameters___()
     Statistic = MeshGenerator.___domain_input_statistic___()
 
-
-
     mesh_name_region_num = dict()
     if exclude_periodic:
         for mesh_id in Statistic:
@@ -43,15 +41,9 @@ def random_mesh_of_elements_around(elements_num,
         for mesh_id in Statistic:
             mesh_name_region_num[mesh_id] = Statistic[mesh_id]['region num']
 
-
-
-
-
-
-
     if mesh_pool is not None:
         if isinstance(mesh_pool, str):
-            mesh_pool = [mesh_pool,]
+            mesh_pool = [mesh_pool, ]
         assert isinstance(mesh_pool, (list, tuple)), f"mesh_pool={mesh_pool} should be a list or a tuple."
 
         _MESH_POOL_ = dict()
@@ -64,16 +56,9 @@ def random_mesh_of_elements_around(elements_num,
     else:
         pass
 
-
-
-
     mesh_name_boundary_num = dict()
     for mesh_id in Statistic:
         mesh_name_boundary_num[mesh_id] = Statistic[mesh_id]['mesh boundary num']
-
-
-
-
 
     if mesh_boundary_num is None:
         pass
@@ -91,7 +76,7 @@ def random_mesh_of_elements_around(elements_num,
 
     assert len(mesh_name_region_num) > 0, f"cannot find a proper mesh."
 
-    #------- check: domain_boundary_distribution_regularities -------------------------------------
+    # ------- check: domain_boundary_distribution_regularities -------------------------------------
 
     while 1:
 
@@ -111,21 +96,22 @@ def random_mesh_of_elements_around(elements_num,
 
         if isinstance(domain_boundary_distribution_regularities, str):
             domain_boundary_distribution_regularities = \
-                [domain_boundary_distribution_regularities,]
+                [domain_boundary_distribution_regularities, ]
 
-        test_mesh = MeshGenerator(mesh_name)([1,1])
+        test_mesh = MeshGenerator(mesh_name)([1, 1])
         dbd_regularities = test_mesh.domain.boundaries.distribution_regularities
 
         for r in domain_boundary_distribution_regularities:
             if r in dbd_regularities:
                 break
         # noinspection PyUnboundLocalVariable
-        if r in dbd_regularities: break
+        if r in dbd_regularities:
+            break
 
         del mesh_name_region_num[mesh_name]
 
     personal_parameters = RP[mesh_name]
-    test_mesh = MeshGenerator(mesh_name, **personal_parameters)([1,1])
+    test_mesh = MeshGenerator(mesh_name, **personal_parameters)([1, 1])
 
     if RANK == MASTER_RANK:
         region_num = mesh_name_region_num[mesh_name]
@@ -156,26 +142,29 @@ def random_mesh_of_elements_around(elements_num,
         else:
             factor1 = random.randint(int(0.666 * elements_num), int(elements_num))
 
-
-        #------ (4) EDIT :: special requests for particular meshes ---------------------------------
+        # ----- (4) EDIT :: special requests for particular meshes ---------------------------------
         if mesh_name == 'crazy_periodic':
             # factor0 and factor1 are elements along each direction.
-            if factor0 == 1: factor0 = 2
-            if factor1 == 1: factor1 = 2
+            if factor0 == 1:
+                factor0 = 2
+            if factor1 == 1:
+                factor1 = 2
         if mesh_name == 'rectangle_periodic':
             # factor0 and factor1 are elements along each direction.
-            if factor0 == 1: factor0 = 2
-            if factor1 == 1: factor1 = 2
-        else: # has no special request for the mesh at this moment.
+            if factor0 == 1:
+                factor0 = 2
+            if factor1 == 1:
+                factor1 = 2
+        else:  # has no special request for the mesh at this moment.
             pass
-        #===========================================================================================
+        # ==========================================================================================
 
         FFF = random.sample((factor0, factor1), 2)
 
         element_layout = list()
         a = random.random()
 
-        if a > 0.5: # 50% chance to use non-uniform element_layout
+        if a > 0.5:  # 50% chance to use non-uniform element_layout
             for f in FFF:
                 element_layout.append([random.randint((f+1), 2*(f+1)) for _ in range(f)])
         else:  # uniform element_layout
@@ -185,7 +174,7 @@ def random_mesh_of_elements_around(elements_num,
         element_layout = None
     element_layout = COMM.bcast(element_layout, root=MASTER_RANK)
 
-    #-----------------------------------------------------------------------------------------------
+    # ----------------------------------------------------------------------------------------------
 
     if EDM_pool is None:
         EDM = None
@@ -193,7 +182,7 @@ def random_mesh_of_elements_around(elements_num,
         if RANK == MASTER_RANK:
 
             if isinstance(EDM_pool, str):
-                EDM_pool = [EDM_pool,]
+                EDM_pool = [EDM_pool, ]
 
             LEN = len(EDM_pool)
             ind = random.randint(0, LEN-1)

@@ -18,7 +18,7 @@ def ___split_A___(indptr, splitting_factor, PS):
             ST += 1
             SL.append(i)
             __ += splitting_factor
-    if SL[-1] != PS :
+    if SL[-1] != PS:
         ST += 1
         SL.append(PS)
     assert ST >= 1 and ST == len(SL)-1

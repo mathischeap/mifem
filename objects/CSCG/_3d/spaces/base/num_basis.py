@@ -185,12 +185,14 @@ class NumBasis(FrozenOnly):
             True: 2 * (px * py + py * pz + pz * px),
             False: self._3dCSCG_0Trace[0][False],
         }
-        return basis, {'N': py * pz,
-                       'S': py * pz,
-                       'W': px * pz,
-                       'E': px * pz,
-                       'B': px * py,
-                       'F': px * py}
+        return basis, {
+            'N': py * pz,
+            'S': py * pz,
+            'W': px * pz,
+            'E': px * pz,
+            'B': px * py,
+            'F': px * py
+        }
 
     @property
     def _3dCSCG_2LocalTrace(self):
@@ -199,12 +201,14 @@ class NumBasis(FrozenOnly):
             True: 2 * (px * py + py * pz + pz * px),
             False: self._3dCSCG_2Trace[0][False],
         }
-        return basis, {'N': py * pz,
-                       'S': py * pz,
-                       'W': px * pz,
-                       'E': px * pz,
-                       'B': px * py,
-                       'F': px * py}
+        return basis, {
+            'N': py * pz,
+            'S': py * pz,
+            'W': px * pz,
+            'E': px * pz,
+            'B': px * py,
+            'F': px * py
+        }
 
     @property
     def _3dCSCG_1LocalTrace(self):
@@ -216,12 +220,11 @@ class NumBasis(FrozenOnly):
             True: 2 * (num_x_face + num_y_face + num_z_face),
             False: self._3dCSCG_1Trace[0][False],
         }
-        return basis, \
-            {
-                'N': num_x_face,
-                'S': num_x_face,
-                'W': num_y_face,
-                'E': num_y_face,
-                'B': num_z_face,
-                'F': num_z_face
-            }
+        return basis, {
+            'N': num_x_face,
+            'S': num_x_face,
+            'W': num_y_face,
+            'E': num_y_face,
+            'B': num_z_face,
+            'F': num_z_face,
+        }

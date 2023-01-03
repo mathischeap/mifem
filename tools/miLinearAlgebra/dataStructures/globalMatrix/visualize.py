@@ -34,4 +34,3 @@ class ___GM_VISUALIZE___(FrozenOnly):
             return fig
         else:
             return None
-

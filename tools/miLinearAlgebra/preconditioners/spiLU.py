@@ -4,10 +4,12 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/10/20 2:20 PM
 """
+from abc import ABC
+
 from tools.miLinearAlgebra.preconditioners.base import Preconditioner
 
 
-class spiLU(Preconditioner):
+class spiLU(Preconditioner, ABC):
     """"""
     def __init__(self, A, drop_tol=1e-4, fill_factor=10, drop_rule='basic'):
         """To improve the better approximation to the inverse, you may need to increase

@@ -66,7 +66,6 @@ class RectanglePeriodic(DomainInputBase):
                 region_sequence += (region_name,)
                 Rs[i][j] = region_name
 
-
         boundary_region_edges = dict()
         boundary_region_edges['Upper'] = tuple()
         boundary_region_edges['Down'] = tuple()
@@ -80,7 +79,7 @@ class RectanglePeriodic(DomainInputBase):
             boundary_region_edges['Right'] += (Rs[i][-1] + '-R',)
 
         self.region_corner_coordinates = region_corner_coordinates
-        self.region_edge_types = dict() # all straight lines
+        self.region_edge_types = dict()  # all straight lines
         self.boundary_region_edges = boundary_region_edges
 
         self.periodic_boundary_pairs = {'Upper=Down': 'regular',
@@ -102,13 +101,11 @@ class RectanglePeriodic(DomainInputBase):
     def p_UL(self):
         return self._p_UL_
 
-
-
     @classproperty
     def statistic(cls):
         return {'periodic': True,
                 'region num':'unknown',
-                'mesh boundary num': 0, # the amount of mesh boundaries (instead of domain boundaries)
+                'mesh boundary num': 0,  # the amount of mesh boundaries (instead of domain boundaries)
                 }
 
     @classproperty

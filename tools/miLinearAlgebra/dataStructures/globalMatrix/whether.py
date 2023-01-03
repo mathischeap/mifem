@@ -3,7 +3,6 @@ from root.config.main import RANK, MASTER_RANK, COMM, MPI
 from components.freeze.main import FrozenOnly
 
 
-
 class ___GM_Whether___(FrozenOnly):
     def __init__(self, gm):
         self._gm_ = gm
@@ -49,7 +48,6 @@ class ___GM_Whether___(FrozenOnly):
             f"regularly_distributed={regularly_distributed} wrong, " \
             f"can only be one of (True, 'row', 'column', False)."
         self._regularly_distributed_ = regularly_distributed
-
 
     @property
     def master_dominating(self):

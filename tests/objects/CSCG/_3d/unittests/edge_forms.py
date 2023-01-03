@@ -7,7 +7,8 @@ if './' not in sys.path:
     sys.path.append('./')
 
 from root.config.main import *
-from root.save import save, read
+from root.save import save
+from root.read.main import read
 import random
 import os
 from tests.objects.CSCG._3d.randObj.form_caller import random_FormCaller_of_total_load_around

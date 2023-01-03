@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
-
 from components.freeze.main import FrozenOnly
 import numpy as np
 from components.exceptions import DimensionError
 from components.decorators.all import accepts
-
-
-
 
 
 class _2dCSCG_space_do(FrozenOnly):
@@ -55,8 +51,8 @@ class _2dCSCG_space_do(FrozenOnly):
                 assert np.all(np.diff(domain[i]) > 0) and \
                        np.max(domain[i]) <= 1 and \
                        np.min(domain[i]) >= -1, \
-                    " <2dCSCG Space> : domain[i]={} wrong, need to be " \
-                    "increasing and bounded in [-1, 1].".format( domain[i])
+                       " <2dCSCG Space> : domain[i]={} wrong, need to be " \
+                       "increasing and bounded in [-1, 1].".format(domain[i])
             else:
                 pass
 
@@ -108,10 +104,6 @@ class _2dCSCG_space_do(FrozenOnly):
         eta = eta.ravel('F')
         return xi, eta
 
-
-
-
-
     @accepts('self', int)
     def evaluate_trace_basis_at_meshgrid(self, k, *domain, compute_xietasigma=True):
         """ """
@@ -158,13 +150,3 @@ class _2dCSCG_space_do(FrozenOnly):
         _basis_['D'] = _basis_['U']
         _basis_['R'] = _basis_['L']
         return _meshgrid_ravel_, _basis_
-
-
-
-
-
-
-
-
-    def evaluate_quadrature(self, *args, **kwargs):
-        return self.space.___PRIVATE_do_evaluate_quadrature___(*args, **kwargs)

@@ -24,7 +24,6 @@ class Rank2(SchurSolverBase):
         assert rank == 2
         assert blocks % 1 == 0 and blocks > 0, f"blocks={blocks} is wrong, must be a positive integer."
 
-
     def __call__(self, A, b, **kwargs):
         """
 

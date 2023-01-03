@@ -2,6 +2,7 @@
 from abc import ABC
 import numpy as np
 
+
 class CFGt(ABC):
     """
     Constant function generator: ``CF = CFG(5)()``.
@@ -23,10 +24,6 @@ class CFGt(ABC):
 
     def __call__(self):
         return self._constant_func_
-
-
-
-
 
 
 if __name__ == "__main__":

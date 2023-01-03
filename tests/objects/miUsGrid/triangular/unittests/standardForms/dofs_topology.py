@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 import numpy as np
 
 from components.freeze.base import FrozenOnly
@@ -15,8 +16,12 @@ from __init__ import miTri
 
 from root.config.main import RANK, MASTER_RANK, COMM
 
+
 def u_fun(t, x, y): return np.pi * np.exp(np.pi * x) * np.sin(np.pi * y) + 0 * t
+
+
 def v_fun(t, x, y): return np.pi * np.sin(np.pi * x) * np.cos(0.983*np.pi * y) + 0 * t
+
 
 class Test_dofs_topology_S1F(FrozenOnly):
     """"""
@@ -47,7 +52,7 @@ class Test_dofs_topology_S1F(FrozenOnly):
                 full_vector = gm[e].full_vector
                 for local_number, global_number in enumerate(full_vector):
                     if global_number not in dof_cochain:
-                        dof_cochain[global_number] = [local_cochain[local_number],]
+                        dof_cochain[global_number] = [local_cochain[local_number], ]
                     else:
                         dof_cochain[global_number].append(local_cochain[local_number])
 
@@ -81,7 +86,7 @@ class Test_dofs_topology_S1F(FrozenOnly):
                             pass
                         else:
                             if dof not in dof_map_dict:
-                                dof_map_dict[dof] = [eMap[e][edge],]
+                                dof_map_dict[dof] = [eMap[e][edge], ]
                             else:
                                 dof_map_dict[dof].append(eMap[e][edge])
 
@@ -121,7 +126,7 @@ class Test_dofs_topology_S1F(FrozenOnly):
                 full_vector = gm[e].full_vector
                 for local_number, global_number in enumerate(full_vector):
                     if global_number not in dof_cochain:
-                        dof_cochain[global_number] = [local_cochain[local_number],]
+                        dof_cochain[global_number] = [local_cochain[local_number], ]
                     else:
                         dof_cochain[global_number].append(local_cochain[local_number])
 
@@ -145,6 +150,7 @@ class Test_dofs_topology_S1F(FrozenOnly):
                         assert len(DOF_COCHAIN[dof]) == 1
 
         return 1
+
 
 if __name__ == '__main__':
     # mpiexec -n 4 python tests/objects/miUsGrid/triangular/unittests/standardForms/dofs_topology.py

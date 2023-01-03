@@ -65,7 +65,6 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Cochain(FrozenOnly):
         DLC = csr_matrix(MM @ LC).T
         return DLC
 
-
     @property
     def globe(self):
         raise NotImplementedError()
@@ -128,9 +127,6 @@ class _3dCSCG_Algebra_DUAL_Standard_Form_Cochain(FrozenOnly):
 
         else:
             raise Exception(f"Can not set cochain from {globe}.")
-
-
-
 
     def __getitem__(self, i):
         """If `i` is an element number in this core, we should be able to return a local cochain of it (if not None)"""

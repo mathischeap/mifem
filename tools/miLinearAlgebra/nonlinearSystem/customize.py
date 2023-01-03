@@ -80,7 +80,6 @@ class nLS_Customize(FrozenOnly):
         else:
             pass
 
-
         # check 1 _______________________________________________________________2
         if i == j:
             assert cochain_itp is None, f"when i == j is None, we must have pc is None."

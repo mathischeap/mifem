@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
 
-
-
 from components.freeze.main import FrozenOnly
-
-
 
 
 class _2dCSCG_Mesh_Elements_DO_FIND(FrozenOnly):
     def __init__(self, elements):
         self._elements_ = elements
         self._freeze_self_()
-
 
     def element_at_region_corner(self, region_name, which_corner):
         """
@@ -34,8 +29,7 @@ class _2dCSCG_Mesh_Elements_DO_FIND(FrozenOnly):
         id0 = 0 if which_corner[0] == 'U' else -1
         id1 = 0 if which_corner[1] == 'L' else -1
 
-        element_numbering = mesh.___PRIVATE_generate_element_global_numbering___ \
-            (number_what=region_name)
+        element_numbering = mesh.___PRIVATE_generate_element_global_numbering___(number_what=region_name)
 
         the_corner_element_numbering = element_numbering[id0, id1]
 

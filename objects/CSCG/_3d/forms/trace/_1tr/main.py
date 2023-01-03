@@ -9,7 +9,8 @@
 """
 import sys
 from abc import ABC
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from root.config.main import np
 from components.quadrature import Quadrature
@@ -30,8 +31,10 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
     :param numbering_parameters:
     :param name:
     """
-    def __init__(self, mesh, space, hybrid=True, orientation='outer',
-        numbering_parameters='Naive', name='outer-oriented-1-trace-form'):
+    def __init__(
+            self, mesh, space, hybrid=True, orientation='outer',
+            numbering_parameters='Naive', name='outer-oriented-1-trace-form'
+    ):
         super().__init__(mesh, space, hybrid, orientation, numbering_parameters, name)
         self._k_ = 1
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_trace_1form')
@@ -67,6 +70,7 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
         if self._visualize_ is None:
             self._visualize_ = _3dCSCG_1Trace_Visualize(self)
         return self._visualize_
+
     @property
     def discretize(self):
         return self._discretize_
@@ -91,7 +95,7 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
             indices = self.mesh.trace.elements._elements_.keys()
         else:
             if not isinstance(trace_element_range, (list, tuple)):
-                indices = [trace_element_range,]
+                indices = [trace_element_range, ]
             else:
                 indices = trace_element_range
 
@@ -182,7 +186,7 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
         """Generate the trace-element-wise mass matrices stored in a dict whose keys are trace-element numbers
         and values are the mass matrices in the corresponding trace-elements.
         """
-        p = [self.dqp[i] + 2 for i in range(self.ndim)] # +2 for safety, the mass matrices of standard forms use dqp
+        p = [self.dqp[i] + 2 for i in range(self.ndim)]  # +2 for safety, the mass matrices of standard forms use dqp
         quad_nodes, quad_weights = Quadrature(p, category='Gauss').quad
 
         qw = dict()
@@ -200,7 +204,7 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
             side = te.CHARACTERISTIC_side
             mark = te.type_wrt_metric.mark
 
-            if isinstance(mark, str) and mark in local_cache: # not an id (chaotic) mark, could be cached.
+            if isinstance(mark, str) and mark in local_cache:  # not an id (chaotic) mark, could be cached.
                 MD[i] = local_cache[mark]
             else:
                 g = te.coordinate_transformation.metric(*xietasigma[side])
@@ -224,7 +228,7 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
                     else:
                         M01 = np.einsum('im, jm, m -> ij', b0, b1, np.sqrt(g) * iG[0][1] * QW, optimize='greedy')
 
-                else: # WE sides
+                else:  # WE sides
                     M00 = np.einsum('im, jm, m -> ij', b0, b0, np.sqrt(g) * iG[1][1] * QW, optimize='greedy')
                     M11 = np.einsum('im, jm, m -> ij', b1, b1, np.sqrt(g) * iG[0][0] * QW, optimize='greedy')
                     if isinstance(mark, str) and mark[:5] == 'Orth.':
@@ -240,7 +244,8 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
                 M = bmat([(M00, M01),
                           (M10, M11)], format='csr')
 
-                if isinstance(mark, str): local_cache[mark] = M
+                if isinstance(mark, str):
+                    local_cache[mark] = M
 
                 MD[i] = M
 
@@ -250,19 +255,17 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
 if __name__ == '__main__':
     # mpiexec -n 5 python objects/CSCG/_3d/forms/trace/_1tr/main.py
 
-    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('ct', c=0.1)([3,3,2])
-    space = SpaceInvoker('polynomials')([('Lobatto',4), ('Lobatto',5), ('Lobatto',6)])
+    mesh = MeshGenerator('ct', c=0.1)([3, 3, 2])
+    space = SpaceInvoker('polynomials')([('Lobatto', 4), ('Lobatto', 5), ('Lobatto', 6)])
     FC = FormCaller(mesh, space)
 
     def u(t, x, y, z): return t + np.sin(2*np.pi*x) * np.cos(np.pi*y) * np.cos(2*np.pi*z)
     def v(t, x, y, z): return t + np.cos(2*np.pi*x) * np.sin(2*np.pi*y) * np.cos(np.pi*z)
     def w(t, x, y, z): return t + np.cos(np.pi*x) * np.cos(2*np.pi*y) * np.sin(2*np.pi*z)
-    # def u(t, x, y, z): return 0.3 + 0*x
-    # def v(t, x, y, z): return 0.75 + 0*x
-    # def w(t, x, y, z): return 0.25 + 0*x
-    V = FC('vector', (u,v,w))
+
+    V = FC('vector', (u, v, w))
 
     t1 = FC('1-t', hybrid=False)
 
@@ -272,12 +275,3 @@ if __name__ == '__main__':
     t1.discretize()
 
     t1.visualize()
-    #
-    # xi, et, sg = np.linspace(-1,1,9), np.linspace(-1,1,10), np.linspace(-1,1,11)
-    #
-    # xyz, v = t1.reconstruct(xi, et, sg)
-    # print(v.keys())
-
-    # t1.visualize()
-
-    # tM1 = t1.matrices.mass

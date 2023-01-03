@@ -88,7 +88,6 @@ class IteratorMonitor(FrozenOnly):
         # even it is 0, the monitor still do the recording background, but no report.
         self.___last_graph_save_time___ = time()
 
-
     def ___PRIVATE_set_auto_save_frequency___(self, AS):
         self._last_auto_save_time_ = None
         if AS is True:

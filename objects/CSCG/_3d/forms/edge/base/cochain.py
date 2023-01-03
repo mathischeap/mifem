@@ -3,14 +3,12 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
-
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.main import FrozenOnly
 from components.exceptions import LocalCochainShapeError
 from root.config.main import *
-
-
 
 
 class _3dCSCG_Edge_Cochain(FrozenOnly):
@@ -25,8 +23,6 @@ class _3dCSCG_Edge_Cochain(FrozenOnly):
     def ___PRIVATE_reset_cache___(self):
         """Do not reset _local_."""
         self._local_EEW_ = None
-
-
 
     def ___PRIVATE_DO_gather_local_to_master___(self):
         """Do what the method name says."""
@@ -89,11 +85,6 @@ class _3dCSCG_Edge_Cochain(FrozenOnly):
 
         self.local = LOC_COCHAIN
 
-
-
-
-
-
     def __getitem__(self, item):
         return self.local[item]
 
@@ -107,7 +98,7 @@ class _3dCSCG_Edge_Cochain(FrozenOnly):
     def __len__(self):
         return len(self.local)
 
-    #-- DEPENDENT PROPERTIES (MAJOR): When set local, clear BRANCHES by set branches to None ---------------------
+    # - DEPENDENT PROPERTIES (MAJOR): When set local, clear BRANCHES by set branches to None ---------------------
     @property
     def local(self):
         """
@@ -134,7 +125,7 @@ class _3dCSCG_Edge_Cochain(FrozenOnly):
         self.___PRIVATE_reset_cache___()
         self._local_ = local
 
-    #-- DEPENDENT PROPERTIES (BRANCHES, must have the two switching methods): when set below, update local ------
+    # - DEPENDENT PROPERTIES (BRANCHES, must have the two switching methods): when set below, update local ------
     @property
     def local_EEW(self):
         """
@@ -170,7 +161,6 @@ class _3dCSCG_Edge_Cochain(FrozenOnly):
         self._local_EEW_ = local_EEW
         self.___local_EEW_2_local___()
 
-
     def ___local_EEW_2_local___(self):
         """"""
         MAP = self._ef_.mesh.edge.elements.map
@@ -187,23 +177,17 @@ class _3dCSCG_Edge_Cochain(FrozenOnly):
             assert local[i].shape == (self._ef_.num.basis,)
         self._local_ = local
 
-
-
     def ___local_2_local_EEW___(self):
         """"""
         raise NotImplementedError()
 
 
-
-
-
-
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\form\edge\cochain.py
-    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('crazy', c=0.25)([5,6,7])
-    space = SpaceInvoker('polynomials')([('Lobatto',2), ('Lobatto',1), ('Lobatto',3)])
+    mesh = MeshGenerator('crazy', c=0.25)([5, 6, 7])
+    space = SpaceInvoker('polynomials')([('Lobatto', 2), ('Lobatto', 1), ('Lobatto', 3)])
     FC = FormCaller(mesh, space)
 
     e0 = FC('0-e')

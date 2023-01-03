@@ -7,7 +7,7 @@
 import sys
 
 if './' not in sys.path:
-    sys.path.append('/')
+    sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
 import numpy as np
@@ -23,7 +23,6 @@ from tools.elementwiseCache.dataStructures.objects.multiDimMatrix.do.helpers.red
 
 from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
 from tools.elementwiseCache.dataStructures.objects.columnVector.main import EWC_ColumnVector
-
 
 
 class MDM_Do(FrozenOnly):
@@ -214,7 +213,6 @@ class MDM_Do(FrozenOnly):
         else:
             raise NotImplementedError(f"remaining dimensions = {remaining_dimensions} not implemented.")
 
-
     def reduce_to_vector(self, v):
         """We reduce the MDM to a vector according to form `v` which must be an entry of the
         correspondence.
@@ -235,13 +233,8 @@ class MDM_Do(FrozenOnly):
         return EWC_ColumnVector(self._MDM_.iterator, real_time_caller, cache_key_generator='no_cache')
 
 
-
-
-
-
-
 if __name__ == '__main__':
-    # mpiexec -n 4 python tools/linear_algebra/elementwise_cache/objects/multi_dim_matrix/do/main.py
+    # mpiexec -n 4 python tools/elementwiseCache/dataStructures/objects/multiDimMatrix/do/main.py
     from __init__ import cscg3
 
     mesh = cscg3.mesh('cuboid', region_layout=[2, 2, 2])([3, 3, 3])
@@ -257,21 +250,15 @@ if __name__ == '__main__':
     V = FC('scalar', v)
     W = FC('scalar', w)
 
-    f1 = FC('1-f', is_hybrid=False)
-    u2 = FC('2-f', is_hybrid=False)
-    v2 = FC('2-f', is_hybrid=False)
+    f1 = FC('1-f', hybrid=False)
+    u2 = FC('2-f', hybrid=False)
+    v2 = FC('2-f', hybrid=False)
 
-    f1.TW.func.do.set_func_body_as(velocity)
-    f1.TW.current_time = 0
-    f1.TW.do.push_all_to_instant()
+    f1.CF = velocity
+    f1.CF.current_time = 0
     f1.discretize()
 
     MDM = f1.special.cross_product_2f__ip_2f(u2, v2, output='MDM')
     mdm = MDM.do.eliminate(0, f1)
 
-    spm = mdm.do.sparse_matrix(transpose=True)
-
-    print(spm)
-
-    for i in spm:
-        print(spm[i].shape)
+    mdm.do.sparse_matrix(transpose=True)

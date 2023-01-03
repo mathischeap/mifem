@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
-
 from root.config.main import *
 from components.freeze.main import FrozenOnly
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-
 
 
 class LocalNumbering(FrozenOnly):
@@ -15,8 +13,6 @@ class LocalNumbering(FrozenOnly):
         assert FS.ndim == 2, " <LocalNumbering> "
         self._FS_ = FS
         self._freeze_self_()
-
-
 
     @property
     def _2dCSCG_0Form_Inner(self):
@@ -30,17 +26,13 @@ class LocalNumbering(FrozenOnly):
         for i in range(self._FS_.ndim):
             p = [self._FS_.p[j]+1 for j in range(self._FS_.ndim)]
             p[i] -= 1
-            I = 0 if i ==0 else np.sum(self._FS_.num_basis._2dCSCG_1Form_Inner[1][0:i])
-            _ln_ += (np.arange(self._FS_.num_basis._2dCSCG_1Form_Inner[1][i]).reshape(*p, order='F') + I,)
+            _I = 0 if i == 0 else np.sum(self._FS_.num_basis._2dCSCG_1Form_Inner[1][0:i])
+            _ln_ += (np.arange(self._FS_.num_basis._2dCSCG_1Form_Inner[1][i]).reshape(*p, order='F') + _I,)
         return _ln_
 
     @property
     def _2dCSCG_2Form_Inner(self):
-        return (np.arange(self._FS_.num_basis._2dCSCG_2Form_Inner[0]).reshape(*self._FS_.p, order='F'),)
-
-
-
-
+        return np.arange(self._FS_.num_basis._2dCSCG_2Form_Inner[0]).reshape(*self._FS_.p, order='F'),
 
     @property
     def _2dCSCG_0Form_Outer(self):
@@ -54,17 +46,13 @@ class LocalNumbering(FrozenOnly):
         for i in range(self._FS_.ndim):
             p = [self._FS_.p[j] for j in range(self._FS_.ndim)]
             p[i] += 1
-            I = 0 if i == 0 else np.sum(self._FS_.num_basis._2dCSCG_1Form_Outer[1][0:i])
-            _ln_ += (np.arange(self._FS_.num_basis._2dCSCG_1Form_Outer[1][i]).reshape(*p, order='F') + I,)
+            _I = 0 if i == 0 else np.sum(self._FS_.num_basis._2dCSCG_1Form_Outer[1][0:i])
+            _ln_ += (np.arange(self._FS_.num_basis._2dCSCG_1Form_Outer[1][i]).reshape(*p, order='F') + _I,)
         return _ln_
 
     @property
     def _2dCSCG_2Form_Outer(self):
-        return (np.arange(self._FS_.num_basis._2dCSCG_2Form_Outer[0]).reshape(*self._FS_.p, order='F'),)
-
-
-
-
+        return np.arange(self._FS_.num_basis._2dCSCG_2Form_Outer[0]).reshape(*self._FS_.p, order='F'),
 
     @property
     def _2dCSCG_0Trace_Inner(self):
@@ -73,7 +61,8 @@ class LocalNumbering(FrozenOnly):
         _local_ = {'U': (np.arange(p[1]+1),),
                    'D': (np.arange(p[1]+1),),
                    'L': (np.arange(p[0]+1),),
-                   'R': (np.arange(p[0]+1),),}
+                   'R': (np.arange(p[0]+1),),
+                   }
         return _local_
 
     @property
@@ -83,33 +72,32 @@ class LocalNumbering(FrozenOnly):
         _local_ = {'U': (np.arange(p[1]+1),),
                    'D': (np.arange(p[1]+1),),
                    'L': (np.arange(p[0]+1),),
-                   'R': (np.arange(p[0]+1),),}
+                   'R': (np.arange(p[0]+1),),
+                   }
         return _local_
 
     @property
     def _2dCSCG_1Trace_Inner(self):
         p = self._FS_.p
-        _local_ = {'U': (np.arange(p[1]),),
-                   'D': (np.arange(p[1]),),
-                   'L': (np.arange(p[0]),),
-                   'R': (np.arange(p[0]),)}
+        _local_ = {'U': (np.arange(p[1]), ),
+                   'D': (np.arange(p[1]), ),
+                   'L': (np.arange(p[0]), ),
+                   'R': (np.arange(p[0]), )}
         return _local_
 
     @property
     def _2dCSCG_1Trace_Outer(self):
         p = self._FS_.p
-        _local_ = {'U': (np.arange(p[1]),),
-                   'D': (np.arange(p[1]),),
-                   'L': (np.arange(p[0]),),
-                   'R': (np.arange(p[0]),)}
+        _local_ = {'U': (np.arange(p[1]), ),
+                   'D': (np.arange(p[1]), ),
+                   'L': (np.arange(p[0]), ),
+                   'R': (np.arange(p[0]), )
+                   }
         return _local_
-
-
-
 
     def ___PRIVATE_matplot___(self, what, **kwargs):
         """"""
-        if what[2:6] == 'Form': # form
+        if what[2:6] == 'Form':  # form
             self.___PRIVATE_matplot_form___(what, **kwargs)
         else:
             raise NotImplementedError()
@@ -141,21 +129,21 @@ class LocalNumbering(FrozenOnly):
                 else:
                     color = 'k'
                 ln = LN[i]
-                if i == 0: # plot node dofs
+                if i == 0:  # plot node dofs
                     for m in range(p[0]+1):
                         for n in range(p[1]+1):
                             x = XI[m]
                             y = ETA[n]
-                            numbering = ln[0][m,n]
+                            numbering = ln[0][m, n]
                             plt.text(x, y, numbering, c=color, va='center', ha='center')
 
-                elif i == 1: # plot edges
+                elif i == 1:  # plot edges
                     if 'Inner' in what_form:
                         for m in range(p[0]):
                             for n in range(p[1]+1):
                                 x = (XI[m+1] + XI[m])/2
                                 y = ETA[n]
-                                numbering = ln[0][m,n]
+                                numbering = ln[0][m, n]
                                 plt.text(x, y, numbering, c=color, va='center', ha='center')
                         for m in range(p[0]+1):
                             for n in range(p[1]):
@@ -168,7 +156,7 @@ class LocalNumbering(FrozenOnly):
                             for n in range(p[1]+1):
                                 x = (XI[m+1] + XI[m])/2
                                 y = ETA[n]
-                                numbering = ln[1][m,n]
+                                numbering = ln[1][m, n]
                                 plt.text(x, y, numbering, c=color, va='center', ha='center')
                         for m in range(p[0]+1):
                             for n in range(p[1]):
@@ -179,12 +167,12 @@ class LocalNumbering(FrozenOnly):
                     else:
                         raise Exception()
 
-                elif i == 2: # plot faces
+                elif i == 2:  # plot faces
                     for m in range(p[0]):
                         for n in range(p[1]):
                             x = (XI[m+1] + XI[m])/2
                             y = (ETA[n+1] + ETA[n]) / 2
-                            numbering = ln[0][m,n]
+                            numbering = ln[0][m, n]
                             plt.text(x, y, numbering, c=color, va='center', ha='center')
 
                 else:
@@ -210,16 +198,16 @@ class LocalNumbering(FrozenOnly):
             plt.xlabel(r'$\xi$')
             plt.ylabel(r'$\eta$')
 
-            plt.plot([-1,1],[-1,-1], '--',c='k')
-            plt.plot([-1,1],[1,1], '--', c='k')
-            plt.plot([-1,-1],[-1,1], '--', c='k')
-            plt.plot([1,1],[-1,1], '--', c='k')
+            plt.plot([-1, 1], [-1, -1], '--', c='k')
+            plt.plot([-1, 1], [1, 1], '--', c='k')
+            plt.plot([-1, -1], [-1, 1], '--', c='k')
+            plt.plot([1, 1], [-1, 1], '--', c='k')
 
             nodes_xi, nodes_eta = self._FS_.nodes
             for n in nodes_xi:
-                plt.plot([n,n],[-1,1], c='k')
+                plt.plot([n, n], [-1, 1], c='k')
             for n in nodes_eta:
-                plt.plot([-1,1],[n,n], c='k')
+                plt.plot([-1, 1], [n, n], c='k')
             p = self._FS_.p
             colors = ["lightseagreen", "lightseagreen", "lightseagreen"]
             colors[k] = 'red'
@@ -256,10 +244,10 @@ class LocalNumbering(FrozenOnly):
                         d = 0.18 * edge
 
                         p0, p1 = nodes_xi[i], nodes_eta[j]
-                        A.append( patches.FancyArrowPatch((p0-d, p1-d), (p0, p1), **kw) )
-                        A.append( patches.FancyArrowPatch((p0+d, p1+d), (p0, p1), **kw) )
-                        A.append( patches.FancyArrowPatch((p0+d, p1-d), (p0, p1), **kw) )
-                        A.append( patches.FancyArrowPatch((p0-d, p1+d), (p0, p1), **kw) )
+                        A.append(patches.FancyArrowPatch((p0-d, p1-d), (p0, p1), **kw))
+                        A.append(patches.FancyArrowPatch((p0+d, p1+d), (p0, p1), **kw))
+                        A.append(patches.FancyArrowPatch((p0+d, p1-d), (p0, p1), **kw))
+                        A.append(patches.FancyArrowPatch((p0-d, p1+d), (p0, p1), **kw))
                 for a in A:
                     plt.gca().add_patch(a)
 
@@ -391,9 +379,9 @@ class LocalNumbering(FrozenOnly):
                         d = edge * 0.18
 
                         p0, p1 = (nodes_xi[i+1] + nodes_xi[i])/2, (nodes_eta[j+1] + nodes_eta[j])/2
-                        A.append( patches.FancyArrowPatch((p0-d, p1-d), (p0, p1), **kw) )
-                        A.append( patches.FancyArrowPatch((p0+d, p1+d), (p0, p1), **kw) )
-                        A.append( patches.FancyArrowPatch((p0+d, p1-d), (p0, p1), **kw) )
-                        A.append( patches.FancyArrowPatch((p0-d, p1+d), (p0, p1), **kw) )
+                        A.append(patches.FancyArrowPatch((p0-d, p1-d), (p0, p1), **kw))
+                        A.append(patches.FancyArrowPatch((p0+d, p1+d), (p0, p1), **kw))
+                        A.append(patches.FancyArrowPatch((p0+d, p1-d), (p0, p1), **kw))
+                        A.append(patches.FancyArrowPatch((p0-d, p1+d), (p0, p1), **kw))
                 for a in A:
                     plt.gca().add_patch(a)

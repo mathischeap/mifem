@@ -112,7 +112,6 @@ class IteratorMonitorDo(FrozenOnly):
 
             gap_time = time() - monitor._last_auto_save_time_
 
-
             if monitor.auto_save_frequency is True:
 
                 if gap_time > monitor.___auto_save_time___ or self._do_first_auto_save_:
@@ -152,7 +151,6 @@ class IteratorMonitorDo(FrozenOnly):
                 else:
                     pass
 
-
             elif self._monitor_._real_time_monitor_:
 
                 try:
@@ -165,7 +163,6 @@ class IteratorMonitorDo(FrozenOnly):
                     except:  # just skip it
                         pass
                 monitor._last_auto_save_time_ = time()
-
 
             else:
                 pass

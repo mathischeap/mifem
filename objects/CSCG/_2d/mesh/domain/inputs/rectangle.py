@@ -35,7 +35,7 @@ class Rectangle(DomainInputBase):
 
         """
         super().__init__(domain_name='Rectangle')
-        #---- check region_layout : must be a tuple or list of two positive integers ---------------
+        # ---- check region_layout : must be a tuple or list of two positive integers ---------------
         assert len(region_layout) == 2 and \
                (region_layout[0] > 0 and region_layout[0] % 1==0) and \
                (region_layout[1] > 0 and region_layout[1] % 1==0), \
@@ -61,7 +61,6 @@ class Rectangle(DomainInputBase):
                 region_sequence += (region_name,)
                 Rs[i][j] = region_name
 
-
         boundary_region_edges = dict()
         boundary_region_edges['Upper'] = tuple()
         boundary_region_edges['Down'] = tuple()
@@ -75,19 +74,17 @@ class Rectangle(DomainInputBase):
             boundary_region_edges['Right'] += (Rs[i][-1] + '-R',)
 
         self.region_corner_coordinates = region_corner_coordinates
-        self.region_edge_types = dict() # all straight lines
+        self.region_edge_types = dict()  # all straight lines
         self.boundary_region_edges = boundary_region_edges
         self.region_interpolators = 'transfinite'
         self.region_type_wr2_metric = 'transfinite'
         self.region_sequence = region_sequence
 
-
-
     @classproperty
     def statistic(cls):
         return {'periodic': False,
                 'region num':'unknown',
-                'mesh boundary num': 4, # the amount of mesh boundaries (instead of domain boundaries)
+                'mesh boundary num': 4,  # the amount of mesh boundaries (instead of domain boundaries)
                 }
 
     @classproperty

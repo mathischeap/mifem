@@ -8,7 +8,8 @@ mpiexec -n 4 python objects/miUsGrid/triangular/__test__/Random/test_mesh_2.py
 """
 import sys
 
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path:
+    sys.path.append('/')
 import numpy as np
 
 from root.config.main import RANK, MASTER_RANK
@@ -31,12 +32,24 @@ types = np.ones(2) * 5  # all triangles
 if RANK == MASTER_RANK:  # make sure only the master rank makes the vtu file.
     unstructuredGridToVTK('test2', x, y, z, CON, offsets, types)
 
+
+# noinspection PyUnusedLocal
 def bUpper(x, y): return x == 0
+
+
+# noinspection PyUnusedLocal
 def bDown(x, y): return x == 1
+
+
+# noinspection PyUnusedLocal
 def bLeft(x, y): return y == 0
+
+
+# noinspection PyUnusedLocal
 def bRight(x, y): return y == 1
 
-boundaries = {'Upper': bUpper, 'Down': bDown, 'Left': bLeft, 'Right':bRight}
+
+boundaries = {'Upper': bUpper, 'Down': bDown, 'Left': bLeft, 'Right': bRight}
 
 mesh = miUsGrid_TriangularMesh('test2.vtu', boundaries)
 

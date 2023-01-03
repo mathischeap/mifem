@@ -83,7 +83,6 @@ class _3dCSCG_Domain_Visualize(FrozenOnly):
     #     plot.view.fit()
     #     frame.plot().activate()
 
-
     def matplot(
             self, density=1000, corlormap='tab10',
             show_internal_region_sides=False,

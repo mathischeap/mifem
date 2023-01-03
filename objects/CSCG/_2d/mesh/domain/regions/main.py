@@ -24,7 +24,8 @@ class Regions(FrozenOnly):
         self._regions_ = regions
         self._topology_ = None
         self._visualize_ = None
-        for key in regions: assert regions[key].__class__.__name__ == 'Region'
+        for key in regions:
+            assert regions[key].__class__.__name__ == 'Region'
         self.___generate_global_corner_numbering___()
         self.___generate_region_map___()
 
@@ -270,7 +271,6 @@ class Regions(FrozenOnly):
         if self._visualize_ is None:
             self._visualize_ = _2dCSCG_Regions_Vis(self)
         return self._visualize_
-
 
     @property
     def topology(self):

@@ -2,6 +2,7 @@
 from abc import ABC
 from components.functions._2dSpace.constant import CFG
 
+
 class ScalingFunc(ABC):
     """
     Scaling a function: new_func = C*func.
@@ -26,9 +27,6 @@ class ScalingFunc(ABC):
     def __call__(self, func):
         self._func_ = func
         return self._scaled_func_
-
-
-
 
 
 if __name__ == "__main__":

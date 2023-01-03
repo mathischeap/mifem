@@ -80,9 +80,6 @@ class AS1(incompressible_MHD_Base):
         return self._h(x) * self._h(y) * self._h(z)
 
 
-
-
-
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/CSCG/_3d/exact_solutions/status/incompressible_MHD/analytic_solution_1.py
 

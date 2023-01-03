@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
 from components.miscellaneous.miprint import miprint
@@ -14,9 +15,11 @@ from components.miscellaneous.mirand import randint
 import numpy as np
 from __init__ import miTri
 
-def _u_fun(t, x, y): return np.pi * np.exp(np.pi * x) * np.sin(np.pi * y) + 0 * t
-def _v_fun(t, x, y): return np.pi * np.sin(np.pi * x) * np.cos(0.983*np.pi * y) + 0 * t
 
+def _u_fun(t, x, y): return np.pi * np.exp(np.pi * x) * np.sin(np.pi * y) + 0 * t
+
+
+def _v_fun(t, x, y): return np.pi * np.sin(np.pi * x) * np.cos(0.983*np.pi * y) + 0 * t
 
 
 class miUsGrid_Triangles_ReconstructionMatrices(FrozenOnly):
@@ -37,7 +40,7 @@ class miUsGrid_Triangles_ReconstructionMatrices(FrozenOnly):
         f2 = self.fc('2-f-o')
 
         scalar = self.fc('scalar', _u_fun)
-        vector = self.fc('vector', [_u_fun,_v_fun])
+        vector = self.fc('vector', [_u_fun, _v_fun])
 
         scalar.current_time = 0
         vector.current_time = 0

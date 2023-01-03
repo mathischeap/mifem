@@ -252,8 +252,6 @@ class NonLinearSystem(FrozenOnly):
         return self._customize_
 
 
-
-
 if __name__ == '__main__':
     # mpiexec -n 4 python tools/linear_algebra/nonlinear_system/main.py
     from __init__ import cscg3

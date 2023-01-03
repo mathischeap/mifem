@@ -80,8 +80,5 @@ class _3dCSCG_VectorField_DO(FrozenOnly):
 
             return NORM
 
-
-
         else:
             raise NotImplementedError(f"")
-

@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 """4D (t, x, y, z) constant function."""
-
-
-
 from abc import ABC
-
 
 
 class CFG(ABC):

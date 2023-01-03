@@ -22,6 +22,7 @@ def mkdir(folder_name):
         else:
             os.mkdir(folder_name)
 
+
 def remove(*file_names):
     COMM.barrier()
     if RANK == MASTER_RANK:
@@ -33,10 +34,12 @@ def rmdir(folder_name):
     if RANK == MASTER_RANK:
         os.rmdir(folder_name)
 
+
 def listdir(folder_name):
     """Return all filenames in the folder."""
     if RANK == MASTER_RANK:
         return os.listdir(folder_name)
+
 
 def cleandir(folder_name):
     """clean all files in a folder.

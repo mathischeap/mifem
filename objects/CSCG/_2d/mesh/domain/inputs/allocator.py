@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path:
+    sys.path.append('/')
 
 from components.freeze.main import FrozenOnly
 from importlib import import_module
@@ -25,8 +26,6 @@ class DomainInputFinder(FrozenOnly):
 
     def __call__(self, *args, **kwargs):
         """ """
-
-
         return self._DomainInput_(*args, **kwargs)
 
     @classmethod
@@ -54,10 +53,10 @@ class DomainInputFinder(FrozenOnly):
         """ """
         base_path = '.'.join(str(cls).split(' ')[1][1:-2].split('.')[:-2]) + '.'
 
-        return {'chp1' : base_path + "chp1",
-                'chp2' : base_path + "chp2",
+        return {'chp1': base_path + "chp1",
+                'chp2': base_path + "chp2",
                 'crazy': base_path + "crazy",
-                'quadrangle'    : base_path + 'quadrangle',
+                'quadrangle': base_path + 'quadrangle',
                 'crazy_periodic': base_path + "crazy_periodic",
                 'bcr': base_path + "bcr",
                 'cic': base_path + "cic",
@@ -65,11 +64,6 @@ class DomainInputFinder(FrozenOnly):
                 'rectangle_periodic': base_path + "rectangle_periodic",
                 'triangle_test': base_path + "triangle_test",
                 }
-
-
-
-
-
 
 
 if __name__ == "__main__":

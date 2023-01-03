@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 10/2/2022 7:14 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
 
@@ -25,8 +22,3 @@ class LinearSystem_Visualize(FrozenOnly):
         """"""
         A = self._ls_.A.assembled
         return A.visualize.spy(*args, **kwargs)
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

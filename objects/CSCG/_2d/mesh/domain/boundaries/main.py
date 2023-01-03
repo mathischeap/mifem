@@ -38,7 +38,6 @@ class _2dCSCG_Domain_Boundaries(FrozenOnly):
     def region_edges(self):
         return self._domain_.domain_input.boundary_region_edges
 
-
     @property
     def distribution_regularities(self):
         """How the boundaries are distributed. Return a list containing one or some of:
@@ -52,11 +51,10 @@ class _2dCSCG_Domain_Boundaries(FrozenOnly):
 
         self._distribution_regularities_ = list()
 
-
-        #--------- below we do all the regularity checks ---------------------------------
+        # --------- below we do all the regularity checks ---------------------------------
 
         # TODO: to be added
 
-        #==================================================================================
+        # =================================================================================
 
         return self._distribution_regularities_

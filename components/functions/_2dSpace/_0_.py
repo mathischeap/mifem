@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 
+
 def _0_(x, y):
     """
     A function always returns ``0``.
@@ -16,9 +17,6 @@ def _0_(x, y):
     """
     assert np.shape(x) == np.shape(y)
     return np.zeros(np.shape(x))
-
-
-
 
 
 if __name__ == "__main__":

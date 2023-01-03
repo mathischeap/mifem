@@ -1,11 +1,11 @@
 
-
 from components.freeze.main import FrozenOnly
 
 from importlib import import_module
 from components.numerical.timePlus3dSpace.partial_derivative_as_functions import \
     NumericalPartialDerivative_txyz_Functions
 from objects.CSCG._3d.fields.tensor.numerical.helpers.div import ___TENSOR_DIVERGENCE_HELPER___
+
 
 class _3dCSCG_TensorField_Numerical(FrozenOnly):
     """"""
@@ -80,8 +80,8 @@ class _3dCSCG_TensorField_Numerical(FrozenOnly):
                  (div_func_0, div_func_1, div_func_2),
                  ftype='standard',
                  valid_time=self._tf_.valid_time,
-                 name = 'divergence-of-' + self._tf_.standard_properties.name
-                                             )
+                 name='divergence-of-' + self._tf_.standard_properties.name
+            )
             return divergence_vector
         else:
             raise NotImplementedError(

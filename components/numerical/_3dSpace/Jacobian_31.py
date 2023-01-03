@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-
 from abc import ABC
 import numpy as np
 from components.numerical._1dSpace.derivative import NumericalDerivative_fx
-
 
 
 class NumericalJacobian_xyz_t_31(ABC):
@@ -17,8 +15,10 @@ class NumericalJacobian_xyz_t_31(ABC):
 
     def ___evaluate_func31_for_x_t___(self, t):
         return self._func31_(t)[0]
+
     def ___evaluate_func31_for_y_t___(self, t):
         return self._func31_(t)[1]
+
     def ___evaluate_func31_for_z_t___(self, t):
         return self._func31_(t)[2]
 

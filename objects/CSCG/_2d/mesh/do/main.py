@@ -38,13 +38,9 @@ class _2dCSCG_Mesh_DO(FrozenOnly):
         else:
             raise Exception('elementSidePair format wrong!')
 
-
-
     @property
     def find(self):
         return self._FIND_
-
-
 
     def regionwsie_stack(self, *ndas):
         """
@@ -70,7 +66,8 @@ class _2dCSCG_Mesh_DO(FrozenOnly):
         _SD_ = tuple()
         for nda in ndas:
             if isinstance(nda, dict):
-                for _ in nda: assert np.ndim(nda[_]) == 2
+                for _ in nda:
+                    assert np.ndim(nda[_]) == 2
             else:
                 assert np.ndim(nda) == 2 + 1
             if isinstance(nda, dict):
@@ -97,14 +94,13 @@ class _2dCSCG_Mesh_DO(FrozenOnly):
         _SD_ = _SD_[0] if len(ndas) == 1 else _SD_
         return _SD_
 
-
     def generate_random_coordinates(self):
         """ We will generate some random coordinates with in this domain in a format of local mesh
         element wise. They are mainly for testing purposes.
 
         :return: two 1d array representing x, y coordinates.
         """
-        amount = random.randint(10, 100) # 3*amount points in #amount local mesh elements.
+        amount = random.randint(10, 100)  # 3*amount points in #amount local mesh elements.
 
         assert isinstance(amount, int) and amount > 0, \
             f"amount={amount} ({amount.__class__.__name__}) is wrong."
@@ -115,7 +111,7 @@ class _2dCSCG_Mesh_DO(FrozenOnly):
         if num_local_mesh_elements == 0:
             return np.array([]), np.array([])
 
-        elif num_local_mesh_elements <= amount: # we will use all local mesh elements
+        elif num_local_mesh_elements <= amount:  # we will use all local mesh elements
             USED = mesh.elements.indices
 
         else:

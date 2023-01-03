@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-
-
 import numpy as np
 from abc import ABC
+
 
 class CartCylSwitcher(ABC):
     """A cylinder <-> Cartesian coordinate switcher."""

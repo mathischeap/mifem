@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.base import FrozenOnly
 from components.miscellaneous.miprint import miprint
@@ -21,6 +22,7 @@ from objects.miUsGrid.triangular.forms.standard._1.outer.main import miUsTriangu
 
 from objects.miUsGrid.triangular.fields.scalar.main import miUsGrid_Triangular_Scalar
 from objects.miUsGrid.triangular.fields.vector.main import miUsGrid_Triangular_Vector
+
 
 class miUsGrid_Triangle_Incidence_matrices(FrozenOnly):
     """"""
@@ -128,5 +130,5 @@ class miUsGrid_Triangle_Incidence_matrices(FrozenOnly):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python objects/miUsGrid/triangular/__test__/unittests/standard_forms/incidence_matrices.py
+    # mpiexec -n 4 python tests/objects/miUsGrid/triangular/unittests/standardForms/incidence_matrices.py
     miUsGrid_Triangle_Incidence_matrices()()

@@ -5,8 +5,8 @@
 @time: 2022/09/03 10:05 PM
 """
 from objects.CSCG._2d.mesh.domain.inputs.base import DomainInputBase
-# import random
 from root.config.main import COMM, RANK, MASTER_RANK
+
 
 class TriangleTest(DomainInputBase):
     """"""
@@ -41,8 +41,3 @@ class TriangleTest(DomainInputBase):
         self.region_type_wr2_metric = {'R:R': 'transfinite'}
         self.region_sequence = ('R:R',)
         # ------------------------------------------------------------------------------
-
-
-if __name__ == "__main__":
-    # mpiexec -n 4 python objects/CSCG/_2d/mesh/domain/inputs/triangle_test.py
-    pass

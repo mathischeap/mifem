@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
-
 from components.freeze.base import FrozenOnly
-
 
 
 class _2dCSCG_Regions_Vis(FrozenOnly):

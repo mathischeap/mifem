@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 """"""
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.main import FrozenOnly
 from root.config.main import *
-
-
 
 
 class _3dCSCG_Edge_DO(FrozenOnly):
@@ -20,18 +19,12 @@ class _3dCSCG_Edge_DO(FrozenOnly):
         return self._ef_.space.do.evaluate_edge_basis_at_meshgrid(self._ef_.k, xi, eta, sigma)
 
 
-
-
-
-
-
-
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\forms\edge\base\main.py
-    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('crazy', c=0.25)([5,6,7])
-    space = SpaceInvoker('polynomials')([('Lobatto',2), ('Lobatto',1), ('Lobatto',3)])
+    mesh = MeshGenerator('crazy', c=0.25)([5, 6, 7])
+    space = SpaceInvoker('polynomials')([('Lobatto', 2), ('Lobatto', 1), ('Lobatto', 3)])
     FC = FormCaller(mesh, space)
 
     e0 = FC('0-e')

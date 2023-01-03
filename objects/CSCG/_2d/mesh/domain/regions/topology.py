@@ -3,8 +3,6 @@
 from components.freeze.base import FrozenOnly
 
 
-
-
 class _2dCSCG_Regions_Topology(FrozenOnly):
     """"""
     def __init__(self, regions):

@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/8/4 21:19
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
 from tools.miLinearAlgebra.solvers.regular.allocator import RegularSolverDistributor
 from tools.miLinearAlgebra.nonlinearSystem.solve.NewtonRaphson.helpers.stop_criterion import nLS_stop_criterion
@@ -14,8 +11,6 @@ from tools.miLinearAlgebra.nonlinearSystem.solve.NewtonRaphson.helpers.stop_crit
 from tools.elementwiseCache.dataStructures.operators.bmat.main import bmat
 from tools.elementwiseCache.dataStructures.operators.concatenate.main import concatenate
 from time import time
-
-
 
 
 class nLS_Solve_NR_regular(FrozenOnly):
@@ -29,10 +24,11 @@ class nLS_Solve_NR_regular(FrozenOnly):
         index = self._nLS_.unknown_variables.index(obj)
         return shadows[index]
 
-    def __call__(self,
-                 x0, atol=1e-4, maxiter=10,                    # args for the outer Newton method.
-                 LS_solver_para='GMRES', LS_solver_kwargs=None # args for the internal linear solver.
-                 ):
+    def __call__(
+            self,
+            x0, atol=1e-4, maxiter=10,                    # args for the outer Newton method.
+            LS_solver_para='GMRES', LS_solver_kwargs=None  # args for the internal linear solver.
+    ):
         """
 
         Parameters
@@ -84,31 +80,33 @@ class nLS_Solve_NR_regular(FrozenOnly):
        """
         t_start = time()
         assert isinstance(atol, (int, float)) and atol > 0, f"atol={atol} is wrong."
-        if LS_solver_kwargs is None: LS_solver_kwargs = dict()
-        LS_solver_kwargs['COD'] = False # make sure we do not automatically clear data.
+        if LS_solver_kwargs is None:
+            LS_solver_kwargs = dict()
+        LS_solver_kwargs['COD'] = False  # make sure we do not automatically clear data.
 
-        if isinstance(LS_solver_para, str): LS_solver_para = (LS_solver_para, dict())
+        if isinstance(LS_solver_para, str):
+            LS_solver_para = (LS_solver_para, dict())
         assert isinstance(LS_solver_para, tuple), f"please put LS_solver_para in a tuple."
         assert isinstance(LS_solver_kwargs, dict), f"please put LS_solver_kwargs in a dict."
 
         linear_solver_name = LS_solver_para[0]
         linear_solver_parameters = LS_solver_para[1]
 
-        #--find the linear solver caller; call it with LS_solver_kwargs to solve a linear system----1
+        # -find the linear solver caller; call it with LS_solver_kwargs to solve a linear system----1
         if linear_solver_name in RegularSolverDistributor.___solver_name___():
             linear_solver_caller = RegularSolverDistributor(linear_solver_name,
                                                             **linear_solver_parameters)
         else:
             raise NotImplementedError()
 
-        #----- initialize the variables ------------------------------------------------------------1
+        # ----- initialize the variables ------------------------------------------------------------1
 
         xi = x0
         ITER = 0
         message = ''
         BETA = list()
 
-        #------------ define intermediate variables ------------------------------------------------1
+        # ------------ define intermediate variables ------------------------------------------------1
 
         itmV = list()
         for uv in self._nLS_.unknown_variables:
@@ -119,10 +117,10 @@ class nLS_Solve_NR_regular(FrozenOnly):
         while 1:
             ITER += 1
 
-            #---------- distribute xi to the intermediate forms -------------------------------2
+            # ---------- distribute xi to the intermediate forms -------------------------------2
             xi.do.distributed_to(*itmV, chain_method=self._nLS_.chain_method)
 
-            #--- evaluate blocks of the left-hand-side matrix with xi -------------------------2
+            # --- evaluate blocks of the left-hand-side matrix with xi -------------------------2
             S0, S1 = self._nLS_.shape
             LHS = [[list() for _ in range(S1)] for _ in range(S0)]
             for i in range(S0):
@@ -131,14 +129,14 @@ class nLS_Solve_NR_regular(FrozenOnly):
                 tv = self._nLS_.test_variables[i]
 
                 for j in range(S1):
-                    #__________ we first find the linear term from A ______________________3
+                    # __________ we first find the linear term from A ______________________3
                     linear_term = self._nLS_.A[i][j]
                     if linear_term is not None:
                         LHS[i][j].append(linear_term)
                     else:
                         pass
 
-                    #__ we then look at the nonlinear terms to find the contributions ____3
+                    # __ we then look at the nonlinear terms to find the contributions ____3
 
                     uv = self._nLS_.unknown_variables[j]
 
@@ -165,7 +163,7 @@ class nLS_Solve_NR_regular(FrozenOnly):
                             if contribution_2_Aij is not None:
                                 LHS[i][j].append(contribution_2_Aij)
 
-                    #----------- sum up blocks _________________________________________3
+                    # ----------- sum up blocks _________________________________________3
                     LEN = len(LHS[i][j])
                     if LEN == 0:
                         # noinspection PyTypeChecker
@@ -181,12 +179,12 @@ class nLS_Solve_NR_regular(FrozenOnly):
                         LHSij0 = LHS[i][j][0]
                         LHS[i][j] = LHSij0.___PRIVATE_sum___(LHS[i][j][1:])
 
-            #--------- now we evaluate vector f ---------------------------------------------2
-            f = self._nLS_.do.evaluate_f(itmV, neg=True) # notice the neg here!
+            # --------- now we evaluate vector f ---------------------------------------------2
+            f = self._nLS_.do.evaluate_f(itmV, neg=True)  # notice the neg here!
 
-            #--------- A, f -----------------------------------------------------------------2
+            # --------- A, f -----------------------------------------------------------------2
             A = bmat(LHS)
-            f = concatenate(f) # notice the minus in already included here, it is important.
+            f = concatenate(f)  # notice the minus in already included here, it is important.
 
             A.assembler.chain_method = self._nLS_.chain_method
             f.assembler.chain_method = self._nLS_.chain_method
@@ -194,32 +192,32 @@ class nLS_Solve_NR_regular(FrozenOnly):
             A.gathering_matrices = (self._nLS_.test_variables, self._nLS_.unknown_variables)
             f.gathering_matrix = self._nLS_.test_variables
 
-            #---------------- adopt customizations ------------------------------------------2
+            # ---------------- adopt customizations ------------------------------------------2
             customizations = self._nLS_.customize.customizations
 
             for customization in customizations:
                 method_name = customization[0]
                 method_para = customization[1]
 
-                #------------------------------------------------------------3
+                # ------------------------------------------------------------3
                 if method_name == "set_no_evaluation":
                     # we make the #i dof unchanged .....
 
                     A.customize.identify_global_row(method_para)
                     f.customize.set_assembled_V_i_to(method_para, 0)
 
-                #------------------------------------------------------------3
+                # ------------------------------------------------------------3
                 elif method_name == "set_ith_value_of_initial_guess":
                     # we make the initial value of dof #i to be v
 
-                    if ITER == 1: # only need to do it for the initial guess
+                    if ITER == 1:  # only need to do it for the initial guess
                         i, v = method_para
                         xi._V_[i] = v
 
                     else:
                         pass
 
-                #------------------------------------------------------------3
+                # ------------------------------------------------------------3
                 elif method_name == "set_no_evaluations":
 
                     i, pd, AS = method_para
@@ -234,12 +232,12 @@ class nLS_Solve_NR_regular(FrozenOnly):
                 else:
                     raise NotImplementedError(f"Cannot handle customization = {method_name}")
 
-            #----------- assemble ---------------------------------------------------------2
+            # ----------- assemble ---------------------------------------------------------2
 
-            A = A.assembled # by default, we use csc format.
+            A = A.assembled  # by default, we use csc format.
             f = f.assembled
 
-            #---------- solve -------------------------------------------------------------2
+            # ---------- solve -------------------------------------------------------------2
             if linear_solver_caller._solver_.__class__.__name__ == 'Direct':
 
                 LSR = linear_solver_caller(A, f, **LS_solver_kwargs)
@@ -250,9 +248,10 @@ class nLS_Solve_NR_regular(FrozenOnly):
 
             dx, LSm = LSR[0], LSR[4]
 
-            #------------ check the progress ----------------------------------------------2
+            # ------------ check the progress ----------------------------------------------2
             BETA.append(dx.vector_norm)
-            if len(BETA) > 10: BETA = [BETA[0],] + BETA[-2:]
+            if len(BETA) > 10:
+                BETA = [BETA[0], ] + BETA[-2:]
             JUDGE, stop_iteration, convergence_info, JUDGE_explanation = \
                 nLS_stop_criterion(BETA, atol, ITER, maxiter)
 
@@ -264,12 +263,12 @@ class nLS_Solve_NR_regular(FrozenOnly):
             else:
                 xi = xi1
 
-        #----------------------------------------------------------------------------------------------1
+        # ----------------------------------------------------------------------------------------------1
         t_iteration_end = time()
         Ta = t_iteration_end-t_start
         TiT = t_iteration_end-t_iteration_start
 
-        #----------------------------------------------------------------------------------------------1
+        # ----------------------------------------------------------------------------------------------1
         message += f"<nonlinear_solver>" \
                    f" = [RegularNewtonRaphson: {A.shape}]" \
                    f" of {self._nLS_.nonlinear_terms.num} nonlinear terms" \
@@ -277,17 +276,9 @@ class nLS_Solve_NR_regular(FrozenOnly):
                    f" -> [ITER: {ITER}]" \
                    f" = [beta: %.4e]" \
                    f" = [{convergence_info}-{JUDGE_explanation}]" \
-                   f" -> nLS solving costs %.2f, each ITER cost %.2f"%(BETA[-1], Ta, TiT/ITER)\
+                   f" -> nLS solving costs %.2f, each ITER cost %.2f" % (BETA[-1], Ta, TiT/ITER)\
                    + '\n --- Last Linear Solver Message: \n' + LSm
 
-        #=============================================================================================1
+        # =============================================================================================1
 
         return xi1, convergence_info, BETA[-1], ITER, message
-
-
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

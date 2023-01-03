@@ -8,7 +8,8 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from root.config.main import *
 from types import FunctionType, MethodType
@@ -78,7 +79,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
                     assert fci.__code__.co_argcount >= 5
                 elif isinstance(fci, (int, float)):
                     fci = CFG(fci)()
-                elif callable(fci): # any other callable objects, we do not do check anymore.
+                elif callable(fci):  # any other callable objects, we do not do check anymore.
                     pass
                 else:
                     raise Exception(f"func[{i}]={fci} is wrong!")
@@ -86,7 +87,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
             self._func_ = _func_checked_
 
-        elif ftype == 'boundary-wise': # only valid (still as a vector) on mesh boundary (not domain boundary-wise)
+        elif ftype == 'boundary-wise':  # only valid (still as a vector) on mesh boundary (not domain boundary-wise)
             # no need to cover all mesh boundaries.
             assert isinstance(func, dict), f" when ftype == 'boundary-wise', " \
                                            f"we must put functions in a dict whose " \
@@ -119,12 +120,14 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
             self._func_ = func
 
-        elif ftype == 'trace-element-wise': # no need to cover all trace elements.
-            # we have received a dict whose keys are local trace elements, values are callable that returns, xyz and a vector.
+        elif ftype == 'trace-element-wise':  # no need to cover all trace elements.
+            # we have received a dict whose keys are local trace elements,
+            # values are callable that returns, xyz and a vector.
             assert isinstance(func, dict), f"func for trace-element-wise vector must a dict."
-            for i in func: # valid local trace elements
+            for i in func:  # valid local trace elements
                 assert i in self.mesh.trace.elements, f"trace element #{i} is not in this core (#{RANK})."
-                # NOTE that we do not put the vector in a list or tuple, it should take (t, xi, eta, sigma) and then return xyz and the vector.
+                # NOTE that we do not put the vector in a list or tuple, it should take
+                # (t, xi, eta, sigma) and then return xyz and the vector.
                 assert callable(func[i]), f"func[{i}] is not callable."
             self._func_ = func
 
@@ -169,9 +172,9 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
             elif self.ftype == 'trace-element-wise':
                 RETURN = dict()
-                for i in self.func: # go through all valid trace elements
+                for i in self.func:  # go through all valid trace elements
                     vi = self.func[i]
-                    RETURN[i] = partial(vi, time) # We can see that for each trace-element, it is a single function
+                    RETURN[i] = partial(vi, time)  # We can see that for each trace-element, it is a single function
 
             else:
                 raise Exception(f" do not understand funcType={self.ftype}")
@@ -182,7 +185,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
 
     @property
     def shape(self):
-        return 3, # do not remove comma.
+        return 3,  # do not remove comma.
 
     def reconstruct(self, *args, **kwargs):
         return self.do.reconstruct(*args, **kwargs)
@@ -237,7 +240,7 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
     def flux(self):
         """Return a _3dCSCG_ScalarField representing the flux scalar on all boundary trace elements.
 
-        Let the self vector is u, then we return a scalar (u \dot n) where n is the positive unit norm vector
+        Let the self vector is u, then we return a scalar (u \\dot n) where n is the positive unit norm vector
         of the trace-element (not the normal direction of the domain!, so this norm direction can point
         the internal of the domain).
 
@@ -248,7 +251,8 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
         if self.ftype == 'standard':
 
             if self.___flux_range___ == 'mesh-boundary':
-                # we have a standard vector, we will make a flux scalar valid on all (locally in each core) trace elements.
+                # we have a standard vector, we will make a flux scalar
+                # valid on all (locally in each core) trace elements.
 
                 RTE = self.mesh.boundaries.range_of_trace_elements
 

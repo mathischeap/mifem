@@ -2,6 +2,7 @@
 from components.freeze.base import FrozenOnly
 from tools.elementwiseCache.gathering.chain import GatheringMatrixChaining
 
+
 class LocallyFullVectorDo(FrozenOnly):
     """"""
     def __init__(self, LFV):
@@ -22,7 +23,8 @@ class LocallyFullVectorDo(FrozenOnly):
 
         :return:
         """
-        if chain_method is None: chain_method = 'silly'
+        if chain_method is None:
+            chain_method = 'silly'
 
         V = self._v_.V  # V now is 1-d array already.
         
@@ -35,7 +37,7 @@ class LocallyFullVectorDo(FrozenOnly):
 
                     # Below we make new locally full vector then distribute it.
                     form.cochain.globe = self._v_.__class__(
-                        V[indices : indices + GLOBAL_dofs])
+                        V[indices: indices + GLOBAL_dofs])
                     indices += GLOBAL_dofs
 
             elif args.count(None) == 1:
@@ -54,7 +56,7 @@ class LocallyFullVectorDo(FrozenOnly):
                     else:
                         GLOBAL_dofs = form.num.global_dofs
                         form.cochain.globe = self._v_.__class__(
-                            V[indices : indices + GLOBAL_dofs])
+                            V[indices:indices + GLOBAL_dofs])
                         indices += GLOBAL_dofs
 
             else:
@@ -81,11 +83,12 @@ class LocallyFullVectorDo(FrozenOnly):
                 local_cochain = dict()
                 for e in GM0:
                     local_cochain[e] = \
-                        local_cochain_all[e][current_local_index : current_local_index+num_basis[i]]
+                        local_cochain_all[e][current_local_index:current_local_index+num_basis[i]]
                 current_local_index += num_basis[i]
                 f.cochain.local = local_cochain
 
-        elif chain_method.__class__.__name__  == 'Chain_Gathering_Matrix': # we receive a regular Chain_Gathering_Matrix.
+        elif chain_method.__class__.__name__ == 'Chain_Gathering_Matrix':
+            # we receive a regular Chain_Gathering_Matrix.
             # we will distribute the entries to forms according to this Chain_Gathering_Matrix.
             cgm = chain_method
             assert cgm.num_GMs == len(args)
@@ -106,10 +109,9 @@ class LocallyFullVectorDo(FrozenOnly):
                 local_cochain = dict()
                 for e in GM0:
                     local_cochain[e] = \
-                        local_cochain_all[e][current_local_index : current_local_index+num_basis[i]]
+                        local_cochain_all[e][current_local_index:current_local_index+num_basis[i]]
                 current_local_index += num_basis[i]
                 f.cochain.local = local_cochain
-
 
         else:
             raise NotImplementedError(f'distribution method: {chain_method} not coded.')

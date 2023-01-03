@@ -12,7 +12,8 @@ div u = 0
 """
 
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from __init__ import miTri
 from tools.elementwiseCache.dataStructures.operators.concatenate.main import concatenate
@@ -44,7 +45,7 @@ def _Stokes2D_Solver_miUsTriangle(K=16, N=3):
 
     u.BC.boundaries = []
 
-    es.current_time = 0 # set current time to all fields.
+    es.current_time = 0  # set current time to all fields.
 
     f.discretize()
 
@@ -56,9 +57,9 @@ def _Stokes2D_Solver_miUsTriangle(K=16, N=3):
     E12 = E21.T
     E23 = E32.T
 
-    A = ([      M1, - E12 @ M2,      None],
-         [M2 @ E21,       None, -E23 @ M3],
-         [    None,   M3 @ E32,      None],)
+    A = ([M1,       - E12 @ M2,  None],
+         [M2 @ E21, None,       -E23 @ M3],
+         [None,     M3 @ E32,    None],)
     A = bmat(A)
 
     b0 = EWC_ColumnVector(w.mesh.elements, w.num.basis)
@@ -113,4 +114,3 @@ def miUsTriangleTest_MSEM_STOKES():
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/miUsGrid/triangular/__test__/unittests/MSEM_Stokes_test.py
     miUsTriangleTest_MSEM_STOKES()
-

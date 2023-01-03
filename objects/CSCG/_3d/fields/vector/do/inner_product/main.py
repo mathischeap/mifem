@@ -14,7 +14,6 @@ from importlib import import_module
 from objects.CSCG._3d.fields.vector.do.inner_product.helpers.ip1 import ___VF_INNER_PRODUCT_HELPER_1___
 
 
-
 class _3dCSCG_Vector_Do_IP(FrozenOnly):
     def __init__(self, vf):
         self._vf_ = vf

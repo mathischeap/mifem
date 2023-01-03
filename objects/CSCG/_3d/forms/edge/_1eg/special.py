@@ -4,13 +4,11 @@ import numpy as np
 from root.config.main import COMM
 
 
-
 class _3dCSCG_1EF_Special(FrozenOnly):
     """"""
     def __init__(self, ef):
         self._ef_ = ef
         self._freeze_self_()
-
 
     def generate_plot_data_for_dof(self, i, density=5, zoom=1):
         """Return the plot data in all cores.
@@ -31,7 +29,7 @@ class _3dCSCG_1EF_Special(FrozenOnly):
 
         elements_indices = GM.do.find.elements_and_local_indices_of_dof(i)
 
-        if elements_indices is not None: # find the data in all cores that involve this edge dof.
+        if elements_indices is not None:  # find the data in all cores that involve this edge dof.
             elements, indices = elements_indices
 
             element = elements[0]
@@ -42,7 +40,7 @@ class _3dCSCG_1EF_Special(FrozenOnly):
             p = self._ef_.space.p
             px, py, pz = p
 
-            if 0 <= index < 4 * px: # N-S edge
+            if 0 <= index < 4 * px:  # N-S edge
                 if index < px:
                     edge = "WB"
                     local_index = index
@@ -58,7 +56,7 @@ class _3dCSCG_1EF_Special(FrozenOnly):
 
             else:
                 index -= 4 * px
-                if 0 <= index < 4 * py: # W-E edge
+                if 0 <= index < 4 * py:  # W-E edge
                     if index < py:
                         edge = "NB"
                         local_index = index
@@ -74,7 +72,7 @@ class _3dCSCG_1EF_Special(FrozenOnly):
 
                 else:
                     index -= 4 * py
-                    if 0 <= index < 4 * pz: # B-F edge
+                    if 0 <= index < 4 * pz:  # B-F edge
                         if index < pz:
                             edge = "NW"
                             local_index = index
@@ -90,7 +88,7 @@ class _3dCSCG_1EF_Special(FrozenOnly):
                     else:
                         raise Exception
 
-            P1 =  np.ones(density)
+            P1 = np.ones(density)
             M1 = - np.ones(density)
 
             nodes = self._ef_.space.nodes
@@ -111,7 +109,6 @@ class _3dCSCG_1EF_Special(FrozenOnly):
                 node = nodes[0]
                 N = np.linspace(node[local_index], node[local_index+1], density) * zoom
                 x, y, z = N, P1, P1
-
 
             elif edge == 'NB':
                 node = nodes[1]

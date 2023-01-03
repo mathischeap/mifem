@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 class ___VECTOR_NORM_COMPONENT___(object):
     """Here we wrap the reconstruction of standard vector such that it works like a function. Then we
     can use it to, for example, build more vectors."""

@@ -26,7 +26,6 @@ class _3dCSCG_S1_ADF(_3dCSCG_Algebra_DUAL_Standard_Form):
         self._freeze_self_()
 
 
-
 if __name__ == "__main__":
     # mpiexec -n 6 python _3dCSCG\ADF\standard\_1_AD_form.py
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller

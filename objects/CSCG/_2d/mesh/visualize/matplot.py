@@ -1,18 +1,10 @@
 # -*- coding: utf-8 -*-
-
-import sys
-if './' not in sys.path: sys.path.append('./')
-
-
 from root.config.main import *
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
 from components.freeze.main import FrozenOnly
-
-
-
 
 
 class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
@@ -26,41 +18,46 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
     def __call__(self, *args, **kwargs):
         return self._matplot_mesh_(*args, **kwargs)
 
-    def element_division(self, density=50000, usetex=False, saveto=None,
-        xlim=None, ylim=None, labelsize=15, ticksize=15, element_linewidth=0.4,
-        element_color='red', corlormap = None):
+    def element_division(
+            self, density=50000, usetex=False, saveto=None,
+            xlim=None, ylim=None, labelsize=15, ticksize=15, element_linewidth=0.4,
+            element_color='red', corlormap=None
+    ):
         """plot element division."""
-        if RANK != MASTER_RANK: return
+        if RANK != MASTER_RANK:
+            return
 
         density = int(np.ceil(density / self._mesh_.elements.global_num))
         max_element_layout = 0
         for rn in self._mesh_.domain.regions.names:
             if np.max(self._mesh_.elements.layout[rn]) > max_element_layout:
                 max_element_layout = np.max(self._mesh_.elements.layout[rn])
-        if density > 30 * max_element_layout: density = 30 * max_element_layout
-        if density < 3 * max_element_layout: density = 3 * max_element_layout
+        if density > 30 * max_element_layout:
+            density = 30 * max_element_layout
+        if density < 3 * max_element_layout:
+            density = 3 * max_element_layout
 
-        o = np.linspace(0, 1, density) # plot density
-        I = np.ones(density)
-        #______________________________________ line data _____________________________
-        RI = {} # data for regions internal lines
+        o = np.linspace(0, 1, density)  # plot density
+        _I = np.ones(density)
+        # ______________________________________ line data _____________________________
+        RI = {}  # data for regions internal lines
         for rn in self._mesh_.domain.regions.names:
-            RI[rn] = ([], []) # ([dy_lines], [dx_lines])
-            #____ compute dy lines ___________________________________________
+            RI[rn] = ([], [])  # ([dy_lines], [dx_lines])
+            # ____ compute dy lines ___________________________________________
             for x in self._mesh_.elements.spacing[rn][0][:]:
-                RI[rn][0].append(self._mesh_.domain.regions(rn).interpolation.mapping(x*I, o))
-            #____ compute dx lines ___________________________________________
+                RI[rn][0].append(self._mesh_.domain.regions(rn).interpolation.mapping(x * _I, o))
+            # ____ compute dx lines ___________________________________________
             for y in self._mesh_.elements.spacing[rn][1][:]:
-                RI[rn][1].append(self._mesh_.domain.regions(rn).interpolation.mapping(o, y*I))
-            #--------------------------------------------------------------------------
+                RI[rn][1].append(self._mesh_.domain.regions(rn).interpolation.mapping(o, y * _I))
+            # --------------------------------------------------------------------------
 
-        #_____________ text: element numbering data ___________________________________
+        # _____________ text: element numbering data ___________________________________
         element_center_coordinates = {}
         for rn in self._mesh_.domain.regions.names:
             element_center_coordinate_xi = (self._mesh_.elements.spacing[rn][0][:-1]
-                                          +self._mesh_.elements.spacing[rn][0][1:]) / 2
+                                            + self._mesh_.elements.spacing[rn][0][1:]) / 2
             element_center_coordinate_eta = (self._mesh_.elements.spacing[rn][1][:-1]
-                                          +self._mesh_.elements.spacing[rn][1][1:]) / 2
+                                             + self._mesh_.elements.spacing[rn][1][1:]) / 2
             element_center_coordinate_eta, element_center_coordinate_xi = \
                 np.meshgrid(element_center_coordinate_eta, element_center_coordinate_xi)
             element_center_coordinates[rn] = \
@@ -79,8 +76,10 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         plt.xlabel(r"$x$", fontsize=labelsize)
         plt.ylabel(r"$y$", fontsize=labelsize)
         plt.tick_params(axis='both', which='both', labelsize=ticksize)
-        if xlim is not None: plt.xlim(xlim)
-        if ylim is not None: plt.ylim(ylim)
+        if xlim is not None:
+            plt.xlim(xlim)
+        if ylim is not None:
+            plt.ylim(ylim)
 
         for rn in self._mesh_.domain.regions.names:
             for dy_lines in RI[rn][0]:  # plot dy mesh lines
@@ -93,13 +92,14 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         reodb = self._mesh_.domain.regions.edges_on_domain_boundaries
         for rn in self._mesh_.domain.regions.names:
             for ei in range(4):
-                if reodb[rn][ei] == 1: # plot the domain boundary
+                if reodb[rn][ei] == 1:  # plot the domain boundary
                     ax.plot(RB[rn][ei][0], RB[rn][ei][1], color='k', linewidth=element_linewidth*3)
                 else:
                     ax.plot(RB[rn][ei][0], RB[rn][ei][1], color='b', linewidth=element_linewidth*2)
 
         # prepare colors for different cores...
-        if corlormap is None: corlormap = 'tab20'
+        if corlormap is None:
+            corlormap = 'tab20'
         color = cm.get_cmap(corlormap, SIZE)
         COLOR = dict()
         for i in range(SIZE):
@@ -114,25 +114,24 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
 
                     C = self._mesh_.do.find.slave_of_element(gnrn[i, j])
 
-                    if C == MASTER_RANK: # for the master core, we box the element numbering.
-                        plt.text(eccrn[0][i,j], eccrn[1][i,j], "${}$".format(gnrn[i,j]),
+                    if C == MASTER_RANK:  # for the master core, we box the element numbering.
+                        plt.text(eccrn[0][i, j], eccrn[1][i, j], "${}$".format(gnrn[i, j]),
                                  bbox={'facecolor': 'gray', 'alpha': 0.5, 'pad': 0},
-                                 color = COLOR[C], fontsize=11, ha='center', va='center')
+                                 color=COLOR[C], fontsize=11, ha='center', va='center')
                     else:
-                        plt.text(eccrn[0][i,j], eccrn[1][i,j], "${}$".format(gnrn[i,j]),
-                                 color = COLOR[C], fontsize=11, ha='center', va='center')
+                        plt.text(eccrn[0][i, j], eccrn[1][i, j], "${}$".format(gnrn[i, j]),
+                                 color=COLOR[C], fontsize=11, ha='center', va='center')
 
         plt.tight_layout()
-        #__________ SAVE TO ___________________________________________________________
+        # __________ SAVE TO ___________________________________________________________
         if saveto is not None and saveto != '':
             plt.savefig(saveto, bbox_inches='tight')
         else:
             plt.show()
 
         plt.close('all')
-        #-------------------------------------------------------------------------------
+        # -------------------------------------------------------------------------------
         return fig
-
 
     def ___PRIVATE_DO_generate_boundary_data___(self, density, usetex=True):
         """ To use this, do:
@@ -170,21 +169,22 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
                                 c=boundary_name_color_dict[bn])
 
         """
+
         o = np.linspace(0, 1, density)  # plot density
-        O = np.zeros(density)
-        I = np.ones(density)
+        _O = np.zeros(density)
+        _I = np.ones(density)
         RB = {}  # regions boundaries
         for rn in self._domain_.regions.names:
             RB[rn] = [None, None, None, None]
             for ei in range(4):
                 if ei == 0:  # U
-                    RB[rn][ei] = self._domain_.regions(rn).interpolation.mapping(O, o)
+                    RB[rn][ei] = self._domain_.regions(rn).interpolation.mapping(_O, o)
                 elif ei == 1:  # S
-                    RB[rn][ei] = self._domain_.regions(rn).interpolation.mapping(I, o)
+                    RB[rn][ei] = self._domain_.regions(rn).interpolation.mapping(_I, o)
                 elif ei == 2:  # L
-                    RB[rn][ei] = self._domain_.regions(rn).interpolation.mapping(o, O)
+                    RB[rn][ei] = self._domain_.regions(rn).interpolation.mapping(o, _O)
                 elif ei == 3:  # R
-                    RB[rn][ei] = self._domain_.regions(rn).interpolation.mapping(o, I)
+                    RB[rn][ei] = self._domain_.regions(rn).interpolation.mapping(o, _I)
                 else:
                     raise Exception()
         RBN = {}
@@ -224,7 +224,7 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
 
         pbs = DI.periodic_boundaries
         pb_text = dict()
-        if pbp == dict(): # no periodic boundaries, lets just pass.
+        if pbp == dict():  # no periodic boundaries, lets just pass.
             assert pbs == set()
         else:
             for pair in pbp:
@@ -244,9 +244,6 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
                                    '\genfrac{}{}{0}{}{%s}{=}' % ptype + '\mathrm{%s}' % pb1
 
         return RB, RBN, boundary_name_color_dict, pb_text
-
-
-
 
     def _matplot_mesh_(self, paper_version=False, region_boundary=True, density=6000, usetex=False,
         show_numbering=False, saveto=None, corlormap='tab10', fontsize=12,
@@ -274,39 +271,43 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         :param element_color:
         :return:
         """
-        if RANK != MASTER_RANK: return
-        if paper_version: return self.___PRIVATE_matplot_paper_version___()
+        if RANK != MASTER_RANK:
+            return
+        if paper_version:
+            return self.___PRIVATE_matplot_paper_version___()
 
         density = int(np.ceil(density / self._mesh_.elements.global_num))
         max_element_layout = 0
         for rn in self._mesh_.domain.regions.names:
             if np.max(self._mesh_.elements.layout[rn]) > max_element_layout:
                 max_element_layout = np.max(self._mesh_.elements.layout[rn])
-        if density > 30 * max_element_layout: density = 30 * max_element_layout
-        if density < 3 * max_element_layout: density = 3 * max_element_layout
+        if density > 30 * max_element_layout:
+            density = 30 * max_element_layout
+        if density < 3 * max_element_layout:
+            density = 3 * max_element_layout
         RB = self._mesh_.domain.visualize.matplot(
                 density=4*150*self._mesh_.domain.regions.num, do_plot=False)
-        o = np.linspace(0, 1, density) # plot density
-        I = np.ones(density)
-        #______________________________________ line data _____________________________
-        RI = {} # data for regions internal lines
+        o = np.linspace(0, 1, density)  # plot density
+        _I = np.ones(density)
+        # ______________________________________ line data _____________________________
+        RI = {}  # data for regions internal lines
         for rn in self._mesh_.domain.regions.names:
-            RI[rn] = ([], []) # ([dy_lines], [dx_lines])
-            #____ compute dy lines ___________________________________________
+            RI[rn] = ([], [])   # ([dy_lines], [dx_lines])
+            # ____ compute dy lines ___________________________________________
             for x in self._mesh_.elements.spacing[rn][0][:]:
-                RI[rn][0].append(self._mesh_.domain.regions(rn).interpolation.mapping(x*I, o))
-            #____ compute dx lines ___________________________________________
+                RI[rn][0].append(self._mesh_.domain.regions(rn).interpolation.mapping(x * _I, o))
+            # ____ compute dx lines ___________________________________________
             for y in self._mesh_.elements.spacing[rn][1][:]:
-                RI[rn][1].append(self._mesh_.domain.regions(rn).interpolation.mapping(o, y*I))
-            #--------------------------------------------------------------------------
-        #_____________ text: element numbering data ___________________________________
+                RI[rn][1].append(self._mesh_.domain.regions(rn).interpolation.mapping(o, y * _I))
+            # --------------------------------------------------------------------------
+        # _____________ text: element numbering data ___________________________________
         if show_numbering:
             element_center_coordinates = {}
             for rn in self._mesh_.domain.regions.names:
                 element_center_coordinate_xi = (self._mesh_.elements.spacing[rn][0][:-1]
-                                              +self._mesh_.elements.spacing[rn][0][1:]) / 2
+                                                + self._mesh_.elements.spacing[rn][0][1:]) / 2
                 element_center_coordinate_eta = (self._mesh_.elements.spacing[rn][1][:-1]
-                                              +self._mesh_.elements.spacing[rn][1][1:]) / 2
+                                                 + self._mesh_.elements.spacing[rn][1][1:]) / 2
                 element_center_coordinate_eta, element_center_coordinate_xi = \
                     np.meshgrid(element_center_coordinate_eta, element_center_coordinate_xi)
                 element_center_coordinates[rn] = \
@@ -333,11 +334,12 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
                         else:
                             raise Exception()
 
-        #_____ get personal color for boundaries ________________________________________
+        # _____ get personal color for boundaries ________________________________________
         boundaries_numb = self._mesh_.domain.boundaries.num
         boundaries_name = self._mesh_.domain.boundaries.names
         boundary_name_color_dict = dict()
-        if boundaries_numb > 10 and corlormap=='tab10': corlormap = 'viridis'
+        if boundaries_numb > 10 and corlormap == 'tab10':
+            corlormap = 'viridis'
         color = cm.get_cmap(corlormap, boundaries_numb)
         colors = []
         for j in range(boundaries_numb):
@@ -350,7 +352,7 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         pbp = DI.periodic_boundary_pairs
         pbs = DI.periodic_boundaries
         pb_text = dict()
-        if pbp == dict(): # no periodic boundaries, lets just pass.
+        if pbp == dict():  # no periodic boundaries, lets just pass.
             assert pbs == set()
         else:
             for pair in pbp:
@@ -370,7 +372,7 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
                     pb_text[pb2] = '\mathrm{%s}' % pb2 + \
                                    '\genfrac{}{}{0}{}{%s}{=}' % ptype + '\mathrm{%s}' % pb1
 
-        #___________ do the plot ______________________________________________________
+        # ___________ do the plot ______________________________________________________
         plt.rc('text', usetex=usetex)
         fig, ax = plt.subplots()
         ax.set_aspect('equal')
@@ -381,24 +383,27 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         plt.xlabel(r"$x$", fontsize=labelsize)
         plt.ylabel(r"$y$", fontsize=labelsize)
         plt.tick_params(axis='both', which='both', labelsize=ticksize)
-        if xlim is not None: plt.xlim(xlim)
-        if ylim is not None: plt.ylim(ylim)
+        if xlim is not None:
+            plt.xlim(xlim)
+        if ylim is not None:
+            plt.ylim(ylim)
 
         for rn in self._mesh_.domain.regions.names:
-            for dy_lines in RI[rn][0]: # plot dy mesh lines
+            for dy_lines in RI[rn][0]:  # plot dy mesh lines
                 ax.plot(dy_lines[0], dy_lines[1], color=element_color, linewidth=element_linewidth)
-            for dx_lines in RI[rn][1]: # plot dx mesh lines
+            for dx_lines in RI[rn][1]:  # plot dx mesh lines
                 ax.plot(dx_lines[0], dx_lines[1], color=element_color, linewidth=element_linewidth)
         for rn in self._mesh_.domain.regions.names:
             for ei in range(4):
-                if reodb[rn][ei] == 1: # plot the domain boundary
+                if reodb[rn][ei] == 1:  # plot the domain boundary
                     bn = self._mesh_.domain.regions.map[rn][ei]
                     ax.plot(RB[rn][ei][0], RB[rn][ei][1],
                             color=boundary_name_color_dict[bn], linewidth=domain_boundary_linewidth)
                     ax.plot(RB[rn][ei][0], RB[rn][ei][1],
-                            color='k', linewidth=0.1*domain_boundary_linewidth) # Not an error, we just plot a thin line in line
+                            color='k', linewidth=0.1*domain_boundary_linewidth)
+                    # Not an error, we just plot a thin line in line
                 else:
-                    if region_boundary: # plot the regions boundary
+                    if region_boundary:  # plot the regions boundary
                         ax.plot(RB[rn][ei][0], RB[rn][ei][1], color='b', linewidth=region_boundary_linewidth)
 
                 if show_boundary_names:
@@ -417,7 +422,7 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
                             ax.text(RBN[rn][ei][0], RBN[rn][ei][1],
                                     '$<$' + bn + '$>$', fontsize=fontsize,
                                     c=boundary_name_color_dict[bn], ha='center', va='center')
-        #______ show the element numbering ____________________________________________
+        # ______ show the element numbering ____________________________________________
         if show_numbering:
             for rn in self._mesh_.domain.regions.names:
                 # noinspection PyUnboundLocalVariable
@@ -426,23 +431,20 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
                 gnrn = AEGN[rn]
                 for i in range(self._mesh_.elements.layout[rn][0]):
                     for j in range(self._mesh_.elements.layout[rn][1]):
-                        plt.text(eccrn[0][i,j], eccrn[1][i,j], "${}$".format(gnrn[i,j]),
-                                 color = 'gray', fontsize=11, ha='center', va='center')
-
+                        plt.text(eccrn[0][i, j], eccrn[1][i, j], "${}$".format(gnrn[i, j]),
+                                 color='gray', fontsize=11, ha='center', va='center')
 
         plt.tight_layout()
-        #__________ SAVE TO ___________________________________________________________
+        # __________ SAVE TO ___________________________________________________________
         if saveto is not None and saveto != '':
             plt.savefig(saveto, bbox_inches='tight')
         else:
             plt.show()
 
         plt.close()
-        #------------------------------------------------------------------------------
+        # ------------------------------------------------------------------------------
         return fig
-
 
     def ___PRIVATE_matplot_paper_version___(self):
         """"""
         raise NotImplementedError()
-

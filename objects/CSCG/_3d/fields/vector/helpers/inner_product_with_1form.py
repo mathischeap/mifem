@@ -4,11 +4,10 @@ import numpy as np
 from scipy import sparse as spspa
 
 
-
-
 class _VF_InnerWith1Form(FrozenOnly):
     def __init__(self, vf, _1f, quad_degree):
-        if quad_degree is None: quad_degree = [_1f.dqp[i]+1 for i in range(3)]
+        if quad_degree is None:
+            quad_degree = [_1f.dqp[i]+1 for i in range(3)]
         quad_nodes, _, quad_weights = _1f.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
         _, bf1 = _1f.do.evaluate_basis_at_meshgrid(*quad_nodes, compute_xietasigma=False)
         self._g0_, self._g1_, self._g2_ = bf1
@@ -17,11 +16,8 @@ class _VF_InnerWith1Form(FrozenOnly):
         self._qw_ = quad_weights
         self._mesh_ = _1f.mesh
         self._vf_ = vf
-        self.RESET_cache()
-        self._freeze_self_()
-
-    def RESET_cache(self):
         self._J_cache_ = dict()
+        self._freeze_self_()
 
     def ___PRIVATE_J___(self, i, mark):
         """"""
@@ -75,6 +71,3 @@ class _VF_InnerWith1Form(FrozenOnly):
         RETURN = spspa.csr_matrix(np.concatenate([v0, v1, v2])).T
 
         return RETURN
-
-
-

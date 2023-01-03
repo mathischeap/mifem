@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/8/4 21:15
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
 from tools.miLinearAlgebra.dataStructures.vectors.locallyFull.main import LocallyFullVector
 from tools.miLinearAlgebra.nonlinearSystem.solve.NewtonRaphson.regular import nLS_Solve_NR_regular
@@ -51,10 +48,3 @@ class nLS_Solve_NewtonRaphson(FrozenOnly):
                 f"x0={x0} is wrong, I need a LocallyFullVector."
 
         return x0
-
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python tools/linear_algebra/nonlinear_system/solve/Newton_Raphson/main.py
-    pass

@@ -159,7 +159,6 @@ class EWC_SparseMatrix(FrozenOnly):
             self._DG_ = self.___PRIVATE_empty_cache_data_generator___
             self._KG_ = self.___PRIVATE_constant_cache_key_generator___
 
-
         # we are making regular sparse matrices --------------------------------------------------
         elif DATA_TYPE is None:  # regular
             if cache_key_generator == 'all_diff':  # all elements return different things but still cache all.

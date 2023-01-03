@@ -6,11 +6,13 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.main import FrozenOnly
 
-from components.numerical.timePlus2dSpace.partial_derivative_as_functions import NumericalPartialDerivative_txy_Functions
+from components.numerical.timePlus2dSpace.partial_derivative_as_functions import \
+    NumericalPartialDerivative_txy_Functions
 
 from components.functions.timePlus2dSpace.wrappers.helpers.scalar_add import t2d_ScalarAdd
 from components.functions.timePlus2dSpace.wrappers.helpers.scalar_sub import t2d_ScalarSub

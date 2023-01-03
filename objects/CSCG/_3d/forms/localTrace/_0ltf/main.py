@@ -24,8 +24,8 @@ class _3dCSCG_0LocalTrace(_3dCSCG_LocalTrace, ABC):
     """"""
 
     def __init__(
-        self, mesh, space, hybrid=True, orientation='outer',
-        numbering_parameters='Naive', name='outer-oriented-0-local-trace-form',
+            self, mesh, space, hybrid=True, orientation='outer',
+            numbering_parameters='Naive', name='outer-oriented-0-local-trace-form',
     ):
         super().__init__(mesh, space, hybrid, orientation, numbering_parameters, name)
         self._k_ = 0

@@ -5,7 +5,6 @@ from objects.CSCG._2d.mesh.elements.element.coordinate_transformation.main impor
 from objects.CSCG._2d.mesh.elements.element.whether import _2dCSCG_Mesh_Whether
 
 
-
 class _2dCSCG_Mesh_Element(FrozenOnly):
     """"""
     def __init__(self, elements, i):
@@ -34,7 +33,7 @@ class _2dCSCG_Mesh_Element(FrozenOnly):
     def spacing(self):
         region, localRegionIndices = self._mesh_.do.find.region_name_and_local_indices_of_element(self.i)
         elementsSpacing = self._elements_.spacing[region]
-        _spacing_ = np.zeros((2,2))
+        _spacing_ = np.zeros((2, 2))
         for i in range(2):
             _spacing_[i, 0] = elementsSpacing[i][localRegionIndices[i]]
             _spacing_[i, 1] = elementsSpacing[i][localRegionIndices[i]+1]

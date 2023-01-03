@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 import sys
 if './' not in sys.path:
     sys.path.append('./')
@@ -21,7 +22,8 @@ def test_Stokes_hdMSEM_Schur_Rank2Solver():
     mesh = MeshGenerator(
         'crazy', c=0.0,
         bounds=[(0.125, 1.125), (0.125, 1.125), (0.125, 1.125)])(
-        K, show_info=True)
+        K, show_info=True
+    )
 
     space = SpaceInvoker('polynomials')(N, show_info=True)
     FC = FormCaller(mesh, space)

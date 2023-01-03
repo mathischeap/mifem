@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 class ___VECTOR_FLUX___(object):
     """Here we will wrap the reconstruction of standard vector such that it works like a function. Then we
     can use it to build flux scalar."""
@@ -38,7 +39,7 @@ class ___VECTOR_FLUX___(object):
             n = self._te_.coordinate_transformation.unit_normal_vector(xi, et, sg, parse_3_1d_eps=True)
             w_dot_n = w[0]*n[0] + w[1]*n[1] + w[2]*n[2]
 
-            return xyz, (w_dot_n,) # xyz and the norm scalar.
+            return xyz, (w_dot_n,)  # xyz and the norm scalar.
 
         else:
             raise Exception(f"We cannot reconstruct from txyz for {self._vf_.ftype} vector.")

@@ -6,13 +6,11 @@ from tools.miLinearAlgebra.solvers.regular.allocator import RegularSolverDistrib
 from tools.miLinearAlgebra.linearSystem.solve.helpers.routine_2b_run import RoutineToBeRun
 
 
-
 class ___LinearSystem_Solve___(FrozenOnly):
     """Used to define customizations to A and b simultaneously."""
     def __init__(self, ls):
         self._LS_ = ls
         self._freeze_self_()
-
 
     def __call__(self, solver_name, **kwargs):
         """
@@ -50,7 +48,7 @@ class ___LinearSystem_Solve___(FrozenOnly):
             A = self._LS_.A.assembled
             b = self._LS_.b.assembled
             solver_2b_run_with_parameters = RegularSolverDistributor(solver_name, **kwargs)
-            RTB = RoutineToBeRun(solver_2b_run_with_parameters, A, b) # wrap A, b with the solver
+            RTB = RoutineToBeRun(solver_2b_run_with_parameters, A, b)  # wrap A, b with the solver
             # call RTB with any other args and kwargs in fact means a call
             # of solver(A, b, *args, **kwargs)
             return RTB

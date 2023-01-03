@@ -29,7 +29,7 @@ def test_Form_NO1_coboundary():
     def P(t, x, y): return - np.pi * np.sin(2*np.pi*x) * np.cos(2*np.pi*y) + t/2
     def Q(t, x, y): return np.pi * np.cos(2*np.pi*x) * np.sin(2*np.pi*y) + t
 
-    def dQdx_m_dPdy(t, x, y): # curl of a 2-d vector
+    def dQdx_m_dPdy(t, x, y):   # curl of a 2-d vector
         dQdx = - 2 * np.pi**2 * np.sin(2*np.pi*x) * np.sin(2*np.pi*y) + 0 * t
         dPdy = 2 * np.pi**2 * np.sin(2*np.pi*x) * np.sin(2*np.pi*y) + 0 * t
         return dQdx - dPdy
@@ -123,6 +123,7 @@ def test_Form_NO1_coboundary():
 
     return 1
 
+
 def test_Form_NO2_Naive_numbering():
     """"""
     if RANK == MASTER_RANK:
@@ -147,13 +148,13 @@ def test_Form_NO2_Naive_numbering():
 
     for i in mesh.elements:
         np.testing.assert_array_equal(
-            G0[i].full_vector, np.arange( i * f0.num.basis, (i+1) * f0.num.basis))
+            G0[i].full_vector, np.arange(i * f0.num.basis, (i+1) * f0.num.basis))
         np.testing.assert_array_equal(
-            G1I[i].full_vector, np.arange( i * f1i.num.basis, (i+1) * f1i.num.basis))
+            G1I[i].full_vector, np.arange(i * f1i.num.basis, (i+1) * f1i.num.basis))
         np.testing.assert_array_equal(
-            G1O[i].full_vector, np.arange( i * f1o.num.basis, (i+1) * f1o.num.basis))
+            G1O[i].full_vector, np.arange(i * f1o.num.basis, (i+1) * f1o.num.basis))
         np.testing.assert_array_equal(
-            G2[i].full_vector, np.arange( i * f2.num.basis, (i+1) * f2.num.basis))
+            G2[i].full_vector, np.arange(i * f2.num.basis, (i+1) * f2.num.basis))
 
     if 1 in mesh.elements:
         np.testing.assert_array_equal(
@@ -211,9 +212,10 @@ def test_Form_NO2_Naive_numbering():
 
     for i in mesh.elements:
         np.testing.assert_array_equal(
-            G2[i].full_vector, np.arange( i * f2.num.basis, (i+1) * f2.num.basis))
+            G2[i].full_vector, np.arange(i * f2.num.basis, (i+1) * f2.num.basis))
 
     return 1
+
 
 def test_Form_NO3_mass_matrices():
     """"""
@@ -324,7 +326,7 @@ def test_Form_NO3_mass_matrices():
         )
         np.testing.assert_array_almost_equal(
             M2[3].toarray()[2],
-            np.array([ 0.57304065, -1.25453527,  8.15018015, -0.08919671,  0.2166255, -1.58437845])
+            np.array([0.57304065, -1.25453527,  8.15018015, -0.08919671,  0.2166255, -1.58437845])
         )
         np.testing.assert_array_almost_equal(
             M2[3].toarray()[3],
@@ -332,7 +334,7 @@ def test_Form_NO3_mass_matrices():
         )
         np.testing.assert_array_almost_equal(
             M2[3].toarray()[4],
-            np.array([ 0.2166255, -0.9143819,  0.2166255, -1.25453527,  5.64509819, -1.47127256])
+            np.array([0.2166255, -0.9143819,  0.2166255, -1.25453527,  5.64509819, -1.47127256])
         )
         np.testing.assert_array_almost_equal(
             M2[3].toarray()[5],
@@ -340,6 +342,7 @@ def test_Form_NO3_mass_matrices():
         )
 
     return 1
+
 
 def test_Form_NO4_Hodge():
     """"""
@@ -437,6 +440,7 @@ def test_Form_NO4_Hodge():
     assert f1i_error < 0.006
     return 1
 
+
 def test_Form_NO5_cross_product():
     """"""
     if RANK == MASTER_RANK:
@@ -495,6 +499,7 @@ def test_Form_NO5_cross_product():
         np.testing.assert_almost_equal(result, 0)
 
     return 1
+
 
 def test_Form_NO6_reconstruction_matrices():
     """"""
@@ -610,6 +615,7 @@ def test_Form_NO6_reconstruction_matrices():
         np.testing.assert_almost_equal(LnEnT, L2Energy, decimal=1)
 
     return 1
+
 
 def test_Form_NO7_weak_curl():
     """"""

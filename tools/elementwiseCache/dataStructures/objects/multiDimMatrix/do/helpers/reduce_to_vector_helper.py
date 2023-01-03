@@ -31,9 +31,11 @@ class nLS_DoR2V_Helper(FrozenOnly):
 
     def __call__(self, basic_unit):
         """"""
-        vec = einsum(self._ein_str,
-               self._mdm_[basic_unit],
-               *[_.cochain.local[basic_unit] for _ in self._eli_fms],
-               optimize='optimal')
+        vec = einsum(
+            self._ein_str,
+            self._mdm_[basic_unit],
+            *[_.cochain.local[basic_unit] for _ in self._eli_fms],
+            optimize='optimal'
+        )
 
         return csc_matrix(vec[:, newaxis])

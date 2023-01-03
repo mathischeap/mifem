@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path:
+    sys.path.append('/')
 from components.freeze.main import FrozenOnly
-
 
 
 class _2dCSCG_Mesh_Boundary(FrozenOnly):

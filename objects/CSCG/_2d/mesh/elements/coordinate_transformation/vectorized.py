@@ -4,7 +4,6 @@ from components.freeze.base import FrozenOnly
 import numpy as np
 
 
-
 class _2dCSCG_MeshElements_CT_Vectorized(FrozenOnly):
     """We will compute the results all together and put the results in higher dimensional arrays.
     The first index always refers to the mesh-elements.
@@ -21,7 +20,6 @@ class _2dCSCG_MeshElements_CT_Vectorized(FrozenOnly):
         for i in self._elements_:
             mapping.append(self._elements_[i].coordinate_transformation.mapping(xi, et))
         return np.array(mapping)
-
 
     def Jacobian_matrix(self, xi, et):
         """"""
@@ -52,8 +50,6 @@ class _2dCSCG_MeshElements_CT_Vectorized(FrozenOnly):
 
             return ([J00, J01],
                     [J10, J11])
-
-
 
     def Jacobian(self, xi, et):
         """"""
@@ -104,7 +100,6 @@ class _2dCSCG_MeshElements_CT_Vectorized(FrozenOnly):
 
             return ([iJ00, iJ01],
                     [iJ10, iJ11])
-
 
     def inverse_Jacobian(self, xi, et):
         """"""

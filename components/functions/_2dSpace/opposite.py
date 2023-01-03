@@ -3,7 +3,6 @@ from abc import ABC
 from components.functions._2dSpace.constant import CFG
 
 
-
 class Opposite(ABC):
     """
     Equal to ``ScalingFunc(-1)(func)``.
@@ -23,9 +22,6 @@ class Opposite(ABC):
 
     def __call__(self):
         return self._opposite_func_
-
-
-
 
 
 if __name__ == "__main__":

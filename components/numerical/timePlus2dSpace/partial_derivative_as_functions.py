@@ -68,7 +68,6 @@ class NumericalPartialDerivative_txy_Functions(FrozenOnly):
         return NPD4.scipy_partial('y')
 
 
-
 if __name__ == '__main__':
     # mpiexec -n 6 python components\numerical\time_plus_2d_space\partial_derivative_as_functions.py
     import numpy as np

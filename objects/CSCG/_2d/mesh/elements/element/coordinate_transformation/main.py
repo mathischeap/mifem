@@ -27,7 +27,8 @@ class _2dCSCG_Mesh_ECT(FrozenOnly):
                 self._element_.i)
             self._origin_, self._delta_ = \
                 self._mesh_.do.find.reference_origin_and_size_of_element_of_given_local_indices(
-                in_region, local_indices)
+                    in_region, local_indices
+                )
         return self._origin_
 
     @property
@@ -37,9 +38,9 @@ class _2dCSCG_Mesh_ECT(FrozenOnly):
                 self._element_.i)
             self._origin_, self._delta_ = \
                 self._mesh_.do.find.reference_origin_and_size_of_element_of_given_local_indices(
-                in_region, local_indices)
+                    in_region, local_indices
+                )
         return self._delta_
-
 
     def mapping(self, *evaluationPoints):
         XY = self._region_.interpolation(
@@ -50,11 +51,11 @@ class _2dCSCG_Mesh_ECT(FrozenOnly):
         X = self._region_.interpolation.mapping_X(
             *[(evaluationPoints[j] + 1) * 0.5 * self.delta[j] + self.origin[j] for j in range(2)])
         return X
+
     def Y(self, *evaluationPoints):
         Y = self._region_.interpolation.mapping_Y(
             *[(evaluationPoints[j] + 1) * 0.5 * self.delta[j] + self.origin[j] for j in range(2)])
         return Y
-
 
     def Jacobian_matrix(self, *evaluationPoints):
         mark = self._element_.type_wrt_metric.mark
@@ -70,16 +71,16 @@ class _2dCSCG_Mesh_ECT(FrozenOnly):
             xyz_rst = self._region_.interpolation.Jacobian_matrix(
                 *[(evaluationPoints[j] + 1) * 0.5 * self.delta[j] + self.origin[j] for j in range(2)])
             for j in range(2):
-                for l in range(2):
-                    xyz_xietasigma[j][l] = xyz_rst[j][l] * (self.delta[l] / 2)
+                for L in range(2):
+                    xyz_xietasigma[j][L] = xyz_rst[j][L] * (self.delta[L] / 2)
+
         return xyz_xietasigma
-
-
 
     def J00(self, *evaluationPoints):
         Xr = self._region_.interpolation.Jacobian_Xr(
             *[(evaluationPoints[j] + 1) * 0.5 * self.delta[j] + self.origin[j] for j in range(2)])
         return Xr * self.delta[0] / 2
+
     def J01(self, *evaluationPoints):
         Xs = self._region_.interpolation.Jacobian_Xs(
             *[(evaluationPoints[j] + 1) * 0.5 * self.delta[j] + self.origin[j] for j in range(2)])
@@ -89,6 +90,7 @@ class _2dCSCG_Mesh_ECT(FrozenOnly):
         Yr = self._region_.interpolation.Jacobian_Yr(
             *[(evaluationPoints[j] + 1) * 0.5 * self.delta[j] + self.origin[j] for j in range(2)])
         return Yr * self.delta[0] / 2
+
     def J11(self, *evaluationPoints):
         Ys = self._region_.interpolation.Jacobian_Ys(
             *[(evaluationPoints[j] + 1) * 0.5 * self.delta[j] + self.origin[j] for j in range(2)])
@@ -96,10 +98,9 @@ class _2dCSCG_Mesh_ECT(FrozenOnly):
 
     def J0_(self, *evaluationPoints):
         return self.J00(*evaluationPoints), self.J01(*evaluationPoints)
+
     def J1_(self, *evaluationPoints):
         return self.J10(*evaluationPoints), self.J11(*evaluationPoints)
-
-
 
     def Jacobian(self, *evaluationPoints, J=None):
         """Determinant of the Jacobian matrix."""
@@ -154,8 +155,8 @@ class _2dCSCG_Mesh_ECT(FrozenOnly):
             for j in range(i, 2):
                 # noinspection PyTypeChecker
                 G[i][j] = J[0][i] * J[0][j]
-                for l in range(1, 2):
-                    G[i][j] += J[l][i] * J[l][j]
+                for L in range(1, 2):
+                    G[i][j] += J[L][i] * J[L][j]
                 if i != j:
                     G[j][i] = G[i][j]
         return G
@@ -174,8 +175,8 @@ class _2dCSCG_Mesh_ECT(FrozenOnly):
             for j in range(i, 2):
                 # noinspection PyTypeChecker
                 iG[i][j] = iJ[i][0] * iJ[j][0]
-                for l in range(1, 2):
-                    iG[i][j] += iJ[i][l] * iJ[j][l]
+                for L in range(1, 2):
+                    iG[i][j] += iJ[i][L] * iJ[j][L]
                 if i != j:
                     iG[j][i] = iG[i][j]
         return iG

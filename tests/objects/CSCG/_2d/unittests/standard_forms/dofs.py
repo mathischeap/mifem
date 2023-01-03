@@ -1,22 +1,18 @@
 # -*- coding: utf-8 -*-
 """test dofs related functions."""
-
-
-
-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from root.config.main import *
 from tests.objects.CSCG._2d.randObj.form_caller import random_FormCaller_of_total_load_around
 import random
 
 
-
 def test_standard_forms_DOFS():
     """"""
     if RANK == MASTER_RANK:
-        load = random.randint(10,100)
-        IH = [True, False][random.randint(0,1)]
+        load = random.randint(10, 100)
+        IH = [True, False][random.randint(0, 1)]
         print(f"~~~ [test_standard_forms_DOFS] @ load= {load}... ", flush=True)
     else:
         load = None

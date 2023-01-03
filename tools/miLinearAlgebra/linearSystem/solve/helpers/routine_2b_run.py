@@ -2,7 +2,6 @@
 from components.freeze.base import FrozenOnly
 
 
-
 class RoutineToBeRun(FrozenOnly):
     """This actually is a wrapper of the solver A and b."""
     def __init__(self, routine, A, b):
@@ -11,7 +10,6 @@ class RoutineToBeRun(FrozenOnly):
         self._A_ = A
         self._b_ = b
         self._freeze_self_()
-
 
     def __call__(self, *args, **kwargs):
         """Here we actually run a routine, for example see GMRES."""

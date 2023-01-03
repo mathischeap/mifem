@@ -9,7 +9,8 @@ A form in space [H^1]^3 actually.
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.base import FrozenOnly
 

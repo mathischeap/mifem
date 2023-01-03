@@ -7,7 +7,6 @@ from components.decorators.all import memoize1
 import numpy as np
 
 
-
 class _2dCSCG_ECT_1d_QUAD(FrozenOnly):
     def __init__(self, ect):
         self._elements_ = ect._elements_
@@ -31,6 +30,7 @@ class _2dCSCG_ECT_1d_QUAD(FrozenOnly):
     def X(self, quad_degree, quad_type):
         xi, eta = self.___compute_xietasigma___(quad_degree, quad_type)
         return ElementsCTValuesCache(self._elements_, 'X', xi, eta)
+
     @memoize1
     def Y(self, quad_degree, quad_type):
         xi, eta = self.___compute_xietasigma___(quad_degree, quad_type)
@@ -40,18 +40,22 @@ class _2dCSCG_ECT_1d_QUAD(FrozenOnly):
     def Jacobian_matrix(self, quad_degree, quad_type):
         xi, eta = self.___compute_xietasigma___(quad_degree, quad_type)
         return ElementsCTValuesCache(self._elements_, 'Jacobian_matrix', xi, eta)
+
     @memoize1
     def J00(self, quad_degree, quad_type):
         xi, eta = self.___compute_xietasigma___(quad_degree, quad_type)
         return ElementsCTValuesCache(self._elements_, 'J00', xi, eta)
+
     @memoize1
     def J01(self, quad_degree, quad_type):
         xi, eta = self.___compute_xietasigma___(quad_degree, quad_type)
         return ElementsCTValuesCache(self._elements_, 'J01', xi, eta)
+
     @memoize1
     def J10(self, quad_degree, quad_type):
         xi, eta = self.___compute_xietasigma___(quad_degree, quad_type)
         return ElementsCTValuesCache(self._elements_, 'J10', xi, eta)
+
     @memoize1
     def J11(self, quad_degree, quad_type):
         xi, eta = self.___compute_xietasigma___(quad_degree, quad_type)
@@ -61,11 +65,13 @@ class _2dCSCG_ECT_1d_QUAD(FrozenOnly):
     def Jacobian(self, quad_degree, quad_type):
         xi, eta = self.___compute_xietasigma___(quad_degree, quad_type)
         return ElementsCTValuesCache(self._elements_, 'Jacobian', xi, eta, intermediateData=None)
+
     @memoize1
     def metric(self, quad_degree, quad_type):
         """g := det(G) = Jacobian ** 2."""
         xi, eta = self.___compute_xietasigma___(quad_degree, quad_type)
         return ElementsCTValuesCache(self._elements_, 'metric', xi, eta, intermediateData=None)
+
     @memoize1
     def metric_matrix(self, quad_degree, quad_type):
         """G, g_{i,j}."""
@@ -76,13 +82,14 @@ class _2dCSCG_ECT_1d_QUAD(FrozenOnly):
     def inverse_Jacobian_matrix(self, quad_degree, quad_type):
         xi, eta = self.___compute_xietasigma___(quad_degree, quad_type)
         return ElementsCTValuesCache(self._elements_, 'inverse_Jacobian_matrix', xi, eta, intermediateData=None)
+
     @memoize1
     def inverse_Jacobian(self, quad_degree, quad_type):
         xi, eta = self.___compute_xietasigma___(quad_degree, quad_type)
         return ElementsCTValuesCache(self._elements_, 'inverse_Jacobian', xi, eta, intermediateData=None)
+
     @memoize1
     def inverse_metric_matrix(self, quad_degree, quad_type):
         """G^-1, g^{i,j}."""
         xi, eta = self.___compute_xietasigma___(quad_degree, quad_type)
         return ElementsCTValuesCache(self._elements_, 'inverse_metric_matrix', xi, eta, intermediateData=None)
-

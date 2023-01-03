@@ -10,6 +10,7 @@ INTRO
 """
 from components.freeze.base import FrozenOnly
 
+
 class _2dCSCG_MeshElements_VIS(FrozenOnly):
     """"""
     def __init__(self, elements):

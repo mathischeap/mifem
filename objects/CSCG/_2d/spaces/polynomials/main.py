@@ -6,6 +6,7 @@ from objects.CSCG.base.spaces._1d_basis.polynomials import _1dPolynomial
 
 from objects.CSCG._2d.spaces.polynomials.do import _2dCSCG_space_Polynomial_Do
 
+
 class _2dCSCG_PolynomialSpace(_2dCSCG_Space):
     """"""
     def __init__(self, inputs, ndim):
@@ -15,7 +16,6 @@ class _2dCSCG_PolynomialSpace(_2dCSCG_Space):
         super().__init__(inputs, ndim)
         self._DO_ = _2dCSCG_space_Polynomial_Do(self)
 
-
     def ___PRIVATE_do_evaluate_quadrature___(self, quad_degree, quad_type=None):
         """
         We only do cache the results for last call.
@@ -24,7 +24,8 @@ class _2dCSCG_PolynomialSpace(_2dCSCG_Space):
         :param quad_type:
         :return:
         """
-        if quad_type is None: quad_type = 'Gauss'
+        if quad_type is None:
+            quad_type = 'Gauss'
 
         if [quad_degree, quad_type] == self._quadrature_cache_[:2]:
             pass

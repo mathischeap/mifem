@@ -7,6 +7,7 @@
          TU Delft, Delft, Netherlands
 
 """
+from abc import ABC
 
 from objects.CSCG._3d.forms.base import _3dCSCG_FORM_BASE
 from objects.CSCG._3d.forms.edge.base.numbering.main import _3dCSCG_Edge_Numbering
@@ -19,7 +20,7 @@ from objects.CSCG._3d.forms.edge.base.dofs.main import _3dCSCG_Edge_forms_DOFs
 from objects.CSCG._3d.forms.edge.base.whether import _3dCSCG_EdgeForm_Whether
 
 
-class _3dCSCG_Edge(_3dCSCG_FORM_BASE, ndim=3):
+class _3dCSCG_Edge(_3dCSCG_FORM_BASE, ABC, ndim=3):
     """
     This is the parent of all 3d standard edge forms.
 
@@ -51,7 +52,6 @@ class _3dCSCG_Edge(_3dCSCG_FORM_BASE, ndim=3):
         self._dofs_ = None
         self._num_ = None
 
-
     def __repr__(self):
         return f"3dCSCG>{self.k}EdgeForm>{self.standard_properties.name}:{id(self)}"
 
@@ -66,8 +66,6 @@ class _3dCSCG_Edge(_3dCSCG_FORM_BASE, ndim=3):
     @property
     def numbering(self):
         return self._numbering_
-
-
 
     @property
     def matrices(self):

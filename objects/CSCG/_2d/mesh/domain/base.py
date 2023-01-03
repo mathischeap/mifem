@@ -10,7 +10,6 @@ class _2dCSCG_DomainBase(FrozenOnly):
         self.___PRIVATE_parse_interpolators_()
         self.___PRIVATE_generate_regions___()
 
-
     def ___PRIVATE_parse_domain_input___(self, di):
         assert di.ndim == 2, " <Domain> : I need 2d DomainInput."
         self._domain_input_ = di
@@ -61,7 +60,7 @@ class _2dCSCG_DomainBase(FrozenOnly):
         _regions_ = {}
         for rn in self._region_names_:
             _regions_[rn] = Region(
-                2, #ndim
+                2,  # ndim
                 rn,
                 self._domain_input_.region_corner_coordinates[rn],
                 self._domain_input_.region_edge_types,

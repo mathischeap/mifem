@@ -3,10 +3,7 @@
 Here we store some customize generators.
 
 """
-
-
 from components.freeze.base import FrozenOnly
-
 
 
 class CustomizedGenerator(FrozenOnly):

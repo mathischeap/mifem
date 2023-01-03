@@ -7,6 +7,7 @@ from tools.miLinearAlgebra.dataStructures.vectors.GLOBAL.adjust import ___GV_ADJ
 from tools.miLinearAlgebra.dataStructures.vectors.GLOBAL.do import GlobalVectorDo
 from tools.miLinearAlgebra.dataStructures.vectors.GLOBAL.whether import GlobalVectorWhether
 
+
 class GlobalVector(FrozenOnly):
     """An entry can be split into parts and stored in multiple cores.
 
@@ -26,7 +27,7 @@ class GlobalVector(FrozenOnly):
             - None: (Cannot be in the master core) we will make an empty sparse matrix.
 
         """
-        #------ parse input V -------------------------------------------
+        # ----- parse input V -------------------------------------------
         if V.__class__.__name__ == 'ndarray':
             if np.ndim(V) == 1:
                 V = spspa.csr_matrix(V).T
@@ -41,7 +42,7 @@ class GlobalVector(FrozenOnly):
             V = spspa.csc_matrix((V, 1))
         else:
             pass
-        #----------------- check V ---------------------------------------
+        # ---------------- check V ---------------------------------------
         if V.__class__.__name__ == 'csr_matrix':
             V = V.tocsc()
 
@@ -59,7 +60,7 @@ class GlobalVector(FrozenOnly):
                 pass
 
         assert spspa.isspmatrix_csc(V) and V.shape[1] == 1, "V must be a csc_matrix of shape (x, 1)."
-        #--------------------------------------------------------------------
+        # -------------------------------------------------------------------
 
         self._V_ = V
         SHAPE = COMM.gather(self.shape, root=SECRETARY_RANK)

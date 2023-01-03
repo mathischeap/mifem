@@ -4,8 +4,6 @@ from importlib import import_module
 from objects.CSCG._3d.fields.vector.do.cross_product.helpers.cp1 import ___VF_CROSS_PRODUCT_HELPER_1___
 
 
-
-
 class _3dCSCG_Vector_Do_CP(FrozenOnly):
     def __init__(self, vf):
         self._vf_ = vf

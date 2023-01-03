@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-class ___VECTOR_T_PERP_COMPONENT___(object): # Trace Perpendicular
+
+class ___VECTOR_T_PERP_COMPONENT___(object):  # Trace Perpendicular
     """Here we wrap the reconstruction of standard vector such that it works like a function. Then we
     can use it to, for example, build more vectors.
 
@@ -45,7 +46,8 @@ class ___VECTOR_T_PERP_COMPONENT___(object): # Trace Perpendicular
             wXn = (w2 * n3 - w3 * n2,
                    w3 * n1 - w1 * n3,
                    w1 * n2 - w2 * n1)
-            #--------- option 2: TEST FOR ORTHOGONAL MESH ONLY ------------------------------------
+
+            # -------- option 2: TEST FOR ORTHOGONAL MESH ONLY ------------------------------------
             # side = self._te_.CHARACTERISTIC_side
             # if side in 'NS':
             #     wXn =  (w1, w3, -w2)
@@ -56,8 +58,7 @@ class ___VECTOR_T_PERP_COMPONENT___(object): # Trace Perpendicular
             # else:
             #     raise Exception
 
-            #=========================================================================================
-
+            # ========================================================================================
 
             return xyz, wXn
 

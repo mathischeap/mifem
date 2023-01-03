@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 class ___VECTOR_DIVERGENCE_HELPER___(object):
     def __init__(self, f0, f1, f2):
         self._f0_ = f0

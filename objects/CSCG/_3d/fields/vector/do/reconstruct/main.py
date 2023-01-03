@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from components.freeze.base import FrozenOnly
 from objects.CSCG._3d.fields.vector.do.reconstruct.mesh_element.standard import OnMeshElement_Standard
-from objects.CSCG._3d.fields.vector.do.reconstruct.trace_element.trace_element_wise import OnTraceElement_TraceElementWise
+from objects.CSCG._3d.fields.vector.do.reconstruct.trace_element.trace_element_wise import \
+    OnTraceElement_TraceElementWise
 from objects.CSCG._3d.fields.vector.do.reconstruct.trace_element.boundary_wise import OnTraceElement_BoundaryWise
 from objects.CSCG._3d.fields.vector.do.reconstruct.trace_element.standard import OnTraceElement_Standard
+
 
 class _3dCSCG_Vector_Do_Reconstruct(FrozenOnly):
     def __init__(self, vf):
@@ -13,7 +15,6 @@ class _3dCSCG_Vector_Do_Reconstruct(FrozenOnly):
         self._on_trace_element___for_trace_element_wise_ = OnTraceElement_TraceElementWise(vf)
         self._on_trace_element___for_boundary_wise_ = OnTraceElement_BoundaryWise(vf)
         self._freeze_self_()
-
 
     def __call__(self, xi, eta, sigma, time=None, ravel=False, i=None, where=None):
         """
@@ -29,7 +30,7 @@ class _3dCSCG_Vector_Do_Reconstruct(FrozenOnly):
         """
         ftype = self._vf_.ftype
 
-        #------- deal with time --------------------------------------------------
+        # ------ deal with time --------------------------------------------------
         if time is None:
             pass
         else:
@@ -46,7 +47,7 @@ class _3dCSCG_Vector_Do_Reconstruct(FrozenOnly):
         else:
             pass
 
-        #--------------------------------------------------------------------------
+        # -------------------------------------------------------------------------
         if where == 'mesh-element':
             if ftype == 'standard':
                 return self._on_mesh_element___for_standard_(xi, eta, sigma, ravel, i)

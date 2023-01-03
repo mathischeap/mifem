@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 11/29/2022 11:50 AM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from objects.CSCG._2d.spaces.base.do import _2dCSCG_space_do
 
 
@@ -17,7 +14,6 @@ class _2dCSCG_space_Polynomial_Do(_2dCSCG_space_do):
         """"""
         super(_2dCSCG_space_Polynomial_Do, self).__init__(space)
         self._freeze_self_()
-
 
     def refine(self, p=(1, 1)):
         """Lets say self.space.p = (a, b), and input p = (c, d), this function gives a new
@@ -45,9 +41,3 @@ class _2dCSCG_space_Polynomial_Do(_2dCSCG_space_do):
         )
 
         return self.space.__class__(new_input, None)
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

@@ -3,7 +3,6 @@
 import numpy as np
 
 
-
 def angle(origin, pt):
     """
     compute angle between the vector from origin to pt and the x-direction vector.
@@ -24,10 +23,6 @@ def angle(origin, pt):
         return 2 * np.pi - np.arccos(inner_product / (len1 * len2))
     else:
         return np.arccos(inner_product / (len1 * len2))
-
-
-
-
 
 
 if __name__ == "__main__":

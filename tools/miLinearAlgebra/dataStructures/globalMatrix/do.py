@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-
-
 from tools.miLinearAlgebra.dataStructures.globalMatrix.helpers.split_A import ___split_A___
 
 from components.freeze.main import FrozenOnly
 from root.config.main import RANK, MASTER_RANK, COMM, TREE
 import numpy as np
 from scipy import sparse as spspa
+
 
 class ___GM_DO___(FrozenOnly):
     def __init__(self, gm):
@@ -31,9 +30,10 @@ class ___GM_DO___(FrozenOnly):
 
         self._gm_.whether.regularly_distributed = False
 
-
-    def gather_M_to_core(self, core=None,
-        clean_local=False, splitting_factor=50000000):
+    def gather_M_to_core(
+            self, core=None,
+            clean_local=False, splitting_factor=50000000
+    ):
         """
         We gather M to one core, leave M to be of all zero elements in all other cores.
 
@@ -51,8 +51,9 @@ class ___GM_DO___(FrozenOnly):
             splitting will only be used when we do ``clean_local`` after gathering.
         :return:
         """
-        SELF  = self._gm_
-        if core is None: core = MASTER_RANK
+        SELF = self._gm_
+        if core is None:
+            core = MASTER_RANK
 
         if core == MASTER_RANK and SELF.whether.master_dominating:
             # In this case, we directly return.
@@ -120,7 +121,8 @@ class ___GM_DO___(FrozenOnly):
                     else:
                         raise Exception()
 
-            if RANK == MASTER_RANK: SELF._M_.sum_duplicates()
+            if RANK == MASTER_RANK:
+                SELF._M_.sum_duplicates()
 
             return SELF._M_
 

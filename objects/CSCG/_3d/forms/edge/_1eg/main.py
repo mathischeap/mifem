@@ -7,15 +7,15 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from abc import ABC
-
-
 
 from objects.CSCG._3d.forms.edge.base.main import _3dCSCG_Edge
 from objects.CSCG._3d.forms.edge._1eg.discretize.main import _3dCSCG_Edge1Form_Discretize
 from objects.CSCG._3d.forms.edge._1eg.special import _3dCSCG_1EF_Special
 from objects.CSCG._3d.forms.edge._1eg.dofs.main import _3dCSCG_E1F_Dofs
+
 
 class _3dCSCG_1Edge(_3dCSCG_Edge, ABC):
     """
@@ -28,8 +28,10 @@ class _3dCSCG_1Edge(_3dCSCG_Edge, ABC):
     :param numbering_parameters:
     :param name:
     """
-    def __init__(self, mesh, space, hybrid=True, orientation='outer',
-        numbering_parameters='Naive', name='outer-oriented-1-edge-form'):
+    def __init__(
+            self, mesh, space, hybrid=True, orientation='outer',
+            numbering_parameters='Naive', name='outer-oriented-1-edge-form'
+    ):
         super().__init__(mesh, space, hybrid, orientation, numbering_parameters, name)
         self._k_ = 1
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_edge_1form')
@@ -37,8 +39,6 @@ class _3dCSCG_1Edge(_3dCSCG_Edge, ABC):
         self._special_ = None
         self._dofs_ = None
         self._freeze_self_()
-
-
 
     def ___Pr_check_CF___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
@@ -55,7 +55,7 @@ class _3dCSCG_1Edge(_3dCSCG_Edge, ABC):
         assert func_body.ndim == self.ndim == 3
 
         if func_body.__class__.__name__ == '_3dCSCG_ScalarField':
-            assert func_body.ftype in ('standard','boundary-wise'), \
+            assert func_body.ftype in ('standard', 'boundary-wise'), \
                 f"3dCSCG 1edge BC do not accept func _3dCSCG_ScalarField of ftype {func_body.ftype}."
         else:
             raise Exception(f"3dCSCG 1edge BC do not accept func {func_body.__class__}")
@@ -63,7 +63,6 @@ class _3dCSCG_1Edge(_3dCSCG_Edge, ABC):
     @property
     def discretize(self):
         return self._discretize_
-
 
     @property
     def special(self):
@@ -78,18 +77,12 @@ class _3dCSCG_1Edge(_3dCSCG_Edge, ABC):
         return self._dofs_
 
 
-
-
-
-
-
-
 if __name__ == '__main__':
     # mpiexec -n 6 python _3dCSCG\form\edge\_1_edge.py
-    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('crazy', c=0.25)([5,6,7])
-    space = SpaceInvoker('polynomials')([('Lobatto',2), ('Lobatto',1), ('Lobatto',3)])
+    mesh = MeshGenerator('crazy', c=0.25)([5, 6, 7])
+    space = SpaceInvoker('polynomials')([('Lobatto', 2), ('Lobatto', 1), ('Lobatto', 3)])
     FC = FormCaller(mesh, space)
 
     e1 = FC('1-e')

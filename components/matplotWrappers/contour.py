@@ -4,10 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/08/31 12:21 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('/')
-
 import matplotlib.pyplot as plt
 import matplotlib
 from matplotlib import cm
@@ -32,10 +28,3 @@ def __matplot_contour_f__(plot_type,
     legend_size=18, legend_local='best', legend_frame=False,
     ):
     """"""
-
-
-
-
-if __name__ == "__main__":
-    # mpiexec -n 4 python components/matplot_wrappers/contour.py
-    pass

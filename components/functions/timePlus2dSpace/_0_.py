@@ -1,7 +1,6 @@
 import numpy as np
 
 
-
 def _0t_(t, x, y):
     """
     A function always returns ``0``.
@@ -17,10 +16,6 @@ def _0t_(t, x, y):
     """
     assert np.shape(x) == np.shape(y)
     return np.zeros(np.shape(x)) + 0 * t
-
-
-
-
 
 
 if __name__ == "__main__":

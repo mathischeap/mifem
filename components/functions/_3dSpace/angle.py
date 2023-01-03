@@ -3,7 +3,6 @@
 import numpy as np
 
 
-
 def angle_between_two_vectors(v1, v2):
     """Compute the angle between the angle between v1 and v2 (can be
     of any dimension).

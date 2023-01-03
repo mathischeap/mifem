@@ -2,13 +2,9 @@
 """
 
 """
-import sys
-if './' not in sys.path: sys.path.append('./')
 
 from components.freeze.main import FrozenOnly
 from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
-
-
 
 
 class _3dCSCG_Edge_Matrices(FrozenOnly):
@@ -48,19 +44,3 @@ class _3dCSCG_Edge_Matrices(FrozenOnly):
                 )
 
         return self._C_
-
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 6 python objects\CSCG\_3d\forms\edge\base\matrices.py
-    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
-
-    mesh = MeshGenerator('crazy', c=0.25)([5,6,7])
-    space = SpaceInvoker('polynomials')([('Lobatto',2), ('Lobatto',1), ('Lobatto',3)])
-    FC = FormCaller(mesh, space)
-
-    ef = FC('1-e')
-
-    C = ef.matrices.complement
-    print(C.shape)

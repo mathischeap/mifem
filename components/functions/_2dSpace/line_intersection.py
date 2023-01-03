@@ -33,7 +33,7 @@ def find_line_intersection(a1, a2, b1, b2):
 
     div = __det__(xdiff, ydiff)
     if div == 0:
-       return None
+        return None
 
     d = (__det__(*line1), __det__(*line2))
     x = __det__(d, xdiff) / div
@@ -41,11 +41,6 @@ def find_line_intersection(a1, a2, b1, b2):
     return x, y
 
 
-
-
-
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-
-

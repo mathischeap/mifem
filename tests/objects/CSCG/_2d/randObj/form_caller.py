@@ -1,7 +1,8 @@
 
 
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path:
+    sys.path.append('/')
 
 from objects.CSCG._2d.master import FormCaller
 
@@ -16,16 +17,13 @@ def random_FormCaller_of_total_load_around(*args, **kwargs):
     return FormCaller(mesh, space)
 
 
-
-
 if __name__ == '__main__':
     # mpiexec -n 4 python _2dCSCG\tests\random_objects.py
     # random_mesh_of_elements_around(1)
     S = random_space_of_degrees_around
     M = random_mesh_of_elements_around
 
-    for i in range(20):
-        FC = random_FormCaller_of_total_load_around(100)
+    FC = random_FormCaller_of_total_load_around(100)
     mesh = FC._mesh_
     space = FC._space_
     print(mesh, mesh.elements.layout, space.p)

@@ -4,13 +4,9 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/7/24 16:28
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
 from tools.miLinearAlgebra.nonlinearSystem.solve.NewtonRaphson.main import nLS_Solve_NewtonRaphson
-
 
 
 class NonLinearSystem_Solve(FrozenOnly):
@@ -43,10 +39,3 @@ class NonLinearSystem_Solve(FrozenOnly):
             raise NotImplementedError()
 
         return RES
-
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python tools/linear_algebra/nonlinear_system/solve/main.py
-    pass

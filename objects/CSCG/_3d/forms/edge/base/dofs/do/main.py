@@ -17,4 +17,3 @@ class _3dCSCG_EdgeDofs_Do(FrozenOnly):
         if self._find_ is None:
             self._find_ = _3dCSCG_EdgeDofs_DoFIND(self._dofs_)
         return self._find_
-

@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 """We make a class to represent a linear system.
 """
-
-import sys
-if './' not in sys.path: sys.path.append('./')
-
 from components.freeze.main import FrozenClass
 from tools.miLinearAlgebra.linearSystem.customize import ___LinearSystem_Customize___
 from tools.miLinearAlgebra.linearSystem.condition import ___LinearSystem_Condition___
@@ -102,17 +98,3 @@ class LinearSystem(FrozenClass):
         """Return (P, Q): A.assembled will be a sparse matrix of shape = (P, Q)."""
         # noinspection PyUnresolvedReferences
         return self.GMr.global_num_dofs, self.GMc.global_num_dofs
-
-
-
-
-
-
-
-
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 5 python TOOLS\linear_algebra\linear_system\main.py
-    pass

@@ -19,7 +19,7 @@ class _3dCSCG_Space_LocalGathering(FrozenOnly):
     @property
     def _3dCSCG_0Trace(self):
         px, py, pz = self._space_.p
-        fully_local_numbering_3d = np.zeros((px+1, py+1, pz+1), dtype=int)
+        fully_local_numbering_3d = - np.ones((px+1, py+1, pz+1), dtype=int)
         cn = 0
         fully_local_numbering_3d[0, :, :] = np.arange(cn, cn+(py+1)*(pz+1)).reshape((py+1, pz+1), order='F')
         cn += (py + 1) * (pz + 1)
@@ -42,14 +42,17 @@ class _3dCSCG_Space_LocalGathering(FrozenOnly):
             'F': fully_local_numbering_3d[:, :, -1].ravel('F'),
         }
 
+        for side in local_gathering:
+            assert -1 not in local_gathering[side], f"local numbering for side {side} not right."
+
         return local_gathering
 
     @property
     def _3dCSCG_1Trace(self):
         px, py, pz = self._space_.p
-        dx_3d = np.zeros((px, py+1, pz+1), dtype=int)
-        dy_3d = np.zeros((px+1, py, pz+1), dtype=int)
-        dz_3d = np.zeros((px+1, py+1, pz), dtype=int)
+        dx_3d = - np.ones((px, py+1, pz+1), dtype=int)
+        dy_3d = - np.ones((px+1, py, pz+1), dtype=int)
+        dz_3d = - np.ones((px+1, py+1, pz), dtype=int)
 
         cn = 0
 
@@ -88,6 +91,9 @@ class _3dCSCG_Space_LocalGathering(FrozenOnly):
             'F': np.concatenate([dx_3d[:, :, -1].ravel('F'), dy_3d[:, :, -1].ravel('F')]),
         }
 
+        for side in local_gathering:
+            assert -1 not in local_gathering[side], f"local numbering for side {side} not right."
+
         return local_gathering
 
     @property
@@ -106,6 +112,10 @@ class _3dCSCG_Space_LocalGathering(FrozenOnly):
         local_gathering['B'] = [i for i in range(cn, cn + px * py)]
         cn += px * py
         local_gathering['F'] = [i for i in range(cn, cn + px * py)]
+
+        for side in local_gathering:
+            assert -1 not in local_gathering[side], f"local numbering for side {side} not right."
+
         return local_gathering
 
     @property

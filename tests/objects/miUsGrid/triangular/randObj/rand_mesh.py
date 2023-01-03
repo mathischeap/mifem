@@ -8,7 +8,8 @@ mpiexec -n 4 python tests/objects/miUsGrid/triangular/randObj/rand_mesh.py
 @time: 10/2/2022 1:00 AM
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from root.config.main import COMM, RANK, MASTER_RANK
 from objects.miUsGrid.triangular.mesh.main import miUsGrid_TriangularMesh
@@ -19,6 +20,7 @@ from components.miscellaneous.mios import remove
 
 COMM.barrier()
 base_path = str(__file__).split('rand_mesh')[0]
+
 
 if RANK == MASTER_RANK:  # make sure only the master rank makes the vtu file.
     x = np.array([0, uniform(0.25, 0.35),
@@ -64,10 +66,9 @@ def bLeft(x, y): return y == 0
 # noinspection PyUnusedLocal
 def bRight(x, y): return y == 1
 
-boundaries = {'Upper': bUpper, 'Down': bDown, 'Left': bLeft, 'Right':bRight}
+
+boundaries = {'Upper': bUpper, 'Down': bDown, 'Left': bLeft, 'Right': bRight}
 
 mesh = miUsGrid_TriangularMesh(base_path + 'rand0.vtu', boundaries)
 
 remove(base_path + 'rand0.vtu')
-
-# mesh.visualize()

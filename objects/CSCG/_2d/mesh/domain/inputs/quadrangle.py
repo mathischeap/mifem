@@ -22,7 +22,7 @@ class Quadrangle(DomainInputBase):
     def statistic(cls):
         return {'periodic': False,
                 'region num': 1,
-                'mesh boundary num': 4, # the amount of mesh boundaries (instead of domain boundaries)
+                'mesh boundary num': 4,  # the amount of mesh boundaries (instead of domain boundaries)
                 }
 
     @classproperty

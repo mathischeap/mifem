@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 import numpy as np
 from components.freeze.main import FrozenOnly
 from scipy.sparse import csc_matrix
@@ -35,13 +36,13 @@ class IncidenceMatrix(FrozenOnly):
         I, J = np.shape(dn[0])
         for j in range(J):
             for i in range(I):
-                E[dn[0][i,j], sn[0][i,j]]   = -1   # U
-                E[dn[0][i,j], sn[0][i+1,j]] = +1   # D
+                E[dn[0][i, j], sn[0][i, j]] = -1   # U
+                E[dn[0][i, j], sn[0][i+1, j]] = +1   # D
         I, J = np.shape(dn[1])
         for j in range(J):
             for i in range(I):
-                E[dn[1][i,j], sn[0][i,j]]   = -1    # L
-                E[dn[1][i,j], sn[0][i,j+1]] = +1    # R
+                E[dn[1][i, j], sn[0][i, j]] = -1    # L
+                E[dn[1][i, j], sn[0][i, j+1]] = +1    # R
         return csc_matrix(E)
 
     @property
@@ -54,10 +55,10 @@ class IncidenceMatrix(FrozenOnly):
         I, J = np.shape(dn[0])
         for j in range(J):
             for i in range(I):
-                E[dn[0][i,j], sn[0][i,j  ]] = +1    # L
-                E[dn[0][i,j], sn[0][i,j+1]] = -1    # R
-                E[dn[0][i,j], sn[1][i  ,j]] = -1    # U
-                E[dn[0][i,j], sn[1][i+1,j]] = +1    # D
+                E[dn[0][i, j], sn[0][i, j]] = +1    # L
+                E[dn[0][i, j], sn[0][i, j+1]] = -1    # R
+                E[dn[0][i, j], sn[1][i, j]] = -1    # U
+                E[dn[0][i, j], sn[1][i+1, j]] = +1    # D
         return csc_matrix(E)
 
     @property
@@ -74,13 +75,13 @@ class IncidenceMatrix(FrozenOnly):
         I, J = np.shape(dn[0])
         for j in range(J):
             for i in range(I):
-                E[dn[0][i,j], sn[0][i,j]]   = -1   # L ##########
-                E[dn[0][i,j], sn[0][i,j+1]] = +1   # R ##########
+                E[dn[0][i, j], sn[0][i, j]] = -1   # L ##########
+                E[dn[0][i, j], sn[0][i, j+1]] = +1   # R ##########
         I, J = np.shape(dn[1])
         for j in range(J):
             for i in range(I):
-                E[dn[1][i,j], sn[0][i,j]]   = +1    # U
-                E[dn[1][i,j], sn[0][i+1,j]] = -1    # D
+                E[dn[1][i, j], sn[0][i, j]] = +1    # U
+                E[dn[1][i, j], sn[0][i+1, j]] = -1    # D
         return csc_matrix(E)
 
     @property
@@ -94,8 +95,8 @@ class IncidenceMatrix(FrozenOnly):
         I, J = np.shape(dn[0])
         for j in range(J):
             for i in range(I):
-                E[dn[0][i,j], sn[1][i,j  ]] = -1    # L
-                E[dn[0][i,j], sn[1][i,j+1]] = +1    # R
-                E[dn[0][i,j], sn[0][i  ,j]] = -1    # U
-                E[dn[0][i,j], sn[0][i+1,j]] = +1    # D
+                E[dn[0][i, j], sn[1][i, j]] = -1    # L
+                E[dn[0][i, j], sn[1][i, j+1]] = +1    # R
+                E[dn[0][i, j], sn[0][i, j]] = -1    # U
+                E[dn[0][i, j], sn[0][i+1, j]] = +1    # D
         return csc_matrix(E)

@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 from mpi4py import MPI
-cOmm = MPI.COMM_WORLD
-sIze: int = cOmm.Get_size()
-rAnk: int = cOmm.Get_rank()
-mAster_rank: int = 0  # you can, but you do not need to change this!
+COMM = MPI.COMM_WORLD
+SIZE: int = COMM.Get_size()
+RANK: int = COMM.Get_rank()
+MASTER_RANK: int = 0  # you can, but you do not need to change this!
 """(int) the master core is under rank?"""
-if sIze >= 2:
-    sEcretary_rank: int = 1  # you can, but you do not need to change this!
-    assert mAster_rank != sEcretary_rank, \
+if SIZE >= 2:
+    SECRETARY_RANK: int = 1  # you can, but you do not need to change this!
+    assert MASTER_RANK != SECRETARY_RANK, \
         f"when we have more than one core, master core should be different from secretary core."
 else:
-    sEcretary_rank: int = 0
+    SECRETARY_RANK: int = 0
 
 
 def CHECK_SAME_IN_ALL_CORES(*args):
@@ -20,20 +20,20 @@ def CHECK_SAME_IN_ALL_CORES(*args):
     :param args:
     :return:
     """
-    ARGS = cOmm.gather(args, root=sEcretary_rank)
-    if rAnk == sEcretary_rank:
+    ARGS = COMM.gather(args, root=SECRETARY_RANK)
+    if RANK == SECRETARY_RANK:
         ASSERTION = list()
-        for i in range(sIze):
+        for i in range(SIZE):
             ASSERTION.append(ARGS[i] == ARGS[0])
         ToF = all(ASSERTION)
         not_same_cores = list()
-        for i in range(sIze):
+        for i in range(SIZE):
             if not ASSERTION[i]:
                 not_same_cores.append(i)
     else:
         ToF = None
         not_same_cores = None
 
-    ToF, not_same_cores = cOmm.bcast([ToF, not_same_cores], root=sEcretary_rank)
+    ToF, not_same_cores = COMM.bcast([ToF, not_same_cores], root=SECRETARY_RANK)
 
     assert ToF, f"inputs in all cores must be same. These cores: {not_same_cores} have different inputs to core 0."

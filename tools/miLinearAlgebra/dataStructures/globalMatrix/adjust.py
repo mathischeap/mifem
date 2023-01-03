@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-
-
 from components.freeze.main import FrozenOnly
 from root.config.main import RANK, MASTER_RANK
-
 
 
 class ___GM_ADJUST___(FrozenOnly):
@@ -22,7 +19,7 @@ class ___GM_ADJUST___(FrozenOnly):
         :return: None
         """
         if self._gm_.mtype != 'lil':
-            self._gm_._M_ = self._gm_._M_.tolil() # this will
+            self._gm_._M_ = self._gm_._M_.tolil()  # this will
         self._gm_._M_[r, :] = 0
 
     def ___PRIVATE_set_value___(self, i, j, value):

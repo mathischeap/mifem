@@ -15,7 +15,8 @@ from objects.CSCG._3d.master import MeshGenerator as _3dCSCG_MeshGenerator
 from objects.CSCG._3d.master import SpaceInvoker as _3dCSCG_SpaceInvoker
 from objects.CSCG._3d.master import ExactSolutionSelector as _3dCSCG_ExactSolutionSelector
 from objects.CSCG._3d.master import FormCaller as _3dCSCG_FormCaller
-from root.save import save, read
+from root.save import save
+from root.read.main import read
 
 import random
 
