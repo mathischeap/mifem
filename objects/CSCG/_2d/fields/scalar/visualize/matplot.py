@@ -33,10 +33,12 @@ class _2dCSCG_ScalarField_Visualize_matplot(FrozenOnly):
     def __call__(self, **kwargs):
         return self.contourf(**kwargs)
 
-    def contourf(self, time=None, density=10000, usetex=False, colormap='coolwarm',
-        show_colorbar=True, levels=None, num_levels=20, title=True,
-        show_boundaries=True, domain_boundary_linewidth=3, boundary_name_fontsize=12,
-        minor_tick_length=0, major_tick_length=0, tick_pad=5, tick_size=12):
+    def contourf(
+            self, time=None, density=10000, usetex=False, colormap='coolwarm',
+            show_colorbar=True, levels=None, num_levels=20, title=True,
+            show_boundaries=True, domain_boundary_linewidth=3, boundary_name_fontsize=12,
+            minor_tick_length=0, major_tick_length=0, tick_pad=5, tick_size=12
+    ):
         """
 
         :param time:
@@ -69,8 +71,10 @@ class _2dCSCG_ScalarField_Visualize_matplot(FrozenOnly):
         else:
             XY = dict()
             VV = dict()
-            for _ in xy: XY.update(_)
-            for _ in v: VV.update(_)
+            for _ in xy:
+                XY.update(_)
+            for _ in v:
+                VV.update(_)
 
             x = list()
             y = list()
@@ -88,7 +92,8 @@ class _2dCSCG_ScalarField_Visualize_matplot(FrozenOnly):
             x, y, v = self._mesh_.do.regionwsie_stack(x, y, v)
 
             plt.rc('text', usetex=usetex)
-            if colormap is not None: plt.rcParams['image.cmap'] = colormap
+            if colormap is not None:
+                plt.rcParams['image.cmap'] = colormap
             fig, ax = plt.subplots()
             ax.set_aspect('equal')
             ax.spines['top'].set_visible(False)
@@ -147,9 +152,7 @@ class _2dCSCG_ScalarField_Visualize_matplot(FrozenOnly):
             if title is True:
                 plt.title(f"Scalar field: {self._cf_.standard_properties.name} @ time={self._cf_.current_time}")
 
-
             if show_colorbar:
                 plt.colorbar()
             plt.show()
             return fig
-

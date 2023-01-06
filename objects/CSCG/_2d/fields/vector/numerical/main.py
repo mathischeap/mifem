@@ -2,16 +2,12 @@
 """
 
 """
-
 from components.freeze.main import FrozenOnly
 from importlib import import_module
 from components.numerical.timePlus2dSpace.partial_derivative_as_functions import \
     NumericalPartialDerivative_txy_Functions
 from objects.CSCG._2d.fields.vector.numerical.helpers.rot import ___VECTOR_rot_HELPER___
 from objects.CSCG._2d.fields.vector.numerical.helpers.divergence import ___VECTOR_DIV_HELPER___
-
-
-
 
 
 class _2dCSCG_VectorField_Numerical(FrozenOnly):
@@ -34,7 +30,7 @@ class _2dCSCG_VectorField_Numerical(FrozenOnly):
                                [NPD4Fx('t'), NPD4Fy('t')],
                                ftype='standard',
                                valid_time=self._vf_.valid_time,
-                               name = 'time-derivative-of-' + self._vf_.standard_properties.name
+                               name='time-derivative-of-' + self._vf_.standard_properties.name
                                )
             return TDS
 
@@ -61,18 +57,16 @@ class _2dCSCG_VectorField_Numerical(FrozenOnly):
 
             scalar_class = getattr(import_module(base_path + 'scalar.main'), '_2dCSCG_ScalarField')
 
-            curl_vector = scalar_class(self._vf_.mesh,
-                                     curl_vector,
-                                     ftype='standard',
-                                     valid_time=self._vf_.valid_time,
-                                     name = 'curl-of-' + self._vf_.standard_properties.name
-                                     )
+            curl_vector = scalar_class(
+                self._vf_.mesh,
+                curl_vector,
+                ftype='standard',
+                valid_time=self._vf_.valid_time,
+                name='curl-of-' + self._vf_.standard_properties.name
+            )
             return curl_vector
         else:
             raise NotImplementedError(f"Numerical curl not implemented for vector type = {self._vf_.ftype}.")
-
-
-
 
     @property
     def div(self):
@@ -90,12 +84,13 @@ class _2dCSCG_VectorField_Numerical(FrozenOnly):
 
             scalar_class = getattr(import_module(base_path + 'scalar.main'), '_2dCSCG_ScalarField')
 
-            curl_vector = scalar_class(self._vf_.mesh,
-                                     curl_vector,
-                                     ftype='standard',
-                                     valid_time=self._vf_.valid_time,
-                                     name = 'div-of-' + self._vf_.standard_properties.name
-                                     )
+            curl_vector = scalar_class(
+                self._vf_.mesh,
+                curl_vector,
+                ftype='standard',
+                valid_time=self._vf_.valid_time,
+                name='div-of-' + self._vf_.standard_properties.name
+            )
             return curl_vector
         else:
             raise NotImplementedError(f"Numerical div not implemented for vector type = {self._vf_.ftype}.")

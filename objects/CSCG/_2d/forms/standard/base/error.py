@@ -35,14 +35,14 @@ class _2dCSCG_Standard_Form_Error(FrozenOnly):
 
         # upon shift ...
         add_to = None
-        if upon is True: # we will shift according to the first quadrature point.
+        if upon is True:  # we will shift according to the first quadrature point.
             if len(xyz) > 0:
                 bi = self._sf_.mesh.elements.indices[0]
                 bx, by = xyz[bi]
                 bv = v[bi]
                 base_xyz = [bx[0], by[0]]
                 if OneOrThree == 1:
-                    base_val = [bv[0][0],]
+                    base_val = [bv[0][0], ]
                 else:
                     base_val = [bv[0][0], bv[1][0]]
             else:
@@ -57,7 +57,7 @@ class _2dCSCG_Standard_Form_Error(FrozenOnly):
                 # noinspection PyUnboundLocalVariable
                 assert bi is not None
                 # noinspection PyUnboundLocalVariable
-                base_xyz = bi # find the base_xyz
+                base_xyz = bi  # find the base_xyz
                 # noinspection PyUnboundLocalVariable
                 base_val = base_val[i]
                 func_val = [self._sf_.func.body[m](*base_xyz) for m in range(OneOrThree)]
@@ -84,8 +84,8 @@ class _2dCSCG_Standard_Form_Error(FrozenOnly):
             element = self._sf_.mesh.elements[i]
             detJ = element.coordinate_transformation.Jacobian(xi, eta)
             LEIntermediate = np.sum(
-            [(v[i][m] - self._sf_.CF.___DO_evaluate_func_at_time___()[m](*xyz[i]))**n
-             for m in range(OneOrThree)], axis=0
+                [(v[i][m] - self._sf_.CF.___DO_evaluate_func_at_time___()[m](*xyz[i]))**n
+                    for m in range(OneOrThree)], axis=0
             )
             localError.append(np.sum(LEIntermediate * detJ * quad_weights))
 
@@ -102,7 +102,7 @@ class _2dCSCG_Standard_Form_Error(FrozenOnly):
 
     def H(self, d_func, quad_degree=None, upon=False):
         """
-        Global :math:`H^1`-error; :math:`H^1` error includes :math:`H(\mathrm{curl})` and :math:`H(\mathrm{div})`;
+        Global :math:`H^1`-error; :math:`H^1` error includes :math:`H(\\mathrm{curl})` and :math:`H(\\mathrm{div})`;
         since it basically use the ``globalL2`` method, so the computation is done in the secretary core and
         communications are needed.
 
@@ -119,5 +119,3 @@ class _2dCSCG_Standard_Form_Error(FrozenOnly):
         D_self.TW.___DO_push_all_to_instant___()
         DErrorL2 = D_self.error.L(n=2, quad_degree=quad_degree)
         return (selfErrorL2 ** 2 + DErrorL2 ** 2) ** 0.5
-
-

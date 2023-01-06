@@ -59,10 +59,6 @@ class _2dCSCG_Standard_Form_Numbering(FrozenOnly):
             self._local_ = getattr(self._sf_.space.local_numbering, self._sf_.__class__.__name__)
         return self._local_
 
-
-
-
-
     @property
     def num_local_dofs(self):
         if self._local_num_dofs_ is None:
@@ -80,8 +76,6 @@ class _2dCSCG_Standard_Form_Numbering(FrozenOnly):
         if self._extra_ is None:
             self.___PRIVATE_do_numbering___()
         return self._extra_
-
-
 
     @property
     def boundary_dofs(self):

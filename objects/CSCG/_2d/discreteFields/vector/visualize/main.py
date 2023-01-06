@@ -7,6 +7,7 @@
 from components.freeze.base import FrozenOnly
 from objects.CSCG._2d.discreteFields.vector.visualize.matplot import _2cCSCG_DV_VisualizeMatplot
 
+
 class _2dCSCG_DV_Visualize(FrozenOnly):
     """"""
 

@@ -4,10 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/08/30 2:38 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
-
 from components.freeze.base import FrozenOnly
 import numpy as np
 from root.config.main import SIZE, COMM, RANK
@@ -57,7 +53,7 @@ class _2dCSCG_SF_ReconstructBase(FrozenOnly):
 
         local_elements_in_regions = mesh.elements.in_regions
 
-        #----------- parse rst -------------------------------------------------------------------1
+        # ----------- parse rst -------------------------------------------------------------------1
         if isinstance(rs, (list, tuple)):
             ___ = dict()
             for rn in local_elements_in_regions:
@@ -81,7 +77,7 @@ class _2dCSCG_SF_ReconstructBase(FrozenOnly):
         else:
             raise Exception(f"grid={rs} wrong.")
 
-        #-------- parse r, s further --------------------------------------------------------------1
+        # -------- parse r, s further --------------------------------------------------------------1
         for rn in rs:
             r, s = rs[rn]
             if isinstance(r, (int, float)):
@@ -98,23 +94,23 @@ class _2dCSCG_SF_ReconstructBase(FrozenOnly):
             else:
                 pass
 
-            if np.ndim(r) == 1 and min(r) >=0 and max(r) <=1 and np.all(np.diff(r) > 0):
+            if np.ndim(r) == 1 and min(r) >= 0 and max(r) <= 1 and np.all(np.diff(r) > 0):
                 pass
-            elif np.ndim(r) == 1 and min(r) >=-1 and max(r) <=1 and np.all(np.diff(r) > 0):
+            elif np.ndim(r) == 1 and min(r) >= -1 and max(r) <= 1 and np.all(np.diff(r) > 0):
                 r = (r + 1) / 2
             else:
                 raise Exception(f"r[{rn}]={r} wrong!")
 
-            if np.ndim(s) == 1 and min(s) >=0 and max(s) <=1 and np.all(np.diff(s) > 0):
+            if np.ndim(s) == 1 and min(s) >= 0 and max(s) <= 1 and np.all(np.diff(s) > 0):
                 pass
-            elif np.ndim(s) == 1 and min(s) >=-1 and max(s) <=1 and np.all(np.diff(s) > 0):
+            elif np.ndim(s) == 1 and min(s) >= -1 and max(s) <= 1 and np.all(np.diff(s) > 0):
                 s = (s + 1) / 2
             else:
                 raise Exception(f"s[{rn}]={s} wrong!")
 
             rs[rn] = r, s
 
-        #------- check cache ----------------------------------------------------------------------1
+        # ------- check cache ----------------------------------------------------------------------1
         if ___grid_cache_2dCSCG_SF_Reconstruct___['grid'] is not None:
             c_rs = ___grid_cache_2dCSCG_SF_Reconstruct___['grid']
             cached = True
@@ -146,7 +142,7 @@ class _2dCSCG_SF_ReconstructBase(FrozenOnly):
         else:
             pass
 
-        #-------- generating RST for region elements ----------------------------------------------1
+        # -------- generating RST for region elements ----------------------------------------------1
 
         Xi_Eta_Sigma_D = dict()
         for rn in rs:
@@ -164,11 +160,11 @@ class _2dCSCG_SF_ReconstructBase(FrozenOnly):
                 base_i = 0
                 for _ in D:
                     for i, low_bound in enumerate(SP[base_i:-1]):
-                        I = base_i + i
-                        up_bound = SP[I +1]
+                        I_ = base_i + i
+                        up_bound = SP[I_ + 1]
                         if low_bound <= _ < up_bound:
-                            Segments[I].append(_)
-                            base_i = I
+                            Segments[I_].append(_)
+                            base_i = I_
                             break
 
                 if D[-1] == 1:
@@ -189,17 +185,17 @@ class _2dCSCG_SF_ReconstructBase(FrozenOnly):
 
             Xi_Eta_Sigma_D[rn] = RST
 
-        ___grid_cache_2dCSCG_SF_Reconstruct___['grid']  = rs
+        ___grid_cache_2dCSCG_SF_Reconstruct___['grid'] = rs
         ___grid_cache_2dCSCG_SF_Reconstruct___['Xi_Eta_Sigma'] = Xi_Eta_Sigma_D
-        #======================================================================================
+        # ======================================================================================
         return Xi_Eta_Sigma_D, rs
 
     @classmethod
     def ___PRIVATE_distribute_XY_and_VAL___(cls, mesh, xy, value):
         """"""
-        rwPc = mesh.elements.region_wise_prime_core #
+        rwPc = mesh.elements.region_wise_prime_core  #
 
-        #---------- we distribute xyz, and value to prime cores -------------------------------------1
+        # ---------- we distribute xyz, and value to prime cores -------------------------------------1
         XY = [dict() for _ in range(SIZE)]
         VAL = [dict() for _ in range(SIZE)]
 
@@ -212,7 +208,7 @@ class _2dCSCG_SF_ReconstructBase(FrozenOnly):
         XY = COMM.alltoall(XY)
         VAL = COMM.alltoall(VAL)
 
-        #----------- collect xyz and value in the prime cores --------------------------------------1
+        # ----------- collect xyz and value in the prime cores --------------------------------------1
         _XY_ = dict()
         for ___ in XY:
             _XY_.update(___)
@@ -225,7 +221,7 @@ class _2dCSCG_SF_ReconstructBase(FrozenOnly):
         element_global_numbering = dict()
         for rn in rwPc:
             core = rwPc[rn]
-            if core == RANK: # I am the prime core of this region.
+            if core == RANK:  # I am the prime core of this region.
                 if rn not in element_global_numbering:
                     element_global_numbering[rn] = \
                         mesh.___PRIVATE_generate_element_global_numbering___(number_what=rn)
@@ -247,6 +243,7 @@ class _2dCSCG_SF_ReconstructBase(FrozenOnly):
                 idj = 0
                 for j in range(mesh.elements.layout[Rn][1]):
                     idi = 0
+                    bj = None
                     for i in range(mesh.elements.layout[Rn][0]):
                         D0 = data_dict[element_global_numbering[Rn][i, j]][0]
                         bi, bj = D0.shape
@@ -264,6 +261,7 @@ class _2dCSCG_SF_ReconstructBase(FrozenOnly):
                 idj = 0
                 for j in range(mesh.elements.layout[Rn][1]):
                     idi = 0
+                    bj = None
                     for i in range(mesh.elements.layout[Rn][0]):
                         D0, D1 = data_dict[element_global_numbering[Rn][i, j]]
                         bi, bj = D0.shape
@@ -279,8 +277,3 @@ class _2dCSCG_SF_ReconstructBase(FrozenOnly):
                 raise NotImplementedError()
 
         return _sd_
-
-
-if __name__ == "__main__":
-    # mpiexec -n 4 python 
-    pass

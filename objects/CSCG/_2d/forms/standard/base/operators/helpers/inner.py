@@ -3,6 +3,7 @@
 from components.freeze.base import FrozenOnly
 import numpy as np
 
+
 class ___Operators_Inner___(FrozenOnly):
     """The class for the inner product matrix."""
     def __init__(self, sf, of, quad_degree=None, quad_type='Lobatto'):

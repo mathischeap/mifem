@@ -12,8 +12,6 @@ from abc import ABC
 from objects.CSCG.base.fields.base import CSCG_Continuous_FORM_BASE
 
 
-
-
 class _2dCSCG_Continuous_FORM_BASE(CSCG_Continuous_FORM_BASE, ABC):
     """"""
     def __init_subclass__(cls, ndim=2):

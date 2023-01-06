@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from time import localtime, strftime, time
 
+
 def timeit1(method):
     """A timer decorator for functions or methods."""
 
@@ -16,5 +17,3 @@ def timeit1(method):
         return result
 
     return timed
-
-

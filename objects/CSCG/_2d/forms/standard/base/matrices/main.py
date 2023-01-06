@@ -5,7 +5,6 @@ from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_
 from objects.CSCG._2d.forms.standard.base.matrices.helpers.mass import MassMatrixHelper
 
 
-
 class _2dCSCG_Standard_Form_Matrices(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from components.freeze.base import FrozenOnly
 
+
 class MassMatrixHelper(FrozenOnly):
     """The class for the inner product matrix."""
     def __init__(self, sf):

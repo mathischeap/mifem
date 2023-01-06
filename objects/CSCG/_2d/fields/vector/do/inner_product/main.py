@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/8/11 0:36
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
 from importlib import import_module
 
@@ -35,14 +32,13 @@ class _2CSCG_VectorField_InnerProduct(FrozenOnly):
                     vector_class = getattr(import_module(base_path + 'scalar.main'),
                                            '_2dCSCG_ScalarField')
 
-                    cp_vector = vector_class(self._vf_.mesh,
-                                                    IP,
-                                                    ftype='standard',
-                                                    valid_time=self._vf_.valid_time,
-                                                    name = self._vf_.standard_properties.name
-                                                         + '--inner-product--'
-                                                         + vector.standard_properties.name
-                                                    )
+                    cp_vector = vector_class(
+                        self._vf_.mesh,
+                        IP,
+                        ftype='standard',
+                        valid_time=self._vf_.valid_time,
+                        name=self._vf_.standard_properties.name + '--inner-product--' + vector.standard_properties.name
+                    )
                     return cp_vector
                 else:
                     raise NotImplementedError(
@@ -53,9 +49,3 @@ class _2CSCG_VectorField_InnerProduct(FrozenOnly):
                                           f"cannot do inner product.")
         else:
             raise NotImplementedError(f"a _2dCSCG_VectorField can not inner product a {vector}.")
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

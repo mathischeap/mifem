@@ -5,7 +5,8 @@
 @time: 2022/08/29 7:49 PM
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.base import FrozenOnly
 import numpy as np
@@ -46,9 +47,9 @@ class OnTraceElement_BoundaryWise(FrozenOnly):
             raise NotImplementedError(f"_3dCSCG_VectorField of 'boundary-wise' ftype"
                                       f" trace-element-reconstruction currently don't accept i={i}.")
 
-        for I in INDICES:
+        for I_ in INDICES:
 
-            te = SELF.mesh.trace.elements[I]
+            te = SELF.mesh.trace.elements[I_]
             assert te.whether.on_mesh_boundary, f"must be the case because ftype == 'boundary-wise!"
 
 
@@ -59,39 +60,40 @@ class OnTraceElement_BoundaryWise(FrozenOnly):
                 xyz_i = te.coordinate_transformation.mapping(eta)
 
             bn = te.on_mesh_boundary
-            assert bn in func, f"trace element #{I} is on <{bn}> which is not covered by boundary-wise func."
+            assert bn in func, f"trace element #{I_} is on <{bn}> which is not covered by boundary-wise func."
             func_i = func[bn]
 
             vx_i = func_i[0](*xyz_i)
             vy_i = func_i[1](*xyz_i)
 
             if ravel:
-                xyz[I] = [_.ravel('F') for _ in xyz_i]
-                value[I] = [vx_i.ravel('F'), vy_i.ravel('F')]
+                xyz[I_] = [_.ravel('F') for _ in xyz_i]
+                value[I_] = [vx_i.ravel('F'), vy_i.ravel('F')]
             else:
-                xyz[I] = xyz_i
-                value[I] = [vx_i, vy_i, ]
+                xyz[I_] = xyz_i
+                value[I_] = [vx_i, vy_i, ]
 
         return xyz, value
 
+
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/CSCG/_2d/fields/vector/do/reconstruct/trace_element/boundary_wise.py
-    from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller
 
     mesh = MeshGenerator('crazy', c=0.)([3, 3])
-    space = SpaceInvoker('polynomials')([1,1])
+    space = SpaceInvoker('polynomials')([1, 1])
     FC = FormCaller(mesh, space)
 
     BV = {'Upper': [0, 0],
           'Down': [0, 0],
           'Left': [0, 0],
-          'Right': [1, 0],}
+          'Right': [1, 0], }
 
     V = FC('vector', BV, name='boundary-vector')
     V.current_time = 0
 
-    xi = np.linspace(-1,1,5)
-    et = np.linspace(-1,1,4)
+    xi = np.linspace(-1, 1, 5)
+    et = np.linspace(-1, 1, 4)
 
     xy, R = V.do.reconstruct(xi, et)
 

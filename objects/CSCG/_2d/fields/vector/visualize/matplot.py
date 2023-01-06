@@ -28,13 +28,14 @@ class _2dCSCG_VectorField_Visualize_matplot(FrozenOnly):
         levels = np.linspace(MINv, MAXv, num_levels)
         return levels
 
-
     def __call__(self, **kwargs):
         return self.contourf(**kwargs)
 
-    def contourf(self, time=None, density=10000, usetex=False, colormap='coolwarm',
-        show_colorbar=True, levels_x=None, levels_y=None, num_levels=20, show_boundaries=True, title=True,
-        saveto=None, dpi=210):
+    def contourf(
+            self, time=None, density=10000, usetex=False, colormap='coolwarm',
+            show_colorbar=True, levels_x=None, levels_y=None, num_levels=20, show_boundaries=True, title=True,
+            saveto=None, dpi=210
+    ):
         """
 
         Parameters
@@ -64,13 +65,16 @@ class _2dCSCG_VectorField_Visualize_matplot(FrozenOnly):
         xy = COMM.gather(xy, root=SECRETARY_RANK)
         v = COMM.gather(v, root=SECRETARY_RANK)
 
-        if RANK != SECRETARY_RANK: return
+        if RANK != SECRETARY_RANK:
+            return
 
-        #------------- prepare data --------------------------------------------------------------1
+        # ------------- prepare data --------------------------------------------------------------1
         XY = dict()
         VV = dict()
-        for _ in xy: XY.update(_)
-        for _ in v: VV.update(_)
+        for _ in xy:
+            XY.update(_)
+        for _ in v:
+            VV.update(_)
 
         x = list()
         y = list()
@@ -94,10 +98,11 @@ class _2dCSCG_VectorField_Visualize_matplot(FrozenOnly):
 
         x, y, vx, vy = self._mesh_.do.regionwsie_stack(x, y, vx, vy)
 
-        #------------- config --------------------------------------------------------------------1
+        # ------------- config --------------------------------------------------------------------1
         plt.rc('text', usetex=usetex)
-        if colormap is not None: plt.rcParams['image.cmap'] = colormap
-        fig = plt.figure(figsize=(12,5.5))
+        if colormap is not None:
+            plt.rcParams['image.cmap'] = colormap
+        fig = plt.figure(figsize=(12, 5.5))
 
         # ---------------- x component -----------------------------------------------------------1
         ax = plt.subplot(121)
@@ -114,6 +119,11 @@ class _2dCSCG_VectorField_Visualize_matplot(FrozenOnly):
         for rn in self._cf_.mesh.domain.regions.names:
             plt.contourf(x[rn], y[rn], vx[rn], levels=levels_x)
 
+        reo_db = None
+        boundary_name_color_dict = None
+        RB = None
+        RBN = None
+        pb_text = None
         if show_boundaries:
             RB, RBN, boundary_name_color_dict, pb_text = \
                 self._mesh_.visualize.matplot.___PRIVATE_DO_generate_boundary_data___(
@@ -148,8 +158,10 @@ class _2dCSCG_VectorField_Visualize_matplot(FrozenOnly):
                                     c=boundary_name_color_dict[bn], ha='center', va='center')
         plt.xlabel('$x$')
         plt.ylabel('$y$')
-        if title is True: plt.title(r"$(u, \cdot)$")
-        if show_colorbar: plt.colorbar()
+        if title is True:
+            plt.title(r"$(u, \cdot)$")
+        if show_colorbar:
+            plt.colorbar()
 
         # ---------------- y component -----------------------------------------------------------1
         ax = plt.subplot(122)
@@ -195,8 +207,10 @@ class _2dCSCG_VectorField_Visualize_matplot(FrozenOnly):
 
         plt.xlabel('$x$')
         plt.ylabel('$y$')
-        if title is True: plt.title(r"$(\cdot, v)$")
-        if show_colorbar: plt.colorbar()
+        if title is True:
+            plt.title(r"$(\cdot, v)$")
+        if show_colorbar:
+            plt.colorbar()
 
         # -------------- title -------------------------------------------------------------------1
         if title is True:
@@ -207,7 +221,7 @@ class _2dCSCG_VectorField_Visualize_matplot(FrozenOnly):
         else:
             plt.title(title)
 
-        #---------------------- save to ----------------------------------------------------------1
+        # ---------------------- save to ----------------------------------------------------------1
         if saveto is None or saveto == '':
             plt.show()
         else:
@@ -217,5 +231,5 @@ class _2dCSCG_VectorField_Visualize_matplot(FrozenOnly):
                 plt.savefig(saveto, dpi=dpi, bbox_inches='tight')
         plt.close()
 
-        #=========================================================================================1
+        # =========================================================================================1
         return fig

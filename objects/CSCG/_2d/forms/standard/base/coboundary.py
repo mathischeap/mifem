@@ -5,10 +5,6 @@ from objects.CSCG.base.forms.standard.coboundary import CSCG_Standard_Form_Cobou
 from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
 
 
-
-
-
-
 class _2dCSCG_Standard_Form_Coboundary(CSCG_Standard_Form_Coboundary_BASE):
     def __init__(self, sf):
         super().__init__(sf)

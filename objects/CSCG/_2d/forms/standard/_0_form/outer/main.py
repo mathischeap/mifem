@@ -8,10 +8,12 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from objects.CSCG._2d.forms.standard._0_form.outer.special.main import _0Form_Outer_Special
 from objects.CSCG._2d.forms.standard._0_form.base.main import _0Form_BASE
 from objects.CSCG._2d.forms.standard._0_form.outer.boundary_integrate.main import _2dCSCG_Outer_S0Form_BI
+
 
 class _2dCSCG_0Form_Outer(_0Form_BASE):
     """
@@ -23,8 +25,10 @@ class _2dCSCG_0Form_Outer(_0Form_BASE):
     :param numbering_parameters:
     :param name:
     """
-    def __init__(self, mesh, space, hybrid=True,
-        numbering_parameters='Naive',  name='outer-oriented-0-form'):
+    def __init__(
+            self, mesh, space, hybrid=True,
+            numbering_parameters='Naive',  name='outer-oriented-0-form'
+    ):
         super().__init__(mesh, space, hybrid, 'outer', numbering_parameters, name)
         super().__init_0form_base__()
         self._k_ = 0
@@ -39,22 +43,14 @@ class _2dCSCG_0Form_Outer(_0Form_BASE):
         return self._special_
 
 
-
-
-
-
-
-
-
-
 if __name__ == '__main__':
     # mpiexec -n 4 python objects\CSCG\_2d\forms\standard\_0_form\outer\main.py
 
     from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
-    mesh = MeshGenerator('crazy', c=0.1)([30,30])
+    mesh = MeshGenerator('crazy', c=0.1)([30, 30])
     # mesh = MeshGenerator('chp1',)([2,2])
-    space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3)])
+    space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 3)])
     FC = FormCaller(mesh, space)
     ES = ExactSolutionSelector(mesh)('sL:sincos1')
     f0 = FC('0-f-o', is_hybrid=True)

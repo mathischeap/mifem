@@ -7,7 +7,6 @@ from components.numerical.timePlus2dSpace.partial_derivative_as_functions import
 from objects.CSCG._2d.fields.scalar.numerical.helpers.curl import ___VECTOR_CURL_HELPER___
 
 
-
 class _2dCSCG_ScalarField_Numerical(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
@@ -23,16 +22,16 @@ class _2dCSCG_ScalarField_Numerical(FrozenOnly):
 
             scalar_class = getattr(import_module(base_path + 'scalar.main'), '_2dCSCG_ScalarField')
 
-            TDS = scalar_class(self._sf_.mesh, NPD4F('t'),
-                              ftype='standard',
-                              valid_time=self._sf_.valid_time,
-                              name = 'time-derivative-of-' + self._sf_.standard_properties.name
-                              )
+            TDS = scalar_class(
+                self._sf_.mesh, NPD4F('t'),
+                ftype='standard',
+                valid_time=self._sf_.valid_time,
+                name='time-derivative-of-' + self._sf_.standard_properties.name
+            )
             return TDS
 
         else:
             raise NotImplementedError(f"Numerical time derivative not implemented for scalar type = {self._sf_.ftype}.")
-
 
     @property
     def grad(self):
@@ -46,17 +45,17 @@ class _2dCSCG_ScalarField_Numerical(FrozenOnly):
 
             vector_class = getattr(import_module(base_path + 'vector.main'), '_2dCSCG_VectorField')
 
-            grad_vector = vector_class(self._sf_.mesh,
-                                     (f_x, f_y),
-                                     ftype='standard',
-                                     valid_time=self._sf_.valid_time,
-                                     name = 'gradient-of-' + self._sf_.standard_properties.name
-                                     )
+            grad_vector = vector_class(
+                self._sf_.mesh,
+                (f_x, f_y),
+                ftype='standard',
+                valid_time=self._sf_.valid_time,
+                name='gradient-of-' + self._sf_.standard_properties.name
+            )
             return grad_vector
 
         else:
             raise NotImplementedError(f"Numerical gradient not implemented for scalar type = {self._sf_.ftype}.")
-
 
     @property
     def curl(self):
@@ -71,12 +70,13 @@ class _2dCSCG_ScalarField_Numerical(FrozenOnly):
 
             vector_class = getattr(import_module(base_path + 'vector.main'), '_2dCSCG_VectorField')
 
-            grad_vector = vector_class(self._sf_.mesh,
-                                     (f_y, m_f_x),
-                                     ftype='standard',
-                                     valid_time=self._sf_.valid_time,
-                                     name = 'curl-of-' + self._sf_.standard_properties.name
-                                     )
+            grad_vector = vector_class(
+                self._sf_.mesh,
+                (f_y, m_f_x),
+                ftype='standard',
+                valid_time=self._sf_.valid_time,
+                name='curl-of-' + self._sf_.standard_properties.name
+            )
             return grad_vector
 
         else:

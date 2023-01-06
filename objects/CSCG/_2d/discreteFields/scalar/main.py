@@ -14,6 +14,7 @@ from objects.CSCG._2d.discreteFields.base.main import _2dCSCG_DiscreteField
 from objects.CSCG._2d.discreteFields.scalar.visualize.main import _2cCSCG_DS_Visualize
 from objects.CSCG._2d.discreteFields.scalar.portion import _2dCSCG_DF_ScalarPortion
 
+
 class _2dCSCG_DF_Scalar(_2dCSCG_DiscreteField):
     """Region wise scalar data."""
 
@@ -41,7 +42,7 @@ if __name__ == '__main__':
     f0.CF.current_time = 0
     f0.discretize()
 
-    x = np.linspace(-1,1,10)
+    x = np.linspace(-1, 1, 10)
 
     ds = f0.reconstruct.discrete_scalar([x, x])
 

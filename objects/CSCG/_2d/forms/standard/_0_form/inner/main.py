@@ -8,9 +8,11 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from objects.CSCG._2d.forms.standard._0_form.inner.special.main import _0Form_Inner_Special
 from objects.CSCG._2d.forms.standard._0_form.base.main import _0Form_BASE
+
 
 class _2dCSCG_0Form_Inner(_0Form_BASE):
     """
@@ -22,8 +24,10 @@ class _2dCSCG_0Form_Inner(_0Form_BASE):
     :param numbering_parameters:
     :param name:
     """
-    def __init__(self, mesh, space, hybrid=True,
-        numbering_parameters='Naive',  name='inner-oriented-0-form'):
+    def __init__(
+            self, mesh, space, hybrid=True,
+            numbering_parameters='Naive',  name='inner-oriented-0-form'
+    ):
         super().__init__(mesh, space, hybrid, 'inner', numbering_parameters, name)
         super().__init_0form_base__()
         self._k_ = 0
@@ -37,19 +41,13 @@ class _2dCSCG_0Form_Inner(_0Form_BASE):
         return self._special_
 
 
-
-
-
-
-
-
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/_2d/forms/standard/_0_form/inner/main.py
     import numpy as np
 
-    from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller  # , ExactSolutionSelector
 
-    mesh = MeshGenerator('crazy', c=0.3)([5,5], show_info=True)
+    mesh = MeshGenerator('crazy', c=0.3)([5, 5], show_info=True)
     # mesh = MeshGenerator('chp1',)([2,2])
     # mesh.visualize()
 
@@ -59,7 +57,9 @@ if __name__ == '__main__':
     # ES = ExactSolutionSelector(mesh)('sL:sincos1')
     #
     # mesh.domain.visualize()
-    def p(t, x, y): return np.cos(2*np.pi*x) * np.cos(2*np.pi*y) + t/2
+
+    def p(t, x, y):
+        return np.cos(2*np.pi*x) * np.cos(2*np.pi*y) + t/2
     scalar = FC('scalar', p)
 
     f0 = FC('0-f-i', is_hybrid=True)

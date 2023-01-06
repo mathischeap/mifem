@@ -3,6 +3,7 @@
 from components.freeze.main import FrozenOnly
 from objects.CSCG._2d.fields.scalar.visualize.matplot import _2dCSCG_ScalarField_Visualize_matplot
 
+
 class _2dCSCG_ScalarField_Visualize(FrozenOnly):
     def __init__(self, cf):
         self._cf_ = cf

@@ -6,13 +6,15 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
 from objects.CSCG._2d.fields.scalar.do.cross_product.helpers.helper2 import ___SF_CROSS_PRODUCT_HELPER_2___
 from objects.CSCG._2d.fields.scalar.do.cross_product.helpers.helper1 import ___SF_CROSS_PRODUCT_HELPER_1___
 
 from importlib import import_module
+
 
 class _2dCSCG_SclarField_CrossProduct(FrozenOnly):
     """w = [0 0 w]^T, U = [u, v, 0]^T, A = w X U = [-wv wu 0]^T"""
@@ -38,14 +40,15 @@ class _2dCSCG_SclarField_CrossProduct(FrozenOnly):
                     vector_class = getattr(import_module(base_path + 'vector.main'),
                                            '_2dCSCG_VectorField')
 
-                    cp_vector = vector_class(self._sf_.mesh,
-                                                    [CP0, CP1],
-                                                    ftype='standard',
-                                                    valid_time=self._sf_.valid_time,
-                                                    name = self._sf_.standard_properties.name
-                                                         + '--cross-X-product--'
-                                                         + vector.standard_properties.name
-                                                    )
+                    cp_vector = vector_class(
+                        self._sf_.mesh,
+                        [CP0, CP1],
+                        ftype='standard',
+                        valid_time=self._sf_.valid_time,
+                        name=self._sf_.standard_properties.name
+                              + '--cross-X-product--'
+                              + vector.standard_properties.name
+                    )
                     return cp_vector
                 else:
                     raise NotImplementedError(

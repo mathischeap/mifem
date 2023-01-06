@@ -3,8 +3,6 @@ from components.freeze.base import FrozenOnly
 from objects.CSCG._2d.forms.standard.base.dofs.do.find import _2dCSCG_SF_dofs_FIND
 
 
-
-
 class _2dCSCG_SF_dofs_do(FrozenOnly):
     """"""
     def __init__(self, dofs):

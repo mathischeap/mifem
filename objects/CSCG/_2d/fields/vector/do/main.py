@@ -6,6 +6,7 @@ from objects.CSCG._2d.fields.vector.do.inner_product.main import _2CSCG_VectorFi
 from components.quadrature import Quadrature
 from root.config.main import RANK, MASTER_RANK, COMM, np
 
+
 class _2dCSCG_VectorField_DO(FrozenOnly):
     def __init__(self, vf):
         self._vf_ = vf

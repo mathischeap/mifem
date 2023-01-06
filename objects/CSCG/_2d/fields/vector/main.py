@@ -8,7 +8,8 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 import numpy as np
 from types import FunctionType, MethodType
@@ -42,7 +43,7 @@ class _2dCSCG_VectorField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
         valid_time
         name
         """
-        #--- when ftype is None, parse it from func type ----------------------------------------1
+        # --- when ftype is None, parse it from func type ----------------------------------------1
         if ftype is None:
             if isinstance(func, (list, tuple)):
                 ftype = 'standard'
@@ -53,7 +54,7 @@ class _2dCSCG_VectorField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
         else:
             pass
 
-        #----------------------------------------------------------------------------------------1
+        # ----------------------------------------------------------------------------------------1
         super().__init__(mesh, ftype, valid_time)
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_vector_field')
         self.standard_properties.___PRIVATE_add_tag___('vector_field')
@@ -87,13 +88,13 @@ class _2dCSCG_VectorField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
                     assert fci.__code__.co_argcount >= 4
                 elif isinstance(fci, (int, float)) and fci == 0:
                     func[i] = _0t_
-                elif callable(fci): # any other callable objects, we do not do check anymore.
+                elif callable(fci):  # any other callable objects, we do not do check anymore.
                     pass
                 else:
                     raise Exception()
             self._func_ = func
 
-        elif ftype == 'boundary-wise': # only valid (still as a vector) on mesh boundary (not domain boundary-wise)
+        elif ftype == 'boundary-wise':  # only valid (still as a vector) on mesh boundary (not domain boundary-wise)
             # no need to cover all mesh boundaries.
             assert isinstance(func, dict), f"when ftype == 'boundary-wise', " \
                                            f"we must put functions in a dict whose " \
@@ -149,16 +150,16 @@ class _2dCSCG_VectorField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
         if self._previous_func_id_time_[0:2] == (id(self.func), time):
             return self._previous_func_id_time_[2]
         else:
-            if self.ftype == 'standard': #------------------------------------------------------2
+            if self.ftype == 'standard':  # ------------------------------------------------------2
                 RETURN = partial(self.func[0], time), partial(self.func[1], time)
 
-            elif self.ftype  == 'boundary-wise': #----------------------------------------------2
+            elif self.ftype == 'boundary-wise':  # ----------------------------------------------2
                 RETURN = dict()
                 for bn in self.func:
                     RETURN[bn] = [partial(self.func[bn][0], time),
                                   partial(self.func[bn][1], time)]
 
-            else: #=============================================================================2
+            else:  # =============================================================================2
                 raise Exception(f" do not understand funcType={self.ftype}")
 
             self._previous_func_id_time_ = (id(self.func), time, RETURN)
@@ -193,11 +194,12 @@ class _2dCSCG_VectorField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
                 x0 = _2dCSCG_ScaMulHelper(w0, other)
                 x1 = _2dCSCG_ScaMulHelper(w1, other)
 
-                mul_vector = self.__class__(self.mesh,
-                     [x0, x1],
-                     ftype='standard',
-                     valid_time=self.valid_time,
-                     name=self.standard_properties.name + f'*{other}'
+                mul_vector = self.__class__(
+                    self.mesh,
+                    [x0, x1],
+                    ftype='standard',
+                    valid_time=self.valid_time,
+                    name=self.standard_properties.name + f'*{other}'
                 )
                 return mul_vector
 
@@ -219,11 +221,12 @@ class _2dCSCG_VectorField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
                 x0 = _2dCSCG_ScaMulHelper(w0, other)
                 x1 = _2dCSCG_ScaMulHelper(w1, other)
 
-                mul_vector = self.__class__(self.mesh,
-                     [x0, x1],
-                     ftype='standard',
-                     valid_time=self.valid_time,
-                     name=f'{other}*' + self.standard_properties.name
+                mul_vector = self.__class__(
+                    self.mesh,
+                    [x0, x1],
+                    ftype='standard',
+                    valid_time=self.valid_time,
+                    name=f'{other}*' + self.standard_properties.name
                 )
                 return mul_vector
 
@@ -249,11 +252,12 @@ class _2dCSCG_VectorField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
                 x0 = _2dCSCG_ScalarFieldAddHelper(sf0, of0)
                 x1 = _2dCSCG_ScalarFieldAddHelper(sf1, of1)
 
-                scalar = _2dCSCG_VectorField(self.mesh,
-                     [x0, x1],
-                     ftype='standard',
-                     valid_time=self.valid_time,
-                     name= self.standard_properties.name + '+' + other.standard_properties.name
+                scalar = _2dCSCG_VectorField(
+                    self.mesh,
+                    [x0, x1],
+                    ftype='standard',
+                    valid_time=self.valid_time,
+                    name=self.standard_properties.name + '+' + other.standard_properties.name
                 )
                 return scalar
 
@@ -273,11 +277,12 @@ class _2dCSCG_VectorField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
                 x0 = _2dCSCG_ScalarFieldSubHelper(sf0, of0)
                 x1 = _2dCSCG_ScalarFieldSubHelper(sf1, of1)
 
-                scalar = _2dCSCG_VectorField(self.mesh,
-                     [x0, x1],
-                     ftype='standard',
-                     valid_time=self.valid_time,
-                     name= self.standard_properties.name + '-' + other.standard_properties.name
+                scalar = _2dCSCG_VectorField(
+                    self.mesh,
+                    [x0, x1],
+                    ftype='standard',
+                    valid_time=self.valid_time,
+                    name=self.standard_properties.name + '-' + other.standard_properties.name
                 )
                 return scalar
 
@@ -295,11 +300,12 @@ class _2dCSCG_VectorField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
             x0 = _2dCSCG_ScalarNeg(self.func[0])
             x1 = _2dCSCG_ScalarNeg(self.func[1])
 
-            scalar = _2dCSCG_VectorField(self.mesh,
-                 [x0, x1],
-                 ftype='standard',
-                 valid_time=self.valid_time,
-                 name= '-' + self.standard_properties.name
+            scalar = _2dCSCG_VectorField(
+                self.mesh,
+                [x0, x1],
+                ftype='standard',
+                valid_time=self.valid_time,
+                name='-' + self.standard_properties.name
             )
             return scalar
 
@@ -311,12 +317,12 @@ if __name__ == '__main__':
     # mpiexec -n 6 python _2dCSCG\fields\vector\main.py
     from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('crazy', c=0.)([2,2], show_info=True)
-    space = SpaceInvoker('polynomials')([('Lobatto',1), ('Lobatto',1)], show_info=True)
+    mesh = MeshGenerator('crazy', c=0.)([2, 2], show_info=True)
+    space = SpaceInvoker('polynomials')([('Lobatto', 1), ('Lobatto', 1)], show_info=True)
     FC = FormCaller(mesh, space)
 
     def p(t, x, y): return t + np.cos(np.pi*x) * np.cos(2*np.pi*y) * (x+1) * (y+1)
     def q(t, x, y): return t + np.cos(2*np.pi*x) * np.cos(np.pi*y) * (x+1) * (y+1)
-    VV = FC('vector', [p,q])
+    VV = FC('vector', [p, q])
 
     VV.visualize(time=1)

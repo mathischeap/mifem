@@ -12,6 +12,7 @@ from components.freeze.main import FrozenOnly
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
+
 class _2dCSCG_Numbering_Visualize(FrozenOnly):
     def __init__(self, f):
         self._f_ = f
@@ -25,11 +26,13 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
     def matplot(self, **kwargs):
         return getattr(self, f'_matplot_{self._f_.__class__.__name__}_numbering')(**kwargs)
 
-    def _matplot_mesh_BASE_(self, ax, region_boundary=True, density=6000, usetex=False,
-        corlormap='tab10', show_numbering=True, title=True,
-        show_boundary_names=True, xlim=None, ylim=None,
-        region_boundary_linewidth=1.5, element_linewidth=1,
-        element_color='red'):
+    def _matplot_mesh_BASE_(
+            self, ax, region_boundary=True, density=6000, usetex=False,
+            corlormap='tab10', show_numbering=True, title=True,
+            show_boundary_names=True, xlim=None, ylim=None,
+            region_boundary_linewidth=1.5, element_linewidth=1,
+            element_color='red'
+    ):
         """
 
         :param ax: The axis we are plotting.
@@ -54,46 +57,52 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
             for rn in self._mesh_.domain.regions.names:
                 if np.max(self._mesh_.elements.layout[rn]) > max_element_layout:
                     max_element_layout = np.max(self._mesh_.elements.layout[rn])
-            if density > 30 * max_element_layout: density = 30 * max_element_layout
-            if density < 3 * max_element_layout: density = 3 * max_element_layout
+            if density > 30 * max_element_layout:
+                density = 30 * max_element_layout
+            if density < 3 * max_element_layout:
+                density = 3 * max_element_layout
             RB = self._mesh_.domain.visualize.matplot(
                     density=4 * 150 * self._mesh_.domain.regions.num, do_plot=False)
-            o = np.linspace(0, 1, density) # plot density
-            I = np.ones(density)
+            o = np.linspace(0, 1, density)  # plot density
+            I_ = np.ones(density)
             # line data ...
-            RI = {} # data for regions internal lines
+            RI = {}  # data for regions internal lines
             for rn in self._mesh_.domain.regions.names:
-                RI[rn] = ([], []) # ([dy_lines], [dx_lines])
-                #____ compute dy lines ___________________________________________
+                RI[rn] = ([], [])  # ([dy_lines], [dx_lines])
+                # ____ compute dy lines ___________________________________________
                 for x in self._mesh_.elements.spacing[rn][0][:]:
-                    RI[rn][0].append(self._mesh_.domain.regions(rn).interpolation.mapping(x*I, o))
-                #____ compute dx lines ___________________________________________
+                    RI[rn][0].append(self._mesh_.domain.regions(rn).interpolation.mapping(x * I_, o))
+                # ____ compute dx lines ___________________________________________
                 for y in self._mesh_.elements.spacing[rn][1][:]:
-                    RI[rn][1].append(self._mesh_.domain.regions(rn).interpolation.mapping(o, y*I))
-                #--------------------------------------------------------------------------
+                    RI[rn][1].append(self._mesh_.domain.regions(rn).interpolation.mapping(o, y * I_))
+                # --------------------------------------------------------------------------
 
             # ... element - internal - mesh ....
             REI = dict()
             nodes = self._f_.space.nodes
             nx, ny = nodes
-            if nx[0] == -1: nx = nx[1:]
-            if nx[-1] == 1: nx = nx[:-1]
-            if ny[0] == -1: ny = ny[1:]
-            if ny[-1] == 1: ny = ny[:-1]
+            if nx[0] == -1:
+                nx = nx[1:]
+            if nx[-1] == 1:
+                nx = nx[:-1]
+            if ny[0] == -1:
+                ny = ny[1:]
+            if ny[-1] == 1:
+                ny = ny[:-1]
 
             # print(nx, ny)
             for rn in self._mesh_.domain.regions.names:
-                REI[rn] = ([], []) # ([dy_lines], [dx_lines])
+                REI[rn] = ([], [])  # ([dy_lines], [dx_lines])
                 for i, x0 in enumerate(self._mesh_.elements.spacing[rn][0][:-1]):
                     x1 = self._mesh_.elements.spacing[rn][0][i+1]
                     for nxi in nx:
                         x = (nxi + 1) * (x1-x0) / 2 + x0
-                        REI[rn][0].append(self._mesh_.domain.regions(rn).interpolation.mapping(x*I, o))
+                        REI[rn][0].append(self._mesh_.domain.regions(rn).interpolation.mapping(x * I_, o))
                 for i, y0 in enumerate(self._mesh_.elements.spacing[rn][1][:-1]):
                     y1 = self._mesh_.elements.spacing[rn][1][i+1]
                     for nyi in ny:
                         y = (nyi + 1) * (y1-y0) / 2 + y0
-                        REI[rn][1].append(self._mesh_.domain.regions(rn).interpolation.mapping(o, y*I))
+                        REI[rn][1].append(self._mesh_.domain.regions(rn).interpolation.mapping(o, y * I_))
 
             reodb = self._mesh_.domain.regions.edges_on_domain_boundaries
             # text: element numbering data ...
@@ -114,11 +123,12 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
                             else:
                                 raise Exception()
 
-            #_____ get personal color for boundaries ________________________________________
+            # _____ get personal color for boundaries ________________________________________
             boundaries_numb = self._mesh_.domain.boundaries.num
             boundaries_name = self._mesh_.domain.boundaries.names
             boundary_name_color_dict = dict()
-            if boundaries_numb > 10 and corlormap=='tab10': corlormap = 'viridis'
+            if boundaries_numb > 10 and corlormap == 'tab10':
+                corlormap = 'viridis'
             color = cm.get_cmap(corlormap, boundaries_numb)
             colors = []
             for j in range(boundaries_numb):
@@ -131,7 +141,7 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
             pbp = DI.periodic_boundary_pairs
             pbs = DI.periodic_boundaries
             pb_text = dict()
-            if pbp == dict(): # no periodic boundaries, lets just pass.
+            if pbp == dict():  # no periodic boundaries, lets just pass.
                 assert pbs == set()
             else:
                 for pair in pbp:
@@ -163,7 +173,7 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
                         self._mesh_.domain.regions(rn).interpolation.mapping(
                             element_center_coordinate_xi,
                             element_center_coordinate_eta)
-            #___________ do the plot ______________________________________________________
+            # ___________ do the plot ______________________________________________________
 
             plt.rc('text', usetex=usetex)
             ax.set_aspect('equal')
@@ -171,13 +181,15 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
             ax.spines['right'].set_visible(False)
             ax.spines['left'].set_visible(True)
             ax.spines['bottom'].set_visible(True)
-            if xlim is not None: plt.xlim(xlim)
-            if ylim is not None: plt.ylim(ylim)
+            if xlim is not None:
+                plt.xlim(xlim)
+            if ylim is not None:
+                plt.ylim(ylim)
 
             for rn in self._mesh_.domain.regions.names:
-                for dy_lines in RI[rn][0]: # plot dy mesh lines
+                for dy_lines in RI[rn][0]:  # plot dy mesh lines
                     ax.plot(dy_lines[0], dy_lines[1], color=element_color, linewidth=element_linewidth)
-                for dx_lines in RI[rn][1]: # plot dx mesh lines
+                for dx_lines in RI[rn][1]:  # plot dx mesh lines
                     ax.plot(dx_lines[0], dx_lines[1], color=element_color, linewidth=element_linewidth)
 
                 for dy_lines in REI[rn][0]:  # plot dy mesh lines
@@ -188,14 +200,14 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
 
             for rn in self._mesh_.domain.regions.names:
                 for ei in range(4):
-                    if reodb[rn][ei] == 1: # plot the domain boundary
+                    if reodb[rn][ei] == 1:  # plot the domain boundary
                         bn = self._mesh_.domain.regions.map[rn][ei]
                         ax.plot(RB[rn][ei][0], RB[rn][ei][1],
                                 color=boundary_name_color_dict[bn], linewidth=3)
                         ax.plot(RB[rn][ei][0], RB[rn][ei][1],
                                 color='k', linewidth=0.1*3)
                     else:
-                        if region_boundary: # plot the regions boundary
+                        if region_boundary:  # plot the regions boundary
                             ax.plot(RB[rn][ei][0], RB[rn][ei][1], color='b', linewidth=region_boundary_linewidth)
 
                     if show_boundary_names:
@@ -227,7 +239,8 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
             if title is True:
                 title = f"numbering of {self._f_.orientation}-{self._f_.k}-form: " + \
                         f"'{self._f_.standard_properties.name}'"
-                if self._f_.IS_hybrid: title += " (hybrid)"
+                if self._f_.IS_hybrid:
+                    title += " (hybrid)"
                 plt.title(title)
             elif title is False:
                 pass
@@ -238,8 +251,6 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
             plt.ylabel('$y$')
             # plt.tight_layout()
             return cm.get_cmap('Dark2', 8)
-
-
 
     def _matplot__0Form_Inner_numbering(self, saveto=None, **kwargs):
         """"""
@@ -270,27 +281,27 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
             pass
 
         if RANK == MASTER_RANK:
-            fig, ax = plt.subplots(figsize=(15,9))
+            fig, ax = plt.subplots(figsize=(15, 9))
             LN_colors = self._matplot_mesh_BASE_(ax, **kwargs)
 
             # .. now, we attach the numbering of 0-form to the fig.
             is_hybrid = self._f_.IS_hybrid
-            for k in mapping: # go through all elements (kth)
+            for k in mapping:  # go through all elements (kth)
                 mpk = mapping[k]
                 gtk = gathering[k]
                 ck = LN_colors(k % 8)
                 for j in range(self._f_.p[1]+1):
                     for i in range(self._f_.p[0]+1):
                         local_number = local_numbering[i, j]
-                        x = mpk[0][i,j]
-                        y = mpk[1][i,j]
+                        x = mpk[0][i, j]
+                        y = mpk[1][i, j]
                         text = gtk[local_number]
                         if is_hybrid:
-                            if i == 0 and j == 0: # corner UL
+                            if i == 0 and j == 0:  # corner UL
                                 ax.text(x, y, str(text), c=ck, va='bottom', ha='left')
-                            elif i == self._f_.p[0] and j == 0: # corner DL
+                            elif i == self._f_.p[0] and j == 0:  # corner DL
                                 ax.text(x, y, str(text), c=ck, va='bottom', ha='right')
-                            elif i == 0 and j == self._f_.p[1]: # corner UR
+                            elif i == 0 and j == self._f_.p[1]:  # corner UR
                                 ax.text(x, y, str(text), c=ck, va='top', ha='left')
                             elif i == self._f_.p[0] and j == self._f_.p[1]:
                                 ax.text(x, y, str(text), c=ck, va='top', ha='right')
@@ -308,17 +319,14 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
                             ax.text(x, y, str(text), c=ck, va='center', ha='center')
 
             plt.show()
-            #... SAVE TO ...
+            # ... SAVE TO ...
             if saveto is not None and saveto != '':
                 plt.savefig(saveto, bbox_inches='tight')
-            #...
+            # ...
             return fig
 
     def _matplot__0Form_Outer_numbering(self, **kwargs):
         return self._matplot__0Form_Inner_numbering(**kwargs)
-
-
-
 
     def _matplot__1Form_Inner_numbering(self, saveto=None, **kwargs):
         """"""
@@ -355,9 +363,9 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
                 mapping_dy.update(MAPPING_dy[i])
                 gathering.update(GATHERING[i])
 
-            local_numbering_dx, local_numbering_dy = self._f_.numbering.local # shift for outer-oriented 1-form
-            assert np.shape(local_numbering_dx) == (self._f_.p[0]    , self._f_.p[1] + 1)
-            assert np.shape(local_numbering_dy) == (self._f_.p[0] + 1, self._f_.p[1]    )
+            local_numbering_dx, local_numbering_dy = self._f_.numbering.local  # shift for outer-oriented 1-form
+            assert np.shape(local_numbering_dx) == (self._f_.p[0], self._f_.p[1] + 1)
+            assert np.shape(local_numbering_dy) == (self._f_.p[0] + 1, self._f_.p[1])
         else:
             pass
 
@@ -406,10 +414,10 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
                             ax.text(x, y, str(text), c=ck, va='center', ha='center')
 
             plt.show()
-            #... SAVE TO ...
+            # ... SAVE TO ...
             if saveto is not None and saveto != '':
                 plt.savefig(saveto, bbox_inches='tight')
-            #...
+            # ...
             return fig
 
     def _matplot__1Form_Outer_numbering(self, saveto=None, **kwargs):
@@ -447,9 +455,9 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
                 mapping_dy.update(MAPPING_dy[i])
                 gathering.update(GATHERING[i])
 
-            local_numbering_dy, local_numbering_dx = self._f_.numbering.local # shift for inner-oriented 1-form
-            assert np.shape(local_numbering_dx) == (self._f_.p[0]    , self._f_.p[1] + 1)
-            assert np.shape(local_numbering_dy) == (self._f_.p[0] + 1, self._f_.p[1]    )
+            local_numbering_dy, local_numbering_dx = self._f_.numbering.local  # shift for inner-oriented 1-form
+            assert np.shape(local_numbering_dx) == (self._f_.p[0], self._f_.p[1] + 1)
+            assert np.shape(local_numbering_dy) == (self._f_.p[0] + 1, self._f_.p[1])
         else:
             pass
 
@@ -498,14 +506,11 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
                             ax.text(x, y, str(text), c=ck, va='center', ha='center')
 
             plt.show()
-            #... SAVE TO ...
+            # ... SAVE TO ...
             if saveto is not None and saveto != '':
                 plt.savefig(saveto, bbox_inches='tight')
-            #...
+            # ...
             return fig
-
-
-
 
     def _matplot__2Form_Inner_numbering(self, saveto=None, **kwargs):
         """"""
@@ -539,35 +544,31 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
             pass
 
         if RANK == MASTER_RANK:
-            fig, ax = plt.subplots(figsize=(15,9))
+            fig, ax = plt.subplots(figsize=(15, 9))
             LN_colors = self._matplot_mesh_BASE_(ax, **kwargs)
 
             # .. now, we attach the numbering of 0-form to the fig.
-            for k in mapping: # go through all elements (kth)
+            for k in mapping:  # go through all elements (kth)
                 mpk = mapping[k]
                 gtk = gathering[k]
                 ck = LN_colors(k % 8)
                 for j in range(self._f_.p[1]):
                     for i in range(self._f_.p[0]):
                         local_number = local_numbering[i, j]
-                        x = mpk[0][i,j]
-                        y = mpk[1][i,j]
+                        x = mpk[0][i, j]
+                        y = mpk[1][i, j]
                         text = gtk[local_number]
                         ax.text(x, y, str(text), c=ck, va='center', ha='center')
 
             plt.show()
-            #... SAVE TO ...
+            # ... SAVE TO ...
             if saveto is not None and saveto != '':
                 plt.savefig(saveto, bbox_inches='tight')
-            #...
+            # ...
             return fig
 
     def _matplot__2Form_Outer_numbering(self, **kwargs):
         return self._matplot__2Form_Inner_numbering(**kwargs)
-
-
-
-
 
     def local(self, **kwargs):
         """Visualize the local numbering."""

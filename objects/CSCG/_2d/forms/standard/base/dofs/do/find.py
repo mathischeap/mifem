@@ -2,10 +2,6 @@ from components.freeze.base import FrozenOnly
 from root.config.main import COMM, MASTER_RANK, RANK
 
 
-
-
-
-
 class _2dCSCG_SF_dofs_FIND(FrozenOnly):
     """"""
     def __init__(self, dofs):
@@ -27,13 +23,13 @@ class _2dCSCG_SF_dofs_FIND(FrozenOnly):
             id0 = 0 if which_corner[0] == 'U' else -1
             id1 = 0 if which_corner[0] == 'L' else -1
 
-            dof_local_numbering = self._dofs_._sf_.numbering.local[0][id0, id1] # local numbering
+            dof_local_numbering = self._dofs_._sf_.numbering.local[0][id0, id1]  # local numbering
             dof_num = GM[corner_element][dof_local_numbering]
 
         dof_num = COMM.gather(dof_num, root=MASTER_RANK)
 
         if RANK == MASTER_RANK:
-            dof_num = [ i for i in dof_num if i is not None ]
+            dof_num = [i for i in dof_num if i is not None]
             assert len(dof_num) == 1, f"We must only find dof as we first will only find one mesh-element"
             dof_num = dof_num[0]
 

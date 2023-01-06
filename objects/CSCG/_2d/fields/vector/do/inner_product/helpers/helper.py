@@ -6,9 +6,6 @@
 """
 
 
-
-
-
 class VF2_IP_H(object):
     def __init__(self, f0, f1, f2, f3):
         self._f0_ = f0

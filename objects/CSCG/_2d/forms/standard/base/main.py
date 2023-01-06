@@ -62,10 +62,12 @@ class _2dCSCG_Standard_Form(CSCG_Standard_Form, _2dCSCG_FORM_BASE, ndim=2):
     def shadow(self):
         hybrid, numbering_parameters, name = self.___ARGS___
         # noinspection PyArgumentList
-        return self.__class__(self.mesh, self.space,
-                              hybrid=hybrid,
-                              numbering_parameters=numbering_parameters,
-                              name = 'shadow-of-' + name)
+        return self.__class__(
+            self.mesh, self.space,
+            hybrid=hybrid,
+            numbering_parameters=numbering_parameters,
+            name='shadow-of-' + name
+        )
 
     def __repr__(self):
         return f"2dCSCG>{self.orientation}-{self.k}SF>{self.standard_properties.name}:{id(self)}"

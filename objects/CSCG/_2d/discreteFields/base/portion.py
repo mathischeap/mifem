@@ -29,8 +29,8 @@ class _2dCSCG_DF_PortionBase(FrozenOnly):
         INDICES = dict()
 
         for rn in self._df_.regions:
-            x0, x1 = x # renew initial x0, x1 for each region
-            y0, y1 = y # renew initial y0, y1 for each region
+            x0, x1 = x  # renew initial x0, x1 for each region
+            y0, y1 = y  # renew initial y0, y1 for each region
 
             region = mesh.domain.regions[rn]
             rItp = region.interpolation
@@ -43,10 +43,15 @@ class _2dCSCG_DF_PortionBase(FrozenOnly):
                 pass
 
             else:
-                if x0 < x_lim[0]: x0 = x_lim[0]
-                if x1 > x_lim[1]: x1 = x_lim[1]
-                if y0 < y_lim[0]: y0 = y_lim[0]
-                if y1 > y_lim[1]: y1 = y_lim[1]
+                if x0 < x_lim[0]:
+                    x0 = x_lim[0]
+                if x1 > x_lim[1]:
+                    x1 = x_lim[1]
+                if y0 < y_lim[0]:
+                    y0 = y_lim[0]
+                if y1 > y_lim[1]:
+                    y1 = y_lim[1]
+
                 assert x0 < x1,  f"trivial check, must be"
                 assert y0 < y1,  f"trivial check, must be"
 

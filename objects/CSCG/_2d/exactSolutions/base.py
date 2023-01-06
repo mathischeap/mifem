@@ -70,12 +70,13 @@ class Base(FrozenOnly):
         """
         vt = self.valid_time
         if vt is None:
-            if amount is None: amount = random.randint(2, 5)
+            if amount is None:
+                amount = random.randint(2, 5)
             rTIs = np.random.rand(amount) * 10
         elif vt == 'valid_only_at_its_first_instant':
             rTIs = np.random.rand(1) * 10
         elif isinstance(vt, (int, float)):
-            rTIs = np.array([vt,])
+            rTIs = np.array([vt, ])
         else:
             raise NotImplementedError(f"valid_time = {vt} is not understandable!")
 
@@ -100,7 +101,8 @@ class Base(FrozenOnly):
 
             if quad_degree is None:
                 quad_degree = int(np.ceil((100000 / self._mesh_.elements.global_num) ** (1 / 2)))
-                if quad_degree > 30: quad_degree = 30
+                if quad_degree > 30:
+                    quad_degree = 30
                 quad_degree = (quad_degree, quad_degree)
 
             _Quadrature_ = Quadrature(quad_degree, category='Gauss')
@@ -117,4 +119,4 @@ class Base(FrozenOnly):
             return GLOBAL
 
         else:
-            raise Exception()
+            raise Exception

@@ -6,6 +6,7 @@ from objects.CSCG._2d.forms.standard._0_form.base.discretize.main import _2dCSCG
 from objects.CSCG._2d.forms.standard._0_form.base.visualize.main import _2dCSCG_S0F_VIS
 from objects.CSCG._2d.forms.standard._0_form.base.reconstruct import _2dCSCG_S0F_Reconstruct
 
+
 class _0Form_BASE(_2dCSCG_Standard_Form):
     """"""
     def __init_0form_base__(self):
@@ -39,6 +40,7 @@ class _0Form_BASE(_2dCSCG_Standard_Form):
     @property
     def reconstruct(self):
         if self._reconstruct_ is None:
+            # noinspection PyAttributeOutsideInit
             self._reconstruct_ = _2dCSCG_S0F_Reconstruct(self)
         return self._reconstruct_
 
@@ -86,7 +88,7 @@ class _0Form_BASE(_2dCSCG_Standard_Form):
             raise Exception(' <_0Form_int_wedge> : meshes do not fit.')
         if quad_degree is None:
             quad_degree = [int(np.max([self.dqp[i], other.dqp[i]])) + 1 for i in range(2)]
-        quad_nodes , _, quad_weights = self.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
+        quad_nodes, _, quad_weights = self.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
         xietasigma, basisS = self.do.evaluate_basis_at_meshgrid(*quad_nodes)
         _, basisO = other.do.evaluate_basis_at_meshgrid(*quad_nodes)
         W = np.einsum('im, jm, m -> ij', basisO[0], basisS[0], quad_weights, optimize='greedy')

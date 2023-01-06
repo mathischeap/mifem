@@ -44,8 +44,8 @@ class _2dCSCG_Standard_Form_DO(FrozenOnly):
         :return:
         """
         f = self._sf_
-        assert n >= 1 and isinstance(n ,int), f'n={n} is wrong.'
-        #-------- parse quad_degree ---------------------------------------------------
+        assert n >= 1 and isinstance(n, int), f'n={n} is wrong.'
+        # -------- parse quad_degree ---------------------------------------------------
         if quad_degree is None:
             if n == 1:
                 quad_degree = f.dqp
@@ -64,14 +64,14 @@ class _2dCSCG_Standard_Form_DO(FrozenOnly):
         quad_nodes, _, quad_weights_1d = \
             f.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
 
-        #-------- vectorized --------------------------------------------------------
-        if vectorized: # we use the vectorized reconstruction
+        # -------- vectorized --------------------------------------------------------
+        if vectorized:  # we use the vectorized reconstruction
             reconstruction = f.reconstruct(*quad_nodes, ravel=True, vectorized=True,
                                            value_only=True)
 
-            if reconstruction[0] is None: # no local mesh elements
+            if reconstruction[0] is None:  # no local mesh elements
 
-                total_energy = 0 # total energy in this core is 0
+                total_energy = 0  # total energy in this core is 0
 
             else:
                 reconstruction = np.sum([reconstruction[_]**n for _ in range(OneOrTwo)], axis=0)
@@ -98,7 +98,7 @@ class _2dCSCG_Standard_Form_DO(FrozenOnly):
 
             total_energy = COMM.allreduce(total_energy, op=MPI.SUM)
 
-        #-------- non-vectorized --------------------------------------------------------
+        # -------- non-vectorized --------------------------------------------------------
         else:
             xi, et = np.meshgrid(*quad_nodes, indexing='ij')
             xi = xi.ravel('F')
@@ -107,7 +107,7 @@ class _2dCSCG_Standard_Form_DO(FrozenOnly):
             detJ = f.mesh.elements.coordinate_transformation.Jacobian(xi, et)
 
             total_energy = 0
-            if f.k in (0, 2): # scalar form
+            if f.k in (0, 2):  # scalar form
                 for i in f.mesh.elements:
                     v = reconstruction[i][0]**n
                     Ei = np.sum(v * quad_weights_1d * detJ[i])
@@ -130,17 +130,19 @@ class _2dCSCG_Standard_Form_DO(FrozenOnly):
         :param M:
         :return:
         """
-        if other is None: other = self._sf_
+        if other is None:
+            other = self._sf_
 
         assert self._sf_.mesh == other.mesh, "Meshes do not match."
-        if M is None: M = self._sf_.operators.inner(other)
+        if M is None:
+            M = self._sf_.operators.inner(other)
 
         if len(self._sf_.mesh.elements) == 0:
             LOCAL = 0
 
         elif self._sf_.mesh.elements.whether.homogeneous_according_to_types_wrt_metric:
             i = self._sf_.mesh.elements.indices[0]
-            repM = M[i].toarray() # representative Mass matrix
+            repM = M[i].toarray()  # representative Mass matrix
             LOCAL = np.einsum('ij, ki, kj -> ',
                               repM,
                               other.cochain.array,

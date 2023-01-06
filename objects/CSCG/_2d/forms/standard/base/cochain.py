@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-
-
-
 from objects.CSCG.base.forms.standard.cochain.main import CSCG_Standard_Form_Cochain_BASE
-
 
 
 class _2dCSCG_Standard_Form_Cochain(CSCG_Standard_Form_Cochain_BASE):
@@ -31,7 +27,6 @@ class _2dCSCG_Standard_Form_Cochain(CSCG_Standard_Form_Cochain_BASE):
             else:
                 raise Exception()
         return localAlongAxis
-
 
     def ___PRIVATE_local_on_axis___(self, axis, i):
         """

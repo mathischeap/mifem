@@ -12,14 +12,10 @@ from components.freeze.main import FrozenOnly
 from tools.elementwiseCache.gathering.regular.chain_matrix.main import Gathering_Matrix, Gathering_Vector
 
 
-
 class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
         self._freeze_self_()
-
-
-
 
     def _2dCSCG_0Form_Inner(self):
         """
@@ -167,8 +163,8 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
             p = (p[0]+1, p[1]+1)
             numberingCache = dict()
             currentNumber = 0
-            other_side_name = 'DURL' # not an error, this is other side name.
-            sidePairDict = {'U':'D', 'D':'U', 'L':'R', 'R':'L'}
+            other_side_name = 'DURL'  # not an error, this is other side name.
+            sidePairDict = {'U': 'D', 'D': 'U', 'L': 'R', 'R': 'L'}
             for i in range(SIZE):
                 if i == MASTER_RANK:
                     element_map = mesh.elements.map
@@ -192,7 +188,7 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
                             currentNumber += howManyNotNumbered
 
                     for j, EMki in enumerate(element_map[k]):
-                        if isinstance(EMki, str): # on domain boundary
+                        if isinstance(EMki, str):  # on domain boundary
                             pass
                         else:
                             otherElement = EMki
@@ -204,12 +200,14 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
                                     k, sidePairDict[otherSide], otherElement, otherSide, numberingCache
                                 )
                 toBeSentAway = dict()
-                for k in element_indices: toBeSentAway[k] = numberingCache[k]
+                for k in element_indices:
+                    toBeSentAway[k] = numberingCache[k]
                 if i == MASTER_RANK:
                     global_numbering = toBeSentAway
                 else:
                     COMM.send(toBeSentAway, dest=i, tag=i)
-                for k in element_indices: del numberingCache[k]
+                for k in element_indices:
+                    del numberingCache[k]
 
         dofsPOOL = set()
         for i in self._sf_.mesh.elements:
@@ -223,19 +221,30 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
 
     @staticmethod
     def ___PRIVATE_for_0Form_pass_element_side_numbering_from_to___(
-        fromElement, fromSide, toElement, toSide, numberingCache):
+            fromElement, fromSide, toElement, toSide, numberingCache
+    ):
 
-        if fromSide == 'U'  : data = numberingCache[fromElement][0 , :]
-        elif fromSide == 'D': data = numberingCache[fromElement][-1, :]
-        elif fromSide == 'L': data = numberingCache[fromElement][ :, 0]
-        elif fromSide == 'R': data = numberingCache[fromElement][ :,-1]
-        else: raise Exception()
+        if fromSide == 'U':
+            data = numberingCache[fromElement][0, :]
+        elif fromSide == 'D':
+            data = numberingCache[fromElement][-1, :]
+        elif fromSide == 'L':
+            data = numberingCache[fromElement][:, 0]
+        elif fromSide == 'R':
+            data = numberingCache[fromElement][:, -1]
+        else:
+            raise Exception()
 
-        if toSide == 'U'  : numberingCache[toElement][ 0, :] = data
-        elif toSide == 'D': numberingCache[toElement][-1, :] = data
-        elif toSide == 'L': numberingCache[toElement][ :, 0] = data
-        elif toSide == 'R': numberingCache[toElement][ :,-1] = data
-        else: raise Exception()
+        if toSide == 'U':
+            numberingCache[toElement][0, :] = data
+        elif toSide == 'D':
+            numberingCache[toElement][-1, :] = data
+        elif toSide == 'L':
+            numberingCache[toElement][:, 0] = data
+        elif toSide == 'R':
+            numberingCache[toElement][:, -1] = data
+        else:
+            raise Exception()
 
     def _0Form_Outer_no_parameters(self):
         return self._0Form_Inner_no_parameters()
@@ -288,8 +297,8 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
             numOfBasisComponents = self._sf_.num.basis_components
             numberingCache = dict()
             currentNumber = 0
-            other_side_name = 'DURL' # not an error, this is other side name.
-            sidePairDict = {'U':'D', 'D':'U', 'L':'R', 'R':'L'}
+            other_side_name = 'DURL'  # not an error, this is other side name.
+            sidePairDict = {'U': 'D', 'D': 'U', 'L': 'R', 'R': 'L'}
             for i in range(SIZE):
                 if i == MASTER_RANK:
                     element_map = mesh.elements.map
@@ -338,12 +347,14 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
                                     k, sidePairDict[otherSide], otherElement, otherSide, numberingCache
                                 )
                 toBeSentAway = dict()
-                for k in element_indices: toBeSentAway[k] = numberingCache[k]
+                for k in element_indices:
+                    toBeSentAway[k] = numberingCache[k]
                 if i == MASTER_RANK:
                     global_numbering = toBeSentAway
                 else:
                     COMM.send(toBeSentAway, dest=i, tag=i)
-                for k in element_indices: del numberingCache[k]
+                for k in element_indices:
+                    del numberingCache[k]
 
         dofsPOOL = set()
         for i in self._sf_.mesh.elements:
@@ -358,7 +369,8 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
 
     @staticmethod
     def ___PRIVATE_for_1FormI_pass_element_side_numbering_from_to___(
-        fromElement, fromSide, toElement, toSide, numberingCache):
+        fromElement, fromSide, toElement, toSide, numberingCache
+    ):
 
         data0, data1, data2 = None, None, None
 
@@ -428,8 +440,8 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
             numOfBasisComponents = self._sf_.num.basis_components
             numberingCache = dict()
             currentNumber = 0
-            other_side_name = 'DURL' # not an error, this is other side name.
-            sidePairDict = {'U':'D', 'D':'U', 'L':'R', 'R':'L'}
+            other_side_name = 'DURL'  # not an error, this is other side name.
+            sidePairDict = {'U': 'D', 'D': 'U', 'L': 'R', 'R': 'L'}
             for i in range(SIZE):
                 if i == MASTER_RANK:
                     element_map = mesh.elements.map
@@ -465,7 +477,7 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
                             currentNumber += howManyNotNumbered1
 
                     for j, EMki in enumerate(element_map[k]):
-                        if isinstance(EMki, str): # on domain boundary
+                        if isinstance(EMki, str):  # on domain boundary
                             pass
                         else:
                             otherElement = EMki
@@ -478,12 +490,14 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
                                     k, sidePairDict[otherSide], otherElement, otherSide, numberingCache
                                 )
                 toBeSentAway = dict()
-                for k in element_indices: toBeSentAway[k] = numberingCache[k]
+                for k in element_indices:
+                    toBeSentAway[k] = numberingCache[k]
                 if i == MASTER_RANK:
                     global_numbering = toBeSentAway
                 else:
                     COMM.send(toBeSentAway, dest=i, tag=i)
-                for k in element_indices: del numberingCache[k]
+                for k in element_indices:
+                    del numberingCache[k]
 
         dofsPOOL = set()
         for i in self._sf_.mesh.elements:
@@ -498,21 +512,29 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
 
     @staticmethod
     def ___PRIVATE_for_1FormO_pass_element_side_numbering_from_to___(
-        fromElement, fromSide, toElement, toSide, numberingCache):
-        if fromSide == 'U'  : data = numberingCache[fromElement][0][0 , :]
-        elif fromSide == 'D': data = numberingCache[fromElement][0][-1, :]
-        elif fromSide == 'L': data = numberingCache[fromElement][1][ :, 0]
-        elif fromSide == 'R': data = numberingCache[fromElement][1][ :,-1]
-        else: raise Exception()
+        fromElement, fromSide, toElement, toSide, numberingCache
+    ):
+        if fromSide == 'U':
+            data = numberingCache[fromElement][0][0, :]
+        elif fromSide == 'D':
+            data = numberingCache[fromElement][0][-1, :]
+        elif fromSide == 'L':
+            data = numberingCache[fromElement][1][:, 0]
+        elif fromSide == 'R':
+            data = numberingCache[fromElement][1][:, -1]
+        else:
+            raise Exception()
 
-        if toSide == 'U'  : numberingCache[toElement][0][ 0, :] = data
-        elif toSide == 'D': numberingCache[toElement][0][-1, :] = data
-        elif toSide == 'L': numberingCache[toElement][1][ :, 0] = data
-        elif toSide == 'R': numberingCache[toElement][1][ :,-1] = data
-        else: raise Exception()
-
-
-
+        if toSide == 'U':
+            numberingCache[toElement][0][0, :] = data
+        elif toSide == 'D':
+            numberingCache[toElement][0][-1, :] = data
+        elif toSide == 'L':
+            numberingCache[toElement][1][:, 0] = data
+        elif toSide == 'R':
+            numberingCache[toElement][1][:, -1] = data
+        else:
+            raise Exception()
 
     def _2Form_Inner_no_parameters(self):
         """

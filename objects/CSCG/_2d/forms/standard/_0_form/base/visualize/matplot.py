@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
-
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.base import FrozenOnly
 from root.config.main import np, SECRETARY_RANK, COMM, RANK
@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 
 # from mpl_toolkits.axes_grid1 import make_axes_locatable
+
 
 class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
     """"""
@@ -39,25 +40,22 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
         return levels
 
     def contourf(self, *args, **kwargs):
-        return  self.contour(*args, **kwargs, plot_type='contourf')
+        return self.contour(*args, **kwargs, plot_type='contourf')
 
-    def contour(self, density=10000,
-
-        levels=None, num_levels=20, linewidth=1, linestyle=None,
-
-        usetex=False, colormap='coolwarm',
-
-        show_colorbar=True,
-                colorbar_label=None, colorbar_orientation='vertical', colorbar_aspect=20,
-                colorbar_labelsize=12.5, colorbar_extend='both',
-
-        ticksize = 12,
-        labelsize = 15,
-
-        title=True,
-        show_boundaries=True,
-        saveto=None,
-        plot_type = 'contour'):
+    def contour(
+            self, density=10000,
+            levels=None, num_levels=20, linewidth=1, linestyle=None,
+            usetex=False, colormap='coolwarm',
+            show_colorbar=True,
+            colorbar_label=None, colorbar_orientation='vertical', colorbar_aspect=20,
+            colorbar_labelsize=12.5, colorbar_extend='both',
+            ticksize=12,
+            labelsize=15,
+            title=True,
+            show_boundaries=True,
+            saveto=None,
+            plot_type='contour',
+    ):
         """
 
         :param density:
@@ -104,8 +102,10 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
 
         XY = dict()
         VV = dict()
-        for _ in xy: XY.update(_)
-        for _ in v: VV.update(_)
+        for _ in xy:
+            XY.update(_)
+        for _ in v:
+            VV.update(_)
 
         x = list()
         y = list()
@@ -122,13 +122,15 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
 
         x, y, v = self._mesh_.do.regionwsie_stack(x, y, v)
 
-        if saveto is not None: matplotlib.use('Agg')
+        if saveto is not None:
+            matplotlib.use('Agg')
         plt.rc('text', usetex=usetex)
         plt.rcParams['text.latex.preamble'] = r"\usepackage{amsmath}"
-        if colormap is not None: plt.rcParams['image.cmap'] = colormap
+        if colormap is not None:
+            plt.rcParams['image.cmap'] = colormap
         fig, ax = plt.subplots()
         ax.set_aspect('equal')
-        #------- label and  ticks -------------------------------------------------------
+        # ------- label and  ticks -------------------------------------------------------
         ax.spines['top'].set_visible(False)
         ax.spines['right'].set_visible(False)
         ax.spines['left'].set_visible(True)
@@ -137,11 +139,11 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
         plt.ylabel('$y$', fontsize=labelsize)
         ax.tick_params(labelsize=ticksize)
 
-        #-------------- plot -------------------------------------------------------------
+        # -------------- plot -------------------------------------------------------------
         for rn in self._sf_.mesh.domain.regions.names:
-            if plot_type =='contour':
+            if plot_type == 'contour':
                 plt.contour(x[rn], y[rn], v[rn], levels=levels, linewidths=linewidth, linestyles=linestyle)
-            elif plot_type =='contourf':
+            elif plot_type == 'contourf':
                 VAL = v[rn]
                 VAL[VAL > levels[-1]] = levels[-1]
                 VAL[VAL < levels[0]] = levels[0]
@@ -149,7 +151,7 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
             else:
                 raise Exception(f"plot_type={plot_type} is wrong. Should be one of ('contour', 'contourf')")
 
-        #-------- boundaries ------------------------------------------------------------------
+        # -------- boundaries ------------------------------------------------------------------
         RB, RBN, boundary_name_color_dict, pb_text = \
             self._mesh_.visualize.matplot.___PRIVATE_DO_generate_boundary_data___(
                 50, usetex=usetex)[0:4]
@@ -192,7 +194,7 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
             pass
         else:
             plt.title(title)
-        #-------------------------------- color bar ---------------------------------
+        # -------------------------------- color bar ---------------------------------
         if show_colorbar:
             mappable = cm.ScalarMappable()
             mappable.set_array(np.array(levels))
@@ -206,16 +208,15 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
 
             cb.ax.tick_params(labelsize=colorbar_labelsize)
 
-        #---------------------- save to ---------------------------------------------
+        # ---------------------- save to ---------------------------------------------
         if saveto is None:
             plt.show()
         else:
             plt.savefig(saveto, bbox_inches='tight')
         plt.close()
-        #--------------------------------------------------------------------------
+        # --------------------------------------------------------------------------
 
         return fig
-
 
 
 if __name__ == '__main__':
@@ -232,10 +233,9 @@ if __name__ == '__main__':
     w.TW.current_time = 0
     w.TW.do.push_all_to_instant()
     w.discretize()
-    w.visualize.matplot.contourf(levels =[-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6], usetex=False)
+    w.visualize.matplot.contourf(levels=[-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6], usetex=False)
 
-
-    mesh = MeshGenerator('rectangle', p_UL=(-1,-1),region_layout=(3,5))([5,5], show_info=False)
+    mesh = MeshGenerator('rectangle', p_UL=(-1, -1), region_layout=(3, 5))([5, 5], show_info=False)
     FC = FormCaller(mesh, space)
     ES = ExactSolutionSelector(mesh)('sL:sincos1')
     f0 = FC('0-f-i', is_hybrid=True)

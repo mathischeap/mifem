@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from objects.CSCG._2d.forms.standard.base.reconstruct import _2dCSCG_SF_ReconstructBase
 from objects.CSCG._2d.discreteFields.scalar.main import _2dCSCG_DF_Scalar
 import numpy as np
@@ -30,7 +31,7 @@ class _2dCSCG_S0F_Reconstruct(_2dCSCG_SF_ReconstructBase):
 
         xietasigma, basis = f.do.evaluate_basis_at_meshgrid(xi, eta)
 
-        #-------- parse indices --------------------------------------------------------
+        # -------- parse indices --------------------------------------------------------
         if element_range is None:
             INDICES = mesh.elements.indices
         else:
@@ -38,7 +39,7 @@ class _2dCSCG_S0F_Reconstruct(_2dCSCG_SF_ReconstructBase):
                 vectorized = False
 
             if isinstance(element_range, int):
-                INDICES = [element_range,]
+                INDICES = [element_range, ]
             else:
                 raise Exception()
 
@@ -60,7 +61,7 @@ class _2dCSCG_S0F_Reconstruct(_2dCSCG_SF_ReconstructBase):
                 raise NotImplementedError()
 
             if value_only:
-                return v, # do not remove comma
+                return v,  # do not remove comma
             else:
                 raise Exception()
 
@@ -81,11 +82,11 @@ class _2dCSCG_S0F_Reconstruct(_2dCSCG_SF_ReconstructBase):
                     xyz[i] = element.coordinate_transformation.mapping(*xietasigma)
                     v = np.einsum('ij, i -> j', basis[0], f.cochain.local[i], optimize='greedy')
                     if ravel:
-                        value[i] = [v,]
+                        value[i] = [v, ]
                     else:
                         # noinspection PyUnresolvedReferences
                         xyz[i] = [xyz[i][j].reshape(shape, order='F') for j in range(2)]
-                        value[i] = [v.reshape(shape, order='F'),]
+                        value[i] = [v.reshape(shape, order='F'), ]
 
                 return xyz, value
 
@@ -110,10 +111,10 @@ class _2dCSCG_S0F_Reconstruct(_2dCSCG_SF_ReconstructBase):
         mesh = f.mesh
         Xi_Eta_Sigma_D, grid = self.___PRIVATE_distribute_region_wise_meshgrid___(mesh, grid)
 
-        #-------- reconstructing -----------------------------------------------------------------1
+        # -------- reconstructing -----------------------------------------------------------------1
         xy = dict()
         value = dict()
-        EMPTY_DATA = np.empty((0,0))
+        EMPTY_DATA = np.empty((0, 0))
 
         for e in mesh.elements:
             rn, ij = mesh.do.find.region_name_and_local_indices_of_element(e)
@@ -128,7 +129,7 @@ class _2dCSCG_S0F_Reconstruct(_2dCSCG_SF_ReconstructBase):
                 xy[e] = [EMPTY_DATA, EMPTY_DATA]
                 value[e] = [EMPTY_DATA, EMPTY_DATA]
             else:
-                #___DIFF for different forms____ reconstruction in local mesh element #e________diff
+                # ___DIFF for different forms____ reconstruction in local mesh element #e________diff
                 xietasigma, basis = f.do.evaluate_basis_at_meshgrid(xi, et)
                 xy[e] = element.coordinate_transformation.mapping(*xietasigma)
                 v = np.einsum('ij, i -> j', basis[0], f.cochain.local[e], optimize='greedy')
@@ -136,9 +137,9 @@ class _2dCSCG_S0F_Reconstruct(_2dCSCG_SF_ReconstructBase):
                 # noinspection PyUnresolvedReferences
                 xy[e] = [xy[e][j].reshape(shape, order='F') for j in range(2)]
                 # noinspection PyUnresolvedReferences
-                value[e] = [v.reshape(shape, order='F'),] #=============================diff
+                value[e] = [v.reshape(shape, order='F'), ]  # =============================diff
 
-        #-------- prime-region-wise stack coordinates and values ----------------------------------1
+        # -------- prime-region-wise stack coordinates and values ----------------------------------1
         XY, VAL, element_global_numbering = self.___PRIVATE_distribute_XY_and_VAL___(mesh, xy, value)
 
         XY = self.___PRIVATE_prime_region_wise_stack___(mesh, XY, 2, grid, element_global_numbering)
@@ -153,9 +154,9 @@ if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/_2d/forms/standard/_0_form/base/reconstruct.py
     from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
-    mesh = MeshGenerator('crazy', c=0.1)([30,30])
+    mesh = MeshGenerator('crazy', c=0.1)([30, 30])
     # mesh = MeshGenerator('chp1',)([2,2])
-    space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3)])
+    space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 3)])
     FC = FormCaller(mesh, space)
     ES = ExactSolutionSelector(mesh)('sL:sincos1')
     f0 = FC('0-f-o', is_hybrid=True)
@@ -165,7 +166,7 @@ if __name__ == '__main__':
     f0.TW.do.push_all_to_instant()
     f0.discretize()
 
-    x = np.linspace(-1,1,10)
+    x = np.linspace(-1, 1, 10)
 
     ds = f0.reconstruct.discrete_scalar([x, x])
     ds.visualize()

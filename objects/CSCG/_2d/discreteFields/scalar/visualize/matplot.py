@@ -143,7 +143,8 @@ class _2cCSCG_DS_VisualizeMatplot(FrozenOnly):
         xy = COMM.gather(xy, root=SECRETARY_RANK)
         v = COMM.gather(v, root=SECRETARY_RANK)
 
-        if RANK != SECRETARY_RANK: return
+        if RANK != SECRETARY_RANK:
+            return
         # ----------- prepare  data --------------------------------------------------------------1
         _ = dict()
         for __ in xy:
@@ -162,20 +163,26 @@ class _2cCSCG_DS_VisualizeMatplot(FrozenOnly):
             pass
 
         # ------ config plt ----------------------------------------------------------------------1
-        if saveto is not None: matplotlib.use('Agg')
+        if saveto is not None:
+            matplotlib.use('Agg')
         plt.rc('text', usetex=usetex)
         plt.rcParams['text.latex.preamble'] = r"\usepackage{amsmath}"
-        if colormap is not None: plt.rcParams['image.cmap'] = colormap
+        if colormap is not None:
+            plt.rcParams['image.cmap'] = colormap
         fig, ax = plt.subplots()
         ax.set_aspect('equal')
 
         # ---------- set labels, ticks, frame and so on ------------------------------------------1
-        if xlim is not None: plt.xlim(xlim)
-        if ylim is not None: plt.ylim(ylim)
+        if xlim is not None:
+            plt.xlim(xlim)
+        if ylim is not None:
+            plt.ylim(ylim)
         if axis_on:
             if tick_on:
-                if xticks is not None: plt.xticks(xticks)
-                if yticks is not None: plt.yticks(yticks)
+                if xticks is not None:
+                    plt.xticks(xticks)
+                if yticks is not None:
+                    plt.yticks(yticks)
                 plt.tick_params(which='both', labeltop=False, labelright=False, top=False, right=False)
                 plt.tick_params(axis='both', which='minor', direction='out', length=minor_tick_length)
                 plt.tick_params(axis='both', which='major', direction='out', length=major_tick_length)
@@ -212,9 +219,11 @@ class _2cCSCG_DS_VisualizeMatplot(FrozenOnly):
         for rn in mesh.domain.regions.names:
             if plot_type == 'contour':
                 if color is None:
-                    plt.contour(*xy[rn], v[rn][0], levels=levels, linewidths=linewidth, linestyles=linestyles)
+                    plt.contour(*xy[rn], v[rn][0],
+                                levels=levels, linewidths=linewidth, linestyles=linestyles)
                 else:
-                    plt.contour(*xy[rn], v[rn][0], colors=color, levels=levels, linewidths=linewidth, linestyles=linestyles)
+                    plt.contour(*xy[rn], v[rn][0],
+                                colors=color, levels=levels, linewidths=linewidth, linestyles=linestyles)
 
             elif plot_type == 'contourf':
                 VAL = v[rn][0]

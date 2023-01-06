@@ -6,9 +6,6 @@
 """
 
 
-
-
-
 class ___SF_CROSS_PRODUCT_HELPER_1___(object):
     """"""
 
@@ -20,4 +17,3 @@ class ___SF_CROSS_PRODUCT_HELPER_1___(object):
     def __call__(self, t, x, y):
         """"""
         return - self._f0_(t, x, y) * self._f1_(t, x, y)
-

@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 from time import localtime, strftime, time
 
+
 def timeit2(method):
     """A timer decorator for functions or methods."""
 
     def timed(*args, **kwargs):
-        print(" <TimeIt> -- Method [%r]:" %method.__name__)
+        print(" <TimeIt> -- Method [%r]:" % method.__name__)
         print("          -> Starts at " + strftime("%Y-%m-%d %H:%M:%S", localtime()))
         ts = time()
         result = method(*args, **kwargs)
@@ -15,4 +16,3 @@ def timeit2(method):
         return result
 
     return timed
-

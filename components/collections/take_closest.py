@@ -20,6 +20,6 @@ def take_closest(myList, myNumber):
     before = myList[pos - 1]
     after = myList[pos]
     if after - myNumber < myNumber - before:
-       return after
+        return after
     else:
-       return before
+        return before

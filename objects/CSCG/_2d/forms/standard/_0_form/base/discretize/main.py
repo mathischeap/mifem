@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from components.freeze.base import FrozenOnly
-from objects.CSCG._2d.forms.standard._0_form.base.discretize.scalar.standard import _2dCSCG_S0F_Discretize_StandardScalar
+from objects.CSCG._2d.forms.standard._0_form.base.discretize.scalar.standard import \
+    _2dCSCG_S0F_Discretize_StandardScalar
+
 
 class _2dCSCG_S0F_Discretize(FrozenOnly):
     def __init__(self, sf):
@@ -36,8 +38,8 @@ class _2dCSCG_S0F_Discretize(FrozenOnly):
                                           f'discretize {self._sf_.TW.func.body.__class__}.')
 
         elif target == 'BC':
-                raise NotImplementedError(f'2dCSCG outer 0-form can not (target BC) '
-                                          f'discretize {self._sf_.TW.BC.body.__class__}.')
+            raise NotImplementedError(f'2dCSCG outer 0-form can not (target BC) '
+                                      f'discretize {self._sf_.TW.BC.body.__class__}.')
 
 
         else:

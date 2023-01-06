@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.base import FrozenOnly
 from components.quadrature import Quadrature
@@ -33,17 +34,18 @@ class ipS_Helper(FrozenOnly):
         self._sf_ = sf
         self._S_ = S
 
-        if quad_degree is None: quad_degree = sf.dqp
+        if quad_degree is None:
+            quad_degree = sf.dqp
 
         QUAD, WEIGHTs = Quadrature(quad_degree, category='Gauss').quad
 
         Qud, Qlr = QUAD
         Wud, Wlr = WEIGHTs
 
-        Qu = [[-1,], Qlr]
-        Qd = [[ 1,], Qlr]
-        Ql = [Qud, [-1,]]
-        Qr = [Qud, [ 1,]]
+        Qu = [[-1, ], Qlr]
+        Qd = [[1, ], Qlr]
+        Ql = [Qud, [-1, ]]
+        Qr = [Qud, [1, ]]
         self.Wu = self.Wd = Wud
         self.Wl = self.Wr = Wlr
 
@@ -79,7 +81,7 @@ class ipS_Helper(FrozenOnly):
 
             for j, bn in enumerate(positions):
 
-                if isinstance(bn, str): # on mesh boundary
+                if isinstance(bn, str):  # on mesh boundary
                     side = 'udlr'[j]
 
                     fv = self._S_.___DO_evaluate_func_at_time___()[bn][0]
@@ -108,9 +110,6 @@ class ipS_Helper(FrozenOnly):
                     pass
 
             return sum(V)
-
-
-
 
 
 if __name__ == "__main__":

@@ -2,16 +2,13 @@
 from components.freeze.base import FrozenOnly
 
 
-
-
-
 class OnMeshElement_for_Standard(FrozenOnly):
     """"""
     def __init__(self, vf):
         self._vf_ = vf
         self._freeze_self_()
 
-    def __call__(self,xi, eta, ravel, i):
+    def __call__(self, xi, eta, ravel, i):
         """
 
         :param xi:
@@ -42,7 +39,7 @@ class OnMeshElement_for_Standard(FrozenOnly):
             vy_i = func[1](*xyz_i)
 
             if ravel:
-                xyz[i] = [I.ravel('F') for I in xyz_i]
+                xyz[i] = [I_.ravel('F') for I_ in xyz_i]
                 value[i] = [vx_i.ravel('F'), vy_i.ravel('F')]
             else:
                 xyz[i] = xyz_i

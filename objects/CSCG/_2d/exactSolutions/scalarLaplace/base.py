@@ -44,10 +44,12 @@ class scalar_Laplace_Base(Base):
 
 
     def p(self, t, x, y): raise NotImplementedError()
+
     def p_x(self, t, x, y):
         if self._NPDf_p_ is None:
             self._NPDf_p_ = NumericalPartialDerivative_txy_Functions(self.p)
         return self._NPDf_p_('x')(t, x, y)
+
     def p_y(self, t, x, y):
         if self._NPDf_p_ is None:
             self._NPDf_p_ = NumericalPartialDerivative_txy_Functions(self.p)
@@ -57,6 +59,7 @@ class scalar_Laplace_Base(Base):
         if self._NPDf_px_ is None:
             self._NPDf_px_ = NumericalPartialDerivative_txy_Functions(self.p_x)
         return self._NPDf_px_('x')(t, x, y)
+
     def p_yy(self, t, x, y):
         if self._NPDf_py_ is None:
             self._NPDf_py_ = NumericalPartialDerivative_txy_Functions(self.p_y)
@@ -100,7 +103,8 @@ class scalar_Laplace_Base(Base):
         TS = self.___PRIVATE_generate_random_valid_time_instances___()
         x, y = self._mesh_.do.generate_random_coordinates()
 
-        if len(x) == 0: return
+        if len(x) == 0:
+            return
 
         for t in TS:
 

@@ -38,8 +38,10 @@ class _2dCSCG_S0F_Discretize_StandardScalar(FrozenOnly):
             xyz = element.coordinate_transformation.mapping(*nodes)
             cochainLocal[i] = FUNC(*xyz)
         # isKronecker? ...
-        if not self._sf_.space.IS_Kronecker: raise NotImplementedError()
+        if not self._sf_.space.IS_Kronecker:
+            raise NotImplementedError()
         # pass to cochain.local ...
-        if update_cochain: self._sf_.cochain.local = cochainLocal
+        if update_cochain:
+            self._sf_.cochain.local = cochainLocal
         # ...
         return 'locally full local cochain', cochainLocal

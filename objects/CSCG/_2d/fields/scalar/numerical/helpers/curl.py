@@ -4,6 +4,7 @@
 
 """
 
+
 class ___VECTOR_CURL_HELPER___(object):
     def __init__(self, f):
         self._f_ = f

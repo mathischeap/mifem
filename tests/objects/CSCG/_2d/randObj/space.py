@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from root.config.main import *
 import random
 from objects.CSCG._2d.master import SpaceInvoker
