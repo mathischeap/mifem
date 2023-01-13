@@ -26,7 +26,7 @@ class _2dCSCG_S1Fo_Discretize_StandardVector(FrozenOnly):
         SELF = self._sf_
 
         if self.___DISCRETIZE_STANDARD_CACHE___ is None or \
-            quad_degree != self.___DISCRETIZE_STANDARD_CACHE___['quadDegree']:
+           quad_degree != self.___DISCRETIZE_STANDARD_CACHE___['quadDegree']:
             self.___DISCRETIZE_STANDARD_CACHE___ = dict()
 
             xi, eta, edge_size_d_xi, quad_weights = \
@@ -108,11 +108,12 @@ class _2dCSCG_S1Fo_Discretize_StandardVector(FrozenOnly):
 
         del JXC, JYC
         # isisKronecker? ...
-        if not SELF.space.IS_Kronecker: raise NotImplementedError()
+        if not SELF.space.IS_Kronecker:
+            raise NotImplementedError()
         # give it to cochain.local ...
         cochainLocal = dict()
         for i in SELF.mesh.elements.indices:
-            cochainLocal[i] = np.hstack((local_dy[i], local_dx[i])) # the difference from inner.
+            cochainLocal[i] = np.hstack((local_dy[i], local_dx[i]))  # the difference from inner.
         if update_cochain:
             SELF.cochain.local = cochainLocal
         # ...

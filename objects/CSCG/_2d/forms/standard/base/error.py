@@ -84,7 +84,7 @@ class _2dCSCG_Standard_Form_Error(FrozenOnly):
             element = self._sf_.mesh.elements[i]
             detJ = element.coordinate_transformation.Jacobian(xi, eta)
             LEIntermediate = np.sum(
-                [(v[i][m] - self._sf_.CF.___DO_evaluate_func_at_time___()[m](*xyz[i]))**n
+                [(v[i][m] - self._sf_.CF.do.evaluate_func_at_time()[m](*xyz[i]))**n
                     for m in range(OneOrThree)], axis=0
             )
             localError.append(np.sum(LEIntermediate * detJ * quad_weights))
@@ -114,8 +114,7 @@ class _2dCSCG_Standard_Form_Error(FrozenOnly):
         """
         selfErrorL2 = self.L(n=2, quad_degree=quad_degree, upon=upon)
         D_self = self._sf_.coboundary()
-        D_self.TW.func.body = d_func
-        D_self.TW.current_time = self._sf_.TW.current_time
-        D_self.TW.___DO_push_all_to_instant___()
+        D_self.CF = d_func
+        D_self.CF.current_time = self._sf_.CF.current_time
         DErrorL2 = D_self.error.L(n=2, quad_degree=quad_degree)
         return (selfErrorL2 ** 2 + DErrorL2 ** 2) ** 0.5

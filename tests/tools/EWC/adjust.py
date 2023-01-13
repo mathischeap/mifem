@@ -120,5 +120,6 @@ def test_EWC_adjust():
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python __tests__/unittests/EWC/adjust.py
-    test_EWC_adjust()
+    # mpiexec -n 4 python tests/tools/EWC/adjust.py
+    for _ in range(100):
+        test_EWC_adjust()

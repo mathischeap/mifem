@@ -5,8 +5,10 @@
 @time: 11/27/2022 9:24 PM
 """
 from components.freeze.main import FrozenOnly
-from objects.CSCG._3d.forms.localTrace._2ltf.discretize.scalar.standard import _3dCSCG_2ltf_Discretize_Standard
-from objects.CSCG._3d.forms.localTrace._2ltf.discretize.scalar.boundary_wise import _3dCSCG_2LocalTrace_DiscretizeBoundaryWise
+from objects.CSCG._3d.forms.localTrace._2ltf.discretize.scalar.standard import \
+    _3dCSCG_2ltf_Discretize_Standard
+from objects.CSCG._3d.forms.localTrace._2ltf.discretize.scalar.boundary_wise import \
+    _3dCSCG_2LocalTrace_DiscretizeBoundaryWise
 
 
 class _3dCSCG_2LocalTrace_Discretize(FrozenOnly):

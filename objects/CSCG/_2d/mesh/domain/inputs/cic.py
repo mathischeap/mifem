@@ -4,6 +4,7 @@ from objects.CSCG._2d.mesh.domain.inputs.base import DomainInputBase
 import numpy as np
 from components.decorators.classproperty.main import classproperty
 
+
 class CylinderInChannel(DomainInputBase):
     """ Just like the class name say, this is a cylinder in channel domain."""
     def __init__(self, h=1.5, r=0.5, li=0.75, lo=2.25):

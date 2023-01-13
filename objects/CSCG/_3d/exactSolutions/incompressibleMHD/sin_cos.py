@@ -32,11 +32,9 @@ class MHD_SinCos1(incompressible_MHD_Base):
         """"""
         return sin(2 * pi * x)
 
-
     def p(self, t, x, y, z):
         """"""
         return sin(2 * pi * (x + y + z)) + t
-
 
     def Bx(self, t, x, y, z):
         """"""

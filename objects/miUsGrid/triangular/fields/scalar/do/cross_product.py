@@ -4,15 +4,13 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 10/5/2022 2:49 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
 from objects.CSCG._2d.fields.scalar.do.cross_product.helpers.helper2 import ___SF_CROSS_PRODUCT_HELPER_2___
 from objects.CSCG._2d.fields.scalar.do.cross_product.helpers.helper1 import ___SF_CROSS_PRODUCT_HELPER_1___
 
 from importlib import import_module
+
 
 class miUsTriangle_ScalarField_CrossProduct(FrozenOnly):
     """w = [0 0 w]^T, U = [u, v, 0]^T, A = w X U = [-wv wu 0]^T"""
@@ -38,14 +36,15 @@ class miUsTriangle_ScalarField_CrossProduct(FrozenOnly):
                     vector_class = getattr(import_module(base_path + 'vector.main'),
                                            'miUsGrid_Triangular_Vector')
 
-                    cp_vector = vector_class(self._sf_.mesh,
-                                                    [CP0, CP1],
-                                                    ftype='standard',
-                                                    valid_time=self._sf_.valid_time,
-                                                    name = self._sf_.standard_properties.name
-                                                         + '--cross-X-product--'
-                                                         + vector.standard_properties.name
-                                                    )
+                    cp_vector = vector_class(
+                        self._sf_.mesh,
+                        [CP0, CP1],
+                        ftype='standard',
+                        valid_time=self._sf_.valid_time,
+                        name=self._sf_.standard_properties.name +
+                              '--cross-X-product--' +
+                              vector.standard_properties.name
+                    )
                     return cp_vector
                 else:
                     raise NotImplementedError(
@@ -56,8 +55,3 @@ class miUsTriangle_ScalarField_CrossProduct(FrozenOnly):
                                           f"cannot do cross product.")
         else:
             raise NotImplementedError(f"a miUsGrid_Triangular_Vector can not cross product a {vector}.")
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

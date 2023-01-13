@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-
+Domain `boundaries` does not exclude periodic ones.
 """
 from components.freeze.main import FrozenOnly
 from objects.CSCG._2d.mesh.domain.boundaries.boundary.main import Boundary

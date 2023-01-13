@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from components.freeze.base import FrozenOnly
-from objects.CSCG._2d.forms.standard._1_form.outer.discretize.vector.standard import _2dCSCG_S1Fo_Discretize_StandardVector
+from objects.CSCG._2d.forms.standard._1_form.outer.discretize.vector.standard import \
+    _2dCSCG_S1Fo_Discretize_StandardVector
+
 
 class _2dCSCG_S1Fo_Discretize(FrozenOnly):
     def __init__(self, sf):
@@ -23,7 +25,6 @@ class _2dCSCG_S1Fo_Discretize(FrozenOnly):
         """
         if target == 'func':
 
-
             if self._sf_.CF.__class__.__name__ == '_2dCSCG_VectorField':
 
                 if self._sf_.CF.ftype == 'standard':
@@ -35,7 +36,6 @@ class _2dCSCG_S1Fo_Discretize(FrozenOnly):
             else:
                 raise Exception()
 
-
         elif target == 'BC':
             if self._sf_.BC.CF.__class__.__name__ == '_2dCSCG_VectorField':
                 if self._sf_.BC.CF.ftype == 'standard':
@@ -46,7 +46,6 @@ class _2dCSCG_S1Fo_Discretize(FrozenOnly):
                                               f'discretize {self._sf_.TW.BC.body.__class__}.')
             else:
                 raise NotImplementedError()
-
 
         else:
             raise NotImplementedError(f"2dCSCG 1-form cannot discretize "

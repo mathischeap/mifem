@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from objects.CSCG._3d.forms.base import _3dCSCG_FORM_BASE
 
 from objects.CSCG._3d.forms.localTrace.base.cochain.main import _3dCSCG_LocalTrace_Cochain
@@ -16,6 +17,7 @@ from objects.CSCG._3d.forms.localTrace.base.do import _3dCSCG_LocalTrace_Do
 from objects.CSCG._3d.forms.localTrace.base.matrices.main import _3dCSCG_LocalTrace_Matrices
 from objects.CSCG._3d.forms.localTrace.base.operators.main import _3dCSCG_LocalTrace_Operators
 from objects.CSCG._3d.forms.localTrace.base.whether import _3dCSCG_LocalTrace_Whether
+
 
 class _3dCSCG_LocalTrace(_3dCSCG_FORM_BASE, ndim=3):
     """"""
@@ -102,13 +104,14 @@ class _3dCSCG_LocalTrace(_3dCSCG_FORM_BASE, ndim=3):
     def visualize(self):
         return self._visualize_
 
+
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/_3d/forms/localTrace/base/main.py
 
-    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller  # ExactSolutionSelector
 
-    mesh = MeshGenerator('crazy', c=0.0)([2,2,2])
-    space = SpaceInvoker('polynomials')([3,3,3])
+    mesh = MeshGenerator('crazy', c=0.0)([2, 2, 2])
+    space = SpaceInvoker('polynomials')([3, 3, 3])
     FC = FormCaller(mesh, space)
 
     lt0 = FC('0-lt')

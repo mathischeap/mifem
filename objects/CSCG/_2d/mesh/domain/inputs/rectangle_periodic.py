@@ -5,6 +5,7 @@ from components.decorators.classproperty.main import classproperty
 import random
 from root.config.main import RANK, MASTER_RANK, COMM
 
+
 class RectanglePeriodic(DomainInputBase):
     """ A rectangle computational whose edges are parallel to the axes.
 
@@ -25,7 +26,7 @@ class RectanglePeriodic(DomainInputBase):
     x
 
     """
-    def __init__(self, p_UL=(0,0), width=1, length=1, region_layout=(2,2)):
+    def __init__(self, p_UL=(0, 0), width=1, length=1, region_layout=(2, 2)):
         """
 
         :param p_UL:
@@ -35,11 +36,10 @@ class RectanglePeriodic(DomainInputBase):
             regions are structured-distributed.
 
         """
-        #---- check region_layout : must be a tuple or list of two positive integers ---------------
+        # ---- check region_layout : must be a tuple or list of two positive integers ---------------
         assert len(region_layout) == 2 and \
-               (region_layout[0] > 0 and region_layout[0] % 1==0) and \
-               (region_layout[1] > 0 and region_layout[1] % 1==0), \
-            f"region_layout = {region_layout} wrong!"
+               (region_layout[0] > 0 and region_layout[0] % 1 == 0) and \
+               (region_layout[1] > 0 and region_layout[1] % 1 == 0), f"region_layout = {region_layout} wrong!"
         assert width > 0 and length > 0
         self._p_UL_ = p_UL
         self._width_ = width
@@ -83,7 +83,8 @@ class RectanglePeriodic(DomainInputBase):
         self.boundary_region_edges = boundary_region_edges
 
         self.periodic_boundary_pairs = {'Upper=Down': 'regular',
-                                        'Left=Right': 'regular',}
+                                        'Left=Right': 'regular',
+                                        }
 
         self.region_interpolators = 'transfinite'
         self.region_type_wr2_metric = 'transfinite'
@@ -102,14 +103,14 @@ class RectanglePeriodic(DomainInputBase):
         return self._p_UL_
 
     @classproperty
-    def statistic(cls):
+    def statistic(self):
         return {'periodic': True,
-                'region num':'unknown',
+                'region num': 'unknown',
                 'mesh boundary num': 0,  # the amount of mesh boundaries (instead of domain boundaries)
                 }
 
     @classproperty
-    def random_parameters(cls):
+    def random_parameters(self):
         if RANK == MASTER_RANK:
             rp = {'p_UL': (random.uniform(-1, 1), random.uniform(-1, 1)),
                   'width': random.uniform(1, 3),

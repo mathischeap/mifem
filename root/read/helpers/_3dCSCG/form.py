@@ -5,7 +5,6 @@ from root.read.helpers._3dCSCG.space import ___restore__3dCSCG_Space___
 from root.read.helpers._3dCSCG.mesh import ___restore__3dCSCG_Mesh___
 
 
-
 def ___restore__3dCSCG_Form___(parameters, mesh_cache, space_cache):
     """"""
     assert parameters.pop('type') == '_3dCSCG_Form'
@@ -13,6 +12,12 @@ def ___restore__3dCSCG_Form___(parameters, mesh_cache, space_cache):
     mesh_parameters = parameters.pop('mesh_parameters')
     space_parameters = parameters.pop('space_parameters')
     kwargs = parameters.pop('kwargs')
+
+    if 'is_hybrid' in kwargs:  # for old version who use is_hybrid as key word input
+        kwargs['hybrid'] = kwargs['is_hybrid']
+        del kwargs['is_hybrid']
+    else:
+        pass
 
     ___COCHAIN_READ_VERSION___ = - 1
     if 'cochain_local' in parameters:
@@ -22,11 +27,9 @@ def ___restore__3dCSCG_Form___(parameters, mesh_cache, space_cache):
         ___COCHAIN_READ_VERSION___ = 1
         COCHAIN = parameters.pop('region_wise_cochain_local')
 
-
     space = ___restore__3dCSCG_Space___(space_parameters, space_cache)
     mesh = ___restore__3dCSCG_Mesh___(mesh_parameters, mesh_cache)
     form = _3dCSCG_FormCaller(mesh, space)(ID, **kwargs)
-
 
     if ___COCHAIN_READ_VERSION___ == 0:
         if COCHAIN != dict():

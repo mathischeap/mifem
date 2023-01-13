@@ -7,10 +7,12 @@
          TU Delft, Delft, Netherlands
 
 """
+from abc import ABC
+
 from objects.CSCG._2d.fields.base import _2dCSCG_Continuous_FORM_BASE
 
 
-class _2dCSCG_TensorField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
+class _2dCSCG_TensorField(_2dCSCG_Continuous_FORM_BASE, ABC, ndim=2):
     """The continuous vector field."""
 
     def __repr__(self):

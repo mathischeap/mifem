@@ -5,6 +5,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
+
 class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
     """Mesh-element-wise plotter. May be not good for non-uniform meshes."""
     def __init__(self, sf):
@@ -32,21 +33,20 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
         levels = np.linspace(MINv, MAXv, num_levels)
         return levels
 
-    def contourf(self, density=10000, num_levels=20,
-        usetex=False, colormap='coolwarm',
-
-        levels_x=None, levels_y=None,
-        show_colorbar=True,
-                 colorbar_label=None, colorbar_orientation='vertical', colorbar_aspect=20,
-                 colorbar_labelsize=12.5, colorbar_extend='both',
-
-        title_x=True,
-        title_y=True,
-        suptitle = False,
-        show_boundaries=True,
-        saveto = None,
-        plot_type='contourf',
-        ):
+    def contourf(
+            self, density=10000, num_levels=20,
+            usetex=False, colormap='coolwarm',
+            levels_x=None, levels_y=None,
+            show_colorbar=True,
+            colorbar_label=None, colorbar_orientation='vertical', colorbar_aspect=20,
+            colorbar_labelsize=12.5, colorbar_extend='both',
+            title_x=True,
+            title_y=True,
+            suptitle=False,
+            show_boundaries=True,
+            saveto=None,
+            plot_type='contourf',
+    ):
         """
 
         Parameters
@@ -92,8 +92,10 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
         else:
             XY = dict()
             VV = dict()
-            for _ in xy: XY.update(_)
-            for _ in v: VV.update(_)
+            for _ in xy:
+                XY.update(_)
+            for _ in v:
+                VV.update(_)
 
             x = list()
             y = list()
@@ -117,11 +119,16 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
 
             x, y, vx, vy = self._mesh_.do.regionwsie_stack(x, y, vx, vy)
 
-            if saveto is not None: matplotlib.use('Agg')
+            if saveto is not None:
+                matplotlib.use('Agg')
             plt.rc('text', usetex=usetex)
+            plt.rcParams.update({
+                "font.family": "Times New Roman"
+            })
             plt.rcParams['text.latex.preamble'] = r"\usepackage{amsmath}"
-            if colormap is not None: plt.rcParams['image.cmap'] = colormap
-            fig = plt.figure(figsize=(12,4))
+            if colormap is not None:
+                plt.rcParams['image.cmap'] = colormap
+            fig = plt.figure(figsize=(12, 4))
 
             plotter = getattr(plt, plot_type)
             # ---------------- x component ---------------------------------------------------------
@@ -138,7 +145,6 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
 
             for rn in self._sf_.mesh.domain.regions.names:
                 plotter(x[rn], y[rn], vx[rn], levels=levels_x)
-
 
             RB, RBN, boundary_name_color_dict, pb_text = \
                 self._mesh_.visualize.matplot.___PRIVATE_DO_generate_boundary_data___(
@@ -276,7 +282,7 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
                 pass
             else:
                 plt.suptitle(suptitle)
-            #---------------------- save to --------------------------------------------------------
+            # ---------------------- save to --------------------------------------------------------
             if saveto is None or saveto == '':
                 plt.show()
             else:
@@ -289,22 +295,19 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
     def contour(self, **kwargs):
         return self.contourf(**kwargs, plot_type='contour')
 
-    def quiver(self, density=100, title=None,
-
-        usetex=False, colormap='cool', xlim = None, ylim=None,
-
-        show_colorbar=True,
-        colorbar_label=None, colorbar_orientation='vertical', colorbar_aspect=20,
-        colorbar_labelsize=12.5, colorbar_extend='both',
-        colorbar_position = None, colorbar_ticks=None,
-
-        quiverkey='1<->1',
-
-        ticksize=12,
-        labelsize=15,
-        show_boundaries=True,
-        saveto=None, dpi=None,
-        ):
+    def quiver(
+            self, density=100, title=None,
+            usetex=False, colormap='cool', xlim=None, ylim=None,
+            show_colorbar=True,
+            colorbar_label=None, colorbar_orientation='vertical', colorbar_aspect=20,
+            colorbar_labelsize=12.5, colorbar_extend='both',
+            colorbar_position=None, colorbar_ticks=None,
+            quiverkey='1<->1',
+            ticksize=12,
+            labelsize=15,
+            show_boundaries=True,
+            saveto=None, dpi=None,
+    ):
         """Could be very badly distributed arrows for non-uniform meshes. Try to use visualization
         of discrete forms.
 
@@ -361,12 +364,15 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
         xy = COMM.gather(xy, root=SECRETARY_RANK)
         v = COMM.gather(v, root=SECRETARY_RANK)
 
-        if RANK != SECRETARY_RANK: return
+        if RANK != SECRETARY_RANK:
+            return
 
         XY = dict()
         VV = dict()
-        for _ in xy: XY.update(_)
-        for _ in v: VV.update(_)
+        for _ in xy:
+            XY.update(_)
+        for _ in v:
+            VV.update(_)
 
         X = list()
         Y = list()
@@ -384,18 +390,21 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
         Y = np.array(Y).ravel()
         M = np.hypot(U, V)
 
-
-        #---- check if zero field, if it is quiver will return warning, so we skip it ---------
+        # ---- check if zero field, if it is quiver will return warning, so we skip it ---------
         U_max, U_min = np.max(U), np.min(U)
         V_max, V_min = np.max(V), np.min(V)
-        if U_max - U_min == 0 and  V_max - V_min == 0:
+        if U_max - U_min == 0 and V_max - V_min == 0:
             ZERO_FIELD = True
         else:
             ZERO_FIELD = False
 
-        #-------------------------------------------------------------------------
-        if saveto is not None: matplotlib.use('Agg')
+        # -------------------------------------------------------------------------
+        if saveto is not None:
+            matplotlib.use('Agg')
         plt.rc('text', usetex=usetex)
+        plt.rcParams.update({
+            "font.family": "Times New Roman"
+        })
         plt.rcParams['text.latex.preamble'] = r"\usepackage{amsmath}"
 
         fig, ax = plt.subplots()
@@ -411,8 +420,10 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
         ax.set_xlabel(r"$x$", fontsize=labelsize)
         ax.set_ylabel(r"$y$", fontsize=labelsize)
         plt.tick_params(axis='both', which='both', labelsize=ticksize)
-        if xlim is not None: plt.xlim(xlim)
-        if ylim is not None: plt.ylim(ylim)
+        if xlim is not None:
+            plt.xlim(xlim)
+        if ylim is not None:
+            plt.ylim(ylim)
 
         RB, RBN, boundary_name_color_dict, pb_text = \
             mesh.visualize.matplot.___PRIVATE_DO_generate_boundary_data___(
@@ -453,12 +464,12 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
             if show_colorbar:
                 # M = M / np.max(M) normalize to max == 1
                 norm = matplotlib.colors.Normalize()
-                if  colorbar_ticks is None:
+                if colorbar_ticks is None:
                     pass
                 else:
                     tMin, tMax = min(colorbar_ticks), max(colorbar_ticks)
                     assert tMax > tMin, f"colorbar_ticks={colorbar_ticks} wrong!"
-                    assert tMin >=0 , f"quiver tick can not be lower than 0!"
+                    assert tMin >= 0, f"quiver tick can not be lower than 0!"
                     LARGE = M > tMax
                     M[LARGE] = tMax
                     LOW = M < tMin
@@ -473,22 +484,28 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
 
                 if colorbar_position is not None:
                     cbaxes = fig.add_axes(colorbar_position)
-                    cbar = plt.colorbar(sm, orientation=colorbar_orientation, cax=cbaxes,
-                                  extend=colorbar_extend,
-                                  aspect=colorbar_aspect,)
+                    cbar = plt.colorbar(
+                        sm, orientation=colorbar_orientation, cax=cbaxes,
+                        extend=colorbar_extend,
+                        aspect=colorbar_aspect,
+                    )
                 else:
-                    cbar = plt.colorbar(sm, orientation=colorbar_orientation,
-                                  extend=colorbar_extend,
-                                  aspect=colorbar_aspect,)
+                    cbar = plt.colorbar(
+                        sm, orientation=colorbar_orientation,
+                        extend=colorbar_extend,
+                        aspect=colorbar_aspect,
+                    )
 
                 if colorbar_label is not None:
                     colorbar_label.set_label(colorbar_label, labelpad=10, size=15)
 
-                if colorbar_ticks is not None: cbar.set_ticks(colorbar_ticks)
+                if colorbar_ticks is not None:
+                    cbar.set_ticks(colorbar_ticks)
                 cbar.ax.tick_params(labelsize=colorbar_labelsize)
 
             else:
-                if colormap is not None: plt.rcParams['image.cmap'] = 'Greys'
+                if colormap is not None:
+                    plt.rcParams['image.cmap'] = 'Greys'
                 Q = ax.quiver(X, Y, U, V, M, color='k')
 
                 assert '<->' in quiverkey, " <Quiver> : quiverkey={} format wrong.".format(quiverkey)
@@ -508,9 +525,10 @@ class _2dCSCG_S1F_VIS_Matplot(FrozenOnly):
         else:
             plt.title(title)
 
-        #---------------------- save to --------------------------------------------------------
+        # ---------------------- save to --------------------------------------------------------
         if saveto is None or saveto is False:
             plt.show()
+
         else:
             if saveto[-4:] == '.pdf':
                 plt.savefig(saveto, bbox_inches='tight')

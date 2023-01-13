@@ -9,12 +9,14 @@ from components.freeze.base import FrozenOnly
 from root.config.main import RANK, MASTER_RANK
 from importlib import import_module
 
+
 class miUsGrid_ExactSolutionAllocator(FrozenOnly):
     """"""
     @classmethod
     def listing(cls, printing=True, returning=True):
         """"""
-        if RANK != MASTER_RANK: return
+        if RANK != MASTER_RANK:
+            return
 
         listing = ''
         names = cls.___es_name___()
@@ -40,13 +42,15 @@ class miUsGrid_ExactSolutionAllocator(FrozenOnly):
 
     @classmethod
     def ___es_name___(cls):
-        return {'diNS : dipole collision': "DipoleCollision",
-                'Stokes : sin cos 1': "Stokes_SinCos1",
-                }
+        return {
+            'diNS : dipole collision': "DipoleCollision",
+            'Stokes : sin cos 1': "Stokes_SinCos1",
+        }
 
     @classmethod
     def ___es_path___(cls):
         base_path = '.'.join(str(cls).split(' ')[1][1:-2].split('.')[:-2]) + '.'
-        return {'diNS : dipole collision': base_path + "dimensionlessIncompressibleNavierStokes.dipole_collision",
-                'Stokes : sin cos 1': base_path + "Stokes.sin_cos_1",
-                }
+        return {
+            'diNS : dipole collision': base_path + "dimensionlessIncompressibleNavierStokes.dipole_collision",
+            'Stokes : sin cos 1': base_path + "Stokes.sin_cos_1",
+        }

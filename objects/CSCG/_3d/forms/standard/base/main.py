@@ -7,6 +7,8 @@
          TU Delft, Delft, Netherlands
 
 """
+from abc import ABC
+
 from objects.CSCG._3d.forms.base import _3dCSCG_FORM_BASE
 from objects.CSCG._3d.forms.standard.base.numbering.main import _3dCSCG_Standard_Form_Numbering
 from objects.CSCG._3d.forms.standard.base.export.main import _3dCSC_Standard_Form_Export
@@ -22,9 +24,7 @@ from objects.CSCG._3d.forms.standard.base.error import _3dCSCG_Standard_Form_Err
 from objects.CSCG._3d.forms.standard.base.cochain.main import _3dCSCG_Standard_Form_Cochain
 
 
-
-
-class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
+class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ABC, ndim=3):
     """ This is the parent of all 3d standard forms.
 
     :param mesh:
@@ -68,7 +68,7 @@ class _3dCSCG_Standard_Form(CSCG_Standard_Form, _3dCSCG_FORM_BASE, ndim=3):
                               hybrid=hybrid,
                               orientation=orientation,
                               numbering_parameters=numbering_parameters,
-                              name = 'shadow-of-' + name)
+                              name='shadow-of-' + name)
 
     def __repr__(self):
         return f"3dCSCG>{self.k}SF>{self.standard_properties.name}:{id(self)}"

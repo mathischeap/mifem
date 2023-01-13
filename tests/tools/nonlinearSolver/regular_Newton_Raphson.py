@@ -16,7 +16,7 @@ from __init__ import cscg2
 from root.config.main import RANK, MASTER_RANK
 from numpy import pi
 import numpy as np
-from components.miscellaneous.mios import rmdir, remove
+from components.miscellaneous.mios import rmdir, remove, isfile
 from components.miscellaneous.miprint import miprint
 
 
@@ -169,8 +169,10 @@ def test_Regular_Newton_Raphson():
 
     mc.make_a_video_from_images_in_folder(image_folder, duration=t, clean_images=True)
 
-    remove('shear_layer_rollup_p1_NRR_test.csv')
-    remove('shear-layer-rollup-p1_NRR_test.png')
+    if isfile('shear_layer_rollup_p1_NRR_test.csv'):
+        remove('shear_layer_rollup_p1_NRR_test.csv')
+    if isfile('shear-layer-rollup-p1_NRR_test.png'):
+        remove('shear-layer-rollup-p1_NRR_test.png')
     remove(image_folder + '/video.avi')
     rmdir(image_folder)
 

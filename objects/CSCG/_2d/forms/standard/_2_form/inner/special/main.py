@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from components.freeze.base import FrozenOnly
 from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
@@ -10,7 +10,6 @@ class _2Form_Inner_Special(FrozenOnly):
     def __init__(self, _2sf):
         self._sf_ = _2sf
         self._freeze_self_()
-
 
     def cross_product_1f__ip_1f(self, u1, e1, quad_degree=None, output='2-M-1'):
         """

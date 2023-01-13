@@ -8,7 +8,8 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path:
+    sys.path.append('/')
 from objects.CSCG._2d.forms.standard._1_form.inner.special import _1Form_Inner_Special
 import numpy as np
 from scipy import sparse as spspa
@@ -27,8 +28,10 @@ class _2dCSCG_1Form_Inner(_1Form_BASE):
     :param numbering_parameters:
     :param name:
     """
-    def __init__(self, mesh, space, hybrid=True,
-        numbering_parameters='Naive',  name='inner-oriented-1-form'):
+    def __init__(
+            self, mesh, space, hybrid=True,
+            numbering_parameters='Naive',  name='inner-oriented-1-form'
+    ):
         super().__init__(mesh, space, hybrid, 'inner', numbering_parameters, name)
         super().__init_1form_base__()
         self._k_ = 1
@@ -37,6 +40,11 @@ class _2dCSCG_1Form_Inner(_1Form_BASE):
         self._special_ = _1Form_Inner_Special(self)
         self._discretize_ = _2dCSCG_S1Fi_Discretize(self)
         self._reconstruct_ = None
+        self.___kwargs___ = {
+            'hybrid': hybrid,
+            'numbering_parameters': numbering_parameters,
+            'name': name,
+        }
         self._freeze_self_()
 
     @property
@@ -52,9 +60,6 @@ class _2dCSCG_1Form_Inner(_1Form_BASE):
         if self._reconstruct_ is None:
             self._reconstruct_ = _2dCSCG_Si1F_Reconstruct(self)
         return self._reconstruct_
-
-
-
 
     def ___PRIVATE_make_reconstruction_matrix_on_grid___(self, xi, eta, element_range=None):
         """
@@ -97,13 +102,13 @@ class _2dCSCG_1Form_Inner(_1Form_BASE):
                     rm00 = np.einsum('ji, j -> ji', b0, iJi[0][0], optimize='greedy')
                     rm11 = np.einsum('ji, j -> ji', b1, iJi[1][1], optimize='greedy')
                     if typeWr2Metric[:4] == 'Orth':
-                        RM_i_ = ( np.hstack((rm00, OO01)),
-                                  np.hstack((OO10, rm11)) )
+                        RM_i_ = (np.hstack((rm00, OO01)),
+                                 np.hstack((OO10, rm11)))
                     else:
                         rm01 = np.einsum('ji, j -> ji', b1, iJi[1][0], optimize='greedy')
                         rm10 = np.einsum('ji, j -> ji', b0, iJi[0][1], optimize='greedy')
-                        RM_i_ = ( np.hstack((rm00, rm01)),
-                                  np.hstack((rm10, rm11)) )
+                        RM_i_ = (np.hstack((rm00, rm01)),
+                                 np.hstack((rm10, rm11)))
 
                     type_cache[typeWr2Metric] = RM_i_
                     RM[i] = RM_i_
@@ -118,8 +123,6 @@ class _2dCSCG_1Form_Inner(_1Form_BASE):
                          np.hstack((rm10, rm11)))
 
         return RM
-
-
 
     def ___PRIVATE_operator_inner___(self, other, i, xietasigma, quad_weights, bfSelf, bfOther):
         """Note that here we only return a local matrix."""
@@ -167,20 +170,18 @@ class _2dCSCG_1Form_Inner(_1Form_BASE):
         #      m   n
         # i  |W00 W01 |
         # j  |W10 W11 |
-        W = np.vstack((np.hstack((W00, np.zeros((i,n)))),
-                       np.hstack((np.zeros((j,m)), W11))))
+        W = np.vstack((np.hstack((W00, np.zeros((i, n)))),
+                       np.hstack((np.zeros((j, m)), W11))))
         return spspa.csc_matrix(W)
-
-
 
 
 if __name__ == '__main__':
     # mpiexec -n 3 python _2dCSCG\forms\standard\_1_form\inner\main.py
     from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
-    mesh = MeshGenerator('crazy', c=0.0,bounds=([0,1],[0,1]))([1,1])
+    mesh = MeshGenerator('crazy', c=0.0, bounds=([0, 1], [0, 1]))([1, 1])
     # mesh = MeshGenerator('chp1',)([2,2])
-    space = SpaceInvoker('polynomials')([('Lobatto',1), ('Lobatto',1)])
+    space = SpaceInvoker('polynomials')([('Lobatto', 1), ('Lobatto', 1)])
     FC = FormCaller(mesh, space)
 
     ES = ExactSolutionSelector(mesh)('sL:sincos1')

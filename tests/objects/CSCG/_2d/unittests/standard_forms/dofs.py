@@ -37,8 +37,6 @@ def test_standard_forms_DOFS():
     return 1
 
 
-
-
 if __name__ == '__main__':
     # mpiexec -n 4 python objects\CSCG\_2d\__tests__\unittests\standard_forms\dofs.py
     test_standard_forms_DOFS()

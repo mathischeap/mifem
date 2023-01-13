@@ -72,8 +72,6 @@ def random_mesh_of_elements_around(elements_num,
     else:
         raise NotImplementedError(f"Do not understand mesh_boundary_num={mesh_boundary_num}.")
 
-
-
     assert len(mesh_name_region_num) > 0, f"cannot find a proper mesh."
 
     # ------- check: domain_boundary_distribution_regularities -------------------------------------

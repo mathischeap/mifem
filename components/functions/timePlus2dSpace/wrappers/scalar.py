@@ -172,8 +172,6 @@ class t2dScalar(FrozenOnly):
             raise NotImplementedError()
 
 
-
-
 if __name__ == '__main__':
     # mpiexec -n 4 python components/functions/timePlus2dSpace/wrappers/scalar.py
     def f0(t, x, y): return x + y + t
@@ -184,7 +182,7 @@ if __name__ == '__main__':
 
     from objects.CSCG._2d.__init__ import mesh
 
-    mesh = mesh('crazy', c=0.1)([5,5])
+    mesh = mesh('crazy', c=0.1)([5, 5])
 
     vis0 = s0.visualize(mesh, t=0)
     vis0()

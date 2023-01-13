@@ -34,6 +34,12 @@ class _3dCSCG_0LocalTrace(_3dCSCG_LocalTrace, ABC):
         self._reconstruct_ = _3dCSCG_0LocalTrace_Reconstruct(self)
         self._visualize_ = _3dCSCG_0LocalTrace_Visualize(self)
         self._bi_ = None
+        self.___kwargs___ = {
+            'hybrid': hybrid,
+            'orientation': orientation,
+            'numbering_parameters': numbering_parameters,
+            'name': name,
+        }
         self._freeze_self_()
 
     def ___Pr_check_CF___(self, func_body):
@@ -257,7 +263,6 @@ if __name__ == '__main__':
 
     def p(t, x, y, z): return np.sin(2*np.pi*x) + t + 0 * y * z
     scalar = FC('scalar', {'North': p, 'South': p, 'West': p, 'East': p, 'Back': p, 'Front': p})
-
 
     ltf0.BC.CF = scalar
     ltf0.BC.boundaries = 'all'

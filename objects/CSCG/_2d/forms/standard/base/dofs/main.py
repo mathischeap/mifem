@@ -1,11 +1,9 @@
-
+# -*- coding: utf-8 -*-
 
 from components.freeze.base import FrozenOnly
 from objects.CSCG._2d.forms.standard.base.dofs.dof.main import _2dCSCG_SF_DOF
 from objects.CSCG._2d.forms.standard.base.dofs.visualize import _2dCSCG_SF_dofs_VIS
 from objects.CSCG._2d.forms.standard.base.dofs.do.main import _2dCSCG_SF_dofs_do
-
-
 
 
 class _2dCSCG_SF_dofs(FrozenOnly):
@@ -16,7 +14,6 @@ class _2dCSCG_SF_dofs(FrozenOnly):
         self._visualize_ = None
         self._do_ = None
         self._freeze_self_()
-
 
     def __getitem__(self, i):
         """return and cache the global dof #i."""
@@ -31,7 +28,7 @@ class _2dCSCG_SF_dofs(FrozenOnly):
             yield i
 
     def __contains__(self, i):
-        """If dof #i is contained in this core?"""
+        """If dof #`i` is contained in this core?"""
         if i % 1 != 0:
             return False
         else:

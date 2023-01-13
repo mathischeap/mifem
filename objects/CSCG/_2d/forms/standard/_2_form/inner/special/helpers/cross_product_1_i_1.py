@@ -1,9 +1,7 @@
-
-
+# -*- coding: utf-8 -*-
 from components.freeze.base import FrozenOnly
 import numpy as np
 from scipy.sparse import csc_matrix
-
 
 
 class ___2dCSCG_2_i_Form_CrossProduct_2_X_1__ip_1___(FrozenOnly):
@@ -59,7 +57,7 @@ class ___2dCSCG_2_i_Form_CrossProduct_2_X_1__ip_1___(FrozenOnly):
 
         CP_IP_3dM = dict()
         type_cache = dict()
-        for i in RMw: # go through all local mesh-elements
+        for i in RMw:  # go through all local mesh-elements
             typeWr2Metric = w2.mesh.elements[i].type_wrt_metric.mark
             if isinstance(typeWr2Metric, str):
                 if typeWr2Metric in type_cache:
@@ -69,9 +67,13 @@ class ___2dCSCG_2_i_Form_CrossProduct_2_X_1__ip_1___(FrozenOnly):
                     u, v = RMu[i]
                     a, b = RMe[i]
                     dJi = detJ[i]
-                    # so, w0 = [0 0 w]^T, u1 = [u, v, 0]^T, e1 = [a b 0]^T, A = w0 X u1 = [-wv wu 0]^T, (A, e1) = -wva + wub
-                    CP_IP_3dM_i_ = - np.einsum('li, lj, lk, l -> ijk', w, v, a, quad_weights_1d * dJi, optimize='greedy')\
-                                   + np.einsum('li, lj, lk, l -> ijk', w, u, b, quad_weights_1d * dJi, optimize='greedy')
+                    # so, w0 = [0 0 w]^T, u1 = [u, v, 0]^T, e1 = [a b 0]^T,
+                    # A = w0 X u1 = [-wv wu 0]^T, (A, e1) = -wva + wub
+                    CP_IP_3dM_i_ = - np.einsum(
+                        'li, lj, lk, l -> ijk', w, v, a, quad_weights_1d * dJi, optimize='greedy'
+                    ) + np.einsum(
+                        'li, lj, lk, l -> ijk', w, u, b, quad_weights_1d * dJi, optimize='greedy'
+                    )
                     CP_IP_3dM[i] = CP_IP_3dM_i_
                     type_cache[typeWr2Metric] = CP_IP_3dM_i_
 
@@ -80,9 +82,13 @@ class ___2dCSCG_2_i_Form_CrossProduct_2_X_1__ip_1___(FrozenOnly):
                 u, v = RMu[i]
                 a, b = RMe[i]
                 dJi = detJ[i]
-                # so, w0 = [0 0 w]^T, u1 = [u, v, 0]^T, e1 = [a b 0]^T, A = w0 X u1 = [-wv wu 0]^T, (A, e1) = -wva + wub
-                CP_IP_3dM[i] = - np.einsum('li, lj, lk, l -> ijk', w, v, a, quad_weights_1d * dJi, optimize='greedy')\
-                               + np.einsum('li, lj, lk, l -> ijk', w, u, b, quad_weights_1d * dJi, optimize='greedy')
+                # so, w0 = [0 0 w]^T, u1 = [u, v, 0]^T, e1 = [a b 0]^T,
+                # A = w0 X u1 = [-wv wu 0]^T, (A, e1) = -wva + wub
+                CP_IP_3dM[i] = - np.einsum(
+                    'li, lj, lk, l -> ijk', w, v, a, quad_weights_1d * dJi, optimize='greedy'
+                ) + np.einsum(
+                    'li, lj, lk, l -> ijk', w, u, b, quad_weights_1d * dJi, optimize='greedy'
+                )
 
         self._CP_IP_3dM_ = CP_IP_3dM
         self._w2_ = w2

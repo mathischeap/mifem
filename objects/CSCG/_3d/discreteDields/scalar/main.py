@@ -7,7 +7,6 @@
 from objects.CSCG._3d.discreteDields.base.main import _3dCSCG_DiscreteField
 
 
-
 class _3dCSCG_DF_Scalar(_3dCSCG_DiscreteField):
     """Region wise scalar data."""
 

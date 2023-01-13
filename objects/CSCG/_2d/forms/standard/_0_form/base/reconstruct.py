@@ -34,9 +34,26 @@ class _2dCSCG_S0F_Reconstruct(_2dCSCG_SF_ReconstructBase):
         # -------- parse indices --------------------------------------------------------
         if element_range is None:
             INDICES = mesh.elements.indices
+
+        elif isinstance(element_range, str):
+            if vectorized:
+                vectorized = False
+            else:
+                pass
+
+            bns = mesh.boundaries.names
+            if element_range in bns:
+
+                INDICES = mesh.boundaries.range_of_element_edges[element_range]
+
+            else:
+                raise NotImplementedError(f"can not parse element_range = {element_range}.")
+
         else:
             if vectorized:
                 vectorized = False
+            else:
+                pass
 
             if isinstance(element_range, int):
                 INDICES = [element_range, ]
@@ -73,20 +90,78 @@ class _2dCSCG_S0F_Reconstruct(_2dCSCG_SF_ReconstructBase):
 
             else:
 
-                xyz = dict()
-                value = dict()
-                shape = [len(xi), len(eta)]
-                for i in INDICES:
-                    element = mesh.elements[i]
-                    # noinspection PyUnresolvedReferences
-                    xyz[i] = element.coordinate_transformation.mapping(*xietasigma)
-                    v = np.einsum('ij, i -> j', basis[0], f.cochain.local[i], optimize='greedy')
-                    if ravel:
-                        value[i] = [v, ]
+                xyz: dict = dict()
+                value: dict = dict()
+                shape: list = [len(xi), len(eta)]
+
+                for ind in INDICES:
+                    if isinstance(ind, int):
+                        i = ind
+                        position = None
+                    elif isinstance(ind, str):  # we get a str indicator
+                        if ind[:-1].isnumeric() and ind[-1] in 'UDLR':  # the str indicator indicates a element edge.
+                            i = int(ind[:-1])
+                            position = ind[-1]
+                        else:
+                            raise NotImplementedError()
                     else:
-                        # noinspection PyUnresolvedReferences
-                        xyz[i] = [xyz[i][j].reshape(shape, order='F') for j in range(2)]
-                        value[i] = [v.reshape(shape, order='F'), ]
+                        raise NotImplementedError()
+
+                    element = mesh.elements[i]
+
+                    if position is None:  # when position is None, we reconstruct all over the element.
+                        xyz[i] = element.coordinate_transformation.mapping(*xietasigma)
+                        v = np.einsum('ij, i -> j', basis[0], f.cochain.local[i], optimize='greedy')
+                        if ravel:
+                            value[i] = [v, ]
+                        else:
+                            # noinspection PyUnresolvedReferences
+                            xyz[i] = [xyz[i][j].reshape(shape, order='F') for j in range(2)]
+                            value[i] = [v.reshape(shape, order='F'), ]
+
+                    elif position in ['U', 'D', 'L', 'R']:  # we will reconstruct only on the edge indicated by position
+
+                        # the algorithm below is not optimal, but it is fine for 2d.
+
+                        if position == 'U':
+                            assert xi[0] == -1, f"to construct on U edge, xi must be [-1, ...]"
+                        elif position == 'D':
+                            assert xi[-1] == 1, f"to construct on D edge, xi must be [..., 1]"
+                        elif position == 'L':
+                            assert eta[0] == 1, f"to construct on L edge, eta must be [-1, ...]"
+                        elif position == 'R':
+                            assert eta[-1] == 1, f"to construct on R edge, xi must be [..., 1]"
+                        else:
+                            raise Exception()
+
+                        coo = element.coordinate_transformation.mapping(*xietasigma)
+                        v = np.einsum('ij, i -> j', basis[0], f.cochain.local[i], optimize='greedy')
+
+                        x, y = [coo[j].reshape(shape, order='F') for j in range(2)]
+                        v = v.reshape(shape, order='F')
+
+                        if position == 'U':
+                            x, y, v = x[0, :], y[0, :], v[0, :]
+                        elif position == 'D':
+                            x, y, v = x[-1, :], y[-1, :], v[-1, :]
+                        elif position == 'L':
+                            x, y, v = x[:, 0], y[:, 0], v[:, 0]
+                        elif position == 'R':
+                            x, y, v = x[:, -1], y[:, -1], v[:, -1]
+                        else:
+                            raise Exception()
+
+                        if i not in xyz:
+                            xyz[i] = dict()
+                            value[i] = dict()
+                        else:
+                            pass
+
+                        xyz[i][position] = (x, y)
+                        value[i][position] = (v, )
+
+                    else:
+                        raise NotImplementedError(f"position={position} not implemented.")
 
                 return xyz, value
 
@@ -129,7 +204,7 @@ class _2dCSCG_S0F_Reconstruct(_2dCSCG_SF_ReconstructBase):
                 xy[e] = [EMPTY_DATA, EMPTY_DATA]
                 value[e] = [EMPTY_DATA, EMPTY_DATA]
             else:
-                # ___DIFF for different forms____ reconstruction in local mesh element #e________diff
+                # ___DIFF for different forms____ reconstruction in local mesh element # e ________diff
                 xietasigma, basis = f.do.evaluate_basis_at_meshgrid(xi, et)
                 xy[e] = element.coordinate_transformation.mapping(*xietasigma)
                 v = np.einsum('ij, i -> j', basis[0], f.cochain.local[e], optimize='greedy')
@@ -154,19 +229,17 @@ if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/_2d/forms/standard/_0_form/base/reconstruct.py
     from objects.CSCG._2d.master import MeshGenerator, SpaceInvoker, FormCaller, ExactSolutionSelector
 
-    mesh = MeshGenerator('crazy', c=0.1)([30, 30])
-    # mesh = MeshGenerator('chp1',)([2,2])
+    mesh = MeshGenerator('crazy', c=0.1)([5, 5])
+
     space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 3)])
     FC = FormCaller(mesh, space)
     ES = ExactSolutionSelector(mesh)('sL:sincos1')
-    f0 = FC('0-f-o', is_hybrid=True)
-    f0.TW.func.do.set_func_body_as(ES, 'potential')
-
-    f0.TW.current_time = 0
-    f0.TW.do.push_all_to_instant()
+    f0 = FC('0-f-o', hybrid=True)
+    f0.CF = ES.potential
+    f0.CF.current_time = 0
     f0.discretize()
 
-    x = np.linspace(-1, 1, 10)
+    x = np.linspace(-1, 1, 100)
 
     ds = f0.reconstruct.discrete_scalar([x, x])
     ds.visualize()

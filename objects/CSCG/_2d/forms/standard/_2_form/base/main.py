@@ -7,7 +7,6 @@ from objects.CSCG._2d.forms.standard._2_form.base.visualize.main import _2dCSCG_
 from objects.CSCG._2d.forms.standard._2_form.base.reconstruct import _2dCSCG_S2F_Reconstruct
 
 
-
 class _2Form_BASE(_2dCSCG_Standard_Form):
     """"""
     def __init_2form_base__(self):
@@ -41,9 +40,9 @@ class _2Form_BASE(_2dCSCG_Standard_Form):
     @property
     def reconstruct(self):
         if self._reconstruct_ is None:
+            # noinspection PyAttributeOutsideInit
             self._reconstruct_ = _2dCSCG_S2F_Reconstruct(self)
         return self._reconstruct_
-
 
     def ___PRIVATE_make_reconstruction_matrix_on_grid___(self, xi, eta, element_range=None):
         """
@@ -88,14 +87,14 @@ class _2Form_BASE(_2dCSCG_Standard_Form):
 
         return RM
 
-
     def ___PRIVATE_operator_inner___(self, _, i, xietasigma, quad_weights, bfSelf, bfOther):
         """Note that here we only return local matrices."""
 
         element = self.mesh.elements[i]
         detJ = element.coordinate_transformation.Jacobian(*xietasigma)
 
-        Mi = np.einsum('im, jm, m -> ij',
+        Mi = np.einsum(
+            'im, jm, m -> ij',
             bfOther[0], bfSelf[0], np.reciprocal(detJ)*quad_weights,
             optimize='greedy'
         )

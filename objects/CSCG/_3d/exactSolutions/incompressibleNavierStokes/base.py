@@ -67,7 +67,6 @@ class incompressible_NavierStokes_Base(Base):
     def nu(self):
         return self._nu_
 
-
     def u(self, t, x, y, z):
         raise NotImplementedError()
     
@@ -90,7 +89,6 @@ class incompressible_NavierStokes_Base(Base):
         if self._NPDf_u_ is None:
             self._NPDf_u_ = NumericalPartialDerivative_txyz_Functions(self.u)
         return self._NPDf_u_('z')(t, x, y, z)
-
 
     def v(self, t, x, y, z):
         raise NotImplementedError()
@@ -115,7 +113,6 @@ class incompressible_NavierStokes_Base(Base):
             self._NPDf_v_ = NumericalPartialDerivative_txyz_Functions(self.v)
         return self._NPDf_v_('z')(t, x, y, z)
 
-
     def w(self, t, x, y, z):
         raise NotImplementedError()
     
@@ -139,7 +136,6 @@ class incompressible_NavierStokes_Base(Base):
             self._NPDf_w_ = NumericalPartialDerivative_txyz_Functions(self.w)
         return self._NPDf_w_('z')(t, x, y, z)
 
-
     def p(self, t, x, y, z): raise NotImplementedError()
     
     def p_x(self, t, x, y, z):
@@ -157,7 +153,6 @@ class incompressible_NavierStokes_Base(Base):
             self._NPDf_p_ = NumericalPartialDerivative_txyz_Functions(self.p)
         return self._NPDf_p_('z')(t, x, y, z)
 
-
     def u_xx(self, t, x, y, z):
         if self._NPDf_ux_ is None:
             self._NPDf_ux_ = NumericalPartialDerivative_txyz_Functions(self.u_x)
@@ -172,7 +167,6 @@ class incompressible_NavierStokes_Base(Base):
         if self._NPDf_uz_ is None:
             self._NPDf_uz_ = NumericalPartialDerivative_txyz_Functions(self.u_z)
         return self._NPDf_uz_('z')(t, x, y, z)
-    
 
     def v_xx(self, t, x, y, z):
         if self._NPDf_vx_ is None:
@@ -188,7 +182,6 @@ class incompressible_NavierStokes_Base(Base):
         if self._NPDf_vz_ is None:
             self._NPDf_vz_ = NumericalPartialDerivative_txyz_Functions(self.v_z)
         return self._NPDf_vz_('z')(t, x, y, z)
-    
 
     def w_xx(self, t, x, y, z):
         if self._NPDf_wx_ is None:
@@ -285,8 +278,6 @@ class incompressible_NavierStokes_Base(Base):
     def omega_z(self, t, x, y, z):
         return self.v_x(t, x, y, z) - self.u_y(t, x, y, z)
 
-
-
     @property
     def curl_of_vorticity(self):
         """ curl_of_vorticity = curl of curl u = grad(div u) - Vector_Laplace u.
@@ -313,7 +304,6 @@ class incompressible_NavierStokes_Base(Base):
     
     def ___m_laplace_w___(self, t, x, y, z):
         return - (self.w_xx(t, x, y, z) + self.w_yy(t, x, y, z) + self.w_zz(t, x, y, z))
-
 
     @property
     def divergence_of_vorticity(self):
@@ -482,23 +472,20 @@ class incompressible_NavierStokes_Base(Base):
                       self.omega_y(t, x, y, z) ** 2 +
                       self.omega_z(t, x, y, z) ** 2)
 
-
-
     @lru_cache(maxsize=8)
     def helicity(self, t):
-        """Helicity at time `t`."""
+        """(total) helicity at time `t`."""
         return self.___Pr_compute_Ln_norm_of___('helicity_distribution', time=t, n=1)
 
     @lru_cache(maxsize=8)
     def kinetic_energy(self, t):
-        """Kinetic energy at time `t`."""
+        """(total) kinetic energy at time `t`."""
         return self.___Pr_compute_Ln_norm_of___('kinetic_energy_distribution', time=t, n=1)
 
     @lru_cache(maxsize=8)
     def enstrophy(self, t):
-        """Enstrophy at time `t`."""
+        """(total) enstrophy at time `t`."""
         return self.___Pr_compute_Ln_norm_of___('enstrophy_distribution', time=t, n=1)
-
 
     def ___PreFrozenChecker___(self):
         """Will be called before freezing self."""
@@ -553,7 +540,6 @@ class incompressible_NavierStokes_Base(Base):
                 assert all(Pu.check_total(self.w_t, self.w_x, self.w_y, self.w_z))
             except NotImplementedError:
                 pass
-
 
             assert np.all(np.isclose(
                 self.u_x(t, *rst) + self.v_y(t, *rst) + self.w_z(t, *rst),

@@ -80,9 +80,9 @@ class IteratorMonitor(FrozenOnly):
             self.___auto_save_time___ = (1 / factor) * self.___auto_save_default_time___
 
         if self.___graph_report_time___ < 60:
-            self.___graph_report_time___ = 60   # 最快60秒报告一次
+            self.___graph_report_time___ = 60   # 最快60秒报告一次， 除非real time monitor is True
         if self.___auto_save_time___ < 60:
-            self.___auto_save_time___ = 60         # 最快60秒报告一次
+            self.___auto_save_time___ = 60      # 最快60秒保存一次
 
         self._factor_ = factor
         # even it is 0, the monitor still do the recording background, but no report.

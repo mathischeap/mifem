@@ -8,7 +8,10 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+from abc import ABC
+
+if './' not in sys.path:
+    sys.path.append('./')
 
 from root.config.main import *
 from objects.CSCG._3d.forms.standard._2s.discretize.main import _3dCSCG_Discretize
@@ -21,8 +24,7 @@ from objects.CSCG._3d.forms.standard._2s.visualize.main import _3dCSCG_S2F_VISUA
 from objects.CSCG._3d.forms.standard._2s.do.main import _3dCSCG_S2F_Do
 
 
-
-class _3dCSCG_2Form(_3dCSCG_S2F_Private, _3dCSCG_Standard_Form):
+class _3dCSCG_2Form(_3dCSCG_S2F_Private, _3dCSCG_Standard_Form, ABC):
     """
     Standard 2-form.
 
@@ -33,8 +35,10 @@ class _3dCSCG_2Form(_3dCSCG_S2F_Private, _3dCSCG_Standard_Form):
     :param numbering_parameters:
     :param name:
     """
-    def __init__(self, mesh, space, hybrid=True,
-        orientation='outer', numbering_parameters='Naive',  name=None):
+    def __init__(
+            self, mesh, space, hybrid=True,
+            orientation='outer', numbering_parameters='Naive',  name=None
+    ):
         if name is None:
             if hybrid:
                 name = 'hybrid-' + orientation + '-oriented-2-form'
@@ -49,6 +53,12 @@ class _3dCSCG_2Form(_3dCSCG_S2F_Private, _3dCSCG_Standard_Form):
         self._reconstruct_ = None
         self._visualize_ = None
         self._DO_ = _3dCSCG_S2F_Do(self)
+        self.___kwargs___ = {
+            'hybrid': hybrid,
+            'orientation': orientation,
+            'numbering_parameters': numbering_parameters,
+            'name': name,
+        }
         self._freeze_self_()
 
     def ___Pr_check_CF___(self, func_body):
@@ -66,11 +76,10 @@ class _3dCSCG_2Form(_3dCSCG_S2F_Private, _3dCSCG_Standard_Form):
         assert func_body.ndim == self.ndim == 3
 
         if func_body.__class__.__name__ == '_3dCSCG_VectorField':
-            assert func_body.ftype in ('standard','boundary-wise'), \
+            assert func_body.ftype in ('standard', 'boundary-wise'), \
                 f"3dCSCG 2form BC do not accept func _3dCSCG_VectorField of ftype {func_body.ftype}."
         else:
             raise Exception(f"3dCSCG 2form BC do not accept func {func_body.__class__}")
-
 
     @property
     def special(self):
@@ -87,9 +96,6 @@ class _3dCSCG_2Form(_3dCSCG_S2F_Private, _3dCSCG_Standard_Form):
             self._discretize_ = _3dCSCG_Discretize(self)
         return self._discretize_
 
-
-
-
     @property
     def reconstruct(self):
         if self._reconstruct_ is None:
@@ -103,27 +109,26 @@ class _3dCSCG_2Form(_3dCSCG_S2F_Private, _3dCSCG_Standard_Form):
         return self._visualize_
 
 
-
-
-
 if __name__ == '__main__':
     # mpiexec -n 5 python objects/CSCG/_3d/forms/standard/_2s/main.py
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('crazy', c=0.0)([3,3,3])
-    space = SpaceInvoker('polynomials')([('Lobatto',3), ('Lobatto',3), ('Lobatto',3)])
+    mesh = MeshGenerator('crazy', c=0.0)([3, 3, 3])
+    space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 3), ('Lobatto', 3)])
     FC = FormCaller(mesh, space)
 
-    def u(t,x,y,z): return np.sin(np.pi*x)*np.cos(2*np.pi*y)*np.cos(np.pi*z) + t
-    def v(t,x,y,z): return np.cos(np.pi*x)*np.sin(np.pi*y)*np.cos(2*np.pi*z) + t
-    def w(t,x,y,z): return np.cos(np.pi*x)*np.cos(np.pi*y)*np.sin(2*np.pi*z) + t
+    def u(t, x, y, z): return np.sin(np.pi*x)*np.cos(2*np.pi*y)*np.cos(np.pi*z) + t
 
-    velocity = FC('vector', (u,v,w))
+    def v(t, x, y, z): return np.cos(np.pi*x)*np.sin(np.pi*y)*np.cos(2*np.pi*z) + t
+
+    def w(t, x, y, z): return np.cos(np.pi*x)*np.cos(np.pi*y)*np.sin(2*np.pi*z) + t
+
+    velocity = FC('vector', (u, v, w))
     U = FC('scalar', u)
     V = FC('scalar', v)
     W = FC('scalar', w)
 
-    f2 = FC('2-f', is_hybrid=False)
+    f2 = FC('2-f', hybrid=False)
     f2.TW.func.do.set_func_body_as(velocity)
     f2.TW.current_time = 0
     f2.TW.___DO_push_all_to_instant___()

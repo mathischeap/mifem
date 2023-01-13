@@ -3,6 +3,7 @@ from objects.CSCG._2d.mesh.domain.inputs.base import DomainInputBase
 import numpy as np
 from components.decorators.classproperty.main import classproperty
 
+
 class CircleHolePlate2(DomainInputBase):
     """ """
     def __init__(self, hx=2, hy=None, r=0.5):

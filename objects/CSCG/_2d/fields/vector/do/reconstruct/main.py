@@ -57,6 +57,5 @@ class _2dCSCG_Vector_Do_Reconstruct(FrozenOnly):
             else:
                 raise NotImplementedError()
 
-
         else:
             raise NotImplementedError()

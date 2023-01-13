@@ -7,6 +7,7 @@
 from components.freeze.main import FrozenOnly
 from objects.miUsGrid.base.form.base.BC.interpret.local import miUsGrid_Form_BC_Interpret_Local
 
+
 class miUsForm_Form_BC_Interpret(FrozenOnly):
     """"""
 

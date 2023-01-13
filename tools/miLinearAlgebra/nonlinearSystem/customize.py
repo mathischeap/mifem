@@ -31,7 +31,7 @@ class nLS_Customize(FrozenOnly):
 
         """
         if i is None:
-            self.___customizations___ = dict()
+            self.___customizations___ = list()
         else:
             raise NotImplementedError(f"clear i={i} customization is not implemented.")
 

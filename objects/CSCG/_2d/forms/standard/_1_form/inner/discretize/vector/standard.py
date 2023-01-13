@@ -4,8 +4,6 @@ from components.freeze.base import FrozenOnly
 import numpy as np
 
 
-
-
 class _2dCSCG_S1Fi_Discretize_StandardVector(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
@@ -28,7 +26,7 @@ class _2dCSCG_S1Fi_Discretize_StandardVector(FrozenOnly):
         SELF = self._sf_
 
         if self.___DISCRETIZE_STANDARD_CACHE___ is None or \
-            quad_degree != self.___DISCRETIZE_STANDARD_CACHE___['quadDegree']:
+           quad_degree != self.___DISCRETIZE_STANDARD_CACHE___['quadDegree']:
             self.___DISCRETIZE_STANDARD_CACHE___ = dict()
 
             xi, eta, edge_size_d_xi, quad_weights = \
@@ -108,7 +106,8 @@ class _2dCSCG_S1Fi_Discretize_StandardVector(FrozenOnly):
 
         del JXC, JYC
         # isisKronecker? ...
-        if not SELF.space.IS_Kronecker: raise NotImplementedError()
+        if not SELF.space.IS_Kronecker:
+            raise NotImplementedError()
         # give it to cochain.local ...
         cochainLocal = dict()
         for i in SELF.mesh.elements.indices:

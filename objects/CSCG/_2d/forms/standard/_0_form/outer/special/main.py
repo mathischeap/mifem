@@ -13,7 +13,6 @@ class _0Form_Outer_Special(FrozenOnly):
         self._sf_ = _0sf
         self._freeze_self_()
 
-
     def cross_product_1f__ip_1f(self, u1, e1, quad_degree=None, output='2-M-1'):
         """
         We do ``(w0 X u1, e1)`` where w0 is self._sf_, u1, e1 are all outer-oriented 1-forms.

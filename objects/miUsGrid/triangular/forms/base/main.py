@@ -6,6 +6,7 @@
 """
 from objects.miUsGrid.base.form.base.main import miUsGrid_FormBase
 
+
 class miUsTriangular_FormBase(miUsGrid_FormBase):
     """"""
 
@@ -13,4 +14,3 @@ class miUsTriangular_FormBase(miUsGrid_FormBase):
         """"""
         super(miUsTriangular_FormBase, self).__init__(mesh, space, name)
         self.standard_properties.___PRIVATE_add_tag___('miUsGrid_triangular_form')
-

@@ -40,6 +40,12 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_trace_1form')
         self._discretize_ = _3dCSCG_1Trace_Discretize(self)
         self._visualize_ = None
+        self.___kwargs___ = {
+            'hybrid': hybrid,
+            'orientation': orientation,
+            'numbering_parameters': numbering_parameters,
+            'name': name,
+        }
         self._freeze_self_()
 
     def ___Pr_check_CF___(self, func_body):
@@ -74,7 +80,6 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
     @property
     def discretize(self):
         return self._discretize_
-
 
     def reconstruct(self, xi, eta, sigma, ravel=False, trace_element_range=None):
         """Do the reconstruction. The results are trace-element-wise.
@@ -179,8 +184,6 @@ class _3dCSCG_1Trace(_3dCSCG_Standard_Trace, ABC):
                         raise Exception
 
         return xyz, v
-
-
 
     def ___PRIVATE_generate_TEW_mass_matrices___(self):
         """Generate the trace-element-wise mass matrices stored in a dict whose keys are trace-element numbers

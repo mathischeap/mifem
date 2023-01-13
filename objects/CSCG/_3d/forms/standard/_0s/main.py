@@ -49,6 +49,12 @@ class _3dCSCG_0Form(_3dCSCG_S0F_Private, _3dCSCG_Standard_Form, ABC):
         self._reconstruct_ = None
         self._visualize_ = None
         self._DO_ = _3dCSCG_S0F_Do(self)
+        self.___kwargs___ = {
+            'hybrid': hybrid,
+            'orientation': orientation,
+            'numbering_parameters': numbering_parameters,
+            'name': name,
+        }
         self._freeze_self_()
 
     def ___Pr_check_CF___(self, func_body):

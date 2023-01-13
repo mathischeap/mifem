@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from components.freeze.base import FrozenOnly
-from objects.CSCG._2d.forms.standard._1_form.inner.discretize.vector.standard import _2dCSCG_S1Fi_Discretize_StandardVector
-
-
+from objects.CSCG._2d.forms.standard._1_form.inner.discretize.vector.standard import \
+    _2dCSCG_S1Fi_Discretize_StandardVector
 
 
 class _2dCSCG_S1Fi_Discretize(FrozenOnly):

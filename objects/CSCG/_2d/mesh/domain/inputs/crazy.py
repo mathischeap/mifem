@@ -6,6 +6,7 @@ from components.decorators.classproperty.main import classproperty
 import random
 from root.config.main import COMM, RANK, MASTER_RANK
 
+
 class Crazy(DomainInputBase):
     """"""
     def __init__(self, c=0, bounds=((0, 1), (0, 1))):

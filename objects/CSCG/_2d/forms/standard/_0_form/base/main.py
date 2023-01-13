@@ -24,14 +24,14 @@ class _0Form_BASE(_2dCSCG_Standard_Form):
 
         if func_body.__class__.__name__ == '_2dCSCG_ScalarField':
             assert func_body.ftype in ('standard',), \
-                f"2dCSCG 0form FUNC do not accept func _2dCSCG_ScalarField of ftype {func_body.ftype}."
+                f"2dCSCG 0form FUNC does not accept func _2dCSCG_ScalarField of ftype {func_body.ftype}."
         else:
-            raise Exception(f"2dCSCG 0form FUNC do not accept func {func_body.__class__}")
+            raise Exception(f"2dCSCG 0form FUNC does not accept func {func_body.__class__}")
 
     def ___Pr_check_BC_CF___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
         assert func_body.ndim == self.ndim == 2
-        raise Exception(f"2dCSCG 0form BC do not accept func {func_body.__class__}")
+        raise Exception(f"2dCSCG 0form BC does not accept func {func_body.__class__}")
 
     @property
     def discretize(self):

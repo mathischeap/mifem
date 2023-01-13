@@ -7,6 +7,7 @@
 from components.freeze.main import FrozenOnly
 from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
 
+
 class _3dCSCG_LocalTrace_Matrices(FrozenOnly):
     """"""
 
@@ -22,5 +23,5 @@ class _3dCSCG_LocalTrace_Matrices(FrozenOnly):
         MM = self._ltf_.___PrLT_mass_matrices___()
         return EWC_SparseMatrix(
             self._ltf_.mesh,
-            MM
+            MM,
         )

@@ -5,15 +5,13 @@ from components.quadrature import Quadrature
 import numpy as np
 
 
-
-
 class _2dCSCG_S2F_Discretize_StandardScalar(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
         self.___DISCRETIZE_STANDARD_CACHE___ = None
         self._freeze_self_()
 
-    def __call__(self, update_cochain:bool=True, target='func', quad_degree=None):
+    def __call__(self, update_cochain: bool = True, target='func', quad_degree=None):
         """
         The return cochain is 'locally full local cochain', which means it is mesh-element-wise
         local cochain. So:
@@ -30,7 +28,7 @@ class _2dCSCG_S2F_Discretize_StandardScalar(FrozenOnly):
         p = [SELF.dqp[i] + 1 for i in range(SELF.ndim)] if quad_degree is None else quad_degree
         quad_nodes, quad_weights = Quadrature(p).quad
         if self.___DISCRETIZE_STANDARD_CACHE___ is None \
-            or quad_degree != self.___DISCRETIZE_STANDARD_CACHE___[0]:
+           or quad_degree != self.___DISCRETIZE_STANDARD_CACHE___[0]:
             magic_factor = 0.25
             xi = np.zeros((SELF.num.basis, p[0]+1, p[1]+1))
             et = np.zeros((SELF.num.basis, p[0]+1, p[1]+1))
@@ -38,14 +36,12 @@ class _2dCSCG_S2F_Discretize_StandardScalar(FrozenOnly):
             for j in range(SELF.p[1]):
                 for i in range(SELF.p[0]):
                     m = i + j*SELF.p[0]
-                    xi[m,...] = (quad_nodes[0][:,np.newaxis].repeat(p[1]+1, axis=1) + 1)\
-                              * (SELF.space.nodes[0][i+1]-SELF.space.nodes[0][i]
-                              )/2 + SELF.space.nodes[0][i]
-                    et[m,...] = (quad_nodes[1][np.newaxis,:].repeat(p[0]+1, axis=0) + 1)\
-                              * (SELF.space.nodes[1][j+1]-SELF.space.nodes[1][j]
-                              )/2 + SELF.space.nodes[1][j]
+                    xi[m, ...] = (quad_nodes[0][:, np.newaxis].repeat(p[1]+1, axis=1) + 1)\
+                        * (SELF.space.nodes[0][i+1]-SELF.space.nodes[0][i])/2 + SELF.space.nodes[0][i]
+                    et[m, ...] = (quad_nodes[1][np.newaxis, :].repeat(p[0]+1, axis=0) + 1)\
+                        * (SELF.space.nodes[1][j+1]-SELF.space.nodes[1][j])/2 + SELF.space.nodes[1][j]
                     volume[m] = (SELF.space.nodes[0][i+1]-SELF.space.nodes[0][i]) \
-                              * (SELF.space.nodes[1][j+1]-SELF.space.nodes[1][j])  * magic_factor
+                        * (SELF.space.nodes[1][j+1]-SELF.space.nodes[1][j]) * magic_factor
             self.___DISCRETIZE_STANDARD_CACHE___ = quad_degree, xi, et, volume
         else:
             xi, et, volume = self.___DISCRETIZE_STANDARD_CACHE___[1:]
@@ -70,13 +66,17 @@ class _2dCSCG_S2F_Discretize_StandardScalar(FrozenOnly):
                 if isinstance(typeWr2Metric, str):
                     JC[typeWr2Metric] = detJ
             fxyz = FUNC(*xyz)
-            cochainLocal[i] = np.einsum('jkl, k, l, j -> j',
+            cochainLocal[i] = np.einsum(
+                'jkl, k, l, j -> j',
                 fxyz*detJ, quad_weights[0], quad_weights[1],
-                volume, optimize='greedy')
+                volume, optimize='greedy'
+            )
 
         # isKronecker? ...
-        if not SELF.space.IS_Kronecker: raise NotImplementedError()
+        if not SELF.space.IS_Kronecker:
+            raise NotImplementedError()
         # pass to cochain.local ...
-        if update_cochain: SELF.cochain.local = cochainLocal
+        if update_cochain:
+            SELF.cochain.local = cochainLocal
         # ...
         return 'locally full local cochain', cochainLocal

@@ -6,6 +6,7 @@
 """
 from components.freeze.main import FrozenOnly
 
+
 class _3dCSCG_LocalTrace_Whether(FrozenOnly):
     """"""
 

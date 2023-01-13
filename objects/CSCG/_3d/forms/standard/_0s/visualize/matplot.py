@@ -18,12 +18,13 @@ class _3dCSCG_S0F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
 
     def perpendicular_surface(
             self,
-            x=None, y=None, z=None, # only one of them can be not-None.
+            x=None, y=None, z=None,  # only one of them can be not-None.
             plot_type='contourf', usetex=True, colormap='coolwarm',
             numOfSamples=100000, figsize=(6, 5),
             num_of_levels=20,
             xlabel=None, ylabel=None,
-            title=None, levels=None, # if provide them, put them in list of length 1 (for 0-, 3-form) or 3 (for 1-, 2-form)
+            title=None, levels=None,
+            # if provide them, put them in list of length 1 (for 0-, 3-form) or 3 (for 1-, 2-form)
             colorbar_font_size=12, title_pad=10,
             label_size=12, title_size=12,
             minor_tick_length=4, major_tick_length=7, tick_pad=8, tick_size=12,
@@ -84,11 +85,12 @@ class _3dCSCG_S0F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
         density = COMM.bcast(density, root=MASTER_RANK)
         sample = np.linspace(-1, 1, density)
 
-        XYZ, VAL = dict(), dict() # get data for plot.
+        XYZ, VAL = dict(), dict()  # get data for plot.
         for e in MPS:
             eps = MPS[e]
             pta = eps.perpendicular_to_axis
-            assert pta == PTA, "For _3dCSCG_MeshPerpendicularSlice, all element perpendicular slice must have same PTA."
+            assert pta == PTA, \
+                "For _3dCSCG_MeshPerpendicularSlice, all element perpendicular slice must have same PTA."
             pos = eps.position
             if pta == 'xi':
                 xi = np.array([pos, ])
@@ -185,16 +187,18 @@ class _3dCSCG_S0F_VISUALIZE_Matplot(_3dCSCG_standard_form_Matplot):
             if title is None:
                 title = f'{self._sf_.k}-form: {self._sf_.standard_properties.name}'
 
-            if saveto is not None: matplotlib.use('Agg')
+            if saveto is not None:
+                matplotlib.use('Agg')
 
             plt.rc('text', usetex=usetex)
-            if colormap is not None: plt.rcParams['image.cmap'] = colormap
+            if colormap is not None:
+                plt.rcParams['image.cmap'] = colormap
 
             plotter = getattr(plt, plot_type)
 
             fig = plt.figure(figsize=figsize)
 
-            for e in VAL: # go through all involved elements.
+            for e in VAL:  # go through all involved elements.
                 if PTA == 'xi':
                     axis_1, axis_2 = XYZ[e][1], XYZ[e][2]
                 elif PTA == 'eta':

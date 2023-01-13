@@ -4,10 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/8/11 0:25
 """
-import sys
-
-if './' not in sys.path:
-    sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
 from objects.CSCG._2d.fields.scalar.do.cross_product.helpers.helper2 import ___SF_CROSS_PRODUCT_HELPER_2___
@@ -59,8 +55,3 @@ class _2dCSCG_SclarField_CrossProduct(FrozenOnly):
                                           f"cannot do cross product.")
         else:
             raise NotImplementedError(f"a _2dCSCG_VectorField can not cross product a {vector}.")
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

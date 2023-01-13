@@ -8,6 +8,8 @@
 
 """
 import sys
+from abc import ABC
+
 if './' not in sys.path:
     sys.path.append('./')
 from root.config.main import *
@@ -17,7 +19,7 @@ from objects.CSCG._3d.forms.trace._2tr.discretize.main import _3dCSCG_2Trace_Dis
 from objects.CSCG._3d.forms.trace._2tr.visualize import _3dCSCG_2Trace_Visualize
 
 
-class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
+class _3dCSCG_2Trace(_3dCSCG_Standard_Trace, ABC):
     """
     Trace 2-form.
 
@@ -37,6 +39,12 @@ class _3dCSCG_2Trace(_3dCSCG_Standard_Trace):
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_trace_2form')
         self._discretize_ = _3dCSCG_2Trace_Discretize(self)
         self._visualize_ = None
+        self.___kwargs___ = {
+            'hybrid': hybrid,
+            'orientation': orientation,
+            'numbering_parameters': numbering_parameters,
+            'name': name,
+        }
         self._freeze_self_()
 
     def ___Pr_check_CF___(self, func_body):

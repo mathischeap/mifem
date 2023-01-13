@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import sys
-if './' not in sys.path: sys.path.append('./')
 from objects.CSCG._2d.forms.standard.base.reconstruct import _2dCSCG_SF_ReconstructBase
 from objects.CSCG._2d.discreteFields.vector.main import _2dCSCG_DF_Vector
 import numpy as np
@@ -29,18 +27,19 @@ class _2dCSCG_Si1F_Reconstruct(_2dCSCG_SF_ReconstructBase):
 
         xietasigma, basis = f.do.evaluate_basis_at_meshgrid(xi, eta)
 
-        #--- parse indices --------------------------------------------------
-        if element_range is None: # default, in all local mesh-elements.
+        # --- parse indices --------------------------------------------------
+        if element_range is None:  # default, in all local mesh-elements.
             INDICES = mesh.elements.indices
         else:
-            if vectorized: vectorized = False
+            if vectorized:
+                vectorized = False
 
             if isinstance(element_range, int):
-                INDICES = [element_range,]
+                INDICES = [element_range, ]
             else:
                 raise NotImplementedError()
 
-        #---- vectorized -----------------------------------------------
+        # ---- vectorized -----------------------------------------------
         if vectorized:
 
             assert INDICES == mesh.elements.indices, f"currently, vectorized computation only works" \
@@ -53,8 +52,8 @@ class _2dCSCG_Si1F_Reconstruct(_2dCSCG_SF_ReconstructBase):
             else:
                 numOfBasisComponents = f.num.basis_components
                 Arr = f.cochain.array
-                ArrX = Arr[:,:numOfBasisComponents[0]]
-                ArrY = Arr[:,numOfBasisComponents[0]:]
+                ArrX = Arr[:, :numOfBasisComponents[0]]
+                ArrY = Arr[:, numOfBasisComponents[0]:]
 
                 u = np.einsum('ij, ki -> kj', basis[0], ArrX, optimize='greedy')
                 v = np.einsum('ij, ki -> kj', basis[1], ArrY, optimize='greedy')
@@ -89,7 +88,6 @@ class _2dCSCG_Si1F_Reconstruct(_2dCSCG_SF_ReconstructBase):
             else:
                 raise Exception()
 
-
         # ----- non-vectorized ------------------------------------------------
         else:
             if value_only:
@@ -102,8 +100,10 @@ class _2dCSCG_Si1F_Reconstruct(_2dCSCG_SF_ReconstructBase):
                 for i in INDICES:
                     element = mesh.elements[i]
                     xyz[i] = element.coordinate_transformation.mapping(*xietasigma)
-                    u = np.einsum('ij, i -> j', basis[0], f.cochain.___PRIVATE_local_on_axis___('x', i), optimize='optimal')
-                    v = np.einsum('ij, i -> j', basis[1], f.cochain.___PRIVATE_local_on_axis___('y', i), optimize='optimal')
+                    u = np.einsum('ij, i -> j',
+                                  basis[0], f.cochain.___PRIVATE_local_on_axis___('x', i), optimize='optimal')
+                    v = np.einsum('ij, i -> j',
+                                  basis[1], f.cochain.___PRIVATE_local_on_axis___('y', i), optimize='optimal')
                     value[i] = [None, None]
                     typeWr2Metric = element.type_wrt_metric.mark
                     iJi = iJ[i]
@@ -143,10 +143,10 @@ class _2dCSCG_Si1F_Reconstruct(_2dCSCG_SF_ReconstructBase):
         mesh = f.mesh
         Xi_Eta_Sigma_D, grid = self.___PRIVATE_distribute_region_wise_meshgrid___(mesh, grid)
 
-        #-------- reconstructing -----------------------------------------------------------------1
+        # -------- reconstructing -----------------------------------------------------------------1
         xy = dict()
         value = dict()
-        EMPTY_DATA = np.empty((0,0))
+        EMPTY_DATA = np.empty((0, 0))
 
         for e in mesh.elements:
             rn, ij = mesh.do.find.region_name_and_local_indices_of_element(e)
@@ -161,7 +161,7 @@ class _2dCSCG_Si1F_Reconstruct(_2dCSCG_SF_ReconstructBase):
                 xy[e] = [EMPTY_DATA, EMPTY_DATA]
                 value[e] = [EMPTY_DATA, EMPTY_DATA]
             else:
-                #___DIFF for different forms____ reconstruction in local mesh element #e________diff
+                # ___DIFF for different forms____ reconstruction in local mesh element #e________diff
                 xietasigma, basis = f.do.evaluate_basis_at_meshgrid(xi, et)
                 iJi = element.coordinate_transformation.inverse_Jacobian_matrix(*xietasigma)
                 xy[e] = element.coordinate_transformation.mapping(*xietasigma)
@@ -181,9 +181,9 @@ class _2dCSCG_Si1F_Reconstruct(_2dCSCG_SF_ReconstructBase):
                 # noinspection PyUnresolvedReferences
                 xy[e] = [xy[e][j].reshape(shape, order='F') for j in range(2)]
                 # noinspection PyUnresolvedReferences
-                value[e] = [value[e][j].reshape(shape, order='F') for j in range(2)] #=========diff
+                value[e] = [value[e][j].reshape(shape, order='F') for j in range(2)]  # =========diff
 
-        #-------- prime-region-wise stack coordinates and values ----------------------------------1
+        # -------- prime-region-wise stack coordinates and values ----------------------------------1
         XY, VAL, element_global_numbering = self.___PRIVATE_distribute_XY_and_VAL___(mesh, xy, value)
 
         XY = self.___PRIVATE_prime_region_wise_stack___(mesh, XY, 2, grid, element_global_numbering)

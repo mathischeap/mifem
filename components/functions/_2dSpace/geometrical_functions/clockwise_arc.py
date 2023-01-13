@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from components.functions._2dSpace.angle import angle
 import numpy as np
 from components.decorators.all import accepts
@@ -21,7 +21,7 @@ class ArcClockWise(object):
         self.end_theta = angle(center, end_point)
         # o in [0, 1]
         if self.end_theta > self.start_theta:
-            self.end_theta -= 2* np.pi
+            self.end_theta -= 2 * np.pi
 
     def _gamma(self, o):
         theta = o * (self.end_theta - self.start_theta) + self.start_theta
@@ -30,7 +30,7 @@ class ArcClockWise(object):
     def _dgamma(self, o):
         theta = o * (self.end_theta - self.start_theta) + self.start_theta
         return -self.r * np.sin(theta) * (self.end_theta - self.start_theta), \
-               self.r * np.cos(theta) * (self.end_theta - self.start_theta)
+            self.r * np.cos(theta) * (self.end_theta - self.start_theta)
 
     def __call__(self):
         return self._gamma, self._dgamma

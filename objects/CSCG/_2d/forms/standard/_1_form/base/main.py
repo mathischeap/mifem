@@ -14,7 +14,6 @@ class _1Form_BASE(_2dCSCG_Standard_Form):
     def visualize(self):
         return self._visualize_
 
-
     def ___PRIVATE_do_evaluate_basis_at_meshgrid___(self, xi, eta, compute_xietasigma=True):
         """
         Evaluate the basis functions on ``meshgrid(xi, eta, sigma)``.
@@ -29,10 +28,10 @@ class _1Form_BASE(_2dCSCG_Standard_Form):
 
             1. (None, tuple) -- ``(xi, eta, sigma)`` after ``meshgrid`` and ``ravel('F')``.
             2. tuple -- The evaluated basis functions.
+
         """
         return self.space.do.evaluate_form_basis_at_meshgrid(
             self.k, xi, eta, orientation=self.orientation, compute_xietasigma=compute_xietasigma)
-
 
     def ___Pr_check_CF___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
@@ -43,7 +42,6 @@ class _1Form_BASE(_2dCSCG_Standard_Form):
                 f"2dCSCG 1form FUNC do not accept func _2dCSCG_VectorField of ftype {func_body.ftype}."
         else:
             raise Exception(f"2dCSCG 1form FUNC do not accept func {func_body.__class__}")
-
 
     def ___Pr_check_BC_CF___(self, func_body):
         assert func_body.mesh.domain == self.mesh.domain
@@ -61,7 +59,7 @@ class _1Form_BASE(_2dCSCG_Standard_Form):
         p_x, p_y = p
         edges_size = [self.space.nodes[i][1:] - self.space.nodes[i][:-1] for i in range(2)]
         cell_nodes = [(0.5 * (edges_size[i][np.newaxis, :]) * (quad_nodes[i][:, np.newaxis] + 1)
-            + self.space.nodes[i][:-1]).ravel('F') for i in range(2)]
+                      + self.space.nodes[i][:-1]).ravel('F') for i in range(2)]
 
         if d_ == 'x':
             quad_xi = np.tile(cell_nodes[0], self.p[1] + 1).reshape(

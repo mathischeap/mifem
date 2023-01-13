@@ -1511,5 +1511,5 @@ def test_TOOLS_NO15_linear_system_apply_BC():
 
 
 if __name__ == '__main__':
-    # mpiexec -n 5 python
-    pass
+    # mpiexec -n 5 python tests/tools/tools_.py
+    test_TOOLS_NO15_linear_system_apply_BC()

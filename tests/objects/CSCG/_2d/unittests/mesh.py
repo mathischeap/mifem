@@ -55,7 +55,6 @@ def test_Mesh_NO1_mesh_topology():
         else:
             assert R.type_wrt_metric.mark[:8] == 'chaotic:'
 
-
     mesh = MeshGenerator('cic')([3, 4], EDM='debug')
     for rn in mesh.domain.regions.names:
         R = mesh.domain.regions[rn]
@@ -118,7 +117,6 @@ def test_Mesh_NO2_mesh_coordinate_transformation():
     """
     if RANK == MASTER_RANK:
         print("+++ [test_Mesh_NO2_mesh_coordinate_transformation] ...... ", flush=True)
-
 
     MID = list(DomainInputFinder.___defined_DI___().keys())
 

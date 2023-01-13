@@ -31,6 +31,7 @@ class incompressibleNavierStokesBase(Base):
         self._kinetic_energy_distribution_ = None
         self._curl_of_omega_ = None
         self._divergence_of_velocity_ = None
+        self._palinstrophy_distribution_ = None
 
         self._NPDf_u_ = None
         self._NPDf_v_ = None
@@ -106,7 +107,6 @@ class incompressibleNavierStokesBase(Base):
         # must be zero
         return self.u_x(t, x, y) + self.v_y(t, x, y)
 
-
     def omega(self, t, x, y):
         return self.v_x(t, x, y) - self.u_y(t, x, y)
 
@@ -149,6 +149,18 @@ class incompressibleNavierStokesBase(Base):
     @property
     def curl_of_vorticity(self):
         return self.curl_of_omega
+    
+    @property
+    def palinstrophy_distribution(self):
+        if self._palinstrophy_distribution_ is None:
+            self._palinstrophy_distribution_ = _2dCSCG_ScalarField(
+                self.mesh, self.___palinstrophy_distribution_distribution___,
+                valid_time=self.valid_time,
+                name='palinstrophy_distribution')
+        return self._palinstrophy_distribution_
+
+    def ___palinstrophy_distribution_distribution___(self, t, x, y):
+        return 0.5 * (self.omega_y(t, x, y)**2 + self.___minus_omega_x___(t, x, y)**2)
 
     def p(self, t, x, y):  # static pressure
         raise NotImplementedError()
@@ -231,7 +243,6 @@ class incompressibleNavierStokesBase(Base):
     def source_term(t, x, y):
         """By default, we have divergence free condition; the source term is zero."""
         return 0 * x
-
 
     def ___PreFrozenChecker___(self):
         """Will be called before freezing self."""

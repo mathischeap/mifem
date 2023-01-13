@@ -19,12 +19,12 @@ from root.config.main import SIZE
 
 class csvFiler(FrozenOnly):
     """We'd better do not use this class in parallel, although it works."""
-    def __init__(self, csv_filename):
+    def __init__(self, csv_filename, header='infer'):
         assert SIZE == 1, f"csvFiler better not work in parallel."
         assert isinstance(csv_filename, str), "csv filename must be a str."
         if csv_filename[-4:] != '.csv':
             csv_filename += '.csv'
-        self._df_ = pd.read_csv(csv_filename, index_col=0)
+        self._df_ = pd.read_csv(csv_filename, index_col=0, header=header)
         self._visualize_ = csvFilerVisualize(self)
         self._do_ = csvFilerDo(self)
         self._freeze_self_()

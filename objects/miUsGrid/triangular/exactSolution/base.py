@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/10/08 7:05 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 
 from components.freeze.base import FrozenOnly
 import random
@@ -44,12 +41,13 @@ class miUsTriangle_ExactSolutionBase(FrozenOnly):
         """
         vt = self.valid_time
         if vt is None:
-            if amount is None: amount = random.randint(2, 5)
+            if amount is None:
+                amount = random.randint(2, 5)
             rTIs = np.random.rand(amount) * 10
         elif vt == 'valid_only_at_its_first_instant':
             rTIs = np.random.rand(1) * 10
         elif isinstance(vt, (int, float)):
-            rTIs = np.array([vt,])
+            rTIs = np.array([vt, ])
         else:
             raise NotImplementedError(f"valid_time = {vt} is not understandable!")
 
@@ -84,11 +82,3 @@ class miUsTriangle_ExactSolutionBase(FrozenOnly):
 
                 else:
                     pass
-
-
-
-
-
-if __name__ == "__main__":
-    # mpiexec -n 4 python 
-    pass

@@ -8,28 +8,29 @@ Aerodynamics, AE
 TU Delft
 """
 import numpy as np
-#import pandas as pd
+# import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
 from matplotlib import cm
 from typing import List
 
 
-
-
 class M_TIR_Visualize:
-    def ___plot_MTIR___(self, plot_type, line_var, res2plot, 
-        prime='input2',
-        hcp=None, show_order=False, order_text_size=18, plot_order_triangle=None, # h-convergence plot related
-        title=None, left=0.15, bottom=0.15, 
-        ylabel=None, yticks=None, 
-        xlabel=None, xticks=None,
-        linewidth=1.2, corlormap='viridis',
-        styles=None, colors=None, COLORS=None,
-        labels=None, legend_local='best', legend_frame=False,
-        minor_tick_length=6, major_tick_length=12, tick_pad=8,
-        tick_size=20, label_size=20, legend_size=20, title_size=20, title_pad=12,
-        figsize=(7.5,5), usetex=False, saveto=None):
+    def ___plot_MTIR___(
+            self, plot_type, line_var, res2plot,
+            prime='input2',
+            hcp=None, show_order=False, order_text_size=18, plot_order_triangle=None,  # h-convergence plot related
+            title=None, left=0.15, bottom=0.15,
+            ylabel=None, yticks=None,
+            xlabel=None, xticks=None,
+            linewidth=1.2, corlormap='viridis',
+            styles=None, colors=None, COLORS=None,
+            labels=None, legend_local='best', legend_frame=False,
+            minor_tick_length=6, major_tick_length=12, tick_pad=8,
+            tick_size=20, label_size=20, legend_size=20, title_size=20, title_pad=12,
+            figsize=(7.5, 5), usetex=False, saveto=None,
+            xlim=None, ylim=None,
+    ):
         """ 
         IMPORTANT: this plotter only works for input's criterion is 'standard'.
         
@@ -69,12 +70,12 @@ class M_TIR_Visualize:
         """
         # noinspection PyUnresolvedReferences
         D = self._data_
-        #_____________check `line_var` and `res2plot`___________________________________
+        # _____________check `line_var` and `res2plot`___________________________________
         # noinspection PyUnresolvedReferences
         input_names = self._dfw_._runner_.input_names
         # noinspection PyUnresolvedReferences
         output_names = self._dfw_._runner_.output_names
-        if isinstance(res2plot, str): # we make it possible to plot more than one result.
+        if isinstance(res2plot, str):  # we make it possible to plot more than one result.
             res2plot = (res2plot,)
         assert all([res2plot[i] in output_names for i in range(len(res2plot))]), \
             " <RunnerVisualize> : res2plot={} is wrong.".format(res2plot)
@@ -84,25 +85,25 @@ class M_TIR_Visualize:
         x_name = input_names[x_index]
         # group the plot data: the data will be grouped into a tuple called `data_sequence`
         num_lines = 0
-        data_sequence_line_var = () # `i2` changes in each `line_var`.
-        data_sequence_inputs2 = () # `line_var` changes in each `i2`.
+        data_sequence_line_var = ()  # `i2` changes in each `line_var`.
+        data_sequence_inputs2 = ()  # `line_var` changes in each `i2`.
         if prime == 'line_var':
             for ai in set(D[line_var]):
-                sub_rdf = D[D[line_var]==ai]
-                for i2i in set(D[input_names[2]][D[line_var]==ai]):
-                    data_sequence_line_var += (sub_rdf[sub_rdf[input_names[2]]==i2i],)
+                sub_rdf = D[D[line_var] == ai]
+                for i2i in set(D[input_names[2]][D[line_var] == ai]):
+                    data_sequence_line_var += (sub_rdf[sub_rdf[input_names[2]] == i2i],)
                     num_lines += 1
             data_sequence = data_sequence_line_var
         elif prime == 'input2':
             for i2i in set(D[input_names[2]]):
-                sub_rdf = D[D[input_names[2]]==i2i]
-                for ai in set(D[line_var][D[input_names[2]]==i2i]):
-                    data_sequence_inputs2 += (sub_rdf[sub_rdf[line_var]==ai],)
+                sub_rdf = D[D[input_names[2]] == i2i]
+                for ai in set(D[line_var][D[input_names[2]] == i2i]):
+                    data_sequence_inputs2 += (sub_rdf[sub_rdf[line_var] == ai],)
                     num_lines += 1
             data_sequence = data_sequence_inputs2
         else:
             raise Exception(" <RunnerVisualize> : prime={} is wrong.".format(prime))
-        #_____ prepare styles, colors, labels If they are none.________________________
+        # _____ prepare styles, colors, labels If they are none.________________________
         num_res2plot = len(res2plot)
         num_lines = len(data_sequence)
         # noinspection PyUnresolvedReferences
@@ -124,37 +125,46 @@ class M_TIR_Visualize:
                     k = j + i * num_lines_per_group
                     list_line_var = data_sequence[k][line_var].tolist()
                     assert all([i == list_line_var[0] for i in list_line_var[1:]]), \
-                        " <RunnerVisualize> : data grouping is wrong for %r"%data_sequence[k]
+                        " <RunnerVisualize> : data grouping is wrong for %r" % data_sequence[k]
                     list_input2 = data_sequence[k][input_names[2]].tolist()
                     assert all([i == list_input2[0] for i in list_input2[1:]]), \
-                        " <RunnerVisualize> : data grouping is wrong for %r"%data_sequence[k]
+                        " <RunnerVisualize> : data grouping is wrong for %r" % data_sequence[k]
                     if num_res2plot == 1:
-                        labels += (line_var+'='+str(list_line_var[0])+', '+
-                                   input_names[2]+'='+str(list_input2[0]).replace('_','-'),)
+                        labels += (line_var+'='+str(list_line_var[0]) + ', ' +
+                                   input_names[2]+'='+str(list_input2[0]).replace('_', '-'),)
                     else:
                         for m in range(num_res2plot):
-                            labels += (line_var+'='+str(list_line_var[0])+', '+
-                                       input_names[2]+'='+str(list_input2[0])+', '+
-                                       res2plot[m].replace('_','-'),)
+                            labels += (line_var+'='+str(list_line_var[0])+', ' +
+                                       input_names[2]+'='+str(list_input2[0]) + ', ' +
+                                       res2plot[m].replace('_', '-'),)
             labels = list(labels)
         elif labels is False:
             pass
         else:
             pass
-        #___ preparing orders _________________________________________________________
+        # ___ preparing orders _________________________________________________________
         if show_order:
-            orders : List[float] = [0.0 for _ in range(len(labels))]
-        #___ pre-parameterize the plot_________________________________________________
-        if saveto is not None: matplotlib.use('Agg')
-        plt.rc('text', usetex=usetex)
-        if usetex: plt.rcParams['text.latex.preamble']= r"\usepackage{amsmath}"
+            orders: List[float] = [0.0 for _ in range(len(labels))]
+        # ___ pre-parameterize the plot_________________________________________________
+        if saveto is not None:
+            matplotlib.use('Agg')
+
+        plt.rcParams.update({
+            "text.usetex": usetex,
+            "font.family": "DejaVu sans",
+            # "font.serif": "Times New Roman",
+        })
+
+        if usetex:
+            plt.rcParams['text.latex.preamble'] = r"\usepackage{amsmath}"
+
         plt.figure(figsize=figsize)
         plt.gcf().subplots_adjust(left=left)
         plt.gcf().subplots_adjust(bottom=bottom)
-        #__ find the range of x_data___________________________________________________
+        # __ find the range of x_data___________________________________________________
         xd_max = ()
         xd_min = ()
-        ploter = getattr(plt, plot_type) # we get the plotter from matplotlib
+        ploter = getattr(plt, plot_type)  # we get the plotter from matplotlib
         for i in range(line_groups):
             for j in range(num_lines_per_group):
                 k = j + i*num_lines_per_group
@@ -166,7 +176,7 @@ class M_TIR_Visualize:
         xd_max = np.min(xd_max)
         xd_min = np.min(xd_min)
         x_range = (xd_max, xd_min)
-        #___ do THE PLOT_______________________________________________________________
+        # ___ do THE PLOT_______________________________________________________________
         for i in range(line_groups):
             for j in range(num_lines_per_group):
                 k = j + i*num_lines_per_group
@@ -178,28 +188,28 @@ class M_TIR_Visualize:
                     J = m + j*num_res2plot
                     N = m + j*num_res2plot + i*num_res2plot*num_lines_per_group
                     ydata2plot = data_sequence[k][res2plot[m]]
-                    #__add order to label______________________________________________
+                    # __add order to label______________________________________________
                     if show_order:
                         try:
                             # noinspection PyUnboundLocalVariable
-                            orders[n] = (np.log10(ydata2plot.values[-1])- np.log10(ydata2plot.values[-2])) /\
+                            orders[n] = (np.log10(ydata2plot.values[-1]) - np.log10(ydata2plot.values[-2])) /\
                                         (np.log10(xdata2plot[-1])-np.log10(xdata2plot[-2]))
                         except IndexError:
                             orders[n] = float('nan')
-                        labels[n] += ', order$={}$'.format('%0.2f'%(orders[n]))
-                    #___ get data and plot the triangle that shows the order___________
+                        labels[n] += ', order$={}$'.format('%0.2f' % (orders[n]))
+                    # ___ get data and plot the triangle that shows the order___________
                     if plot_order_triangle is not None:
                         # __ check_____________________________________________________
                         assert isinstance(plot_order_triangle, dict), \
                             " <RunnerVisualize> : plot_order_triangle needs to be a dict."
-                        #__compute_data________________________________________________
+                        # __compute_data________________________________________________
                         if n in plot_order_triangle:
                             potn = plot_order_triangle[n]
                             assert isinstance(potn, dict), \
                                 " <RunnerVisualize> : plot_order_triangle[{}] needs to be a dict.".format(n)
                             c0, c1, c2, textpos, ordern = self.___plot_MTIR_plot_order_triangle___(
                                 plot_type, x_range, potn, xdata2plot, ydata2plot.values)
-                        #___plot triangle______________________________________________
+                        # ___plot triangle______________________________________________
                             c0x, c0y = c0
                             c1x, c1y = c1
                             c2x, c2y = c2
@@ -207,13 +217,14 @@ class M_TIR_Visualize:
                             if isinstance(ordern, int):
                                 plt.text(textpos[0], textpos[1], "${}$".format(ordern), fontsize=order_text_size)
                             else:
-                                plt.text(textpos[0], textpos[1], "${}$".format('%0.2f'%ordern), fontsize=order_text_size)
-                        #--------------------------------------------------------------
-                    #------------------------------------------------------------------
+                                plt.text(textpos[0], textpos[1], "${}$".format('%0.2f' % ordern),
+                                         fontsize=order_text_size)
+                        # --------------------------------------------------------------
+                    # ------------------------------------------------------------------
                     if COLORS is None:
                         if labels is False:
                             ploter(xdata2plot, ydata2plot, styles[J],
-                               color=colors[i], linewidth=linewidth)
+                                   color=colors[i], linewidth=linewidth)
                         else:
                             ploter(xdata2plot, ydata2plot, styles[J],
                                    color=colors[i], label=labels[n], linewidth=linewidth)
@@ -224,13 +235,17 @@ class M_TIR_Visualize:
                         else:
                             ploter(xdata2plot, ydata2plot, styles[J],
                                    color=COLORS[N], label=labels[n], linewidth=linewidth)
-        #___ post-parameterize the plot________________________________________________
+        # ___ post-parameterize the plot________________________________________________
         plt.tick_params(which='both', labeltop=False, labelright=False, top=True, right=True)
         plt.tick_params(axis='both', which='minor', direction='in', length=minor_tick_length)
         plt.tick_params(axis='both', which='major', direction='in', length=major_tick_length)
         plt.tick_params(axis='both', which='both', labelsize=tick_size)
         plt.tick_params(axis='x', which='both', pad=tick_pad)
         plt.tick_params(axis='y', which='both', pad=tick_pad)
+        if xlim is not None:
+            plt.xlim(xlim)
+        if ylim is not None:
+            plt.ylim(ylim)
         if labels is False:
             pass
         else:
@@ -242,19 +257,22 @@ class M_TIR_Visualize:
                 plt.xlabel(x_name, fontsize=label_size)
             else:
                 plt.xlabel(str(hcp)+'/'+x_name, fontsize=label_size)
-        if ylabel is not None: plt.ylabel(ylabel, fontsize=label_size)
-        if xticks is not None: plt.xticks(xticks)
-        if yticks is not None: plt.yticks(yticks)
+        if ylabel is not None:
+            plt.ylabel(ylabel, fontsize=label_size)
+        if xticks is not None:
+            plt.xticks(xticks)
+        if yticks is not None:
+            plt.yticks(yticks)
+
         if title is None: 
             if len(res2plot) == 1:
-                plt.title(r'' + res2plot[0].replace('_','-'), fontsize=title_size, pad=title_pad)
+                plt.title(r'' + res2plot[0].replace('_', '-'), fontsize=title_size, pad=title_pad)
             else:
-                plt.title(r'' + str(res2plot).replace('_','-'), fontsize=title_size, pad=title_pad)
+                plt.title(r'' + str(res2plot).replace('_', '-'), fontsize=title_size, pad=title_pad)
         elif title is False:
             pass
         else:
             plt.title(r'' + title, fontsize=title_size, pad=title_pad)
-
 
         plt.tight_layout()
         if saveto is not None and saveto != '':
@@ -267,7 +285,7 @@ class M_TIR_Visualize:
             plt.show()
 
         plt.close()
-        #------------------------------------------------------------------------------
+        # ------------------------------------------------------------------------------
         return
     
     def ___plot_MTIR_plot_order_triangle___(self, plot_type, x_range, potn, xd, yd):
@@ -306,18 +324,18 @@ class M_TIR_Visualize:
             The y-axis data to plot for this line.
                     
         """
-        #___default "p"________________________________________________________________
+        # ___default "p"________________________________________________________________
         if "p" not in potn:
             potn["p"] = (0, -0.3)
         if "tp" not in potn:
             potn["tp"] = (0.02, 0.2)
-        #___default "l"________________________________________________________________
+        # ___default "l"________________________________________________________________
         if "l" not in potn:
             potn["l"] = 0.1
-        #___default "h"________________________________________________________________
+        # ___default "h"________________________________________________________________
         if "order" not in potn:
             potn["order"] = (np.log10(yd[-1]) - np.log10(yd[-2])) / (np.log10(xd[-1]) - np.log10(xd[-2]))
-        #___ loglog____________________________________________________________________
+        # ___ loglog____________________________________________________________________
         if plot_type == 'loglog':
             x_max, xmin = x_range
             x_range = np.log10(x_max) - np.log10(xmin)
@@ -326,18 +344,18 @@ class M_TIR_Visualize:
             otc0x = 10**otc0x 
             otc0y = np.log10(origin[1]) + x_range*potn["p"][1] 
             otc0y = 10**otc0y 
-            otc0 = (otc0x, otc0y) # order_triangle_corner_0
+            otc0 = (otc0x, otc0y)  # order_triangle_corner_0
             otc1x = np.log10(otc0x) + x_range*potn["l"]
             otc1x = 10**otc1x 
-            otc1 = (otc1x, otc0y) # order_triangle_corner_0
+            otc1 = (otc1x, otc0y)  # order_triangle_corner_0
             otc2y = np.log10(otc0y) + x_range*potn["l"]*potn["order"]
             otc2y = 10**otc2y
-            otc2 = (otc1x, otc2y) # order_triangle_corner_0
+            otc2 = (otc1x, otc2y)  # order_triangle_corner_0
             ttps_x, ttps_y = potn["tp"]
             textpos_x = 10**(np.log10(otc1x) + x_range*ttps_x)
             textpos_y = 10**(np.log10(otc0y) + x_range*potn["l"]*potn["order"]*ttps_y)
             order = potn["order"]
             return otc0, otc1, otc2, (textpos_x, textpos_y), order
-        #___ELSE: ERRORING_____________________________________________________________
+        # ...
         else:
             raise NotImplementedError(" <plot_order_triangle> does not work for {} plot".format(plot_type))

@@ -192,6 +192,13 @@ class IteratorMonitorDo(FrozenOnly):
 
         # real time monitoring: each single time step, we have a look
         judge3 = self._monitor_._real_time_monitor_
+        if judge3:
+            if (monitor._current_time_ - monitor.___last_graph_save_time___) < 10:
+                judge3 = False
+            else:
+                pass
+        else:
+            pass
 
         # to judge special iteration stop: shut down by the solver.
         judge_sd = monitor._iterator_.shut_down

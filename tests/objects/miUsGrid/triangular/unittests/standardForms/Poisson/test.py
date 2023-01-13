@@ -135,67 +135,130 @@ class miUsGrid_Triangle_Poisson(FrozenOnly):
 
         remove(current_dir + '/TriangularPoissonTest.txt')
 
-        pr.visualize(
-            'loglog', 'N', 'p_error_L2', prime='input2', hcp=1, usetex=True,
-            labels=['$N=1$', '$N=2$', '$N=3$', ],
-            styles=["-s", "-v", '-^'],
-            colors=[(0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
-            title=False,
-            xlabel=r'$1/K$',
-            ylabel=r"$\left\| \varphi^h\right\|_{L^2-\mathrm{error}}$",
-            order_text_size=15,
-            plot_order_triangle={
-                0: {'tp': (0.02, -0.5), 'order': 0},
-                1: {'tp': (0.02, 0.2), 'order': 1},
-                2: {'tp': (0.02, 0.2), 'order': 2}
-            },
-            saveto=current_dir + '/p_error_L2.png'
-        )
+        try:
+            pr.visualize(
+                'loglog', 'N', 'p_error_L2', prime='input2', hcp=1, usetex=True,
+                labels=['$N=1$', '$N=2$', '$N=3$', ],
+                styles=["-s", "-v", '-^'],
+                colors=[(0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
+                title=False,
+                xlabel=r'$1/K$',
+                ylabel=r"$\left\| \varphi^h\right\|_{L^2-\mathrm{error}}$",
+                order_text_size=15,
+                plot_order_triangle={
+                    0: {'tp': (0.02, -0.5), 'order': 0},
+                    1: {'tp': (0.02, 0.2), 'order': 1},
+                    2: {'tp': (0.02, 0.2), 'order': 2}
+                },
+                saveto=current_dir + '/p_error_L2.png'
+            )
 
-        pr.visualize(
-            'loglog', 'N', 'u_error_L2', prime='input2', hcp=1, usetex=True,
-            labels=['$N=1$', '$N=2$', '$N=3$', ],
-            styles=["-s", "-v", '-^'],
-            colors=[(0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
-            title=False,
-            xlabel=r'$1/K$',
-            ylabel=r"$\left\| \boldsymbol{u}^h\right\|_{L^2-\mathrm{error}}$",
-            order_text_size=15,
-            plot_order_triangle={
-                0: {'tp': (0.02, -0.5), 'order': 1},
-                1: {'tp': (0.02, 0.2), 'order': 2},
-                2: {'tp': (0.02, 0.2), 'order': 3}
-            },
-            saveto=current_dir + '/u_error_L2.png'
-        )
+            pr.visualize(
+                'loglog', 'N', 'u_error_L2', prime='input2', hcp=1, usetex=True,
+                labels=['$N=1$', '$N=2$', '$N=3$', ],
+                styles=["-s", "-v", '-^'],
+                colors=[(0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
+                title=False,
+                xlabel=r'$1/K$',
+                ylabel=r"$\left\| \boldsymbol{u}^h\right\|_{L^2-\mathrm{error}}$",
+                order_text_size=15,
+                plot_order_triangle={
+                    0: {'tp': (0.02, -0.5), 'order': 1},
+                    1: {'tp': (0.02, 0.2), 'order': 2},
+                    2: {'tp': (0.02, 0.2), 'order': 3}
+                },
+                saveto=current_dir + '/u_error_L2.png'
+            )
 
-        pr.visualize(
-            'loglog', 'N', 'u_error_Hdiv', prime='input2', hcp=1, usetex=True,
-            labels=['$N=1$', '$N=2$', '$N=3$', ],
-            styles=["-s", "-v", '-^'],
-            colors=[(0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
-            title=False,
-            xlabel=r'$1/K$',
-            ylabel=r"$\left\| \boldsymbol{u}^h\right\|_{H(\mathrm{div})-\mathrm{error}}$",
-            order_text_size=15,
-            plot_order_triangle={
-                0: {'tp': (0.02, -0.5), 'order': 0},
-                1: {'tp': (0.02, 0.2), 'order': 1},
-                2: {'tp': (0.02, 0.2), 'order': 2}
-            },
-            saveto=current_dir + '/u_error_Hdiv.png')
+            pr.visualize(
+                'loglog', 'N', 'u_error_Hdiv', prime='input2', hcp=1, usetex=True,
+                labels=['$N=1$', '$N=2$', '$N=3$', ],
+                styles=["-s", "-v", '-^'],
+                colors=[(0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
+                title=False,
+                xlabel=r'$1/K$',
+                ylabel=r"$\left\| \boldsymbol{u}^h\right\|_{H(\mathrm{div})-\mathrm{error}}$",
+                order_text_size=15,
+                plot_order_triangle={
+                    0: {'tp': (0.02, -0.5), 'order': 0},
+                    1: {'tp': (0.02, 0.2), 'order': 1},
+                    2: {'tp': (0.02, 0.2), 'order': 2}
+                },
+                saveto=current_dir + '/u_error_Hdiv.png')
 
-        pr.visualize(
-            'loglog', 'N', 'mass_conservation', prime='input2', hcp=1, usetex=True,
-            labels=['$N=1$', '$N=2$', '$N=3$', ],
-            styles=["-s", "-v", '-^'],
-            colors=[(0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
-            title=False,
-            xlabel=r'$1/K$',
-            ylabel=r"$\left\| \mathrm{d}\boldsymbol{u}^h + f^h\right\|_{L^2-\mathrm{error}}$",
-            order_text_size=15,
-            saveto=current_dir + '/mass_conservation_L2.png'
-        )
+            pr.visualize(
+                'loglog', 'N', 'mass_conservation', prime='input2', hcp=1, usetex=True,
+                labels=['$N=1$', '$N=2$', '$N=3$', ],
+                styles=["-s", "-v", '-^'],
+                colors=[(0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
+                title=False,
+                xlabel=r'$1/K$',
+                ylabel=r"$\left\| \mathrm{d}\boldsymbol{u}^h + f^h\right\|_{L^2-\mathrm{error}}$",
+                order_text_size=15,
+                saveto=current_dir + '/mass_conservation_L2.png'
+            )
+        except RuntimeError:
+            pr.visualize(
+                'loglog', 'N', 'p_error_L2', prime='input2', hcp=1, usetex=False,
+                labels=['$N=1$', '$N=2$', '$N=3$', ],
+                styles=["-s", "-v", '-^'],
+                colors=[(0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
+                title=False,
+                xlabel=r'$1/K$',
+                ylabel=r"phi L2-error",
+                order_text_size=15,
+                plot_order_triangle={
+                    0: {'tp': (0.02, -0.5), 'order': 0},
+                    1: {'tp': (0.02, 0.2), 'order': 1},
+                    2: {'tp': (0.02, 0.2), 'order': 2}
+                },
+                saveto=current_dir + '/p_error_L2.png'
+            )
+
+            pr.visualize(
+                'loglog', 'N', 'u_error_L2', prime='input2', hcp=1, usetex=False,
+                labels=['$N=1$', '$N=2$', '$N=3$', ],
+                styles=["-s", "-v", '-^'],
+                colors=[(0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
+                title=False,
+                xlabel=r'$1/K$',
+                ylabel=r"u L2-error",
+                order_text_size=15,
+                plot_order_triangle={
+                    0: {'tp': (0.02, -0.5), 'order': 1},
+                    1: {'tp': (0.02, 0.2), 'order': 2},
+                    2: {'tp': (0.02, 0.2), 'order': 3}
+                },
+                saveto=current_dir + '/u_error_L2.png'
+            )
+
+            pr.visualize(
+                'loglog', 'N', 'u_error_Hdiv', prime='input2', hcp=1, usetex=False,
+                labels=['$N=1$', '$N=2$', '$N=3$', ],
+                styles=["-s", "-v", '-^'],
+                colors=[(0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
+                title=False,
+                xlabel=r'$1/K$',
+                ylabel=r"u Hdiv-error",
+                order_text_size=15,
+                plot_order_triangle={
+                    0: {'tp': (0.02, -0.5), 'order': 0},
+                    1: {'tp': (0.02, 0.2), 'order': 1},
+                    2: {'tp': (0.02, 0.2), 'order': 2}
+                },
+                saveto=current_dir + '/u_error_Hdiv.png')
+
+            pr.visualize(
+                'loglog', 'N', 'mass_conservation', prime='input2', hcp=1, usetex=False,
+                labels=['$N=1$', '$N=2$', '$N=3$', ],
+                styles=["-s", "-v", '-^'],
+                colors=[(0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
+                title=False,
+                xlabel=r'$1/K$',
+                ylabel=r"u + f L2-error",
+                order_text_size=15,
+                saveto=current_dir + '/mass_conservation_L2.png'
+            )
 
         a, b = pr.results.to_numpy()[:, 3][-2:]
         a = np.log10(a)

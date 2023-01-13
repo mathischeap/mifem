@@ -8,9 +8,6 @@ import random
 from root.config.main import MASTER_RANK, RANK, COMM
 
 
-
-
-
 class CrazyPeriodic(DomainInputBase):
     def __init__(self, c=0, bounds=((0, 1), (0, 1))):
         assert np.shape(bounds)[0] == 2, " <Crazy_Periodic> : bounds dimension is wrong."

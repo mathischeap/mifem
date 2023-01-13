@@ -32,14 +32,13 @@ SIZE: int = COMM.Get_size()
 MASTER_RANK: int = 0  # you can, but you do not need to change this!
 """(int) the master core is under rank?"""
 
-
 if RANK == MASTER_RANK:
-    ASSEMBLE_COST = {'accumulated': 0,  # we have used this much time (seconds) on assembling.
-                     'recent': list(),  # we additionally have spent this much time on assembling.
-                     }
+    ASSEMBLE_COST = {
+        'accumulated': 0,  # we have used this much time (seconds) on assembling.
+        'recent': list(),  # we additionally have spent this much time on assembling.
+    }
 else:
     ASSEMBLE_COST = None
-
 
 assert SIZE > 0, "I must have at least one core, right?"
 if SIZE >= 2:
@@ -48,7 +47,6 @@ if SIZE >= 2:
         f"when we have more than one core, master core should be different from secretary core."
 else:
     SECRETARY_RANK: int = 0
-
 
 SLAVE_RANKS: list = [i for i in range(SIZE)]
 """(list) The collections of ranks of all slaves (cores other than the master). So, 

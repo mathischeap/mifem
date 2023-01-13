@@ -8,12 +8,15 @@
 
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+from abc import ABC
+
+if './' not in sys.path:
+    sys.path.append('./')
 from objects.CSCG._2d.forms.trace._1_trace.base import _2dCSCG_1Trace
 from objects.CSCG._2d.forms.trace._1_trace.outer.discretize.main import _2dCSCG_Outer0Trace_discretize
 
 
-class _2dCSCG_1Trace_Outer(_2dCSCG_1Trace):
+class _2dCSCG_1Trace_Outer(_2dCSCG_1Trace, ABC):
     """
     Outer trace 1-form.
 
@@ -22,11 +25,19 @@ class _2dCSCG_1Trace_Outer(_2dCSCG_1Trace):
     :param numbering_parameters:
     :param name:
     """
-    def __init__(self, mesh, space, hybrid=True, numbering_parameters='Naive', name='outer-oriented-1-trace-form'):
+    def __init__(
+            self, mesh, space,
+            hybrid=True, numbering_parameters='Naive', name='outer-oriented-1-trace-form'
+    ):
         super().__init__(mesh, space, hybrid, 'outer', numbering_parameters, name)
         self._k_ = 1
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_trace_1form')
         self._discretize_ = _2dCSCG_Outer0Trace_discretize(self)
+        self.___kwargs___ = {
+            'hybrid': hybrid,
+            'numbering_parameters': numbering_parameters,
+            'name': name,
+        }
         self._freeze_self_()
 
     def ___PRIVATE_TW_FUNC_body_checker___(self, func_body):
@@ -38,7 +49,6 @@ class _2dCSCG_1Trace_Outer(_2dCSCG_1Trace):
 
     def discretize(self):
         return self._discretize_
-
 
     def reconstruct(self, xi, eta, ravel=False, key=None):
         """
@@ -56,17 +66,15 @@ class _2dCSCG_1Trace_Outer(_2dCSCG_1Trace):
         raise NotImplementedError
 
 
-
-
 if __name__ == '__main__':
-    # mpiexec python _2dCSCG\form\trace\_1_trace_outer.py
+    # mpiexec -n 2 python objects/CSCG/_2d/forms/trace/_1_trace/outer/main.py
 
     from objects.CSCG._2d.master import *
     # from mifem import read, save
 
-    mesh = MeshGenerator('cic')([2,2])
+    mesh = MeshGenerator('cic')([2, 2])
     # mesh = MeshGenerator('crazy',)([2,2])
-    space = SpaceInvoker('polynomials')([('Lobatto',2), ('Lobatto',3)])
+    space = SpaceInvoker('polynomials')([('Lobatto', 2), ('Lobatto', 3)])
     FC = FormCaller(mesh, space)
 
     # mesh.trace.visualize()
@@ -75,4 +83,4 @@ if __name__ == '__main__':
 
     t1o.numbering.visualize(show_element_numbering=False, show_boundary_names=False)
 
-    print(t1o.IS_hybrid)
+    print(t1o.whether.hybrid, t1o.___kwargs___)

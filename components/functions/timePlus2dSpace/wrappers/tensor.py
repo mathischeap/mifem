@@ -10,7 +10,6 @@ from components.numerical.timePlus2dSpace.partial_derivative_as_functions import
     NumericalPartialDerivative_txy_Functions
 
 
-
 class t2dTensor(FrozenOnly):
     """ Wrap four functions into a tensor class.
     """

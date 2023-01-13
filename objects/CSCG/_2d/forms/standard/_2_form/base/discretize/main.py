@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from components.freeze.base import FrozenOnly
-from objects.CSCG._2d.forms.standard._2_form.base.discretize.scalar.standard import _2dCSCG_S2F_Discretize_StandardScalar
+from objects.CSCG._2d.forms.standard._2_form.base.discretize.scalar.standard import \
+    _2dCSCG_S2F_Discretize_StandardScalar
+
 
 class _2dCSCG_S2F_Discretize(FrozenOnly):
     def __init__(self, sf):
@@ -28,7 +30,7 @@ class _2dCSCG_S2F_Discretize(FrozenOnly):
             if self._sf_.CF.__class__.__name__ == '_2dCSCG_ScalarField':
                 if self._sf_.CF.ftype == 'standard':
                     return self._standard_scalar_(
-                        update_cochain=update_cochain, target=target,**kwargs)
+                        update_cochain=update_cochain, target=target, **kwargs)
                 else:
                     raise NotImplementedError()
             else:

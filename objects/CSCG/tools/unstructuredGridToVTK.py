@@ -285,9 +285,6 @@ def _2dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
     return COMM.bcast(full_save_path, root=MASTER_RANK)
 
 
-
-
-
 def _3dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
     """The function for objects in 3d CSCG meshes.
 
@@ -496,7 +493,6 @@ def _3dCSCG_unstructuredGridToVTK(mesh, dfs, filename, objs):
         full_save_path = None
 
     return COMM.bcast(full_save_path, root=MASTER_RANK)
-
 
 
 if __name__ == "__main__":

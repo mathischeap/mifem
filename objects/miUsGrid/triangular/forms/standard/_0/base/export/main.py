@@ -6,10 +6,10 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from components.freeze.main import FrozenOnly
 from objects.miUsGrid.triangular.forms.standard._0.base.export.vtk.main import miUsTriangular_S0F_Export_VTK
-
 
 
 class miUsTriangular_S0F_Export(FrozenOnly):
@@ -30,9 +30,6 @@ class miUsTriangular_S0F_Export(FrozenOnly):
         if self._vtk_ is None:
             self._vtk_ = miUsTriangular_S0F_Export_VTK(self._sf_)
         return self._vtk_
-
-
-
 
 
 if __name__ == '__main__':

@@ -47,8 +47,6 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         else:
             raise NotImplementedError()
 
-
-
     def _2dCSCG_1Form_Inner(self):
         """
         Do the numbering if it is a standard 0-form.
@@ -79,8 +77,6 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
         else:
             raise NotImplementedError()
 
-
-
     def _2dCSCG_2Form_Inner(self):
         """
         Do the numbering if it is a standard 0-form.
@@ -110,12 +106,6 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
             return self._2Form_Outer_no_parameters()
         else:
             raise NotImplementedError()
-
-
-
-
-
-
 
     def _0Form_Inner_no_parameters(self):
         """
@@ -151,7 +141,6 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
                         assert all(np.array(regionElementLayout) > 1), \
                             f" elements.layout[{rn}]={regionElementLayout} wrong," \
                             f" needs (>1, >1) to make it work for periodic domain."
-
 
         if RANK != MASTER_RANK:
             element_map = mesh.elements.map
@@ -248,9 +237,6 @@ class _2dCSCG_Standard_Form_Numbering_Naive(FrozenOnly):
 
     def _0Form_Outer_no_parameters(self):
         return self._0Form_Inner_no_parameters()
-
-
-
 
     def _1Form_Inner_no_parameters(self):
         """

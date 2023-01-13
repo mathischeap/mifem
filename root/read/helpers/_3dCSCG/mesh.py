@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from objects.CSCG._3d.master import MeshGenerator as _3dCSCG_MeshGenerator
 
 

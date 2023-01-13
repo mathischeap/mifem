@@ -31,6 +31,12 @@ class _3dCSCG_1LocalTrace(_3dCSCG_LocalTrace, ABC):
         self._discretize_ = _3dCSCG_1LocalTrace_Discretize(self)
         self._reconstruct_ = _3dCSCG_1LocalTrace_Reconstruct(self)
         self._visualize_ = _3dCSCG_1LocalTrace_Visualize(self)
+        self.___kwargs___ = {
+            'hybrid': hybrid,
+            'orientation': orientation,
+            'numbering_parameters': numbering_parameters,
+            'name': name,
+        }
         self._freeze_self_()
 
     def ___Pr_check_CF___(self, func_body):

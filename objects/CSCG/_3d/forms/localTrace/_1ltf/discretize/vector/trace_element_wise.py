@@ -5,7 +5,6 @@ import numpy as np
 from components.quadrature import Quadrature
 
 
-
 class _3dCSCG_1LocalTrace_Discretize_TraceElementWiseVector(FrozenOnly):
     """"""
     def __init__(self, ltf):
@@ -36,9 +35,9 @@ class _3dCSCG_1LocalTrace_Discretize_TraceElementWiseVector(FrozenOnly):
             lens = [nodes[i][1:]-nodes[i][0:-1] for i in range(SELF.ndim)]
             qnodes = []
             for i in range(SELF.ndim):
-                qnodes_i = ((np.array(quad_nodes[i])+1)/2)[np.newaxis,:].repeat(num_edges[i],
-                           axis=0)*lens[i][:,np.newaxis]
-                qnodes_i += np.array(nodes[i][:-1])[:,np.newaxis].repeat(p[i]+1, axis=1)
+                qnodes_i = ((np.array(quad_nodes[i])+1)/2)[np.newaxis, :].repeat(
+                    num_edges[i], axis=0)*lens[i][:, np.newaxis]
+                qnodes_i += np.array(nodes[i][:-1])[:, np.newaxis].repeat(p[i]+1, axis=1)
                 qnodes.append(qnodes_i)
 
             # NS ------------------------------------------------------
@@ -80,7 +79,7 @@ class _3dCSCG_1LocalTrace_Discretize_TraceElementWiseVector(FrozenOnly):
             qn_WE_dz_x, qn_WE_dz_z = np.array(qn_WE_dz_x), np.array(qn_WE_dz_z)
             lens_WE_dz = np.repeat(lens[2]*0.5, (SELF.p[0] + 1))
 
-            #BF -------------------------------------------------------------------------------
+            # BF -------------------------------------------------------------------------------
             qn_BF_dx_x = []
             qn_BF_dx_y = []
             for j in range(SELF.p[1]+1):
@@ -141,9 +140,9 @@ class _3dCSCG_1LocalTrace_Discretize_TraceElementWiseVector(FrozenOnly):
             lens = [nodes[i][1:]-nodes[i][0:-1] for i in range(SELF.ndim)]
             qnodes = []
             for i in range(SELF.ndim):
-                qnodes_i = ((np.array(quad_nodes[i])+1)/2)[np.newaxis,:].repeat(num_edges[i],
-                           axis=0)*lens[i][:,np.newaxis]
-                qnodes_i += np.array(nodes[i][:-1])[:,np.newaxis].repeat(p[i]+1, axis=1)
+                qnodes_i = ((np.array(quad_nodes[i])+1)/2)[np.newaxis, :].repeat(
+                    num_edges[i], axis=0)*lens[i][:, np.newaxis]
+                qnodes_i += np.array(nodes[i][:-1])[:, np.newaxis].repeat(p[i]+1, axis=1)
                 qnodes.append(list(qnodes_i))
 
             # NS ------------------------------------------------------------------------------------
@@ -152,14 +151,14 @@ class _3dCSCG_1LocalTrace_Discretize_TraceElementWiseVector(FrozenOnly):
             for k in range(SELF.p[2]+1):
                 for j in range(SELF.p[1]):
                     qn_NS_dy_y1.append(qnodes[1][j])
-                    qn_NS_dy_z1.append([nodes[2][k],])
+                    qn_NS_dy_z1.append([nodes[2][k], ])
             lens_NS_dy = np.tile(lens[1]*0.5, (SELF.p[2]+1))
 
             qn_NS_dz_y1 = []
             qn_NS_dz_z1 = []
             for k in range(SELF.p[2]):
                 for j in range(SELF.p[1]+1):
-                    qn_NS_dz_y1.append([nodes[1][j],])
+                    qn_NS_dz_y1.append([nodes[1][j], ])
                     qn_NS_dz_z1.append(qnodes[2][k])
             lens_NS_dz = np.repeat(lens[2]*0.5, (SELF.p[1] + 1))
 
@@ -169,7 +168,7 @@ class _3dCSCG_1LocalTrace_Discretize_TraceElementWiseVector(FrozenOnly):
             for k in range(SELF.p[2]+1):
                 for i in range(SELF.p[0]):
                     qn_WE_dx_x1.append(qnodes[0][i])
-                    qn_WE_dx_z1.append([nodes[2][k],])
+                    qn_WE_dx_z1.append([nodes[2][k], ])
             lens_WE_dx = np.tile(lens[0]*0.5, (SELF.p[2] + 1))
 
 
@@ -177,24 +176,24 @@ class _3dCSCG_1LocalTrace_Discretize_TraceElementWiseVector(FrozenOnly):
             qn_WE_dz_z1 = []
             for k in range(SELF.p[2]):
                 for i in range(SELF.p[0]+1):
-                    qn_WE_dz_x1.append([nodes[0][i],])
+                    qn_WE_dz_x1.append([nodes[0][i], ])
                     qn_WE_dz_z1.append(qnodes[2][k])
             lens_WE_dz = np.repeat(lens[2]*0.5, (SELF.p[0] + 1))
 
-            #BF --------------------------------------------------------------------------------------------
+            # BF --------------------------------------------------------------------------------------------
             qn_BF_dx_x1 = []
             qn_BF_dx_y1 = []
             for j in range(SELF.p[1]+1):
                 for i in range(SELF.p[0]):
                     qn_BF_dx_x1.append(qnodes[0][i])
-                    qn_BF_dx_y1.append([nodes[1][j],])
+                    qn_BF_dx_y1.append([nodes[1][j], ])
             lens_BF_dx = np.tile(lens[0]*0.5, (SELF.p[1] + 1))
 
             qn_BF_dy_x1 = []
             qn_BF_dy_y1 = []
             for j in range(SELF.p[1]):
                 for i in range(SELF.p[0]+1):
-                    qn_BF_dy_x1.append([nodes[0][i],])
+                    qn_BF_dy_x1.append([nodes[0][i], ])
                     qn_BF_dy_y1.append(qnodes[1][j])
             lens_BF_dy = np.repeat(lens[1]*0.5, (SELF.p[0] + 1))
 
@@ -232,7 +231,7 @@ class _3dCSCG_1LocalTrace_Discretize_TraceElementWiseVector(FrozenOnly):
             qn_BF_dy_y1 = self.___cache_DISCRETIZE_TEW___['qn_BF_dy_y1']
             quad_weights = self.___cache_DISCRETIZE_TEW___['quad_weights']
 
-        #------- check func and get func --------------------------------------------------------------------
+        # ------- check func and get func --------------------------------------------------------------------
         if target == 'func':
             assert SELF.CF is not None, f"No func.body!"
             TEW_func = SELF.CF.do.evaluate_func_at_time()
@@ -253,42 +252,42 @@ class _3dCSCG_1LocalTrace_Discretize_TraceElementWiseVector(FrozenOnly):
         lens_NS_dy, lens_NS_dz, lens_WE_dx, lens_WE_dz, lens_BF_dx, lens_BF_dy = LENS
         # initialize the Trace-Element-Wise-local-cochain dict ------------------------------------
         local_TEW = dict()
-        Zo = [0,]
+        Zo = [0, ]
         # Go through all valid (no need to be all) local trace-elements in the function ---------------------------
         for T in TEW_func:
             te = SELF.mesh.trace.elements[T]
             # ele = te.CHARACTERISTIC_element
             ele_side = te.CHARACTERISTIC_side
 
-            #--------------------------------- NS sides ---------------------------------------
+            # --------------------------------- NS sides ---------------------------------------
             if ele_side in 'NS':
                 J = te.coordinate_transformation.Jacobian_matrix(qn_NS_dy_y, qn_NS_dy_z)
-                J = (J[0][0], J[1][0], J[2][0]) # dy of (dy, dz)
+                J = (J[0][0], J[1][0], J[2][0])  # dy of (dy, dz)
                 u, v, w = list(), list(), list()
                 for dy, dz in zip(qn_NS_dy_y1, qn_NS_dy_z1):
                     ___, uvw = TEW_func[T](Zo, dy, dz)
                     u.append(uvw[0])
                     v.append(uvw[1])
                     w.append(uvw[2])
-                u = np.array(u)[:,:,0]
-                v = np.array(v)[:,:,0]
-                w = np.array(w)[:,:,0]
+                u = np.array(u)[:, :, 0]
+                v = np.array(v)[:, :, 0]
+                w = np.array(w)[:, :, 0]
                 A = J[0] * u + J[1] * v + J[2] * w
                 B = quad_weights[1]
                 C = lens_NS_dy
                 cochain_dy = np.einsum('jk, k, j -> j', A, B, C, optimize='greedy')
 
                 J = te.coordinate_transformation.Jacobian_matrix(qn_NS_dz_y, qn_NS_dz_z)
-                J = (J[0][1], J[1][1], J[2][1]) # dz of (dy, dz)
+                J = (J[0][1], J[1][1], J[2][1])  # dz of (dy, dz)
                 u, v, w = list(), list(), list()
                 for dy, dz in zip(qn_NS_dz_y1, qn_NS_dz_z1):
                     ___, uvw = TEW_func[T](Zo, dy, dz)
                     u.append(uvw[0])
                     v.append(uvw[1])
                     w.append(uvw[2])
-                u = np.array(u)[:,0,:]
-                v = np.array(v)[:,0,:]
-                w = np.array(w)[:,0,:]
+                u = np.array(u)[:, 0, :]
+                v = np.array(v)[:, 0, :]
+                w = np.array(w)[:, 0, :]
                 A = J[0] * u + J[1] * v + J[2] * w
                 B = quad_weights[2]
                 C = lens_NS_dz
@@ -296,19 +295,19 @@ class _3dCSCG_1LocalTrace_Discretize_TraceElementWiseVector(FrozenOnly):
 
                 te_primal_local = np.concatenate([cochain_dy, cochain_dz])
 
-            #--------------------------------- WE sides ---------------------------------------
+            # --------------------------------- WE sides ---------------------------------------
             elif ele_side in 'WE':
                 J = te.coordinate_transformation.Jacobian_matrix(qn_WE_dx_x, qn_WE_dx_z)
-                J = (J[0][1], J[1][1], J[2][1]) # dx of (dz, dx)
+                J = (J[0][1], J[1][1], J[2][1])  # dx of (dz, dx)
                 u, v, w = list(), list(), list()
                 for dx, dz in zip(qn_WE_dx_x1, qn_WE_dx_z1):
                     ___, uvw = TEW_func[T](dx, Zo, dz)
                     u.append(uvw[0])
                     v.append(uvw[1])
                     w.append(uvw[2])
-                u = np.array(u)[:,:,0]
-                v = np.array(v)[:,:,0]
-                w = np.array(w)[:,:,0]
+                u = np.array(u)[:, :, 0]
+                v = np.array(v)[:, :, 0]
+                w = np.array(w)[:, :, 0]
 
                 A = J[0] * u + J[1] * v + J[2] * w
                 B = quad_weights[0]
@@ -316,16 +315,16 @@ class _3dCSCG_1LocalTrace_Discretize_TraceElementWiseVector(FrozenOnly):
                 cochain_dx = np.einsum('jk, k, j -> j', A, B, C, optimize='greedy')
 
                 J = te.coordinate_transformation.Jacobian_matrix(qn_WE_dz_x, qn_WE_dz_z)
-                J = (J[0][0], J[1][0], J[2][0]) # dz of (dz, dx)
+                J = (J[0][0], J[1][0], J[2][0])  # dz of (dz, dx)
                 u, v, w = list(), list(), list()
                 for dx, dz in zip(qn_WE_dz_x1, qn_WE_dz_z1):
                     ___, uvw = TEW_func[T](dx, Zo, dz)
                     u.append(uvw[0])
                     v.append(uvw[1])
                     w.append(uvw[2])
-                u = np.array(u)[:,0,:]
-                v = np.array(v)[:,0,:]
-                w = np.array(w)[:,0,:]
+                u = np.array(u)[:, 0, :]
+                v = np.array(v)[:, 0, :]
+                w = np.array(w)[:, 0, :]
                 A = J[0] * u + J[1] * v + J[2] * w
                 B = quad_weights[2]
                 C = lens_WE_dz
@@ -333,36 +332,36 @@ class _3dCSCG_1LocalTrace_Discretize_TraceElementWiseVector(FrozenOnly):
 
                 te_primal_local = np.concatenate([cochain_dx, cochain_dz])
 
-            #--------------------------------- BF sides ---------------------------------------
+            # --------------------------------- BF sides ---------------------------------------
             elif ele_side in 'BF':
 
                 J = te.coordinate_transformation.Jacobian_matrix(qn_BF_dx_x, qn_BF_dx_y)
-                J = (J[0][0], J[1][0], J[2][0]) # dx of (dx, dy)
+                J = (J[0][0], J[1][0], J[2][0])  # dx of (dx, dy)
                 u, v, w = list(), list(), list()
                 for dx, dy in zip(qn_BF_dx_x1, qn_BF_dx_y1):
                     ___, uvw = TEW_func[T](dx, dy, Zo)
                     u.append(uvw[0])
                     v.append(uvw[1])
                     w.append(uvw[2])
-                u = np.array(u)[:,:,0]
-                v = np.array(v)[:,:,0]
-                w = np.array(w)[:,:,0]
+                u = np.array(u)[:, :, 0]
+                v = np.array(v)[:, :, 0]
+                w = np.array(w)[:, :, 0]
                 A = J[0] * u + J[1] * v + J[2] * w
                 B = quad_weights[0]
                 C = lens_BF_dx
                 cochain_dx = np.einsum('jk, k, j -> j', A, B, C, optimize='greedy')
 
                 J = te.coordinate_transformation.Jacobian_matrix(qn_BF_dy_x, qn_BF_dy_y)
-                J = (J[0][1], J[1][1], J[2][1]) # dy of (dx, dy)
+                J = (J[0][1], J[1][1], J[2][1])  # dy of (dx, dy)
                 u, v, w = list(), list(), list()
                 for dx, dy in zip(qn_BF_dy_x1, qn_BF_dy_y1):
                     ___, uvw = TEW_func[T](dx, dy, Zo)
                     u.append(uvw[0])
                     v.append(uvw[1])
                     w.append(uvw[2])
-                u = np.array(u)[:,0,:]
-                v = np.array(v)[:,0,:]
-                w = np.array(w)[:,0,:]
+                u = np.array(u)[:, 0, :]
+                v = np.array(v)[:, 0, :]
+                w = np.array(w)[:, 0, :]
                 A = J[0] * u + J[1] * v + J[2] * w
                 B = quad_weights[1]
                 C = lens_BF_dy
@@ -373,11 +372,12 @@ class _3dCSCG_1LocalTrace_Discretize_TraceElementWiseVector(FrozenOnly):
             else:
                 raise Exception()
 
-            if not SELF.space.IS_Kronecker: raise NotImplementedError()
+            if not SELF.space.IS_Kronecker:
+                raise NotImplementedError()
 
             local_TEW[T] = te_primal_local
 
-        #now we convert Trace-Element-Wise local cochain: local_TEW into mesh-element-wise local cochain
+        # now we convert Trace-Element-Wise local cochain: local_TEW into mesh-element-wise local cochain
 
         raise NotImplementedError()
 

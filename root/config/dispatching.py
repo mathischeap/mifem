@@ -67,7 +67,7 @@ def DISPATCHING(originalTaskInputs: list, method):
             # now all tasks are gone. Send message to all slaves to tell they stop waiting for more new tasks.
             for i in SLAVE_RANKS:
                 assert CORE_STATUS[i]  # must be true
-                COMM.send('stop waiting for new tasks', dest=i, tag=i)  # ask it stopping waiting.
+                COMM.send('stop waiting for new tasks', dest=i, tag=i)  # ask it to stop waiting.
         else:
             while 1:
                 nextTaskData = COMM.recv(source=MASTER_RANK, tag=RANK)

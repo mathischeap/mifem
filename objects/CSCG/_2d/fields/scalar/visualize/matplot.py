@@ -28,8 +28,6 @@ class _2dCSCG_ScalarField_Visualize_matplot(FrozenOnly):
         levels = np.linspace(MINv, MAXv, num_levels)
         return levels
 
-
-
     def __call__(self, **kwargs):
         return self.contourf(**kwargs)
 
@@ -37,26 +35,31 @@ class _2dCSCG_ScalarField_Visualize_matplot(FrozenOnly):
             self, time=None, density=10000, usetex=False, colormap='coolwarm',
             show_colorbar=True, levels=None, num_levels=20, title=True,
             show_boundaries=True, domain_boundary_linewidth=3, boundary_name_fontsize=12,
-            minor_tick_length=0, major_tick_length=0, tick_pad=5, tick_size=12
+            minor_tick_length=0, major_tick_length=0, tick_pad=5, tick_size=12,
     ):
         """
 
-        :param time:
-        :param density:
-        :param usetex:
-        :param colormap:
-        :param show_colorbar:
-        :param levels:
-        :param num_levels:
-        :param title:
-        :param show_boundaries:
-        :param domain_boundary_linewidth:
-        :param boundary_name_fontsize:
-        :param minor_tick_length:
-        :param major_tick_length:
-        :param tick_pad:
-        :param tick_size:
-        :return:
+        Parameters
+        ----------
+        time
+        density
+        usetex
+        colormap
+        show_colorbar
+        levels
+        num_levels
+        title
+        show_boundaries
+        domain_boundary_linewidth
+        boundary_name_fontsize
+        minor_tick_length
+        major_tick_length
+        tick_pad
+        tick_size
+
+        Returns
+        -------
+
         """
         density = int(np.ceil(np.sqrt(density / self._mesh_.elements.global_num)))
         rs = [np.linspace(-1, 1, density) for _ in range(self._cf_.ndim)]

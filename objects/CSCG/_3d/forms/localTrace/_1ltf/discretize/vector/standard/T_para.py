@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
 from components.freeze.base import FrozenOnly
 import numpy as np
 from components.quadrature import Quadrature
@@ -13,8 +12,10 @@ class _3dCSCG_1LocalTrace_Discretize_StandardVector_T_para(FrozenOnly):
         self.___cache_DISCRETIZE_STANDARD___ = None
         self._freeze_self_()
 
-    def __call__(self,
-        update_cochain=True, target='func'):
+    def __call__(
+            self,
+            update_cochain=True, target='func'
+    ):
         """We will discretize the Trace_parallel component of a standard vector field to all trace
         elements.
 
@@ -22,7 +23,8 @@ class _3dCSCG_1LocalTrace_Discretize_StandardVector_T_para(FrozenOnly):
         numbers and values are trace-element-wise local cochains.
         """
         SELF = self._tf_
-        if target in ('BC',): assert update_cochain is False, f"CANNOT update cochain when target is {target}"
+        if target in ('BC', ):
+            assert update_cochain is False, f"CANNOT update cochain when target is {target}"
 
         if self.___cache_DISCRETIZE_STANDARD___ is None:
             p = [SELF.dqp[i] + 1 for i in range(SELF.ndim)]
@@ -32,9 +34,9 @@ class _3dCSCG_1LocalTrace_Discretize_StandardVector_T_para(FrozenOnly):
             lens = [nodes[i][1:]-nodes[i][0:-1] for i in range(SELF.ndim)]
             qnodes = []
             for i in range(SELF.ndim):
-                qnodes_i = ((np.array(quad_nodes[i])+1)/2)[np.newaxis,:].repeat(num_edges[i],
-                           axis=0)*lens[i][:,np.newaxis]
-                qnodes_i += np.array(nodes[i][:-1])[:,np.newaxis].repeat(p[i]+1, axis=1)
+                qnodes_i = ((np.array(quad_nodes[i])+1)/2)[np.newaxis, :].repeat(
+                    num_edges[i], axis=0)*lens[i][:, np.newaxis]
+                qnodes_i += np.array(nodes[i][:-1])[:, np.newaxis].repeat(p[i]+1, axis=1)
                 qnodes.append(qnodes_i)
 
             # NS ------------------------------------------------------
@@ -77,7 +79,7 @@ class _3dCSCG_1LocalTrace_Discretize_StandardVector_T_para(FrozenOnly):
             qn_WE_dz_x, qn_WE_dz_z = np.array(qn_WE_dz_x), np.array(qn_WE_dz_z)
             lens_WE_dz = np.repeat(lens[2]*0.5, (SELF.p[0] + 1))
 
-            #BF --------------------------------------------------------------------------------------------
+            # BF --------------------------------------------------------------------------------------------
             qn_BF_dx_x = []
             qn_BF_dx_y = []
             for j in range(SELF.p[1]+1):
@@ -150,7 +152,7 @@ class _3dCSCG_1LocalTrace_Discretize_StandardVector_T_para(FrozenOnly):
             if ele_side in 'NS':
 
                 J = te.coordinate_transformation.Jacobian_matrix(qn_NS_dy_y, qn_NS_dy_z)
-                J = (J[0][0], J[1][0], J[2][0]) # dy of (dy, dz)
+                J = (J[0][0], J[1][0], J[2][0])  # dy of (dy, dz)
                 x, y, z = te.coordinate_transformation.mapping(qn_NS_dy_y, qn_NS_dy_z, from_element=ele, side=ele_side)
                 u = FUNC[0](x, y, z)
                 v = FUNC[1](x, y, z)
@@ -162,7 +164,7 @@ class _3dCSCG_1LocalTrace_Discretize_StandardVector_T_para(FrozenOnly):
 
 
                 J = te.coordinate_transformation.Jacobian_matrix(qn_NS_dz_y, qn_NS_dz_z)
-                J = (J[0][1], J[1][1], J[2][1]) # dz of (dy, dz)
+                J = (J[0][1], J[1][1], J[2][1])  # dz of (dy, dz)
                 x, y, z = te.coordinate_transformation.mapping(qn_NS_dz_y, qn_NS_dz_z, from_element=ele, side=ele_side)
                 u = FUNC[0](x, y, z)
                 v = FUNC[1](x, y, z)
@@ -178,7 +180,7 @@ class _3dCSCG_1LocalTrace_Discretize_StandardVector_T_para(FrozenOnly):
             elif ele_side in 'WE':
 
                 J = te.coordinate_transformation.Jacobian_matrix(qn_WE_dx_x, qn_WE_dx_z)
-                J = (J[0][1], J[1][1], J[2][1]) # dx of (dz, dx)
+                J = (J[0][1], J[1][1], J[2][1])  # dx of (dz, dx)
                 x, y, z = te.coordinate_transformation.mapping(qn_WE_dx_x, qn_WE_dx_z, from_element=ele, side=ele_side)
                 u = FUNC[0](x, y, z)
                 v = FUNC[1](x, y, z)
@@ -190,7 +192,7 @@ class _3dCSCG_1LocalTrace_Discretize_StandardVector_T_para(FrozenOnly):
 
 
                 J = te.coordinate_transformation.Jacobian_matrix(qn_WE_dz_x, qn_WE_dz_z)
-                J = (J[0][0], J[1][0], J[2][0]) # dz of (dz, dx)
+                J = (J[0][0], J[1][0], J[2][0])  # dz of (dz, dx)
                 x, y, z = te.coordinate_transformation.mapping(qn_WE_dz_x, qn_WE_dz_z, from_element=ele, side=ele_side)
                 u = FUNC[0](x, y, z)
                 v = FUNC[1](x, y, z)
@@ -206,7 +208,7 @@ class _3dCSCG_1LocalTrace_Discretize_StandardVector_T_para(FrozenOnly):
             elif ele_side in 'BF':
 
                 J = te.coordinate_transformation.Jacobian_matrix(qn_BF_dx_x, qn_BF_dx_y)
-                J = (J[0][0], J[1][0], J[2][0]) # dx of (dx, dy)
+                J = (J[0][0], J[1][0], J[2][0])  # dx of (dx, dy)
                 x, y, z = te.coordinate_transformation.mapping(qn_BF_dx_x, qn_BF_dx_y, from_element=ele, side=ele_side)
                 u = FUNC[0](x, y, z)
                 v = FUNC[1](x, y, z)
@@ -218,7 +220,7 @@ class _3dCSCG_1LocalTrace_Discretize_StandardVector_T_para(FrozenOnly):
 
 
                 J = te.coordinate_transformation.Jacobian_matrix(qn_BF_dy_x, qn_BF_dy_y)
-                J = (J[0][1], J[1][1], J[2][1]) # dy of (dx, dy)
+                J = (J[0][1], J[1][1], J[2][1])  # dy of (dx, dy)
                 x, y, z = te.coordinate_transformation.mapping(qn_BF_dy_x, qn_BF_dy_y, from_element=ele, side=ele_side)
                 u = FUNC[0](x, y, z)
                 v = FUNC[1](x, y, z)
@@ -233,11 +235,12 @@ class _3dCSCG_1LocalTrace_Discretize_StandardVector_T_para(FrozenOnly):
             else:
                 raise Exception()
 
-            if not SELF.space.IS_Kronecker: raise NotImplementedError()
+            if not SELF.space.IS_Kronecker:
+                raise NotImplementedError()
 
             local_TEW[key] = te_primal_local
 
-
-        if update_cochain: SELF.cochain.local_TEW = local_TEW
+        if update_cochain:
+            SELF.cochain.local_TEW = local_TEW
         # 'locally full local TEW cochain': provide cochain.local_TEW and for all dofs on the trace element.
         return 'locally full local TEW cochain', local_TEW

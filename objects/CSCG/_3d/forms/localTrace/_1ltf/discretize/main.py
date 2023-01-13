@@ -6,9 +6,12 @@
 """
 from components.freeze.main import FrozenOnly
 
-from objects.CSCG._3d.forms.localTrace._1ltf.discretize.vector.trace_element_wise import _3dCSCG_1LocalTrace_Discretize_TraceElementWiseVector
-from objects.CSCG._3d.forms.localTrace._1ltf.discretize.vector.standard.T_perp import _3dCSCG_1LocalTrace_Discretize_StandardVector_T_perp
-from objects.CSCG._3d.forms.localTrace._1ltf.discretize.vector.standard.T_para import _3dCSCG_1LocalTrace_Discretize_StandardVector_T_para
+from objects.CSCG._3d.forms.localTrace._1ltf.discretize.vector.trace_element_wise import \
+    _3dCSCG_1LocalTrace_Discretize_TraceElementWiseVector
+from objects.CSCG._3d.forms.localTrace._1ltf.discretize.vector.standard.T_perp import \
+    _3dCSCG_1LocalTrace_Discretize_StandardVector_T_perp
+from objects.CSCG._3d.forms.localTrace._1ltf.discretize.vector.standard.T_para import \
+    _3dCSCG_1LocalTrace_Discretize_StandardVector_T_para
 
 
 class _3dCSCG_1LocalTrace_Discretize(FrozenOnly):
@@ -58,7 +61,8 @@ class _3dCSCG_1LocalTrace_Discretize(FrozenOnly):
 
 
                 elif SELF.CF.ftype == 'trace-element-wise':
-                    # we do not care this trace-element-wise vector is T_para or T_perp vector, we just discretize it to the trace.
+                    # we do not care this trace-element-wise vector is T_para or T_perp vector,
+                    # we just discretize it to the trace.
                     return self._trace_element_wise_vector_(
                         update_cochain=update_cochain, target='func')
 
@@ -78,7 +82,8 @@ class _3dCSCG_1LocalTrace_Discretize(FrozenOnly):
             if SELF.BC.CF.__class__.__name__ == '_3dCSCG_VectorField':
 
                 if SELF.BC.CF.ftype == 'trace-element-wise':
-                    # we do not care this trace-element-wise vector is T_para or T_perp vector, we just discretize it to the trace.
+                    # we do not care this trace-element-wise vector is T_para or T_perp vector,
+                    # we just discretize it to the trace.
                     return self._trace_element_wise_vector_(
                         update_cochain=False, target='BC')
 

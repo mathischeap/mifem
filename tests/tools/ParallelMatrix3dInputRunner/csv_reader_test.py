@@ -73,31 +73,58 @@ pr.iterate(Ns, Ks, cs, writeto=current_dir + '/csv_reader.txt', show_progress=Fa
 if isfile(current_dir + '/csv_reader.txt'):
     remove(current_dir + '/csv_reader.txt')
 
-pr.visualize('loglog', 'N', 'a_L2_error', prime='input2', hcp=1, usetex=True,
-             labels=['$N=1$', '$N=2$'],
-             styles=["-s", "-v"],
-             colors=[(0, 0, 0, 1), (0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
-             title=False,
-             yticks=[1e-1, 1e-2, 1e-3],
-             xlabel=r'$1/K$',
-             ylabel=r"$\left\| a^h \right\|_{L^2-\mathrm{error}}$",
-             order_text_size=15,
-             plot_order_triangle={0: {'tp': (0.02, -0.5), 'order': 1},
-                                  1: {'tp': (0.02, 0.2), 'order': 2}},
-             saveto=current_dir + '/a_L2_error.png')
+try:
+    pr.visualize('loglog', 'N', 'a_L2_error', prime='input2', hcp=1, usetex=True,
+                 labels=['$N=1$', '$N=2$'],
+                 styles=["-s", "-v"],
+                 colors=[(0, 0, 0, 1), (0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
+                 title=False,
+                 yticks=[1e-1, 1e-2, 1e-3],
+                 xlabel=r'$1/K$',
+                 ylabel=r"$\left\| a^h \right\|_{L^2-\mathrm{error}}$",
+                 order_text_size=15,
+                 plot_order_triangle={0: {'tp': (0.02, -0.5), 'order': 1},
+                                      1: {'tp': (0.02, 0.2), 'order': 2}},
+                 saveto=current_dir + '/a_L2_error.png')
 
-pr.visualize('loglog', 'N', 'b_L2_error', prime='input2', hcp=1, usetex=True,
-             labels=['$N=1$', '$N=2$'],
-             styles=["-s", "-v"],
-             colors=[(0, 0, 0, 1), (0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
-             title=False,
-             yticks=[1e-1, 1e-2, 1e-3, 1e-4],
-             xlabel=r'$1/K$',
-             ylabel=r"$\left\| b^h \right\|_{L^2-\mathrm{error}}$",
-             order_text_size=15,
-             plot_order_triangle={0: {'tp': (0.02, -0.5), 'order': 2},
-                                  1: {'tp': (0.02, 0.2), 'order': 3}},
-             saveto=current_dir + '/b_L2_error.png')
+    pr.visualize('loglog', 'N', 'b_L2_error', prime='input2', hcp=1, usetex=True,
+                 labels=['$N=1$', '$N=2$'],
+                 styles=["-s", "-v"],
+                 colors=[(0, 0, 0, 1), (0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
+                 title=False,
+                 yticks=[1e-1, 1e-2, 1e-3, 1e-4],
+                 xlabel=r'$1/K$',
+                 ylabel=r"$\left\| b^h \right\|_{L^2-\mathrm{error}}$",
+                 order_text_size=15,
+                 plot_order_triangle={0: {'tp': (0.02, -0.5), 'order': 2},
+                                      1: {'tp': (0.02, 0.2), 'order': 3}},
+                 saveto=current_dir + '/b_L2_error.png')
+
+except RuntimeError:
+    pr.visualize('loglog', 'N', 'a_L2_error', prime='input2', hcp=1, usetex=False,
+                 labels=['$N=1$', '$N=2$'],
+                 styles=["-s", "-v"],
+                 colors=[(0, 0, 0, 1), (0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
+                 title=False,
+                 yticks=[1e-1, 1e-2, 1e-3],
+                 xlabel=r'$1/K$',
+                 order_text_size=15,
+                 plot_order_triangle={0: {'tp': (0.02, -0.5), 'order': 1},
+                                      1: {'tp': (0.02, 0.2), 'order': 2}},
+                 saveto=current_dir + '/a_L2_error.png')
+
+    pr.visualize('loglog', 'N', 'b_L2_error', prime='input2', hcp=1, usetex=False,
+                 labels=['$N=1$', '$N=2$'],
+                 styles=["-s", "-v"],
+                 colors=[(0, 0, 0, 1), (0.4, 0.4, 0.4, 1), (0.75, 0.75, 0.75, 1)],
+                 title=False,
+                 yticks=[1e-1, 1e-2, 1e-3, 1e-4],
+                 xlabel=r'$1/K$',
+                 order_text_size=15,
+                 plot_order_triangle={0: {'tp': (0.02, -0.5), 'order': 2},
+                                      1: {'tp': (0.02, 0.2), 'order': 3}},
+                 saveto=current_dir + '/b_L2_error.png')
+
 
 test_csv_reader_passed = 1  # do not comment this.
 

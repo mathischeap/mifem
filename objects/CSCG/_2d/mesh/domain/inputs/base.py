@@ -305,9 +305,9 @@ class DomainInputBase(FrozenOnly):
 
     # class properties ------------------------
     @classproperty
-    def statistic(cls):
+    def statistic(self):
         raise NotImplementedError()
 
     @classproperty
-    def random_parameters(cls):
+    def random_parameters(self):
         raise NotImplementedError()

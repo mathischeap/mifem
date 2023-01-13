@@ -10,8 +10,6 @@ from tools.elementwiseCache.gathering.vector import Gathering_Vector
 from tools.elementwiseCache.gathering.regular.matrix.main import Gathering_Matrix
 
 
-
-
 class _3dCSCG_LocalTrace_Form_Numbering_Naive(FrozenOnly):
     """"""
 

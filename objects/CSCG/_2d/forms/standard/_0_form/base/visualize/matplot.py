@@ -55,6 +55,8 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
             show_boundaries=True,
             saveto=None,
             plot_type='contour',
+            colorbar_only=False,
+            pad_inches=0,
     ):
         """
 
@@ -82,6 +84,8 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
         :param show_boundaries:
         :param saveto:
         :param plot_type: {'contour', 'contourf'}
+        :param colorbar_only:
+        :param pad_inches:
         :return:
         """
         density = int(np.ceil(np.sqrt(density / self._mesh_.elements.global_num)))
@@ -124,8 +128,16 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
 
         if saveto is not None:
             matplotlib.use('Agg')
-        plt.rc('text', usetex=usetex)
-        plt.rcParams['text.latex.preamble'] = r"\usepackage{amsmath}"
+
+        plt.rcParams.update({
+            "text.usetex": usetex,
+            "font.family": "DejaVu sans",
+            # "font.serif": "Times New Roman",
+        })
+
+        if usetex:
+            plt.rcParams['text.latex.preamble'] = r"\usepackage{amsmath}"
+
         if colormap is not None:
             plt.rcParams['image.cmap'] = colormap
         fig, ax = plt.subplots()
@@ -209,10 +221,14 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
             cb.ax.tick_params(labelsize=colorbar_labelsize)
 
         # ---------------------- save to ---------------------------------------------
+        if colorbar_only:
+            ax.remove()
+        else:
+            pass
         if saveto is None:
             plt.show()
         else:
-            plt.savefig(saveto, bbox_inches='tight')
+            plt.savefig(saveto, bbox_inches='tight', pad_inches=pad_inches)
         plt.close()
         # --------------------------------------------------------------------------
 
@@ -220,7 +236,7 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
 
 
 if __name__ == '__main__':
-    # mpiexec -n 3 python _2dCSCG\forms\standard\_0_form\base\visualize\matplot.py
+    # mpiexec -n 3 python objects/CSCG/_2d/forms/standard/_0_form/base/visualize/matplot.py
 
     from objects.CSCG._2d.master import MeshGenerator, ExactSolutionSelector, SpaceInvoker, FormCaller
     from numpy import pi
@@ -228,19 +244,17 @@ if __name__ == '__main__':
     space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 3)], show_info=True)
     FC = FormCaller(mesh, space)
     es = ExactSolutionSelector(mesh)("Euler:shear_layer_rollup", show_info=True)
-    w = FC('0-f-o', is_hybrid=False, name='vorticity')
-    w.TW.func.do.set_func_body_as(es, 'vorticity')
-    w.TW.current_time = 0
-    w.TW.do.push_all_to_instant()
+    w = FC('0-f-o', hybrid=False, name='vorticity')
+    w.CF = es.vorticity
+    w.CF.current_time = 0
     w.discretize()
     w.visualize.matplot.contourf(levels=[-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6], usetex=False)
 
     mesh = MeshGenerator('rectangle', p_UL=(-1, -1), region_layout=(3, 5))([5, 5], show_info=False)
     FC = FormCaller(mesh, space)
     ES = ExactSolutionSelector(mesh)('sL:sincos1')
-    f0 = FC('0-f-i', is_hybrid=True)
-    f0.TW.func.do.set_func_body_as(ES, 'potential')
-    f0.TW.current_time = 0
-    f0.TW.do.push_all_to_instant()
+    f0 = FC('0-f-i', hybrid=True)
+    f0.CF = ES.potential
+    f0.CF.current_time = 0
     f0.discretize()
     f0.visualize.matplot.contourf(usetex=True)

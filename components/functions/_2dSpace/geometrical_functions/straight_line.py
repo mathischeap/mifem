@@ -1,7 +1,6 @@
-
+# -*- coding: utf-8 -*-
 from components.decorators.all import accepts
 import numpy as np
-
 
 
 class StraightLine(object):
@@ -13,7 +12,7 @@ class StraightLine(object):
 
     # o in [0, 1]
     def _gamma(self, o):
-        return self.x1 + o* (self.x2 - self.x1), self.y1 + o * (self.y2 - self.y1)
+        return self.x1 + o * (self.x2 - self.x1), self.y1 + o * (self.y2 - self.y1)
 
     def _dgamma(self, o):
         return (self.x2 - self.x1) * np.ones(np.shape(o)), (self.y2 - self.y1) * np.ones(

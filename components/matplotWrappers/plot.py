@@ -10,25 +10,29 @@ from matplotlib import cm
 
 
 def __matplot__(
-    plot_type,
-    # data, and linewidth
-    x, y, num_lines=1, linewidth=1.2,
-    # style, color, and labels
-    style=None, color=None, label=False,
-    styles=None, colors=None, labels=None,
-    # config
-    usetex=True, saveto=None, corlormap='Dark2',
-    # figure
-    figsize=(5.5, 4), left=0.15, bottom=0.15,
-    # title
-    title=None, title_size=20, title_pad=12,
-    # labels
-    xlabel=None, ylabel=None, label_size=16,
-    # ticks
-    tick_style='sci', xticks=None, yticks=None,
-    tick_size=16, tick_pad=6, minor_tick_length=4, major_tick_length=8,
-    # legend
-    legend_size=18, legend_local='best', legend_frame=False,
+        plot_type,
+        # data, and linewidth
+        x, y, num_lines=1, linewidth=1.2,
+        # style, color, and labels
+        style=None, color=None, label=False,
+        styles=None, colors=None, labels=None,
+        # config
+        usetex=True, saveto=None, pad_inches=0.1, corlormap='Dark2',
+        # figure
+        figsize=(5.5, 4), left=0.15, bottom=0.15,
+        # title
+        title=None, title_size=20, title_pad=12,
+        # labels
+        xlabel=None, ylabel=None, label_size=16,
+        # ticks
+        tick_style='sci', xticks=None, yticks=None,
+        tick_size=16, tick_pad=6, minor_tick_length=4, major_tick_length=8,
+        # legend
+        legend_size=18, legend_local='best', legend_frame=False,
+        xlim=None, ylim=None,
+        y_scientific=True,
+        legend_ncol=1,
+
 ):
     """
 
@@ -55,6 +59,7 @@ def __matplot__(
     linewidth
     usetex
     saveto
+    pad_inches
     corlormap
     figsize
     left
@@ -78,6 +83,10 @@ def __matplot__(
     legend_size
     legend_local
     legend_frame
+    legend_ncol:
+    xlim
+    ylim
+    y_scientific
 
     Returns
     -------
@@ -86,9 +95,16 @@ def __matplot__(
     # - config matplotlib -------------------------------------------------------------------------1
     if saveto is not None:
         matplotlib.use('Agg')
-    plt.rc('text', usetex=usetex)
+
+    plt.rcParams.update({
+        "text.usetex": usetex,
+        "font.family": "DejaVu sans",
+        # "font.serif": "Times New Roman",
+    })
+
     if usetex:
         plt.rcParams['text.latex.preamble'] = r"\usepackage{amsmath}"
+
     _, ax = plt.subplots(figsize=figsize)
     plt.gcf().subplots_adjust(left=left)
     plt.gcf().subplots_adjust(bottom=bottom)
@@ -105,6 +121,7 @@ def __matplot__(
             label = r'$\mathrm{line}\#0$'
 
     elif num_lines > 1:  # multiple lines
+
         if styles is None:
             styles = ('-^', '-x', '-o', '-s', '-v', '-*', '-8', '->', '-p', '-H', '-h', '-D', '-d', '-P') * 5
 
@@ -117,9 +134,9 @@ def __matplot__(
         if labels is None:
             labels = [r'$\mathrm{line}\#' + str(_) + '$' for _ in range(num_lines)]
 
-        assert isinstance(styles, (list, tuple)) and len(styles) == num_lines, \
+        assert isinstance(styles, (list, tuple)), \
             f"put correct amount of styles in list pls."
-        assert isinstance(colors, (list, tuple)) and len(styles) == num_lines, \
+        assert isinstance(colors, (list, tuple)), \
             f"put correct amount of colors in list pls."
 
         if labels is False:
@@ -170,12 +187,25 @@ def __matplot__(
         tx = ax.yaxis.get_offset_text()
         tx.set_fontsize(tick_size)
 
+        if not y_scientific:
+            ax.get_yaxis().get_major_formatter().set_scientific(y_scientific)
+
     if xlabel is not None:
         plt.xlabel(xlabel, fontsize=label_size)
     if ylabel is not None:
         plt.ylabel(ylabel, fontsize=label_size)
-    if title is not None:
+
+    if title is None:
+        pass
+    elif title is False:
+        pass
+    else:
         plt.title(r'' + title, fontsize=title_size, pad=title_pad)
+
+    if xlim is not None:
+        plt.xlim(xlim)
+    if ylim is not None:
+        plt.ylim(ylim)
 
     # ----legend ----------------------------------------------------------------------------------1
     if num_lines == 1 and label is False:
@@ -185,12 +215,13 @@ def __matplot__(
         # turn off legend when num_line > 1 and labels is False
         pass
     else:
-        plt.legend(fontsize=legend_size, loc=legend_local, frameon=legend_frame)
+        plt.legend(fontsize=legend_size, loc=legend_local, ncol=legend_ncol,
+                   frameon=legend_frame)
 
     # ---------------- save the figure ------------------------------------------------------------1
     plt.tight_layout()
     if saveto is not None and saveto != '':
-        plt.savefig(saveto, bbox_inches='tight')
+        plt.savefig(saveto, bbox_inches='tight', pad_inches=pad_inches)
     else:
         plt.show()
     plt.close()

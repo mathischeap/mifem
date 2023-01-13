@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
 
@@ -24,7 +25,7 @@ class _3dCSCG_LocalTrace_NUM(FrozenOnly):
     def basis(self):
         """"""
         if self._basis_ is None:
-            self._basis_= getattr(
+            self._basis_ = getattr(
                 self._ltf_.space.num_basis, self._ltf_.__class__.__name__
             )[0][self._ltf_.whether.hybrid]
         return self._basis_

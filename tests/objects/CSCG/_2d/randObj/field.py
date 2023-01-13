@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/8/10 23:53
 """
-import sys
-if './' not in sys.path:
-    sys.path.append('/')
 import random
 
 from root.config.main import RANK, MASTER_RANK, np, COMM
@@ -49,8 +46,3 @@ def random_scalar(mesh):
     def p(t, x, y): return np.sin(a*np.pi*x) * np.sin(b*np.pi*y) + c*t
 
     return _2dCSCG_ScalarField(mesh, p, name=name)
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python objects/CSCG/_2d/__tests__/Random/field.py
-    pass

@@ -23,6 +23,7 @@ from objects.CSCG._3d.forms.standard._1s.visualize.main import _3dCSCG_S1F_VISUA
 from objects.CSCG._3d.forms.standard._1s.boundary_integration.main import _3dCSCG_S1F_BI
 from objects.CSCG._3d.forms.standard._1s.do.main import _3dCSCG_S1F_Do
 
+
 class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form, ABC):
     """
     Standard 1-form.
@@ -53,6 +54,12 @@ class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form, ABC):
         self._visualize_ = None
         self.__BI__ = None
         self._DO_ = _3dCSCG_S1F_Do(self)
+        self.___kwargs___ = {
+            'hybrid': hybrid,
+            'orientation': orientation,
+            'numbering_parameters': numbering_parameters,
+            'name': name,
+        }
         self._freeze_self_()
 
     def ___Pr_check_CF___(self, func_body):

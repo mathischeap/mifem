@@ -34,6 +34,11 @@ class _2dCSCG_0Form_Inner(_0Form_BASE):
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_inner_0form')
         self.standard_properties.___PRIVATE_add_tag___('2dCSCG_standard_0form')
         self._special_ = _0Form_Inner_Special(self)
+        self.___kwargs___ = {
+            'hybrid': hybrid,
+            'numbering_parameters': numbering_parameters,
+            'name': name,
+        }
         self._freeze_self_()
 
     @property
@@ -62,9 +67,13 @@ if __name__ == '__main__':
         return np.cos(2*np.pi*x) * np.cos(2*np.pi*y) + t/2
     scalar = FC('scalar', p)
 
-    f0 = FC('0-f-i', is_hybrid=True)
+    f0 = FC('0-f-i', hybrid=True)
     f0.CF = scalar
     f0.CF.current_time = 0
     f0.discretize()
 
     f0.visualize.matplot.contour()
+
+    f00 = 0.5 * (f0 + f0)
+
+    f00.visualize()

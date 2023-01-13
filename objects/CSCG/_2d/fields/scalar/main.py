@@ -164,7 +164,6 @@ class _2dCSCG_ScalarField(_2dCSCG_Continuous_FORM_BASE, ndim=2):
     def visualize(self):
         return self._visualize_
 
-
     def __mul__(self, other):
         """self * other"""
         if other.__class__.__name__ in ('int', 'float', 'int64', 'int32'):

@@ -7,6 +7,7 @@
 from components.freeze.main import FrozenOnly
 from objects.CSCG._3d.forms.localTrace.base.numbering.do.find import _3dCSCG_LocalTrace_Numbering_DoFind
 
+
 class _3dCSCG_LocalTrace_Numbering_Do(FrozenOnly):
     """"""
 
@@ -15,7 +16,6 @@ class _3dCSCG_LocalTrace_Numbering_Do(FrozenOnly):
         self._ltf_ = ltf
         self._find_ = _3dCSCG_LocalTrace_Numbering_DoFind(ltf)
         self._freeze_self_()
-
 
     @property
     def find(self):

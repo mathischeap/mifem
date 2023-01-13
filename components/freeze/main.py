@@ -32,7 +32,6 @@ class FrozenClass(FrozenOnly):
                 self.___sp___ = StandardProperties(self)
         return self.___sp___
 
-
     def ___PRIVATE_save___(self, filename, do_save=False):
         """Better be called from `mifem.save` when save an object."""
         _2bs_ = dict()

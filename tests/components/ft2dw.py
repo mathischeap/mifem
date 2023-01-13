@@ -50,7 +50,6 @@ def v_y(t, x, y):
     return - pi * sin(pi * x) * sin(pi * y) * exp(2*t)
 
 
-
 def fs(t, x, y):
     return sin(pi * x) * sin(pi * y) * exp(2*t)
 

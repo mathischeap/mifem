@@ -35,6 +35,7 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
         assert mesh.ndim == space.ndim == 3
         super().__init__(mesh, space, name)
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_form')
+        self.___kwargs___ = None
         assert self.ndim == 3, "CHECK ndim"
 
     @property
@@ -58,8 +59,8 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
         assert self.cochain.local is not None,  f"a of (a-b) has no cochain.local, cannot perform add operator."
         assert other.cochain.local is not None, f"b of (a-b) has no cochain.local, cannot perform add operator."
 
-        kwargs_A = self.___define_parameters___['kwargs']
-        kwargs_B = other.___define_parameters___['kwargs']
+        kwargs_A = self.___kwargs___
+        kwargs_B = other.___kwargs___
         if 'name' in kwargs_A:
             name_A = kwargs_A['name']
         else:
@@ -70,10 +71,19 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
             name_B = 'form_B'
 
         name = name_A + "-" + name_B
-        kwargs_A['name'] = name
+
+        kwargs = dict()
+        for key in kwargs_A:
+            if key == 'name':
+                kwargs['name'] = name
+            else:
+                kwargs[key] = kwargs_A[key]
+
+        if 'name' not in kwargs:
+            kwargs['name'] = name
 
         # noinspection PyArgumentList
-        result_form = self.__class__(self.mesh, self.space, **kwargs_A)
+        result_form = self.__class__(self.mesh, self.space, **kwargs)
 
         # MUST do: add the cochain local ------------------
         COCHAIN_LOCAL = dict()
@@ -95,8 +105,8 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
         assert self.cochain.local is not None,  f"a of (a+b) has no cochain.local, cannot perform add operator."
         assert other.cochain.local is not None, f"b of (a+b) has no cochain.local, cannot perform add operator."
 
-        kwargs_A = self.___define_parameters___['kwargs']
-        kwargs_B = other.___define_parameters___['kwargs']
+        kwargs_A = self.___kwargs___
+        kwargs_B = other.___kwargs___
         if 'name' in kwargs_A:
             name_A = kwargs_A['name']
         else:
@@ -107,10 +117,19 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
             name_B = 'form_B'
 
         name = name_A + "+" + name_B
-        kwargs_A['name'] = name
+
+        kwargs = dict()
+        for key in kwargs_A:
+            if key == 'name':
+                kwargs['name'] = name
+            else:
+                kwargs[key] = kwargs_A[key]
+
+        if 'name' not in kwargs:
+            kwargs['name'] = name
 
         # noinspection PyArgumentList
-        result_form = self.__class__(self.mesh, self.space, **kwargs_A)
+        result_form = self.__class__(self.mesh, self.space, **kwargs)
 
         # MUST do: add the cochain local ------------------
         COCHAIN_LOCAL = dict()
@@ -122,7 +141,6 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
         # ========================================================
         result_form.cochain.local = COCHAIN_LOCAL
         return result_form
-
 
     @lru_cache(maxsize=24)
     def ___PRIVATE_element_grid_data_generator_1___(self, i, density, zoom=1):

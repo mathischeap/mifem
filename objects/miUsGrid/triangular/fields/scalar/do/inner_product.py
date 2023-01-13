@@ -4,14 +4,12 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 10/5/2022 2:49 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 from components.freeze.main import FrozenOnly
 
 from objects.CSCG._2d.fields.scalar.do.cross_product.helpers.helper2 import ___SF_CROSS_PRODUCT_HELPER_2___
 
 from importlib import import_module
+
 
 class miUsTriangle_ScalarField_InnerProduct(FrozenOnly):
     """w = [0 0 w]^T, U = [u, v, 0]^T, A = w X U = [-wv wu 0]^T"""
@@ -36,14 +34,15 @@ class miUsTriangle_ScalarField_InnerProduct(FrozenOnly):
                     vector_class = getattr(import_module(base_path + 'scalar.main'),
                                            'miUsGrid_Triangular_Scalar')
 
-                    cp_vector = vector_class(self._sf_.mesh,
-                                                    IP,
-                                                    ftype='standard',
-                                                    valid_time=self._sf_.valid_time,
-                                                    name =self._sf_.standard_properties.name
-                                                          + '--inner-product--'
-                                                          + scalar.standard_properties.name
-                                                    )
+                    cp_vector = vector_class(
+                        self._sf_.mesh,
+                        IP,
+                        ftype='standard',
+                        valid_time=self._sf_.valid_time,
+                        name=self._sf_.standard_properties.name
+                        + '--inner-product--'
+                        + scalar.standard_properties.name
+                        )
                     return cp_vector
                 else:
                     raise NotImplementedError(
@@ -55,8 +54,3 @@ class miUsTriangle_ScalarField_InnerProduct(FrozenOnly):
                                           f"cannot do inner product.")
         else:
             raise NotImplementedError(f"a miUsGrid_Triangular_Scalar can not inner product a {scalar}.")
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

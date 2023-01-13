@@ -5,7 +5,8 @@
 @time: 2022/10/08 10:03 PM
 """
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from components.freeze.base import FrozenOnly
 
 # look, we only cache the dofs, not the cochains.
@@ -13,6 +14,7 @@ ___miUSGrid_global_BC_itp_Local_dofs_cache___ = {
     'iEE_ID': -1,
     'dofs': dict(),
 }
+
 
 class miUsGrid_Form_BC_Interpret_Local(FrozenOnly):
     """"""
@@ -23,7 +25,7 @@ class miUsGrid_Form_BC_Interpret_Local(FrozenOnly):
         self._mesh_ = f.mesh
         self._cochains_ = None
         # both dofs and cochains will be initialized and will not follow the form.BC in real time.
-        self.___Pr_parse_dofs___() # need no BC.CF
+        self.___Pr_parse_dofs___()  # need no BC.CF
         if self._f_.BC.CF is not None:
             self.___Pr_parse_cochains___()
         else:
@@ -44,7 +46,7 @@ class miUsGrid_Form_BC_Interpret_Local(FrozenOnly):
 
                 if self._mesh_.ndim == 3:
                     raise NotImplementedError()
-                elif  self._mesh_.ndim == 2:
+                elif self._mesh_.ndim == 2:
                     dofs = self._f_.numbering.do.find.local_dofs_on_element_edge(edge)
                 else:
                     raise Exception()
@@ -90,6 +92,7 @@ class miUsGrid_Form_BC_Interpret_Local(FrozenOnly):
     @property
     def cochains(self):
         return self._cochains_
+
 
 if __name__ == "__main__":
     # mpiexec -n 4 python objects/miUsGrid/base/form/base/BC/interpret/local.py

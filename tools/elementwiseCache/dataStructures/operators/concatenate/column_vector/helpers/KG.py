@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 class ___concatenate_HELPER_KeyGenerator___:
     """"""
     def __init__(self, vectors):

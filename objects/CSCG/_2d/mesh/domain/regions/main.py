@@ -145,7 +145,7 @@ class Regions(FrozenOnly):
         # we first find the internal pairing___________________________________________
         for rn in self.names:  # go through all regions
             _rm_[rn] = [[] for _ in range(4)]
-            for i in range(4):  # go through all 4 edges of each regions.
+            for i in range(4):  # go through all 4 edges of each region.
                 self_corner_indices = self.___found_edge_corner_global_numbering___(rn, i)
                 for rnrn in self.names:  # go through all regions except self
                     if rnrn != rn:
@@ -159,6 +159,7 @@ class Regions(FrozenOnly):
         for bn in self._domain_._boundary_names_:  # we of course go through all domain boundaries
             for db_i in self._domain_.domain_input.boundary_region_edges[bn]:
                 _region_name_, _region_edge_ = db_i.split('-')
+                # noinspection PyUnboundLocalVariable
                 _rm_[_region_name_][self(rn)._edge_name_to_index_(_region_edge_)].append(bn)
         # Now we check the regions map and extract more info____________________________
         # We first check each edge only appears at one place and extract the sides on domain boundaries

@@ -2,6 +2,7 @@
 from root.config.main import *
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
 from matplotlib import cm
 
 from components.freeze.main import FrozenOnly
@@ -206,7 +207,7 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
 
         boundaries_numb = self._domain_.boundaries.num
         boundaries_name = self._domain_.boundaries.names
-        boundary_name_color_dict = dict()
+        boundary_name_color_dict: dict = dict()
         if boundaries_numb > 10:
             corlormap = 'viridis'
         else:
@@ -245,36 +246,52 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
 
         return RB, RBN, boundary_name_color_dict, pb_text
 
-    def _matplot_mesh_(self, paper_version=False, region_boundary=True, density=6000, usetex=False,
-        show_numbering=False, saveto=None, corlormap='tab10', fontsize=12,
-        xlim=None, ylim=None, labelsize=15, ticksize=15, show_boundary_names=True,
-        domain_boundary_linewidth=3, region_boundary_linewidth=0.8, element_linewidth=0.4,
-        element_color='red'):
+    def _matplot_mesh_(
+            self, region_boundary=True, density=6000, usetex=False,
+            show_numbering=False,
+            saveto=None, pad_inches=0,
+            corlormap='tab10', fontsize=12,
+            xlim=None, ylim=None, xticks=None, yticks=None,
+            labelsize=15, ticksize=15, show_boundary_names=True,
+            highlight_domain_boundary=True,
+            domain_boundary_linewidth=3, region_boundary_linewidth=0.8, element_linewidth=0.4,
+            element_color='red', top_spine=True, bottom_spine=True, left_spine=True, right_spine=True,
+    ):
         """
-        :param paper_version: Plot a mesh suitable for a paper. Other, we plot much more
-            information which makes the plot messed.
-        :param region_boundary:
-        :param density:
-        :param usetex:
-        :param show_numbering:
-        :param saveto:
-        :param corlormap:
-        :param fontsize:
-        :param xlim:
-        :param ylim:
-        :param labelsize:
-        :param ticksize:
-        :param show_boundary_names:
-        :param domain_boundary_linewidth:
-        :param region_boundary_linewidth:
-        :param element_linewidth:
-        :param element_color:
-        :return:
+
+        Parameters
+        ----------
+        region_boundary
+        density
+        usetex
+        show_numbering
+        saveto
+        pad_inches
+        corlormap
+        fontsize
+        xlim
+        ylim
+        xticks
+        yticks
+        labelsize
+        ticksize
+        show_boundary_names
+        highlight_domain_boundary
+        domain_boundary_linewidth
+        region_boundary_linewidth
+        element_linewidth
+        element_color
+        top_spine
+        bottom_spine
+        left_spine
+        right_spine
+
+        Returns
+        -------
+
         """
         if RANK != MASTER_RANK:
             return
-        if paper_version:
-            return self.___PRIVATE_matplot_paper_version___()
 
         density = int(np.ceil(density / self._mesh_.elements.global_num))
         max_element_layout = 0
@@ -373,16 +390,25 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
                                    '\genfrac{}{}{0}{}{%s}{=}' % ptype + '\mathrm{%s}' % pb1
 
         # ___________ do the plot ______________________________________________________
-        plt.rc('text', usetex=usetex)
+        if saveto is not None:
+            matplotlib.use('Agg')
+        plt.rcParams.update({
+            "text.usetex": usetex,
+            "font.family": "Times New Roman"
+        })
         fig, ax = plt.subplots()
         ax.set_aspect('equal')
-        ax.spines['top'].set_visible(False)
-        ax.spines['right'].set_visible(False)
-        ax.spines['left'].set_visible(True)
-        ax.spines['bottom'].set_visible(True)
+        ax.spines['top'].set_visible(top_spine)
+        ax.spines['right'].set_visible(right_spine)
+        ax.spines['left'].set_visible(left_spine)
+        ax.spines['bottom'].set_visible(bottom_spine)
         plt.xlabel(r"$x$", fontsize=labelsize)
         plt.ylabel(r"$y$", fontsize=labelsize)
         plt.tick_params(axis='both', which='both', labelsize=ticksize)
+        if xticks is not None:
+            plt.xticks(xticks)
+        if yticks is not None:
+            plt.yticks(yticks)
         if xlim is not None:
             plt.xlim(xlim)
         if ylim is not None:
@@ -397,10 +423,15 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
             for ei in range(4):
                 if reodb[rn][ei] == 1:  # plot the domain boundary
                     bn = self._mesh_.domain.regions.map[rn][ei]
-                    ax.plot(RB[rn][ei][0], RB[rn][ei][1],
-                            color=boundary_name_color_dict[bn], linewidth=domain_boundary_linewidth)
-                    ax.plot(RB[rn][ei][0], RB[rn][ei][1],
-                            color='k', linewidth=0.1*domain_boundary_linewidth)
+                    if highlight_domain_boundary:
+                        ax.plot(RB[rn][ei][0], RB[rn][ei][1],
+                                color=boundary_name_color_dict[bn], linewidth=domain_boundary_linewidth)
+                        ax.plot(RB[rn][ei][0], RB[rn][ei][1],
+                                color='k', linewidth=0.1*domain_boundary_linewidth)
+                    else:
+                        ax.plot(RB[rn][ei][0], RB[rn][ei][1],
+                                color='k', linewidth=2*element_linewidth)
+
                     # Not an error, we just plot a thin line in line
                 else:
                     if region_boundary:  # plot the regions boundary
@@ -437,14 +468,10 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         plt.tight_layout()
         # __________ SAVE TO ___________________________________________________________
         if saveto is not None and saveto != '':
-            plt.savefig(saveto, bbox_inches='tight')
+            plt.savefig(saveto, bbox_inches='tight', pad_inches=pad_inches)
         else:
             plt.show()
 
         plt.close()
         # ------------------------------------------------------------------------------
         return fig
-
-    def ___PRIVATE_matplot_paper_version___(self):
-        """"""
-        raise NotImplementedError()

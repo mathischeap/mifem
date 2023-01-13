@@ -6,7 +6,7 @@ we still have them named and in `mesh.domain.regions.map` shown.
 However, in mesh.boundaries, the periodic boundaries are not considered. Because they have no
 differences to element boundary.
 
-Therefore, for a periodic domain, mesh.boundaries will have no valid boundary.
+Therefore, for a periodic domain, `mesh.boundaries` will have no valid boundary.
 
 This is very important. The reason we have this is because of the logic we used to code the mesh. We first
 generate the mesh.elements.map through `regions.map`, then we adjust the elements.map through studying the
@@ -178,7 +178,7 @@ class _2dCSCG_Mesh_Boundaries(FrozenOnly):
 if __name__ == "__main__":
     # mpiexec python _2dCSCG\mesh\boundaries.py
     from objects.CSCG._2d.master import MeshGenerator
-    mesh = MeshGenerator('crazy', bounds=((0,3),(0,3)))([2,3])
+    mesh = MeshGenerator('crazy', bounds=((0, 3), (0, 3)))([2, 3])
     mesh.boundaries.___PRIVATE_parse_boundaries___()
     print(RANK, mesh.boundaries.range_of_element_edges)
     print(RANK, mesh.boundaries.range_of_trace_elements)

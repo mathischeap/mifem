@@ -38,6 +38,12 @@ class _3dCSCG_0Trace(_3dCSCG_Standard_Trace, ABC):
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_trace_0form')
         self._discretize_ = _3dCSCG_0Trace_Discretize(self)
         self._visualize_ = None
+        self.___kwargs___ = {
+            'hybrid': hybrid,
+            'orientation': orientation,
+            'numbering_parameters': numbering_parameters,
+            'name': name,
+        }
         self._freeze_self_()
 
     def ___Pr_check_CF___(self, func_body):

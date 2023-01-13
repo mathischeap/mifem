@@ -37,6 +37,12 @@ class _3dCSCG_0Edge(_3dCSCG_Edge, ABC):
         self._k_ = 0
         self.standard_properties.___PRIVATE_add_tag___('3dCSCG_edge_0form')
         self._discretize_ = _3dCSCG_Edge0Form_Discretize(self)
+        self.___kwargs___ = {
+            'hybrid': hybrid,
+            'orientation': orientation,
+            'numbering_parameters': numbering_parameters,
+            'name': name,
+        }
         self._freeze_self_()
 
     def ___Pr_check_CF___(self, func_body):

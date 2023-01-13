@@ -113,12 +113,12 @@ class BottomCustomizedRectangle(DomainInputBase):
         return self._bottom_Jacobian_
 
     @classproperty
-    def statistic(cls):
+    def statistic(self):
         return {'periodic': False,
                 'region num': 1,
                 'mesh boundary num': 4,  # the amount of mesh boundaries (instead of domain boundaries)
                 }
 
     @classproperty
-    def random_parameters(cls):
+    def random_parameters(self):
         return {}

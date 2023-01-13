@@ -75,7 +75,7 @@ def test_APP_NO4_Poisson_hMSEM_test_1():
     if RANK == MASTER_RANK:
         print(">>> [test_APP_NO4_Poisson_hMSEM_test_1] ...... ", flush=True)
 
-    p_error_L2, u_error_L2 = PoissonSolver1(0.125, 8, 7, 3, 4)
+    p_error_L2, u_error_L2 = PoissonSolver1(0.0, 8, 8, 3, 3)
 
     assert p_error_L2 < 0.0008
     assert u_error_L2 < 0.002
@@ -84,6 +84,6 @@ def test_APP_NO4_Poisson_hMSEM_test_1():
 
 
 if __name__ == '__main__':
-    # mpiexec -n 4 python objects/CSCG/_2d/__tests__/unittests/APP.py
-    test_APP_NO3_Euler_ShearLayerRollup_Direct_test()
+    # mpiexec -n 4 python tests/objects/CSCG/_2d/unittests/APP.py
+    test_APP_NO4_Poisson_hMSEM_test_1()
     # test_APP_NO2_scalar_Laplace_essential_BC_iterative_solver()

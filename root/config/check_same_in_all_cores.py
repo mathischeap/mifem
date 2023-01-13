@@ -36,4 +36,5 @@ def CHECK_SAME_IN_ALL_CORES(*args):
 
     ToF, not_same_cores = COMM.bcast([ToF, not_same_cores], root=SECRETARY_RANK)
 
-    assert ToF, f"inputs in all cores must be same. These cores: {not_same_cores} have different inputs to core 0."
+    assert ToF, f"inputs in all cores must be same. These cores: " \
+                f"{not_same_cores} have different inputs to core 0."

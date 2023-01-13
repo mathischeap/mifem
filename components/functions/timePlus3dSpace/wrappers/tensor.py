@@ -48,7 +48,6 @@ class t3dTensor(FrozenOnly):
     def ndim(self):
         return 3
 
-
     @property
     def _NPD00_(self):
         if self.__NPD00__ is None:

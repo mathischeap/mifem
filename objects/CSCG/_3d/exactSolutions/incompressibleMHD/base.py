@@ -229,7 +229,6 @@ class incompressible_MHD_Base(Base):
         if self._NPDf_vz_ is None:
             self._NPDf_vz_ = NumericalPartialDerivative_txyz_Functions(self.v_z)
         return self._NPDf_vz_('z')(t, x, y, z)
-    
 
     def w_xx(self, t, x, y, z):
         if self._NPDf_wx_ is None:
@@ -346,7 +345,6 @@ class incompressible_MHD_Base(Base):
         if self._NPDf_Ex_ is None:
             self._NPDf_Ex_ = NumericalPartialDerivative_txyz_Functions(self.Ex)
         return self._NPDf_Ex_('z')(t, x, y, z)
-    
 
     def Ey_x(self, t, x, y, z):
         if self._NPDf_Ey_ is None:
@@ -362,7 +360,6 @@ class incompressible_MHD_Base(Base):
         if self._NPDf_Ey_ is None:
             self._NPDf_Ey_ = NumericalPartialDerivative_txyz_Functions(self.Ey)
         return self._NPDf_Ey_('z')(t, x, y, z)
-    
 
     def Ez_x(self, t, x, y, z):
         if self._NPDf_Ez_ is None:

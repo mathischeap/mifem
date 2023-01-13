@@ -7,6 +7,7 @@
          TU Delft, Delft, Netherlands
 
 """
+from abc import ABC
 
 from objects.CSCG._2d.forms.base import _2dCSCG_FORM_BASE
 from objects.CSCG._2d.forms.standard.base.numbering.main import _2dCSCG_Standard_Form_Numbering
@@ -23,7 +24,7 @@ from objects.CSCG.base.forms.standard.main import CSCG_Standard_Form
 from copy import deepcopy
 
 
-class _2dCSCG_Standard_Form(CSCG_Standard_Form, _2dCSCG_FORM_BASE, ndim=2):
+class _2dCSCG_Standard_Form(CSCG_Standard_Form, _2dCSCG_FORM_BASE, ABC, ndim=2):
     """This is the parent of all 2d standard forms.
 
     :param mesh:
@@ -56,7 +57,6 @@ class _2dCSCG_Standard_Form(CSCG_Standard_Form, _2dCSCG_FORM_BASE, ndim=2):
         self._DO_ = _2dCSCG_Standard_Form_DO(self)
         self._dofs_ = None
         self._export_ = None
-
 
     @property
     def shadow(self):

@@ -106,6 +106,7 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
 
             reodb = self._mesh_.domain.regions.edges_on_domain_boundaries
             # text: element numbering data ...
+            RBN = None
             if show_boundary_names:
                 RBN = {}
                 for rn in self._mesh_.domain.regions.names:
@@ -126,7 +127,7 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
             # _____ get personal color for boundaries ________________________________________
             boundaries_numb = self._mesh_.domain.boundaries.num
             boundaries_name = self._mesh_.domain.boundaries.names
-            boundary_name_color_dict = dict()
+            boundary_name_color_dict: dict = dict()
             if boundaries_numb > 10 and corlormap == 'tab10':
                 corlormap = 'viridis'
             color = cm.get_cmap(corlormap, boundaries_numb)
@@ -150,16 +151,17 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
                     boundary_name_color_dict[pb2] = boundary_name_color_dict[pb1]
 
                     if usetex:
-                        pb_text[pb1] = r'\mathrm{%s}' % pb1 + \
-                                       r'\stackrel{\mathrm{%s}}{=}' % ptype + '\mathrm{%s}' % pb2
-                        pb_text[pb2] = r'\mathrm{%s}' % pb2 + \
-                                       r'\stackrel{\mathrm{%s}}{=}' % ptype + '\mathrm{%s}' % pb1
+                        pb_text[pb1] = r'\\mathrm{%s}' % pb1 + \
+                                       r'\\stackrel{\\mathrm{%s}}{=}' % ptype + '\\mathrm{%s}' % pb2
+                        pb_text[pb2] = r'\\mathrm{%s}' % pb2 + \
+                                       r'\\stackrel{\\mathrm{%s}}{=}' % ptype + '\\mathrm{%s}' % pb1
                     else:
-                        pb_text[pb1] = r'\mathrm{%s}' % pb1 + \
-                                       r'\genfrac{}{}{0}{}{%s}{=}' % ptype + '\mathrm{%s}' % pb2
-                        pb_text[pb2] = r'\mathrm{%s}' % pb2 + \
-                                       r'\genfrac{}{}{0}{}{%s}{=}' % ptype + '\mathrm{%s}' % pb1
+                        pb_text[pb1] = r'\\mathrm{%s}' % pb1 + \
+                                       r'\\genfrac{}{}{0}{}{%s}{=}' % ptype + '\\mathrm{%s}' % pb2
+                        pb_text[pb2] = r'\\mathrm{%s}' % pb2 + \
+                                       r'\\genfrac{}{}{0}{}{%s}{=}' % ptype + '\\mathrm{%s}' % pb1
 
+            element_center_coordinates = None
             if show_numbering:
                 element_center_coordinates = {}
                 for rn in self._mesh_.domain.regions.names:
@@ -196,7 +198,6 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
                     ax.plot(dy_lines[0], dy_lines[1], color='gray', linewidth=0.75*element_linewidth)
                 for dx_lines in REI[rn][1]:  # plot dx mesh lines
                     ax.plot(dx_lines[0], dx_lines[1], color='gray', linewidth=0.75*element_linewidth)
-
 
             for rn in self._mesh_.domain.regions.names:
                 for ei in range(4):
@@ -239,7 +240,7 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
             if title is True:
                 title = f"numbering of {self._f_.orientation}-{self._f_.k}-form: " + \
                         f"'{self._f_.standard_properties.name}'"
-                if self._f_.IS_hybrid:
+                if self._f_.whether.hybrid:
                     title += " (hybrid)"
                 plt.title(title)
             elif title is False:
@@ -252,7 +253,7 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
             # plt.tight_layout()
             return cm.get_cmap('Dark2', 8)
 
-    def _matplot__0Form_Inner_numbering(self, saveto=None, **kwargs):
+    def _matplot__2dCSCG_0Form_Inner_numbering(self, saveto=None, **kwargs):
         """"""
         assert self._f_.k == 0
         nodes = self._f_.space.nodes
@@ -278,57 +279,56 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
             local_numbering = self._f_.numbering.local[0]
             assert np.shape(local_numbering) == (self._f_.p[0]+1, self._f_.p[1]+1)
         else:
-            pass
+            return
 
-        if RANK == MASTER_RANK:
-            fig, ax = plt.subplots(figsize=(15, 9))
-            LN_colors = self._matplot_mesh_BASE_(ax, **kwargs)
+        fig, ax = plt.subplots(figsize=(15, 9))
+        LN_colors = self._matplot_mesh_BASE_(ax, **kwargs)
 
-            # .. now, we attach the numbering of 0-form to the fig.
-            is_hybrid = self._f_.IS_hybrid
-            for k in mapping:  # go through all elements (kth)
-                mpk = mapping[k]
-                gtk = gathering[k]
-                ck = LN_colors(k % 8)
-                for j in range(self._f_.p[1]+1):
-                    for i in range(self._f_.p[0]+1):
-                        local_number = local_numbering[i, j]
-                        x = mpk[0][i, j]
-                        y = mpk[1][i, j]
-                        text = gtk[local_number]
-                        if is_hybrid:
-                            if i == 0 and j == 0:  # corner UL
-                                ax.text(x, y, str(text), c=ck, va='bottom', ha='left')
-                            elif i == self._f_.p[0] and j == 0:  # corner DL
-                                ax.text(x, y, str(text), c=ck, va='bottom', ha='right')
-                            elif i == 0 and j == self._f_.p[1]:  # corner UR
-                                ax.text(x, y, str(text), c=ck, va='top', ha='left')
-                            elif i == self._f_.p[0] and j == self._f_.p[1]:
-                                ax.text(x, y, str(text), c=ck, va='top', ha='right')
-                            elif i == 0:
-                                ax.text(x, y, str(text), c=ck, ha='left', va='center')
-                            elif i == self._f_.p[0]:
-                                ax.text(x, y, str(text), c=ck, ha='right', va='center')
-                            elif j == 0:
-                                ax.text(x, y, str(text), c=ck, va='bottom', ha='center')
-                            elif j == self._f_.p[1]:
-                                ax.text(x, y, str(text), c=ck, va='top', ha='center')
-                            else:
-                                ax.text(x, y, str(text), c=ck, va='center', ha='center')
+        # .. now, we attach the numbering of 0-form to the fig.
+        is_hybrid = self._f_.whether.hybrid
+        for k in mapping:  # go through all elements (kth)
+            mpk = mapping[k]
+            gtk = gathering[k]
+            ck = LN_colors(k % 8)
+            for j in range(self._f_.p[1]+1):
+                for i in range(self._f_.p[0]+1):
+                    local_number = local_numbering[i, j]
+                    x = mpk[0][i, j]
+                    y = mpk[1][i, j]
+                    text = gtk[local_number]
+                    if is_hybrid:
+                        if i == 0 and j == 0:  # corner UL
+                            ax.text(x, y, str(text), c=ck, va='bottom', ha='left')
+                        elif i == self._f_.p[0] and j == 0:  # corner DL
+                            ax.text(x, y, str(text), c=ck, va='bottom', ha='right')
+                        elif i == 0 and j == self._f_.p[1]:  # corner UR
+                            ax.text(x, y, str(text), c=ck, va='top', ha='left')
+                        elif i == self._f_.p[0] and j == self._f_.p[1]:
+                            ax.text(x, y, str(text), c=ck, va='top', ha='right')
+                        elif i == 0:
+                            ax.text(x, y, str(text), c=ck, ha='left', va='center')
+                        elif i == self._f_.p[0]:
+                            ax.text(x, y, str(text), c=ck, ha='right', va='center')
+                        elif j == 0:
+                            ax.text(x, y, str(text), c=ck, va='bottom', ha='center')
+                        elif j == self._f_.p[1]:
+                            ax.text(x, y, str(text), c=ck, va='top', ha='center')
                         else:
                             ax.text(x, y, str(text), c=ck, va='center', ha='center')
+                    else:
+                        ax.text(x, y, str(text), c=ck, va='center', ha='center')
 
-            plt.show()
-            # ... SAVE TO ...
-            if saveto is not None and saveto != '':
-                plt.savefig(saveto, bbox_inches='tight')
-            # ...
-            return fig
+        plt.show()
+        # ... SAVE TO ...
+        if saveto is not None and saveto != '':
+            plt.savefig(saveto, bbox_inches='tight')
+        # ...
+        return fig
 
-    def _matplot__0Form_Outer_numbering(self, **kwargs):
-        return self._matplot__0Form_Inner_numbering(**kwargs)
+    def _matplot__2dCSCG_0Form_Outer_numbering(self, **kwargs):
+        return self._matplot__2dCSCG_0Form_Inner_numbering(**kwargs)
 
-    def _matplot__1Form_Inner_numbering(self, saveto=None, **kwargs):
+    def _matplot__2dCSCG_1Form_Inner_numbering(self, saveto=None, **kwargs):
         """"""
         assert self._f_.k == 1 and self._f_.orientation == 'inner'
         nodes = self._f_.space.nodes
@@ -367,60 +367,59 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
             assert np.shape(local_numbering_dx) == (self._f_.p[0], self._f_.p[1] + 1)
             assert np.shape(local_numbering_dy) == (self._f_.p[0] + 1, self._f_.p[1])
         else:
-            pass
+            return
 
-        if RANK == MASTER_RANK:
-            fig, ax = plt.subplots(figsize=(15, 9))
-            LN_colors = self._matplot_mesh_BASE_(ax, **kwargs)
+        fig, ax = plt.subplots(figsize=(15, 9))
+        LN_colors = self._matplot_mesh_BASE_(ax, **kwargs)
 
-            # .. now, we attach the numbering of inner 1-form to the fig.
-            is_hybrid = self._f_.IS_hybrid
-            for k in range(self._mesh_.elements.global_num):  # go through all elements (kth)
-                mpk_x = mapping_dx[k]
-                mpk_y = mapping_dy[k]
-                gtk = gathering[k]
-                ck = LN_colors(k % 8)
-                # ..... dx goes firstly; shift for outer-oriented-1-forms...
-                for j in range(self._f_.p[1] + 1):
-                    for i in range(self._f_.p[0]):
-                        local_number = local_numbering_dx[i, j]
-                        x = mpk_x[0][i, j]
-                        y = mpk_x[1][i, j]
-                        text = gtk[local_number]
-                        if is_hybrid:
-                            if j == 0:
-                                ax.text(x, y, str(text), c=ck, va='bottom', ha='center')
-                            elif j == self._f_.p[1]:
-                                ax.text(x, y, str(text), c=ck, va='top', ha='center')
-                            else:
-                                ax.text(x, y, str(text), c=ck, va='center', ha='center')
+        # .. now, we attach the numbering of inner 1-form to the fig.
+        is_hybrid = self._f_.whether.hybrid
+        for k in range(self._mesh_.elements.global_num):  # go through all elements (kth)
+            mpk_x = mapping_dx[k]
+            mpk_y = mapping_dy[k]
+            gtk = gathering[k]
+            ck = LN_colors(k % 8)
+            # ..... dx goes firstly; shift for outer-oriented-1-forms...
+            for j in range(self._f_.p[1] + 1):
+                for i in range(self._f_.p[0]):
+                    local_number = local_numbering_dx[i, j]
+                    x = mpk_x[0][i, j]
+                    y = mpk_x[1][i, j]
+                    text = gtk[local_number]
+                    if is_hybrid:
+                        if j == 0:
+                            ax.text(x, y, str(text), c=ck, va='bottom', ha='center')
+                        elif j == self._f_.p[1]:
+                            ax.text(x, y, str(text), c=ck, va='top', ha='center')
                         else:
                             ax.text(x, y, str(text), c=ck, va='center', ha='center')
-                # ..... dy goes secondly; shift for outer-oriented-1-forms...
-                for j in range(self._f_.p[1]):
-                    for i in range(self._f_.p[0]+1):
-                        local_number = local_numbering_dy[i, j]
-                        x = mpk_y[0][i, j]
-                        y = mpk_y[1][i, j]
-                        text = gtk[local_number]
-                        if is_hybrid:
-                            if i == 0:
-                                ax.text(x, y, str(text), c=ck, ha='left', va='center')
-                            elif i == self._f_.p[0]:
-                                ax.text(x, y, str(text), c=ck, ha='right', va='center')
-                            else:
-                                ax.text(x, y, str(text), c=ck, va='center', ha='center')
+                    else:
+                        ax.text(x, y, str(text), c=ck, va='center', ha='center')
+            # ..... dy goes secondly; shift for outer-oriented-1-forms...
+            for j in range(self._f_.p[1]):
+                for i in range(self._f_.p[0]+1):
+                    local_number = local_numbering_dy[i, j]
+                    x = mpk_y[0][i, j]
+                    y = mpk_y[1][i, j]
+                    text = gtk[local_number]
+                    if is_hybrid:
+                        if i == 0:
+                            ax.text(x, y, str(text), c=ck, ha='left', va='center')
+                        elif i == self._f_.p[0]:
+                            ax.text(x, y, str(text), c=ck, ha='right', va='center')
                         else:
                             ax.text(x, y, str(text), c=ck, va='center', ha='center')
+                    else:
+                        ax.text(x, y, str(text), c=ck, va='center', ha='center')
 
-            plt.show()
-            # ... SAVE TO ...
-            if saveto is not None and saveto != '':
-                plt.savefig(saveto, bbox_inches='tight')
-            # ...
-            return fig
+        plt.show()
+        # ... SAVE TO ...
+        if saveto is not None and saveto != '':
+            plt.savefig(saveto, bbox_inches='tight')
+        # ...
+        return fig
 
-    def _matplot__1Form_Outer_numbering(self, saveto=None, **kwargs):
+    def _matplot__2dCSCG_1Form_Outer_numbering(self, saveto=None, **kwargs):
         """"""
         assert self._f_.k == 1 and self._f_.orientation == 'outer'
         nodes = self._f_.space.nodes
@@ -459,60 +458,59 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
             assert np.shape(local_numbering_dx) == (self._f_.p[0], self._f_.p[1] + 1)
             assert np.shape(local_numbering_dy) == (self._f_.p[0] + 1, self._f_.p[1])
         else:
-            pass
+            return
 
-        if RANK == MASTER_RANK:
-            fig, ax = plt.subplots(figsize=(15, 9))
-            LN_colors = self._matplot_mesh_BASE_(ax, **kwargs)
+        fig, ax = plt.subplots(figsize=(15, 9))
+        LN_colors = self._matplot_mesh_BASE_(ax, **kwargs)
 
-            # .. now, we attach the numbering of outer 1-form to the fig.
-            is_hybrid = self._f_.IS_hybrid
-            for k in range(self._mesh_.elements.global_num):  # go through all elements (kth)
-                mpk_x = mapping_dx[k]
-                mpk_y = mapping_dy[k]
-                gtk = gathering[k]
-                ck = LN_colors(k % 8)
-                # ..... dy goes firstly; shift for inner-oriented-1-forms...
-                for j in range(self._f_.p[1]):
-                    for i in range(self._f_.p[0]+1):
-                        local_number = local_numbering_dy[i, j]
-                        x = mpk_y[0][i, j]
-                        y = mpk_y[1][i, j]
-                        text = gtk[local_number]
-                        if is_hybrid:
-                            if i == 0:
-                                ax.text(x, y, str(text), c=ck, ha='left', va='center')
-                            elif i == self._f_.p[0]:
-                                ax.text(x, y, str(text), c=ck, ha='right', va='center')
-                            else:
-                                ax.text(x, y, str(text), c=ck, va='center', ha='center')
+        # .. now, we attach the numbering of outer 1-form to the fig.
+        is_hybrid = self._f_.whether.hybrid
+        for k in range(self._mesh_.elements.global_num):  # go through all elements (kth)
+            mpk_x = mapping_dx[k]
+            mpk_y = mapping_dy[k]
+            gtk = gathering[k]
+            ck = LN_colors(k % 8)
+            # ..... dy goes firstly; shift for inner-oriented-1-forms...
+            for j in range(self._f_.p[1]):
+                for i in range(self._f_.p[0]+1):
+                    local_number = local_numbering_dy[i, j]
+                    x = mpk_y[0][i, j]
+                    y = mpk_y[1][i, j]
+                    text = gtk[local_number]
+                    if is_hybrid:
+                        if i == 0:
+                            ax.text(x, y, str(text), c=ck, ha='left', va='center')
+                        elif i == self._f_.p[0]:
+                            ax.text(x, y, str(text), c=ck, ha='right', va='center')
                         else:
                             ax.text(x, y, str(text), c=ck, va='center', ha='center')
-                # ..... dx goes secondly; shift for inner-oriented-1-forms...
-                for j in range(self._f_.p[1]+1):
-                    for i in range(self._f_.p[0]):
-                        local_number = local_numbering_dx[i, j]
-                        x = mpk_x[0][i, j]
-                        y = mpk_x[1][i, j]
-                        text = gtk[local_number]
-                        if is_hybrid:
-                            if j == 0:
-                                ax.text(x, y, str(text), c=ck, va='bottom', ha='center')
-                            elif j == self._f_.p[1]:
-                                ax.text(x, y, str(text), c=ck, va='top', ha='center')
-                            else:
-                                ax.text(x, y, str(text), c=ck, va='center', ha='center')
+                    else:
+                        ax.text(x, y, str(text), c=ck, va='center', ha='center')
+            # ..... dx goes secondly; shift for inner-oriented-1-forms...
+            for j in range(self._f_.p[1]+1):
+                for i in range(self._f_.p[0]):
+                    local_number = local_numbering_dx[i, j]
+                    x = mpk_x[0][i, j]
+                    y = mpk_x[1][i, j]
+                    text = gtk[local_number]
+                    if is_hybrid:
+                        if j == 0:
+                            ax.text(x, y, str(text), c=ck, va='bottom', ha='center')
+                        elif j == self._f_.p[1]:
+                            ax.text(x, y, str(text), c=ck, va='top', ha='center')
                         else:
                             ax.text(x, y, str(text), c=ck, va='center', ha='center')
+                    else:
+                        ax.text(x, y, str(text), c=ck, va='center', ha='center')
 
-            plt.show()
-            # ... SAVE TO ...
-            if saveto is not None and saveto != '':
-                plt.savefig(saveto, bbox_inches='tight')
-            # ...
-            return fig
+        plt.show()
+        # ... SAVE TO ...
+        if saveto is not None and saveto != '':
+            plt.savefig(saveto, bbox_inches='tight')
+        # ...
+        return fig
 
-    def _matplot__2Form_Inner_numbering(self, saveto=None, **kwargs):
+    def _matplot__2dCSCG_2Form_Inner_numbering(self, saveto=None, **kwargs):
         """"""
         assert self._f_.k == 2
         nodes = self._f_.space.nodes
@@ -541,34 +539,33 @@ class _2dCSCG_Numbering_Visualize(FrozenOnly):
             local_numbering = self._f_.numbering.local[0]
             assert np.shape(local_numbering) == (self._f_.p[0], self._f_.p[1])
         else:
-            pass
+            return
 
-        if RANK == MASTER_RANK:
-            fig, ax = plt.subplots(figsize=(15, 9))
-            LN_colors = self._matplot_mesh_BASE_(ax, **kwargs)
+        fig, ax = plt.subplots(figsize=(15, 9))
+        LN_colors = self._matplot_mesh_BASE_(ax, **kwargs)
 
-            # .. now, we attach the numbering of 0-form to the fig.
-            for k in mapping:  # go through all elements (kth)
-                mpk = mapping[k]
-                gtk = gathering[k]
-                ck = LN_colors(k % 8)
-                for j in range(self._f_.p[1]):
-                    for i in range(self._f_.p[0]):
-                        local_number = local_numbering[i, j]
-                        x = mpk[0][i, j]
-                        y = mpk[1][i, j]
-                        text = gtk[local_number]
-                        ax.text(x, y, str(text), c=ck, va='center', ha='center')
+        # .. now, we attach the numbering of 0-form to the fig.
+        for k in mapping:  # go through all elements (kth)
+            mpk = mapping[k]
+            gtk = gathering[k]
+            ck = LN_colors(k % 8)
+            for j in range(self._f_.p[1]):
+                for i in range(self._f_.p[0]):
+                    local_number = local_numbering[i, j]
+                    x = mpk[0][i, j]
+                    y = mpk[1][i, j]
+                    text = gtk[local_number]
+                    ax.text(x, y, str(text), c=ck, va='center', ha='center')
 
-            plt.show()
-            # ... SAVE TO ...
-            if saveto is not None and saveto != '':
-                plt.savefig(saveto, bbox_inches='tight')
-            # ...
-            return fig
+        plt.show()
+        # ... SAVE TO ...
+        if saveto is not None and saveto != '':
+            plt.savefig(saveto, bbox_inches='tight')
+        # ...
+        return fig
 
-    def _matplot__2Form_Outer_numbering(self, **kwargs):
-        return self._matplot__2Form_Inner_numbering(**kwargs)
+    def _matplot__2dCSCG_2Form_Outer_numbering(self, **kwargs):
+        return self._matplot__2dCSCG_2Form_Inner_numbering(**kwargs)
 
     def local(self, **kwargs):
         """Visualize the local numbering."""

@@ -4,9 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/08/29 7:34 PM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 
 from components.freeze.base import FrozenOnly
 
@@ -30,8 +27,3 @@ class ipV_Helper(FrozenOnly):
     def __call__(self, e):
         """"""
         raise NotImplementedError()
-
-
-if __name__ == "__main__":
-    # mpiexec -n 4 python 
-    pass

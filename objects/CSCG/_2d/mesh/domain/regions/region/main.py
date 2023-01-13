@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
 from objects.CSCG._2d.mesh.domain.regions.region.interpolations.allocator import InterpolationSearcher
 from objects.CSCG._2d.mesh.domain.regions.region.edge_geometries.allocator import EdgeGeometryDispatcher
 from objects.CSCG._2d.mesh.domain.regions.region.types_wrt_metric.allocator import TypeWr2MetricGiver
@@ -14,8 +13,6 @@ from components.decorators.all import accepts
 
 from objects.CSCG._2d.mesh.domain.regions.region.inheriting.topology import RegionTopology
 import numpy as np
-
-
 
 
 class Region(RegionTopology, FrozenOnly):
@@ -79,7 +76,6 @@ class Region(RegionTopology, FrozenOnly):
         else:
             return TypeWr2MetricGiver('chaotic')(self)
 
-
     @property
     def type_wrt_metric(self):
         return self._type_wrt_metric_
@@ -131,7 +127,7 @@ class Region(RegionTopology, FrozenOnly):
         _eg_ = {}
         for i in range(self.num_edges()):
             _et_ = self._edge_types_[i]
-            if _et_ is None: # when we do not mention, it is straight, not free.
+            if _et_ is None:  # when we do not mention, it is straight, not free.
                 _et_ = ('straight',)
             _cc_ = np.array(self.corner_coordinates)[list(self._edge_corner_local_numbering_(i))]
             _eg_[self._edge_index_to_name_(i)] = EdgeGeometryDispatcher(_et_)(_cc_)

@@ -49,7 +49,6 @@ class _2dCSCG_ScalarField_DO(FrozenOnly):
         else:
             raise NotImplementedError()
 
-
     def compute_Ln_norm(self, n=1, quad_degree=None):
         """We compute Ln norm of self.
 

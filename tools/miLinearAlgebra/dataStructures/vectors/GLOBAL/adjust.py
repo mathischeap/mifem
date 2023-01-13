@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
 from components.freeze.main import FrozenOnly
 
 

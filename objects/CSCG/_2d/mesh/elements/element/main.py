@@ -17,6 +17,9 @@ class _2dCSCG_Mesh_Element(FrozenOnly):
         self._whether_ = _2dCSCG_Mesh_Whether(self)
         self._freeze_self_()
 
+    def __repr__(self):
+        return f'2dCSCG-mesh-{self._mesh_.domain.name}--element#{self._i_}'
+
     @property
     def i(self):
         return self._i_

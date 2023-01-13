@@ -4,11 +4,6 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 2022/08/29 7:34 PM
 """
-import sys
-
-if './' not in sys.path:
-    sys.path.append('./')
-
 from components.freeze.base import FrozenOnly
 from components.quadrature import Quadrature
 import numpy as np
@@ -63,8 +58,6 @@ class ipS_Helper(FrozenOnly):
         self.ZeroVec = csc_matrix(np.zeros((sf.num.basis, 1)))
         self._freeze_self_()
 
-
-
     def __call__(self, i):
         """for ith mesh element."""
         element = self.mesh.elements[i]
@@ -94,7 +87,6 @@ class ipS_Helper(FrozenOnly):
                     TEct = self.mesh.trace.elements[TE].coordinate_transformation
                     C_Jacobian = TEct.constant.Jacobian
 
-
                     if C_Jacobian is not None:
                         Vs = csc_matrix(
                                 np.einsum(
@@ -110,8 +102,3 @@ class ipS_Helper(FrozenOnly):
                     pass
 
             return sum(V)
-
-
-if __name__ == "__main__":
-    # mpiexec -n 4 python objects/CSCG/_2d/forms/standard/_0_form/outer/boundary_integrate/helpers/ipS_helper.py
-    pass

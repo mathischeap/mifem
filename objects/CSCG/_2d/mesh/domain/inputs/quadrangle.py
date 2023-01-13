@@ -17,7 +17,6 @@ class Quadrangle(DomainInputBase):
         self.region_type_wr2_metric = {'R:R': 'transfinite'}
         self.region_sequence = ('R:R',)
 
-
     @classproperty
     def statistic(cls):
         return {'periodic': False,

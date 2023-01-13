@@ -4,6 +4,7 @@ from components.decorators.classproperty.main import classproperty
 import random
 from root.config.main import MASTER_RANK, RANK, COMM
 
+
 class Rectangle(DomainInputBase):
     """ A rectangle computational whose edges are parallel to the axes.
 

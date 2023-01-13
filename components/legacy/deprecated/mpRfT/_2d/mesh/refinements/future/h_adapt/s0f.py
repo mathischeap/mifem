@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('/')
+if './' not in sys.path:
+    sys.path.append('/')
 
 from components.freeze.base import FrozenOnly
 from root.config.main import COMM, MPI, np
@@ -31,9 +32,9 @@ class hAdapt_S0F(FrozenOnly):
 
     def ___A1___(self, levels):
         """"""
-        #------- check levels -------------------------------------------------------------
+        # ------- check levels -------------------------------------------------------------
         if isinstance(levels, (int, float)):
-            levels = np.array([levels,])
+            levels = np.array([levels, ])
         else:
             levels = list(levels)
             levels.sort()

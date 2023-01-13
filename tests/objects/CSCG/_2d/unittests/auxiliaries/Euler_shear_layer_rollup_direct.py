@@ -57,7 +57,6 @@ def Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename
     E12 = E21.T
     C = w.special.cross_product_1f__ip_1f(u, u)
 
-
     # ---------- initial condition -----------------------------------------------------------
     u.CF = es.velocity
     u.CF.current_time = t0
@@ -114,7 +113,6 @@ def Euler_shear_layer_rollup_direct_test(K, N, dt, t, image_folder, RDF_filename
     b2 = EWC_ColumnVector(mesh, P.num.basis)
     b = concatenate([b1, b2])
     b.gathering_matrix = (u, P)
-
 
     LSuP = LinearSystem(A, b)
     LSuP.customize.identify_global_row(-1)

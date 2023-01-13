@@ -12,9 +12,6 @@ div u = 0
 @contact: zhangyi_aero@hotmail.com
 @time: 10/10/2022 1:27 AM
 """
-import sys
-
-if './' not in sys.path: sys.path.append('./')
 
 import numpy as np
 from objects.miUsGrid.triangular.exactSolution.base import miUsTriangle_ExactSolutionBase
@@ -28,6 +25,7 @@ from objects.miUsGrid.triangular.fields.vector.main import miUsGrid_Triangular_V
 from objects.miUsGrid.triangular.fields.scalar.main import miUsGrid_Triangular_Scalar
 
 from components.numerical._2dSpace.partial_derivative import NumericalPartialDerivative_xy
+
 
 class Stokes(miUsTriangle_ExactSolutionBase):
     """"""
@@ -58,50 +56,49 @@ class Stokes(miUsTriangle_ExactSolutionBase):
 
         self._freeze_self_()
 
-
-
     def u(self, t, x, y):
         raise NotImplementedError()
+
     def u_x(self, t, x, y):
         if self._NPDf_u_ is None:
             self._NPDf_u_ = NumericalPartialDerivative_txy_Functions(self.u)
         return self._NPDf_u_('x')(t, x, y)
+
     def u_y(self, t, x, y):
         if self._NPDf_u_ is None:
             self._NPDf_u_ = NumericalPartialDerivative_txy_Functions(self.u)
         return self._NPDf_u_('y')(t, x, y)
 
-
-
     def v(self, t, x, y):
         raise NotImplementedError()
+
     def v_x(self, t, x, y):
         if self._NPDf_v_ is None:
             self._NPDf_v_ = NumericalPartialDerivative_txy_Functions(self.v)
         return self._NPDf_v_('x')(t, x, y)
+
     def v_y(self, t, x, y):
         if self._NPDf_v_ is None:
             self._NPDf_v_ = NumericalPartialDerivative_txy_Functions(self.v)
         return self._NPDf_v_('y')(t, x, y)
 
-
-
-
     def p(self, t, x, y): raise NotImplementedError()
+
     def p_x(self, t, x, y):
         if self._NPDf_p_ is None:
             self._NPDf_p_ = NumericalPartialDerivative_txy_Functions(self.p)
         return self._NPDf_p_('x')(t, x, y)
+
     def p_y(self, t, x, y):
         if self._NPDf_p_ is None:
             self._NPDf_p_ = NumericalPartialDerivative_txy_Functions(self.p)
         return self._NPDf_p_('y')(t, x, y)
 
-
     def u_xx(self, t, x, y):
         if self._NPDf_ux_ is None:
             self._NPDf_ux_ = NumericalPartialDerivative_txy_Functions(self.u_x)
         return self._NPDf_ux_('x')(t, x, y)
+
     def u_yy(self, t, x, y):
         if self._NPDf_uy_ is None:
             self._NPDf_uy_ = NumericalPartialDerivative_txy_Functions(self.u_y)
@@ -111,6 +108,7 @@ class Stokes(miUsTriangle_ExactSolutionBase):
         if self._NPDf_vx_ is None:
             self._NPDf_vx_ = NumericalPartialDerivative_txy_Functions(self.v_x)
         return self._NPDf_vx_('x')(t, x, y)
+
     def v_yy(self, t, x, y):
         if self._NPDf_vy_ is None:
             self._NPDf_vy_ = NumericalPartialDerivative_txy_Functions(self.v_y)
@@ -128,19 +126,20 @@ class Stokes(miUsTriangle_ExactSolutionBase):
     @property
     def gradient_of_pressure(self):
         if self._gradientOfPressure_ is None:
-            self._gradientOfPressure_ =  miUsGrid_Triangular_Vector(
+            self._gradientOfPressure_ = miUsGrid_Triangular_Vector(
                 self.mesh, (self.p_x, self.p_y), valid_time=self.valid_time)
         return self._gradientOfPressure_
 
     @property
     def velocity(self):
         if self._velocity_ is None:
-            self._velocity_ =  miUsGrid_Triangular_Vector(
+            self._velocity_ = miUsGrid_Triangular_Vector(
                 self.mesh, (self.u, self.v), valid_time=self.valid_time)
         return self._velocity_
 
     def omega_z(self, t, x, y):
         return self.v_x(t, x, y) - self.u_y(t, x, y)
+
     @property
     def vorticity(self):
         if self._vorticity_ is None:
@@ -187,10 +186,10 @@ class Stokes(miUsTriangle_ExactSolutionBase):
         return self._curl_of_vorticity_
 
     def ___m_laplace_u___(self, t, x, y):
-        return - ( self.u_xx(t, x, y) + self.u_yy(t, x, y) )
-    def ___m_laplace_v___(self, t, x, y):
-        return - ( self.v_xx(t, x, y) + self.v_yy(t, x, y) )
+        return - (self.u_xx(t, x, y) + self.u_yy(t, x, y))
 
+    def ___m_laplace_v___(self, t, x, y):
+        return - (self.v_xx(t, x, y) + self.v_yy(t, x, y))
 
     @property
     def divergence_of_vorticity(self):
@@ -205,35 +204,34 @@ class Stokes(miUsTriangle_ExactSolutionBase):
         # must be zero
         return 0 * t * x * y
 
-
-
     def fx(self, t, x, y):
-        return self.___m_laplace_u___(t,x,y) + self.p_x(t,x,y)
+        return self.___m_laplace_u___(t, x, y) + self.p_x(t, x, y)
+
     def fy(self, t, x, y):
-        return self.___m_laplace_v___(t,x,y) + self.p_y(t,x,y)
+        return self.___m_laplace_v___(t, x, y) + self.p_y(t, x, y)
 
     @property
     def body_force(self):
         if self._bodyForce_ is None:
-            self._bodyForce_ = miUsGrid_Triangular_Vector(self.mesh,
-                                                   (self.fx, self.fy),
-                                                   valid_time=self.valid_time)
+            self._bodyForce_ = miUsGrid_Triangular_Vector(
+                self.mesh,
+                (self.fx, self.fy),
+                valid_time=self.valid_time
+            )
         return self._bodyForce_
 
     @property
     def kinetic_energy_distribution(self):
         """A scalar field of the kinetic energy distribution."""
         if self._kineticEnergyDistribution_ is None:
-            self._kineticEnergyDistribution_ =miUsGrid_Triangular_Scalar(
+            self._kineticEnergyDistribution_ = miUsGrid_Triangular_Scalar(
                 self.mesh,
                 self.___kinetic_energy_distribution___,
                 valid_time=self.valid_time)
         return self._kineticEnergyDistribution_
+
     def ___kinetic_energy_distribution___(self, t, x, y):
-        return 0.5 * (self.u(t, x, y)**2 + self.v(t, x, y)**2 )
-
-
-
+        return 0.5 * (self.u(t, x, y)**2 + self.v(t, x, y)**2)
 
     def ___PreFrozenChecker___(self):
         """Will be called before freezing self."""
@@ -242,12 +240,13 @@ class Stokes(miUsTriangle_ExactSolutionBase):
 
         rst = (x, y)
 
-        if len(x) == 0: return
+        if len(x) == 0:
+            return
 
         for t in TS:
-            fx = self.___m_laplace_u___(t,x,y) + self.p_x(t,x,y)
+            fx = self.___m_laplace_u___(t, x, y) + self.p_x(t, x, y)
 
-            fy = self.___m_laplace_v___(t,x,y) + self.p_y(t,x,y)
+            fy = self.___m_laplace_v___(t, x, y) + self.p_y(t, x, y)
 
             FX = self.fx(t, x, y)
             FY = self.fy(t, x, y)
@@ -284,10 +283,3 @@ class Stokes(miUsTriangle_ExactSolutionBase):
             assert Pv_x.check_partial_x(v_xx)
             Pv_y = NumericalPartialDerivative_xy(v_y, *rst)
             assert Pv_y.check_partial_y(v_yy)
-
-
-
-
-if __name__ == '__main__':
-    # mpiexec -n 4 python 
-    pass

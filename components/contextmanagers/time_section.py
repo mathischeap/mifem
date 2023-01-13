@@ -16,4 +16,4 @@ def timesection(info=None):
     COMM.barrier()
     if RANK == MASTER_RANK:
         print(" <{}> ends at [".format(info) + strftime("%Y-%m-%d %H:%M:%S", localtime()) + ']')
-        print(" <{}> costs: [%.5f seconds]\n".format(info)%(time()-ts), flush=True)
+        print(" <{}> costs: [%.5f seconds]\n".format(info) % (time()-ts), flush=True)

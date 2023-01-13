@@ -41,7 +41,6 @@ class _2dCSCG_S0F_Discretize(FrozenOnly):
             raise NotImplementedError(f'2dCSCG outer 0-form can not (target BC) '
                                       f'discretize {self._sf_.TW.BC.body.__class__}.')
 
-
         else:
             raise NotImplementedError(f"2dCSCG outer 0-form cannot discretize "
                                       f"while targeting at {target}.")

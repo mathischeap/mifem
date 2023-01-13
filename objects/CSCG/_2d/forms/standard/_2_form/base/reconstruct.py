@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 from objects.CSCG._2d.forms.standard.base.reconstruct import _2dCSCG_SF_ReconstructBase
 from objects.CSCG._2d.discreteFields.scalar.main import _2dCSCG_DF_Scalar
 import numpy as np
@@ -11,7 +12,6 @@ class _2dCSCG_S2F_Reconstruct(_2dCSCG_SF_ReconstructBase):
     def __init__(self, f):
         super(_2dCSCG_S2F_Reconstruct, self).__init__(f)
         self._freeze_self_()
-
 
     def __call__(self, xi, eta, ravel=False, element_range=None, vectorized=False, value_only=False):
         """
@@ -39,18 +39,19 @@ class _2dCSCG_S2F_Reconstruct(_2dCSCG_SF_ReconstructBase):
         mesh = self._f_.mesh
 
         xietasigma, basis = f.do.evaluate_basis_at_meshgrid(xi, eta)
-        #--- parse indices --------------------------------------------------
-        if element_range is None: # default, in all local mesh-elements.
+        # --- parse indices --------------------------------------------------
+        if element_range is None:  # default, in all local mesh-elements.
             INDICES = mesh.elements.indices
         else:
-            if vectorized: vectorized = False
+            if vectorized:
+                vectorized = False
 
             if isinstance(element_range, int):
-                INDICES = [element_range,]
+                INDICES = [element_range, ]
             else:
                 raise NotImplementedError()
 
-        #---- vectorized -----------------------------------------------
+        # ---- vectorized -----------------------------------------------
         if vectorized:
 
             assert INDICES == mesh.elements.indices, f"currently, vectorized computation only works" \
@@ -77,7 +78,7 @@ class _2dCSCG_S2F_Reconstruct(_2dCSCG_SF_ReconstructBase):
             else:
                 raise Exception()
 
-        #----- non-vectorized ------------------------------------------------
+        # ----- non-vectorized ------------------------------------------------
         else:
             if value_only:
                 raise NotImplementedError()
@@ -100,14 +101,12 @@ class _2dCSCG_S2F_Reconstruct(_2dCSCG_SF_ReconstructBase):
 
                     v = np.einsum('ij, i -> j', basis_det_iJ, f.cochain.local[i], optimize='greedy')
                     if ravel:
-                        value[i] = [v,]
+                        value[i] = [v, ]
                     else:
                         # noinspection PyUnresolvedReferences
                         xyz[i] = [xyz[i][j].reshape(shape, order='F') for j in range(2)]
-                        value[i] = [v.reshape(shape, order='F'),]
+                        value[i] = [v.reshape(shape, order='F'), ]
                 return xyz, value
-
-
 
     def discrete_scalar(self, grid):
         """We reconstruct this outer S0F as a 2d CSCG discrete scalar in the `regions`.
@@ -130,10 +129,10 @@ class _2dCSCG_S2F_Reconstruct(_2dCSCG_SF_ReconstructBase):
         mesh = f.mesh
         Xi_Eta_Sigma_D, grid = self.___PRIVATE_distribute_region_wise_meshgrid___(mesh, grid)
 
-        #-------- reconstructing -----------------------------------------------------------------1
+        # -------- reconstructing -----------------------------------------------------------------1
         xy = dict()
         value = dict()
-        EMPTY_DATA = np.empty((0,0))
+        EMPTY_DATA = np.empty((0, 0))
 
         for e in mesh.elements:
             rn, ij = mesh.do.find.region_name_and_local_indices_of_element(e)
@@ -148,7 +147,7 @@ class _2dCSCG_S2F_Reconstruct(_2dCSCG_SF_ReconstructBase):
                 xy[e] = [EMPTY_DATA, EMPTY_DATA]
                 value[e] = [EMPTY_DATA, EMPTY_DATA]
             else:
-                #___DIFF for different forms____ reconstruction in local mesh element #e________diff
+                # ___DIFF for different forms____ reconstruction in local mesh element #e________diff
                 xietasigma, basis = f.do.evaluate_basis_at_meshgrid(xi, et)
                 xy[e] = element.coordinate_transformation.mapping(*xietasigma)
                 det_iJ = element.coordinate_transformation.inverse_Jacobian(*xietasigma)
@@ -157,9 +156,9 @@ class _2dCSCG_S2F_Reconstruct(_2dCSCG_SF_ReconstructBase):
                 # noinspection PyUnresolvedReferences
                 xy[e] = [xy[e][j].reshape(shape, order='F') for j in range(2)]
                 # noinspection PyUnresolvedReferences
-                value[e] = [v.reshape(shape, order='F'),] #=============================diff
+                value[e] = [v.reshape(shape, order='F'), ]  # =============================diff
 
-        #-------- prime-region-wise stack coordinates and values ----------------------------------1
+        # -------- prime-region-wise stack coordinates and values ----------------------------------1
         XY, VAL, element_global_numbering = self.___PRIVATE_distribute_XY_and_VAL___(mesh, xy, value)
 
         XY = self.___PRIVATE_prime_region_wise_stack___(mesh, XY, 2, grid, element_global_numbering)
