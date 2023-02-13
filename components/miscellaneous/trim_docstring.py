@@ -6,6 +6,7 @@
 """
 import sys
 
+
 def trim(docstring):
     if not docstring:
         return ''

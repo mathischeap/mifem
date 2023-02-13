@@ -35,7 +35,7 @@ def rsmat(arbmat):
             if abs(arbmat[r, n]) < 1e-10:
                 r = r
             else:
-                r = r + 1
+                r += 1
         for m in range(column_number):
             if abs(arbmat[-1, m]) > 1e-10:
                 arbmat[-1, :] = arbmat[-1, :] / arbmat[-1, m]

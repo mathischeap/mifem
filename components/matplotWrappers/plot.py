@@ -25,7 +25,7 @@ def __matplot__(
         # labels
         xlabel=None, ylabel=None, label_size=16,
         # ticks
-        tick_style='sci', xticks=None, yticks=None,
+        tick_style='sci', xticks=None, yticks=None, tick_direction='in',
         tick_size=16, tick_pad=6, minor_tick_length=4, major_tick_length=8,
         # legend
         legend_size=18, legend_local='best', legend_frame=False,
@@ -123,7 +123,8 @@ def __matplot__(
     elif num_lines > 1:  # multiple lines
 
         if styles is None:
-            styles = ('-^', '-x', '-o', '-s', '-v', '-*', '-8', '->', '-p', '-H', '-h', '-D', '-d', '-P') * 5
+            styles = ('-^', '-x', '-o', '-s', '-v', '-*', '-8', '->', '-p',
+                      '-H', '-h', '-D', '-d', '-P') * 5
 
         if colors is None:
             color = cm.get_cmap(corlormap, num_lines)
@@ -145,7 +146,8 @@ def __matplot__(
             assert isinstance(labels, (list, tuple)), f"put labels in list pls."
             assert len(labels) == num_lines, f"I need {num_lines} labels, now I get {len(labels)}."
             for i, lab in enumerate(labels):
-                assert isinstance(lab, str), f"labels[{i}] = {lab} is not str."
+                if lab is not None:
+                    assert isinstance(lab, str), f"labels[{i}] = {lab} is not str."
 
     else:
         raise Exception()
@@ -173,9 +175,10 @@ def __matplot__(
         plt.xticks(xticks)
     if yticks is not None:
         plt.yticks(yticks)
+
     plt.tick_params(which='both', labeltop=False, labelright=False, top=True, right=True)
-    plt.tick_params(axis='both', which='minor', direction='in', length=minor_tick_length)
-    plt.tick_params(axis='both', which='major', direction='in', length=major_tick_length)
+    plt.tick_params(axis='both', which='minor', direction=tick_direction, length=minor_tick_length)
+    plt.tick_params(axis='both', which='major', direction=tick_direction, length=major_tick_length)
     plt.tick_params(axis='both', which='both', labelsize=tick_size)
     plt.tick_params(axis='x', which='both', pad=tick_pad)
     plt.tick_params(axis='y', which='both', pad=tick_pad)

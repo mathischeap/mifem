@@ -18,9 +18,9 @@ from objects.CSCG._3d.exactSolutions.incompressibleMHD.base import incompressibl
 class AS1(incompressible_MHD_Base):
     """The first analytical solution."""
 
-    def __init__(self, mesh, Re=1e4, Rm=1e4, c=1):
+    def __init__(self, mesh, Rf=1e4, Rm=1e4, c=1):
         """"""
-        super(AS1, self).__init__(mesh, Re, Rm, c)
+        super(AS1, self).__init__(mesh, Rf, Rm, c)
         self._freeze_self_()
 
     @staticmethod
@@ -81,12 +81,12 @@ class AS1(incompressible_MHD_Base):
 
 
 if __name__ == "__main__":
-    # mpiexec -n 4 python objects/CSCG/_3d/exact_solutions/status/incompressible_MHD/analytic_solution_1.py
+    # mpiexec -n 4 python objects/CSCG/_3d/exactSolutions/incompressibleMHD/analytic_solution_1.py
 
     from objects.CSCG._3d.master import MeshGenerator, ExactSolutionSelector
     mesh = MeshGenerator('crazy', c=0.0)([5, 5, 5])
     es = ExactSolutionSelector(mesh)("MHD:as1", show_info=True)
 
-    r = es.status.volume_current_density
+    r = es.mass_source_term
     r.current_time = 1
     r.visualize()

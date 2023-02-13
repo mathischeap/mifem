@@ -35,14 +35,15 @@ class _3dCSCG_Vector_Do_IP(FrozenOnly):
                     scalar_class = getattr(import_module(base_path + 'scalar.main'),
                                            '_3dCSCG_ScalarField')
 
-                    cp_scalar = scalar_class(self._vf_.mesh,
-                                                    IP,
-                                                    ftype='standard',
-                                                    valid_time=self._vf_.valid_time,
-                                                    name = self._vf_.standard_properties.name
-                                                         + '--inner-product--'
-                                                         + vector.standard_properties.name
-                                                    )
+                    cp_scalar = scalar_class(
+                        self._vf_.mesh,
+                        IP,
+                        ftype='standard',
+                        valid_time=self._vf_.valid_time,
+                        name=self._vf_.standard_properties.name
+                        + '--inner-product--'
+                        + vector.standard_properties.name,
+                    )
                     return cp_scalar
 
                 else:

@@ -153,15 +153,19 @@ class IteratorMonitorDo(FrozenOnly):
 
             elif self._monitor_._real_time_monitor_:
 
-                try:
-                    # if PermissionError, we do not stop the iteration
-                    monitor._iterator_.RDF.to_csv(monitor.RDF_filename, header=True)
-                except:  # wait 3 seconds
-                    sleep(3)
-                    try:  # try once more
+                if (monitor._current_time_ - monitor._last_auto_save_time_) < 10:
+                    pass
+                else:
+                    try:
+                        # if PermissionError, we do not stop the iteration
                         monitor._iterator_.RDF.to_csv(monitor.RDF_filename, header=True)
-                    except:  # just skip it
-                        pass
+                    except:  # wait 3 seconds
+                        sleep(3)
+                        try:  # try once more
+                            monitor._iterator_.RDF.to_csv(monitor.RDF_filename, header=True)
+                        except:  # just skip it
+                            pass
+
                 monitor._last_auto_save_time_ = time()
 
             else:

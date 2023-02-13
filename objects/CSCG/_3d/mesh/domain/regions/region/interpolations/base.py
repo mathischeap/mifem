@@ -180,7 +180,7 @@ class InterpolationBase(FrozenOnly):
 
 
     def ___inverse_mapping_r_x_s0t0___(self, x):
-        """Return r according to the inverse function of x = mapping_X(r, 0 , 0)
+        """Return `r` according to the inverse function of x = mapping_X(r, 0, 0)
 
         Parameters
         ----------
@@ -196,7 +196,7 @@ class InterpolationBase(FrozenOnly):
         return self._Rx00_(x)
 
     def ___inverse_mapping_s_y_r0t0___(self, y):
-        """Return s according to the inverse function of y = mapping_Y(0, s , 0)
+        """Return `s` according to the inverse function of y = mapping_Y(0, s, 0)
 
         Parameters
         ----------
@@ -212,7 +212,7 @@ class InterpolationBase(FrozenOnly):
         return self._Sy00_(y)
 
     def ___inverse_mapping_t_z_r0s0___(self, z):
-        """Return t according to the inverse function of z = mapping_Z(0, 0 , t)
+        """Return `t` according to the inverse function of z = mapping_Z(0, 0, t)
 
         Parameters
         ----------

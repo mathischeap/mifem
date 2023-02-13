@@ -15,9 +15,9 @@ from numpy import sin, cos, pi
 
 class MHD_SinCos1(incompressible_MHD_Base):
     """The first manufactured solution with sin cos functions."""
-    def __init__(self, mesh, Re=1, Rm=1, c=1):
+    def __init__(self, mesh, Rf=1, Rm=1, c=1):
         """"""
-        super(MHD_SinCos1, self).__init__(mesh, Re, Rm, c)
+        super(MHD_SinCos1, self).__init__(mesh, Rf, Rm, c)
         self._freeze_self_()
 
     def u(self, t, x, y, z):

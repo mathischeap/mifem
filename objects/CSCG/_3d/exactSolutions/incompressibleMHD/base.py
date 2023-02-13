@@ -4,12 +4,12 @@
 @contact: zhangyi_aero@hotmail.com
 @time: 8/20/2022 3:09 PM
 
-incompressible MHD reads:
+incompressible MHD reads (dimensionless):
 
-Pu/Pt + w X u + (1/Re)*curl(w) - c* (j X B) + grad(P) = f
+Pu/Pt + w X u + (1/Re)*curl(w) - c * (j X B) + grad(P) = f
 w = curl(u)
 div(u) = 0
-PB/Pt + curl(E) = r (r normally is 0, r != 0 cases are usually for manufactured test.)
+PB/Pt + curl(E) = 0
 (1/Rm) * j - E - u X B = 0
 j = curl(B)
 
@@ -26,14 +26,14 @@ import numpy as np
 
 
 class incompressible_MHD_Base(Base):
-    def __init__(self, mesh, Re, Rm, c):
+    def __init__(self, mesh, Rf, Rm, c):
         """
 
         Parameters
         ----------
         mesh :
             The status instance.
-        Re :
+        Rf :
             The fluid Reynolds number.
         Rm :
             The magnetic Reynolds number.
@@ -41,18 +41,23 @@ class incompressible_MHD_Base(Base):
             c:=V^2_A/V^2 is the coupling number, where V_A and V are the scales of the
             Alfvén speed and of the flow, respectively.
 
+            c = Al^{-2} where Al is the Alfvén number.
+
+            Al = sqrt(1/c)
+
         """
         super(incompressible_MHD_Base, self).__init__(mesh)
 
-        self._Re_ = Re
+        self._Rf_ = Rf
         self._Rm_ = Rm
 
-        if isinstance(Re, (int, float)) and Re > 0:
-            self._1_over_Re_ = 1 / Re
-        elif Re == 'infty':
-            self._1_over_Re_ = 0
+        if isinstance(Rf, (int, float)) and Rf > 0:
+            self._1_over_Rf_ = 1 / Rf
+
+        elif Rf == 'infty':
+            self._1_over_Rf_ = 0
         else:
-            raise Exception(f"Re={Re} wrong, be a positive number or 'infty'.")
+            raise Exception(f"Rf={Rf} wrong, be a positive number or 'infty'.")
 
         if isinstance(Rm, (int, float)) and Rm > 0:
             self._1_over_Rm_ = 1 / Rm
@@ -62,14 +67,16 @@ class incompressible_MHD_Base(Base):
             raise Exception(f"Rm={Rm} wrong, be a positive number or 'infty'.")
 
         self._c_ = c
-        self._velocity_ = None
-        self._vorticity_ = None
-        self._pressure_ = None
-        self._body_force_ = None
+        self._Alfven_number_ = np.sqrt(1 / c)
+
+        self._velocity_ = None              # u
+        self._vorticity_ = None             # w
+        self._pressure_ = None              # p
+        self._body_force_ = None            # f
 
         self._volume_current_density_ = None  # j
-        self._magnetic_field_ = None  # B
-        self._electric_field_ = None  # E
+        self._magnetic_field_ = None          # B
+        self._electric_field_ = None          # E
 
         self._divergence_of_magnetic_field_ = None
 
@@ -100,8 +107,12 @@ class incompressible_MHD_Base(Base):
         self._NPDf_Ey_ = None
         self._NPDf_Ez_ = None
 
+        self._NPDf_Omx_ = None
+        self._NPDf_Omy_ = None
+        self._NPDf_Omz_ = None
+
         self._gradientOfPressure_ = None
-        self._totalPressure_ = None
+        self._totalPressure_ = None              # p + 0.5 * u * u
         self._gradientOfTotalPressure_ = None
         self._kineticEnergyDistribution_ = None
         self._helicityDistribution_ = None
@@ -109,19 +120,20 @@ class incompressible_MHD_Base(Base):
         self._divergence_of_velocity_ = None
         self._divergence_of_vorticity_ = None
         self._curl_of_vorticity_ = None
+        self._Laplace_of_velocity_ = None
 
         self._cross_helicity_distribution_ = None
         self._magnetic_helicity_distribution_ = None
 
-        self._mass_source_term_ = None  # s,  div (u) = s, should be 0;
+        self._mass_source_term_ = None      # s, div(u) = s, should be 0;
         self._magnetic_source_term_ = None  # m, div(B) = m, should be 0;
-        self._electric_source_term_ = None  # r, \partial_t(B) + curl(E) = r, should be 0;
+        self._electric_source_term_ = None  # r, P_t(B) + curl(E) = r, should be 0;
 
         self._freeze_self_()
 
     @property
-    def Re(self):
-        return self._Re_
+    def Rf(self):
+        return self._Rf_
 
     @property
     def Rm(self):
@@ -130,6 +142,10 @@ class incompressible_MHD_Base(Base):
     @property
     def c(self):
         return self._c_
+
+    @property
+    def Alfven_number(self):
+        return self._Alfven_number_
 
     def u(self, t, x, y, z):
         raise NotImplementedError()
@@ -376,24 +392,73 @@ class incompressible_MHD_Base(Base):
             self._NPDf_Ez_ = NumericalPartialDerivative_txyz_Functions(self.Ez)
         return self._NPDf_Ez_('z')(t, x, y, z)
 
+    def omega_x_x(self, t, x, y, z):
+        if self._NPDf_Omx_ is None:
+            self._NPDf_Omx_ = NumericalPartialDerivative_txyz_Functions(self.omega_x)
+        return self._NPDf_Omx_('x')(t, x, y, z)
+
+    def omega_x_y(self, t, x, y, z):
+        if self._NPDf_Omx_ is None:
+            self._NPDf_Omx_ = NumericalPartialDerivative_txyz_Functions(self.omega_x)
+        return self._NPDf_Omx_('y')(t, x, y, z)
+
+    def omega_x_z(self, t, x, y, z):
+        if self._NPDf_Omx_ is None:
+            self._NPDf_Omx_ = NumericalPartialDerivative_txyz_Functions(self.omega_x)
+        return self._NPDf_Omx_('z')(t, x, y, z)
+
+    def omega_y_x(self, t, x, y, z):
+        if self._NPDf_Omy_ is None:
+            self._NPDf_Omy_ = NumericalPartialDerivative_txyz_Functions(self.omega_y)
+        return self._NPDf_Omy_('x')(t, x, y, z)
+
+    def omega_y_y(self, t, x, y, z):
+        if self._NPDf_Omy_ is None:
+            self._NPDf_Omy_ = NumericalPartialDerivative_txyz_Functions(self.omega_y)
+        return self._NPDf_Omy_('y')(t, x, y, z)
+
+    def omega_y_z(self, t, x, y, z):
+        if self._NPDf_Omy_ is None:
+            self._NPDf_Omy_ = NumericalPartialDerivative_txyz_Functions(self.omega_y)
+        return self._NPDf_Omy_('z')(t, x, y, z)
+
+    def omega_z_x(self, t, x, y, z):
+        if self._NPDf_Omz_ is None:
+            self._NPDf_Omz_ = NumericalPartialDerivative_txyz_Functions(self.omega_z)
+        return self._NPDf_Omz_('x')(t, x, y, z)
+
+    def omega_z_y(self, t, x, y, z):
+        if self._NPDf_Omz_ is None:
+            self._NPDf_Omz_ = NumericalPartialDerivative_txyz_Functions(self.omega_z)
+        return self._NPDf_Omz_('y')(t, x, y, z)
+
+    def omega_z_z(self, t, x, y, z):
+        if self._NPDf_Omz_ is None:
+            self._NPDf_Omz_ = NumericalPartialDerivative_txyz_Functions(self.omega_z)
+        return self._NPDf_Omz_('z')(t, x, y, z)
+
     # .............................................................................
     @property
     def magnetic_field(self):
         """B"""
         if self._magnetic_field_ is None:
-            self._magnetic_field_ = _3dCSCG_VectorField(self.mesh,
-                                                        (self.Bx, self.By, self.Bz),
-                                                        valid_time=self.valid_time)
+            self._magnetic_field_ = _3dCSCG_VectorField(
+                self.mesh,
+                (self.Bx, self.By, self.Bz),
+                valid_time=self.valid_time,
+            )
         return self._magnetic_field_
 
     @property
     def divergence_of_magnetic_field(self):
+        """div(B)"""
         if self._divergence_of_magnetic_field_ is None:
             # this condition must be valid for all time.
             self._divergence_of_magnetic_field_ = _3dCSCG_ScalarField(
                 self.mesh,
                 self.___div_of_B___,
-                valid_time=None)
+                valid_time=self.valid_time,
+            )
         return self._divergence_of_magnetic_field_
 
     def ___div_of_B___(self, t, x, y, z):
@@ -407,11 +472,12 @@ class incompressible_MHD_Base(Base):
             self._volume_current_density_ = _3dCSCG_VectorField(
                 self.mesh,
                 (self.j_x, self.j_y, self.j_z),
-                valid_time=self.valid_time)
+                valid_time=self.valid_time,
+            )
         return self._volume_current_density_
 
     def j_x(self, t, x, y, z):
-        """ j = curl (B) """
+        """ j = curl(B) """
         return self.Bz_y(t, x, y, z) - self.By_z(t, x, y, z)
     
     def j_y(self, t, x, y, z):
@@ -430,7 +496,8 @@ class incompressible_MHD_Base(Base):
             self._electric_field_ = _3dCSCG_VectorField(
                 self.mesh,
                 (self.Ex, self.Ey, self.Ez),
-                valid_time=self.valid_time)
+                valid_time=self.valid_time,
+            )
         return self._electric_field_
 
     def _uXB_x_(self, t, x, y, z):
@@ -463,7 +530,7 @@ class incompressible_MHD_Base(Base):
             self._velocity_ = _3dCSCG_VectorField(
                 self.mesh,
                 (self.u, self.v, self.w),
-                valid_time=self.valid_time
+                valid_time=self.valid_time,
             )
         return self._velocity_
 
@@ -475,9 +542,11 @@ class incompressible_MHD_Base(Base):
     def divergence_of_velocity(self):
         if self._divergence_of_velocity_ is None:
             # this condition must be valid for all time.
-            self._divergence_of_velocity_ = _3dCSCG_ScalarField(self.mesh,
-                                                                self.___div_of_velocity___,
-                                                                valid_time=None)
+            self._divergence_of_velocity_ = _3dCSCG_ScalarField(
+                self.mesh,
+                self.___div_of_velocity___,
+                valid_time=None,
+            )
         return self._divergence_of_velocity_
 
     def ___div_of_velocity___(self, t, x, y, z):
@@ -501,7 +570,7 @@ class incompressible_MHD_Base(Base):
             self._mass_source_term_ = _3dCSCG_ScalarField(
                 self.mesh,
                 self.s,
-                valid_time=None,
+                valid_time=self.valid_time,
                 name='mass-source-term')
         return self._mass_source_term_
 
@@ -517,16 +586,19 @@ class incompressible_MHD_Base(Base):
             self._magnetic_source_term_ = _3dCSCG_ScalarField(
                 self.mesh,
                 self.m,
-                valid_time=None,
-                name='magnetic-source-term')
+                valid_time=self.valid_time,
+                name='magnetic-source-term',
+            )
         return self._magnetic_source_term_
 
     @property
     def vorticity(self):
         if self._vorticity_ is None:
-            self._vorticity_ = _3dCSCG_VectorField(self.mesh,
-                                                   (self.omega_x, self.omega_y, self.omega_z),
-                                                   valid_time=self.valid_time)
+            self._vorticity_ = _3dCSCG_VectorField(
+                self.mesh,
+                (self.omega_x, self.omega_y, self.omega_z),
+                valid_time=self.valid_time,
+            )
         return self._vorticity_
 
     def omega_x(self, t, x, y, z):
@@ -539,6 +611,16 @@ class incompressible_MHD_Base(Base):
         return self.v_x(t, x, y, z) - self.u_y(t, x, y, z)
 
 
+    def ___curl_omega_x___(self, t, x, y, z):
+        return self.omega_z_y(t, x, y, z) - self.omega_y_z(t, x, y, z)
+
+    def ___curl_omega_y___(self, t, x, y, z):
+        return self.omega_x_z(t, x, y, z) - self.omega_z_x(t, x, y, z)
+
+    def ___curl_omega_z___(self, t, x, y, z):
+        return self.omega_y_x(t, x, y, z) - self.omega_x_y(t, x, y, z)
+
+
     def _CurlBx_(self, t, x, y, z):
         return self.Bz_y(t, x, y, z) - self.By_z(t, x, y, z)
     
@@ -547,7 +629,6 @@ class incompressible_MHD_Base(Base):
     
     def _CurlBz_(self, t, x, y, z):
         return self.By_x(t, x, y, z) - self.Bx_y(t, x, y, z)
-
 
     def _CurlEx_(self, t, x, y, z):
         return self.Ez_y(t, x, y, z) - self.Ey_z(t, x, y, z)
@@ -569,9 +650,9 @@ class incompressible_MHD_Base(Base):
 
     @property
     def curl_of_vorticity(self):
-        """ curl_of_vorticity = curl of curl u = grad(div u) - Vector_Laplace u.
+        """curl_of_vorticity = curl of curl u = grad(div u) - Vector_Laplace u.
 
-        Since div u must be zero (conservation of mass), we have
+        If div(u) = zero (conservation of mass), we have
 
         curl_of_vorticity = - Vector_Laplace u = - ( Laplace u_x,  Laplace u_y,  Laplace u_z) ^ T.
 
@@ -579,54 +660,65 @@ class incompressible_MHD_Base(Base):
         if self._curl_of_vorticity_ is None:
             self._curl_of_vorticity_ = _3dCSCG_VectorField(
                 self.mesh,
-                (self.___m_laplace_u___, self.___m_laplace_v___, self.___m_laplace_w___),
-                valid_time=self.valid_time
+                (self.___curl_omega_x___, self.___curl_omega_y___, self.___curl_omega_z___),
+                valid_time=self.valid_time,
             )
         return self._curl_of_vorticity_
 
-    def ___m_laplace_u___(self, t, x, y, z):
-        return - (self.u_xx(t, x, y, z) + self.u_yy(t, x, y, z) + self.u_zz(t, x, y, z))
+    @property
+    def Laplace_of_velocity(self):
+        if self._Laplace_of_velocity_ is None:
+            self._Laplace_of_velocity_ = _3dCSCG_VectorField(
+                self.mesh,
+                (self.___laplace_u___, self.___laplace_v___, self.___laplace_w___),
+                valid_time=self.valid_time,
+            )
+        return self._Laplace_of_velocity_
+
+    def ___laplace_u___(self, t, x, y, z):
+        return self.u_xx(t, x, y, z) + self.u_yy(t, x, y, z) + self.u_zz(t, x, y, z)
     
-    def ___m_laplace_v___(self, t, x, y, z):
-        return - (self.v_xx(t, x, y, z) + self.v_yy(t, x, y, z) + self.v_zz(t, x, y, z))
+    def ___laplace_v___(self, t, x, y, z):
+        return self.v_xx(t, x, y, z) + self.v_yy(t, x, y, z) + self.v_zz(t, x, y, z)
     
-    def ___m_laplace_w___(self, t, x, y, z):
-        return - (self.w_xx(t, x, y, z) + self.w_yy(t, x, y, z) + self.w_zz(t, x, y, z))
+    def ___laplace_w___(self, t, x, y, z):
+        return self.w_xx(t, x, y, z) + self.w_yy(t, x, y, z) + self.w_zz(t, x, y, z)
 
     @property
     def divergence_of_vorticity(self):
         if self._divergence_of_vorticity_ is None:
             # this condition must be valid for all time.
-            self._divergence_of_vorticity_ = _3dCSCG_ScalarField(self.mesh,
-                                                                 self.___div_of_vorticity___,
-                                                                 valid_time=None)
+            self._divergence_of_vorticity_ = _3dCSCG_ScalarField(
+                self.mesh,
+                self.___div_of_vorticity___,
+                valid_time=None,
+            )
         return self._divergence_of_vorticity_
 
-    @staticmethod
-    def ___div_of_vorticity___(t, x, y, z):
+    def ___div_of_vorticity___(self, t, x, y, z):
         # must be zero
-        return 0 * t * x * y * z
+        return self.omega_x_x(t, x, y, z) + self.omega_y_y(t, x, y, z) + self.omega_z_z(t, x, y, z)
 
     def fx(self, t, x, y, z):
         return self.u_t(t, x, y, z) \
                     + self.omega_y(t, x, y, z) * self.w(t, x, y, z) - self.omega_z(t, x, y, z) * self.v(t, x, y, z) \
                     + self._tp_x_(t, x, y, z) \
-                    - self._1_over_Re_ * (self.u_xx(t, x, y, z) + self.u_yy(t, x, y, z) + self.u_zz(t, x, y, z)) \
-                    - self.j_y(t, x, y, z) * self.Bz(t, x, y, z) + self.j_z(t, x, y, z) * self.By(t, x, y, z)
+                    - self._1_over_Rf_ * self.___laplace_u___(t, x, y, z) \
+                    - self.c * (self.j_y(t, x, y, z) * self.Bz(t, x, y, z) - self.j_z(t, x, y, z) * self.By(t, x, y, z))
     
     def fy(self, t, x, y, z):
         return self.v_t(t, x, y, z) \
                     + self.omega_z(t, x, y, z) * self.u(t, x, y, z) - self.omega_x(t, x, y, z) * self.w(t, x, y, z) \
                     + self._tp_y_(t, x, y, z) \
-                    - self._1_over_Re_ * (self.v_xx(t, x, y, z) + self.v_yy(t, x, y, z) + self.v_zz(t, x, y, z)) \
-                    - self.j_z(t, x, y, z) * self.Bx(t, x, y, z) + self.j_x(t, x, y, z) * self.Bz(t, x, y, z)
+                    - self._1_over_Rf_ * self.___laplace_v___(t, x, y, z) \
+                    - self.c * (self.j_z(t, x, y, z) * self.Bx(t, x, y, z) - self.j_x(t, x, y, z) * self.Bz(t, x, y, z))
     
     def fz(self, t, x, y, z):
         return self.w_t(t, x, y, z) \
                     + self.omega_x(t, x, y, z) * self.v(t, x, y, z) - self.omega_y(t, x, y, z) * self.u(t, x, y, z) \
                     + self._tp_z_(t, x, y, z) \
-                    - self._1_over_Re_ * (self.w_xx(t, x, y, z) + self.w_yy(t, x, y, z) + self.w_zz(t, x, y, z)) \
-                    - self.j_x(t, x, y, z) * self.By(t, x, y, z) + self.j_y(t, x, y, z) * self.Bx(t, x, y, z)
+                    - self._1_over_Rf_ * self.___laplace_w___(t, x, y, z) \
+                    - self.c * (self.j_x(t, x, y, z) * self.By(t, x, y, z) - self.j_y(t, x, y, z) * self.Bx(t, x, y, z))
 
     @property
     def body_force(self):
@@ -655,15 +747,18 @@ class incompressible_MHD_Base(Base):
             self._electric_source_term_ = _3dCSCG_VectorField(
                 self.mesh,
                 (self.rx, self.ry, self.rz),
-                valid_time=self.valid_time)
+                valid_time=self.valid_time,
+            )
         return self._electric_source_term_
 
     @property
     def pressure(self):
         if self._pressure_ is None:
-            self._pressure_ = _3dCSCG_ScalarField(self.mesh,
-                                                  self.p,
-                                                  valid_time=self.valid_time)
+            self._pressure_ = _3dCSCG_ScalarField(
+                self.mesh,
+                self.p,
+                valid_time=self.valid_time,
+            )
         return self._pressure_
 
     @property
@@ -672,15 +767,18 @@ class incompressible_MHD_Base(Base):
             self._gradientOfPressure_ = _3dCSCG_VectorField(
                 self.mesh,
                 (self.p_x, self.p_y, self.p_z),
-                valid_time=self.valid_time)
+                valid_time=self.valid_time,
+            )
         return self._gradientOfPressure_
 
     @property
     def total_pressure(self):
         if self._totalPressure_ is None:
-            self._totalPressure_ = _3dCSCG_ScalarField(self.mesh,
-                                                       self.___total_pressure___,
-                                                       valid_time=self.valid_time)
+            self._totalPressure_ = _3dCSCG_ScalarField(
+                self.mesh,
+                self.___total_pressure___,
+                valid_time=self.valid_time,
+            )
         return self._totalPressure_
     
     def ___total_pressure___(self, t, x, y, z):
@@ -803,28 +901,35 @@ class incompressible_MHD_Base(Base):
             return
 
         for t in TS:
+
+            assert np.all(np.isclose(
+                self.___div_of_velocity___(t, *rst),
+                self.s(t, *rst))), \
+                " <exact solution> <MHD> : velocity divergence free condition."
+
             try:
                 fx = self.u_t(t, x, y, z) + \
                     self.omega_y(t, x, y, z) * self.w(t, x, y, z) - self.omega_z(t, x, y, z) * self.v(t, x, y, z) + \
                     self._tp_x_(t, x, y, z) - \
-                    self._1_over_Re_ * (self.u_xx(t, x, y, z) + self.u_yy(t, x, y, z) + self.u_zz(t, x, y, z)) - \
-                    self.j_y(t, x, y, z) * self.Bz(t, x, y, z) + self.j_z(t, x, y, z) * self.By(t, x, y, z)
+                    self._1_over_Rf_ * (self.u_xx(t, x, y, z) + self.u_yy(t, x, y, z) + self.u_zz(t, x, y, z)) - \
+                    self.c * (self.j_y(t, x, y, z) * self.Bz(t, x, y, z) - self.j_z(t, x, y, z) * self.By(t, x, y, z))
 
                 fy = self.v_t(t, x, y, z) + \
                     self.omega_z(t, x, y, z) * self.u(t, x, y, z) - self.omega_x(t, x, y, z) * self.w(t, x, y, z) + \
                     self._tp_y_(t, x, y, z) - \
-                    self._1_over_Re_ * (self.v_xx(t, x, y, z) + self.v_yy(t, x, y, z) + self.v_zz(t, x, y, z)) - \
-                    self.j_z(t, x, y, z) * self.Bx(t, x, y, z) + self.j_x(t, x, y, z) * self.Bz(t, x, y, z)
+                    self._1_over_Rf_ * (self.v_xx(t, x, y, z) + self.v_yy(t, x, y, z) + self.v_zz(t, x, y, z)) - \
+                    self.c * (self.j_z(t, x, y, z) * self.Bx(t, x, y, z) - self.j_x(t, x, y, z) * self.Bz(t, x, y, z))
 
                 fz = self.w_t(t, x, y, z) + \
                     self.omega_x(t, x, y, z) * self.v(t, x, y, z) - self.omega_y(t, x, y, z) * self.u(t, x, y, z) + \
                     self._tp_z_(t, x, y, z) - \
-                    self._1_over_Re_ * (self.w_xx(t, x, y, z) + self.w_yy(t, x, y, z) + self.w_zz(t, x, y, z)) - \
-                    self.j_x(t, x, y, z) * self.By(t, x, y, z) + self.j_y(t, x, y, z) * self.Bx(t, x, y, z)
+                    self._1_over_Rf_ * (self.w_xx(t, x, y, z) + self.w_yy(t, x, y, z) + self.w_zz(t, x, y, z)) - \
+                    self.c * (self.j_x(t, x, y, z) * self.By(t, x, y, z) - self.j_y(t, x, y, z) * self.Bx(t, x, y, z))
 
                 FX = self.fx(t, x, y, z)
                 FY = self.fy(t, x, y, z)
                 FZ = self.fz(t, x, y, z)
+
                 np.testing.assert_array_almost_equal(FX - fx, 0, decimal=5)
                 np.testing.assert_array_almost_equal(FY - fy, 0, decimal=5)
                 np.testing.assert_array_almost_equal(FZ - fz, 0, decimal=5)
@@ -836,6 +941,7 @@ class incompressible_MHD_Base(Base):
                 RX = self.rx(t, x, y, z)
                 RY = self.ry(t, x, y, z)
                 RZ = self.rz(t, x, y, z)
+
                 np.testing.assert_array_almost_equal(RX, rx, decimal=4)
                 np.testing.assert_array_almost_equal(RY, ry, decimal=4)
                 np.testing.assert_array_almost_equal(RZ, rz, decimal=4)
@@ -883,13 +989,13 @@ class incompressible_MHD_Base(Base):
                 " <exact solution> <MHD> : velocity divergence condition."
 
             assert np.all(np.isclose(
-                self.___div_of_velocity___(time, *rst),
-                self.s(time, *rst))), \
-                " <exact solution> <MHD> : velocity divergence free condition."
-
-            assert np.all(np.isclose(
                 self.___div_of_B___(time, *rst),
                 self.m(time, *rst))), \
+                " <exact solution> <MHD> : magnetic field divergence free condition."
+
+            assert np.all(np.isclose(
+                self.___div_of_vorticity___(time, *rst),
+                0)), \
                 " <exact solution> <MHD> : magnetic field divergence free condition."
 
             wx = partial(self.omega_x, time)

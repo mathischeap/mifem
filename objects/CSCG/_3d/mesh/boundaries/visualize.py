@@ -47,11 +47,11 @@ class _3dCSCG_MeshBoundaries_VIS(FrozenOnly):
         ax.zaxis._axinfo["grid"]['color'] = (1, 1, 1, 0)
 
         if boundaries_num > 10:
-            corlormap = 'viridis'
+            colormap = 'viridis'
         else:
-            corlormap = 'tab10'
+            colormap = 'tab10'
 
-        color = cm.get_cmap(corlormap, boundaries_num)
+        color = cm.get_cmap(colormap, boundaries_num)
         colors = []
         boundary_name_color_dict = dict()
         for j in range(boundaries_num):

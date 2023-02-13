@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 def parse_boundary_position_indicator(element):
     """
