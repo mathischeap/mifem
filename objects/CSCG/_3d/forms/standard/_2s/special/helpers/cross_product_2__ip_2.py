@@ -28,7 +28,7 @@ class ___3dCSCG_2Form_CrossProduct_2__ip_2___(FrozenOnly):
         assert u2.mesh == e2.mesh, "___3dCSCG_2Form_CrossProduct_2__ip_2___: Meshes do not match."
 
         if quad_degree is None:
-            quad_degree = [int(np.max([u2.dqp[i], w2.dqp[i], e2.dqp[i]]) * 1.5)  for i in range(3)]
+            quad_degree = [int(np.max([u2.dqp[i], w2.dqp[i], e2.dqp[i]]) * 1.5) for i in range(3)]
 
         quad_nodes, _, quad_weights_1d = \
             u2.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
@@ -45,7 +45,7 @@ class ___3dCSCG_2Form_CrossProduct_2__ip_2___(FrozenOnly):
 
         CP_IP_3dM = dict()
         type_cache = dict()
-        for i in RMw: # go through all local mesh-elements
+        for i in RMw:  # go through all local mesh-elements
             typeWr2Metric = w2.mesh.elements[i].type_wrt_metric.mark
             if isinstance(typeWr2Metric, str):
                 if typeWr2Metric in type_cache:
@@ -59,11 +59,11 @@ class ___3dCSCG_2Form_CrossProduct_2__ip_2___(FrozenOnly):
                     # WXU = w1 X u2 = [wy*w - wz*v,   wz*u - wx*w,   wx*v - wy*u]^T = [A B C]^T
                     # WXU dot e2 = Aa + Bb + Cc
                     Aa = + np.einsum('li, lj, lk, l -> ijk', wy, w, a, quad_weights_1d * dJi, optimize='greedy')\
-                         - np.einsum('li, lj, lk, l -> ijk', wz, v, a, quad_weights_1d * dJi, optimize='greedy')
+                        - np.einsum('li, lj, lk, l -> ijk',  wz, v, a, quad_weights_1d * dJi, optimize='greedy')
                     Bb = + np.einsum('li, lj, lk, l -> ijk', wz, u, b, quad_weights_1d * dJi, optimize='greedy')\
-                         - np.einsum('li, lj, lk, l -> ijk', wx, w, b, quad_weights_1d * dJi, optimize='greedy')
+                        - np.einsum('li, lj, lk, l -> ijk',  wx, w, b, quad_weights_1d * dJi, optimize='greedy')
                     Cc = + np.einsum('li, lj, lk, l -> ijk', wx, v, c, quad_weights_1d * dJi, optimize='greedy')\
-                         - np.einsum('li, lj, lk, l -> ijk', wy, u, c, quad_weights_1d * dJi, optimize='greedy')
+                        - np.einsum('li, lj, lk, l -> ijk',  wy, u, c, quad_weights_1d * dJi, optimize='greedy')
                     CP_IP_3dM_i_ = Aa + Bb + Cc
                     CP_IP_3dM[i] = CP_IP_3dM_i_
                     type_cache[typeWr2Metric] = CP_IP_3dM_i_
@@ -77,11 +77,11 @@ class ___3dCSCG_2Form_CrossProduct_2__ip_2___(FrozenOnly):
                 # WXU = w1 X u2 = [wy*w - wz*v,   wz*u - wx*w,   wx*v - wy*u]^T = [A B C]^T
                 # WXU dot e2 = Aa + Bb + Cc
                 Aa = + np.einsum('li, lj, lk, l -> ijk', wy, w, a, quad_weights_1d * dJi, optimize='greedy')\
-                     - np.einsum('li, lj, lk, l -> ijk', wz, v, a, quad_weights_1d * dJi, optimize='greedy')
+                    - np.einsum('li, lj, lk, l -> ijk',  wz, v, a, quad_weights_1d * dJi, optimize='greedy')
                 Bb = + np.einsum('li, lj, lk, l -> ijk', wz, u, b, quad_weights_1d * dJi, optimize='greedy')\
-                     - np.einsum('li, lj, lk, l -> ijk', wx, w, b, quad_weights_1d * dJi, optimize='greedy')
+                    - np.einsum('li, lj, lk, l -> ijk',  wx, w, b, quad_weights_1d * dJi, optimize='greedy')
                 Cc = + np.einsum('li, lj, lk, l -> ijk', wx, v, c, quad_weights_1d * dJi, optimize='greedy')\
-                     - np.einsum('li, lj, lk, l -> ijk', wy, u, c, quad_weights_1d * dJi, optimize='greedy')
+                    - np.einsum('li, lj, lk, l -> ijk',  wy, u, c, quad_weights_1d * dJi, optimize='greedy')
 
                 CP_IP_3dM[i] = Aa + Bb + Cc
 

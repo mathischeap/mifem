@@ -36,8 +36,10 @@ class _3dCSCG_Discretize_Standard(FrozenOnly):
             xyz = element.coordinate_transformation.mapping(*nodes)
             cochainLocal[i] = FUNC(*xyz)
         # isKronecker? ...
-        if not SELF.space.IS_Kronecker: raise NotImplementedError()
+        if not SELF.space.IS_Kronecker:
+            raise NotImplementedError()
         # pass to cochain.local ...
-        if update_cochain: SELF.cochain.local = cochainLocal
+        if update_cochain:
+            SELF.cochain.local = cochainLocal
         # ...
         return 'locally full local cochain', cochainLocal

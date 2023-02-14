@@ -4,10 +4,9 @@ from objects.CSCG._3d.forms.standard._1s.project.to import ___3dCSCG_1Form_Proje
 from objects.CSCG._3d.forms.standard._1s.project.van import ___3dCSCG_1Form_Project_Van___
 
 
-
 class _1Form_Projection(FrozenOnly):
     """A wrapper of all projection methods."""
-    def __init__(self,_1sf):
+    def __init__(self, _1sf):
         self._sf_ = _1sf
         self._to_ = ___3dCSCG_1Form_Project_To___(self._sf_)
         self._van_ = ___3dCSCG_1Form_Project_Van___(self._sf_)

@@ -482,6 +482,9 @@ class IteratorMonitorDo(FrozenOnly):
 
                 else:
                     plt.plot(RDF['t'], RDF[di], color=colors(i-6), linewidth=1.5)
+                    a, b = min(RDF['t']), max(RDF['t'])
+                    if isinstance(a, (int, float)) and isinstance(b, (int, float)) and a < b:
+                        plt.xlim([a, b])
 
                 ax.tick_params(axis="x", direction='in', length=8, labelsize=15)
                 ax.tick_params(axis="y", direction='in', length=8, labelsize=15)

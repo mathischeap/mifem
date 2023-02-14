@@ -4,6 +4,7 @@ import numpy as np
 
 from components.quadrature import Quadrature
 
+
 class _3dCSCG_Discretize_Standard(FrozenOnly):
     def __init__(self, sf):
         self._sf_ = sf
@@ -25,7 +26,7 @@ class _3dCSCG_Discretize_Standard(FrozenOnly):
         SELF = self._sf_
 
         if self.___DISCRETIZE_STANDARD_CACHE___ is None or \
-            quad_degree != self.___DISCRETIZE_STANDARD_CACHE___['quadDegree']:
+           quad_degree != self.___DISCRETIZE_STANDARD_CACHE___['quadDegree']:
             self.___DISCRETIZE_STANDARD_CACHE___ = dict()
 
             xi, eta, sigma, edge_size_d_xi, quad_weights = \
@@ -144,7 +145,8 @@ class _3dCSCG_Discretize_Standard(FrozenOnly):
                 )
         del JXC, JYC, JZC
         # isisKronecker? ...
-        if not SELF.space.IS_Kronecker: raise NotImplementedError()
+        if not SELF.space.IS_Kronecker:
+            raise NotImplementedError()
         # give it to cochain.local ...
         cochainLocal = dict()
         for i in SELF.mesh.elements.indices:

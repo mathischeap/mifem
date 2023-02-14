@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-
-
 import sys
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from objects.CSCG._3d.forms.standard._2s.special.vortex_detection import ___3dCSCG_2Form_Vortex_Detection___
 
@@ -10,11 +9,12 @@ from components.freeze.main import FrozenOnly
 from tools.elementwiseCache.dataStructures.objects.sparseMatrix.main import EWC_SparseMatrix
 from tools.elementwiseCache.dataStructures.objects.columnVector.main import EWC_ColumnVector
 
-from objects.CSCG._3d.forms.standard._2s.special.helpers.cross_product_2__ip_2_2M0 import ___3dCSCG_2Form_CrossProduct_2__ip_2_2M0___
-from objects.CSCG._3d.forms.standard._2s.special.helpers.cross_product_2__ip_2 import ___3dCSCG_2Form_CrossProduct_2__ip_2___
-from objects.CSCG._3d.forms.standard._2s.special.helpers.cross_product_2__ip_1 import ___3dCSCG_2Form_CrossProduct_2__ip_1___
-
-
+from objects.CSCG._3d.forms.standard._2s.special.helpers.cross_product_2__ip_2_2M0 import \
+    ___3dCSCG_2Form_CrossProduct_2__ip_2_2M0___
+from objects.CSCG._3d.forms.standard._2s.special.helpers.cross_product_2__ip_2 import \
+    ___3dCSCG_2Form_CrossProduct_2__ip_2___
+from objects.CSCG._3d.forms.standard._2s.special.helpers.cross_product_2__ip_1 import \
+    ___3dCSCG_2Form_CrossProduct_2__ip_1___
 
 
 class _2Form_Special(FrozenOnly):
@@ -102,17 +102,17 @@ class _2Form_Special(FrozenOnly):
         D.gathering_matrices = (adt2, adt2)
         b.gathering_matrix = adt2
 
-        #----- get boundaries and do a check --------------------------------------
+        # ----- get boundaries and do a check --------------------------------------
         Dirichlet_boundaries = adt2.BC.boundaries
         Neumann_boundaries = sf.BC.boundaries
 
         bns = mesh.boundaries.names
         SDb = set(Dirichlet_boundaries)
         SNb = set(Neumann_boundaries)
-        assert SDb & SNb == set()   , f"Dirichlet_boundaries intersect Neumann_boundaries is not None."
+        assert SDb & SNb == set(), f"Dirichlet_boundaries intersect Neumann_boundaries is not None."
         assert SDb | SNb == set(bns), f"Dirichlet_boundaries union Neumann_boundaries is not full!"
 
-        #-------- set Neumann boundary condition ---------------------------------------------------
+        # -------- set Neumann boundary condition ---------------------------------------------------
         sf.BC.boundaries = Neumann_boundaries
         adt2.BC.boundaries = Neumann_boundaries
         col_pc = sf.BC.interpret
@@ -120,12 +120,12 @@ class _2Form_Special(FrozenOnly):
         T = T.adjust.identify_rows_according_to(row_pd, col_pc)
         b = b.adjust.set_entries_according_to(row_pd, col_pc)
 
-        #-------- set Dirichlet boundary condition -------------------------------
+        # -------- set Dirichlet boundary condition -------------------------------
         adt2.BC.boundaries = Dirichlet_boundaries
         adt_pc = adt2.BC.interpret
         D = D.adjust.identify_rows_according_to(adt_pc)
         T = T.adjust.clear_rows_according_to(adt_pc)
         b = b.adjust.set_entries_according_to(adt_pc, adt_pc)
 
-        #=====================================================================================
+        # =====================================================================================
         return T, D, b

@@ -28,7 +28,7 @@ from components.miscellaneous.timer import break_list_into_parts
 from objects.CSCG._3d.mesh.elements.main import _3dCSCG_Mesh_Elements
 from objects.CSCG._3d.mesh.periodicSetting.main import _3dCSCG_PeriodicDomainSetting
 from objects.CSCG._3d.mesh.legacy.coordinate_transformation.transformer import \
-    CoordinateTransformation as ___DCT___
+    CoordinateTransformation as ___DeCooTrans___
 from objects.CSCG._3d.mesh.visualize.main import _3dCSCG_Mesh_Visualize
 from objects.CSCG._3d.mesh.boundaries.main import _3dCSCG_Mesh_Boundaries
 from objects.CSCG._3d.mesh.subGeometry.main import _3dCSCG_Mesh_SubGeometry
@@ -97,7 +97,7 @@ class _3dCSCG_Mesh(CSCG_MESH_BASE):
         self.___PRIVATE_modify_elements_map_wr2_periodic_setting___()
         self.___PRIVATE_generate_boundary_element_sides___()
 
-        self.___DEPRECATED_ct___ = ___DCT___(self)  # only for test purpose
+        self.___DEPRECATED_ct___ = ___DeCooTrans___(self)  # only for test purpose
         self._elements_ = _3dCSCG_Mesh_Elements(self)
         self._trace_ = None
         self._edge_ = None

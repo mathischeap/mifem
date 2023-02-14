@@ -6,7 +6,8 @@
 """
 import sys
 
-if './' not in sys.path: sys.path.append('./')
+if './' not in sys.path:
+    sys.path.append('./')
 
 from components.freeze.base import FrozenOnly
 from objects.CSCG._3d.forms.standard._2s.main import _3dCSCG_2Form
@@ -57,7 +58,7 @@ class ___3dCSCG_curl1_CrossProduct_1__ip_2___(FrozenOnly):
         CP_IP_3dM = dict()
         type_cache = dict()
 
-        for i in RMw: # go through all local mesh-elements
+        for i in RMw:  # go through all local mesh-elements
             typeWr2Metric = u.mesh.elements[i].type_wrt_metric.mark
             if isinstance(typeWr2Metric, str):
                 if typeWr2Metric in type_cache:
@@ -71,12 +72,13 @@ class ___3dCSCG_curl1_CrossProduct_1__ip_2___(FrozenOnly):
                     U, V, W = RMu[i]
                     a, b, c = RMe[i]
                     dJi = detJ[i]
-                    CP_IP_3dM_i_ = + np.einsum('li, lj, lk, l -> ijk', wy, W, a, quad_weights_1d * dJi, optimize='optimal')\
-                                   - np.einsum('li, lj, lk, l -> ijk', wz, V, a, quad_weights_1d * dJi, optimize='optimal')\
-                                   + np.einsum('li, lj, lk, l -> ijk', wz, U, b, quad_weights_1d * dJi, optimize='optimal')\
-                                   - np.einsum('li, lj, lk, l -> ijk', wx, W, b, quad_weights_1d * dJi, optimize='optimal')\
-                                   + np.einsum('li, lj, lk, l -> ijk', wx, V, c, quad_weights_1d * dJi, optimize='optimal')\
-                                   - np.einsum('li, lj, lk, l -> ijk', wy, U, c, quad_weights_1d * dJi, optimize='optimal')
+                    CP_IP_3dM_i_ = \
+                        + np.einsum('li, lj, lk, l -> ijk', wy, W, a, quad_weights_1d * dJi, optimize='optimal')\
+                        - np.einsum('li, lj, lk, l -> ijk', wz, V, a, quad_weights_1d * dJi, optimize='optimal')\
+                        + np.einsum('li, lj, lk, l -> ijk', wz, U, b, quad_weights_1d * dJi, optimize='optimal')\
+                        - np.einsum('li, lj, lk, l -> ijk', wx, W, b, quad_weights_1d * dJi, optimize='optimal')\
+                        + np.einsum('li, lj, lk, l -> ijk', wx, V, c, quad_weights_1d * dJi, optimize='optimal')\
+                        - np.einsum('li, lj, lk, l -> ijk', wy, U, c, quad_weights_1d * dJi, optimize='optimal')
 
                     CP_IP_3dM[i] = CP_IP_3dM_i_
                     type_cache[typeWr2Metric] = CP_IP_3dM_i_
@@ -86,12 +88,13 @@ class ___3dCSCG_curl1_CrossProduct_1__ip_2___(FrozenOnly):
                 U, V, W = RMu[i]
                 a, b, c = RMe[i]
                 dJi = detJ[i]
-                CP_IP_3dM[i] = + np.einsum('li, lj, lk, l -> ijk', wy, W, a, quad_weights_1d * dJi, optimize='optimal')\
-                               - np.einsum('li, lj, lk, l -> ijk', wz, V, a, quad_weights_1d * dJi, optimize='optimal')\
-                               + np.einsum('li, lj, lk, l -> ijk', wz, U, b, quad_weights_1d * dJi, optimize='optimal')\
-                               - np.einsum('li, lj, lk, l -> ijk', wx, W, b, quad_weights_1d * dJi, optimize='optimal')\
-                               + np.einsum('li, lj, lk, l -> ijk', wx, V, c, quad_weights_1d * dJi, optimize='optimal')\
-                               - np.einsum('li, lj, lk, l -> ijk', wy, U, c, quad_weights_1d * dJi, optimize='optimal')
+                CP_IP_3dM[i] = \
+                    + np.einsum('li, lj, lk, l -> ijk', wy, W, a, quad_weights_1d * dJi, optimize='optimal')\
+                    - np.einsum('li, lj, lk, l -> ijk', wz, V, a, quad_weights_1d * dJi, optimize='optimal')\
+                    + np.einsum('li, lj, lk, l -> ijk', wz, U, b, quad_weights_1d * dJi, optimize='optimal')\
+                    - np.einsum('li, lj, lk, l -> ijk', wx, W, b, quad_weights_1d * dJi, optimize='optimal')\
+                    + np.einsum('li, lj, lk, l -> ijk', wx, V, c, quad_weights_1d * dJi, optimize='optimal')\
+                    - np.einsum('li, lj, lk, l -> ijk', wy, U, c, quad_weights_1d * dJi, optimize='optimal')
 
         self._CP_IP_3dM_ = CP_IP_3dM
         self._u_ = u
@@ -105,27 +108,25 @@ class ___3dCSCG_curl1_CrossProduct_1__ip_2___(FrozenOnly):
         return csr_matrix(V).T
 
 
-
 if __name__ == '__main__':
     # mpiexec -n 4 python objects/CSCG/_3d/forms/standard/_1s/special/helpers/curl1_cross_product_1__ip_2.py
-    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller#, ExactSolutionSelector
+    from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller  # , ExactSolutionSelector
 
-    mesh = MeshGenerator('cuboid', region_layout=[2,2,2])([3,3,3])
-    space = SpaceInvoker('polynomials')((2,2,2))
+    mesh = MeshGenerator('cuboid', region_layout=[2, 2, 2])([3, 3, 3])
+    space = SpaceInvoker('polynomials')((2, 2, 2))
     FC = FormCaller(mesh, space)
 
-    def u(t,x,y,z): return np.sin(np.pi*x)*np.cos(2*np.pi*y)*np.cos(np.pi*z) + t
-    def v(t,x,y,z): return np.cos(np.pi*x)*np.sin(np.pi*y)*np.cos(2*np.pi*z) + t
-    def w(t,x,y,z): return np.cos(np.pi*x)*np.cos(np.pi*y)*np.sin(2*np.pi*z) + t
+    def u(t, x, y, z): return np.sin(np.pi*x)*np.cos(2*np.pi*y)*np.cos(np.pi*z) + t
+    def v(t, x, y, z): return np.cos(np.pi*x)*np.sin(np.pi*y)*np.cos(2*np.pi*z) + t
+    def w(t, x, y, z): return np.cos(np.pi*x)*np.cos(np.pi*y)*np.sin(2*np.pi*z) + t
 
-    velocity = FC('vector', (u,v,w))
+    velocity = FC('vector', (u, v, w))
     U = FC('scalar', u)
     V = FC('scalar', v)
     W = FC('scalar', w)
 
     f1 = FC('1-f', is_hybrid=False)
     u2 = FC('2-f', is_hybrid=False)
-
 
     f1.TW.func.do.set_func_body_as(velocity)
     f1.TW.current_time = 0

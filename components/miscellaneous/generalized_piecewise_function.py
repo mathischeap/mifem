@@ -138,11 +138,11 @@ if __name__ == '__main__':
 
     doctest.testmod()
 
-    def Yp0(p, q): return 0
+    def Yp0(p, q): return 0 * p * q
 
-    def Yp1(p, q): return 1
+    def Yp1(p, q): return 1 + 0 * p * q
 
-    def Yp2(p, q): return 2
+    def Yp2(p, q): return 2 + 0 * p * q
 
     p = np.linspace(0, 1, 10)
     q = np.linspace(0, 1, 10)

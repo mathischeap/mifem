@@ -27,11 +27,11 @@ class ___3dCSCG_2Form_Vortex_Detection___(FrozenOnly):
         :param sigma: 1d increasing array in [-1,1]
 
         """
-        assert np.ndim(xi) == 1 and np.all(np.diff(xi) >0) and np.max(xi) <= 1 and np.min(xi) >= -1, \
+        assert np.ndim(xi) == 1 and np.all(np.diff(xi) > 0) and np.max(xi) <= 1 and np.min(xi) >= -1, \
             f"xi={xi} wrong, should be 1d array in [-1,1] and increasing."
-        assert np.ndim(eta) == 1 and np.all(np.diff(eta) >0) and np.max(eta) <= 1 and np.min(eta) >= -1, \
+        assert np.ndim(eta) == 1 and np.all(np.diff(eta) > 0) and np.max(eta) <= 1 and np.min(eta) >= -1, \
             f"eta={eta} wrong, should be 1d array in [-1,1] and increasing."
-        assert np.ndim(sigma) == 1 and np.all(np.diff(sigma) >0) and np.max(sigma) <= 1 and np.min(sigma) >= -1, \
+        assert np.ndim(sigma) == 1 and np.all(np.diff(sigma) > 0) and np.max(sigma) <= 1 and np.min(sigma) >= -1, \
             f"sigma={sigma} wrong, should be 1d array in [-1,1] and increasing."
 
         U, V, W = self._sf_.projection.to.vector_of_3_standard_0forms()
@@ -86,7 +86,7 @@ class ___3dCSCG_2Form_Vortex_Detection___(FrozenOnly):
         U_10, U_11, U_12 = dV_xyz
         U_20, U_21, U_22 = dW_xyz
 
-        for i in U_00: # will go through all local mesh elements
+        for i in U_00:  # will go through all local mesh elements
             u_00 = U_00[i]
             u_01 = U_01[i]
             u_02 = U_02[i]
@@ -136,10 +136,10 @@ class ___3dCSCG_2Form_Vortex_Detection___(FrozenOnly):
         :param eta: 1d increasing array in [-1,1]
         :param sigma: 1d increasing array in [-1,1]
         """
-        xyz, S, O = self.___PRIVATE_generate_S_and_Omega___(xi, eta, sigma)
+        xyz, S, Oo = self.___PRIVATE_generate_S_and_Omega___(xi, eta, sigma)
 
         S0, S1, S2 = S
-        O0, O1, O2 = O
+        O0, O1, O2 = Oo
 
         S00, S01, S02 = S0
         S10, S11, S12 = S1
@@ -152,11 +152,11 @@ class ___3dCSCG_2Form_Vortex_Detection___(FrozenOnly):
         Q = dict()
         LAMBDA_2 = dict()
 
-        for i in S00: # we go through all local mesh elements
+        for i in S00:  # we go through all local mesh elements
             s00, s01, s02 = S00[i], S01[i], S02[i]
             s10, s11, s12 = S10[i], S11[i], S12[i]
             s20, s21, s22 = S20[i], S21[i], S22[i]
-            o00 ,o01, o02 = O00[i], O01[i], O02[i]
+            o00, o01, o02 = O00[i], O01[i], O02[i]
             o10, o11, o12 = O10[i], O11[i], O12[i]
             o20, o21, o22 = O20[i], O21[i], O22[i]
 
@@ -174,16 +174,16 @@ class ___3dCSCG_2Form_Vortex_Detection___(FrozenOnly):
             so_21 = (s21**2 + o21**2).ravel('F')
             so_22 = (s22**2 + o22**2).ravel('F')
 
-            so = np.zeros((len(so_00),3,3))
-            so[:,0,0] = so_00
-            so[:,0,1] = so_01
-            so[:,0,2] = so_02
-            so[:,1,0] = so_10
-            so[:,1,1] = so_11
-            so[:,1,2] = so_12
-            so[:,2,0] = so_20
-            so[:,2,1] = so_21
-            so[:,2,2] = so_22
+            so = np.zeros((len(so_00), 3, 3))
+            so[:, 0, 0] = so_00
+            so[:, 0, 1] = so_01
+            so[:, 0, 2] = so_02
+            so[:, 1, 0] = so_10
+            so[:, 1, 1] = so_11
+            so[:, 1, 2] = so_12
+            so[:, 2, 0] = so_20
+            so[:, 2, 1] = so_21
+            so[:, 2, 2] = so_22
 
             eigen_values, _ = np.linalg.eig(so)
             Q[i] = (- 0.5 * np.sum(eigen_values, axis=1)).reshape(SHAPE, order='F')
@@ -191,7 +191,7 @@ class ___3dCSCG_2Form_Vortex_Detection___(FrozenOnly):
 
             # print(eigen_values, eigen_values[:,1] )
 
-            LAMBDA_2[i] = eigen_values[:,1].reshape(SHAPE, order='F')
+            LAMBDA_2[i] = eigen_values[:, 1].reshape(SHAPE, order='F')
 
         return xyz, Q, LAMBDA_2
 
@@ -206,4 +206,3 @@ class ___3dCSCG_2Form_Vortex_Detection___(FrozenOnly):
         """
         xyz, Q, LAMBDA_2 = self.___PRIVATE_generate_lambda_1_2_3_Q___(xi, eta, sigma)[:3]
         return xyz, Q, LAMBDA_2
-

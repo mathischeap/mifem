@@ -65,11 +65,11 @@ class ___3dCSCG_2Form_CrossProduct_2__ip_1___(FrozenOnly):
                     # WXU = w1 X u2 = [wy*w - wz*v,   wz*u - wx*w,   wx*v - wy*u]^T = [A B C]^T
                     # WXU dot e2 = Aa + Bb + Cc
                     Aa = + np.einsum('li, lj, lk, l -> ijk', wy, w, a, quad_weights_1d * dJi, optimize='greedy')\
-                        - np.einsum('li, lj, lk, l -> ijk', wz, v, a, quad_weights_1d * dJi, optimize='greedy')
+                        - np.einsum('li, lj, lk, l -> ijk',  wz, v, a, quad_weights_1d * dJi, optimize='greedy')
                     Bb = + np.einsum('li, lj, lk, l -> ijk', wz, U, b, quad_weights_1d * dJi, optimize='greedy')\
-                        - np.einsum('li, lj, lk, l -> ijk', wx, w, b, quad_weights_1d * dJi, optimize='greedy')
+                        - np.einsum('li, lj, lk, l -> ijk',  wx, w, b, quad_weights_1d * dJi, optimize='greedy')
                     Cc = + np.einsum('li, lj, lk, l -> ijk', wx, v, c, quad_weights_1d * dJi, optimize='greedy')\
-                        - np.einsum('li, lj, lk, l -> ijk', wy, U, c, quad_weights_1d * dJi, optimize='greedy')
+                        - np.einsum('li, lj, lk, l -> ijk',  wy, U, c, quad_weights_1d * dJi, optimize='greedy')
                     CP_IP_3dM_i_ = Aa + Bb + Cc
                     CP_IP_3dM[i] = CP_IP_3dM_i_
                     type_cache[typeWr2Metric] = CP_IP_3dM_i_
@@ -83,11 +83,11 @@ class ___3dCSCG_2Form_CrossProduct_2__ip_1___(FrozenOnly):
                 # WXU = w1 X u2 = [wy*w - wz*v,   wz*u - wx*w,   wx*v - wy*u]^T = [A B C]^T
                 # WXU dot e2 = Aa + Bb + Cc
                 Aa = + np.einsum('li, lj, lk, l -> ijk', wy, w, a, quad_weights_1d * dJi, optimize='greedy')\
-                    - np.einsum('li, lj, lk, l -> ijk', wz, v, a, quad_weights_1d * dJi, optimize='greedy')
+                    - np.einsum('li, lj, lk, l -> ijk',  wz, v, a, quad_weights_1d * dJi, optimize='greedy')
                 Bb = + np.einsum('li, lj, lk, l -> ijk', wz, U, b, quad_weights_1d * dJi, optimize='greedy')\
-                    - np.einsum('li, lj, lk, l -> ijk', wx, w, b, quad_weights_1d * dJi, optimize='greedy')
+                    - np.einsum('li, lj, lk, l -> ijk',  wx, w, b, quad_weights_1d * dJi, optimize='greedy')
                 Cc = + np.einsum('li, lj, lk, l -> ijk', wx, v, c, quad_weights_1d * dJi, optimize='greedy') \
-                    - np.einsum('li, lj, lk, l -> ijk', wy, U, c, quad_weights_1d * dJi, optimize='greedy')
+                    - np.einsum('li, lj, lk, l -> ijk',  wy, U, c, quad_weights_1d * dJi, optimize='greedy')
 
                 CP_IP_3dM[i] = Aa + Bb + Cc
 
