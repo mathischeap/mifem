@@ -37,7 +37,7 @@ class _3dCSCG_1Form(_3dCSCG_S1F_Private, _3dCSCG_Standard_Form, ABC):
     """
     def __init__(
         self, mesh, space, hybrid=True,
-        orientation='outer', numbering_parameters='Naive',  name=None
+        orientation='outer', numbering_parameters='Naive', name=None
     ):
         if name is None:
             if hybrid:

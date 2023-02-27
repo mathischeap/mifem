@@ -14,6 +14,12 @@ if './' not in sys.path:
 import numpy as np
 from scipy.sparse import csr_matrix
 from components.freeze.base import FrozenOnly
+from tools.elementwiseCache.dataStructures.objects.multiDimMatrix.main import MultiDimMatrix
+
+_global_cache = {
+    'key': '',
+    'data': dict(),
+}
 
 
 class ___3dCSCG_2Form_CrossProduct_2__ip_1___(FrozenOnly):
@@ -33,72 +39,88 @@ class ___3dCSCG_2Form_CrossProduct_2__ip_1___(FrozenOnly):
         assert u.mesh == B.mesh, "___3dCSCG_2Form_CrossProduct_2__ip_1___, Meshes do not match."
         assert j.mesh == B.mesh, "___3dCSCG_2Form_CrossProduct_2__ip_1___, Meshes do not match."
 
-        if quad_degree is None:
-            quad_degree = [int(np.max([u.dqp[i], B.dqp[i], j.dqp[i]]) * 1.5) for i in range(3)]
+        key = "{}{}{}{}".format(id(u), id(B), id(j), quad_degree)
 
-        quad_nodes, _, quad_weights_1d = \
-            u.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
+        if key == _global_cache['key']:
+            CP_IP_3dM = _global_cache['data']
+        else:
 
-        RMB = B.do.make_reconstruction_matrix_on_grid(*quad_nodes)
-        RMu = u.do.make_reconstruction_matrix_on_grid(*quad_nodes)
-        RMe = j.do.make_reconstruction_matrix_on_grid(*quad_nodes)
+            if quad_degree is None:
+                quad_degree = [int(np.max([u.dqp[i], B.dqp[i], j.dqp[i]]) * 1.5) for i in range(3)]
 
-        xi, et, sg = np.meshgrid(*quad_nodes, indexing='ij')
-        xi = xi.ravel()
-        et = et.ravel()
-        sg = sg.ravel()
-        detJ = u.mesh.elements.coordinate_transformation.Jacobian(xi, et, sg)
+            quad_nodes, _, quad_weights_1d = \
+                u.space.___PRIVATE_do_evaluate_quadrature___(quad_degree)
 
-        CP_IP_3dM = dict()
-        type_cache = dict()
-        for i in RMB:  # go through all local mesh-elements
-            typeWr2Metric = B.mesh.elements[i].type_wrt_metric.mark
-            if isinstance(typeWr2Metric, str):
-                if typeWr2Metric in type_cache:
-                    CP_IP_3dM[i] = type_cache[typeWr2Metric]
+            RMB = B.do.make_reconstruction_matrix_on_grid(*quad_nodes)
+            RMu = u.do.make_reconstruction_matrix_on_grid(*quad_nodes)
+            RMe = j.do.make_reconstruction_matrix_on_grid(*quad_nodes)
+
+            xi, et, sg = np.meshgrid(*quad_nodes, indexing='ij')
+            xi = xi.ravel()
+            et = et.ravel()
+            sg = sg.ravel()
+            detJ = u.mesh.elements.coordinate_transformation.Jacobian(xi, et, sg)
+
+            CP_IP_3dM = dict()
+            type_cache = dict()
+            for i in RMB:  # go through all local mesh-elements
+                typeWr2Metric = B.mesh.elements[i].type_wrt_metric.mark
+                if isinstance(typeWr2Metric, str):
+                    if typeWr2Metric in type_cache:
+                        CP_IP_3dM[i] = type_cache[typeWr2Metric]
+                    else:
+                        wx, wy, wz = RMu[i]
+                        U, V, W = RMB[i]
+                        a, b, c = RMe[i]
+                        dJi = detJ[i]
+                        # w1 = [wx wy, wz]^T    u2= [u v w]^T   e2= [a b c]^T
+                        # WXU = w1 X u2 = [wy*w - wz*v,   wz*u - wx*w,   wx*v - wy*u]^T = [A B C]^T
+                        # WXU dot e2 = Aa + Bb + Cc
+                        Aa = + np.einsum('li, lj, lk, l -> ijk', wy, W, a, quad_weights_1d * dJi, optimize='greedy')\
+                            - np.einsum('li, lj, lk, l -> ijk',  wz, V, a, quad_weights_1d * dJi, optimize='greedy')
+                        Bb = + np.einsum('li, lj, lk, l -> ijk', wz, U, b, quad_weights_1d * dJi, optimize='greedy')\
+                            - np.einsum('li, lj, lk, l -> ijk',  wx, W, b, quad_weights_1d * dJi, optimize='greedy')
+                        Cc = + np.einsum('li, lj, lk, l -> ijk', wx, V, c, quad_weights_1d * dJi, optimize='greedy')\
+                            - np.einsum('li, lj, lk, l -> ijk',  wy, U, c, quad_weights_1d * dJi, optimize='greedy')
+                        CP_IP_3dM_i_ = Aa + Bb + Cc
+                        CP_IP_3dM[i] = CP_IP_3dM_i_
+                        type_cache[typeWr2Metric] = CP_IP_3dM_i_
+
                 else:
                     wx, wy, wz = RMu[i]
-                    U, v, w = RMB[i]
+                    U, V, W = RMB[i]
                     a, b, c = RMe[i]
                     dJi = detJ[i]
                     # w1 = [wx wy, wz]^T    u2= [u v w]^T   e2= [a b c]^T
                     # WXU = w1 X u2 = [wy*w - wz*v,   wz*u - wx*w,   wx*v - wy*u]^T = [A B C]^T
                     # WXU dot e2 = Aa + Bb + Cc
-                    Aa = + np.einsum('li, lj, lk, l -> ijk', wy, w, a, quad_weights_1d * dJi, optimize='greedy')\
-                        - np.einsum('li, lj, lk, l -> ijk',  wz, v, a, quad_weights_1d * dJi, optimize='greedy')
+                    Aa = + np.einsum('li, lj, lk, l -> ijk', wy, W, a, quad_weights_1d * dJi, optimize='greedy')\
+                        - np.einsum('li, lj, lk, l -> ijk',  wz, V, a, quad_weights_1d * dJi, optimize='greedy')
                     Bb = + np.einsum('li, lj, lk, l -> ijk', wz, U, b, quad_weights_1d * dJi, optimize='greedy')\
-                        - np.einsum('li, lj, lk, l -> ijk',  wx, w, b, quad_weights_1d * dJi, optimize='greedy')
-                    Cc = + np.einsum('li, lj, lk, l -> ijk', wx, v, c, quad_weights_1d * dJi, optimize='greedy')\
+                        - np.einsum('li, lj, lk, l -> ijk',  wx, W, b, quad_weights_1d * dJi, optimize='greedy')
+                    Cc = + np.einsum('li, lj, lk, l -> ijk', wx, V, c, quad_weights_1d * dJi, optimize='greedy') \
                         - np.einsum('li, lj, lk, l -> ijk',  wy, U, c, quad_weights_1d * dJi, optimize='greedy')
-                    CP_IP_3dM_i_ = Aa + Bb + Cc
-                    CP_IP_3dM[i] = CP_IP_3dM_i_
-                    type_cache[typeWr2Metric] = CP_IP_3dM_i_
 
-            else:
-                wx, wy, wz = RMu[i]
-                U, v, w = RMB[i]
-                a, b, c = RMe[i]
-                dJi = detJ[i]
-                # w1 = [wx wy, wz]^T    u2= [u v w]^T   e2= [a b c]^T
-                # WXU = w1 X u2 = [wy*w - wz*v,   wz*u - wx*w,   wx*v - wy*u]^T = [A B C]^T
-                # WXU dot e2 = Aa + Bb + Cc
-                Aa = + np.einsum('li, lj, lk, l -> ijk', wy, w, a, quad_weights_1d * dJi, optimize='greedy')\
-                    - np.einsum('li, lj, lk, l -> ijk',  wz, v, a, quad_weights_1d * dJi, optimize='greedy')
-                Bb = + np.einsum('li, lj, lk, l -> ijk', wz, U, b, quad_weights_1d * dJi, optimize='greedy')\
-                    - np.einsum('li, lj, lk, l -> ijk',  wx, w, b, quad_weights_1d * dJi, optimize='greedy')
-                Cc = + np.einsum('li, lj, lk, l -> ijk', wx, v, c, quad_weights_1d * dJi, optimize='greedy') \
-                    - np.einsum('li, lj, lk, l -> ijk',  wy, U, c, quad_weights_1d * dJi, optimize='greedy')
+                    CP_IP_3dM[i] = Aa + Bb + Cc
 
-                CP_IP_3dM[i] = Aa + Bb + Cc
+            _global_cache['key'] = key
+            _global_cache['data'] = CP_IP_3dM
 
         self._CP_IP_3dM_ = CP_IP_3dM
         self._u_ = u
+        self._B_ = B
+        self._j_ = j
         self._freeze_self_()
 
     def __call__(self, i):
         """return 2d matrix of output = '2-M-1' type for mesh-element #i."""
         M = np.einsum('ijk, i -> kj', self._CP_IP_3dM_[i], self._u_.cochain.local[i], optimize='greedy')
         return csr_matrix(M)
+
+    @property
+    def MDM(self):
+        """Return a multi-dimension matrix representing this triple-operator."""
+        return MultiDimMatrix(self._u_.mesh.elements, self._CP_IP_3dM_, [self._u_, self._B_, self._j_], 'no_cache')
 
 
 if __name__ == '__main__':

@@ -68,6 +68,11 @@ class _3dCSCG_VectorField(_3dCSCG_Continuous_FORM_BASE, ndim=3):
         """
         if ftype == 'standard':
             # standard func is function or method.
+            if func.__class__.__name__ == 't3dVector':
+                func = func._vs_
+            else:
+                pass
+
             assert len(func) == 3, f"Standard vector only accepts list or tuple of shape (3,)."
             _func_checked_ = list()
             for i, fci in enumerate(func):

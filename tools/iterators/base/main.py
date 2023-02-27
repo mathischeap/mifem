@@ -155,8 +155,8 @@ class Iterator(FrozenClass):
         solver_par = ds.Parameters
         solver_ret = ds.Returns
 
-        assert len(solver_par) == 2 and solver_par[0] == 'tk' and solver_par[1] == 'tk1', \
-            f" <iterator> : to use iterator, two parameters need to be 'tk', 'tk1'. {solver_par}"
+        assert len(solver_par) == 2, \
+            f" <iterator> : to use iterator, need two parameters"
         assert solver_ret[0] == 'exit_code', "First output must be exit_code."
         assert solver_ret[1] == 'shut_down', "Second output must be shut_down."
         assert solver_ret[2] == 'message', "Third output must be message."
@@ -292,6 +292,13 @@ class Iterator(FrozenClass):
     def ___PRIVATE_append_outputs_to_RDF___(self, outputs):
         """"""
         self.RDF.loc[self.running_step-1] = [self.t, self.dt] + list(outputs[3:])
+
+    def test(self, times=1):
+        """Do a test run of `times` iterations."""
+        if times == 1:
+            return next(self)
+        else:
+            raise NotImplementedError()
 
     # ------------- core methods: run and read ------------------------------------------------
 

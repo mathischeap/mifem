@@ -33,7 +33,7 @@ class MDM_Do(FrozenOnly):
         self._freeze_self_()
 
     def eliminate(self, dim, form):
-        """We eliminate the dimension #dim of the MDM with the local cochain of form.
+        """We eliminate the dimension #dim of the MDM with the local cochain of the form.
 
         Parameters
         ----------

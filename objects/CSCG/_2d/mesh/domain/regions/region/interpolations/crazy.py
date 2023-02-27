@@ -34,6 +34,7 @@ class Crazy(InterpolationBase):
         a, b = self.bounds[0]
         x = (b - a) * (r + 0.5 * self.c * np.sin(2 * np.pi * r) * np.sin(2 * np.pi * s)) + a
         return x
+
     def mapping_Y(self, r, s):
         r, s = self.___check_rs___(r, s)
         c, d = self.bounds[1]
@@ -58,6 +59,7 @@ class Crazy(InterpolationBase):
         a, b = self.bounds[0]
         xr = (b - a) + (b - a) * 2 * np.pi * 0.5 * self.c * np.cos(2 * np.pi * r) * np.sin(2 * np.pi * s)
         return xr
+
     def Jacobian_Xs(self, r, s):
         r, s = self.___check_rs___(r, s)
         a, b = self.bounds[0]
@@ -69,6 +71,7 @@ class Crazy(InterpolationBase):
         c, d = self.bounds[1]
         yr = (d - c) * 2 * np.pi * 0.5 * self.c * np.cos(2 * np.pi * r) * np.sin(2 * np.pi * s)
         return yr
+
     def Jacobian_Ys(self, r, s):
         r, s = self.___check_rs___(r, s)
         c, d = self.bounds[1]

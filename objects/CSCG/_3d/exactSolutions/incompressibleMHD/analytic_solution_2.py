@@ -23,27 +23,27 @@ class AS2(incompressible_MHD_Base):
 
 
     def u(self, t, x, y, z):
-        return sin(x) * cos(y) * cos(z) * exp(-t/(2*pi))
+        return sin(x) * cos(y) * cos(z) * exp(t/pi)
 
     def v(self, t, x, y, z):
-        return cos(x) * sin(y) * cos(z) * exp(-t/(2*pi))
+        return cos(x) * sin(y) * cos(z) * exp(t/pi)
 
     def w(self, t, x, y, z):
-        return -2 * cos(x) * cos(y) * sin(z) * exp(-t/(2*pi))
+        return -2 * cos(x) * cos(y) * sin(z) * exp(t/pi)
 
 
     def p(self, t, x, y, z):
-        return sin(x) * sin(y) * sin(z)
+        return sin(x) * sin(y) * sin(z) * exp(t/pi)
 
 
     def Bx(self, t, x, y, z):
-        return cos(x) * cos(y) * cos(z) * exp(-t/(2*pi))
+        return cos(x) * cos(y) * cos(z) * exp(t/pi)
 
     def By(self, t, x, y, z):
-        return sin(x) * sin(y) * cos(z) * exp(-t/(2*pi))
+        return sin(x) * sin(y) * cos(z) * exp(t/pi)
 
     def Bz(self, t, x, y, z):
-        return cos(x) * sin(y) * exp(-t/(2*pi))
+        return cos(x) * sin(y) * exp(t/pi)
 
 
 if __name__ == '__main__':

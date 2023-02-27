@@ -142,6 +142,43 @@ class _3dCSCG_FORM_BASE(CSCG_FORM_BASE):
         result_form.cochain.local = COCHAIN_LOCAL
         return result_form
 
+
+    def __rmul__(self, other):
+        """ other * self """
+        if isinstance(other, (int, float)):
+            assert self.cochain.local is not None,  f"I have no cochain.local, cannot perform add operator."
+
+            kwargs_A = self.___kwargs___
+            if 'name' in kwargs_A:
+                name_A = kwargs_A['name']
+            else:
+                name_A = 'form_A'
+
+            name = str(other) + name_A
+
+            kwargs = dict()
+            for key in kwargs_A:
+                if key == 'name':
+                    kwargs['name'] = name
+                else:
+                    kwargs[key] = kwargs_A[key]
+
+            if 'name' not in kwargs:
+                kwargs['name'] = name
+
+            result_form = self.__class__(self.mesh, self.space, **kwargs)
+
+            COCHAIN_LOCAL = dict()
+            for e in self.mesh.elements:
+                clA = self.cochain.local[e]
+                COCHAIN_LOCAL[e] = other * clA
+
+            result_form.cochain.local = COCHAIN_LOCAL
+            return result_form
+
+        else:
+            raise NotImplementedError()
+
     @lru_cache(maxsize=24)
     def ___PRIVATE_element_grid_data_generator_1___(self, i, density, zoom=1):
         """We generate the data for plotting all dofs of standard forms in a mesh element #`i`."""

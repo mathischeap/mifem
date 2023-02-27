@@ -15,6 +15,11 @@ from objects.CSCG._3d.forms.standard._2s.special.helpers.cross_product_2__ip_2 i
     ___3dCSCG_2Form_CrossProduct_2__ip_2___
 from objects.CSCG._3d.forms.standard._2s.special.helpers.cross_product_2__ip_1 import \
     ___3dCSCG_2Form_CrossProduct_2__ip_1___
+from objects.CSCG._3d.forms.standard._2s.special.helpers.cross_product_1__ip_2 import \
+    ___3dCSCG_2Form_CrossProduct_1__ip_2___
+
+from objects.CSCG._3d.forms.standard._2s.special.helpers.inner_curl_cross_2f2f import \
+    _InnerCurlCrossProduct_2f2f
 
 
 class _2Form_Special(FrozenOnly):
@@ -68,10 +73,39 @@ class _2Form_Special(FrozenOnly):
         """
         if output == '2-M-1':
             SCP_generator = ___3dCSCG_2Form_CrossProduct_2__ip_1___(self._sf_, u, e, quad_degree=quad_degree)
+        elif output == 'MDM':
+            SCP_generator = ___3dCSCG_2Form_CrossProduct_2__ip_1___(self._sf_, u, e, quad_degree=quad_degree)
+            return SCP_generator.MDM
         else:
             raise NotImplementedError(f"output={output} is not implemented.")
 
         return EWC_SparseMatrix(self._sf_.mesh.elements, SCP_generator, 'no_cache')
+
+    def cross_product_1f__ip_2f(self, u, e, quad_degree=None, output='2-M-1'):
+        """
+        (self X 1form, 2form)
+
+        (self X u    , e    )
+
+        We do ``(self X other, e)`` where ``self`` and ``other`` both are 2-form.
+
+        output:
+            '2-M-1': Means we return a local matrix refers to local dofs of e (rows, index-0) and u (cols, index-1)
+
+        :return:
+        """
+
+        if output == '2-M-1':
+            SCP_generator = ___3dCSCG_2Form_CrossProduct_1__ip_2___(self._sf_, u, e, quad_degree=quad_degree)
+            return EWC_SparseMatrix(self._sf_.mesh.elements, SCP_generator, 'no_cache')
+        elif output == 'MDM':
+            SCP_generator = ___3dCSCG_2Form_CrossProduct_1__ip_2___(self._sf_, u, e, quad_degree=quad_degree)
+            return SCP_generator.MDM
+        elif output == '2-M-0':
+            SCP_generator = ___3dCSCG_2Form_CrossProduct_1__ip_2___(self._sf_, u, e, quad_degree=quad_degree)
+            return EWC_SparseMatrix(self._sf_.mesh.elements, SCP_generator._2_M_0_, 'no_cache')
+        else:
+            raise NotImplementedError(f"output={output} is not implemented.")
 
     @property
     def vortex_detection(self):
@@ -112,7 +146,7 @@ class _2Form_Special(FrozenOnly):
         assert SDb & SNb == set(), f"Dirichlet_boundaries intersect Neumann_boundaries is not None."
         assert SDb | SNb == set(bns), f"Dirichlet_boundaries union Neumann_boundaries is not full!"
 
-        # -------- set Neumann boundary condition ---------------------------------------------------
+        # -------- set Neumann boundary condition ---------------------------------
         sf.BC.boundaries = Neumann_boundaries
         adt2.BC.boundaries = Neumann_boundaries
         col_pc = sf.BC.interpret
@@ -127,5 +161,17 @@ class _2Form_Special(FrozenOnly):
         T = T.adjust.clear_rows_according_to(adt_pc)
         b = b.adjust.set_entries_according_to(adt_pc, adt_pc)
 
-        # =====================================================================================
+        # =========================================================================
         return T, D, b
+
+    def inner_curl__cross_product_2f(self, B, b, quad_degree=None, output='2-M-1'):
+        """We compute (curl(self x B), b)."""
+        data_generator = _InnerCurlCrossProduct_2f2f(self._sf_, B, b, quad_degree=quad_degree)
+        if output == '2-M-1':
+            return EWC_SparseMatrix(self._sf_.mesh.elements, data_generator._2_M_1_, 'no_cache')
+        if output == '2-M-0':
+            return EWC_SparseMatrix(self._sf_.mesh.elements, data_generator._2_M_0_, 'no_cache')
+        elif output == 'MDM':
+            return data_generator.MDM
+        else:
+            raise NotImplementedError()

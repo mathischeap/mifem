@@ -234,15 +234,15 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
                 boundary_name_color_dict[pb2] = boundary_name_color_dict[pb1]
 
                 if usetex:
-                    pb_text[pb1] = '\mathrm{%s}' % pb1 + \
-                                   '\stackrel{\mathrm{%s}}{=}' % ptype + '\mathrm{%s}' % pb2
-                    pb_text[pb2] = '\mathrm{%s}' % pb2 + \
-                                   '\stackrel{\mathrm{%s}}{=}' % ptype + '\mathrm{%s}' % pb1
+                    pb_text[pb1] = r'\mathrm{%s}' % pb1 + \
+                                   r'\stackrel{\mathrm{%s}}{=}' % ptype + r'\mathrm{%s}' % pb2
+                    pb_text[pb2] = r'\mathrm{%s}' % pb2 + \
+                                   r'\stackrel{\mathrm{%s}}{=}' % ptype + r'\mathrm{%s}' % pb1
                 else:
-                    pb_text[pb1] = '\mathrm{%s}' % pb1 + \
-                                   '\genfrac{}{}{0}{}{%s}{=}' % ptype + '\mathrm{%s}' % pb2
-                    pb_text[pb2] = '\mathrm{%s}' % pb2 + \
-                                   '\genfrac{}{}{0}{}{%s}{=}' % ptype + '\mathrm{%s}' % pb1
+                    pb_text[pb1] = r'\mathrm{%s}' % pb1 + \
+                                   r'\genfrac{}{}{0}{}{%s}{=}' % ptype + r'\mathrm{%s}' % pb2
+                    pb_text[pb2] = r'\mathrm{%s}' % pb2 + \
+                                   r'\genfrac{}{}{0}{}{%s}{=}' % ptype + r'\mathrm{%s}' % pb1
 
         return RB, RBN, boundary_name_color_dict, pb_text
 
@@ -379,15 +379,15 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
                 boundary_name_color_dict[pb2] = boundary_name_color_dict[pb1]
 
                 if usetex:
-                    pb_text[pb1] = '\mathrm{%s}' % pb1 + \
-                                   '\stackrel{\mathrm{%s}}{=}' % ptype + '\mathrm{%s}' % pb2
-                    pb_text[pb2] = '\mathrm{%s}' % pb2 + \
-                                   '\stackrel{\mathrm{%s}}{=}' % ptype + '\mathrm{%s}' % pb1
+                    pb_text[pb1] = r'\mathrm{%s}' % pb1 + \
+                                   r'\stackrel{\mathrm{%s}}{=}' % ptype + r'\mathrm{%s}' % pb2
+                    pb_text[pb2] = r'\mathrm{%s}' % pb2 + \
+                                   r'\stackrel{\mathrm{%s}}{=}' % ptype + r'\mathrm{%s}' % pb1
                 else:
-                    pb_text[pb1] = '\mathrm{%s}' % pb1 + \
-                                   '\genfrac{}{}{0}{}{%s}{=}' % ptype + '\mathrm{%s}' % pb2
-                    pb_text[pb2] = '\mathrm{%s}' % pb2 + \
-                                   '\genfrac{}{}{0}{}{%s}{=}' % ptype + '\mathrm{%s}' % pb1
+                    pb_text[pb1] = r'\mathrm{%s}' % pb1 + \
+                                   r'\genfrac{}{}{0}{}{%s}{=}' % ptype + r'\mathrm{%s}' % pb2
+                    pb_text[pb2] = r'\mathrm{%s}' % pb2 + \
+                                   r'\genfrac{}{}{0}{}{%s}{=}' % ptype + r'\mathrm{%s}' % pb1
 
         # ___________ do the plot ______________________________________________________
         if saveto is not None:
@@ -402,13 +402,24 @@ class _2dCSCG_Mesh_Visualize_Matplot(FrozenOnly):
         ax.spines['right'].set_visible(right_spine)
         ax.spines['left'].set_visible(left_spine)
         ax.spines['bottom'].set_visible(bottom_spine)
-        plt.xlabel(r"$x$", fontsize=labelsize)
-        plt.ylabel(r"$y$", fontsize=labelsize)
+        if labelsize == 0:
+            ax.set_xticklabels([])
+            ax.set_yticklabels([])
+        else:
+            plt.xlabel(r"$x$", fontsize=labelsize)
+            plt.ylabel(r"$y$", fontsize=labelsize)
         plt.tick_params(axis='both', which='both', labelsize=ticksize)
-        if xticks is not None:
+
+        if xticks is False:
+            plt.xticks([])
+        elif xticks is not None:
             plt.xticks(xticks)
-        if yticks is not None:
+
+        if yticks is False:
+            plt.yticks([])
+        elif yticks is not None:
             plt.yticks(yticks)
+
         if xlim is not None:
             plt.xlim(xlim)
         if ylim is not None:

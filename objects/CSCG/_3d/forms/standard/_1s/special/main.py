@@ -17,8 +17,6 @@ from objects.CSCG._3d.forms.standard._1s.special.helpers.cross_product_1__ip_1 i
     ___3dCSCG_1Form_CrossProduct_1__ip_1___
 from objects.CSCG._3d.forms.standard._1s.special.helpers.cross_product_2__ip_2 import \
     ___3dCSCG_1Form_CrossProduct_2__ip_2___
-from objects.CSCG._3d.forms.standard._1s.special.helpers.cross_product_2__ip_2_2M0 import \
-    ___3dCSCG_1Form_CrossProduct_2__ip_2_2M0___
 from objects.CSCG._3d.forms.standard._1s.special.helpers.curl1_cross_product_1__ip_2 import \
     ___3dCSCG_curl1_CrossProduct_1__ip_2___
 from root.config.main import COMM, MPI
@@ -63,16 +61,17 @@ class _1Form_Special(FrozenOnly):
         """
         if output == '2-M-1':
             SCP_generator = ___3dCSCG_1Form_CrossProduct_2__ip_2___(self._sf_, u, e, quad_degree=quad_degree)
+            return EWC_SparseMatrix(self._sf_.mesh.elements, SCP_generator, 'no_cache')
         elif output == 'MDM':
             SCP_generator = ___3dCSCG_1Form_CrossProduct_2__ip_2___(self._sf_, u, e, quad_degree=quad_degree)
             return SCP_generator.MDM
         elif output == '2-M-0':
-            SCP_generator = ___3dCSCG_1Form_CrossProduct_2__ip_2_2M0___(
-                self._sf_, u, e, quad_degree=quad_degree, cache=cache)
+            SCP_generator = ___3dCSCG_1Form_CrossProduct_2__ip_2___(self._sf_, u, e, quad_degree=quad_degree)
+            return EWC_SparseMatrix(self._sf_.mesh.elements, SCP_generator._2_M_0_, 'no_cache')
         else:
             raise NotImplementedError(f"output={output} is not implemented.")
 
-        return EWC_SparseMatrix(self._sf_.mesh.elements, SCP_generator, 'no_cache')
+
 
 
     def curl_self_cross_product_self__ip_2f(self, e, quad_degree=None, output='e'):

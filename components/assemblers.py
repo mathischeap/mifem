@@ -73,7 +73,7 @@ class VectorAssembler(FrozenOnly):
         self._freeze_self_()
 
     def __call__(self, TBA, mode, routine=None, **kwargs):
-        """The out put will be a 1d array instead of sparse column vector for example."""
+        """The output will be a 1d array instead of sparse column vector for example."""
         if routine is None:
             routine = self._default_routine_
         else:

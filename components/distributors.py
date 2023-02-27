@@ -5,7 +5,6 @@
 @time: 12/2/2022 4:37 PM
 """
 from components.freeze.main import FrozenOnly
-
 from components.assemblers import ___Pr_gathering_matrix_checker___
 
 
@@ -24,7 +23,7 @@ class VectorDistributor(FrozenOnly):
         self._freeze_self_()
 
     def __call__(self, TBD, routine=None, **kwargs):
-        """The out put will be a dict or list (depends on gathering) of 1d arrays."""
+        """The output will be a dict or list (depends on gathering) of 1d arrays."""
         if routine is None:
             routine = self._default_routine_
         else:

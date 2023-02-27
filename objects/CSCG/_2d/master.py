@@ -232,6 +232,6 @@ if __name__ == "__main__":
     # mesh = MeshGenerator('cic',)([14,14])
     # mesh = MeshGenerator('rectangle', p_UL=(-1,-1),region_layout=(3,5))([5,5], show_info=True)
     # mesh = MeshGenerator('rectangle_periodic', p_UL=(-1,-1),region_layout=(3,5))([5,5], show_info=True)
-    # mesh = MeshGenerator('rectangle')([1,1], show_info=True)
-
-    ExactSolutionSelector.listing()
+    mesh = MeshGenerator('crazy', c=0.3)([16, 16], show_info=True)
+    mesh.visualize()
+    # ExactSolutionSelector.listing()

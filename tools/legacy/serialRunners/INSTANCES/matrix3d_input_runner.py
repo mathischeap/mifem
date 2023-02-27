@@ -204,7 +204,7 @@ class Matrix3dInputRunner(Runner):
         self._num_iterations_ :
         
         """
-        #_____ standard criterion ___________________________________________________
+        # _____ standard criterion ___________________________________________________
         if criterion == 'standard':
             shape_i0_i = len(i0)
             assert shape_i0_i == len(i1), " <Matrix3dInputRunner> : i0, i1 len do not match."
@@ -213,7 +213,7 @@ class Matrix3dInputRunner(Runner):
                 if len(i0i) > shape_i0_j:
                     shape_i0_j = len(i0i)
                 assert len(i0i) == len(i1[i]), \
-                    " <Matrix3dInputRunner> : i0[{}], i1[{}] len do not match.".format(i,i)
+                    " <Matrix3dInputRunner> : i0[{}], i1[{}] len do not match.".format(i, i)
             shape0, shape1 = shape_i0_i, shape_i0_j
             shape2 = len(i2)
             self._input_shape_ = (shape0, shape1, shape2)
@@ -231,7 +231,7 @@ class Matrix3dInputRunner(Runner):
                             self._num_iterations_ += 1
                         except IndexError:
                             pass
-        #------------------------------------------------------------------------------
+        # ------------------------------------------------------------------------------
         else:
             raise NotImplementedError(" <Matrix3dInputRunner> : criterion={} not coded.".format(criterion))
 
@@ -276,19 +276,19 @@ class Matrix3dInputRunner(Runner):
 
         if SIZE > 1:
             assert RANK == MASTER_RANK
-            for sc in range(SIZE): # do not use bcast for safety
+            for sc in range(SIZE):  # do not use bcast for safety
                 if sc != MASTER_RANK:
                     COMM.send([I, J, K], dest=sc, tag=sc + 1)   # position mark 1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             COMM.barrier()
 
         if not show_progress:
-            pbar = tqdm(total=I * J * K,
+            pbar = tqdm(total=I * J * K,  # this amount it not accurate, but it is OK. just leave it like this.
                         desc=self.__class__.__name__)
 
         n = 0
-        for k in range(K): # we let the axis2 go at the last.
-            for i in range(I): # we let the axis0 go secondly.
-                for j in range(J): # we let the axis1 go firstly.
+        for k in range(K):  # we let the axis2 go at the last.
+            for i in range(I):  # we let the axis0 go secondly.
+                for j in range(J):  # we let the axis1 go firstly.
 
                     if not show_progress:
                         # noinspection PyUnboundLocalVariable
@@ -296,17 +296,16 @@ class Matrix3dInputRunner(Runner):
                     else:
                         pass
 
-                    #_______ there is not input for computing _________________________
+                    # _______ there is not input for computing _________________________
                     if self._I0Seq_[i][j][k] is None:
 
                         if SIZE > 1:
-                            for sc in range(SIZE): # do not use bcast for safety
+                            for sc in range(SIZE):  # do not use bcast for safety
                                 if sc != MASTER_RANK:
-                                    COMM.send(False, dest=sc, tag=sc + 2)   # position mark 2 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                                    COMM.send(False, dest=sc, tag=sc + 2)  # position mark 2 <<<<<<<<<<<<<<<<
                             COMM.barrier()
 
-
-                    #_______ It is already computed in the `writeto` file _____________
+                    # _______ It is already computed in the `writeto` file _____________
                     elif self._computed_pool_ != () and \
                         self.___check_inputs_in_computed_pool___(
                             [self._I0Seq_[i][j][k], self._I1Seq_[i][j][k], self._I2Seq_[i][j][k]]):
@@ -314,75 +313,69 @@ class Matrix3dInputRunner(Runner):
                             print(f'\n -----> REPEATED {n+1}/{self.num_iterations} computation of '
                                   f'inputs:\n\t{[self._I0Seq_[i][j][k], self._I1Seq_[i][j][k], self._I2Seq_[i][j][k]]}')
 
-                            print('\t____________________________________________________________________\n', flush=True)
+                            print('\t__________________________________________________________________\n', flush=True)
                         else:
                             pass
                         n += 1
                         sleep(0.0125)
                         if SIZE > 1:
-                            for sc in range(SIZE): # do not use bcast for safety
+                            for sc in range(SIZE):  # do not use bcast for safety
                                 if sc != MASTER_RANK:
-                                    COMM.send(False, dest=sc, tag=sc + 2)   # position mark 2 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                                    COMM.send(False, dest=sc, tag=sc + 2)  # position mark 2 <<<<<<<<<<<<<
                             COMM.barrier()
 
-
-                    #_______ We have to compute this set of inputs ____________________
+                    # _______ We have to compute this set of inputs ____________________
                     else:
                         if self._rdf_.empty:
                             m = 0
-                            TTC = [' ',]
+                            TTC = [' ', ]
                         else:
                             TTC = [0, self._rdf_['TTC'][self._rdf_.index[-1]]]
                             m = self._rdf_.index[-1] + 1
 
                         if SIZE > 1:
-                            for sc in range(SIZE): # do not use bcast for safety
+                            for sc in range(SIZE):  # do not use bcast for safety
                                 if sc != MASTER_RANK:
-                                    COMM.send(True, dest=sc, tag=sc + 2)   # position mark 2 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                                    COMM.send(True, dest=sc, tag=sc + 2)  # position mark 2 <<<<<<<<<<<<<<<<<<<<<
                             COMM.barrier()
-
 
                         with TimeIteration(n, self.num_iterations, TTC, show_progress) as TIcontextmanager:
                             if show_progress:
                                 print('\t> input[0]: {} = {}'  .format(self.input_names[0],
-                                                                              self._I0Seq_[i][j][k]))
+                                                                       self._I0Seq_[i][j][k]))
                                 print('\t> input[1]: {} = {}'  .format(self.input_names[1],
-                                                                              self._I1Seq_[i][j][k]))
+                                                                       self._I1Seq_[i][j][k]))
                                 print('\t> input[2]: {} = {}\n'.format(self.input_names[2],
-                                                                              self._I2Seq_[i][j][k]), flush=True)
-
+                                                                       self._I2Seq_[i][j][k]), flush=True)
 
                             if SIZE == 1:
                                 outputs = self._solver_(self._I0Seq_[i][j][k],
                                                         self._I1Seq_[i][j][k],
                                                         self._I2Seq_[i][j][k], **kwargs)
 
-                            else: # parallel case
+                            else:  # parallel case
 
                                 INPUTS = [self._I0Seq_[i][j][k], self._I1Seq_[i][j][k], self._I2Seq_[i][j][k], kwargs]
 
                                 if SIZE > 1:
-                                    for sc in range(SIZE): # do not use bcast for safety
+                                    for sc in range(SIZE):  # do not use bcast for safety
                                         if sc != MASTER_RANK:
-                                            COMM.send(INPUTS, dest=sc, tag=sc + 3)   # position mark 3 <<<<<<<<<<<<<<<<<<<<<
+                                            COMM.send(INPUTS, dest=sc, tag=sc + 3)  # position mark 3 <<<<<<<<<<<<
                                     COMM.barrier()
 
                                 outputs = self._solver_(INPUTS[0], INPUTS[1], INPUTS[2], **INPUTS[3])
 
-
-
-
                         self.___update_rdf___(m, (self._I0Seq_[i][j][k], 
                                                   self._I1Seq_[i][j][k], 
-                                                  self._I2Seq_[i][j][k])
-                                             ,outputs
-                                             ,TIcontextmanager.mth_iteration_cost_HMS
-                                             ,TIcontextmanager.total_cost
-                                             ,TIcontextmanager.ERT,
+                                                  self._I2Seq_[i][j][k]),
+                                              outputs,
+                                              TIcontextmanager.mth_iteration_cost_HMS,
+                                              TIcontextmanager.total_cost,
+                                              TIcontextmanager.ERT,
                                               show_progress=show_progress)
                         self.___write_to___(m)
                         n += 1
-                    #------------------------------------------------------------------
+                    # ------------------------------------------------------------------
         if not show_progress:
             pbar.close()
         self._results_ = self._rdf_
@@ -396,7 +389,6 @@ class Matrix3dInputRunner(Runner):
         """ """
         return self._tabular_
         
-
 
 def TestSolver(a, b, c):
     """ 
@@ -413,26 +405,22 @@ def TestSolver(a, b, c):
 
 
     """
-    d = a + 5*b  - c
+    d = a + 5*b - c
     e = a + b
     return d, e
-
-
-
 
 
 if __name__ == '__main__':
 
     R = Matrix3dInputRunner(TestSolver)
     
-    a = [[1,2,3],
-         [1,2]]
-    b = [[1,1,1],
-         [2,2]]
-    c = [0,0.2]
+    a = [[1, 2, 3],
+         [1, 2]]
+    b = [[1, 1, 1],
+         [2, 2]]
+    c = [0, 0.2]
     
     R.iterate(a, b, c, writeto='123.txt')
-
 
     R.visualize.loglog('b', 'd')
 

@@ -237,7 +237,7 @@ class t3dVector(FrozenOnly):
         return self.__class__(neg_v0, neg_v1, neg_v2)
 
     def dot(self, other):
-        """ self dot product with other。 So lets say self = (a, b), other = (u, v),
+        """`self` dot product with `other`. So lets say self = (a, b), other = (u, v),
         self.dot(other) gives a scalar, au + bv.
 
         Parameters
@@ -261,6 +261,29 @@ class t3dVector(FrozenOnly):
             base_path = '.'.join(str(self).split(' ')[0][1:].split('.')[:-2]) + '.'
             S_CLASS = getattr(import_module(base_path + "scalar"), "t3dScalar")
             return S_CLASS(V0V1V2)
+
+        else:
+            raise NotImplementedError()
+
+
+    def cross_product(self, other):
+        """"""
+        if other.__class__ is self.__class__:
+
+            a, b, c = self._v0_, self._v1_, self._v2_
+            u, v, w = other._v0_, other._v1_, other._v2_
+
+            bw = t3d_ScalarMultiply(b, w)
+            cu = t3d_ScalarMultiply(c, u)
+            av = t3d_ScalarMultiply(a, v)
+            cv = t3d_ScalarMultiply(c, v)
+            aw = t3d_ScalarMultiply(a, w)
+            bu = t3d_ScalarMultiply(b, u)
+
+            V0 = self.__class__(bw, cu, av)
+            V1 = self.__class__(cv, aw, bu)
+
+            return V0 - V1
 
         else:
             raise NotImplementedError()
