@@ -13,7 +13,6 @@ from abc import ABC
 if './' not in sys.path:
     sys.path.append('./')
 
-from root.config.main import *
 from objects.CSCG._3d.forms.standard._2s.discretize.main import _3dCSCG_Discretize
 from objects.CSCG._3d.forms.standard.base.main import _3dCSCG_Standard_Form
 from objects.CSCG._3d.forms.standard._2s.special.main import _2Form_Special
@@ -113,24 +112,29 @@ if __name__ == '__main__':
     # mpiexec -n 5 python objects/CSCG/_3d/forms/standard/_2s/main.py
     from objects.CSCG._3d.master import MeshGenerator, SpaceInvoker, FormCaller
 
-    mesh = MeshGenerator('crazy', c=0.0)([3, 3, 3])
-    space = SpaceInvoker('polynomials')([('Lobatto', 3), ('Lobatto', 3), ('Lobatto', 3)])
+    K = 3
+    N = 2
+    mesh = MeshGenerator('crazy', c=0.0)([K, K, K])
+    space = SpaceInvoker('polynomials')([2, 2, 2])
     FC = FormCaller(mesh, space)
 
-    def u(t, x, y, z): return np.sin(np.pi*x)*np.cos(2*np.pi*y)*np.cos(np.pi*z) + t
+    from numpy import cos, sin, pi
 
-    def v(t, x, y, z): return np.cos(np.pi*x)*np.sin(np.pi*y)*np.cos(2*np.pi*z) + t
-
-    def w(t, x, y, z): return np.cos(np.pi*x)*np.cos(np.pi*y)*np.sin(2*np.pi*z) + t
+    def u(t, x, y, z): return 2 * pi * cos(2*pi*x) * sin(2*pi*y) * sin(2*pi*z) + 0 * t
+    def v(t, x, y, z): return 2 * pi * sin(2*pi*x) * cos(2*pi*y) * sin(2*pi*z) + 0 * t
+    def w(t, x, y, z): return 2 * pi * sin(2*pi*x) * sin(2*pi*y) * cos(2*pi*z) + 0 * t
 
     velocity = FC('vector', (u, v, w))
-    U = FC('scalar', u)
-    V = FC('scalar', v)
-    W = FC('scalar', w)
 
-    f2 = FC('2-f', hybrid=False)
-    f2.TW.func.do.set_func_body_as(velocity)
-    f2.TW.current_time = 0
-    f2.TW.___DO_push_all_to_instant___()
-    f2.discretize()
-    f2.visualize(x=0.25)
+    u = FC('2-f', hybrid=False, name='velocity')
+
+    u.CF = velocity
+    u.CF.current_time = 0
+    u.discretize()
+
+    xyz, value = u.reconstruct([-1, 0, 1], [-1, 0, 1], [-1, 0, 1])
+    if 5 in value:
+        U, V, W = value[5]
+        print(U.ravel('F'))
+        print(V.ravel('F'))
+        print(W.ravel('F'))

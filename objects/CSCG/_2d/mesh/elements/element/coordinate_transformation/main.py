@@ -146,7 +146,7 @@ class _2dCSCG_Mesh_ECT(FrozenOnly):
         Which means for a square Jacobian matrix, the metric turns out to be the square of the
         determinant of the Jacobian matrix.
 
-        The entries of G is normally denoted as g_{i,j}.
+        The entries of G are normally denoted as g_{i,j}.
         """
         if J is None:
             J = self.Jacobian_matrix(*evaluationPoints)

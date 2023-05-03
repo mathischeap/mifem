@@ -44,6 +44,9 @@ class _1Form_Special(FrozenOnly):
         """
         if output == '2-M-1':
             SCP_generator = ___3dCSCG_1Form_CrossProduct_1__ip_1___(self._sf_, u, e, quad_degree=quad_degree)
+        elif output == '2-M-0':
+            X_class = ___3dCSCG_1Form_CrossProduct_1__ip_1___(self._sf_, u, e, quad_degree=quad_degree)
+            SCP_generator = X_class._2_M_0_
         else:
             raise NotImplementedError(f"output={output} is not implemented.")
 

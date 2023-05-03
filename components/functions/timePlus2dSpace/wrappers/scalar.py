@@ -38,7 +38,7 @@ class t2dScalar(FrozenOnly):
         return self._s_(t, x, y)
 
     def visualize(self, mesh, t):
-        """Return a visualize class for a mesh at t=`t`.
+        """Return a `visualize` class for a mesh at t=`t`.
 
         Parameters
         ----------

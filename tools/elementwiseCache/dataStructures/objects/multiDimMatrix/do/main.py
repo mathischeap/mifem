@@ -152,7 +152,7 @@ class MDM_Do(FrozenOnly):
         known_paris : list
             For example:
                 [(u, shadow_u), (w, shadow_w), ...]
-            We use u, w, ... the locate the forms, and we use cochains of
+            We use u, w, ... to locate the forms, and we use cochains of
             shadow_u, shadow_w, ... to compute.
 
         Returns

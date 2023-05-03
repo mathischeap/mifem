@@ -42,6 +42,7 @@ class _2dCSCG_ExactSolutionAllocator(FrozenOnly):
             'Euler:shear_layer_rollup': 'ShearLayerRollup',
             'icpsNS:TGV': 'TaylorGreenVortex',
             'icpsNS:dipole_collision': 'DipoleCollision',
+            'icpsNS:flow_round_cylinder': 'FlowRoundCylinder',
         }
 
     @classmethod
@@ -52,4 +53,5 @@ class _2dCSCG_ExactSolutionAllocator(FrozenOnly):
             'Euler:shear_layer_rollup': base_path + 'Euler.shear_layer_rollup',
             'icpsNS:TGV': base_path + 'incompressibleNavierStokes.Taylor_Green_vortex',
             'icpsNS:dipole_collision': base_path + 'incompressibleNavierStokes.dipole_collision',
+            'icpsNS:flow_round_cylinder': base_path + 'incompressibleNavierStokes.flow_round_cylinder',
         }

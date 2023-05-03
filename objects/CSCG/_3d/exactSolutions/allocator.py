@@ -62,8 +62,11 @@ class _3dCSCG_ExactSolution_Allocator(FrozenOnly):
                 'MHD:sincos1': "MHD_SinCos1",
                 'MHD:as1': "AS1",
                 'MHD:as2': "AS2",
+                'MHD:as3': "AS3",
 
                 'pH_grad_div:eigen1': 'Eigen1',
+
+                'WE:as1': 'AS1',
 
                 }
 
@@ -94,6 +97,9 @@ class _3dCSCG_ExactSolution_Allocator(FrozenOnly):
                 'MHD:sincos1': base_path + "incompressibleMHD.sin_cos",
                 'MHD:as1': base_path + "incompressibleMHD.analytic_solution_1",
                 'MHD:as2': base_path + "incompressibleMHD.analytic_solution_2",
+                'MHD:as3': base_path + "incompressibleMHD.analytic_solution_3",
 
                 'pH_grad_div:eigen1': base_path + "pH.linearGradDiv.eigen1",
+
+                'WE:as1': base_path + 'wave_equations.analytical_solution1',
                 }

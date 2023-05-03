@@ -56,8 +56,8 @@ class CylinderInChannel(DomainInputBase):
         self._r_ = r
         self._li_ = li
         self._lo_ = lo
-        # ______ initialiing parent ____________________________________________________
-        hsqr_r = 0.5 * np.sqrt(r)
+        # ______ initializing parent ____________________________________________________
+        hsqr_r = r / 2 ** 0.5
         super().__init__(domain_name='CylinderInChannel')
         self.region_corner_coordinates = {
             'R:Ru': ((-hsqr_r, hsqr_r), (hsqr_r, hsqr_r), (-h / 2, h / 2), (h / 2, h / 2)),

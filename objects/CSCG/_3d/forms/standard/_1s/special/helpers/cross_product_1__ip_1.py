@@ -112,6 +112,11 @@ class ___3dCSCG_1Form_CrossProduct_1__ip_1___(FrozenOnly):
         M = np.einsum('ijk, i -> kj', self._CP_IP_3dM_[i], self._w1_.cochain.local[i], optimize='greedy')
         return csr_matrix(M)
 
+    def _2_M_0_(self, i):
+        """return 2d matrix of output = '2-M-1' type for mesh-element #i."""
+        M = np.einsum('ijk, i -> ki', self._CP_IP_3dM_[i], self._u1_.cochain.local[i], optimize='greedy')
+        return csr_matrix(M)
+
     #     """
     #     (w1 X u1, e1).
     #     """

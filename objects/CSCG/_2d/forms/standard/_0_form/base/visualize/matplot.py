@@ -43,7 +43,7 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
         return self.contour(*args, **kwargs, plot_type='contourf')
 
     def contour(
-            self, density=10000,
+            self, density=10000, figsize=(8, 6),
             levels=None, num_levels=20, linewidth=1, linestyle=None,
             usetex=False, colormap='coolwarm',
             show_colorbar=True,
@@ -57,10 +57,12 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
             plot_type='contour',
             colorbar_only=False,
             pad_inches=0,
+            dpi=150,
     ):
         """
 
         :param density:
+        :param figsize:
         :param levels:
         :param num_levels:
         :param linewidth: float
@@ -86,6 +88,7 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
         :param plot_type: {'contour', 'contourf'}
         :param colorbar_only:
         :param pad_inches:
+        :param dpi:
         :return:
         """
         density = int(np.ceil(np.sqrt(density / self._mesh_.elements.global_num)))
@@ -140,7 +143,7 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
 
         if colormap is not None:
             plt.rcParams['image.cmap'] = colormap
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(figsize=figsize)
         ax.set_aspect('equal')
         # ------- label and  ticks -------------------------------------------------------
         ax.spines['top'].set_visible(False)
@@ -228,7 +231,7 @@ class _2dCSCG_S0F_VIS_Matplot(FrozenOnly):
         if saveto is None:
             plt.show()
         else:
-            plt.savefig(saveto, bbox_inches='tight', pad_inches=pad_inches)
+            plt.savefig(saveto, bbox_inches='tight', pad_inches=pad_inches, dpi=dpi)
         plt.close()
         # --------------------------------------------------------------------------
 

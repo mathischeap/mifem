@@ -223,6 +223,19 @@ class CSCG_Standard_Form_Cochain_BASE(FrozenOnly):
     def __len__(self):
         return len(self.local)
 
+    def update_bc(self):
+        """"""
+
+        dofs = self._sf_.BC.interpret.local._dofs_
+        cochains = self._sf_.BC.interpret.local._cochains_
+
+        for i in dofs:
+            dof = dofs[i]
+            cochain = cochains[i]
+            a = self._local_[i]
+            a[dof] = cochain
+            self._local_[i] = a
+
     # ------------- DEPENDENT PROPERTIES (MAJOR): When set, clear BRANCHES by set _branches_ to None -------------------
     @property
     def local(self):

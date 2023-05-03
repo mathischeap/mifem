@@ -12,10 +12,10 @@ from matplotlib import cm
 def __matplot__(
         plot_type,
         # data, and linewidth
-        x, y, num_lines=1, linewidth=1.2,
+        x, y, num_lines=1, linewidth=1.2, markersize=None,
         # style, color, and labels
         style=None, color=None, label=False,
-        styles=None, colors=None, labels=None,
+        styles=None, colors=None, labels=None, mfcs=None,  # mfc: maker face color
         # config
         usetex=True, saveto=None, pad_inches=0.1, corlormap='Dark2',
         # figure
@@ -32,6 +32,8 @@ def __matplot__(
         xlim=None, ylim=None,
         y_scientific=True,
         legend_ncol=1,
+        scatter=None,
+        scatter_kwargs=None,
 
 ):
     """
@@ -57,6 +59,7 @@ def __matplot__(
     colors :
     labels : list, tuple, bool
     linewidth
+    markersize
     usetex
     saveto
     pad_inches
@@ -87,6 +90,8 @@ def __matplot__(
     xlim
     ylim
     y_scientific
+    scatter
+    scatter_kwargs
 
     Returns
     -------
@@ -157,18 +162,29 @@ def __matplot__(
 
     if num_lines == 1:
         if label is not False:
-            plotter(x, y, style, color=color, label=label, linewidth=linewidth)
+            plotter(x, y, style, color=color, label=label, markersize=markersize, linewidth=linewidth)
         else:
-            plotter(x, y, style, color=color, linewidth=linewidth)
+            plotter(x, y, style, color=color, markersize=markersize, linewidth=linewidth)
 
     else:
+        if mfcs is None:
+            if labels is False:
+                for i in range(num_lines):
+                    plotter(x[i], y[i], styles[i], markersize=markersize, color=colors[i], linewidth=linewidth)
+            else:
+                for i in range(num_lines):
+                    plotter(x[i], y[i], styles[i],
+                            markersize=markersize, color=colors[i], label=labels[i], linewidth=linewidth)
 
-        if labels is False:
-            for i in range(num_lines):
-                plotter(x[i], y[i], styles[i], color=colors[i], linewidth=linewidth)
         else:
-            for i in range(num_lines):
-                plotter(x[i], y[i], styles[i], color=colors[i], label=labels[i], linewidth=linewidth)
+            if labels is False:
+                for i in range(num_lines):
+                    plotter(x[i], y[i], styles[i],
+                            color=colors[i], markersize=markersize, linewidth=linewidth, mfc=mfcs[i],)
+            else:
+                for i in range(num_lines):
+                    plotter(x[i], y[i], styles[i],
+                            color=colors[i], markersize=markersize, label=labels[i], linewidth=linewidth, mfc=mfcs[i],)
 
     # ------ customize figure ---------------------------------------------------------------------1
     if xticks is not None:
@@ -192,6 +208,11 @@ def __matplot__(
 
         if not y_scientific:
             ax.get_yaxis().get_major_formatter().set_scientific(y_scientific)
+
+    if scatter is None:
+        pass
+    else:
+        ax.scatter(*scatter, **scatter_kwargs)
 
     if xlabel is not None:
         plt.xlabel(xlabel, fontsize=label_size)
